@@ -22,7 +22,8 @@
 	
 	<!-- Load property file -->
 	<loadproperties srcFile="${property.file}" />
-	<property name="version.string" value="${version.major}.${version.minor}.${version.patch}" />
+	<property name="patch.version.string" value="${version.major}.${version.minor}.${version.patch}" />
+	<property name="minor.version.string" value="${version.major}.${version.minor}" />
 
 	<property name="build.classpath" value="" />
 	
@@ -35,7 +36,7 @@
 		<filter token="VERSION_PATCH" value="${version.patch}" />
 
 		<echo> ${project.name} project </echo>
-		<echo message="Project version : ${version.string}" />
+		<echo message="Project version : ${patch.version.string}" />
 		<echo message="Ant version     : ${ant.version}" />
 		<echo message="Svn branch root : ${svn.branch.url}" />
 		<echo message="Java home       : ${java.home}" />
@@ -89,8 +90,8 @@
 	== Init svn dist
 	==================================-->
 	<target name="init-dist" depends="init, init-build-number">
-		<property name="dist.tag" value="${project.name}-${version.string}-${dist.build.number}" />
-		<property name="dist.svn.tag.url" value="${svn.project.url}/tags/${version.string}/${dist.tag}" />
+		<property name="dist.tag" value="${project.name}-${patch.version.string}-${dist.build.number}" />
+		<property name="dist.svn.tag.url" value="${svn.project.url}/tags/${minor.version.string}/${dist.tag}" />
 		<property name="dist.tag.dir" value="${tag.dir}/${dist.tag}" />
 		<mkdir dir="${dist.lib.dir}" />
 		<mkdir dir="${dist.javadoc.dir}" />
@@ -150,7 +151,7 @@
 	== Build distribution package locally. 
 	==================================-->
 	<target name="dist" depends="build, javadocs, init-dist" description="Creates distribution of current version">
-		<jar destfile="${dist.lib.dir}/${project.name}-${version.string}.jar">
+		<jar destfile="${dist.lib.dir}/${project.name}-${patch.version.string}.jar">
 			<fileset dir="${build.dir}">
 				<include name="**/*.class"/>
 			</fileset>
