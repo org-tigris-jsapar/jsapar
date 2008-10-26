@@ -151,6 +151,16 @@
 	== Build distribution package locally. 
 	==================================-->
 	<target name="dist" depends="build, javadocs, init-dist" description="Creates distribution of current version">
+		<copy todir="${dist.dir}">
+            <fileset dir="${basedir}/resources">
+                <include name="xml/schema/*.xsd"/>
+            </fileset>
+            <fileset dir="${basedir}">
+                <include name="LICENSE"/>
+                <include name="NOTICE"/>
+            </fileset>
+		</copy> 
+		
 		<jar destfile="${dist.lib.dir}/${project.name}-${patch.version.string}.jar">
 			<fileset dir="${build.dir}">
 				<include name="**/*.class"/>
@@ -159,6 +169,7 @@
                 <include name="xml/schema/*.xsd"/>
             </fileset>
 		</jar>
+		
 		<zip destfile="${dist.dir}/${dist.tag}.zip">
 			<fileset dir="${dist.dir}" includes="**/*"/>
 		</zip>
