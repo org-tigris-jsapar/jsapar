@@ -15,6 +15,7 @@ import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.input.CellParseError;
 import org.jsapar.input.ParseException;
+import org.jsapar.input.ParsingEventListener;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
@@ -26,7 +27,7 @@ public class XmlSchema extends Schema {
     }
 
     @Override
-    public Document build(Reader reader, List<CellParseError> parseErrors)
+    public void parse(Reader reader, ParsingEventListener listener)
 	    throws IOException, JSaParException {
 
 	try {
@@ -50,14 +51,13 @@ public class XmlSchema extends Schema {
 		    if (sName == null || !sElementName.equals("line"))
 			throw new ParseException("Invalid element found: <" + sElementName
 				+ ">, when expecting <line>");
-		    Line line = this.buildLine((org.w3c.dom.Element) child, parseErrors);
+		    Line line = this.parseLine((org.w3c.dom.Element) child, listener);
 		    if (line == null)
 			break;
 		    else
 			document.addLine(line);
 		}
 	    }
-	    return document;
 
 	    // TODO Auto-generated method stub
 	} catch (ParserConfigurationException e) {
@@ -67,7 +67,6 @@ public class XmlSchema extends Schema {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
-	return null;
     }
 
     /**
@@ -76,7 +75,7 @@ public class XmlSchema extends Schema {
      * @return
      * @throws ParseException 
      */
-    private Line buildLine(org.w3c.dom.Element xmlLine, List<CellParseError> parseErrors) throws ParseException {
+    private Line parseLine(org.w3c.dom.Element xmlLine, ParsingEventListener listener) throws ParseException {
 	Line line = new Line();
 	
 	String sLineType = xmlLine.getAttribute("linetype");
@@ -91,7 +90,7 @@ public class XmlSchema extends Schema {
 		if (sName == null || !sName.equals("cell"))
 		    throw new ParseException("Invalid element found: <" + sName
 			    + ">, when expecting <cell>");
-		Cell cell = this.buildCell((org.w3c.dom.Element) child, parseErrors);
+		Cell cell = this.parseCell((org.w3c.dom.Element) child, listener);
 		if (line == null)
 		    break;
 		else
@@ -107,7 +106,7 @@ public class XmlSchema extends Schema {
      * @return
      * @throws ParseException 
      */
-    private Cell buildCell(Element xmlCell, List<CellParseError> parseErrors) throws ParseException {
+    private Cell parseCell(Element xmlCell, ParsingEventListener listener) throws ParseException {
 	String sType = xmlCell.getAttribute("type");
 	Cell cell = null;
 	
@@ -129,7 +128,7 @@ public class XmlSchema extends Schema {
 		if (sName == null || !sName.equals("cell"))
 		    throw new ParseException("Invalid element found: <" + sName
 			    + ">, when expecting <cell>");
-		cell = this.buildCell((org.w3c.dom.Element) child, parseErrors);
+		cell = this.parseCell((org.w3c.dom.Element) child, listener);
 		if (cell == null)
 		    break;
 	    }
@@ -143,26 +142,45 @@ public class XmlSchema extends Schema {
     }
 
     @Override
+    public void outputBefore(Writer writer)
+	    throws IOException, JSaParException {
+	// TODO Auto-generated method stub
+	
+    }
+
+    @Override
     public void output(Document document, Writer writer) throws IOException,
 	    JSaParException {
 	// TODO Auto-generated method stub
 
     }
 
+    @Override
+    public void outputAfter(Writer writer)
+	    throws IOException, JSaParException {
+	// TODO Auto-generated method stub
+	
+    }
+
 
     @Override
-    protected Document buildByControlCell(Reader reader, List<CellParseError> parseErrors)
+    protected void parseByControlCell(Reader reader, ParsingEventListener eventListener)
 	    throws JSaParException {
 	// TODO Auto-generated method stub
-	return null;
     }
 
 
     @Override
-    protected Document buildByOccurs(Reader reader, List<CellParseError> parseErrors)
+    protected void parseByOccurs(Reader reader, ParsingEventListener listener)
 	    throws JSaParException, IOException {
+	// TODO Auto-generated method stub
+    }
+
+    @Override
+    public List getSchemaLines() {
 	// TODO Auto-generated method stub
 	return null;
     }
+
 
 }

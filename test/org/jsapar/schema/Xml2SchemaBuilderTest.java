@@ -40,17 +40,17 @@ public class Xml2SchemaBuilderTest {
 
 		assertEquals("\r\n", fwSchema.getLineSeparator());
 
-		assertEquals("First name", fwSchema.getSchemaLines().get(0)
+		assertEquals("First name", fwSchema.getFixedWidthSchemaLines().get(0)
 				.getSchemaCells().get(0).getName());
-		assertEquals("Last name", fwSchema.getSchemaLines().get(0)
+		assertEquals("Last name", fwSchema.getFixedWidthSchemaLines().get(0)
 				.getSchemaCells().get(1).getName());
 
-		assertEquals(5, fwSchema.getSchemaLines().get(0).getSchemaCells()
+		assertEquals(5, fwSchema.getFixedWidthSchemaLines().get(0).getSchemaCells()
 				.get(0).getLength());
-		assertEquals(8, fwSchema.getSchemaLines().get(0).getSchemaCells()
+		assertEquals(8, fwSchema.getFixedWidthSchemaLines().get(0).getSchemaCells()
 				.get(1).getLength());
 
-		assertEquals(CellType.INTEGER, fwSchema.getSchemaLines().get(0)
+		assertEquals(CellType.INTEGER, fwSchema.getFixedWidthSchemaLines().get(0)
 				.getSchemaCells().get(2).getCellFormat().getCellType());
 
 	}
@@ -69,9 +69,9 @@ public class Xml2SchemaBuilderTest {
 		Schema schema = builder.build(reader);
 		CsvSchema csvSchema = (CsvSchema) schema;
 
-		assertEquals("First name", csvSchema.getSchemaLines().get(0)
+		assertEquals("First name", csvSchema.getCsvSchemaLines().get(0)
 				.getSchemaCells().get(0).getName());
-		assertEquals("Last name", csvSchema.getSchemaLines().get(0)
+		assertEquals("Last name", csvSchema.getCsvSchemaLines().get(0)
 				.getSchemaCells().get(1).getName());
 
 	}
@@ -89,7 +89,7 @@ public class Xml2SchemaBuilderTest {
 		Schema schema = builder.build(reader);
 		CsvSchema csvSchema = (CsvSchema) schema;
 
-		assertEquals(true, csvSchema.getSchemaLines().get(0)
+		assertEquals(true, csvSchema.getCsvSchemaLines().get(0)
 				.isFirstLineAsSchema());
 
 	}

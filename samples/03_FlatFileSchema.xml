@@ -2,8 +2,8 @@
 <jsp:schema xmlns:jsp="http://jsapar.tigris.org/JSaParSchema" 
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema ../xml/schema/JSaParSchema.xsd ">
-  <jsp:fixedwidthschema lineseparator="" trimfillcharacters="true">
-    <jsp:line occurs="*">
+  <jsp:fixedwidthschema lineseparator="" >
+    <jsp:line occurs="*" trimfillcharacters="true">
       <jsp:cell name="First name" length="8"/>
       <jsp:cell name="Middle name" length="9" ignoreread="true"/>
       <jsp:cell name="Last name" length="9"/>

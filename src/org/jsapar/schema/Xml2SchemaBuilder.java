@@ -233,16 +233,6 @@ public class Xml2SchemaBuilder {
 
 	assignSchemaBase(schema, xmlSchema);
 
-	String sFillChar = getAttributeValue(xmlSchema,
-		ATTRIB_FW_SCHEMA_FILL_CHARACTER);
-	if (sFillChar != null)
-	    schema.setFillCharacter(sFillChar.charAt(0));
-
-	Node xmlTrimFill = xmlSchema
-		.getAttributeNode(ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS);
-	if (xmlTrimFill != null)
-	    schema.setTrimFillCharacters(getBooleanValue(xmlTrimFill));
-
 	Element xmlControlCell = getChild(xmlSchema,
 		ELEMENT_FW_SCHEMA_CONTROLCELL);
 
@@ -292,19 +282,29 @@ public class Xml2SchemaBuilder {
      */
     private FixedWidthSchemaLine buildFixedWidthSchemaLine(
 	    Element xmlSchemaLine, Locale locale) throws SchemaException {
-	FixedWidthSchemaLine line = new FixedWidthSchemaLine();
+	FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine();
 
-	assignSchemaLineBase(line, xmlSchemaLine);
+	assignSchemaLineBase(schemaLine, xmlSchemaLine);
+
+	String sFillChar = getAttributeValue(xmlSchemaLine,
+		ATTRIB_FW_SCHEMA_FILL_CHARACTER);
+	if (sFillChar != null)
+	    schemaLine.setFillCharacter(sFillChar.charAt(0));
+
+	Node xmlTrimFill = xmlSchemaLine
+		.getAttributeNode(ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS);
+	if (xmlTrimFill != null)
+	    schemaLine.setTrimFillCharacters(getBooleanValue(xmlTrimFill));
 
 	NodeList nodes = xmlSchemaLine
 		.getElementsByTagName(ELEMENT_SCHEMA_LINE_CELL);
 	for (int i = 0; i < nodes.getLength(); i++) {
 	    org.w3c.dom.Node child = nodes.item(i);
 	    if (child instanceof Element)
-		line.addSchemaCell(buildFixedWidthSchemaCell((Element) child,
+		schemaLine.addSchemaCell(buildFixedWidthSchemaCell((Element) child,
 			locale));
 	}
-	return line;
+	return schemaLine;
     }
 
     /**
@@ -359,10 +359,6 @@ public class Xml2SchemaBuilder {
 		ATTRIB_CSV_SCHEMA_CELL_SEPARATOR);
 	if (sSeparator != null)
 	    schema.setCellSeparator(sSeparator);
-
-	String sQuoteChar = getAttributeValue(xmlSchema, ATTRIB_CSV_QUOTE_CHAR);
-	if (sQuoteChar != null)
-	    schema.setQuoteChar(sQuoteChar.charAt(0));
 
 	NodeList nodes = xmlSchema.getElementsByTagName(ELEMENT_SCHEMA_LINE);
 	for (int i = 0; i < nodes.getLength(); i++) {

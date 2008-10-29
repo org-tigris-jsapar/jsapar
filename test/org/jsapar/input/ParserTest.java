@@ -12,10 +12,10 @@ import org.jsapar.schema.FixedWidthSchemaLine;
 import org.junit.Test;
 
 
-public class BuilderTest {
+public class ParserTest {
 
     @Test
-    public void testBuild_fixed_oneLine() throws JSaParException {
+    public void testParse_fixed_oneLine() throws JSaParException {
         String toParse = "JonasStenberg";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
@@ -23,7 +23,7 @@ public class BuilderTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
         schema.addSchemaLine(schemaLine);
 
-        Builder builder = new Builder();
+        Parser builder = new Parser();
         Reader reader = new StringReader(toParse);
         Document doc = builder.build(reader, schema);
 
@@ -32,7 +32,7 @@ public class BuilderTest {
     }
 
     @Test
-    public void testBuild_fixed_twoLines() throws JSaParException {
+    public void testParse_fixed_twoLines() throws JSaParException {
         String toParse = "JonasStenberg" + System.getProperty("line.separator") + "FridaStenberg";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
@@ -40,7 +40,7 @@ public class BuilderTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
         schema.addSchemaLine(schemaLine);
 
-        Builder builder = new Builder();
+        Parser builder = new Parser();
         Reader reader = new StringReader(toParse);
         Document doc = builder.build(reader, schema);
 
@@ -52,14 +52,14 @@ public class BuilderTest {
     }
 
     @Test
-    public void testBuild_fixed_twoLines_toLong() throws JSaParException {
+    public void testParse_fixed_twoLines_toLong() throws JSaParException {
         String toParse = "Jonas " + System.getProperty("line.separator") + "Frida";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
         schema.addSchemaLine(schemaLine);
 
-        Builder builder = new Builder();
+        Parser builder = new Parser();
         Reader reader = new StringReader(toParse);
         Document doc = builder.build(reader, schema);
         assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
@@ -67,7 +67,7 @@ public class BuilderTest {
     }
 
     @Test
-    public void testBuild_fixed_twoLines_infiniteOccurs() throws JSaParException {
+    public void testParse_fixed_twoLines_infiniteOccurs() throws JSaParException {
         String toParse = "Jonas" + System.getProperty("line.separator") + "Frida";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine();
@@ -75,7 +75,7 @@ public class BuilderTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
         schema.addSchemaLine(schemaLine);
 
-        Builder builder = new Builder();
+        Parser builder = new Parser();
         Reader reader = new StringReader(toParse);
         Document doc;
         doc = builder.build(reader, schema);

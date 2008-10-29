@@ -11,7 +11,9 @@ import org.jsapar.Cell;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
 import org.jsapar.input.CellParseError;
+import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.ParseException;
+import org.jsapar.input.ParsingEventListener;
 
 
 public class CsvSchemaLine extends SchemaLine {
@@ -52,12 +54,12 @@ public class CsvSchemaLine extends SchemaLine {
     }
 
     Line build(long nLineNumber, String sLine, String sCellSeparator,
-	    char quoteChar, List<CellParseError> parseErrors)
+	    ParsingEventListener listener)
 	    throws ParseException {
 	Line line = new Line((getSchemaCells().size() > 0) ? getSchemaCells()
 		.size() : 10);
 
-	String[] asCells = this.split(sLine, sCellSeparator, quoteChar);
+	String[] asCells = this.split(sLine, sCellSeparator);
 	java.util.Iterator<CsvSchemaCell> itSchemaCell = getSchemaCells()
 		.iterator();
 	for (String sCell : asCells) {
@@ -71,11 +73,7 @@ public class CsvSchemaLine extends SchemaLine {
 		    cell.setName(schemaCell.getName());
 		} catch (ParseException e) {
 		    e.getCellParseError().setLineNumber(nLineNumber);
-		    if (parseErrors == null) {
-			throw e;
-		    } else {
-			parseErrors.add(e.getCellParseError());
-		    }
+		    listener.lineErrorErrorEvent(new LineErrorEvent(this, e.getCellParseError()));
 		}
 	    } else {
 		cell = new StringCell(sCell);
@@ -87,7 +85,7 @@ public class CsvSchemaLine extends SchemaLine {
 	return line;
     }
 
-    String[] split(String sLine, String sCellSeparator, char quoteChar)
+    String[] split(String sLine, String sCellSeparator)
 	    throws ParseException {
 	if (getCellSeparator() != null)
 	    sCellSeparator = getCellSeparator();
@@ -199,15 +197,15 @@ public class CsvSchemaLine extends SchemaLine {
      * @param schema
      * @throws IOException
      */
-    void output(Line line, Writer writer, CsvSchema schema) throws IOException {
-	String sCellSeparator = getCellSeparator() != null ? getCellSeparator()
-		: schema.getCellSeparator();
+    @Override
+    public void output(Line line, Writer writer) throws IOException {
+	String sCellSeparator = getCellSeparator();
 
 	Iterator<CsvSchemaCell> iter = getSchemaCells().iterator();
 	for (int i = 0; iter.hasNext(); i++) {
 	    CsvSchemaCell schemaCell = iter.next();
 	    Cell cell = findCell(line, schemaCell, i);
-	    char quoteChar = (schema.getQuoteChar()==0) ? getQuoteChar() : schema.getQuoteChar();
+	    char quoteChar = getQuoteChar();
 	    
 	    if (cell != null)
 		schemaCell.output(cell, writer, sCellSeparator, quoteChar);
@@ -277,5 +275,27 @@ public class CsvSchemaLine extends SchemaLine {
      */
     public void setQuoteChar(char quoteChar) {
 	this.quoteChar = quoteChar;
+    }
+
+    /**
+     * @return
+     */
+    Line buildHeaderLineFromSchema() {
+	Line line = new Line();
+
+	for (CsvSchemaCell schemaCell : this.getSchemaCells()) {
+	    line.addCell(new StringCell(schemaCell.getName()));
+	}
+
+	return line;
+    }
+
+    /**
+     * Writes header line if first line is schema.
+     * @param writer
+     * @throws IOException
+     */
+    public void outputHeaderLine(Writer writer) throws IOException {
+	output( this.buildHeaderLineFromSchema(), writer);
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://jsapar.tigris.org/JSaParSchema" >
-  <fixedwidthschema lineseparator="&#13;&#10;" trimfillcharacters="false">
-    <line occurs="*">
+  <fixedwidthschema lineseparator="&#13;&#10;">
+    <line occurs="*" trimfillcharacters="false">
       <cell name="First name" length="8"/>
       <cell name="Middle name" length="9" ignoreread="true"/>
       <cell name="Last name" length="9"/>

@@ -14,12 +14,12 @@ Example of reading CSV file according to an xml-schema:
 <table style="font-family: monospace" border="1" >
 	<tr>
 		<td>
-		Reader schemaReader = new FileReader("resources/xml/samples/01_CsvSchema.xml");<br />
-		XmlSchemaBuilder xmlBuilder=new XmlSchemaBuilder();<br />
-		Schema schema = xmlBuilder.build(schemaReader);<br />
-		Reader fileReader = new	FileReader("resources/xml/samples/01_Names.csv");<br />
-		Builder docBuilder=new Builder();<br />
-		Document document = docBuilder.build(fileReader, schema);<br />
+    Reader schemaReader = new FileReader("samples/01_CsvSchema.xml");
+    Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
+    Schema schema = xmlBuilder.build(schemaReader);
+    Reader fileReader = new FileReader("samples/01_Names.csv");
+    Parser parser = new Parser();
+    Document document = parser.build(fileReader, schema);
 		<td />
 	</tr>
 </table>

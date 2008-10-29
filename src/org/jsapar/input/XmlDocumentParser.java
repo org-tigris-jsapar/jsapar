@@ -29,12 +29,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-
-public class XmlDocumentParser implements org.jsapar.input.Parser {
+public class XmlDocumentParser implements org.jsapar.input.ParseSchema {
     // private final static String SCHEMA_LANGUAGE =
     // "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
 
-    public Document build(Reader reader, List<CellParseError> parseErrors)
+    @Override
+    public void parse(Reader reader, ParsingEventListener listener)
 	    throws IOException, JSaParException {
 
 	String schemaFileName = "/xml/schema/XMLDocumentFormat.xsd";
@@ -58,11 +58,8 @@ public class XmlDocumentParser implements org.jsapar.input.Parser {
 	    // factory.set
 	    SAXParser parser = parserFactory.newSAXParser();
 	    org.xml.sax.InputSource is = new org.xml.sax.InputSource(reader);
-	    if (parseErrors == null)
-		parseErrors = new java.util.LinkedList<CellParseError>();
-	    JsaparSAXHandler handler = new JsaparSAXHandler(parseErrors);
+	    JsaparSAXHandler handler = new JsaparSAXHandler(listener);
 	    parser.parse(is, handler);
-	    return handler.getCurrentDocument();
 
 	    // TODO Auto-generated method stub
 	} catch (ParserConfigurationException e) {
@@ -78,16 +75,16 @@ public class XmlDocumentParser implements org.jsapar.input.Parser {
     }
 
     private class JsaparSAXHandler extends org.xml.sax.helpers.DefaultHandler {
-	private Document currentDocument;
 	private Line currentLine;
 	private Cell.CellType currentCellType;
 	private String currentCellName;
 	private Cell currentCell;
 	private boolean cellStarted = false;
-	private List<CellParseError> parseErrors;
+	private ParsingEventListener listener;
+	private long currentLineNumber = 1;
 
-	public JsaparSAXHandler(List<CellParseError> parseErrors) {
-	    this.parseErrors = parseErrors;
+	public JsaparSAXHandler(ParsingEventListener listener) {
+	    this.listener = listener;
 	}
 
 	/*
@@ -99,13 +96,18 @@ public class XmlDocumentParser implements org.jsapar.input.Parser {
 	@Override
 	public void endElement(String uri, String localName, String name)
 		throws SAXException {
-	    if (localName.equals("cell")) {
-		this.currentLine.addCell(this.currentCell);
-		this.currentCell = null;
-		this.cellStarted = false;
-	    } else if (localName.equals("line")) {
-		this.currentDocument.addLine(this.currentLine);
-		this.currentLine = null;
+	    try {
+		if (localName.equals("cell")) {
+		    this.currentLine.addCell(this.currentCell);
+		    this.currentCell = null;
+		    this.cellStarted = false;
+		} else if (localName.equals("line")) {
+		    this.listener.lineParsedEvent(new LineParsedEvent(this,
+			    this.currentLine, this.currentLineNumber));
+		    this.currentLine = null;
+		}
+	    } catch (JSaParException e) {
+		throw new SAXException("Error while handling parsed line.", e);
 	    }
 	}
 
@@ -133,16 +135,9 @@ public class XmlDocumentParser implements org.jsapar.input.Parser {
 		    this.currentCellType = Cell.CellType.STRING;
 	    } else if (localName.equals("line")) {
 		this.currentLine = new Line();
+		this.currentLineNumber++;
 	    } else if (localName.equals("document")) {
-		this.currentDocument = new Document();
 	    }
-	}
-
-	/**
-	 * @return the currentDocument
-	 */
-	public Document getCurrentDocument() {
-	    return currentDocument;
 	}
 
 	/*
@@ -195,12 +190,17 @@ public class XmlDocumentParser implements org.jsapar.input.Parser {
 	 */
 	@Override
 	public void error(SAXParseException e) throws SAXException {
+	    CellParseError error = new CellParseError(this.currentLineNumber,
+		    this.currentCellName, "", null, e.getMessage());
+	    try {
+		this.listener.lineErrorErrorEvent(new LineErrorEvent(this,
+			error));
+	    } catch (ParseException e1) {
+		// If the event handler throws back exception, throw the
+		// original.
+		throw e;
+	    }
 	    throw e;
-	    // int nLine = (this.currentDocument != null) ?
-	    // this.currentDocument.getNumberOfLines()+1 : 0;
-	    // this.parseErrors.add(new CellParseError(nLine,
-	    // this.currentCellName, null, null, e.getMessage()));
-	    // e.printStackTrace();
 	}
 
 	/*
@@ -211,12 +211,17 @@ public class XmlDocumentParser implements org.jsapar.input.Parser {
 	 */
 	@Override
 	public void fatalError(SAXParseException e) throws SAXException {
+	    CellParseError error = new CellParseError(this.currentLineNumber,
+		    this.currentCellName, "", null, e.getMessage());
+	    try {
+		this.listener.lineErrorErrorEvent(new LineErrorEvent(this,
+			error));
+	    } catch (ParseException e1) {
+		// If the event handler throws back exception, throw the
+		// original.
+		throw e;
+	    }
 	    throw e;
-	    // int nLine = (this.currentDocument != null) ?
-	    // this.currentDocument.getNumberOfLines()+1 : 0;
-	    // this.parseErrors.add(new CellParseError(nLine,
-	    // this.currentCellName, null, null, e.getMessage()));
-	    // e.printStackTrace();
 	}
 
 	/*
@@ -228,12 +233,17 @@ public class XmlDocumentParser implements org.jsapar.input.Parser {
 	 */
 	@Override
 	public void warning(SAXParseException e) throws SAXException {
+	    CellParseError error = new CellParseError(this.currentLineNumber,
+		    this.currentCellName, "", null, e.getMessage());
+	    try {
+		this.listener.lineErrorErrorEvent(new LineErrorEvent(this,
+			error));
+	    } catch (ParseException e1) {
+		// If the event handler throws back exception, throw the
+		// original.
+		throw e;
+	    }
 	    throw e;
-	    // int nLine = (this.currentDocument != null) ?
-	    // this.currentDocument.getNumberOfLines()+1 : 0;
-	    // this.parseErrors.add(new CellParseError(nLine,
-	    // this.currentCellName, null, null, e.getMessage()));
-	    // e.printStackTrace();
 	}
 
     }
