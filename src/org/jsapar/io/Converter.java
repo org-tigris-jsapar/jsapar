@@ -35,8 +35,8 @@ public class Converter {
 
     /**
      * Internal class for handling output of one line at a time while receiving
-     * parsing events. This class requires the schema to have
-     * linetypeby="occurs"
+     * parsing events. This class does not support schema where the line type is
+     * determined by a control cell.
      * 
      * @author stejon0
      * 
@@ -46,16 +46,16 @@ public class Converter {
 	private Outputter outputter = new Outputter();
 	private Schema outputSchema;
 	private java.io.Writer writer;
+
+	@SuppressWarnings("unchecked")
 	private Iterator iterSchemaLine;
 	private SchemaLine currentSchemaLine;
 	private long currentSchemaLineLines = 0; // Number of lines written with
-						 // current schema line.
+
+	// current schema line.
 
 	public DocumentWriterOccurs(Schema outputSchema, Writer writer)
 		throws JSaParException {
-	    if (Schema.LineTypeByTypes.OCCURS != outputSchema.getLineTypeBy())
-		throw new JSaParException(
-			"Only LineTypeBy=OCCURS is supported for output schema.");
 
 	    this.outputSchema = outputSchema;
 	    this.writer = writer;

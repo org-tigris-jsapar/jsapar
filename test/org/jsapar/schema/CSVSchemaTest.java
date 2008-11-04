@@ -40,7 +40,7 @@ public class CSVSchemaTest {
     }
 
     @Test
-    public final void testBuild_twoLines() throws IOException, JSaParException {
+    public final void testParse_twoLines() throws IOException, JSaParException {
 	CsvSchema schema = new CsvSchema();
 	CsvSchemaLine schemaLine = new CsvSchemaLine();
 	schema.addSchemaLine(schemaLine);
@@ -60,7 +60,7 @@ public class CSVSchemaTest {
     }
 
     @Test
-    public final void testBuild_firstLineAsHeader() throws IOException,
+    public final void testParse_firstLineAsHeader() throws IOException,
 	    JSaParException {
 	CsvSchema schema = new CsvSchema();
 	CsvSchemaLine schemaLine = new CsvSchemaLine();
@@ -84,7 +84,7 @@ public class CSVSchemaTest {
     }
 
     @Test
-    public final void testBuild_firstLineAsHeader_quoted() throws IOException,
+    public final void testParse_firstLineAsHeader_quoted() throws IOException,
 	    JSaParException {
 	CsvSchema schema = new CsvSchema();
 	CsvSchemaLine schemaLine = new CsvSchemaLine();
@@ -109,8 +109,7 @@ public class CSVSchemaTest {
     }
 
     @Test
-    public final void testOutput_firstLineAsHeader() throws ParseException,
-	    IOException {
+    public final void testOutput_firstLineAsHeader() throws IOException, JSaParException {
 	CsvSchema schema = new CsvSchema();
 
 	CsvSchemaLine schemaLine = new CsvSchemaLine();

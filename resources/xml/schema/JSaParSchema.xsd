@@ -1,99 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--Created with Liquid XML Studio 6.1.18.0 - FREE Community Edition (http://www.liquid-technologies.com)-->
 <xsd:schema xmlns="http://jsapar.tigris.org/JSaParSchema" elementFormDefault="qualified" targetNamespace="http://jsapar.tigris.org/JSaParSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <xsd:complexType name="FixedWidthSchemaCell">
-    <xsd:complexContent mixed="false">
-      <xsd:extension base="SchemaCell">
-        <xsd:attribute name="length" type="xsd:int" use="required">
-          <xsd:annotation>
-            <xsd:documentation>The length of the cell, i.e. the number of characters it occupies.</xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="allignment" use="optional">
-          <xsd:annotation>
-            <xsd:documentation>Defines the cell alignment. The remaining space is filled with the fill-character of the parent document schema. Have to be one of the following:
-left
-right
-center
-           	</xsd:documentation>
-          </xsd:annotation>
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:string">
-              <xsd:enumeration value="left" />
-              <xsd:enumeration value="right" />
-              <xsd:enumeration value="center" />
-            </xsd:restriction>
-          </xsd:simpleType>
-        </xsd:attribute>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="FixedWidthSchemaLine">
-    <xsd:complexContent mixed="false">
-      <xsd:extension base="SchemaLine">
-        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
-          <xsd:element name="cell" type="FixedWidthSchemaCell" />
-        </xsd:sequence>
-        <xsd:attribute name="trimfillcharacters" type="xsd:boolean" use="optional">
-          <xsd:annotation>
-            <xsd:documentation>Default value is true.
-If true, all leading and trailing fill-characters are discarded.
-If false, value is left as is. 
-                    	</xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="fillcharacter" use="optional">
-          <xsd:annotation>
-            <xsd:documentation>Specifies the character space character that is used to fill the cells. Default is space character ' ' (ASCII 20) </xsd:documentation>
-          </xsd:annotation>
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:string">
-              <xsd:maxLength value="1" />
-              <xsd:minLength value="1" />
-            </xsd:restriction>
-          </xsd:simpleType>
-        </xsd:attribute>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
-  <xsd:complexType name="FixedWidthSchema">
-    <xsd:complexContent mixed="false">
-      <xsd:extension base="SchemaBase">
-        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
-          <xsd:element minOccurs="0" maxOccurs="1" name="controlcell" type="FixedWidthSchemaControlCell">
-            <xsd:annotation>
-              <xsd:documentation>The control cell occurs as the first cell at each line and denotes which type of line the rest of the line is. This element tells how the control cell is to be parsed or written.
-                    		</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="1" maxOccurs="unbounded" name="line" type="FixedWidthSchemaLine" />
-        </xsd:sequence>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
   <xsd:element name="schema">
     <xsd:complexType>
       <xsd:choice>
         <xsd:element name="csvschema" type="CsvSchema" />
         <xsd:element name="fixedwidthschema" type="FixedWidthSchema" />
+        <xsd:element name="csvcontrolcellschema" type="CsvControlCellSchema" />
+        <xsd:element name="fixedwidthcontrolcellschema" type="FixedWidthControlCellSchema" />
       </xsd:choice>
     </xsd:complexType>
   </xsd:element>
-  <xsd:complexType name="CsvSchema">
-    <xsd:complexContent mixed="false">
-      <xsd:extension base="SchemaBase">
-        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="line" type="CsvSchemaLine" />
-        </xsd:sequence>
-        <xsd:attribute name="cellseparator" type="xsd:string">
-          <xsd:annotation>
-            <xsd:documentation>A sequence of characters that are used to delimit each cell. Each line schema also has this attribute and by setting cellseparator attribute of a line schema, this attribute will be overridden for the lines parsed with that line schema. Default is a single ';' character.
-						</xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-      </xsd:extension>
-    </xsd:complexContent>
-  </xsd:complexType>
   <xsd:complexType name="SchemaBase">
     <xsd:sequence>
       <xsd:element minOccurs="0" maxOccurs="1" name="locale" type="Locale">
@@ -106,22 +23,6 @@ If false, value is left as is.
       <xsd:annotation>
         <xsd:documentation>A sequence of characters that separates each line. Default is the system default line separator characters. To specify control characters, use xml syntax e.g. &amp;#13; = \n and &amp;#10; = \r.</xsd:documentation>
       </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute name="linetypeby" use="optional">
-      <xsd:annotation>
-        <xsd:documentation>Default value is "occurs".
-
-The value "occurs" means that each line is parsed by the schema-line denoted by the occurs attribute in each schema-line.
-
-The value "controlcell" means that each line is parsed by the scema-line denoted by the value of a controll cell. The control cell has to be the first cell at each line. If the schema is of Csv type, the first cell is always the control cell. If the schema is of FixedWith type, the element "controlcell" has to be specified within the schema.
-				</xsd:documentation>
-      </xsd:annotation>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="occurs" />
-          <xsd:enumeration value="controlcell" />
-        </xsd:restriction>
-      </xsd:simpleType>
     </xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="SchemaLine">
@@ -155,38 +56,6 @@ The value "controlcell" means that each line is parsed by the scema-line denoted
 				</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-  </xsd:complexType>
-  <xsd:complexType name="CsvSchemaLine">
-    <xsd:complexContent mixed="false">
-      <xsd:extension base="SchemaLine">
-        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="cell" type="SchemaCell" />
-        </xsd:sequence>
-        <xsd:attribute name="cellseparator" type="xsd:string" use="optional">
-          <xsd:annotation>
-            <xsd:documentation>A sequence of characters that are used to delimit each cell of this line. 
-                    	</xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="firstlineasschema" type="xsd:boolean">
-          <xsd:annotation>
-            <xsd:documentation>Specifies if the first line of this type contains a header that should be used as schema. In that case all cells will be considered of type string and no validation will be made.
-						</xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="quotechar" use="optional">
-          <xsd:annotation>
-            <xsd:documentation>Specifies if there is a quote character used to encapsulate cells. Within quotes the cell separator will be ignored.</xsd:documentation>
-          </xsd:annotation>
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:string">
-              <xsd:maxLength value="1" />
-              <xsd:minLength value="1" />
-            </xsd:restriction>
-          </xsd:simpleType>
-        </xsd:attribute>
-      </xsd:extension>
-    </xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="SchemaCell">
     <xsd:sequence>
@@ -252,6 +121,137 @@ Note that the number formats are parsed according to the specified locale.</xsd:
 * If the type is date, then the pattern should be described according to java.text.SimpleDateFormat (http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html).</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="FixedWidthSchema">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="SchemaBase">
+        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="line" type="FixedWidthSchemaLine" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="FixedWidthControlCellSchema">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="FixedWidthSchema">
+        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
+          <xsd:element minOccurs="1" maxOccurs="1" name="controlcell" type="FixedWidthSchemaControlCell">
+            <xsd:annotation>
+              <xsd:documentation>The control cell occurs as the first cell at each line and denotes which type of line the rest of the line is. This element tells how the control cell is to be parsed or written.
+                    		</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="FixedWidthSchemaLine">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="SchemaLine">
+        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
+          <xsd:element name="cell" type="FixedWidthSchemaCell" />
+        </xsd:sequence>
+        <xsd:attribute name="trimfillcharacters" type="xsd:boolean" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>Default value is true.
+If true, all leading and trailing fill-characters are discarded.
+If false, value is left as is. 
+                    	</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="fillcharacter" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>Specifies the character space character that is used to fill the cells. Default is space character ' ' (ASCII 20) </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="1" />
+              <xsd:minLength value="1" />
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="FixedWidthSchemaCell">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="SchemaCell">
+        <xsd:attribute name="length" type="xsd:int" use="required">
+          <xsd:annotation>
+            <xsd:documentation>The length of the cell, i.e. the number of characters it occupies.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="allignment" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>Defines the cell alignment. The remaining space is filled with the fill-character of the parent document schema. Have to be one of the following:
+left
+right
+center
+           	</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="left" />
+              <xsd:enumeration value="right" />
+              <xsd:enumeration value="center" />
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CsvSchema">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="SchemaBase">
+        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+          <xsd:element name="line" type="CsvSchemaLine" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CsvControlCellSchema">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="CsvSchema">
+        <xsd:attribute name="controlcellseparator" type="xsd:string" use="required">
+          <xsd:annotation>
+            <xsd:documentation>A sequence of characters that are used to delimit the control cell from the rest of the line. Default is a single ';' character.
+						</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CsvSchemaLine">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="SchemaLine">
+        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+          <xsd:element name="cell" type="SchemaCell" />
+        </xsd:sequence>
+        <xsd:attribute name="cellseparator" type="xsd:string" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>A sequence of characters that are used to delimit each cell of this line. 
+                    	</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="firstlineasschema" type="xsd:boolean">
+          <xsd:annotation>
+            <xsd:documentation>Specifies if the first line of this type contains a header that should be used as schema. In that case all cells will be considered of type string and no validation will be made.
+						</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="quotechar" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>Specifies if there is a quote character used to encapsulate cells. Within quotes the cell separator will be ignored.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="1" />
+              <xsd:minLength value="1" />
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="Locale">
     <xsd:attribute name="language" use="required">

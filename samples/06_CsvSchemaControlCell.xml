@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://jsapar.tigris.org/JSaParSchema" 
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema ../xml/schema/JSaParSchema.xsd ">
-  <csvschema cellseparator=";" lineseparator="&#13;&#10;" linetypeby="controlcell">
-    <line linetype="Header" linetypecontrolvalue="H">
+        xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema ../resources/xml/schema/JSaParSchema.xsd ">
+  <csvcontrolcellschema controlcellseparator=";" lineseparator="&#13;&#10;">
+    <line linetype="Header" linetypecontrolvalue="H" cellseparator=";">
       <cell name="FileName"/>
       <cell name="Created date"/>
     </line>
-    <line occurs="*" linetype="Person" linetypecontrolvalue="B">
+    <line occurs="*" linetype="Person" linetypecontrolvalue="B" cellseparator=";">
       <cell name="First name" />
       <cell name="Middle name" ignoreread="true"/>
       <cell name="Last name" />
     </line>
-    <line linetype="Footer" linetypecontrolvalue="F">
+    <line linetype="Footer" linetypecontrolvalue="F" cellseparator=";">
       <cell name="Rowcount"/>
     </line>
-  </csvschema>
+  </csvcontrolcellschema>
 </schema>

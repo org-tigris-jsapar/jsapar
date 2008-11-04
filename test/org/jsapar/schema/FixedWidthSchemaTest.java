@@ -22,7 +22,7 @@ import org.junit.Test;
 public class FixedWidthSchemaTest {
 
     @Test
-    public final void testBuild_Flat() throws JSaParException, IOException {
+    public final void testParse_Flat() throws JSaParException, IOException {
 	String toParse = "JonasStenbergFridaStenberg";
 	org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
 	FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);

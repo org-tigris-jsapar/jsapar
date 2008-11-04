@@ -20,6 +20,11 @@ public class FixedWidthSchemaCell extends SchemaCell {
     private int length;
     private Alignment alignment = Alignment.LEFT;
 
+    public FixedWidthSchemaCell(String sName, int nLength, Alignment alignment) {
+	this(sName, nLength);
+	this.alignment = alignment;
+    }
+
     public FixedWidthSchemaCell(String sName, int nLength) {
 	super(sName);
 	this.length = nLength;
@@ -78,7 +83,8 @@ public class FixedWidthSchemaCell extends SchemaCell {
      * @param nSize
      * @throws IOException
      */
-    private void fill(Writer writer, char ch, int nSize) throws IOException {
+    private static void fill(Writer writer, char ch, int nSize)
+	    throws IOException {
 	for (int i = 0; i < nSize; i++) {
 	    writer.write(ch);
 	}
@@ -106,31 +112,45 @@ public class FixedWidthSchemaCell extends SchemaCell {
      */
     void output(Cell cell, Writer writer, char fillCharacter)
 	    throws IOException, JSaParException {
+	String sValue = cell.getStringValue(getCellFormat().getFormat());
+	output(sValue, writer, fillCharacter, getLength(), getAlignment());
+    }
+
+    /**
+     * @param cell
+     * @param writer
+     * @param fillCharacter
+     * @param length
+     * @param alignment
+     * @param format
+     * @throws IOException
+     * @throws OutputException
+     */
+    static void output(String sValue, Writer writer, char fillCharacter,
+	    int length, Alignment alignment)
+	    throws IOException, OutputException {
 	// If the cell value is larger than the cell length, we have to cut the
 	// value.
-	String sValue = cell
-		.getStringValue(null != getCellFormat() ? getCellFormat()
-			.getFormat() : null);
-	if (sValue.length() >= getLength()) {
-	    writer.write(sValue.substring(0, getLength()));
+	if (sValue.length() >= length) {
+	    writer.write(sValue.substring(0, length));
 	    return;
 	}
 	// Otherwise use the alignment of the schema.
-	int nToFill = getLength() - sValue.length();
+	int nToFill = length - sValue.length();
 	switch (alignment) {
 	case LEFT:
 	    writer.write(sValue);
-	    this.fill(writer, fillCharacter, nToFill);
+	    fill(writer, fillCharacter, nToFill);
 	    break;
 	case RIGHT:
-	    this.fill(writer, fillCharacter, nToFill);
+	    fill(writer, fillCharacter, nToFill);
 	    writer.write(sValue);
 	    break;
 	case CENTER:
 	    int nLeft = nToFill / 2;
-	    this.fill(writer, fillCharacter, nLeft);
+	    fill(writer, fillCharacter, nLeft);
 	    writer.write(sValue);
-	    this.fill(writer, fillCharacter, nToFill - nLeft);
+	    fill(writer, fillCharacter, nToFill - nLeft);
 	    break;
 	default:
 	    throw new OutputException(

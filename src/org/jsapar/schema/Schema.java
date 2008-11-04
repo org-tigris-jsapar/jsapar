@@ -1,7 +1,6 @@
 package org.jsapar.schema;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
 import java.util.List;
 import java.util.Locale;
@@ -22,8 +21,6 @@ public abstract class Schema implements Cloneable, ParseSchema {
     };
 
     private String lineSeparator = System.getProperty("line.separator");
-
-    private LineTypeByTypes lineTypeBy = LineTypeByTypes.OCCURS;
 
     /**
      * This method should only be called by a Outputter class. Don't use this
@@ -90,37 +87,10 @@ public abstract class Schema implements Cloneable, ParseSchema {
 	this.locale = locale;
     }
 
-    /**
-     * @return the lineTypeBy
-     */
-    public LineTypeByTypes getLineTypeBy() {
-	return lineTypeBy;
-    }
-
-    /**
-     * @param lineTypeBy
-     *            the lineTypeBy to set
-     */
-    public void setLineTypeBy(LineTypeByTypes lineTypeBy) {
-	this.lineTypeBy = lineTypeBy;
-    }
 
     @Override
-    public void parse(java.io.Reader reader, ParsingEventListener listener)
-	    throws JSaParException, IOException {
-	if (this.getLineTypeBy() == LineTypeByTypes.OCCURS) {
-	    parseByOccurs(reader, listener);
-	} else if (this.getLineTypeBy() == LineTypeByTypes.CONTROL_CELL) {
-	    parseByControlCell(reader, listener);
-	} else
-	    throw new SchemaException("Unimplemented lineTypeBy within schema.");
-    }
-
-    protected abstract void parseByControlCell(Reader reader,
-	    ParsingEventListener listener) throws JSaParException;
-
-    protected abstract void parseByOccurs(Reader reader,
-	    ParsingEventListener listener) throws JSaParException, IOException;
+    public abstract void parse(java.io.Reader reader, ParsingEventListener listener)
+	    throws JSaParException, IOException;
 
     /**
      * Reads a line from the reader.
@@ -175,8 +145,6 @@ public abstract class Schema implements Cloneable, ParseSchema {
 	// ls.replaceAll("\\n", "/n");
 	// ls.replaceAll("\\r", "/r");
 	sb.append(ls);
-	sb.append(" lineTypeBy=");
-	sb.append(this.lineTypeBy);
 	sb.append(" locale=");
 	sb.append(this.locale);
 	return sb.toString();

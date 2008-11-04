@@ -4,24 +4,21 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import org.jsapar.Cell;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
-import org.jsapar.input.CellParseError;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
-
 
 public class CsvSchemaLine extends SchemaLine {
 
     private java.util.List<CsvSchemaCell> schemaCells = new java.util.LinkedList<CsvSchemaCell>();
     private boolean firstLineAsSchema = false;
 
-    private String cellSeparator;
+    private String cellSeparator = ";";
 
     /**
      * Specifies quote characters used to encapsulate cells. Numerical value 0
@@ -35,6 +32,14 @@ public class CsvSchemaLine extends SchemaLine {
 
     public CsvSchemaLine(int nOccurs) {
 	super(nOccurs);
+    }
+
+    public CsvSchemaLine(String lineType) {
+	super(lineType);
+    }
+
+    public CsvSchemaLine(String lineType, String lineTypeControlValue) {
+	super(lineType, lineTypeControlValue);
     }
 
     /**
@@ -53,13 +58,12 @@ public class CsvSchemaLine extends SchemaLine {
 	this.schemaCells.add(cell);
     }
 
-    Line build(long nLineNumber, String sLine, String sCellSeparator,
-	    ParsingEventListener listener)
+    Line build(long nLineNumber, String sLine, ParsingEventListener listener)
 	    throws ParseException {
 	Line line = new Line((getSchemaCells().size() > 0) ? getSchemaCells()
 		.size() : 10);
 
-	String[] asCells = this.split(sLine, sCellSeparator);
+	String[] asCells = this.split(sLine);
 	java.util.Iterator<CsvSchemaCell> itSchemaCell = getSchemaCells()
 		.iterator();
 	for (String sCell : asCells) {
@@ -73,7 +77,8 @@ public class CsvSchemaLine extends SchemaLine {
 		    cell.setName(schemaCell.getName());
 		} catch (ParseException e) {
 		    e.getCellParseError().setLineNumber(nLineNumber);
-		    listener.lineErrorErrorEvent(new LineErrorEvent(this, e.getCellParseError()));
+		    listener.lineErrorErrorEvent(new LineErrorEvent(this, e
+			    .getCellParseError()));
 		}
 	    } else {
 		cell = new StringCell(sCell);
@@ -85,19 +90,16 @@ public class CsvSchemaLine extends SchemaLine {
 	return line;
     }
 
-    String[] split(String sLine, String sCellSeparator)
-	    throws ParseException {
-	if (getCellSeparator() != null)
-	    sCellSeparator = getCellSeparator();
+    String[] split(String sLine) throws ParseException {
 	if (getQuoteChar() != 0)
 	    quoteChar = getQuoteChar();
 
 	if (quoteChar == 0)
-	    return sLine.split(Pattern.quote(sCellSeparator));
+	    return sLine.split(Pattern.quote(getCellSeparator()));
 
 	java.util.List<String> cells = new java.util.ArrayList<String>(sLine
 		.length() / 10);
-	splitQuoted(cells, sLine, sCellSeparator, quoteChar);
+	splitQuoted(cells, sLine, getCellSeparator(), quoteChar);
 	return cells.toArray(new String[cells.size()]);
 
 	/*
@@ -147,7 +149,8 @@ public class CsvSchemaLine extends SchemaLine {
 	    String[] asCells = sUnquoted.split(sCellSeparator);
 	    cells.addAll(Arrays.asList(asCells));
 	    nIndex = nFoundQuote + 1;
-	} else // Quote is the first character.
+	} else
+	    // Quote is the first character.
 	    nIndex++;
 
 	String sFound;
@@ -206,7 +209,7 @@ public class CsvSchemaLine extends SchemaLine {
 	    CsvSchemaCell schemaCell = iter.next();
 	    Cell cell = findCell(line, schemaCell, i);
 	    char quoteChar = getQuoteChar();
-	    
+
 	    if (cell != null)
 		schemaCell.output(cell, writer, sCellSeparator, quoteChar);
 	    if (iter.hasNext())
@@ -292,10 +295,11 @@ public class CsvSchemaLine extends SchemaLine {
 
     /**
      * Writes header line if first line is schema.
+     * 
      * @param writer
      * @throws IOException
      */
     public void outputHeaderLine(Writer writer) throws IOException {
-	output( this.buildHeaderLineFromSchema(), writer);
+	output(this.buildHeaderLineFromSchema(), writer);
     }
 }

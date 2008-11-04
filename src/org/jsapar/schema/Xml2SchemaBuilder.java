@@ -18,11 +18,12 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-
 public class Xml2SchemaBuilder {
     private final static String ELEMENT_CSV_SCHEMA = "csvschema";
+    private final static String ELEMENT_CSV_CONTROL_CELL_SCHEMA = "csvcontrolcellschema";
 
     private final static String ELEMENT_FIXED_WIDTH_SCHEMA = "fixedwidthschema";
+    private final static String ELEMENT_FIXED_WIDTH_CONTROL_CELL_SCHEMA = "fixedwidthcontrolcellschema";
 
     private final static String ELEMENT_LOCALE = "locale";
 
@@ -43,6 +44,8 @@ public class Xml2SchemaBuilder {
     private static final String ATTRIB_SCHEMA_LINE_OCCURS = "occurs";
 
     private static final String ATTRIB_CSV_SCHEMA_CELL_SEPARATOR = "cellseparator";
+
+    private static final String ATTRIB_CSV_SCHEMA_CONTROL_CELL_SEPARATOR = "controlcellseparator";
 
     private static final String ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA = "firstlineasschema";
 
@@ -149,9 +152,10 @@ public class Xml2SchemaBuilder {
 	    String schemaFileName = "/xml/schema/JSaParSchema.xsd";
 	    InputStream schemaStream = Xml2SchemaBuilder.class
 		    .getResourceAsStream(schemaFileName);
-	    
-	    if(schemaStream == null)
-		throw new SchemaException("Could not find schema file: "+schemaFileName);
+
+	    if (schemaStream == null)
+		throw new SchemaException("Could not find schema file: "
+			+ schemaFileName);
 	    // File schemaFile = new
 	    // File("resources/xml/schema/JSaParSchema.xsd");
 
@@ -201,6 +205,14 @@ public class Xml2SchemaBuilder {
 	    if (null != xmlSchema)
 		return buildFixedWidthSchema(xmlSchema);
 
+	    xmlSchema = getChild(xmlRoot, ELEMENT_CSV_CONTROL_CELL_SCHEMA);
+	    if (null != xmlSchema)
+		return buildCsvControlCellSchema(xmlSchema);
+
+	    xmlSchema = getChild(xmlRoot, ELEMENT_FIXED_WIDTH_CONTROL_CELL_SCHEMA);
+	    if (null != xmlSchema)
+		return buildFixedWidthControlCellSchema(xmlSchema);
+
 	    throw new SchemaException(
 		    "Failed to find specific schema XML element. Expected one of "
 			    + ELEMENT_CSV_SCHEMA + " or "
@@ -231,43 +243,66 @@ public class Xml2SchemaBuilder {
 	    throws SchemaException {
 	FixedWidthSchema schema = new FixedWidthSchema();
 
+	assignFixedWidthSchema(schema, xmlSchema);
+	return schema;
+    }
+
+    /**
+     * @param xmlSchema
+     * @return
+     * @throws SchemaException
+     */
+    private void assignFixedWidthSchema(FixedWidthSchema schema,
+	    Element xmlSchema) throws SchemaException {
+
 	assignSchemaBase(schema, xmlSchema);
 
-	Element xmlControlCell = getChild(xmlSchema,
-		ELEMENT_FW_SCHEMA_CONTROLCELL);
-
-	if (xmlControlCell != null) {
-	    Node xmlControlCellLength = xmlControlCell
-		    .getAttributeNode(ATTRIB_FW_SCHEMA_CONTROLCELLL_ENGTH);
-	    if (xmlControlCellLength != null)
-		schema.setControlCellLength(getIntValue(xmlControlCellLength));
-
-	    Node xmlControlCellAllignment = xmlControlCell
-		    .getAttributeNode(ATTRIB_FW_SCHEMA_CONTROLCELL_ALLIGNMENT);
-	    if (xmlControlCellAllignment != null) {
-		String sControlCellAllignment = getStringValue(xmlControlCellAllignment);
-		if (sControlCellAllignment.equals("left"))
-		    schema
-			    .setControlCellAllignment(FixedWidthSchemaCell.Alignment.LEFT);
-		else if (sControlCellAllignment.equals("center"))
-		    schema
-			    .setControlCellAllignment(FixedWidthSchemaCell.Alignment.CENTER);
-		else if (sControlCellAllignment.equals("right"))
-		    schema
-			    .setControlCellAllignment(FixedWidthSchemaCell.Alignment.RIGHT);
-		else {
-		    throw new SchemaException("Invalid value for attribute: "
-			    + ATTRIB_FW_SCHEMA_CONTROLCELL_ALLIGNMENT + "="
-			    + sControlCellAllignment);
-		}
-	    }
-	}
 	NodeList nodes = xmlSchema.getElementsByTagName(ELEMENT_SCHEMA_LINE);
 	for (int i = 0; i < nodes.getLength(); i++) {
 	    org.w3c.dom.Node child = nodes.item(i);
 	    if (child instanceof Element)
 		schema.addSchemaLine(buildFixedWidthSchemaLine((Element) child,
 			schema.getLocale()));
+	}
+    }
+
+    /**
+     * @param xmlSchema
+     * @return
+     * @throws SchemaException
+     */
+    private Schema buildFixedWidthControlCellSchema(Element xmlSchema)
+	    throws SchemaException {
+	FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema();
+
+	assignFixedWidthSchema(schema, xmlSchema);
+
+	Element xmlControlCell = getChild(xmlSchema,
+		ELEMENT_FW_SCHEMA_CONTROLCELL);
+
+	Node xmlControlCellLength = xmlControlCell
+		.getAttributeNode(ATTRIB_FW_SCHEMA_CONTROLCELLL_ENGTH);
+	if (xmlControlCellLength != null)
+	    schema.setControlCellLength(getIntValue(xmlControlCellLength));
+
+	Node xmlControlCellAllignment = xmlControlCell
+		.getAttributeNode(ATTRIB_FW_SCHEMA_CONTROLCELL_ALLIGNMENT);
+	if (xmlControlCellAllignment != null) {
+	    String sControlCellAllignment = getStringValue(xmlControlCellAllignment);
+	    if (sControlCellAllignment.equals("left"))
+		schema
+			.setControlCellAlignment(FixedWidthSchemaCell.Alignment.LEFT);
+	    else if (sControlCellAllignment.equals("center"))
+		schema
+			.setControlCellAlignment(FixedWidthSchemaCell.Alignment.CENTER);
+	    else if (sControlCellAllignment.equals("right"))
+		schema
+			.setControlCellAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
+	    else {
+		throw new SchemaException("Invalid value for attribute: "
+			+ ATTRIB_FW_SCHEMA_CONTROLCELL_ALLIGNMENT + "="
+			+ sControlCellAllignment);
+	    }
 	}
 	return schema;
     }
@@ -301,8 +336,8 @@ public class Xml2SchemaBuilder {
 	for (int i = 0; i < nodes.getLength(); i++) {
 	    org.w3c.dom.Node child = nodes.item(i);
 	    if (child instanceof Element)
-		schemaLine.addSchemaCell(buildFixedWidthSchemaCell((Element) child,
-			locale));
+		schemaLine.addSchemaCell(buildFixedWidthSchemaCell(
+			(Element) child, locale));
 	}
 	return schemaLine;
     }
@@ -352,13 +387,22 @@ public class Xml2SchemaBuilder {
      */
     private Schema buildCsvSchema(Element xmlSchema) throws SchemaException {
 	CsvSchema schema = new CsvSchema();
+	assignCsvSchema(schema, xmlSchema);
+	return schema;
+    }
+
+    /**
+     * Builds a CSV file schema object.
+     * 
+     * @param xmlSchema
+     * @return
+     * @throws DataConversionException
+     * @throws SchemaException
+     */
+    private void assignCsvSchema(CsvSchema schema, Element xmlSchema)
+	    throws SchemaException {
 
 	assignSchemaBase(schema, xmlSchema);
-
-	String sSeparator = getAttributeValue(xmlSchema,
-		ATTRIB_CSV_SCHEMA_CELL_SEPARATOR);
-	if (sSeparator != null)
-	    schema.setCellSeparator(sSeparator);
 
 	NodeList nodes = xmlSchema.getElementsByTagName(ELEMENT_SCHEMA_LINE);
 	for (int i = 0; i < nodes.getLength(); i++) {
@@ -367,6 +411,27 @@ public class Xml2SchemaBuilder {
 		schema.addSchemaLine(buildCsvSchemaLine((Element) child, schema
 			.getLocale()));
 	}
+    }
+
+    /**
+     * Builds a CSV file schema object.
+     * 
+     * @param xmlSchema
+     * @return
+     * @throws DataConversionException
+     * @throws SchemaException
+     */
+    private Schema buildCsvControlCellSchema(Element xmlSchema)
+	    throws SchemaException {
+	CsvControlCellSchema schema = new CsvControlCellSchema();
+
+	assignCsvSchema(schema, xmlSchema);
+
+	String sSeparator = getAttributeValue(xmlSchema,
+		ATTRIB_CSV_SCHEMA_CONTROL_CELL_SEPARATOR);
+	if (sSeparator != null)
+	    schema.setControlCellSeparator(sSeparator);
+
 	return schema;
     }
 
@@ -438,16 +503,6 @@ public class Xml2SchemaBuilder {
 	if (sSeparator != null) {
 	    schema.setLineSeparator(sSeparator);
 	}
-
-	String sLineTypeBy = getAttributeValue(xmlSchema,
-		ATTRIB_SCHEMA_LINETYPEBY);
-	if (sLineTypeBy == null || sLineTypeBy.equals("occurs"))
-	    schema.setLineTypeBy(Schema.LineTypeByTypes.OCCURS);
-	else if (sLineTypeBy.equals("controlcell"))
-	    schema.setLineTypeBy(Schema.LineTypeByTypes.CONTROL_CELL);
-	else
-	    throw new SchemaException("Invalid value for attribute: "
-		    + ATTRIB_SCHEMA_LINETYPEBY + "=" + sLineTypeBy);
 
 	Element xmlLocale = getChild(xmlSchema, ELEMENT_LOCALE);
 	if (xmlLocale != null)

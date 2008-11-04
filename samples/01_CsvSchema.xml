@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://jsapar.tigris.org/JSaParSchema">
-  <csvschema cellseparator=";" lineseparator="&#13;&#10;">
-    <line occurs="*" linetype="Person">
+  <csvschema lineseparator="&#13;&#10;">
+    <line occurs="*" linetype="Person" cellseparator=";">
       <cell name="First name" />
       <cell name="Middle name" ignoreread="true"/>
       <cell name="Last name" />

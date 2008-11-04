@@ -18,7 +18,7 @@
 
 <h3>Mission</h3>
 
-<p>The goal of this project is to create a java library that contains a parser of flat files and csv files. The parser should take a schema as input to denote how the file should be parsed.
+<p>The goal of this project is to create a java library that contains a parser of flat files and csv files. The parser should take a schema as input to denote how the file should be parsed. The library should be simple to use and possible to extend.
 </p>
 
 <h3>Existing features</h3>
@@ -26,9 +26,12 @@
 <li>Support for flat files with fixed positions.</li>
 <li>Support for CSV files.</li>
 <li>The schema can be expressed with xml notation or created directly within the java code.</li>
-<li>The output of the parser is a Document class containing a list of lines which contains a list of cells.</li>
+<li>The parser can either produce a Document class, representing the content of the file, or you can choose to receive events for each line that has been successfully parsed.</li>
+<li>Can handle huge files without loading everything into memory.</li>
+<li>The output Document class contains a list of lines which contains a list of cells.</li>
 <li>The Document class can be transformed into a Java object (via reflection) if the schema is carefully written.</li>
-<li>The Document class can be transformed into a xml file (according to an internal xml schema).</li>
+<!--<li>The Document class can be transformed into a xml file (according to an internal xml schema).</li>-->
+<li>The Document class can be built from a xml file (according to an internal xml schema).</li>
 <li>The input and outputs are given by java.io.Reader and java.io.Writer which means that it is not necessarily files that are parsed or generated.</li>
 <li>The file parsing schema contains information about how to parse each cell regarding data type and syntax.</li>
 <li>Parsing errors can either be handled by exceptions thrown at first error or the errors can be collected during parsing to be able to deal with them later.</li>

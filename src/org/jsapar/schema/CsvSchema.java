@@ -9,8 +9,6 @@ import java.util.List;
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
-import org.jsapar.StringCell;
-import org.jsapar.input.CellParseError;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
@@ -28,11 +26,6 @@ public class CsvSchema extends Schema {
     private java.util.LinkedList<CsvSchemaLine> schemaLines = new java.util.LinkedList<CsvSchemaLine>();
 
     /**
-     * Regular expression determining the separator between cells within a row.
-     */
-    private String cellSeparator = ";";
-
-    /**
      * @return the schemaLines
      */
     public java.util.List<CsvSchemaLine> getCsvSchemaLines() {
@@ -44,8 +37,6 @@ public class CsvSchema extends Schema {
      *            the schemaLines to set
      */
     public void addSchemaLine(CsvSchemaLine schemaLine) {
-	if (schemaLine.getCellSeparator() == null)
-	    schemaLine.setCellSeparator(getCellSeparator());
 	this.schemaLines.add(schemaLine);
     }
 
@@ -65,38 +56,16 @@ public class CsvSchema extends Schema {
 	schemaLine.getSchemaCells().clear();
 
 	schemaLine.setOccursInfinitely();
-	schemaLine.setCellSeparator(getCellSeparator());
 
-	String[] asCells = schemaLine.split(sHeaderLine, getCellSeparator());
+	String[] asCells = schemaLine.split(sHeaderLine);
 	for (String sCell : asCells) {
 	    schemaLine.addSchemaCell(new CsvSchemaCell(sCell));
 	}
 	return schemaLine;
     }
 
-    /**
-     * @return the cellSeparator
-     */
-    public String getCellSeparator() {
-	return cellSeparator;
-    }
-
-    /**
-     * Sets the character sequence that separates each cell. This value can be
-     * overridden by setting for each line. <br>
-     * In output schemas the non-breaking space character '\u00A0' is not
-     * allowed since that character is used to replace any occurrence of the
-     * separator within each cell.
-     * 
-     * @param cellSeparator
-     *            the cellSeparator to set
-     */
-    public void setCellSeparator(String cellSeparator) {
-	this.cellSeparator = cellSeparator;
-    }
-
     @Override
-    public void output(Document document, Writer writer) throws IOException {
+    public void output(Document document, Writer writer) throws IOException, JSaParException {
 	Iterator<Line> itLines = document.getLineIterator();
 
 	for (CsvSchemaLine lineSchema : getCsvSchemaLines()) {
@@ -121,7 +90,7 @@ public class CsvSchema extends Schema {
     }
 
     @Override
-    protected void parseByOccurs(java.io.Reader reader,
+    public void parse(java.io.Reader reader,
 	    ParsingEventListener listener) throws IOException, JSaParException {
 
 	long nLineNumber = 0; // First line is 1
@@ -149,7 +118,7 @@ public class CsvSchema extends Schema {
      * @param parseErrors
      * @return Number of lines that were parsed (including failed ones).
      * @throws IOException
-     * @throws JSaParException 
+     * @throws JSaParException
      */
     private long parseLinesByOccurs(CsvSchemaLine lineSchema, long nLineNumber,
 	    Reader reader, ParsingEventListener listener) throws IOException,
@@ -170,8 +139,7 @@ public class CsvSchema extends Schema {
 		}
 	    }
 
-	    Line line = lineSchema.build(nLineNumber, sLine,
-		    getCellSeparator(), listener);
+	    Line line = lineSchema.build(nLineNumber, sLine, listener);
 	    line.setLineType(lineSchema.getLineType());
 	    listener.lineParsedEvent(new LineParsedEvent(this, line,
 		    nLineNumber));
@@ -180,65 +148,6 @@ public class CsvSchema extends Schema {
 	return nLineNumber - nStartLine;
     }
 
-    /**
-     * @param sLineTypeControlValue
-     * @return A schema line of type FixedWitdthSchemaLine which has the
-     *         supplied line type.
-     */
-    public CsvSchemaLine getSchemaLine(String sLineTypeControlValue) {
-	for (CsvSchemaLine lineSchema : this.schemaLines) {
-	    if (lineSchema.getLineTypeControlValue().equals(
-		    sLineTypeControlValue))
-		return lineSchema;
-	}
-	return null;
-    }
-
-    @Override
-    protected void parseByControlCell(Reader reader,
-	    ParsingEventListener listener) throws JSaParException {
-	CsvSchemaLine lineSchema = null;
-	long nLineNumber = 0; // First line is 1
-	try {
-	    do {
-		String sControlCell;
-		String sLine = parseLine(reader);
-		if (sLine.length() == 0)
-		    break;
-
-		int nIndex = sLine.indexOf(this.getCellSeparator());
-		if (nIndex >= 0) {
-		    sControlCell = sLine.substring(0, nIndex);
-		    sLine = sLine.substring(nIndex + 1, sLine.length());
-		} else { // There is no delimiter, the control cell is the
-		    // complete line.
-		    sControlCell = sLine;
-		    sLine = "";
-		}
-
-		if (lineSchema == null
-			|| !lineSchema.getLineTypeControlValue().equals(
-				sControlCell))
-		    lineSchema = getSchemaLine(sControlCell);
-
-		if (lineSchema == null) {
-		    CellParseError error = new CellParseError(nLineNumber,
-			    "Control cell", sControlCell, null,
-			    "Invalid Line-type: " + sControlCell);
-		    throw new ParseException(error);
-		}
-
-		Line line = lineSchema.build(nLineNumber, sLine,
-			getCellSeparator(), listener);
-		line.setLineType(lineSchema.getLineType());
-		listener.lineParsedEvent(new LineParsedEvent(this, line,
-			nLineNumber));
-	    } while (true);
-
-	} catch (IOException ex) {
-	    throw new JSaParException("Failed to read control cell.", ex);
-	}
-    }
 
     public CsvSchema clone() throws CloneNotSupportedException {
 	CsvSchema schema = (CsvSchema) super.clone();
@@ -259,27 +168,24 @@ public class CsvSchema extends Schema {
     public String toString() {
 	StringBuilder sb = new StringBuilder();
 	sb.append(super.toString());
-	sb.append(" cellSeparator='");
-	sb.append(this.cellSeparator);
 	sb.append("'");
 	sb.append(" schemaLines=");
 	sb.append(this.schemaLines);
 	return sb.toString();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List getSchemaLines() {
 	return this.schemaLines;
     }
 
     @Override
-    public void outputAfter(Writer writer)
-	    throws IOException, JSaParException {
+    public void outputAfter(Writer writer) throws IOException, JSaParException {
     }
 
     @Override
-    public void outputBefore(Writer writer)
-	    throws IOException, JSaParException {
+    public void outputBefore(Writer writer) throws IOException, JSaParException {
     }
 
 }

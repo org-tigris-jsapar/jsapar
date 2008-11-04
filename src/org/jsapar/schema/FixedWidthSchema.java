@@ -36,8 +36,6 @@ import org.jsapar.input.ParsingEventListener;
  */
 public class FixedWidthSchema extends Schema {
 
-    private int controlCellLength;
-    private FixedWidthSchemaCell.Alignment controlCellAllignment;
     private java.util.List<FixedWidthSchemaLine> schemaLines = new java.util.LinkedList<FixedWidthSchemaLine>();
 
     /**
@@ -63,89 +61,6 @@ public class FixedWidthSchema extends Schema {
 	this.schemaLines.add(schemaLine);
     }
 
-    /**
-     * @param sLineTypeControlValue
-     * @return A schema line of type FixedWitdthSchemaLine which has the
-     *         supplied line type.
-     */
-    public FixedWidthSchemaLine getSchemaLine(String sLineTypeControlValue) {
-	for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
-	    if (lineSchema.getLineTypeControlValue().equals(
-		    sLineTypeControlValue)) {
-		return lineSchema;
-	    }
-	}
-	return null;
-    }
-
-    /**
-     * Builds a Document from a reader where each line is denoted by a control
-     * cell at the beginning of each line.
-     * 
-     * @param reader
-     * @throws JSaParException
-     */
-    @Override
-    protected void parseByControlCell(java.io.Reader reader,
-	    ParsingEventListener listener) throws JSaParException {
-	char[] lineSeparatorBuffer = new char[getLineSeparator().length()];
-	char[] controlCellBuffer = new char[getControlCellLength()];
-	FixedWidthSchemaLine lineSchema = null;
-	long nLineNumber = 0; // First line is 1
-	try {
-	    do {
-		nLineNumber++;
-		int nRead = reader.read(controlCellBuffer, 0,
-			getControlCellLength());
-		if (nRead < getControlCellLength()) {
-		    break; // End of stream.
-		}
-		String sControlCell = new String(controlCellBuffer);
-		if (lineSchema == null
-			|| !lineSchema.getLineTypeControlValue().equals(
-				sControlCell)) {
-		    lineSchema = getSchemaLine(sControlCell);
-		}
-		if (lineSchema == null) {
-		    CellParseError error = new CellParseError(nLineNumber,
-			    "Control cell", sControlCell, null,
-			    "Invalid Line-type: " + sControlCell);
-		    throw new ParseException(error);
-		}
-
-		Line line = lineSchema.build(nLineNumber, reader, listener);
-		if (line != null) {
-		    line.setLineType(lineSchema.getLineType());
-		    listener.lineParsedEvent(new LineParsedEvent(this, line,
-			    nLineNumber));
-		} else {
-		    break; // End of stream.
-		}
-		if (getLineSeparator().length() > 0) {
-		    nRead = reader.read(lineSeparatorBuffer, 0,
-			    getLineSeparator().length());
-		    if (nRead < getLineSeparator().length()) {
-			break; // End of stream.
-		    }
-		    String sSeparator = new String(lineSeparatorBuffer);
-		    if (!sSeparator.equals(getLineSeparator())) {
-			CellParseError error = new CellParseError(
-				nLineNumber,
-				"End-of-line",
-				sSeparator,
-				null,
-				"Unexpected characters '"
-					+ sSeparator
-					+ "' found when expecting line separator.");
-			throw new ParseException(error);
-		    }
-		}
-
-	    } while (true);
-	} catch (IOException ex) {
-	    throw new JSaParException("Failed to read control cell.", ex);
-	}
-    }
 
     /**
      * Builds a document from a reader using a schema where the line types are
@@ -157,7 +72,7 @@ public class FixedWidthSchema extends Schema {
      * @throws JSaParException 
      */
     @Override
-    protected void parseByOccurs(java.io.Reader reader,
+    public void parse(java.io.Reader reader,
 	    ParsingEventListener listener) throws IOException, JSaParException {
 	if (getLineSeparator().length() > 0) {
 	    parseByOccursLinesSeparated(reader, listener);
@@ -252,36 +167,6 @@ public class FixedWidthSchema extends Schema {
 	}
     }
 
-    /**
-     * @return the controlCellAllignment
-     */
-    public FixedWidthSchemaCell.Alignment getControlCellAllignment() {
-	return controlCellAllignment;
-    }
-
-    /**
-     * @param controlCellAllignment
-     *            the controlCellAllignment to set
-     */
-    public void setControlCellAllignment(
-	    FixedWidthSchemaCell.Alignment controlCellAllignment) {
-	this.controlCellAllignment = controlCellAllignment;
-    }
-
-    /**
-     * @return the controlCellLength
-     */
-    public int getControlCellLength() {
-	return controlCellLength;
-    }
-
-    /**
-     * @param controlCellLength
-     *            the controlCellLength to set
-     */
-    public void setControlCellLength(int controlCellLength) {
-	this.controlCellLength = controlCellLength;
-    }
 
     public FixedWidthSchema clone() throws CloneNotSupportedException {
 	FixedWidthSchema schema = (FixedWidthSchema) super.clone();
@@ -302,12 +187,6 @@ public class FixedWidthSchema extends Schema {
     public String toString() {
 	StringBuilder sb = new StringBuilder();
 	sb.append(super.toString());
-	if (getLineTypeBy() == LineTypeByTypes.CONTROL_CELL) {
-	    sb.append(" controlCellAllignment=");
-	    sb.append(this.controlCellAllignment);
-	    sb.append(" controlCellLength=");
-	    sb.append(this.controlCellLength);
-	}
 	sb.append(" schemaLines=");
 	sb.append(this.schemaLines);
 	return sb.toString();

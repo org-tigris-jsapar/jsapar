@@ -107,7 +107,7 @@ public class XmlSchema extends Schema {
      * @throws ParseException 
      */
     private Cell parseCell(Element xmlCell, ParsingEventListener listener) throws ParseException {
-	String sType = xmlCell.getAttribute("type");
+//	String sType = xmlCell.getAttribute("type");
 	Cell cell = null;
 	
 	org.w3c.dom.NodeList nodes = xmlCell.getChildNodes();
@@ -137,10 +137,6 @@ public class XmlSchema extends Schema {
 	return cell;
     }
     
-    private Cell createCell(String sType, String sName, String sValue){
-	return null;
-    }
-
     @Override
     public void outputBefore(Writer writer)
 	    throws IOException, JSaParException {
@@ -162,19 +158,6 @@ public class XmlSchema extends Schema {
 	
     }
 
-
-    @Override
-    protected void parseByControlCell(Reader reader, ParsingEventListener eventListener)
-	    throws JSaParException {
-	// TODO Auto-generated method stub
-    }
-
-
-    @Override
-    protected void parseByOccurs(Reader reader, ParsingEventListener listener)
-	    throws JSaParException, IOException {
-	// TODO Auto-generated method stub
-    }
 
     @Override
     public List getSchemaLines() {

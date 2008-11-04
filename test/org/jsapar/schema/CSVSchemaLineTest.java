@@ -5,19 +5,29 @@ import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
+import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
+import org.jsapar.input.LineErrorEvent;
+import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
+import org.jsapar.input.ParsingEventListener;
 import org.junit.Test;
 
 
 public class CSVSchemaLineTest extends TestCase {
+    
+    private class NullParsingEventListener implements ParsingEventListener{
+	    public void lineErrorErrorEvent(LineErrorEvent event)
+		    throws ParseException {}
+	    public void lineParsedEvent(LineParsedEvent event)
+		    throws JSaParException {}}
 
 	@Test
 	public void testBuild() throws ParseException {
 		CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 		String sLine = "Jonas;Stenberg;Hemvägen 19;111 22;Stockholm";
-		Line line = schemaLine.build(1, sLine, ";", null);
+		Line line = schemaLine.build(1, sLine, new NullParsingEventListener());
 		
 		assertEquals("Jonas", line.getCell(0).getStringValue());
 		assertEquals("Stenberg", line.getCell(1).getStringValue());
@@ -28,7 +38,7 @@ public class CSVSchemaLineTest extends TestCase {
 		CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 		schemaLine.setQuoteChar('\"');
 		String sLine = "Jonas;Stenberg;\"Hemvägen ;19\";111 22;Stockholm";
-		Line line = schemaLine.build(1, sLine, ";", null);
+		Line line = schemaLine.build(1, sLine, new NullParsingEventListener());
 		
 		assertEquals("Jonas", line.getCell(0).getStringValue());
 		assertEquals("Stenberg", line.getCell(1).getStringValue());
@@ -41,7 +51,7 @@ public class CSVSchemaLineTest extends TestCase {
 		schemaLine.setQuoteChar('\"');
 		String sLine = "Jonas;Stenberg;\"Hemvägen ;19;111 22;Stockholm";
 		try {
-			Line line = schemaLine.build(1, sLine, ";", null);
+			Line line = schemaLine.build(1, sLine, new NullParsingEventListener());
 		} catch (ParseException e) {
 			return;
 		}
@@ -54,7 +64,7 @@ public class CSVSchemaLineTest extends TestCase {
 		schemaLine.setQuoteChar('\"');
 		String sLine = "Jonas;Stenberg;H\"emvägen ;19\";111 22;Stockholm";
 		try {
-			Line line = schemaLine.build(1, sLine, ";", null);
+			Line line = schemaLine.build(1, sLine, new NullParsingEventListener());
 		} catch (ParseException e) {
 			return;
 		}
@@ -67,7 +77,7 @@ public class CSVSchemaLineTest extends TestCase {
 		schemaLine.setQuoteChar('\"');
 		String sLine = "Jonas;Stenberg;\"Hemvägen ;1\"9;111 22;Stockholm";
 		try {
-			Line line = schemaLine.build(1, sLine, ";", null);
+			Line line = schemaLine.build(1, sLine, new NullParsingEventListener());
 		} catch (ParseException e) {
 			return;
 		}
@@ -77,11 +87,12 @@ public class CSVSchemaLineTest extends TestCase {
 	@Test
 	public void testBuild_withNames() throws ParseException {
 		CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+		schemaLine.setCellSeparator(";-)");
 		schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
 		schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
 		
 		String sLine = "Jonas;-)Stenberg";
-		Line line = schemaLine.build(1, sLine, ";-)", null);
+		Line line = schemaLine.build(1, sLine, new NullParsingEventListener());
 		
 		assertEquals("Jonas", line.getCell(0).getStringValue());
 		assertEquals("Stenberg", line.getCell(1).getStringValue());

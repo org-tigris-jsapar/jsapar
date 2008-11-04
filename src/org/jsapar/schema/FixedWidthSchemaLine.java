@@ -28,6 +28,14 @@ public class FixedWidthSchemaLine extends SchemaLine {
 	super(nOccurs);
     }
 
+    public FixedWidthSchemaLine(String lineType) {
+	super(lineType);
+    }
+
+    public FixedWidthSchemaLine(String lineType, String lineTypeControlValue) {
+	super(lineType, lineTypeControlValue);
+    }
+
     /**
      * @return the cells
      */

@@ -24,6 +24,15 @@ public abstract class SchemaLine implements Cloneable {
 	this.occurs = nOccurs;
     }
 
+    public SchemaLine(String lineType) {
+	this.setLineType(lineType);
+    }
+
+    public SchemaLine(String lineType, String lineTypeControlValue) {
+	this(lineType);
+	this.setLineTypeControlValue(lineTypeControlValue);
+    }
+
     /**
      * @return the occurs
      */
@@ -136,6 +145,8 @@ public abstract class SchemaLine implements Cloneable {
      */
     public void setLineTypeControlValue(String lineTypeControlValue) {
 	this.lineTypeControlValue = lineTypeControlValue;
+	if (this.lineType == null)
+	    this.lineType = lineTypeControlValue;
     }
 
     /*
