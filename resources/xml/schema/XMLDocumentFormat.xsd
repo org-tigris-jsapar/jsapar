@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema targetNamespace="http://jsapar.tigris.org/XMLDocumentFormat" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jsp="http://jsapar.tigris.org/XMLDocumentFormat">
+<xsd:schema targetNamespace="http://jsapar.tigris.org/XMLDocumentFormat/1.0" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:jsp="http://jsapar.tigris.org/XMLDocumentFormat/1.0">
 
     <xsd:complexType name="Document">
     	<xsd:sequence>

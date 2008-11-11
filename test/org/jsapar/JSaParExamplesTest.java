@@ -15,7 +15,6 @@ import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.junit.Test;
 
-
 /**
  * These tests are not unit tests!!<br>
  * The tests in this class uses the sample files provided in the folder
@@ -30,8 +29,7 @@ public class JSaParExamplesTest {
     @Test
     public final void testExampleCsv01() throws SchemaException, IOException,
 	    JSaParException {
-	Reader schemaReader = new FileReader(
-		"samples/01_CsvSchema.xml");
+	Reader schemaReader = new FileReader("samples/01_CsvSchema.xml");
 	Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
 	Schema schema = xmlBuilder.build(schemaReader);
 	Reader fileReader = new FileReader("samples/01_Names.csv");
@@ -51,8 +49,7 @@ public class JSaParExamplesTest {
     @Test
     public final void testExampleFixedWidth02() throws SchemaException,
 	    IOException, JSaParException {
-	Reader schemaReader = new FileReader(
-		"samples/02_FixedWidthSchema.xml");
+	Reader schemaReader = new FileReader("samples/02_FixedWidthSchema.xml");
 	Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
 	Schema schema = builder.build(schemaReader);
 	System.out.println("Schema: " + schema);
@@ -70,22 +67,22 @@ public class JSaParExamplesTest {
 		.getStringValue());
     }
 
+    /**
+     * @throws SchemaException
+     * @throws IOException
+     * @throws JSaParException
+     */
     @Test
     public final void testExampleFlatFile03() throws SchemaException,
 	    IOException, JSaParException {
-	/*
-	 * This test fails. JAXP does not seem to recognise the name space
-	 * prefix correctly. I don't know what I am doing wrong.
-	 */
-	Reader schemaReader = new FileReader(
-		"samples/03_FlatFileSchema.xml");
+	Reader schemaReader = new FileReader("samples/03_FlatFileSchema.xml");
 	Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
 	Schema schema = builder.build(schemaReader);
-	Reader fileReader = new FileReader(
-		"samples/03_FlatFileNames.txt");
+	Reader fileReader = new FileReader("samples/03_FlatFileNames.txt");
 	Parser docBuilder = new Parser();
 	Document document = docBuilder.build(fileReader, schema);
 
+	assertEquals(3, document.getNumberOfLines());
 	assertEquals("Erik", document.getLine(0).getCell(0).getStringValue());
 	assertEquals("Svensson", document.getLine(0).getCell(1)
 		.getStringValue());
@@ -93,6 +90,11 @@ public class JSaParExamplesTest {
 	assertEquals("Larsson", document.getLine(1).getCell(1).getStringValue());
     }
 
+    /**
+     * @throws SchemaException
+     * @throws IOException
+     * @throws JSaParException
+     */
     @Test
     public final void testExampleFixedWidth04() throws SchemaException,
 	    IOException, JSaParException {
@@ -128,7 +130,7 @@ public class JSaParExamplesTest {
 	Parser docBuilder = new Parser();
 	Document document = docBuilder.build(fileReader, parser, parseErrors);
 
-//	System.out.println("Errors: " + parseErrors.toString());
+	// System.out.println("Errors: " + parseErrors.toString());
 
 	assertEquals(2, document.getNumberOfLines());
 	assertEquals("Hans", document.getLine(0).getCell("FirstName")
@@ -154,8 +156,7 @@ public class JSaParExamplesTest {
 		"samples/06_CsvSchemaControlCell.xml");
 	Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
 	Schema schema = builder.build(schemaReader);
-	Reader fileReader = new FileReader(
-		"samples/06_NamesControlCell.csv");
+	Reader fileReader = new FileReader("samples/06_NamesControlCell.csv");
 	Parser docBuilder = new Parser();
 	Document document = docBuilder.build(fileReader, schema);
 

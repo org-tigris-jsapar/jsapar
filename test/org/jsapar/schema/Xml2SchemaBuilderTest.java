@@ -26,7 +26,7 @@ public class Xml2SchemaBuilderTest {
 	public final void testBuild_FixedLength() throws SchemaException {
 
 		String sXmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-		    		+ "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema\" >"
+		    		+ "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema/1.0\" >"
 		    		+ "<fixedwidthschema lineseparator=\"&#13;&#10;\"><line occurs=\"*\">"
 				+ "<cell name=\"First name\" length=\"5\"/>"
 				+ "<cell name=\"Last name\" length=\"8\"/>"
@@ -59,7 +59,7 @@ public class Xml2SchemaBuilderTest {
 	public final void testBuild_Csv() throws SchemaException {
 
 		String sXmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-		    		+ "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema\" >"
+		    		+ "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema/1.0\" >"
 		    		+ "<csvschema><line occurs=\"4\">"
 				+ "<cell name=\"First name\"/>" + "<cell name=\"Last name\"/>"
 				+ "</line></csvschema></schema>";
@@ -80,7 +80,7 @@ public class Xml2SchemaBuilderTest {
 	public final void testBuild_Csv_firstlineasschema() throws SchemaException {
 
 		String sXmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-		    		+ "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema\" >"
+		    		+ "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema/1.0\" >"
 	    			+ "<csvschema><line occurs=\"4\" firstlineasschema=\"true\" >"
 				+ "</line></csvschema></schema>";
 
@@ -99,7 +99,7 @@ public class Xml2SchemaBuilderTest {
 
 	    	//"yes" is not a valid boolean value.
 		String sXmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-		    		+ "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema\" >\n"
+		    		+ "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema/1.0\" >\n"
 	    			+ "<csvschema><line occurs=\"4\" firstlineasschema=\"yes\" >\n"
 				+ "</line></csvschema></schema>";
 

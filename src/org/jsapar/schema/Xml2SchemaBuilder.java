@@ -84,6 +84,7 @@ public class Xml2SchemaBuilder {
     private static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
 
     private static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
+    public static final String JSAPAR_XML_SCHEMA = "http://jsapar.tigris.org/JSaParSchema/1.0";
 
     /**
      * Utility function to retreive first matching child element.
@@ -93,8 +94,8 @@ public class Xml2SchemaBuilder {
      * @return
      */
     private Element getChild(Element parentElement, String sChildName) {
-	org.w3c.dom.NodeList nodes = parentElement
-		.getElementsByTagName(sChildName);
+	org.w3c.dom.NodeList nodes = parentElement.getElementsByTagNameNS(
+		JSAPAR_XML_SCHEMA, sChildName);
 	for (int i = 0; i < nodes.getLength(); i++) {
 	    org.w3c.dom.Node child = nodes.item(i);
 	    if (child instanceof org.w3c.dom.Element) {
@@ -194,8 +195,8 @@ public class Xml2SchemaBuilder {
 	    org.xml.sax.InputSource is = new org.xml.sax.InputSource(reader);
 	    org.w3c.dom.Document xmlDocument = builder.parse(is);
 
-	    // Element xmlRoot = xmlDocument.getDocumentElement();
-	    Element xmlRoot = (Element) xmlDocument.getFirstChild();
+	    Element xmlRoot = xmlDocument.getDocumentElement();
+	    // Element xmlRoot = (Element) xmlDocument.getFirstChild();
 
 	    Element xmlSchema = getChild(xmlRoot, ELEMENT_CSV_SCHEMA);
 	    if (null != xmlSchema)
@@ -209,7 +210,8 @@ public class Xml2SchemaBuilder {
 	    if (null != xmlSchema)
 		return buildCsvControlCellSchema(xmlSchema);
 
-	    xmlSchema = getChild(xmlRoot, ELEMENT_FIXED_WIDTH_CONTROL_CELL_SCHEMA);
+	    xmlSchema = getChild(xmlRoot,
+		    ELEMENT_FIXED_WIDTH_CONTROL_CELL_SCHEMA);
 	    if (null != xmlSchema)
 		return buildFixedWidthControlCellSchema(xmlSchema);
 
@@ -257,7 +259,8 @@ public class Xml2SchemaBuilder {
 
 	assignSchemaBase(schema, xmlSchema);
 
-	NodeList nodes = xmlSchema.getElementsByTagName(ELEMENT_SCHEMA_LINE);
+	NodeList nodes = xmlSchema.getElementsByTagNameNS(JSAPAR_XML_SCHEMA,
+		ELEMENT_SCHEMA_LINE);
 	for (int i = 0; i < nodes.getLength(); i++) {
 	    org.w3c.dom.Node child = nodes.item(i);
 	    if (child instanceof Element)
@@ -331,8 +334,8 @@ public class Xml2SchemaBuilder {
 	if (xmlTrimFill != null)
 	    schemaLine.setTrimFillCharacters(getBooleanValue(xmlTrimFill));
 
-	NodeList nodes = xmlSchemaLine
-		.getElementsByTagName(ELEMENT_SCHEMA_LINE_CELL);
+	NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(
+		JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
 	for (int i = 0; i < nodes.getLength(); i++) {
 	    org.w3c.dom.Node child = nodes.item(i);
 	    if (child instanceof Element)
@@ -404,7 +407,8 @@ public class Xml2SchemaBuilder {
 
 	assignSchemaBase(schema, xmlSchema);
 
-	NodeList nodes = xmlSchema.getElementsByTagName(ELEMENT_SCHEMA_LINE);
+	NodeList nodes = xmlSchema.getElementsByTagNameNS(JSAPAR_XML_SCHEMA,
+		ELEMENT_SCHEMA_LINE);
 	for (int i = 0; i < nodes.getLength(); i++) {
 	    org.w3c.dom.Node child = nodes.item(i);
 	    if (child instanceof Element)
@@ -463,8 +467,8 @@ public class Xml2SchemaBuilder {
 	if (sQuoteChar != null)
 	    schemaLine.setQuoteChar(sQuoteChar.charAt(0));
 
-	NodeList nodes = xmlSchemaLine
-		.getElementsByTagName(ELEMENT_SCHEMA_LINE_CELL);
+	NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(
+		JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
 	for (int i = 0; i < nodes.getLength(); i++) {
 	    org.w3c.dom.Node child = nodes.item(i);
 	    if (child instanceof Element)
