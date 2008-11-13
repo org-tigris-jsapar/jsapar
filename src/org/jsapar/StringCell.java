@@ -23,28 +23,50 @@ public class StringCell extends Cell implements Comparable<StringCell> {
      */
     private String stringValue;
 
+    /**
+     * Creates an empty cell without any name or value.
+     */
     public StringCell() {
 	super(CellType.STRING);
 
     }
 
+    /**
+     * Creates a string cell without any name with the supplied value.
+     * 
+     * @param sValue
+     */
     public StringCell(String sValue) {
 	super(CellType.STRING);
 	this.stringValue = sValue;
     }
 
+    /**
+     * Creates a string cell with the supplied name and value.
+     * 
+     * @param sName
+     * @param sValue
+     */
     public StringCell(String sName, String sValue) {
 	super(sName, CellType.STRING);
 	this.stringValue = sValue;
     }
 
-    public StringCell(String name, String value, Format format) throws ParseException {
-    	super(name, CellType.STRING);
-    	setValue(value, format);
-	}
+    /**
+     * Creates a string cell with the supplied name and value. The format parameter is used to parse the supplied value.
+     * @param name
+     * @param value
+     * @param format
+     * @throws ParseException
+     */
+    public StringCell(String name, String value, Format format)
+	    throws ParseException {
+	super(name, CellType.STRING);
+	setValue(value, format);
+    }
 
-	/**
-     * @return the stringValue
+    /**
+     * @return the stringValue as an Object.
      */
     @Override
     public Object getValue() {
@@ -52,8 +74,8 @@ public class StringCell extends Cell implements Comparable<StringCell> {
     }
 
     /**
-     * @param stringValue
-     *                the stringValue to set
+     * @param value
+     *            the stringValue to set
      */
     public void setStringValue(String value) {
 	this.stringValue = value;
@@ -97,12 +119,12 @@ public class StringCell extends Cell implements Comparable<StringCell> {
     }
 
     @Override
-    public int compareTo(StringCell right){
-    	return this.getStringValue().compareTo(right.getStringValue());
+    public int compareTo(StringCell right) {
+	return this.getStringValue().compareTo(right.getStringValue());
     }
 
-	@Override
-	public void setValue(String value, Locale locale) throws ParseException {
-	    this.stringValue = value;
-	}
+    @Override
+    public void setValue(String value, Locale locale) throws ParseException {
+	this.stringValue = value;
+    }
 }

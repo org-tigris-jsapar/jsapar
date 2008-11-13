@@ -18,10 +18,10 @@ import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaLine;
 
 /**
- * This class contains methods for transforming a Document into something else.
+ * This class contains methods for transforming a Document into an output.
  * E.g. if you want to write the Document to a file you should use a
  * {@link java.io.FileWriter} together with a Schema and call the
- * {@link #output()} method.
+ * {@link #output(Document, Schema, java.io.Writer)} method.
  * 
  * @author Jonas Stenberg
  * 
@@ -54,8 +54,8 @@ public class Outputter {
      * Writes the single line to a {@link java.io.Writer} according to the
      * supplied schema line.
      * 
-     * @param document
-     * @param schema
+     * @param line
+     * @param schemaLine
      * @param writer
      * @throws JSaParException
      */
@@ -71,8 +71,7 @@ public class Outputter {
     /**
      * Writes the header line if the first line is schema.
      * 
-     * @param document
-     * @param schema
+     * @param schemaLine
      * @param writer
      * @throws JSaParException
      */
@@ -87,15 +86,6 @@ public class Outputter {
 	} catch (IOException e) {
 	    throw new OutputException("Failed to write to buffert.", e);
 	}
-    }
-
-    /**
-     * @param document
-     * @return
-     */
-    public String outputXmlDocument(Document document) {
-	assert false;
-	return null;
     }
 
     /**
@@ -131,8 +121,10 @@ public class Outputter {
 
     /**
      * @param c
+     *            The class to use when creating the object to return.
      * @param line
-     * @return
+     * @return An object of the supplied class (c) with attibutes set by the
+     *         supplied line.
      * @throws InstantiationException
      * @throws IllegalAccessException
      */

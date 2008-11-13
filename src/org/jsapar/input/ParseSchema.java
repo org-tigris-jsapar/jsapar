@@ -13,7 +13,6 @@ public interface ParseSchema {
      * 
      * @param reader
      * @param listener
-     * @param throwParsingException TODO
      * @throws IOException
      * @throws JSaParException
      */

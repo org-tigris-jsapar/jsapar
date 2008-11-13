@@ -45,8 +45,8 @@ public class CsvControlCellSchema extends CsvSchema {
      * @param controlCellSeparator
      *            the controlCellSeparator to set
      */
-    public void setControlCellSeparator(String cellSeparator) {
-	this.controlCellSeparator = cellSeparator;
+    public void setControlCellSeparator(String controlCellSeparator) {
+	this.controlCellSeparator = controlCellSeparator;
     }
 
     /*
@@ -105,6 +105,9 @@ public class CsvControlCellSchema extends CsvSchema {
 	return null;
     }
 
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.CsvSchema#parse(java.io.Reader, org.jsapar.input.ParsingEventListener)
+     */
     @Override
     public void parse(Reader reader, ParsingEventListener listener)
 	    throws JSaParException {
@@ -152,6 +155,9 @@ public class CsvControlCellSchema extends CsvSchema {
 	}
     }
 
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.CsvSchema#clone()
+     */
     public CsvControlCellSchema clone() throws CloneNotSupportedException {
 	CsvControlCellSchema schema = (CsvControlCellSchema) super.clone();
 	return schema;

@@ -20,7 +20,7 @@ public class Parser implements ParsingEventListener {
      * @param reader
      * @param parser
      *            The ParseSchema to use to build the document.
-     * @return
+     * @return A complete Document representing the parsed input buffer.
      * @throws JSaParException
      */
     public org.jsapar.Document build(java.io.Reader reader, ParseSchema parser)
@@ -43,7 +43,7 @@ public class Parser implements ParsingEventListener {
      * @param parser
      *            The ParseSchema to use to build the document.
      * @param parseErrors
-     * @return
+     * @return A complete Document representing the parsed input buffer.
      * @throws JSaParException
      */
     public Document build(java.io.Reader reader, ParseSchema parser,
@@ -66,7 +66,6 @@ public class Parser implements ParsingEventListener {
     /**
      * @param reader
      * @param parser
-     * @param listener
      * @throws JSaParException
      */
     public void parse(java.io.Reader reader, ParseSchema parser)
@@ -90,7 +89,8 @@ public class Parser implements ParsingEventListener {
 
     /**
      * Forwards the event to all registered listeners.
-     * @throws ParseException 
+     * 
+     * @throws ParseException
      */
     @Override
     public void lineErrorErrorEvent(LineErrorEvent event) throws ParseException {
@@ -101,7 +101,8 @@ public class Parser implements ParsingEventListener {
 
     /**
      * Forwards the event to all registered listeners.
-     * @throws JSaParException 
+     * 
+     * @throws JSaParException
      */
     @Override
     public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
@@ -110,6 +111,13 @@ public class Parser implements ParsingEventListener {
 	}
     }
 
+    /**
+     * Private class that converts the events from the parser into a Document
+     * object. This builder adds errors to a list of CellParseErrors.
+     * 
+     * @author stejon0
+     * 
+     */
     private class DocumentBuilder {
 	private Document document = new Document();
 	private List<CellParseError> parseErrors;
@@ -142,6 +150,13 @@ public class Parser implements ParsingEventListener {
 	}
     }
 
+    /**
+     * Private class that converts the events from the parser into a Document
+     * object. This builder throws an exception at first error that occurs.
+     * 
+     * @author stejon0
+     * 
+     */
     private class AbortingDocumentBuilder {
 	private Document document = new Document();
 
