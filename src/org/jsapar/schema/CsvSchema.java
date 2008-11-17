@@ -14,16 +14,15 @@ import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
 
 /**
- * Defines a schema for a fixed position buffer. Each cell is defined by a fixed
- * number of characters. Each line is separated by the line separator defined in
- * the base class {@link Schema}
+ * Defines a schema for a fixed position buffer. Each cell is defined by a fixed number of
+ * characters. Each line is separated by the line separator defined in the base class {@link Schema}
  * 
  * @author Jonas
  * 
  */
 public class CsvSchema extends Schema {
 
-    private java.util.LinkedList<CsvSchemaLine> schemaLines = new java.util.LinkedList<CsvSchemaLine>();
+    private java.util.ArrayList<CsvSchemaLine> schemaLines = new java.util.ArrayList<CsvSchemaLine>(4);
 
     /**
      * @return the schemaLines
@@ -48,9 +47,8 @@ public class CsvSchema extends Schema {
      * @throws CloneNotSupportedException
      * @throws ParseException
      */
-    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema,
-	    String sHeaderLine) throws CloneNotSupportedException,
-	    ParseException {
+    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, String sHeaderLine)
+	    throws CloneNotSupportedException, ParseException {
 
 	CsvSchemaLine schemaLine = masterLineSchema.clone();
 	schemaLine.getSchemaCells().clear();
@@ -70,7 +68,7 @@ public class CsvSchema extends Schema {
 
 	for (CsvSchemaLine lineSchema : getCsvSchemaLines()) {
 	    if (lineSchema.isFirstLineAsSchema()) {
-		this.schemaLines.getFirst().outputHeaderLine(writer);
+		lineSchema.outputHeaderLine(writer);
 		if (itLines.hasNext())
 		    writer.write(getLineSeparator());
 	    }
@@ -90,23 +88,19 @@ public class CsvSchema extends Schema {
     }
 
     @Override
-    public void parse(java.io.Reader reader,
-	    ParsingEventListener listener) throws IOException, JSaParException {
+    public void parse(java.io.Reader reader, ParsingEventListener listener) throws IOException, JSaParException {
 
 	long nLineNumber = 0; // First line is 1
 	for (CsvSchemaLine lineSchema : getCsvSchemaLines()) {
 
 	    if (lineSchema.isFirstLineAsSchema()) {
 		try {
-		    lineSchema = buildSchemaFromHeader(lineSchema,
-			    parseLine(reader));
+		    lineSchema = buildSchemaFromHeader(lineSchema, parseLine(reader));
 		} catch (CloneNotSupportedException e) {
-		    throw new ParseException("Failed to create header schema.",
-			    e);
+		    throw new ParseException("Failed to create header schema.", e);
 		}
 	    }
-	    nLineNumber += parseLinesByOccurs(lineSchema, nLineNumber, reader,
-		    listener);
+	    nLineNumber += parseLinesByOccurs(lineSchema, nLineNumber, reader, listener);
 	}
     }
 
@@ -120,9 +114,8 @@ public class CsvSchema extends Schema {
      * @throws IOException
      * @throws JSaParException
      */
-    private long parseLinesByOccurs(CsvSchemaLine lineSchema, long nLineNumber,
-	    Reader reader, ParsingEventListener listener) throws IOException,
-	    JSaParException {
+    private long parseLinesByOccurs(CsvSchemaLine lineSchema, long nLineNumber, Reader reader,
+	    ParsingEventListener listener) throws IOException, JSaParException {
 	long nStartLine = nLineNumber;
 	for (int i = 0; i < lineSchema.getOccurs(); i++) {
 	    nLineNumber++;
@@ -131,28 +124,23 @@ public class CsvSchema extends Schema {
 		if (lineSchema.isOccursInfinitely())
 		    break;
 		else {
-		    throw new ParseException(
-			    "Unexpected end of input buffer. Was expecting "
-				    + lineSchema.getOccurs()
-				    + " lines of this type. Found " + i
-				    + " lines");
+		    throw new ParseException("Unexpected end of input buffer. Was expecting " + lineSchema.getOccurs()
+			    + " lines of this type. Found " + i + " lines");
 		}
 	    }
 
 	    Line line = lineSchema.build(nLineNumber, sLine, listener);
 	    line.setLineType(lineSchema.getLineType());
-	    listener.lineParsedEvent(new LineParsedEvent(this, line,
-		    nLineNumber));
+	    listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
 	}
 
 	return nLineNumber - nStartLine;
     }
 
-
     public CsvSchema clone() throws CloneNotSupportedException {
 	CsvSchema schema = (CsvSchema) super.clone();
 
-	schema.schemaLines = new java.util.LinkedList<CsvSchemaLine>();
+	schema.schemaLines = new java.util.ArrayList<CsvSchemaLine>();
 	for (CsvSchemaLine line : this.schemaLines) {
 	    schema.addSchemaLine(line.clone());
 	}
@@ -188,4 +176,38 @@ public class CsvSchema extends Schema {
     public void outputBefore(Writer writer) throws IOException, JSaParException {
     }
 
+ 
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.Schema#outputLine(org.jsapar.Line, long, java.io.Writer)
+     */
+    @Override
+    public void outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
+	CsvSchemaLine schemaLine=null;
+	
+	long nLineMax = 0; // The line number for the last line of this schema line.
+	long nLineWithinSchema=1; // The line number within this schema.
+	for (CsvSchemaLine currentSchemaLine : this.getCsvSchemaLines()) {
+	    nLineWithinSchema = lineNumber - nLineMax;
+	    if(currentSchemaLine.isOccursInfinitely()){
+		schemaLine = currentSchemaLine;
+		break;
+	    }
+	    nLineMax += (long)currentSchemaLine.getOccurs();
+	    if(lineNumber <= nLineMax){
+		schemaLine = currentSchemaLine;
+		break;
+	    }
+	}
+	
+	if(schemaLine != null){
+	    if(lineNumber > 1)
+		writer.append(getLineSeparator());
+	    if(nLineWithinSchema == 1 && schemaLine.isFirstLineAsSchema()){
+		schemaLine.outputHeaderLine(writer);
+		writer.append(getLineSeparator());
+	    }
+	    schemaLine.output(line, writer);
+	}
+    }
+    
 }

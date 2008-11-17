@@ -11,6 +11,7 @@ import org.jsapar.input.CellParseError;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
+import org.jsapar.output.OutputException;
 import org.jsapar.schema.FixedWidthSchemaCell.Alignment;
 
 /**
@@ -179,15 +180,26 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
 	    if (schemaLine == null)
 		throw new JSaParException("Could not find schema line of type "
 			+ line.getLineType());
-	    FixedWidthSchemaCell.output(schemaLine.getLineTypeControlValue(),
-		    writer, ' ', getControlCellLength(),
-		    getControlCellAlignment());
+	    writeControlCell(writer, schemaLine.getLineTypeControlValue());
 	    schemaLine.output(line, writer);
 
 	    if (itLines.hasNext() && getLineSeparator().length() > 0) {
 		writer.write(getLineSeparator());
 	    }
 	}
+    }
+    
+    /**
+     * Writes the control cell to the buffer.
+     * @param writer
+     * @param controlValue
+     * @throws OutputException
+     * @throws IOException
+     */
+    private void writeControlCell(Writer writer, String controlValue) throws OutputException, IOException{
+	    FixedWidthSchemaCell.output(controlValue,
+		    writer, ' ', getControlCellLength(),
+		    getControlCellAlignment());
     }
 
     /**
@@ -245,5 +257,15 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
 
 	return sb.toString();
     }
-
+    
+    @Override
+    public void outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
+	SchemaLine schemaLine = getSchemaLineByType(line.getLineType());
+	if(schemaLine != null){
+	    if(lineNumber > 1)
+		writer.append(getLineSeparator());
+	    writeControlCell(writer, schemaLine.getLineTypeControlValue());
+	    schemaLine.output(line, writer);
+	}
+    }
 }

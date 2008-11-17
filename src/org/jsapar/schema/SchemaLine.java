@@ -20,21 +20,43 @@ public abstract class SchemaLine implements Cloneable {
 	this.occurs = OCCURS_INFINITE;
     }
 
+    /**
+     * Creates a SchemaLine which occurs supplied number of times.
+     * 
+     * @param nOccurs
+     *            The number of times that a line of this type occurs in the
+     *            corresponding buffer.
+     */
     public SchemaLine(int nOccurs) {
 	this.occurs = nOccurs;
     }
 
+    /**
+     * Creates a SchemaLine with the supplied line type.
+     * 
+     * @param lineType
+     *            The name of the type of the line.
+     */
     public SchemaLine(String lineType) {
 	this.setLineType(lineType);
     }
 
+    /**
+     * Creates a SchemaLine with the supplied line type and control value.
+     * 
+     * @param lineType
+     *            The name of the type of the line.
+     * @param lineTypeControlValue
+     *            The tag that determines which type of line it is.
+     */
     public SchemaLine(String lineType, String lineTypeControlValue) {
 	this(lineType);
 	this.setLineTypeControlValue(lineTypeControlValue);
     }
 
     /**
-     * @return the occurs
+     * @return The number of times this type of line occurs in the corresponding
+     *         buffer.
      */
     public int getOccurs() {
 	return occurs;
@@ -42,16 +64,23 @@ public abstract class SchemaLine implements Cloneable {
 
     /**
      * @param occurs
-     *            the occurs to set
+     *            The number of times this type of line occurs in the
+     *            corresponding buffer.
      */
     public void setOccurs(int occurs) {
 	this.occurs = occurs;
     }
 
+    /**
+     * Setts the occurs attribute so that this type of line occurs until the end of the buffer.
+     */
     public void setOccursInfinitely() {
 	this.occurs = OCCURS_INFINITE;
     }
 
+    /**
+     * @return true if this line occurs to the end of the buffer, false otherwise.
+     */
     public boolean isOccursInfinitely() {
 	return this.occurs == OCCURS_INFINITE;
     }
@@ -73,10 +102,9 @@ public abstract class SchemaLine implements Cloneable {
      *            The schema-cell to use.
      * @param nSchemaCellIndex
      *            The index at wich the schema-cell is found.
-     * @return
+     * @return The cell within the supplied line to use for output according to the supplied schemaCell.
      */
-    protected static Cell findCell(Line line, SchemaCell schemaCell,
-	    int nSchemaCellIndex) {
+    protected static Cell findCell(Line line, SchemaCell schemaCell, int nSchemaCellIndex) {
 	Cell cellByIndex = null;
 	if (nSchemaCellIndex < line.getNumberOfCells())
 	    cellByIndex = line.getCell(nSchemaCellIndex); // Use optimistic
@@ -189,6 +217,5 @@ public abstract class SchemaLine implements Cloneable {
      * @throws IOException
      * @throws JSaParException
      */
-    abstract public void output(Line line, Writer writer) throws IOException,
-	    JSaParException;
+    abstract public void output(Line line, Writer writer) throws IOException, JSaParException;
 }

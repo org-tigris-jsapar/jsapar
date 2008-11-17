@@ -18,10 +18,9 @@ import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaLine;
 
 /**
- * This class contains methods for transforming a Document into an output.
- * E.g. if you want to write the Document to a file you should use a
- * {@link java.io.FileWriter} together with a Schema and call the
- * {@link #output(Document, Schema, java.io.Writer)} method.
+ * This class contains methods for transforming a Document into an output. E.g. if you want to write
+ * the Document to a file you should use a {@link java.io.FileWriter} together with a Schema and
+ * call the {@link #output(Document, Schema, java.io.Writer)} method.
  * 
  * @author Jonas Stenberg
  * 
@@ -31,16 +30,14 @@ public class Outputter {
     protected static Logger logger = Logger.getLogger("org.jsapar");
 
     /**
-     * Writes the document to a {@link java.io.Writer} according to the supplied
-     * schema.
+     * Writes the document to a {@link java.io.Writer} according to the supplied schema.
      * 
      * @param document
      * @param schema
      * @param writer
      * @throws JSaParException
      */
-    public void output(Document document, Schema schema, java.io.Writer writer)
-	    throws JSaParException {
+    public void output(Document document, Schema schema, java.io.Writer writer) throws JSaParException {
 	try {
 	    schema.outputBefore(writer);
 	    schema.output(document, writer);
@@ -51,18 +48,34 @@ public class Outputter {
     }
 
     /**
-     * Writes the single line to a {@link java.io.Writer} according to the
-     * supplied schema line.
+     * Writes the single line to a {@link java.io.Writer} according to the supplied schema line.
      * 
      * @param line
      * @param schemaLine
      * @param writer
      * @throws JSaParException
      */
-    public void output(Line line, SchemaLine schemaLine, java.io.Writer writer)
-	    throws JSaParException {
+    public void outputLine(Line line, SchemaLine schemaLine, java.io.Writer writer) throws JSaParException {
 	try {
 	    schemaLine.output(line, writer);
+	} catch (IOException e) {
+	    throw new OutputException("Failed to write to buffert.", e);
+	}
+    }
+
+    /**
+     * Writes the single line to a {@link java.io.Writer} according to the supplied schema for the
+     * supplied line number.
+     * 
+     * @param line
+     * @param schema
+     * @param lineNumber
+     * @param writer
+     * @throws JSaParException
+     */
+    public void outputLine(Line line, Schema schema, long lineNumber, java.io.Writer writer) throws JSaParException {
+	try {
+	    schema.outputLine(line, lineNumber, writer);
 	} catch (IOException e) {
 	    throw new OutputException("Failed to write to buffert.", e);
 	}
@@ -75,11 +88,9 @@ public class Outputter {
      * @param writer
      * @throws JSaParException
      */
-    public void outputCsvHeaderLine(CsvSchemaLine schemaLine,
-	    java.io.Writer writer) throws JSaParException {
+    public void outputCsvHeaderLine(CsvSchemaLine schemaLine, java.io.Writer writer) throws JSaParException {
 	if (!schemaLine.isFirstLineAsSchema())
-	    throw new JSaParException(
-		    "The schema line is not of type where first line is schema.");
+	    throw new JSaParException("The schema line is not of type where first line is schema.");
 
 	try {
 	    schemaLine.outputHeaderLine(writer);
@@ -89,18 +100,16 @@ public class Outputter {
     }
 
     /**
-     * Creates a list of java objects. For this method to work, the lineType
-     * attribute of each line have to contain the full class name of the class
-     * to create for each line. Also the set method for each attribute have to
-     * match exactly to the name of each cell.
+     * Creates a list of java objects. For this method to work, the lineType attribute of each line
+     * have to contain the full class name of the class to create for each line. Also the set method
+     * for each attribute have to match exactly to the name of each cell.
      * 
      * @param document
      * @return A list of Java objects.
      */
     @SuppressWarnings("unchecked")
     public java.util.List createJavaObjects(Document document) {
-	java.util.List objects = new java.util.ArrayList(document
-		.getNumberOfLines());
+	java.util.List objects = new java.util.ArrayList(document.getNumberOfLines());
 	java.util.Iterator<Line> lineIter = document.getLineIterator();
 	while (lineIter.hasNext()) {
 	    try {
@@ -123,14 +132,12 @@ public class Outputter {
      * @param c
      *            The class to use when creating the object to return.
      * @param line
-     * @return An object of the supplied class (c) with attibutes set by the
-     *         supplied line.
+     * @return An object of the supplied class (c) with attibutes set by the supplied line.
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
     @SuppressWarnings("unchecked")
-    private Object createObject(Class c, Line line)
-	    throws InstantiationException, IllegalAccessException {
+    private Object createObject(Class c, Line line) throws InstantiationException, IllegalAccessException {
 	Object o = c.newInstance();
 	Method[] methods = o.getClass().getMethods();
 	Object[] logInfo = new Object[] { c.getName(), null, null };
@@ -153,42 +160,31 @@ public class Outputter {
 		    }
 		}
 		if (!isSet) {
-		    logger
-			    .log(
-				    Level.INFO,
-				    "Skipped assigning cell - No method called {1}() found in class {0}",
-				    logInfo);
+		    logger.log(Level.INFO, "Skipped assigning cell - No method called {1}() found in class {0}",
+			    logInfo);
 		}
 	    } catch (SecurityException e) {
 		logInfo[2] = e;
-		logger
-			.log(
-				Level.INFO,
-				"Skipped assigning cell - The method {1}() in class {0} does not have public access. - {2}",
-				logInfo);
+		logger.log(Level.INFO,
+			"Skipped assigning cell - The method {1}() in class {0} does not have public access. - {2}",
+			logInfo);
 	    } catch (IllegalArgumentException e) {
 		logInfo[2] = e;
-		logger
-			.log(
-				Level.INFO,
-				"Skipped assigning cell - The method {1}() in class {0} does accept correct type. - {2}",
-				logInfo);
+		logger.log(Level.INFO,
+			"Skipped assigning cell - The method {1}() in class {0} does accept correct type. - {2}",
+			logInfo);
 	    } catch (IllegalAccessException e) {
 		logInfo[2] = e;
-		logger
-			.log(
-				Level.INFO,
-				"Skipped assigning cell - The method {1}() in class {0} does not have correct access. - {2}",
-				logInfo);
+		logger.log(Level.INFO,
+			"Skipped assigning cell - The method {1}() in class {0} does not have correct access. - {2}",
+			logInfo);
 	    } catch (InvocationTargetException e) {
 		logInfo[2] = e;
-		logger
-			.log(
-				Level.INFO,
-				"Skipped assigning cell - The method {1}() in class {0} fails to execute. - {2}",
-				logInfo);
+		logger.log(Level.INFO,
+			"Skipped assigning cell - The method {1}() in class {0} fails to execute. - {2}", logInfo);
 	    }
 	}
 	return o;
     }
+
 }

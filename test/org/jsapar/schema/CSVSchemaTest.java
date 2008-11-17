@@ -140,6 +140,85 @@ public class CSVSchemaTest {
 	assertEquals(sExpected, writer.toString());
     }
 
+    @Test
+    public final void testOutputLine() throws IOException, JSaParException {
+	org.jsapar.schema.CsvSchema outputSchema = new org.jsapar.schema.CsvSchema();
+	CsvSchemaLine outputSchemaLine = new CsvSchemaLine(1);
+	outputSchemaLine.addSchemaCell(new CsvSchemaCell("Header"));
+	outputSchema.addSchemaLine(outputSchemaLine);
+
+	outputSchemaLine = new CsvSchemaLine();
+	outputSchemaLine.addSchemaCell(new CsvSchemaCell("First name"));
+	outputSchemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
+	outputSchemaLine.setCellSeparator(";");
+	outputSchema.addSchemaLine(outputSchemaLine);
+
+	Line line1 = new Line();
+	line1.addCell(new StringCell("Jonas"));
+	line1.addCell(new StringCell("Stenberg"));
+	
+	StringWriter writer = new StringWriter();
+	outputSchema.outputLine(line1, 2, writer);
+	
+	String sLineSep = System.getProperty("line.separator");
+	String sExpected = sLineSep + "Jonas;Stenberg";
+
+	assertEquals(sExpected, writer.toString());
+    }
+
+    
+    @Test
+    public final void testOutputLine_first() throws IOException, JSaParException {
+	org.jsapar.schema.CsvSchema outputSchema = new org.jsapar.schema.CsvSchema();
+	CsvSchemaLine outputSchemaLine = new CsvSchemaLine(1);
+	outputSchemaLine.addSchemaCell(new CsvSchemaCell("Header"));
+	outputSchema.addSchemaLine(outputSchemaLine);
+
+	outputSchemaLine = new CsvSchemaLine();
+	outputSchemaLine.addSchemaCell(new CsvSchemaCell("First name"));
+	outputSchemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
+	outputSchemaLine.setCellSeparator(";");
+	outputSchema.addSchemaLine(outputSchemaLine);
+
+	Line line1 = new Line();
+	line1.addCell(new StringCell("Header", "TheHeader"));
+	line1.addCell(new StringCell("Something", "This should not be written"));
+	
+	StringWriter writer = new StringWriter();
+	outputSchema.outputLine(line1, 1, writer);
+	
+	String sExpected = "TheHeader";
+
+	assertEquals(sExpected, writer.toString());
+    }
+    
+
+    @Test
+    public final void testOutputLine_firstLineAsHeader() throws IOException, JSaParException {
+	CsvSchema schema = new CsvSchema();
+	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+	schemaLine.addSchemaCell(new CsvSchemaCell("HeaderHeader"));
+	schema.addSchemaLine(schemaLine);
+
+	schemaLine = new CsvSchemaLine();
+	schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
+	schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+	schemaLine.setFirstLineAsSchema(true);
+	schema.addSchemaLine(schemaLine);
+
+	Line line1 = new Line();
+	line1.addCell(new StringCell("Jonas"));
+	line1.addCell(new StringCell("Stenberg"));
+
+	StringWriter writer = new StringWriter();
+	schema.outputLine(line1, 2, writer);
+
+	String sLineSep = System.getProperty("line.separator");
+	String sExpected = sLineSep + "First Name;Last Name" + sLineSep + "Jonas;Stenberg";
+
+	assertEquals(sExpected, writer.toString());
+    }
+    
     private class DocumentBuilder {
 	private Document document = new Document();
 	private ParsingEventListener listener;

@@ -207,4 +207,5 @@ public class FixedWidthSchema extends Schema {
 	    throws IOException, JSaParException {
     }
 
+   
 }

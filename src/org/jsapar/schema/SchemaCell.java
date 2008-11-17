@@ -18,8 +18,7 @@ import org.jsapar.utils.StringUtils;
 
 public abstract class SchemaCell implements Cloneable {
 
-    private final static SchemaCellFormat CELL_FORMAT_PROTOTYPE = new SchemaCellFormat(
-	    CellType.STRING);
+    private final static SchemaCellFormat CELL_FORMAT_PROTOTYPE = new SchemaCellFormat(CellType.STRING);
 
     private String name;
     private SchemaCellFormat cellFormat = CELL_FORMAT_PROTOTYPE;
@@ -29,7 +28,18 @@ public abstract class SchemaCell implements Cloneable {
     private Cell maxValue = null;
     private Locale locale = Locale.getDefault();
 
+    public SchemaCell() {
+    }
+
+    public SchemaCell(String sName) {
+	this.name = sName;
+    }
+
     /**
+     * Indicates if this cell should be ignored after reading it from the
+     * buffer. If ignoreRead is true the cell will not be stored to the current
+     * Line object.
+     * 
      * @return the ignoreRead
      */
     public boolean isIgnoreRead() {
@@ -38,17 +48,12 @@ public abstract class SchemaCell implements Cloneable {
 
     /**
      * @param ignoreRead
-     *            the ignoreRead to set
+     *            Indicates if this cell should be ignored after reading it from
+     *            the buffer. If ignoreRead is true the cell will not be stored
+     *            to the current Line object.
      */
     public void setIgnoreRead(boolean ignoreRead) {
 	this.ignoreRead = ignoreRead;
-    }
-
-    public SchemaCell() {
-    }
-
-    public SchemaCell(String sName) {
-	this.name = sName;
     }
 
     /**
@@ -89,7 +94,6 @@ public abstract class SchemaCell implements Cloneable {
      * @return A new cell of a type according to the schema specified. Returns
      *         null if there is no value.
      * @throws SchemaException
-     * @throws SchemaException
      * @throws ParseException
      */
     public Cell makeCell(String sValue) throws ParseException {
@@ -97,8 +101,8 @@ public abstract class SchemaCell implements Cloneable {
 	// If the cell is mandatory, don't accept empty string.
 	if (sValue.length() <= 0) {
 	    if (isMandatory()) {
-		throw new ParseException(new CellParseError(getName(), "",
-			getCellFormat(), "Mandatory cell requires a value."));
+		throw new ParseException(new CellParseError(getName(), "", getCellFormat(),
+			"Mandatory cell requires a value."));
 	    } else {
 		return new EmptyCell(getName(), this.cellFormat.getCellType());
 	    }
@@ -108,19 +112,15 @@ public abstract class SchemaCell implements Cloneable {
 	    CellType cellType = this.cellFormat.getCellType();
 	    Cell cell;
 	    if (getCellFormat().getFormat() != null)
-		cell = SchemaCell.makeCell(cellType, getName(), sValue, this
-			.getCellFormat().getFormat());
+		cell = SchemaCell.makeCell(cellType, getName(), sValue, this.getCellFormat().getFormat());
 	    else
-		cell = SchemaCell.makeCell(cellType, getName(), sValue,
-			getLocale());
+		cell = SchemaCell.makeCell(cellType, getName(), sValue, getLocale());
 	    validateRange(cell);
 	    return cell;
 	} catch (SchemaException e) {
-	    throw new ParseException(new CellParseError(getName(), sValue,
-		    getCellFormat(), e.getMessage()), e);
+	    throw new ParseException(new CellParseError(getName(), sValue, getCellFormat(), e.getMessage()), e);
 	} catch (java.text.ParseException e) {
-	    throw new ParseException(new CellParseError(getName(), sValue,
-		    getCellFormat(), e.getMessage()), e);
+	    throw new ParseException(new CellParseError(getName(), sValue, getCellFormat(), e.getMessage()), e);
 	}
 
     }
@@ -130,16 +130,16 @@ public abstract class SchemaCell implements Cloneable {
      * @param sName
      * @param sValue
      * @param format
-     * @return
+     * @return A cell object that has been parsed from the supplied sValue
+     *         parameter according to the supplied format.
      * @throws ParseE
      *             , java.lang.Comparable, java.lang.Comparable,
      *             java.lang.Comparablexception
      * @throws java.text.ParseException
      * @throws SchemaException
      */
-    public static Cell makeCell(CellType cellType, String sName, String sValue,
-	    java.text.Format format) throws java.text.ParseException,
-	    SchemaException {
+    public static Cell makeCell(CellType cellType, String sName, String sValue, java.text.Format format)
+	    throws java.text.ParseException, SchemaException {
 	switch (cellType) {
 	case STRING:
 	    return new StringCell(sName, sValue, format);
@@ -152,8 +152,7 @@ public abstract class SchemaCell implements Cloneable {
 		// we want to remove all space characters not only the
 		// non breakable.
 		DecimalFormat decFormat = (DecimalFormat) format;
-		char groupingSeparator = decFormat.getDecimalFormatSymbols()
-			.getGroupingSeparator();
+		char groupingSeparator = decFormat.getDecimalFormatSymbols().getGroupingSeparator();
 		if (Character.isSpaceChar(groupingSeparator)) {
 		    sValue = StringUtils.removeAllSpaces(sValue);
 		}
@@ -176,16 +175,18 @@ public abstract class SchemaCell implements Cloneable {
      * @param cellType
      * @param sName
      * @param sValue
-     * @param format
-     * @return
+     * @param locale
+     * @return A cell object that has been parsed from the supplied sValue
+     *         parameter according to the default format for supplied type and
+     *         locale.
      * @throws ParseE
      *             , java.lang.Comparable, java.lang.Comparable,
      *             java.lang.Comparablexception
      * @throws java.text.ParseException
      * @throws SchemaException
      */
-    public static Cell makeCell(CellType cellType, String sName, String sValue,
-	    Locale locale) throws java.text.ParseException, SchemaException {
+    public static Cell makeCell(CellType cellType, String sName, String sValue, Locale locale)
+	    throws java.text.ParseException, SchemaException {
 	switch (cellType) {
 	case STRING:
 	    return new StringCell(sName, sValue);
@@ -206,10 +207,21 @@ public abstract class SchemaCell implements Cloneable {
 	}
     }
 
+    /**
+     * Indicates if the corresponding cell is mandatory, that is an error will
+     * be reported if it does not exist while parsing.
+     * 
+     * @return true if the cell is mandatory, false otherwise.
+     */
     public boolean isMandatory() {
 	return mandatory;
     }
 
+    /**
+     * @param mandatory
+     *            Indicates if the corresponding cell is mandatory, that is an
+     *            error will be reported if it does not exist while parsing.
+     */
     public void setMandatory(boolean mandatory) {
 	this.mandatory = mandatory;
     }
@@ -307,11 +319,9 @@ public abstract class SchemaCell implements Cloneable {
      * @throws SchemaException
      * @throws java.text.ParseException
      */
-    public void setMinValue(String value) throws SchemaException,
-	    java.text.ParseException {
+    public void setMinValue(String value) throws SchemaException, java.text.ParseException {
 	Locale locale = new Locale("US_en");
-	Cell cell = SchemaCell.makeCell(this.getCellFormat().getCellType(),
-		"Min", value, locale);
+	Cell cell = SchemaCell.makeCell(this.getCellFormat().getCellType(), "Min", value, locale);
 	this.minValue = cell;
     }
 
@@ -320,11 +330,9 @@ public abstract class SchemaCell implements Cloneable {
      * @throws SchemaException
      * @throws java.text.ParseException
      */
-    public void setMaxValue(String value) throws SchemaException,
-	    java.text.ParseException {
+    public void setMaxValue(String value) throws SchemaException, java.text.ParseException {
 	Locale locale = new Locale("US_en");
-	Cell cell = SchemaCell.makeCell(this.getCellFormat().getCellType(),
-		"Max", value, locale);
+	Cell cell = SchemaCell.makeCell(this.getCellFormat().getCellType(), "Max", value, locale);
 	this.maxValue = cell;
     }
 }

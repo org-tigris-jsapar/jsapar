@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
+import org.jsapar.Line;
 import org.jsapar.input.ParseSchema;
 import org.jsapar.input.ParsingEventListener;
 
@@ -23,35 +24,36 @@ public abstract class Schema implements Cloneable, ParseSchema {
     private String lineSeparator = System.getProperty("line.separator");
 
     /**
-     * This method should only be called by a Outputter class. Don't use this
-     * directly in your code. Use a Outputter instead.
+     * This method should only be called by a Outputter class. Don't use this directly in your code.
+     * Use a Outputter instead.
      * 
      * @param document
      * @param writer
      * @throws IOException
      * @throws JSaParException
      */
-    public abstract void output(Document document, Writer writer)
-	    throws IOException, JSaParException;
+    public abstract void output(Document document, Writer writer) throws IOException, JSaParException;
 
     /**
      * Called before output() in order to set up or write file header.
+     * 
      * @param writer
      * @throws IOException
      * @throws JSaParException
      */
-    public abstract void outputBefore(Writer writer)
-	    throws IOException, JSaParException;
+    public abstract void outputBefore(Writer writer) throws IOException, JSaParException;
+
 
     /**
      * Called after output() in order to clean up or write file footer.
+     * 
      * @param writer
      * @throws IOException
      * @throws JSaParException
      */
-    public abstract void outputAfter(Writer writer)
-	    throws IOException, JSaParException;
+    public abstract void outputAfter(Writer writer) throws IOException, JSaParException;
 
+    
     private java.util.Locale locale = Locale.getDefault();
 
     /**
@@ -62,8 +64,8 @@ public abstract class Schema implements Cloneable, ParseSchema {
     }
 
     /**
-     * Sets the line separator string. Default value is the system default
-     * (Retrieved by System.getProperty("line.separator")).
+     * Sets the line separator string. Default value is the system default (Retrieved by
+     * System.getProperty("line.separator")).
      * 
      * @param lineSeparator
      *            the lineSeparator to set.
@@ -87,10 +89,9 @@ public abstract class Schema implements Cloneable, ParseSchema {
 	this.locale = locale;
     }
 
-
     @Override
-    public abstract void parse(java.io.Reader reader, ParsingEventListener listener)
-	    throws JSaParException, IOException;
+    public abstract void parse(java.io.Reader reader, ParsingEventListener listener) throws JSaParException,
+	    IOException;
 
     /**
      * Reads a line from the reader.
@@ -111,8 +112,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
 	    if (chRead == chLineSeparatorNext) {
 		pending.append(chRead);
 		if (getLineSeparator().length() > pending.length())
-		    chLineSeparatorNext = getLineSeparator().charAt(
-			    pending.length());
+		    chLineSeparatorNext = getLineSeparator().charAt(pending.length());
 		else
 		    break; // End of line found.
 	    }
@@ -151,4 +151,40 @@ public abstract class Schema implements Cloneable, ParseSchema {
     }
 
     public abstract List getSchemaLines();
+
+    /**
+     * @param lineNumber
+     * @return
+     */
+    private SchemaLine getSchemaLine(long lineNumber) {
+	long nLineMax = 0;
+	for (Object oSchemaLine : this.getSchemaLines()) {
+	    SchemaLine schemaLine = (SchemaLine)oSchemaLine;
+	    if(schemaLine.isOccursInfinitely())
+		return schemaLine;
+	    nLineMax += (long)schemaLine.getOccurs();
+	    if(lineNumber <= nLineMax)
+		return schemaLine;
+	}
+	return null;
+    }
+
+    /**
+     * This method should only be called by a Outputter class. Don't use this directly in your code.
+     * Use a Outputter instead.
+     * @param line
+     * @param lineNumber
+     * @param writer
+     * @throws IOException
+     * @throws JSaParException
+     */
+    public void outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
+	SchemaLine schemaLine = getSchemaLine(lineNumber);
+	if(schemaLine != null){
+	    if(lineNumber > 1)
+		writer.append(getLineSeparator());
+	    schemaLine.output(line, writer);
+	}
+    }
+    
 }

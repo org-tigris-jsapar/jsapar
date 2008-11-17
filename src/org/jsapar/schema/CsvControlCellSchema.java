@@ -12,6 +12,7 @@ import org.jsapar.input.CellParseError;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
+import org.jsapar.output.OutputException;
 
 /**
  * Defines a schema for a fixed position buffer. Each cell is defined by a fixed
@@ -65,8 +66,7 @@ public class CsvControlCellSchema extends CsvSchema {
 	    if (schemaLine == null)
 		throw new JSaParException("Could not find schema line of type "
 			+ line.getLineType());
-	    writer.append(schemaLine.getLineTypeControlValue());
-	    writer.append(this.getControlCellSeparator());
+	    writeControlCell(writer, schemaLine.getLineTypeControlValue());
 
 	    ((CsvSchemaLine) schemaLine).output(line, writer);
 
@@ -75,6 +75,18 @@ public class CsvControlCellSchema extends CsvSchema {
 	    else
 		return;
 	}
+    }
+
+    /**
+     * Writes the control cell to the buffer.
+     * @param writer
+     * @param controlValue
+     * @throws OutputException
+     * @throws IOException
+     */
+    private void writeControlCell(Writer writer, String controlValue) throws OutputException, IOException{
+	    writer.append(controlValue);
+	    writer.append(this.getControlCellSeparator());
     }
 
     /**
@@ -178,4 +190,17 @@ public class CsvControlCellSchema extends CsvSchema {
 	return sb.toString();
     }
 
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.Schema#output(org.jsapar.Line, int, java.io.Writer)
+     */
+    @Override
+    public void outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
+	SchemaLine schemaLine = getSchemaLineByType(line.getLineType());
+	if(schemaLine != null){
+	    if(lineNumber > 1)
+		writer.append(getLineSeparator());
+	    writeControlCell(writer, schemaLine.getLineTypeControlValue());
+	    schemaLine.output(line, writer);
+	}
+    }
 }
