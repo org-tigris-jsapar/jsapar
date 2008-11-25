@@ -4,14 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.List;
 
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
-import org.jsapar.input.Parser;
-import org.jsapar.input.CellParseError;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
@@ -26,15 +23,37 @@ public class CSVSchemaTest {
 	CsvSchema schema = new CsvSchema();
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schema.addSchemaLine(schemaLine);
-	String sToParse = "Jonas;Stenberg;Hemv√§gen 19;111 22;Stockholm";
+	String sToParse = "Jonas;Stenberg;Hemv‰gen 19;111 22;Stockholm";
 	java.io.Reader reader = new java.io.StringReader(sToParse);
 	DocumentBuilder builder = new DocumentBuilder();
 	Document doc = builder.build(reader, schema);
-	Line line = doc.getLine(0);
 
+	assertEquals(1, doc.getNumberOfLines());
+
+	Line line = doc.getLine(0);
 	assertEquals("Jonas", line.getCell(0).getStringValue());
 	assertEquals("Stenberg", line.getCell(1).getStringValue());
-	assertEquals("Hemv√§gen 19", line.getCell(2).getStringValue());
+	assertEquals("Hemv‰gen 19", line.getCell(2).getStringValue());
+	assertEquals("111 22", line.getCell(3).getStringValue());
+	assertEquals("Stockholm", line.getCell(4).getStringValue());
+    }
+
+    @Test
+    public final void testParse_endingNewLine() throws IOException, JSaParException {
+	CsvSchema schema = new CsvSchema();
+	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+	schema.addSchemaLine(schemaLine);
+	String sToParse = "Jonas;Stenberg;Hemv‰gen 19;111 22;Stockholm" + System.getProperty("line.separator");
+	java.io.Reader reader = new java.io.StringReader(sToParse);
+	DocumentBuilder builder = new DocumentBuilder();
+	Document doc = builder.build(reader, schema);
+
+	assertEquals(1, doc.getNumberOfLines());
+
+	Line line = doc.getLine(0);
+	assertEquals("Jonas", line.getCell(0).getStringValue());
+	assertEquals("Stenberg", line.getCell(1).getStringValue());
+	assertEquals("Hemv‰gen 19", line.getCell(2).getStringValue());
 	assertEquals("111 22", line.getCell(3).getStringValue());
 	assertEquals("Stockholm", line.getCell(4).getStringValue());
     }
@@ -44,8 +63,7 @@ public class CSVSchemaTest {
 	CsvSchema schema = new CsvSchema();
 	CsvSchemaLine schemaLine = new CsvSchemaLine();
 	schema.addSchemaLine(schemaLine);
-	String sToParse = "Jonas;Stenberg"
-		+ System.getProperty("line.separator") + "Nils;Nilsson";
+	String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator") + "Nils;Nilsson";
 	java.io.Reader reader = new java.io.StringReader(sToParse);
 	DocumentBuilder builder = new DocumentBuilder();
 	Document doc = builder.build(reader, schema);
@@ -60,16 +78,14 @@ public class CSVSchemaTest {
     }
 
     @Test
-    public final void testParse_firstLineAsHeader() throws IOException,
-	    JSaParException {
+    public final void testParse_firstLineAsHeader() throws IOException, JSaParException {
 	CsvSchema schema = new CsvSchema();
 	CsvSchemaLine schemaLine = new CsvSchemaLine();
 	schemaLine.setFirstLineAsSchema(true);
 	schema.addSchemaLine(schemaLine);
 
 	String sLineSep = System.getProperty("line.separator");
-	String sToParse = "First Name;Last Name" + sLineSep + "Jonas;Stenberg"
-		+ sLineSep + "Nils;Nilsson";
+	String sToParse = "First Name;Last Name" + sLineSep + "Jonas;Stenberg" + sLineSep + "Nils;Nilsson";
 	java.io.Reader reader = new java.io.StringReader(sToParse);
 	DocumentBuilder builder = new DocumentBuilder();
 	Document doc = builder.build(reader, schema);
@@ -84,8 +100,7 @@ public class CSVSchemaTest {
     }
 
     @Test
-    public final void testParse_firstLineAsHeader_quoted() throws IOException,
-	    JSaParException {
+    public final void testParse_firstLineAsHeader_quoted() throws IOException, JSaParException {
 	CsvSchema schema = new CsvSchema();
 	CsvSchemaLine schemaLine = new CsvSchemaLine();
 	schemaLine.setFirstLineAsSchema(true);
@@ -93,8 +108,7 @@ public class CSVSchemaTest {
 	schema.addSchemaLine(schemaLine);
 
 	String sLineSep = System.getProperty("line.separator");
-	String sToParse = "$First Name$;$Last Name$" + sLineSep
-		+ "Jonas;$Stenberg$" + sLineSep + "Nils;Nilsson";
+	String sToParse = "$First Name$;$Last Name$" + sLineSep + "Jonas;$Stenberg$" + sLineSep + "Nils;Nilsson";
 	java.io.Reader reader = new java.io.StringReader(sToParse);
 	DocumentBuilder builder = new DocumentBuilder();
 	Document doc = builder.build(reader, schema);
@@ -134,8 +148,7 @@ public class CSVSchemaTest {
 	schema.output(doc, writer);
 
 	String sLineSep = System.getProperty("line.separator");
-	String sExpected = "First Name;Last Name" + sLineSep + "Jonas;Stenberg"
-		+ sLineSep + "Nils;Nilsson";
+	String sExpected = "First Name;Last Name" + sLineSep + "Jonas;Stenberg" + sLineSep + "Nils;Nilsson";
 
 	assertEquals(sExpected, writer.toString());
     }
@@ -156,17 +169,16 @@ public class CSVSchemaTest {
 	Line line1 = new Line();
 	line1.addCell(new StringCell("Jonas"));
 	line1.addCell(new StringCell("Stenberg"));
-	
+
 	StringWriter writer = new StringWriter();
 	outputSchema.outputLine(line1, 2, writer);
-	
+
 	String sLineSep = System.getProperty("line.separator");
 	String sExpected = sLineSep + "Jonas;Stenberg";
 
 	assertEquals(sExpected, writer.toString());
     }
 
-    
     @Test
     public final void testOutputLine_first() throws IOException, JSaParException {
 	org.jsapar.schema.CsvSchema outputSchema = new org.jsapar.schema.CsvSchema();
@@ -183,15 +195,14 @@ public class CSVSchemaTest {
 	Line line1 = new Line();
 	line1.addCell(new StringCell("Header", "TheHeader"));
 	line1.addCell(new StringCell("Something", "This should not be written"));
-	
+
 	StringWriter writer = new StringWriter();
 	outputSchema.outputLine(line1, 1, writer);
-	
+
 	String sExpected = "TheHeader";
 
 	assertEquals(sExpected, writer.toString());
     }
-    
 
     @Test
     public final void testOutputLine_firstLineAsHeader() throws IOException, JSaParException {
@@ -218,7 +229,7 @@ public class CSVSchemaTest {
 
 	assertEquals(sExpected, writer.toString());
     }
-    
+
     private class DocumentBuilder {
 	private Document document = new Document();
 	private ParsingEventListener listener;
@@ -227,8 +238,7 @@ public class CSVSchemaTest {
 	    listener = new ParsingEventListener() {
 
 		@Override
-		public void lineErrorErrorEvent(LineErrorEvent event)
-			throws ParseException {
+		public void lineErrorErrorEvent(LineErrorEvent event) throws ParseException {
 		    throw new ParseException(event.getCellParseError());
 		}
 
@@ -239,8 +249,7 @@ public class CSVSchemaTest {
 	    };
 	}
 
-	public Document build(java.io.Reader reader, ParseSchema parser)
-		throws JSaParException, IOException {
+	public Document build(java.io.Reader reader, ParseSchema parser) throws JSaParException, IOException {
 
 	    parser.parse(reader, listener);
 	    return this.document;

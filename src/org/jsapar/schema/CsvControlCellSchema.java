@@ -9,7 +9,6 @@ import org.jsapar.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.input.CellParseError;
-import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
 import org.jsapar.output.OutputException;
@@ -156,10 +155,10 @@ public class CsvControlCellSchema extends CsvSchema {
 		    throw new ParseException(error);
 		}
 
-		Line line = lineSchema.build(nLineNumber, sLine, listener);
-		line.setLineType(lineSchema.getLineType());
-		listener.lineParsedEvent(new LineParsedEvent(this, line,
-			nLineNumber));
+		boolean isLineParsed = lineSchema.parse(nLineNumber, sLine, listener);
+		if(!isLineParsed)
+		    break;
+		
 	    } while (true);
 
 	} catch (IOException ex) {

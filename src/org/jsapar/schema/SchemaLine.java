@@ -6,6 +6,7 @@ import java.io.Writer;
 import org.jsapar.Cell;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
+import org.jsapar.input.ParsingEventListener;
 
 public abstract class SchemaLine implements Cloneable {
     private static final int OCCURS_INFINITE = Integer.MAX_VALUE;
@@ -218,4 +219,23 @@ public abstract class SchemaLine implements Cloneable {
      * @throws JSaParException
      */
     abstract public void output(Line line, Writer writer) throws IOException, JSaParException;
+
+    /**
+     * Reads characters from the line and generates a LineParsedEvent to the listener when it has
+     * been parsed.
+     * 
+     * @param nLineNumber
+     *            The current line number while parsing.
+     * @param sLine
+     *            The line to parse
+     * @param listener
+     *            The listener to generate call-backs to.
+     * @return true if a line was found. false if there were no cells within this line.
+     * @throws IOException
+     * @throws JSaParException
+     */
+    abstract boolean parse(long lineNumber, String line, ParsingEventListener listener) throws JSaParException, IOException;
+
+    
+    
 }

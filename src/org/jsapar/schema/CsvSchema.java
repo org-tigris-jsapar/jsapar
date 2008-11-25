@@ -9,7 +9,6 @@ import java.util.List;
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
-import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
 
@@ -105,11 +104,10 @@ public class CsvSchema extends Schema {
     }
 
     /**
-     * @param doc
      * @param lineSchema
      * @param nLineNumber
      * @param reader
-     * @param parseErrors
+     * @param listener The event listener to report paring events back to.
      * @return Number of lines that were parsed (including failed ones).
      * @throws IOException
      * @throws JSaParException
@@ -129,9 +127,9 @@ public class CsvSchema extends Schema {
 		}
 	    }
 
-	    Line line = lineSchema.build(nLineNumber, sLine, listener);
-	    line.setLineType(lineSchema.getLineType());
-	    listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
+	    boolean isLineParsed = lineSchema.parse(nLineNumber, sLine, listener);
+	    if (!isLineParsed)
+		break;
 	}
 
 	return nLineNumber - nStartLine;
@@ -176,38 +174,39 @@ public class CsvSchema extends Schema {
     public void outputBefore(Writer writer) throws IOException, JSaParException {
     }
 
- 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.jsapar.schema.Schema#outputLine(org.jsapar.Line, long, java.io.Writer)
      */
     @Override
     public void outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
-	CsvSchemaLine schemaLine=null;
-	
+	CsvSchemaLine schemaLine = null;
+
 	long nLineMax = 0; // The line number for the last line of this schema line.
-	long nLineWithinSchema=1; // The line number within this schema.
+	long nLineWithinSchema = 1; // The line number within this schema.
 	for (CsvSchemaLine currentSchemaLine : this.getCsvSchemaLines()) {
 	    nLineWithinSchema = lineNumber - nLineMax;
-	    if(currentSchemaLine.isOccursInfinitely()){
+	    if (currentSchemaLine.isOccursInfinitely()) {
 		schemaLine = currentSchemaLine;
 		break;
 	    }
-	    nLineMax += (long)currentSchemaLine.getOccurs();
-	    if(lineNumber <= nLineMax){
+	    nLineMax += (long) currentSchemaLine.getOccurs();
+	    if (lineNumber <= nLineMax) {
 		schemaLine = currentSchemaLine;
 		break;
 	    }
 	}
-	
-	if(schemaLine != null){
-	    if(lineNumber > 1)
+
+	if (schemaLine != null) {
+	    if (lineNumber > 1)
 		writer.append(getLineSeparator());
-	    if(nLineWithinSchema == 1 && schemaLine.isFirstLineAsSchema()){
+	    if (nLineWithinSchema == 1 && schemaLine.isFirstLineAsSchema()) {
 		schemaLine.outputHeaderLine(writer);
 		writer.append(getLineSeparator());
 	    }
 	    schemaLine.output(line, writer);
 	}
     }
-    
+
 }

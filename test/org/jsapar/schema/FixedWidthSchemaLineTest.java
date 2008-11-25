@@ -12,21 +12,18 @@ import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
 import org.jsapar.Cell.CellType;
-import org.jsapar.input.CellParseError;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
-import org.junit.Before;
 import org.junit.Test;
 
 public class FixedWidthSchemaLineTest {
 
-    private ParsingEventListener listener = new ParsingEventListener() {
+    private class NullParsingEventListener implements ParsingEventListener {
 
 	@Override
-	public void lineErrorErrorEvent(LineErrorEvent event)
-		throws ParseException {
+	public void lineErrorErrorEvent(LineErrorEvent event) throws ParseException {
 	    throw new ParseException(event.getCellParseError());
 	}
 
@@ -34,7 +31,6 @@ public class FixedWidthSchemaLineTest {
 	public void lineParsedEvent(LineParsedEvent event) {
 	}
     };
-    
 
     @Test
     public void testBuild() throws IOException, JSaParException {
@@ -43,27 +39,37 @@ public class FixedWidthSchemaLineTest {
 	FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
 	schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
 	schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-	schemaLine
-		.addSchemaCell(new FixedWidthSchemaCell("Street address", 14));
+	schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street address", 14));
 	schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
 	schemaLine.addSchemaCell(new FixedWidthSchemaCell("City", 8));
 	schema.addSchemaLine(schemaLine);
 
 	Reader reader = new StringReader(toParse);
-	Line line = schemaLine.build(1, reader, listener);
+	boolean rc = schemaLine.parse(1, reader, new ParsingEventListener() {
 
-	assertEquals("Jonas", line.getCell(0).getStringValue());
-	assertEquals("Stenberg", line.getCell("Last name").getStringValue());
-	assertEquals("Spiselvägen 19", line.getCell(2).getStringValue());
-	assertEquals("141 59", line.getCell("Zip code").getStringValue());
-	assertEquals("Huddinge", line.getCell(4).getStringValue());
+	    @Override
+	    public void lineErrorErrorEvent(LineErrorEvent event) throws ParseException {
+		throw new ParseException(event.getCellParseError());
+	    }
 
-	assertEquals("Last name", line.getCell(1).getName());
-	assertEquals("Zip code", line.getCell(3).getName());
+	    @Override
+	    public void lineParsedEvent(LineParsedEvent event) {
+		Line line = event.getLine();
+		assertEquals("Jonas", line.getCell(0).getStringValue());
+		assertEquals("Stenberg", line.getCell("Last name").getStringValue());
+		assertEquals("Spiselvägen 19", line.getCell(2).getStringValue());
+		assertEquals("141 59", line.getCell("Zip code").getStringValue());
+		assertEquals("Huddinge", line.getCell(4).getStringValue());
 
+		assertEquals("Last name", line.getCell(1).getName());
+		assertEquals("Zip code", line.getCell(3).getName());
+	    }
+	});
+
+	assertEquals(true, rc);
     }
 
-    @Test(expected= org.jsapar.input.ParseException.class)
+    @Test(expected = org.jsapar.input.ParseException.class)
     public void testBuild_parseError() throws IOException, JSaParException {
 	String toParse = "JonasStenbergFortione";
 	org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
@@ -71,16 +77,15 @@ public class FixedWidthSchemaLineTest {
 	schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
 	schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
 
-	FixedWidthSchemaCell shoeSizeSchema = new FixedWidthSchemaCell(
-		"Shoe size", 8);
+	FixedWidthSchemaCell shoeSizeSchema = new FixedWidthSchemaCell("Shoe size", 8);
 	shoeSizeSchema.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
 	schemaLine.addSchemaCell(shoeSizeSchema);
 
 	schema.addSchemaLine(schemaLine);
 
 	Reader reader = new StringReader(toParse);
-	java.util.List<CellParseError> parseErrors = new java.util.LinkedList<CellParseError>();
-	Line line = schemaLine.build(1, reader, listener);
+	@SuppressWarnings("unused")
+	boolean rc = schemaLine.parse(1, reader, new NullParsingEventListener());
     }
 
     @Test
@@ -96,8 +101,7 @@ public class FixedWidthSchemaLineTest {
 	FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
 	schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
 	schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-	schemaLine
-		.addSchemaCell(new FixedWidthSchemaCell("Street address", 14));
+	schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street address", 14));
 	schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
 	schemaLine.addSchemaCell(new FixedWidthSchemaCell("City", 8));
 	schema.addSchemaLine(schemaLine);
@@ -122,10 +126,8 @@ public class FixedWidthSchemaLineTest {
 
 	// Does not clone strings values yet. Might do that in the future.
 	assertTrue(schemaLine.getLineType() == clone.getLineType());
-	assertEquals(schemaLine.getSchemaCells().get(0).getName(), clone
-		.getSchemaCells().get(0).getName());
-	assertFalse(schemaLine.getSchemaCells().get(0) == clone
-		.getSchemaCells().get(0));
+	assertEquals(schemaLine.getSchemaCells().get(0).getName(), clone.getSchemaCells().get(0).getName());
+	assertFalse(schemaLine.getSchemaCells().get(0) == clone.getSchemaCells().get(0));
     }
 
 }

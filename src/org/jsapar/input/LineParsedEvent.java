@@ -13,6 +13,10 @@ import org.jsapar.Line;
  */
 public class LineParsedEvent extends EventObject {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 9009392654758990079L;
     private Line line;
     private long lineNumber;
 

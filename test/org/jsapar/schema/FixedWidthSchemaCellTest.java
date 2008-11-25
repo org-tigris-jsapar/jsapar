@@ -57,6 +57,7 @@ public class FixedWidthSchemaCellTest {
 	schemaElement.setMandatory(true);
 
 	Reader reader = new StringReader(toParse);
+	@SuppressWarnings("unused")
 	Cell cell;
 	try {
 	    cell = schemaElement.build(reader, true, ' ');

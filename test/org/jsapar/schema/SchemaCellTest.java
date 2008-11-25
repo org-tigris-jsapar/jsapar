@@ -108,6 +108,7 @@ public class SchemaCellTest {
 		"[A-Z]{3}[0-9]{0,3}de"));
 	schemaCell.setName("test");
 
+	@SuppressWarnings("unused")
 	Cell cell;
 	try {
 	    cell = schemaCell.makeCell("AB1C123de");
@@ -143,6 +144,7 @@ public class SchemaCellTest {
     @Test
     public void testMakeCell_UnfinishedInteger() throws SchemaException,
 	    ParseException {
+	@SuppressWarnings("unused")
 	Cell cell;
 	try {
 	    cell = SchemaCell.makeCell(Cell.CellType.INTEGER, "number",
@@ -178,6 +180,7 @@ public class SchemaCellTest {
     @Test
     public void testMakeCell_UnfinishedFloat() throws SchemaException,
 	    ParseException {
+	@SuppressWarnings("unused")
 	Cell cell;
 	Locale locale = new Locale("UK_en");
 	try {
@@ -234,6 +237,7 @@ public class SchemaCellTest {
 	schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
 	schemaCell.setMinValue(new IntegerCell(54321));
 	schemaCell.setMaxValue(new IntegerCell(54322));
+	@SuppressWarnings("unused")
 
 	Cell cell;
 	try {
@@ -258,6 +262,7 @@ public class SchemaCellTest {
 	schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
 	schemaCell.setMinValue(new IntegerCell(0));
 	schemaCell.setMaxValue(new IntegerCell(100));
+	@SuppressWarnings("unused")
 
 	Cell cell;
 	cell = schemaCell.makeCell("12345");

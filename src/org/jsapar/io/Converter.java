@@ -2,7 +2,6 @@ package org.jsapar.io;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,9 +11,7 @@ import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseSchema;
 import org.jsapar.input.ParsingEventListener;
-import org.jsapar.output.Outputter;
 import org.jsapar.schema.Schema;
-import org.jsapar.schema.SchemaLine;
 
 public class Converter {
 

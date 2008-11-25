@@ -21,68 +21,37 @@ import org.xml.sax.SAXParseException;
 public class Xml2SchemaBuilder {
     private final static String ELEMENT_CSV_SCHEMA = "csvschema";
     private final static String ELEMENT_CSV_CONTROL_CELL_SCHEMA = "csvcontrolcellschema";
-
     private final static String ELEMENT_FIXED_WIDTH_SCHEMA = "fixedwidthschema";
     private final static String ELEMENT_FIXED_WIDTH_CONTROL_CELL_SCHEMA = "fixedwidthcontrolcellschema";
-
     private final static String ELEMENT_LOCALE = "locale";
-
     private final static String ELEMENT_FORMAT = "format";
-
     private static final String ATTRIB_FW_SCHEMA_FILL_CHARACTER = "fillcharacter";
-
     private static final String ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS = "trimfillcharacters";
-
     private static final String ATTRIB_SCHEMA_CELL_NAME = "name";
-
     private static final String ATTRIB_FW_SCHEMA_CELL_LENGTH = "length";
-
     private static final String ATTRIB_SCHEMA_LINE_LINETYPE = "linetype";
-
     private static final String ATTRIB_SCHEMA_LINE_LINETYPE_CONTROL_VALUE = "linetypecontrolvalue";
-
     private static final String ATTRIB_SCHEMA_LINE_OCCURS = "occurs";
-
     private static final String ATTRIB_CSV_SCHEMA_CELL_SEPARATOR = "cellseparator";
-
     private static final String ATTRIB_CSV_SCHEMA_CONTROL_CELL_SEPARATOR = "controlcellseparator";
-
     private static final String ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA = "firstlineasschema";
-
     private static final String ATTRIB_LOCALE_LANGUAGE = "language";
-
     private static final String ATTRIB_LOCALE_COUNTRY = "country";
-
     private static final String ATTRIB_SCHEMA_LINESEPARATOR = "lineseparator";
-
     private static final String ATTRIB_SCHEMA_CELL_IGNOREREAD = "ignoreread";
-
-    private static final String ATTRIB_SCHEMA_LINETYPEBY = "linetypeby";
-
     private static final String ATTRIB_FW_SCHEMA_CONTROLCELLL_ENGTH = "length";
-
     private static final String ATTRIB_FW_SCHEMA_CONTROLCELL_ALLIGNMENT = "allignment";
-
     private static final String ATTRIB_FW_SCHEMA_CELL_ALLIGNMENT = "allignment";
-
     private static final String ELEMENT_FW_SCHEMA_CONTROLCELL = "controlcell";
-
     private static final String ELEMENT_SCHEMA_LINE = "line";
     private static final String ELEMENT_SCHEMA_LINE_CELL = "cell";
-
     private static final String ATTRIB_SCHEMA_CELL_MANDATORY = "mandatory";
-
     private static final String ELEMENT_RANGE = "range";
-
     private static final String ATTRIB_SCHEMA_CELL_MIN = "min";
-
     private static final String ATTRIB_SCHEMA_CELL_MAX = "max";
-
     private static final String ATTRIB_CSV_QUOTE_CHAR = "quotechar";
-
     private static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
     private static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
-
     private static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
     public static final String JSAPAR_XML_SCHEMA = "http://jsapar.tigris.org/JSaParSchema/1.0";
 
@@ -94,8 +63,7 @@ public class Xml2SchemaBuilder {
      * @return
      */
     private Element getChild(Element parentElement, String sChildName) {
-	org.w3c.dom.NodeList nodes = parentElement.getElementsByTagNameNS(
-		JSAPAR_XML_SCHEMA, sChildName);
+	org.w3c.dom.NodeList nodes = parentElement.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, sChildName);
 	for (int i = 0; i < nodes.getLength(); i++) {
 	    org.w3c.dom.Node child = nodes.item(i);
 	    if (child instanceof org.w3c.dom.Element) {
@@ -116,8 +84,7 @@ public class Xml2SchemaBuilder {
 	final String value = node.getNodeValue().trim();
 	if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1")) {
 	    return true;
-	} else if (value.equalsIgnoreCase("false")
-		|| value.equalsIgnoreCase("0")) {
+	} else if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("0")) {
 	    return false;
 	} else {
 	    throw new SchemaException("Failed to parse boolean node: " + node);
@@ -151,18 +118,15 @@ public class Xml2SchemaBuilder {
     public Schema build(java.io.Reader reader) throws SchemaException {
 	try {
 	    String schemaFileName = "/xml/schema/JSaParSchema.xsd";
-	    InputStream schemaStream = Xml2SchemaBuilder.class
-		    .getResourceAsStream(schemaFileName);
+	    InputStream schemaStream = Xml2SchemaBuilder.class.getResourceAsStream(schemaFileName);
 
 	    if (schemaStream == null)
-		throw new SchemaException("Could not find schema file: "
-			+ schemaFileName);
+		throw new SchemaException("Could not find schema file: " + schemaFileName);
 	    // File schemaFile = new
 	    // File("resources/xml/schema/JSaParSchema.xsd");
 
 	    // javax.xml.validation.Schema xmlSchema;
-	    DocumentBuilderFactory factory = DocumentBuilderFactory
-		    .newInstance();
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    factory.setIgnoringElementContentWhitespace(true);
 	    factory.setIgnoringComments(true);
 	    factory.setCoalescing(true);
@@ -210,29 +174,20 @@ public class Xml2SchemaBuilder {
 	    if (null != xmlSchema)
 		return buildCsvControlCellSchema(xmlSchema);
 
-	    xmlSchema = getChild(xmlRoot,
-		    ELEMENT_FIXED_WIDTH_CONTROL_CELL_SCHEMA);
+	    xmlSchema = getChild(xmlRoot, ELEMENT_FIXED_WIDTH_CONTROL_CELL_SCHEMA);
 	    if (null != xmlSchema)
 		return buildFixedWidthControlCellSchema(xmlSchema);
 
-	    throw new SchemaException(
-		    "Failed to find specific schema XML element. Expected one of "
-			    + ELEMENT_CSV_SCHEMA + " or "
-			    + ELEMENT_FIXED_WIDTH_SCHEMA);
+	    throw new SchemaException("Failed to find specific schema XML element. Expected one of "
+		    + ELEMENT_CSV_SCHEMA + " or " + ELEMENT_FIXED_WIDTH_SCHEMA);
 	} catch (IOException e) {
-	    throw new SchemaException(
-		    "Failed to generate schema. Failed to read input.", e);
+	    throw new SchemaException("Failed to generate schema. Failed to read input.", e);
 	} catch (ParserConfigurationException e) {
-	    throw new SchemaException(
-		    "Failed to generate schema from XML file. XML parsing error.",
-		    e);
+	    throw new SchemaException("Failed to generate schema from XML file. XML parsing error.", e);
 	} catch (SAXParseException e) {
-	    throw new SchemaException("Failed to read XML file. Error at line "
-		    + e.getLineNumber(), e);
+	    throw new SchemaException("Failed to read XML file. Error at line " + e.getLineNumber(), e);
 	} catch (SAXException e) {
-	    throw new SchemaException(
-		    "Failed to generate schema from XML file. XML parsing error.",
-		    e);
+	    throw new SchemaException("Failed to generate schema from XML file. XML parsing error.", e);
 	}
     }
 
@@ -241,8 +196,7 @@ public class Xml2SchemaBuilder {
      * @return
      * @throws SchemaException
      */
-    private Schema buildFixedWidthSchema(Element xmlSchema)
-	    throws SchemaException {
+    private Schema buildFixedWidthSchema(Element xmlSchema) throws SchemaException {
 	FixedWidthSchema schema = new FixedWidthSchema();
 
 	assignFixedWidthSchema(schema, xmlSchema);
@@ -254,18 +208,15 @@ public class Xml2SchemaBuilder {
      * @return
      * @throws SchemaException
      */
-    private void assignFixedWidthSchema(FixedWidthSchema schema,
-	    Element xmlSchema) throws SchemaException {
+    private void assignFixedWidthSchema(FixedWidthSchema schema, Element xmlSchema) throws SchemaException {
 
 	assignSchemaBase(schema, xmlSchema);
 
-	NodeList nodes = xmlSchema.getElementsByTagNameNS(JSAPAR_XML_SCHEMA,
-		ELEMENT_SCHEMA_LINE);
+	NodeList nodes = xmlSchema.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE);
 	for (int i = 0; i < nodes.getLength(); i++) {
 	    org.w3c.dom.Node child = nodes.item(i);
 	    if (child instanceof Element)
-		schema.addSchemaLine(buildFixedWidthSchemaLine((Element) child,
-			schema.getLocale()));
+		schema.addSchemaLine(buildFixedWidthSchemaLine((Element) child, schema.getLocale()));
 	}
     }
 
@@ -274,37 +225,29 @@ public class Xml2SchemaBuilder {
      * @return
      * @throws SchemaException
      */
-    private Schema buildFixedWidthControlCellSchema(Element xmlSchema)
-	    throws SchemaException {
+    private Schema buildFixedWidthControlCellSchema(Element xmlSchema) throws SchemaException {
 	FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema();
 
 	assignFixedWidthSchema(schema, xmlSchema);
 
-	Element xmlControlCell = getChild(xmlSchema,
-		ELEMENT_FW_SCHEMA_CONTROLCELL);
+	Element xmlControlCell = getChild(xmlSchema, ELEMENT_FW_SCHEMA_CONTROLCELL);
 
-	Node xmlControlCellLength = xmlControlCell
-		.getAttributeNode(ATTRIB_FW_SCHEMA_CONTROLCELLL_ENGTH);
+	Node xmlControlCellLength = xmlControlCell.getAttributeNode(ATTRIB_FW_SCHEMA_CONTROLCELLL_ENGTH);
 	if (xmlControlCellLength != null)
 	    schema.setControlCellLength(getIntValue(xmlControlCellLength));
 
-	Node xmlControlCellAllignment = xmlControlCell
-		.getAttributeNode(ATTRIB_FW_SCHEMA_CONTROLCELL_ALLIGNMENT);
+	Node xmlControlCellAllignment = xmlControlCell.getAttributeNode(ATTRIB_FW_SCHEMA_CONTROLCELL_ALLIGNMENT);
 	if (xmlControlCellAllignment != null) {
 	    String sControlCellAllignment = getStringValue(xmlControlCellAllignment);
 	    if (sControlCellAllignment.equals("left"))
-		schema
-			.setControlCellAlignment(FixedWidthSchemaCell.Alignment.LEFT);
+		schema.setControlCellAlignment(FixedWidthSchemaCell.Alignment.LEFT);
 	    else if (sControlCellAllignment.equals("center"))
-		schema
-			.setControlCellAlignment(FixedWidthSchemaCell.Alignment.CENTER);
+		schema.setControlCellAlignment(FixedWidthSchemaCell.Alignment.CENTER);
 	    else if (sControlCellAllignment.equals("right"))
-		schema
-			.setControlCellAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
+		schema.setControlCellAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
 	    else {
-		throw new SchemaException("Invalid value for attribute: "
-			+ ATTRIB_FW_SCHEMA_CONTROLCELL_ALLIGNMENT + "="
-			+ sControlCellAllignment);
+		throw new SchemaException("Invalid value for attribute: " + ATTRIB_FW_SCHEMA_CONTROLCELL_ALLIGNMENT
+			+ "=" + sControlCellAllignment);
 	    }
 	}
 	return schema;
@@ -318,29 +261,24 @@ public class Xml2SchemaBuilder {
      * @throws SchemaException
      * @throws DataConversionException
      */
-    private FixedWidthSchemaLine buildFixedWidthSchemaLine(
-	    Element xmlSchemaLine, Locale locale) throws SchemaException {
+    private FixedWidthSchemaLine buildFixedWidthSchemaLine(Element xmlSchemaLine, Locale locale) throws SchemaException {
 	FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine();
 
 	assignSchemaLineBase(schemaLine, xmlSchemaLine);
 
-	String sFillChar = getAttributeValue(xmlSchemaLine,
-		ATTRIB_FW_SCHEMA_FILL_CHARACTER);
+	String sFillChar = getAttributeValue(xmlSchemaLine, ATTRIB_FW_SCHEMA_FILL_CHARACTER);
 	if (sFillChar != null)
 	    schemaLine.setFillCharacter(sFillChar.charAt(0));
 
-	Node xmlTrimFill = xmlSchemaLine
-		.getAttributeNode(ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS);
+	Node xmlTrimFill = xmlSchemaLine.getAttributeNode(ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS);
 	if (xmlTrimFill != null)
 	    schemaLine.setTrimFillCharacters(getBooleanValue(xmlTrimFill));
 
-	NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(
-		JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
+	NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
 	for (int i = 0; i < nodes.getLength(); i++) {
 	    org.w3c.dom.Node child = nodes.item(i);
 	    if (child instanceof Element)
-		schemaLine.addSchemaCell(buildFixedWidthSchemaCell(
-			(Element) child, locale));
+		schemaLine.addSchemaCell(buildFixedWidthSchemaCell((Element) child, locale));
 	}
 	return schemaLine;
     }
@@ -353,26 +291,21 @@ public class Xml2SchemaBuilder {
      * @throws SchemaException
      * @throws DataConversionException
      */
-    private FixedWidthSchemaCell buildFixedWidthSchemaCell(
-	    Element xmlSchemaCell, Locale locale) throws SchemaException {
+    private FixedWidthSchemaCell buildFixedWidthSchemaCell(Element xmlSchemaCell, Locale locale) throws SchemaException {
 
-	int nLength = getIntValue(getMandatoryAttribute(xmlSchemaCell,
-		ATTRIB_FW_SCHEMA_CELL_LENGTH));
+	int nLength = getIntValue(getMandatoryAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_CELL_LENGTH));
 
 	FixedWidthSchemaCell cell = new FixedWidthSchemaCell(nLength);
 
-	Node xmlAllignment = xmlSchemaCell
-		.getAttributeNode(ATTRIB_FW_SCHEMA_CELL_ALLIGNMENT);
-	if (xmlAllignment == null
-		|| getStringValue(xmlAllignment).equals("left"))
+	Node xmlAllignment = xmlSchemaCell.getAttributeNode(ATTRIB_FW_SCHEMA_CELL_ALLIGNMENT);
+	if (xmlAllignment == null || getStringValue(xmlAllignment).equals("left"))
 	    cell.setAlignment(FixedWidthSchemaCell.Alignment.LEFT);
 	else if (getStringValue(xmlAllignment).equals("center"))
 	    cell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
 	else if (getStringValue(xmlAllignment).equals("right"))
 	    cell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
 	else {
-	    throw new SchemaException("Invalid value for attribute: "
-		    + ATTRIB_FW_SCHEMA_CELL_ALLIGNMENT + "="
+	    throw new SchemaException("Invalid value for attribute: " + ATTRIB_FW_SCHEMA_CELL_ALLIGNMENT + "="
 		    + getStringValue(xmlAllignment));
 	}
 
@@ -402,18 +335,15 @@ public class Xml2SchemaBuilder {
      * @throws DataConversionException
      * @throws SchemaException
      */
-    private void assignCsvSchema(CsvSchema schema, Element xmlSchema)
-	    throws SchemaException {
+    private void assignCsvSchema(CsvSchema schema, Element xmlSchema) throws SchemaException {
 
 	assignSchemaBase(schema, xmlSchema);
 
-	NodeList nodes = xmlSchema.getElementsByTagNameNS(JSAPAR_XML_SCHEMA,
-		ELEMENT_SCHEMA_LINE);
+	NodeList nodes = xmlSchema.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE);
 	for (int i = 0; i < nodes.getLength(); i++) {
 	    org.w3c.dom.Node child = nodes.item(i);
 	    if (child instanceof Element)
-		schema.addSchemaLine(buildCsvSchemaLine((Element) child, schema
-			.getLocale()));
+		schema.addSchemaLine(buildCsvSchemaLine((Element) child, schema.getLocale()));
 	}
     }
 
@@ -425,14 +355,12 @@ public class Xml2SchemaBuilder {
      * @throws DataConversionException
      * @throws SchemaException
      */
-    private Schema buildCsvControlCellSchema(Element xmlSchema)
-	    throws SchemaException {
+    private Schema buildCsvControlCellSchema(Element xmlSchema) throws SchemaException {
 	CsvControlCellSchema schema = new CsvControlCellSchema();
 
 	assignCsvSchema(schema, xmlSchema);
 
-	String sSeparator = getAttributeValue(xmlSchema,
-		ATTRIB_CSV_SCHEMA_CONTROL_CELL_SEPARATOR);
+	String sSeparator = getAttributeValue(xmlSchema, ATTRIB_CSV_SCHEMA_CONTROL_CELL_SEPARATOR);
 	if (sSeparator != null)
 	    schema.setControlCellSeparator(sSeparator);
 
@@ -445,35 +373,28 @@ public class Xml2SchemaBuilder {
      * @throws DataConversionException
      * @throws SchemaException
      */
-    private CsvSchemaLine buildCsvSchemaLine(Element xmlSchemaLine,
-	    Locale locale) throws SchemaException {
+    private CsvSchemaLine buildCsvSchemaLine(Element xmlSchemaLine, Locale locale) throws SchemaException {
 
 	CsvSchemaLine schemaLine = new CsvSchemaLine();
 	assignSchemaLineBase(schemaLine, xmlSchemaLine);
 
-	String sSeparator = getAttributeValue(xmlSchemaLine,
-		ATTRIB_CSV_SCHEMA_CELL_SEPARATOR);
+	String sSeparator = getAttributeValue(xmlSchemaLine, ATTRIB_CSV_SCHEMA_CELL_SEPARATOR);
 	if (sSeparator != null)
 	    schemaLine.setCellSeparator(sSeparator);
 
-	Node xmlFirstLineAsSchema = xmlSchemaLine
-		.getAttributeNode(ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA);
+	Node xmlFirstLineAsSchema = xmlSchemaLine.getAttributeNode(ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA);
 	if (xmlFirstLineAsSchema != null)
-	    schemaLine
-		    .setFirstLineAsSchema(getBooleanValue(xmlFirstLineAsSchema));
+	    schemaLine.setFirstLineAsSchema(getBooleanValue(xmlFirstLineAsSchema));
 
-	String sQuoteChar = getAttributeValue(xmlSchemaLine,
-		ATTRIB_CSV_QUOTE_CHAR);
+	String sQuoteChar = getAttributeValue(xmlSchemaLine, ATTRIB_CSV_QUOTE_CHAR);
 	if (sQuoteChar != null)
 	    schemaLine.setQuoteChar(sQuoteChar.charAt(0));
 
-	NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(
-		JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
+	NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
 	for (int i = 0; i < nodes.getLength(); i++) {
 	    org.w3c.dom.Node child = nodes.item(i);
 	    if (child instanceof Element)
-		schemaLine.addSchemaCell(buildCsvSchemaCell((Element) child,
-			locale));
+		schemaLine.addSchemaCell(buildCsvSchemaCell((Element) child, locale));
 	}
 
 	return schemaLine;
@@ -484,8 +405,7 @@ public class Xml2SchemaBuilder {
      * @return
      * @throws SchemaException
      */
-    private CsvSchemaCell buildCsvSchemaCell(Element xmlSchemaCell,
-	    Locale locale) throws SchemaException {
+    private CsvSchemaCell buildCsvSchemaCell(Element xmlSchemaCell, Locale locale) throws SchemaException {
 
 	CsvSchemaCell cell = new CsvSchemaCell();
 	assignSchemaCellBase(cell, xmlSchemaCell, locale);
@@ -500,10 +420,8 @@ public class Xml2SchemaBuilder {
      * @param xmlSchemaCell
      * @throws SchemaException
      */
-    private void assignSchemaBase(Schema schema, Element xmlSchema)
-	    throws SchemaException {
-	String sSeparator = getAttributeValue(xmlSchema,
-		ATTRIB_SCHEMA_LINESEPARATOR);
+    private void assignSchemaBase(Schema schema, Element xmlSchema) throws SchemaException {
+	String sSeparator = getAttributeValue(xmlSchema, ATTRIB_SCHEMA_LINESEPARATOR);
 	if (sSeparator != null) {
 	    schema.setLineSeparator(sSeparator);
 	}
@@ -522,8 +440,7 @@ public class Xml2SchemaBuilder {
      * @throws DataConversionException
      */
     private void assignSchemaLineBase(SchemaLine line, Element xmlSchemaLine) {
-	Node xmlOccurs = xmlSchemaLine
-		.getAttributeNode(ATTRIB_SCHEMA_LINE_OCCURS);
+	Node xmlOccurs = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_OCCURS);
 	if (xmlOccurs != null) {
 	    if (getStringValue(xmlOccurs).equals("*"))
 		line.setOccursInfinitely();
@@ -531,16 +448,13 @@ public class Xml2SchemaBuilder {
 		line.setOccurs(getIntValue(xmlOccurs));
 	}
 
-	Node xmlLineType = xmlSchemaLine
-		.getAttributeNode(ATTRIB_SCHEMA_LINE_LINETYPE);
+	Node xmlLineType = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_LINETYPE);
 	if (xmlLineType != null)
 	    line.setLineType(getStringValue(xmlLineType));
 
-	Node xmlLineTypeControlValue = xmlSchemaLine
-		.getAttributeNode(ATTRIB_SCHEMA_LINE_LINETYPE_CONTROL_VALUE);
+	Node xmlLineTypeControlValue = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_LINETYPE_CONTROL_VALUE);
 	if (xmlLineTypeControlValue != null)
-	    line
-		    .setLineTypeControlValue(getStringValue(xmlLineTypeControlValue));
+	    line.setLineTypeControlValue(getStringValue(xmlLineTypeControlValue));
     }
 
     /**
@@ -550,21 +464,17 @@ public class Xml2SchemaBuilder {
      * @param xmlSchemaCell
      * @throws SchemaException
      */
-    private void assignSchemaCellBase(SchemaCell cell, Element xmlSchemaCell,
-	    Locale locale) throws SchemaException {
+    private void assignSchemaCellBase(SchemaCell cell, Element xmlSchemaCell, Locale locale) throws SchemaException {
 	try {
-	    String sName = getAttributeValue(xmlSchemaCell,
-		    ATTRIB_SCHEMA_CELL_NAME);
+	    String sName = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_NAME);
 	    if (sName != null)
 		cell.setName(sName);
 
-	    Node xmlIgnoreRead = xmlSchemaCell
-		    .getAttributeNode(ATTRIB_SCHEMA_CELL_IGNOREREAD);
+	    Node xmlIgnoreRead = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_IGNOREREAD);
 	    if (xmlIgnoreRead != null)
 		cell.setIgnoreRead(getBooleanValue(xmlIgnoreRead));
 
-	    Node xmlMandatory = xmlSchemaCell
-		    .getAttributeNode(ATTRIB_SCHEMA_CELL_MANDATORY);
+	    Node xmlMandatory = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_MANDATORY);
 	    if (xmlMandatory != null)
 		cell.setMandatory(getBooleanValue(xmlMandatory));
 
@@ -579,19 +489,16 @@ public class Xml2SchemaBuilder {
 
 	    Element xmlRange = getChild(xmlSchemaCell, ELEMENT_RANGE);
 	    if (xmlRange != null) {
-		Node minValue = xmlRange
-			.getAttributeNode(ATTRIB_SCHEMA_CELL_MIN);
+		Node minValue = xmlRange.getAttributeNode(ATTRIB_SCHEMA_CELL_MIN);
 		if (minValue != null)
 		    cell.setMinValue(getStringValue(minValue));
-		Node maxValue = xmlRange
-			.getAttributeNode(ATTRIB_SCHEMA_CELL_MAX);
+		Node maxValue = xmlRange.getAttributeNode(ATTRIB_SCHEMA_CELL_MAX);
 		if (maxValue != null)
 		    cell.setMaxValue(getStringValue(maxValue));
 	    }
 
 	} catch (ParseException e) {
-	    throw new SchemaException(
-		    "Failed to parse value within xml schema. ", e);
+	    throw new SchemaException("Failed to parse value within xml schema. ", e);
 	}
 
     }
@@ -604,13 +511,11 @@ public class Xml2SchemaBuilder {
      * @param locale
      * @throws SchemaException
      */
-    private void assignCellFormat(SchemaCell cell, Element xmlFormat,
-	    Locale locale) throws SchemaException {
+    private void assignCellFormat(SchemaCell cell, Element xmlFormat, Locale locale) throws SchemaException {
 	String sType = getAttributeValue(xmlFormat, "type");
 	String sPattern = getAttributeValue(xmlFormat, "pattern");
 
-	cell.setCellFormat(new SchemaCellFormat(getCellType(sType), sPattern,
-		locale));
+	cell.setCellFormat(new SchemaCellFormat(getCellType(sType), sPattern, locale));
     }
 
     /**
@@ -652,8 +557,7 @@ public class Xml2SchemaBuilder {
      * @throws SchemaException
      */
     private Locale buildLocale(Element xmlLocale) throws SchemaException {
-	String sLanguage = getMandatoryAttribute(xmlLocale,
-		ATTRIB_LOCALE_LANGUAGE).getValue();
+	String sLanguage = getMandatoryAttribute(xmlLocale, ATTRIB_LOCALE_LANGUAGE).getValue();
 	String sCountry = getAttributeValue(xmlLocale, ATTRIB_LOCALE_COUNTRY);
 	if (sCountry != null)
 	    return new Locale(sLanguage, sCountry);
@@ -662,20 +566,18 @@ public class Xml2SchemaBuilder {
     }
 
     /**
-     * Gets a mandatory xml attribute from a xml element. If the element does
-     * not exist, a SchemaException is thrown.
+     * Gets a mandatory xml attribute from a xml element. If the element does not exist, a
+     * SchemaException is thrown.
      * 
      * @param xmlElement
      * @param sAttributeName
      * @return The xml attribute.
      * @throws SchemaException
      */
-    private static Attr getMandatoryAttribute(Element xmlElement,
-	    String sAttributeName) throws SchemaException {
+    private static Attr getMandatoryAttribute(Element xmlElement, String sAttributeName) throws SchemaException {
 	Node xmlAttribute = xmlElement.getAttributeNode(sAttributeName);
 	if (xmlAttribute == null || !(xmlAttribute instanceof Attr))
-	    throw new SchemaException("Missing mandatory attribute: "
-		    + sAttributeName + " of element " + xmlElement);
+	    throw new SchemaException("Missing mandatory attribute: " + sAttributeName + " of element " + xmlElement);
 	return (Attr) xmlAttribute;
     }
 }

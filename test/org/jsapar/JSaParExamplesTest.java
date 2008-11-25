@@ -6,9 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.jsapar.input.Parser;
 import org.jsapar.input.CellParseError;
 import org.jsapar.input.ParseSchema;
+import org.jsapar.input.Parser;
 import org.jsapar.input.XmlDocumentParser;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaException;

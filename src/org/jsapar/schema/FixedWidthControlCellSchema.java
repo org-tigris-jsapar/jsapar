@@ -8,7 +8,6 @@ import org.jsapar.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.input.CellParseError;
-import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
 import org.jsapar.output.OutputException;
@@ -33,8 +32,6 @@ import org.jsapar.schema.FixedWidthSchemaCell.Alignment;
  * 
  */
 public class FixedWidthControlCellSchema extends FixedWidthSchema {
-
-    private final static SchemaCellFormat CONTROL_CELL_FORMAT = new SchemaCellFormat();
 
     private int controlCellLength;
     private FixedWidthSchemaCell.Alignment controlCellAlignment = Alignment.LEFT;
@@ -99,12 +96,8 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
 	return null;
     }
 
-    /**
-     * Builds a Document from a reader where each line is denoted by a control
-     * cell at the beginning of each line.
-     * 
-     * @param reader
-     * @throws JSaParException
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.FixedWidthSchema#parse(java.io.Reader, org.jsapar.input.ParsingEventListener)
      */
     @Override
     public void parse(java.io.Reader reader, ParsingEventListener listener)
@@ -134,12 +127,8 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
 		    throw new ParseException(error);
 		}
 
-		Line line = lineSchema.build(nLineNumber, reader, listener);
-		if (line != null) {
-		    line.setLineType(lineSchema.getLineType());
-		    listener.lineParsedEvent(new LineParsedEvent(this, line,
-			    nLineNumber));
-		} else {
+		boolean isLineFound = lineSchema.parse(nLineNumber, reader, listener);
+		if (!isLineFound) {
 		    break; // End of stream.
 		}
 		if (getLineSeparator().length() > 0) {
@@ -168,6 +157,9 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
 	}
     }
 
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.FixedWidthSchema#output(org.jsapar.Document, java.io.Writer)
+     */
     @Override
     public void output(Document document, Writer writer) throws IOException,
 	    JSaParException {
@@ -214,8 +206,8 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
      *            the controlCellAlignment to set
      */
     public void setControlCellAlignment(
-	    FixedWidthSchemaCell.Alignment controlCellAllignment) {
-	this.controlCellAlignment = controlCellAllignment;
+	    FixedWidthSchemaCell.Alignment controlCellAlignment) {
+	this.controlCellAlignment = controlCellAlignment;
     }
 
     /**

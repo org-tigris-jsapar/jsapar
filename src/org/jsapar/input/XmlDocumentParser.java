@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
 
 import javax.xml.XMLConstants;
@@ -20,7 +19,6 @@ import javax.xml.validation.SchemaFactory;
 
 import org.jsapar.Cell;
 import org.jsapar.DateCell;
-import org.jsapar.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.schema.SchemaCell;

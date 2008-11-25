@@ -12,6 +12,10 @@ import org.jsapar.input.ParseSchema;
 import org.jsapar.input.ParsingEventListener;
 
 /**
+ * Abstract base class for all type of jsapar schemas. A schema describes how the buffer should be
+ * parsed or how the lines of a Document should be written. Usually the parse and output methods are
+ * called from one of the in, out or io classes.
+ * 
  * @author Jonas
  * 
  */
@@ -43,7 +47,6 @@ public abstract class Schema implements Cloneable, ParseSchema {
      */
     public abstract void outputBefore(Writer writer) throws IOException, JSaParException;
 
-
     /**
      * Called after output() in order to clean up or write file footer.
      * 
@@ -53,7 +56,6 @@ public abstract class Schema implements Cloneable, ParseSchema {
      */
     public abstract void outputAfter(Writer writer) throws IOException, JSaParException;
 
-    
     private java.util.Locale locale = Locale.getDefault();
 
     /**
@@ -150,6 +152,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
 	return sb.toString();
     }
 
+    @SuppressWarnings("unchecked")
     public abstract List getSchemaLines();
 
     /**
@@ -159,11 +162,11 @@ public abstract class Schema implements Cloneable, ParseSchema {
     private SchemaLine getSchemaLine(long lineNumber) {
 	long nLineMax = 0;
 	for (Object oSchemaLine : this.getSchemaLines()) {
-	    SchemaLine schemaLine = (SchemaLine)oSchemaLine;
-	    if(schemaLine.isOccursInfinitely())
+	    SchemaLine schemaLine = (SchemaLine) oSchemaLine;
+	    if (schemaLine.isOccursInfinitely())
 		return schemaLine;
-	    nLineMax += (long)schemaLine.getOccurs();
-	    if(lineNumber <= nLineMax)
+	    nLineMax += (long) schemaLine.getOccurs();
+	    if (lineNumber <= nLineMax)
 		return schemaLine;
 	}
 	return null;
@@ -172,6 +175,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
     /**
      * This method should only be called by a Outputter class. Don't use this directly in your code.
      * Use a Outputter instead.
+     * 
      * @param line
      * @param lineNumber
      * @param writer
@@ -180,11 +184,11 @@ public abstract class Schema implements Cloneable, ParseSchema {
      */
     public void outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
 	SchemaLine schemaLine = getSchemaLine(lineNumber);
-	if(schemaLine != null){
-	    if(lineNumber > 1)
+	if (schemaLine != null) {
+	    if (lineNumber > 1)
 		writer.append(getLineSeparator());
 	    schemaLine.output(line, writer);
 	}
     }
-    
+
 }

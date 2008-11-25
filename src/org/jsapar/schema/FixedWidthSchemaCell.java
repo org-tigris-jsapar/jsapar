@@ -10,32 +10,86 @@ import org.jsapar.JSaParException;
 import org.jsapar.input.ParseException;
 import org.jsapar.output.OutputException;
 
+/**
+ * Describes how a cell is represented for a fixed with schema.
+ * 
+ * @author stejon0
+ */
 public class FixedWidthSchemaCell extends SchemaCell {
 
+    /**
+     * Describes how a cell is aligned within its allocated space.
+     * 
+     * @author stejon0
+     * 
+     */
     public enum Alignment {
 
 	LEFT, CENTER, RIGHT
     };
 
+    /**
+     * The length of the cell.
+     */
     private int length;
+
+    /**
+     * The alignment of the cell content within the allocated space. Default is Alignment.LEFT.
+     */
     private Alignment alignment = Alignment.LEFT;
 
+    /**
+     * Creates a fixed with schema cell with specified name, length and alignment.
+     * 
+     * @param sName
+     *            The name of the cell
+     * @param nLength
+     *            The length of the cell
+     * @param alignment
+     *            The alignment of the cell content within the allocated space
+     */
     public FixedWidthSchemaCell(String sName, int nLength, Alignment alignment) {
 	this(sName, nLength);
 	this.alignment = alignment;
     }
 
+    /**
+     * Creates a fixed with schema cell with specified name and length.
+     * 
+     * @param sName
+     *            The name of the cell
+     * @param nLength
+     *            The length of the cell
+     */
     public FixedWidthSchemaCell(String sName, int nLength) {
 	super(sName);
 	this.length = nLength;
     }
 
+    /**
+     * Creates a fixed with schema cell with specified length.
+     * 
+     * @param nLength
+     *            The length of the cell
+     */
     public FixedWidthSchemaCell(int nLength) {
 	this.length = nLength;
     }
 
-    Cell build(Reader reader, boolean trimFillCharacters, char fillCharacter)
-	    throws IOException, ParseException {
+    /**
+     * Builds a Cell from a reader input.
+     * 
+     * @param reader
+     *            The input reader
+     * @param trimFillCharacters
+     *            If true, fill characters are ignored while reading.
+     * @param fillCharacter
+     *            The fill character to ignore if trimFillCharacters is true.
+     * @return A Cell filled with the parsed cell value and with the name of this schema cell.
+     * @throws IOException
+     * @throws ParseException
+     */
+    Cell build(Reader reader, boolean trimFillCharacters, char fillCharacter) throws IOException, ParseException {
 
 	int nOffset = 0;
 	int nLength = this.length; // The actuall length
@@ -83,8 +137,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
      * @param nSize
      * @throws IOException
      */
-    private static void fill(Writer writer, char ch, int nSize)
-	    throws IOException {
+    private static void fill(Writer writer, char ch, int nSize) throws IOException {
 	for (int i = 0; i < nSize; i++) {
 	    writer.write(ch);
 	}
@@ -94,40 +147,50 @@ public class FixedWidthSchemaCell extends SchemaCell {
      * Writes an empty cell. Uses the fill character to fill the space.
      * 
      * @param writer
-     * @param schema
+     * @param fillCharacter
      * @throws IOException
      * @throws JSaParException
      */
-    public void outputEmptyCell(Writer writer, char fillCharacter)
-	    throws IOException, JSaParException {
-	this.fill(writer, fillCharacter, getLength());
+    public void outputEmptyCell(Writer writer, char fillCharacter) throws IOException, JSaParException {
+	FixedWidthSchemaCell.fill(writer, fillCharacter, getLength());
     }
 
     /**
+     * Writes a cell to the supplied writer using supplied fill character.
+     * 
      * @param cell
+     *            The cell to write
      * @param writer
-     * @param schema
+     *            The writer to write to.
+     * @param fillCharacter
+     *            The fill character to fill empty spaces.
      * @throws IOException
      * @throws OutputException
      */
-    void output(Cell cell, Writer writer, char fillCharacter)
-	    throws IOException, JSaParException {
+    void output(Cell cell, Writer writer, char fillCharacter) throws IOException, JSaParException {
 	String sValue = cell.getStringValue(getCellFormat().getFormat());
 	output(sValue, writer, fillCharacter, getLength(), getAlignment());
     }
 
     /**
+     * Writes a cell to the supplied writer using supplied fill character.
+     * 
      * @param cell
+     *            The cell to write
      * @param writer
+     *            The writer to write to.
      * @param fillCharacter
+     *            The fill character to fill empty spaces.
      * @param length
+     *            The number of characters to write.
      * @param alignment
+     *            The alignment of the cell content if the content is smaller than the cell length.
      * @param format
+     *            The format to use.
      * @throws IOException
      * @throws OutputException
      */
-    static void output(String sValue, Writer writer, char fillCharacter,
-	    int length, Alignment alignment)
+    static void output(String sValue, Writer writer, char fillCharacter, int length, Alignment alignment)
 	    throws IOException, OutputException {
 	// If the cell value is larger than the cell length, we have to cut the
 	// value.
@@ -153,8 +216,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
 	    fill(writer, fillCharacter, nToFill - nLeft);
 	    break;
 	default:
-	    throw new OutputException(
-		    "Unknown allignment style for cell schema.");
+	    throw new OutputException("Unknown allignment style for cell schema.");
 	}
     }
 
@@ -173,6 +235,11 @@ public class FixedWidthSchemaCell extends SchemaCell {
 	this.alignment = alignment;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.jsapar.schema.SchemaCell#clone()
+     */
     public FixedWidthSchemaCell clone() throws CloneNotSupportedException {
 	return (FixedWidthSchemaCell) super.clone();
     }

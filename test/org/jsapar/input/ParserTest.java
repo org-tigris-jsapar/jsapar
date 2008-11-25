@@ -27,6 +27,7 @@ public class ParserTest {
         Reader reader = new StringReader(toParse);
         Document doc = builder.build(reader, schema);
 
+        assertEquals(1, doc.getNumberOfLines());
         assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
         assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
     }
@@ -44,6 +45,7 @@ public class ParserTest {
         Reader reader = new StringReader(toParse);
         Document doc = builder.build(reader, schema);
 
+        assertEquals(2, doc.getNumberOfLines());
         assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
         assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
 
@@ -62,6 +64,7 @@ public class ParserTest {
         Parser builder = new Parser();
         Reader reader = new StringReader(toParse);
         Document doc = builder.build(reader, schema);
+        assertEquals(2, doc.getNumberOfLines());
         assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
         assertEquals("Frida", doc.getLine(1).getCell(0).getStringValue());
     }
