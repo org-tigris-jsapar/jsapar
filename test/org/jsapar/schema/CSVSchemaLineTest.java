@@ -141,7 +141,7 @@ public class CSVSchemaLineTest extends TestCase {
     }
 
     @Test
-    public void testOutput() throws ParseException, IOException {
+    public void testOutput() throws IOException, JSaParException {
 
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schemaLine.setCellSeparator(";-)");
@@ -160,7 +160,7 @@ public class CSVSchemaLineTest extends TestCase {
     }
 
     @Test
-    public void testOutput_reorder() throws ParseException, IOException {
+    public void testOutput_reorder() throws IOException, JSaParException {
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
 	schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));

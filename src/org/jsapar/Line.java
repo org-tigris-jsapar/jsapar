@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 /**
- * A line is one row of the input buffer. Each line contains a list of cells. Cells can be retreived
+ * A line is one row of the input buffer. Each line contains a list of cells. Cells can be retrieved
  * either by index O(1) or by name O(n). Note that the class is not synchronized internally. If
  * multiple threads access the same instance, external synchronization is required.
  * 
@@ -97,19 +97,60 @@ public class Line implements Serializable {
     }
 
     /**
+     * Adds a cell to the cellsByName list.
+     * 
+     * @param cell
+     *            The cell to add
+     * @throws JSaParException
+     *             If a cell with the same name already exists.
+     */
+    private void addCellByName(Cell cell) throws JSaParException {
+	Cell oldCell = cellsByName.get(cell.getName());
+	if (oldCell != null)
+	    throw new JSaParException("A cell with the name '" + cell.getName()
+		    + "' already exists. Failed to add cell.");
+	this.cellsByName.put(cell.getName(), cell);
+    }
+
+    /**
      * Adds a cell to the end of the line.
      * 
      * @param cell
      *            The cell to add
+     * @throws JSaParException
      */
-    public void addCell(Cell cell) {
+    public void addCell(Cell cell) throws JSaParException {
 	this.cellsByIndex.add(cell);
 	if (cell.getName() != null)
-	    this.cellsByName.put(cell.getName(), cell);
+	    addCellByName(cell);
     }
 
     /**
-     * Adds a cell at specified index of a line. First cell has index 0. Existing cells to the rigth
+     * Adds a cell to the line end of the line, replacing any existing cell with the same name.
+     * 
+     * @param cell
+     *            The cell to add
+     * @return The replaced cell or null if there were no cell within the line with the same name.
+     * @throws JSaParException
+     */
+    public Cell replaceCell(Cell cell) {
+	Cell foundCell = null;
+	if (cell.getName() != null) {
+	    foundCell = this.cellsByName.put(cell.getName(), cell);
+	    if (foundCell != null) {
+		Iterator<Cell> i = this.cellsByIndex.iterator();
+		while (i.hasNext()) {
+		    if (cell.getName().equals(i.next().getName()))
+			i.remove();
+		}
+	    }
+	}
+	this.cellsByIndex.add(cell);
+	return foundCell;
+    }
+
+    /**
+     * Adds a cell at specified index of a line. First cell has index 0. Existing cells to the right
      * of the new cell will have incremented indexes.
      * 
      * @param cell
@@ -121,6 +162,28 @@ public class Line implements Serializable {
 	this.cellsByIndex.add(index, cell);
 	if (cell.getName() != null)
 	    this.cellsByName.put(cell.getName(), cell);
+    }
+
+    /**
+     * Replaces a cell at specified index of a line. First cell has index 0.
+     * 
+     * @param cell
+     *            The cell to add
+     * @param index
+     *            The index the cell will have in the line.
+     * @return The replaced cell or null if there were no cell within the line at that index.
+     */
+    public Cell replaceCell(Cell cell, int index) {
+	Cell removed = null;
+	if (this.cellsByIndex.size() > index && this.cellsByIndex.get(index) != null) {
+	    removed = this.cellsByIndex.remove(index);
+	    if (removed.getName() != null)
+		this.cellsByName.remove(removed.getName());
+	}
+	this.cellsByIndex.add(index, cell);
+	if (cell.getName() != null)
+	    this.cellsByName.put(cell.getName(), cell);
+	return removed;
     }
 
     /**

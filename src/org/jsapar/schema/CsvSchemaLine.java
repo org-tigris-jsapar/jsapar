@@ -292,8 +292,9 @@ public class CsvSchemaLine extends SchemaLine {
 
     /**
      * @return
+     * @throws JSaParException 
      */
-    Line buildHeaderLineFromSchema() {
+    Line buildHeaderLineFromSchema() throws JSaParException {
 	Line line = new Line();
 
 	for (CsvSchemaCell schemaCell : this.getSchemaCells()) {
@@ -308,8 +309,9 @@ public class CsvSchemaLine extends SchemaLine {
      * 
      * @param writer
      * @throws IOException
+     * @throws JSaParException 
      */
-    public void outputHeaderLine(Writer writer) throws IOException {
+    public void outputHeaderLine(Writer writer) throws IOException, JSaParException {
 	output(this.buildHeaderLineFromSchema(), writer);
     }
 }
