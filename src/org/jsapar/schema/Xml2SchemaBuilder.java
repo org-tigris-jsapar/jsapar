@@ -50,6 +50,8 @@ public class Xml2SchemaBuilder {
     private static final String ATTRIB_SCHEMA_CELL_MIN = "min";
     private static final String ATTRIB_SCHEMA_CELL_MAX = "max";
     private static final String ATTRIB_CSV_QUOTE_CHAR = "quotechar";
+    private static final String ATTRIB_SCHEMA_LINE_IGNORE_READ_EMPTY_LINES = "ignorereademptylines";
+
     private static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
     private static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
     private static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
@@ -437,9 +439,10 @@ public class Xml2SchemaBuilder {
      * 
      * @param line
      * @param xmlSchemaLine
+     * @throws SchemaException 
      * @throws DataConversionException
      */
-    private void assignSchemaLineBase(SchemaLine line, Element xmlSchemaLine) {
+    private void assignSchemaLineBase(SchemaLine line, Element xmlSchemaLine) throws SchemaException {
 	Node xmlOccurs = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_OCCURS);
 	if (xmlOccurs != null) {
 	    if (getStringValue(xmlOccurs).equals("*"))
@@ -455,6 +458,10 @@ public class Xml2SchemaBuilder {
 	Node xmlLineTypeControlValue = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_LINETYPE_CONTROL_VALUE);
 	if (xmlLineTypeControlValue != null)
 	    line.setLineTypeControlValue(getStringValue(xmlLineTypeControlValue));
+
+	Node xmlIgnoreReadEmptyLines = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_IGNORE_READ_EMPTY_LINES);
+	if (xmlIgnoreReadEmptyLines != null)
+	    line.setIgnoreReadEmptyLines(getBooleanValue(xmlIgnoreReadEmptyLines));
     }
 
     /**

@@ -87,6 +87,10 @@ public class CsvSchemaLine extends SchemaLine {
      */
     @Override
     boolean parse(long nLineNumber, String sLine, ParsingEventListener listener) throws JSaParException {
+
+	if (sLine.length() <= 0)
+	    return handleEmptyLine(nLineNumber, listener);
+
 	Line line = new Line(getLineType(), (getSchemaCells().size() > 0) ? getSchemaCells().size() : 10);
 
 	String[] asCells = this.split(sLine);
@@ -117,6 +121,7 @@ public class CsvSchemaLine extends SchemaLine {
 	listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
 	return true;
     }
+
 
     /**
      * @param sLine
@@ -292,7 +297,7 @@ public class CsvSchemaLine extends SchemaLine {
 
     /**
      * @return
-     * @throws JSaParException 
+     * @throws JSaParException
      */
     Line buildHeaderLineFromSchema() throws JSaParException {
 	Line line = new Line();
@@ -309,7 +314,7 @@ public class CsvSchemaLine extends SchemaLine {
      * 
      * @param writer
      * @throws IOException
-     * @throws JSaParException 
+     * @throws JSaParException
      */
     public void outputHeaderLine(Writer writer) throws IOException, JSaParException {
 	output(this.buildHeaderLineFromSchema(), writer);

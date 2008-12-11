@@ -88,6 +88,8 @@ public class FixedWidthSchemaLine extends SchemaLine {
      */
     @Override
     boolean parse(long nLineNumber, String sLine, ParsingEventListener listener) throws IOException, JSaParException {
+	if (sLine.length() <= 0)
+	    return handleEmptyLine(nLineNumber, listener);
 	java.io.Reader reader = new java.io.StringReader(sLine);
 	return parse(nLineNumber, reader, listener);
     }

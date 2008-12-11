@@ -94,7 +94,10 @@ public class CsvSchema extends Schema {
 
 	    if (lineSchema.isFirstLineAsSchema()) {
 		try {
-		    lineSchema = buildSchemaFromHeader(lineSchema, parseLine(reader));
+		    String sHeaderLine = parseLine(reader);
+		    if(sHeaderLine == null)
+			return;
+		    lineSchema = buildSchemaFromHeader(lineSchema, sHeaderLine);
 		} catch (CloneNotSupportedException e) {
 		    throw new ParseException("Failed to create header schema.", e);
 		}
@@ -118,15 +121,9 @@ public class CsvSchema extends Schema {
 	for (int i = 0; i < lineSchema.getOccurs(); i++) {
 	    nLineNumber++;
 	    String sLine = parseLine(reader);
-	    if (sLine.length() == 0) {
-		if (lineSchema.isOccursInfinitely())
-		    break;
-		else {
-		    throw new ParseException("Unexpected end of input buffer. Was expecting " + lineSchema.getOccurs()
-			    + " lines of this type. Found " + i + " lines");
-		}
-	    }
-
+	    if(sLine == null)
+		break;
+	    
 	    boolean isLineParsed = lineSchema.parse(nLineNumber, sLine, listener);
 	    if (!isLineParsed)
 		break;

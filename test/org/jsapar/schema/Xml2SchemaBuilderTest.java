@@ -63,7 +63,7 @@ public class Xml2SchemaBuilderTest {
 	assertEquals("Last name", csvSchema.getCsvSchemaLines().get(0).getSchemaCells().get(1).getName());
 
     }
-
+    
     @Test
     public final void testBuild_Csv_firstlineasschema() throws SchemaException {
 
@@ -77,6 +77,22 @@ public class Xml2SchemaBuilderTest {
 	CsvSchema csvSchema = (CsvSchema) schema;
 
 	assertEquals(true, csvSchema.getCsvSchemaLines().get(0).isFirstLineAsSchema());
+
+    }
+
+    @Test
+    public final void testBuild_Csv_ignorereademptylines() throws SchemaException {
+
+	String sXmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+		+ "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema/1.0\" >"
+		+ "<csvschema><line occurs=\"4\" ignorereademptylines=\"false\" >" + "</line></csvschema></schema>";
+
+	Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
+	java.io.Reader reader = new java.io.StringReader(sXmlSchema);
+	Schema schema = builder.build(reader);
+	CsvSchema csvSchema = (CsvSchema) schema;
+
+	assertEquals(false, csvSchema.getCsvSchemaLines().get(0).isIgnoreReadEmptyLines());
 
     }
 

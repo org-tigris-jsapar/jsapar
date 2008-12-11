@@ -60,17 +60,5 @@ public class OutputterTest {
 	assertEquals(sExpected, writer.toString());
     }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public final void testCreateJavaObjects() {
-	Outputter outputter = new Outputter();
-	java.util.List objects = outputter.createJavaObjects(document);
-	assertEquals(2, objects.size());
-	assertEquals("Jonas", ((TestPerson) objects.get(0)).getFirstName());
-	assertEquals(42, ((TestPerson) objects.get(0)).getShoeSize());
-	assertEquals(this.birthTime, ((TestPerson) objects.get(0)).getBirthTime());
-	assertEquals(123456787901234567L, ((TestPerson) objects.get(0)).getLuckyNumber());
-	assertEquals("Bergsten", ((TestPerson) objects.get(1)).getLastName());
-    }
-  
+
 }

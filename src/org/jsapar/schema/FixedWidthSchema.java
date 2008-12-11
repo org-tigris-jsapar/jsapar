@@ -121,14 +121,8 @@ public class FixedWidthSchema extends Schema {
 	    for (int i = 0; i < lineSchema.getOccurs(); i++) {
 		nLineNumber++;
 		String sLine = parseLine(reader);
-		if (sLine.length() == 0) {
-		    if (lineSchema.isOccursInfinitely()) {
-			break;
-		    } else {
-			throw new ParseException("Unexpected end of input buffer. Was expecting "
-				+ lineSchema.getOccurs() + " lines of this type. Found " + i + " lines");
-		    }
-		}
+		if(sLine == null)
+		    return; // End of buffer
 
 		boolean isLineFound = lineSchema.parse(nLineNumber, sLine, listener);
 		if (!isLineFound) {

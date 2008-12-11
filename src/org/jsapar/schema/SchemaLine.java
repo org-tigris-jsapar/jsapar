@@ -6,6 +6,7 @@ import java.io.Writer;
 import org.jsapar.Cell;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
+import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParsingEventListener;
 
 public abstract class SchemaLine implements Cloneable {
@@ -16,6 +17,8 @@ public abstract class SchemaLine implements Cloneable {
     private String lineType;
 
     private String lineTypeControlValue;
+    
+    private boolean ignoreReadEmptyLines=true;
 
     public SchemaLine() {
 	this.occurs = OCCURS_INFINITE;
@@ -236,6 +239,32 @@ public abstract class SchemaLine implements Cloneable {
      */
     abstract boolean parse(long lineNumber, String line, ParsingEventListener listener) throws JSaParException, IOException;
 
+    /**
+     * @return the ignoreReadEmptyLines
+     */
+    public boolean isIgnoreReadEmptyLines() {
+        return ignoreReadEmptyLines;
+    }
+
+    /**
+     * @param ignoreReadEmptyLines the ignoreReadEmptyLines to set
+     */
+    public void setIgnoreReadEmptyLines(boolean ignoreEmptyLines) {
+        this.ignoreReadEmptyLines = ignoreEmptyLines;
+    }
+
+    /** Handles behavior of empty lines
+     * @param lineNumber
+     * @param listener
+     * @return
+     * @throws JSaParException
+     */
+    protected boolean handleEmptyLine(long lineNumber, ParsingEventListener listener) throws JSaParException {
+	if (!isIgnoreReadEmptyLines()){
+		listener.lineParsedEvent(new LineParsedEvent(this, new Line(getLineType()), lineNumber));
+	}
+	return true;
+    }
     
     
 }

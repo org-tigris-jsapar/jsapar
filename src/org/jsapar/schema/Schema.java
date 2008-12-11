@@ -99,7 +99,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * Reads a line from the reader.
      * 
      * @param reader
-     * @return The line as a string or an empty string if no line was found.
+     * @return The line as a string or null if end of buffer was encountered.
      * @throws IOException
      */
     protected String parseLine(java.io.Reader reader) throws IOException {
@@ -108,8 +108,13 @@ public abstract class Schema implements Cloneable, ParseSchema {
 	StringBuilder pending = new StringBuilder();
 	while (true) {
 	    int nRead = reader.read();
-	    if (nRead == -1)
-		return lineBuilder.toString(); // End of input buffer.
+	    if (nRead == -1){
+		// End of input buffer.
+		if(lineBuilder.length()>0)
+		    return lineBuilder.toString();
+		else
+		    return null;
+	    }
 	    char chRead = (char) nRead;
 	    if (chRead == chLineSeparatorNext) {
 		pending.append(chRead);

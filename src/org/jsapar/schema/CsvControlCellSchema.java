@@ -128,7 +128,7 @@ public class CsvControlCellSchema extends CsvSchema {
 	    do {
 		String sControlCell;
 		String sLine = parseLine(reader);
-		if (sLine.length() == 0)
+		if(sLine == null || sLine.length() == 0)
 		    break;
 
 		int nIndex = sLine.indexOf(this.getControlCellSeparator());

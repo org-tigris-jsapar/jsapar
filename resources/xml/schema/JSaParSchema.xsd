@@ -56,6 +56,14 @@
 				</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
+    <xsd:attribute name="ignorereademptylines" type="xsd:boolean">
+      <xsd:annotation>
+        <xsd:documentation>Specifies if empty lines should be ignored while reading.
+true = (default) Empty lines in the input buffer are ignored.
+false = Empty lines generates empty Line objects. Any mandatory cells are ignored within empty line.
+Default is true.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="SchemaCell">
     <xsd:sequence>
