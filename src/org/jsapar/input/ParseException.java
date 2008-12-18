@@ -22,7 +22,7 @@ public class ParseException extends JSaParException {
      * 
      */
     public ParseException() {
-	// TODO Auto-generated constructor stub
+        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -30,15 +30,15 @@ public class ParseException extends JSaParException {
      * @param sMessage
      */
     public ParseException(CellParseError cellParseError, String sMessage) {
-	super(sMessage);
-	this.cellParseError = cellParseError;
+        super(sMessage);
+        this.cellParseError = cellParseError;
     }
 
     /**
      * @param sMessage
      */
     public ParseException(String sMessage) {
-	super(sMessage);
+        super(sMessage);
     }
 
     /**
@@ -46,8 +46,8 @@ public class ParseException extends JSaParException {
      * @param ex
      */
     public ParseException(CellParseError cellParseError, Throwable ex) {
-	super(ex);
-	this.cellParseError = cellParseError;
+        super(ex);
+        this.cellParseError = cellParseError;
     }
 
     /**
@@ -56,8 +56,8 @@ public class ParseException extends JSaParException {
      * @param ex
      */
     public ParseException(CellParseError cellParseError, String sMessage, Throwable ex) {
-	super(sMessage, ex);
-	this.cellParseError = cellParseError;
+        super(sMessage, ex);
+        this.cellParseError = cellParseError;
     }
 
     /**
@@ -65,38 +65,38 @@ public class ParseException extends JSaParException {
      * @param ex
      */
     public ParseException(String sMessage, Throwable ex) {
-	super(sMessage, ex);
+        super(sMessage, ex);
     }
 
     /**
      * @param cellParseError
      */
     public ParseException(CellParseError cellParseError) {
-	this.cellParseError = cellParseError;
+        this.cellParseError = cellParseError;
     }
 
     /**
-     * Returns the cell parse error information. Can be null if the parse
-     * exception does not origin from a cell parsing.
+     * Returns the cell parse error information. Can be null if the parse exception does not origin
+     * from a cell parsing.
      * 
      * @return the parseError
      */
     public CellParseError getCellParseError() {
-	return cellParseError;
+        return cellParseError;
     }
 
     /**
      * @param parseError
-     *                the parseError to set
+     *            the parseError to set
      */
     public void setCellParseError(CellParseError parseError) {
-	this.cellParseError = parseError;
+        this.cellParseError = parseError;
     }
 
     public String getMessage() {
-	String sMessage = super.getMessage();
-	if (cellParseError != null)
-	    sMessage += cellParseError.toString();
-	return sMessage;
+        String sMessage = super.getMessage();
+        if (cellParseError != null)
+            sMessage += cellParseError.toString();
+        return sMessage;
     }
 }

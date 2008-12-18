@@ -35,7 +35,7 @@
 		<filter token="VERSION_MINOR" value="${version.minor}" />
 		<filter token="VERSION_PATCH" value="${version.patch}" />
 
-		<echo> ${project.name} project </echo>
+		<echo>${project.name} project</echo>
 		<echo message="Project version : ${patch.version.string}" />
 		<echo message="Ant version     : ${ant.version}" />
 		<echo message="Svn branch root : ${svn.branch.url}" />

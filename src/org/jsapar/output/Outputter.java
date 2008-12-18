@@ -4,12 +4,7 @@
 package org.jsapar.output;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.jsapar.Cell;
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
@@ -36,13 +31,13 @@ public class Outputter {
      * @throws JSaParException
      */
     public void output(Document document, Schema schema, java.io.Writer writer) throws JSaParException {
-	try {
-	    schema.outputBefore(writer);
-	    schema.output(document, writer);
-	    schema.outputAfter(writer);
-	} catch (IOException e) {
-	    throw new OutputException("Failed to write to buffert.", e);
-	}
+        try {
+            schema.outputBefore(writer);
+            schema.output(document, writer);
+            schema.outputAfter(writer);
+        } catch (IOException e) {
+            throw new OutputException("Failed to write to buffert.", e);
+        }
     }
 
     /**
@@ -54,11 +49,11 @@ public class Outputter {
      * @throws JSaParException
      */
     public void outputLine(Line line, SchemaLine schemaLine, java.io.Writer writer) throws JSaParException {
-	try {
-	    schemaLine.output(line, writer);
-	} catch (IOException e) {
-	    throw new OutputException("Failed to write to buffert.", e);
-	}
+        try {
+            schemaLine.output(line, writer);
+        } catch (IOException e) {
+            throw new OutputException("Failed to write to buffert.", e);
+        }
     }
 
     /**
@@ -72,11 +67,11 @@ public class Outputter {
      * @throws JSaParException
      */
     public void outputLine(Line line, Schema schema, long lineNumber, java.io.Writer writer) throws JSaParException {
-	try {
-	    schema.outputLine(line, lineNumber, writer);
-	} catch (IOException e) {
-	    throw new OutputException("Failed to write to buffert.", e);
-	}
+        try {
+            schema.outputLine(line, lineNumber, writer);
+        } catch (IOException e) {
+            throw new OutputException("Failed to write to buffert.", e);
+        }
     }
 
     /**
@@ -87,14 +82,14 @@ public class Outputter {
      * @throws JSaParException
      */
     public void outputCsvHeaderLine(CsvSchemaLine schemaLine, java.io.Writer writer) throws JSaParException {
-	if (!schemaLine.isFirstLineAsSchema())
-	    throw new JSaParException("The schema line is not of type where first line is schema.");
+        if (!schemaLine.isFirstLineAsSchema())
+            throw new JSaParException("The schema line is not of type where first line is schema.");
 
-	try {
-	    schemaLine.outputHeaderLine(writer);
-	} catch (IOException e) {
-	    throw new OutputException("Failed to write to buffert.", e);
-	}
+        try {
+            schemaLine.outputHeaderLine(writer);
+        } catch (IOException e) {
+            throw new OutputException("Failed to write to buffert.", e);
+        }
     }
 
 }

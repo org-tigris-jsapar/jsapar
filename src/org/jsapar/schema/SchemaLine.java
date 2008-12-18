@@ -17,22 +17,21 @@ public abstract class SchemaLine implements Cloneable {
     private String lineType;
 
     private String lineTypeControlValue;
-    
-    private boolean ignoreReadEmptyLines=true;
+
+    private boolean ignoreReadEmptyLines = true;
 
     public SchemaLine() {
-	this.occurs = OCCURS_INFINITE;
+        this.occurs = OCCURS_INFINITE;
     }
 
     /**
      * Creates a SchemaLine which occurs supplied number of times.
      * 
      * @param nOccurs
-     *            The number of times that a line of this type occurs in the
-     *            corresponding buffer.
+     *            The number of times that a line of this type occurs in the corresponding buffer.
      */
     public SchemaLine(int nOccurs) {
-	this.occurs = nOccurs;
+        this.occurs = nOccurs;
     }
 
     /**
@@ -42,7 +41,7 @@ public abstract class SchemaLine implements Cloneable {
      *            The name of the type of the line.
      */
     public SchemaLine(String lineType) {
-	this.setLineType(lineType);
+        this.setLineType(lineType);
     }
 
     /**
@@ -54,50 +53,46 @@ public abstract class SchemaLine implements Cloneable {
      *            The tag that determines which type of line it is.
      */
     public SchemaLine(String lineType, String lineTypeControlValue) {
-	this(lineType);
-	this.setLineTypeControlValue(lineTypeControlValue);
+        this(lineType);
+        this.setLineTypeControlValue(lineTypeControlValue);
     }
 
     /**
-     * @return The number of times this type of line occurs in the corresponding
-     *         buffer.
+     * @return The number of times this type of line occurs in the corresponding buffer.
      */
     public int getOccurs() {
-	return occurs;
+        return occurs;
     }
 
     /**
      * @param occurs
-     *            The number of times this type of line occurs in the
-     *            corresponding buffer.
+     *            The number of times this type of line occurs in the corresponding buffer.
      */
     public void setOccurs(int occurs) {
-	this.occurs = occurs;
+        this.occurs = occurs;
     }
 
     /**
      * Setts the occurs attribute so that this type of line occurs until the end of the buffer.
      */
     public void setOccursInfinitely() {
-	this.occurs = OCCURS_INFINITE;
+        this.occurs = OCCURS_INFINITE;
     }
 
     /**
      * @return true if this line occurs to the end of the buffer, false otherwise.
      */
     public boolean isOccursInfinitely() {
-	return this.occurs == OCCURS_INFINITE;
+        return this.occurs == OCCURS_INFINITE;
     }
 
     /**
-     * Finds the cell to use for output. Each cell is identified from the schema
-     * by the name of the cell. If the schema-cell has no name, the cell at the
-     * same position in the line is used under the condition that it also lacks
-     * name.
+     * Finds the cell to use for output. Each cell is identified from the schema by the name of the
+     * cell. If the schema-cell has no name, the cell at the same position in the line is used under
+     * the condition that it also lacks name.
      * 
-     * If the schema-cell has a name the cell with the same name is used. If no
-     * such cell is found and the cell att the same position lacks name, it is
-     * used instead.
+     * If the schema-cell has a name the cell with the same name is used. If no such cell is found
+     * and the cell att the same position lacks name, it is used instead.
      * 
      * 
      * @param line
@@ -106,52 +101,53 @@ public abstract class SchemaLine implements Cloneable {
      *            The schema-cell to use.
      * @param nSchemaCellIndex
      *            The index at wich the schema-cell is found.
-     * @return The cell within the supplied line to use for output according to the supplied schemaCell.
+     * @return The cell within the supplied line to use for output according to the supplied
+     *         schemaCell.
      */
     protected static Cell findCell(Line line, SchemaCell schemaCell, int nSchemaCellIndex) {
-	Cell cellByIndex = null;
-	if (nSchemaCellIndex < line.getNumberOfCells())
-	    cellByIndex = line.getCell(nSchemaCellIndex); // Use optimistic
-	// matching.
-	if (null != cellByIndex && null == schemaCell.getName()) {
-	    // cell = line.getCell(i);
-	    if (null == cellByIndex.getName()) {
-		// If both cell and schema cell names are null then it is ok
-		// to use cell by index.
-		return cellByIndex;
-	    } else {
-		return null;
-	    }
-	} else {
-	    if (null != cellByIndex && null != cellByIndex.getName()
-		    && schemaCell.getName().equals(cellByIndex.getName())) {
-		// We were lucky.
-		return cellByIndex;
-	    } else {
-		// The optimistic match failed. We take the penalty.
-		Cell cellByName = line.getCell(schemaCell.getName());
-		if (null != cellByName) {
-		    return cellByName;
-		} else {
-		    if (null == cellByIndex) {
-			return null;
-		    } else if (cellByIndex.getName() == null) {
-			// If it was not found by name we fall back to the
-			// cell with correct index.
-			return cellByIndex;
-		    } else {
-			return null;
-		    }
-		}
-	    }
-	}
+        Cell cellByIndex = null;
+        if (nSchemaCellIndex < line.getNumberOfCells())
+            cellByIndex = line.getCell(nSchemaCellIndex); // Use optimistic
+        // matching.
+        if (null != cellByIndex && null == schemaCell.getName()) {
+            // cell = line.getCell(i);
+            if (null == cellByIndex.getName()) {
+                // If both cell and schema cell names are null then it is ok
+                // to use cell by index.
+                return cellByIndex;
+            } else {
+                return null;
+            }
+        } else {
+            if (null != cellByIndex && null != cellByIndex.getName()
+                    && schemaCell.getName().equals(cellByIndex.getName())) {
+                // We were lucky.
+                return cellByIndex;
+            } else {
+                // The optimistic match failed. We take the penalty.
+                Cell cellByName = line.getCell(schemaCell.getName());
+                if (null != cellByName) {
+                    return cellByName;
+                } else {
+                    if (null == cellByIndex) {
+                        return null;
+                    } else if (cellByIndex.getName() == null) {
+                        // If it was not found by name we fall back to the
+                        // cell with correct index.
+                        return cellByIndex;
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        }
     }
 
     /**
      * @return the lineType
      */
     public String getLineType() {
-	return lineType;
+        return lineType;
     }
 
     /**
@@ -159,16 +155,16 @@ public abstract class SchemaLine implements Cloneable {
      *            the lineType to set
      */
     public void setLineType(String lineType) {
-	this.lineType = lineType;
-	if (this.lineTypeControlValue == null)
-	    this.lineTypeControlValue = lineType;
+        this.lineType = lineType;
+        if (this.lineTypeControlValue == null)
+            this.lineTypeControlValue = lineType;
     }
 
     /**
      * @return the lineTypeControlValue
      */
     public String getLineTypeControlValue() {
-	return lineTypeControlValue;
+        return lineTypeControlValue;
     }
 
     /**
@@ -176,9 +172,9 @@ public abstract class SchemaLine implements Cloneable {
      *            the lineTypeControlValue to set
      */
     public void setLineTypeControlValue(String lineTypeControlValue) {
-	this.lineTypeControlValue = lineTypeControlValue;
-	if (this.lineType == null)
-	    this.lineType = lineTypeControlValue;
+        this.lineTypeControlValue = lineTypeControlValue;
+        if (this.lineType == null)
+            this.lineType = lineTypeControlValue;
     }
 
     /*
@@ -188,33 +184,31 @@ public abstract class SchemaLine implements Cloneable {
      */
     @Override
     public String toString() {
-	StringBuilder sb = new StringBuilder();
-	sb.append("SchemaLine lineType=");
-	sb.append(this.lineType);
-	if (this.lineTypeControlValue != null) {
-	    sb.append(" lineTypeControlValue=");
-	    sb.append(this.lineTypeControlValue);
-	}
-	sb.append(" occurs=");
-	if (isOccursInfinitely())
-	    sb.append("INFINITE");
-	else
-	    sb.append(this.occurs);
-	return sb.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("SchemaLine lineType=");
+        sb.append(this.lineType);
+        if (this.lineTypeControlValue != null) {
+            sb.append(" lineTypeControlValue=");
+            sb.append(this.lineTypeControlValue);
+        }
+        sb.append(" occurs=");
+        if (isOccursInfinitely())
+            sb.append("INFINITE");
+        else
+            sb.append(this.occurs);
+        return sb.toString();
     }
 
     /**
-     * Writes a line to the writer. Each cell is identified from the schema by
-     * the name of the cell. If the schema-cell has no name, the cell at the
-     * same position in the line is used under the condition that it also lacks
-     * name.
+     * Writes a line to the writer. Each cell is identified from the schema by the name of the cell.
+     * If the schema-cell has no name, the cell at the same position in the line is used under the
+     * condition that it also lacks name.
      * 
-     * If the schema-cell has a name the cell with the same name is used. If no
-     * such cell is found and the cell at the same position lacks name, it is
-     * used instead.
+     * If the schema-cell has a name the cell with the same name is used. If no such cell is found
+     * and the cell at the same position lacks name, it is used instead.
      * 
-     * If no corresponding cell is found for a schema-cell, the cell is left
-     * empty. Sub-class decides how to treat empty cells.
+     * If no corresponding cell is found for a schema-cell, the cell is left empty. Sub-class
+     * decides how to treat empty cells.
      * 
      * @param line
      * @param writer
@@ -237,7 +231,8 @@ public abstract class SchemaLine implements Cloneable {
      * @throws IOException
      * @throws JSaParException
      */
-    abstract boolean parse(long lineNumber, String line, ParsingEventListener listener) throws JSaParException, IOException;
+    abstract boolean parse(long lineNumber, String line, ParsingEventListener listener) throws JSaParException,
+            IOException;
 
     /**
      * @return the ignoreReadEmptyLines
@@ -247,24 +242,25 @@ public abstract class SchemaLine implements Cloneable {
     }
 
     /**
-     * @param ignoreReadEmptyLines the ignoreReadEmptyLines to set
+     * @param ignoreEmptyLines
      */
     public void setIgnoreReadEmptyLines(boolean ignoreEmptyLines) {
         this.ignoreReadEmptyLines = ignoreEmptyLines;
     }
 
-    /** Handles behavior of empty lines
+    /**
+     * Handles behavior of empty lines
+     * 
      * @param lineNumber
      * @param listener
-     * @return
+     * @return Returns true (always).
      * @throws JSaParException
      */
     protected boolean handleEmptyLine(long lineNumber, ParsingEventListener listener) throws JSaParException {
-	if (!isIgnoreReadEmptyLines()){
-		listener.lineParsedEvent(new LineParsedEvent(this, new Line(getLineType()), lineNumber));
-	}
-	return true;
+        if (!isIgnoreReadEmptyLines()) {
+            listener.lineParsedEvent(new LineParsedEvent(this, new Line(getLineType()), lineNumber));
+        }
+        return true;
     }
-    
-    
+
 }
