@@ -5,10 +5,8 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jsapar.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
-import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
 
 /**
@@ -138,9 +136,8 @@ public class FixedWidthSchema extends Schema {
      * @see org.jsapar.schema.Schema#output(org.jsapar.Document, java.io.Writer)
      */
     @Override
-    public void output(Document document, Writer writer) throws IOException, JSaParException {
+    public void output(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {
 
-	Iterator<Line> itLines = document.getLineIterator();
 	for (SchemaLine lineSchema : getFixedWidthSchemaLines()) {
 	    for (int i = 0; i < lineSchema.getOccurs(); i++) {
 		if (!itLines.hasNext()) {

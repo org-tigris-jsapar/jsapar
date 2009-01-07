@@ -69,7 +69,7 @@ public class FixedWidthSchemaTest {
 	doc.addLine(line2);
 
 	java.io.Writer writer = new java.io.StringWriter();
-	schema.output(doc, writer);
+	schema.output(doc.getLineIterator(), writer);
 
 	assertEquals(sExpected, writer.toString());
     }

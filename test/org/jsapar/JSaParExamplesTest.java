@@ -33,8 +33,8 @@ public class JSaParExamplesTest {
 	Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
 	Schema schema = xmlBuilder.build(schemaReader);
 	Reader fileReader = new FileReader("samples/01_Names.csv");
-	Parser parser = new Parser();
-	Document document = parser.build(fileReader, schema);
+	Parser parser = new Parser(schema);
+	Document document = parser.build(fileReader);
 
 	assertEquals("Erik", document.getLine(0).getCell(0).getStringValue());
 	assertEquals("Svensson", document.getLine(0).getCell(1)
@@ -54,8 +54,8 @@ public class JSaParExamplesTest {
 	Schema schema = builder.build(schemaReader);
 	System.out.println("Schema: " + schema);
 	Reader fileReader = new FileReader("samples/02_Names.txt");
-	Parser docBuilder = new Parser();
-	Document document = docBuilder.build(fileReader, schema);
+        Parser parser = new Parser(schema);
+        Document document = parser.build(fileReader);
 
 	assertEquals("Erik    ", document.getLine(0).getCell(0)
 		.getStringValue());
@@ -79,8 +79,8 @@ public class JSaParExamplesTest {
 	Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
 	Schema schema = builder.build(schemaReader);
 	Reader fileReader = new FileReader("samples/03_FlatFileNames.txt");
-	Parser docBuilder = new Parser();
-	Document document = docBuilder.build(fileReader, schema);
+        Parser parser = new Parser(schema);
+        Document document = parser.build(fileReader);
 
 	assertEquals(3, document.getNumberOfLines());
 	assertEquals("Erik", document.getLine(0).getCell(0).getStringValue());
@@ -103,8 +103,8 @@ public class JSaParExamplesTest {
 	Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
 	Schema schema = builder.build(schemaReader);
 	Reader fileReader = new FileReader("samples/04_Names.txt");
-	Parser docBuilder = new Parser();
-	Document document = docBuilder.build(fileReader, schema);
+        Parser parser = new Parser(schema);
+        Document document = parser.build(fileReader);
 
 	assertEquals("04_Names.txt", document.getLine(0).getCell("FileName")
 		.getStringValue());
@@ -125,10 +125,10 @@ public class JSaParExamplesTest {
     public final void testExampleXml05() throws SchemaException, IOException,
 	    JSaParException {
 	java.util.List<CellParseError> parseErrors = new java.util.LinkedList<CellParseError>();
-	ParseSchema parser = new XmlDocumentParser();
+	ParseSchema schema = new XmlDocumentParser();
 	Reader fileReader = new FileReader("samples/05_Names.xml");
-	Parser docBuilder = new Parser();
-	Document document = docBuilder.build(fileReader, parser, parseErrors);
+        Parser parser = new Parser(schema);
+        Document document = parser.build(fileReader, parseErrors);
 
 	// System.out.println("Errors: " + parseErrors.toString());
 
@@ -157,8 +157,8 @@ public class JSaParExamplesTest {
 	Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
 	Schema schema = builder.build(schemaReader);
 	Reader fileReader = new FileReader("samples/06_NamesControlCell.csv");
-	Parser docBuilder = new Parser();
-	Document document = docBuilder.build(fileReader, schema);
+        Parser parser = new Parser(schema);
+        Document document = parser.build(fileReader);
 
 	assertEquals("06_NamesControlCell.csv", document.getLine(0).getCell(
 		"FileName").getStringValue());

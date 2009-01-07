@@ -188,7 +188,7 @@ public class CSVSchemaTest {
 	doc.addLine(line2);
 
 	StringWriter writer = new StringWriter();
-	schema.output(doc, writer);
+	schema.output(doc.getLineIterator(), writer);
 
 	String sLineSep = System.getProperty("line.separator");
 	String sExpected = "First Name;Last Name" + sLineSep + "Jonas;Stenberg" + sLineSep + "Nils;Nilsson";

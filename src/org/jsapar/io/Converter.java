@@ -25,7 +25,7 @@ import org.jsapar.schema.Schema;
  */
 public class Converter {
 
-    private java.util.List<LineManipulator> manipulators = new java.util.LinkedList<LineManipulator>();
+    private List<LineManipulator> manipulators = new java.util.LinkedList<LineManipulator>();
     private ParseSchema inputSchema;
     private Schema outputSchema;
 

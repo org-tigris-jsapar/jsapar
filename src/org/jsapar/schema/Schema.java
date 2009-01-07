@@ -2,10 +2,10 @@ package org.jsapar.schema;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.jsapar.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.input.ParseSchema;
@@ -31,12 +31,12 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * This method should only be called by a Outputter class. Don't use this directly in your code.
      * Use a Outputter instead.
      * 
-     * @param document
+     * @param iterator
      * @param writer
      * @throws IOException
      * @throws JSaParException
      */
-    public abstract void output(Document document, Writer writer) throws IOException, JSaParException;
+    public abstract void output(Iterator<Line> iterator, Writer writer) throws IOException, JSaParException;
 
     /**
      * Called before output() in order to set up or write file header.

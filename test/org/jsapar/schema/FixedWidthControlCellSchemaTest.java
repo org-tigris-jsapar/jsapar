@@ -82,7 +82,7 @@ public class FixedWidthControlCellSchemaTest {
 	doc.addLine(line);
 
 	StringWriter writer = new StringWriter();
-	schema.output(doc, writer);
+	schema.output(doc.getLineIterator(), writer);
 
 	String sExpected = "NJonasStenbergAStorgatan 123 45NFred Bergsten";
 	assertEquals(sExpected, writer.toString());

@@ -26,10 +26,10 @@ public class XMLDocumentParserTest {
 		+ "</line></document>";
 
 	java.io.Reader reader=new java.io.StringReader(sXml);
-	ParseSchema parser = new XmlDocumentParser();
-	Parser docBuilder = new Parser();
+	ParseSchema schema = new XmlDocumentParser();
+	Parser docBuilder = new Parser(schema);
 	java.util.List<CellParseError> parseErrors = new java.util.LinkedList<CellParseError>();
-	Document document = docBuilder.build(reader, parser, parseErrors);
+	Document document = docBuilder.build(reader, parseErrors);
 
 	// System.out.println("Errors: " + parseErrors.toString());
 
