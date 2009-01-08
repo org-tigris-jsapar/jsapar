@@ -175,7 +175,7 @@ public class CsvSchema extends Schema {
      * @see org.jsapar.schema.Schema#outputLine(org.jsapar.Line, long, java.io.Writer)
      */
     @Override
-    public void outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
+    public boolean outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
         CsvSchemaLine schemaLine = null;
 
         long nLineMax = 0; // The line number for the last line of this schema line.
@@ -193,15 +193,17 @@ public class CsvSchema extends Schema {
             }
         }
 
-        if (schemaLine != null) {
-            if (lineNumber > 1)
-                writer.append(getLineSeparator());
-            if (nLineWithinSchema == 1 && schemaLine.isFirstLineAsSchema()) {
-                schemaLine.outputHeaderLine(writer);
-                writer.append(getLineSeparator());
-            }
-            schemaLine.output(line, writer);
+        if (schemaLine == null)
+            return false;
+
+        if (lineNumber > 1)
+            writer.append(getLineSeparator());
+        if (nLineWithinSchema == 1 && schemaLine.isFirstLineAsSchema()) {
+            schemaLine.outputHeaderLine(writer);
+            writer.append(getLineSeparator());
         }
+        schemaLine.output(line, writer);
+        return true;
     }
 
 }

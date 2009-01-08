@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
+import org.jsapar.schema.Schema;
 
 /**
  * This class is the starting point for parsing a file (or other source). <br>
@@ -52,7 +53,7 @@ public class Parser implements ParsingEventListener {
      * 
      * @param schemas
      */
-    public Parser(List<ParseSchema> schemas) {
+    public Parser(List<Schema> schemas) {
         this.schemas.addAll(schemas);
     }
 

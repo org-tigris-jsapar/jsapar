@@ -2,6 +2,8 @@ package org.jsapar.io;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,8 +28,15 @@ import org.jsapar.schema.Schema;
 public class Converter {
 
     private List<LineManipulator> manipulators = new java.util.LinkedList<LineManipulator>();
-    private ParseSchema inputSchema;
-    private Schema outputSchema;
+    private List<ParseSchema> inputSchemas = new LinkedList<ParseSchema>();
+    private List<Schema> outputSchemas = new LinkedList<Schema>();
+
+    /**
+     * Creates an empty Converter. Note that you have to add both input and output schemas before
+     * calling the convert method.
+     */
+    public Converter() {
+    }
 
     /**
      * Creates a Converter object with the specified schemas.
@@ -36,8 +45,26 @@ public class Converter {
      * @param outputSchema
      */
     public Converter(ParseSchema inputSchema, Schema outputSchema) {
-        this.inputSchema = inputSchema;
-        this.outputSchema = outputSchema;
+        this.inputSchemas.add(inputSchema);
+        this.outputSchemas.add(outputSchema);
+    }
+
+    /**
+     * Creates a Converter object with the specified multiple schemas. A file is parsed according to
+     * each input schema one at a time. The output is produced according to each output schema one
+     * at a time. <br>
+     * <br>
+     * Multiple input schemas will not work together with control cell schemas. It will continue to
+     * use the first input schema for the complete file.<br>
+     * Multiple output schemas will step to the next schema when no valid output schmea line is
+     * found any more for the current output schema.
+     * 
+     * @param inputSchemas
+     * @param outputSchemas
+     */
+    public Converter(Collection<ParseSchema> inputSchemas, Collection<Schema> outputSchemas) {
+        this.inputSchemas.addAll(inputSchemas);
+        this.outputSchemas.addAll(outputSchemas);
     }
 
     /**
@@ -51,6 +78,20 @@ public class Converter {
     }
 
     /**
+     * @param schema
+     */
+    public void addInputSchema(ParseSchema schema) {
+        inputSchemas.add(schema);
+    }
+
+    /**
+     * @param schema
+     */
+    public void addOutputSchema(Schema schema) {
+        outputSchemas.add(schema);
+    }
+
+    /**
      * @param reader
      * @param writer
      * @return A list of CellParseErrors or an empty list if there were no errors.
@@ -60,12 +101,13 @@ public class Converter {
     public java.util.List<CellParseError> convert(java.io.Reader reader, java.io.Writer writer) throws IOException,
             JSaParException {
 
-        DocumentWriter outputter = new DocumentWriter(outputSchema, writer);
-        // TODO Create a DocumentWriter that supports line type by control cell.
+        DocumentWriter outputter = new DocumentWriter(outputSchemas, writer);
 
-        outputSchema.outputBefore(writer);
-        inputSchema.parse(reader, outputter);
-        outputSchema.outputAfter(writer);
+        outputter.outputBefore(writer);
+        for (ParseSchema inputSchema : inputSchemas) {
+            inputSchema.parse(reader, outputter);
+        }
+        outputter.outputAfter(writer);
         return outputter.getParseErrors();
 
     }
@@ -78,12 +120,41 @@ public class Converter {
      */
     private class DocumentWriter implements ParsingEventListener {
         private List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        private Schema outputSchema;
+        private Schema currentOutputSchema = null;
+        private Iterator<Schema> outputSchemaIter;
         private java.io.Writer writer;
+        private long lineNumberWithinSchema = 0;
 
-        public DocumentWriter(Schema outputSchema, Writer writer) throws JSaParException {
-            this.outputSchema = outputSchema;
+        public DocumentWriter(Collection<Schema> outputSchemas, Writer writer) throws JSaParException {
+            this.outputSchemaIter = outputSchemas.iterator();
             this.writer = writer;
+        }
+
+        public void outputBefore(Writer writer) throws IOException, JSaParException {
+            incrementOutputSchema();
+        }
+
+        public void outputAfter(Writer writer) throws IOException, JSaParException {
+            if (currentOutputSchema != null)
+                currentOutputSchema.outputAfter(writer);
+
+        }
+
+        /**
+         * @throws IOException
+         * @throws JSaParException
+         */
+        private void incrementOutputSchema() throws IOException, JSaParException {
+            if (currentOutputSchema != null)
+                currentOutputSchema.outputAfter(writer);
+            if (outputSchemaIter.hasNext()) {
+                if (currentOutputSchema != null)
+                    writer.append(currentOutputSchema.getLineSeparator());
+                currentOutputSchema = outputSchemaIter.next();
+                lineNumberWithinSchema = 0;
+                currentOutputSchema.outputBefore(writer);
+            } else
+                currentOutputSchema = null;
         }
 
         @Override
@@ -93,12 +164,24 @@ public class Converter {
 
         @Override
         public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+            // No point in processing further if the end of output schemas has been reached.
+            if (currentOutputSchema == null)
+                return;
+
             try {
                 Line line = event.getLine();
+                lineNumberWithinSchema++;
                 for (LineManipulator manipulator : manipulators) {
                     manipulator.manipulate(line);
                 }
-                outputSchema.outputLine(line, event.getLineNumber(), this.writer);
+                boolean success = currentOutputSchema.outputLine(line, lineNumberWithinSchema, this.writer);
+                if (!success) {
+                    // Try again with next output schema.
+                    incrementOutputSchema();
+                    lineNumberWithinSchema = 1;
+                    if (currentOutputSchema != null)
+                        currentOutputSchema.outputLine(line, lineNumberWithinSchema, this.writer);
+                }
             } catch (IOException e) {
                 throw new JSaParException("Failed to write to writer", e);
             }
@@ -111,36 +194,6 @@ public class Converter {
             return parseErrors;
         }
 
-    }
-
-    /**
-     * @return the inputSchema
-     */
-    public ParseSchema getInputSchema() {
-        return inputSchema;
-    }
-
-    /**
-     * @param inputSchema
-     *            the inputSchema to set
-     */
-    public void setInputSchema(ParseSchema inputSchema) {
-        this.inputSchema = inputSchema;
-    }
-
-    /**
-     * @return the outputSchema
-     */
-    public Schema getOutputSchema() {
-        return outputSchema;
-    }
-
-    /**
-     * @param outputSchema
-     *            the outputSchema to set
-     */
-    public void setOutputSchema(Schema outputSchema) {
-        this.outputSchema = outputSchema;
     }
 
 }

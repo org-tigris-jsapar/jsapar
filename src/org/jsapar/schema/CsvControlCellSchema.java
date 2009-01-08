@@ -185,13 +185,15 @@ public class CsvControlCellSchema extends CsvSchema {
      * @see org.jsapar.schema.Schema#output(org.jsapar.Line, int, java.io.Writer)
      */
     @Override
-    public void outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
+    public boolean outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
         SchemaLine schemaLine = getSchemaLineByType(line.getLineType());
-        if (schemaLine != null) {
-            if (lineNumber > 1)
-                writer.append(getLineSeparator());
-            writeControlCell(writer, schemaLine.getLineTypeControlValue());
-            schemaLine.output(line, writer);
-        }
+        if (schemaLine == null)
+            return false;
+
+        if (lineNumber > 1)
+            writer.append(getLineSeparator());
+        writeControlCell(writer, schemaLine.getLineTypeControlValue());
+        schemaLine.output(line, writer);
+        return true;
     }
 }
