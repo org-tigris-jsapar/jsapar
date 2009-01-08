@@ -62,7 +62,7 @@ public class Converter {
      * @param inputSchemas
      * @param outputSchemas
      */
-    public Converter(Collection<ParseSchema> inputSchemas, Collection<Schema> outputSchemas) {
+    public Converter(Collection<Schema> inputSchemas, Collection<Schema> outputSchemas) {
         this.inputSchemas.addAll(inputSchemas);
         this.outputSchemas.addAll(outputSchemas);
     }
