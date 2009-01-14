@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
-import org.jsapar.schema.Schema;
 
 /**
  * This class is the starting point for parsing a file (or other source). <br>
@@ -31,39 +30,15 @@ import org.jsapar.schema.Schema;
  */
 public class Parser implements ParsingEventListener {
     private List<ParsingEventListener> parsingEventListeners = new LinkedList<ParsingEventListener>();
-    private List<ParseSchema> schemas = new LinkedList<ParseSchema>();
+    ParseSchema schema;
 
     /**
-     * Creates an empty parser. You have to add at least one ParseSchema before using this Parser.
-     */
-    public Parser() {
-    }
-
-    /**
-     * Creates a Parser with one schema. You can add more schemas by calling addSchema().
+     * Creates a Parser with a schema.
      * 
      * @param schema
      */
     public Parser(ParseSchema schema) {
-        this.addSchema(schema);
-    }
-
-    /**
-     * Creates a Parser with a list of schemas. You can add more schemas by calling addSchema().
-     * 
-     * @param schemas
-     */
-    public Parser(List<Schema> schemas) {
-        this.schemas.addAll(schemas);
-    }
-
-    /**
-     * Adds a schema to this parser.
-     * 
-     * @param schema
-     */
-    public void addSchema(ParseSchema schema) {
-        schemas.add(schema);
+        this.schema = schema;
     }
 
     /**
@@ -91,7 +66,7 @@ public class Parser implements ParsingEventListener {
      * <br>
      * This method will clear all existing ParseSchemas and replace them with the supplied schema.<br>
      * 
-     * @deprecated Deprecated since version 0.4.0. Use build(Reader) instead. 
+     * @deprecated Deprecated since version 0.4.0. Use build(Reader) instead.
      * 
      * @param reader
      * @param schema
@@ -101,8 +76,7 @@ public class Parser implements ParsingEventListener {
      */
     @Deprecated
     public org.jsapar.Document build(java.io.Reader reader, ParseSchema schema) throws JSaParException {
-        this.schemas.clear();
-        addSchema(schema);
+        this.schema = schema;
         return build(reader);
     }
 
@@ -120,8 +94,7 @@ public class Parser implements ParsingEventListener {
      * @return A complete Document representing the parsed input buffer.
      * @throws JSaParException
      */
-    public Document build(java.io.Reader reader, List<CellParseError> parseErrors)
-            throws JSaParException {
+    public Document build(java.io.Reader reader, List<CellParseError> parseErrors) throws JSaParException {
         DocumentBuilder docBuilder = new DocumentBuilder(parseErrors);
         return docBuilder.build(reader);
     }
@@ -139,7 +112,7 @@ public class Parser implements ParsingEventListener {
      * This method will clear all existing ParseSchemas and replace them with the supplied schema.<br>
      * 
      * @deprecated Deprecated since version 0.4.0. Use build(Reader) instead.
-     *  
+     * 
      * @param reader
      * @param schema
      *            The ParseSchema to use to build the document.
@@ -150,8 +123,7 @@ public class Parser implements ParsingEventListener {
     @Deprecated
     public Document build(java.io.Reader reader, ParseSchema schema, List<CellParseError> parseErrors)
             throws JSaParException {
-        this.schemas.clear();
-        addSchema(schema);
+        this.schema = schema;
         return build(reader, parseErrors);
     }
 
@@ -169,9 +141,7 @@ public class Parser implements ParsingEventListener {
      */
     public void parse(java.io.Reader reader) throws JSaParException {
         try {
-            for (ParseSchema schema : Parser.this.schemas) {
-                schema.parse(reader, Parser.this);
-            }
+            schema.parse(reader, Parser.this);
         } catch (IOException e) {
             throw new ParseException("Failed to read input", e);
         }
@@ -196,8 +166,7 @@ public class Parser implements ParsingEventListener {
      */
     @Deprecated
     public void parse(java.io.Reader reader, ParseSchema schema) throws JSaParException {
-        this.schemas.clear();
-        addSchema(schema);
+        this.schema = schema;
         parse(reader);
     }
 
@@ -264,9 +233,7 @@ public class Parser implements ParsingEventListener {
             });
 
             try {
-                for (ParseSchema schema : Parser.this.schemas) {
-                    schema.parse(reader, Parser.this);
-                }
+                schema.parse(reader, Parser.this);
             } catch (IOException e) {
                 throw new ParseException("Failed to read input", e);
             }
@@ -302,9 +269,7 @@ public class Parser implements ParsingEventListener {
             });
 
             try {
-                for (ParseSchema schema : Parser.this.schemas) {
-                    schema.parse(reader, Parser.this);
-                }
+                schema.parse(reader, Parser.this);
             } catch (IOException e) {
                 throw new ParseException("Failed to read input", e);
             }

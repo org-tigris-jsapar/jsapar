@@ -7,7 +7,6 @@ import java.io.StringReader;
 
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
-import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 import org.junit.Test;
@@ -85,38 +84,6 @@ public class ParserTest {
 
         assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
         assertEquals("Frida", doc.getLine(1).getCell(0).getStringValue());
-    }
-    
-    @Test
-    public void testBuild_fixed_twoSchemas() throws JSaParException {
-        String toParse = "first name;last name" + System.getProperty("line.separator") + "JonasStenberg" + System.getProperty("line.separator") + "FridaStenberg";
-
-        org.jsapar.schema.CsvSchema headerSchema = new org.jsapar.schema.CsvSchema();
-        CsvSchemaLine headerSchemaLine = new CsvSchemaLine(1);
-        headerSchema.addSchemaLine(headerSchemaLine);
-        
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schema.addSchemaLine(schemaLine);
-
-        Parser parser = new Parser();
-        parser.addSchema(headerSchema);
-        parser.addSchema(schema);
-        
-        Reader reader = new StringReader(toParse);
-        Document doc = parser.build(reader);
-
-        assertEquals(3, doc.getNumberOfLines());
-        assertEquals("first name", doc.getLine(0).getCell(0).getStringValue());
-        assertEquals("last name", doc.getLine(0).getCell(1).getStringValue());
-
-        assertEquals("Jonas", doc.getLine(1).getCell(0).getStringValue());
-        assertEquals("Stenberg", doc.getLine(1).getCell("Last name").getStringValue());
-
-        assertEquals("Frida", doc.getLine(2).getCell(0).getStringValue());
-        assertEquals("Stenberg", doc.getLine(2).getCell("Last name").getStringValue());
     }
     
 }

@@ -5,7 +5,6 @@ package org.jsapar.output;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
@@ -23,46 +22,21 @@ import org.jsapar.schema.SchemaLine;
  * 
  */
 public class Outputter {
-    private List<Schema> schemas = new java.util.LinkedList<Schema>();
+    private Schema schema;
 
     /**
-     * Creates an empty Outputter. You have to add at least one schema before you can use this
-     * Outputter.
-     */
-    public Outputter() {
-
-    }
-
-    /**
-     * Creates an Outputter with one schema. You can add more schemas by calling addSchema().
+     * Creates an Outputter with a schema.
      * 
      * @param schema
      */
     public Outputter(Schema schema) {
-        this.addSchema(schema);
-    }
-
-    /**
-     * Creates an Outputter with a list of schemas. You can add more schemas by calling addSchema().
-     * 
-     * @param schemas
-     */
-    public Outputter(List<Schema> schemas) {
-        this.schemas.addAll(schemas);
-    }
-
-    /**
-     * Adds a schema to this Outputter.
-     * 
-     * @param schema
-     */
-    public void addSchema(Schema schema) {
-        schemas.add(schema);
+        this.schema = schema;
     }
 
     /**
      * Writes the document to a {@link java.io.Writer} according to the schemas of this outputter.
-     * Note that you have to add at least one schema to the instance of Outputter before calling this method.
+     * Note that you have to add at least one schema to the instance of Outputter before calling
+     * this method.
      * 
      * @param document
      * @param writer
@@ -71,13 +45,11 @@ public class Outputter {
     public void output(Document document, java.io.Writer writer) throws JSaParException {
         try {
             Iterator<Line> itLines = document.getLineIterator();
-            for (Schema schema : schemas) {
-                schema.outputBefore(writer);
-                schema.output(itLines, writer);
-                schema.outputAfter(writer);
-                if (!itLines.hasNext())
-                    return;
-            }
+            schema.outputBefore(writer);
+            schema.output(itLines, writer);
+            schema.outputAfter(writer);
+            if (!itLines.hasNext())
+                return;
         } catch (IOException e) {
             throw new OutputException("Failed to write to buffert.", e);
         }
@@ -94,8 +66,7 @@ public class Outputter {
      */
     @Deprecated
     public void output(Document document, Schema schema, java.io.Writer writer) throws JSaParException {
-        this.schemas.clear();
-        this.schemas.add(schema);
+        this.schema=schema;
         output(document, writer);
     }
 

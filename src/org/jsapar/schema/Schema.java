@@ -22,7 +22,7 @@ import org.jsapar.input.ParsingEventListener;
 public abstract class Schema implements Cloneable, ParseSchema {
 
     public enum LineTypeByTypes {
-        OCCURS, CONTROL_CELL
+	OCCURS, CONTROL_CELL
     };
 
     private String lineSeparator = System.getProperty("line.separator");
@@ -62,7 +62,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @return the lineSeparator
      */
     public String getLineSeparator() {
-        return lineSeparator;
+	return lineSeparator;
     }
 
     /**
@@ -73,14 +73,14 @@ public abstract class Schema implements Cloneable, ParseSchema {
      *            the lineSeparator to set.
      */
     public void setLineSeparator(String lineSeparator) {
-        this.lineSeparator = lineSeparator;
+	this.lineSeparator = lineSeparator;
     }
 
     /**
      * @return the locale
      */
     public java.util.Locale getLocale() {
-        return locale;
+	return locale;
     }
 
     /**
@@ -88,12 +88,12 @@ public abstract class Schema implements Cloneable, ParseSchema {
      *            the locale to set
      */
     public void setLocale(java.util.Locale locale) {
-        this.locale = locale;
+	this.locale = locale;
     }
 
     @Override
     public abstract void parse(java.io.Reader reader, ParsingEventListener listener) throws JSaParException,
-            IOException;
+	    IOException;
 
     /**
      * Reads a line from the reader.
@@ -103,40 +103,40 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @throws IOException
      */
     protected String parseLine(java.io.Reader reader) throws IOException {
-        char chLineSeparatorNext = getLineSeparator().charAt(0);
-        StringBuilder lineBuilder = new StringBuilder();
-        StringBuilder pending = new StringBuilder();
-        while (true) {
-            int nRead = reader.read();
-            if (nRead == -1) {
-                // End of input buffer.
-                if (lineBuilder.length() > 0)
-                    return lineBuilder.toString();
-                else
-                    return null;
-            }
-            char chRead = (char) nRead;
-            if (chRead == chLineSeparatorNext) {
-                pending.append(chRead);
-                if (getLineSeparator().length() > pending.length())
-                    chLineSeparatorNext = getLineSeparator().charAt(pending.length());
-                else
-                    break; // End of line found.
-            }
-            // It was not a complete line separator.
-            else if (pending.length() > 0) {
-                // Move pending characters to lineBuilder.
-                lineBuilder.append(pending);
-                pending.setLength(0);
-                lineBuilder.append(chRead);
-            } else
-                lineBuilder.append(chRead);
-        }
-        return lineBuilder.toString();
+	char chLineSeparatorNext = getLineSeparator().charAt(0);
+	StringBuilder lineBuilder = new StringBuilder();
+	StringBuilder pending = new StringBuilder();
+	while (true) {
+	    int nRead = reader.read();
+	    if (nRead == -1){
+		// End of input buffer.
+		if(lineBuilder.length()>0)
+		    return lineBuilder.toString();
+		else
+		    return null;
+	    }
+	    char chRead = (char) nRead;
+	    if (chRead == chLineSeparatorNext) {
+		pending.append(chRead);
+		if (getLineSeparator().length() > pending.length())
+		    chLineSeparatorNext = getLineSeparator().charAt(pending.length());
+		else
+		    break; // End of line found.
+	    }
+	    // It was not a complete line separator.
+	    else if (pending.length() > 0) {
+		// Move pending characters to lineBuilder.
+		lineBuilder.append(pending);
+		pending.setLength(0);
+		lineBuilder.append(chRead);
+	    } else
+		lineBuilder.append(chRead);
+	}
+	return lineBuilder.toString();
     }
 
     public Schema clone() throws CloneNotSupportedException {
-        return (Schema) super.clone();
+	return (Schema) super.clone();
     }
 
     /*
@@ -146,15 +146,15 @@ public abstract class Schema implements Cloneable, ParseSchema {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" lineSeparator=");
-        String ls = this.lineSeparator;
-        // ls.replaceAll("\\n", "/n");
-        // ls.replaceAll("\\r", "/r");
-        sb.append(ls);
-        sb.append(" locale=");
-        sb.append(this.locale);
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append(" lineSeparator=");
+	String ls = this.lineSeparator;
+	// ls.replaceAll("\\n", "/n");
+	// ls.replaceAll("\\r", "/r");
+	sb.append(ls);
+	sb.append(" locale=");
+	sb.append(this.locale);
+	return sb.toString();
     }
 
     @SuppressWarnings("unchecked")
@@ -165,16 +165,16 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @return
      */
     private SchemaLine getSchemaLine(long lineNumber) {
-        long nLineMax = 0;
-        for (Object oSchemaLine : this.getSchemaLines()) {
-            SchemaLine schemaLine = (SchemaLine) oSchemaLine;
-            if (schemaLine.isOccursInfinitely())
-                return schemaLine;
-            nLineMax += (long) schemaLine.getOccurs();
-            if (lineNumber <= nLineMax)
-                return schemaLine;
-        }
-        return null;
+	long nLineMax = 0;
+	for (Object oSchemaLine : this.getSchemaLines()) {
+	    SchemaLine schemaLine = (SchemaLine) oSchemaLine;
+	    if (schemaLine.isOccursInfinitely())
+		return schemaLine;
+	    nLineMax += (long) schemaLine.getOccurs();
+	    if (lineNumber <= nLineMax)
+		return schemaLine;
+	}
+	return null;
     }
 
     /**

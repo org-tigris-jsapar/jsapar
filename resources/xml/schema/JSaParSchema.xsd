@@ -3,7 +3,7 @@
 <xsd:schema xmlns="http://jsapar.tigris.org/JSaParSchema/1.0" elementFormDefault="qualified" targetNamespace="http://jsapar.tigris.org/JSaParSchema/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <xsd:element name="schema">
     <xsd:complexType>
-      <xsd:choice maxOccurs="unbounded">
+      <xsd:choice>
         <xsd:element name="csvschema" type="CsvSchema" />
         <xsd:element name="fixedwidthschema" type="FixedWidthSchema" />
         <xsd:element name="csvcontrolcellschema" type="CsvControlCellSchema" />

@@ -8,8 +8,6 @@ import org.jsapar.IntegerCell;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
-import org.jsapar.schema.CsvSchemaCell;
-import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 import org.junit.Before;
@@ -59,38 +57,6 @@ public class OutputterTest {
 	outputter.output(document, writer);
 
 	assertEquals(sExpected, writer.toString());
-    }
-
-    @Test
-    public final void testOutput_twoSchemas() throws JSaParException {
-        String sExpected = "JonasStenberg" + System.getProperty("line.separator") + "FridaBergsten" + System.getProperty("line.separator") + "first name;last name";
-
-        org.jsapar.schema.CsvSchema footerSchema = new org.jsapar.schema.CsvSchema();
-        CsvSchemaLine headerSchemaLine = new CsvSchemaLine(1);
-        headerSchemaLine.addSchemaCell(new CsvSchemaCell());
-        headerSchemaLine.addSchemaCell(new CsvSchemaCell());
-        footerSchema.addSchemaLine(headerSchemaLine);
-        
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("FirstName", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("LastName", 8));
-        schema.addSchemaLine(schemaLine);
-        
-        Outputter outputter = new Outputter();
-        outputter.addSchema(schema);
-        outputter.addSchema(footerSchema);
-
-        Line footer = new Line("Footer");
-        footer.addCell(new StringCell("first name"));
-        footer.addCell(new StringCell("last name"));
-        
-        document.addLine(footer);
-        
-        java.io.Writer writer = new java.io.StringWriter();
-        outputter.output(document, writer);
-
-        assertEquals(sExpected, writer.toString());
     }
 
 }
