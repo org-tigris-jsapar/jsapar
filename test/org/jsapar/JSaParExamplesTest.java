@@ -1,15 +1,20 @@
 package org.jsapar;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
 
 import org.jsapar.input.CellParseError;
 import org.jsapar.input.ParseSchema;
 import org.jsapar.input.Parser;
 import org.jsapar.input.XmlDocumentParser;
+import org.jsapar.io.Converter;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.junit.Test;
@@ -31,6 +36,7 @@ public class JSaParExamplesTest {
         Reader fileReader = new FileReader("samples/01_Names.csv");
         Parser parser = new Parser(xmlBuilder.build(schemaReader));
         Document document = parser.build(fileReader);
+        fileReader.close();
 
         assertEquals("Erik", document.getLine(0).getCell(0).getStringValue());
         assertEquals("Svensson", document.getLine(0).getCell(1).getStringValue());
@@ -48,6 +54,7 @@ public class JSaParExamplesTest {
         Reader fileReader = new FileReader("samples/02_Names.txt");
         Parser parser = new Parser(builder.build(schemaReader));
         Document document = parser.build(fileReader);
+        fileReader.close();
 
         assertEquals("Erik    ", document.getLine(0).getCell(0).getStringValue());
         assertEquals("Svensson ", document.getLine(0).getCell(1).getStringValue());
@@ -67,6 +74,7 @@ public class JSaParExamplesTest {
         Reader fileReader = new FileReader("samples/03_FlatFileNames.txt");
         Parser parser = new Parser(builder.build(schemaReader));
         Document document = parser.build(fileReader);
+        fileReader.close();
 
         assertEquals(3, document.getNumberOfLines());
         assertEquals("Erik", document.getLine(0).getCell(0).getStringValue());
@@ -87,6 +95,7 @@ public class JSaParExamplesTest {
         Reader fileReader = new FileReader("samples/04_Names.txt");
         Parser parser = new Parser(builder.build(schemaReader));
         Document document = parser.build(fileReader);
+        fileReader.close();
 
         assertEquals("04_Names.txt", document.getLine(0).getCell("FileName").getStringValue());
         assertEquals("2007-07-07", document.getLine(0).getCell("Created date").getStringValue());
@@ -106,6 +115,7 @@ public class JSaParExamplesTest {
         Reader fileReader = new FileReader("samples/05_Names.xml");
         Parser parser = new Parser(schema);
         Document document = parser.build(fileReader, parseErrors);
+        fileReader.close();
 
         // System.out.println("Errors: " + parseErrors.toString());
 
@@ -125,6 +135,7 @@ public class JSaParExamplesTest {
         Reader fileReader = new FileReader("samples/06_NamesControlCell.csv");
         Parser parser = new Parser(builder.build(schemaReader));
         Document document = parser.build(fileReader);
+        fileReader.close();
 
         assertEquals("06_NamesControlCell.csv", document.getLine(0).getCell("FileName").getStringValue());
         assertEquals("2007-07-07", document.getLine(0).getCell("Created date").getStringValue());
@@ -145,6 +156,7 @@ public class JSaParExamplesTest {
         Reader fileReader = new FileReader("samples/07_Names.txt");
         Parser parser = new Parser(builder.build(schemaReader));
         Document document = parser.build(fileReader);
+        fileReader.close();
 
         assertEquals(3, document.getNumberOfLines());
         assertEquals("2009-01-08", document.getLine(0).getCell(0).getStringValue());
@@ -155,5 +167,21 @@ public class JSaParExamplesTest {
         assertEquals("Svensson ", document.getLine(1).getCell(1).getStringValue());
         assertEquals("Fredrik ", document.getLine(2).getCell(0).getStringValue());
         assertEquals("Larsson  ", document.getLine(2).getCell(1).getStringValue());
+    }
+    
+    @Test
+    public final void testConvert01_02() throws IOException, JSaParException{
+        File outFile = new File("samples/02_FixedWidthSchema.xml");
+        Reader inSchemaReader = new FileReader("samples/01_CsvSchema.xml");
+        Reader outSchemaReader = new FileReader(outFile);
+        Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
+        Reader inReader = new FileReader("samples/01_Names.csv");
+        Writer outWriter = new FileWriter("samples/02_Names_out.txt");
+        Converter converter = new Converter(xmlBuilder.build(inSchemaReader), xmlBuilder.build(outSchemaReader));
+        converter.convert(inReader, outWriter);
+        inReader.close();
+        outWriter.close();
+        
+        assertTrue(outFile.isFile());
     }
 }
