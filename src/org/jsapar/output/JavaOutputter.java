@@ -2,12 +2,13 @@ package org.jsapar.output;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 
 import org.jsapar.Cell;
 import org.jsapar.Document;
+import org.jsapar.JSaParException;
 import org.jsapar.Line;
+import org.jsapar.input.CellParseError;
 
 /**
  * Uses Java reflection to convert the Document structure into POJO objects.
@@ -16,7 +17,6 @@ import org.jsapar.Line;
  * 
  */
 public class JavaOutputter {
-    protected static Logger logger = Logger.getLogger("org.jsapar");
 
     /**
      * Creates a list of java objects. For this method to work, the lineType attribute of each line
@@ -27,20 +27,16 @@ public class JavaOutputter {
      * @return A list of Java objects.
      */
     @SuppressWarnings("unchecked")
-    public java.util.List createJavaObjects(Document document) {
+    public java.util.List createJavaObjects(Document document, List<CellParseError> parseErrors) {
         java.util.List objects = new java.util.ArrayList(document.getNumberOfLines());
         java.util.Iterator<Line> lineIter = document.getLineIterator();
         while (lineIter.hasNext()) {
+            Line line = lineIter.next();
             try {
-                Line line = lineIter.next();
-                Object o = this.createObject(line);
+                Object o = this.createObject(line, parseErrors);
                 objects.add(o);
-            } catch (ClassNotFoundException e) {
-                logger.info("Skipped creating object - " + e);
-            } catch (InstantiationException e) {
-                logger.info("Skipped creating object - " + e);
-            } catch (IllegalAccessException e) {
-                logger.info("Skipped creating object - " + e);
+            } catch (Exception e) {
+                parseErrors.add(new CellParseError("", "", null, "Skipped creating object - " + e));
             }
         }
         return objects;
@@ -55,10 +51,11 @@ public class JavaOutputter {
      * @throws ClassNotFoundException
      */
     @SuppressWarnings("unchecked")
-    public Object createObject(Line line) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public Object createObject(Line line, List<CellParseError> parseErrors) throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException {
         Class c = Class.forName(line.getLineType());
         Object o = c.newInstance();
-        return assign(line, o);
+        return assign(line, o, parseErrors);
     }
 
     /**
@@ -72,58 +69,123 @@ public class JavaOutputter {
      *            The object to assign cell attributes to. The object will be modified.
      * @return The object that was assigned. The same object that was supplied as parameter.
      */
-    public <T> T assign(Line line, T objectToAssign) {
-
-        Method[] methods = objectToAssign.getClass().getMethods();
-        Object[] logInfo = new Object[] { objectToAssign.getClass().getName(), null, null };
+    public <T> T assign(Line line, T objectToAssign, List<CellParseError> parseErrors) {
 
         java.util.Iterator<Cell> cellIter = line.getCellIterator();
         while (cellIter.hasNext()) {
+            Cell cell = cellIter.next();
+            String sName = cell.getName();
+            if (sName == null || sName.length() == 0)
+                continue;
+
+            String sSetMethodName = "set" + sName.substring(0, 1).toUpperCase() + sName.substring(1, sName.length());
+            boolean success;
             try {
-                Cell cell = cellIter.next();
-                if (cell.getName() == null)
-                    continue;
-                String sName = cell.getName();
-                if (sName != null && sName.length() > 0) {
-                    String sSetMethodName = "set" + sName.substring(0, 1).toUpperCase()
-                            + sName.substring(1, sName.length());
-                    logInfo[1] = sSetMethodName;
-                    boolean isSet = false;
-                    for (Method f : methods) {
-                        if (f.getName().equals(sSetMethodName)) {
-                            f.invoke(objectToAssign, cell.getValue());
-                            isSet = true;
-                            logger.finest("Assigned cell by calling {1} of {0}");
-                            break;
-                        }
-                    }
-                    if (!isSet) {
-                        logger.log(Level.INFO, "Skipped assigning cell - No method called {1}() found in class {0}",
-                                logInfo);
-                    }
-                }
-            } catch (SecurityException e) {
-                logInfo[2] = e;
-                logger.log(Level.INFO,
-                        "Skipped assigning cell - The method {1}() in class {0} does not have public access. - {2}",
-                        logInfo);
+                success = assignParameterBySignature(objectToAssign, sSetMethodName, cell);
+                if (!success) // Try again but use the name and try to cast.
+                    assignParameterByName(objectToAssign, sSetMethodName, cell, parseErrors);
             } catch (IllegalArgumentException e) {
-                logInfo[2] = e;
-                logger.log(Level.INFO,
-                        "Skipped assigning cell - The method {1}() in class {0} does accept correct type. - {2}",
-                        logInfo);
+                parseErrors.add(new CellParseError(cell.getName(), cell.getStringValue(), null,
+                        "Skipped assigning cell - The method " + sSetMethodName + "() in class "
+                                + objectToAssign.getClass().getName() + " does not accept correct type - " + e));
             } catch (IllegalAccessException e) {
-                logInfo[2] = e;
-                logger.log(Level.INFO,
-                        "Skipped assigning cell - The method {1}() in class {0} does not have correct access. - {2}",
-                        logInfo);
+                parseErrors.add(new CellParseError(cell.getName(), cell.getStringValue(), null,
+                        "Skipped assigning cell - The method " + sSetMethodName + "() in class "
+                                + objectToAssign.getClass().getName() + " does not have correct access - " + e));
             } catch (InvocationTargetException e) {
-                logInfo[2] = e;
-                logger.log(Level.INFO,
-                        "Skipped assigning cell - The method {1}() in class {0} fails to execute. - {2}", logInfo);
+                parseErrors.add(new CellParseError(cell.getName(), cell.getStringValue(), null,
+                        "Skipped assigning cell - The method " + sSetMethodName + "() in class "
+                                + objectToAssign.getClass().getName() + " failed to execute - " + e));
             }
         }
         return objectToAssign;
+    }
+
+    /**
+     * Assigns the cells of a line as attributes to an object.
+     * 
+     * @param <T>
+     *            The type of the object to assign
+     * @param cell
+     *            The cell to get the parameter from.
+     * @param objectToAssign
+     *            The object to assign cell attributes to. The object will be modified.
+     * @return True if the parameter was assigned to the object, false otherwise.
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     */
+    @SuppressWarnings("unchecked")
+    private <T> boolean assignParameterBySignature(T objectToAssign, String sSetMethodName, Cell cell)
+            throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        try {
+            Class type = cell.getValue().getClass();
+            Method f = objectToAssign.getClass().getMethod(sSetMethodName, type);
+            f.invoke(objectToAssign, cell.getValue());
+            return true;
+        } catch (NoSuchMethodException e) {
+            // We don't care here since we will try again if this method fails.
+        }
+        return false;
+    }
+
+    /**
+     * Assigns the cells of a line as attributes to an object.
+     * 
+     * @param <T>
+     *            The type of the object to assign
+     * @param cell
+     *            The cell to get the parameter from.
+     * @param objectToAssign
+     *            The object to assign cell attributes to. The object will be modified.
+     * @return True if the parameter was assigned to the object, false otherwise.
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
+     */
+    @SuppressWarnings("unchecked")
+    private <T> boolean assignParameterByName(T objectToAssign,
+                                              String sSetMethodName,
+                                              Cell cell,
+                                              List<CellParseError> parseErrors) throws IllegalArgumentException,
+            IllegalAccessException, InvocationTargetException {
+
+        try {
+            Method[] methods = objectToAssign.getClass().getMethods();
+            for (Method f : methods) {
+                Class[] paramTypes = f.getParameterTypes();
+                if (paramTypes.length != 1 || !f.getName().equals(sSetMethodName))
+                    continue;
+                
+                Object value = cell.getValue();
+                // Casts between simple types does not work automatically
+                if (paramTypes[0] == Integer.TYPE && value instanceof Number)
+                    f.invoke(objectToAssign, ((Number) value).intValue());
+                else if (paramTypes[0] == Short.TYPE && value instanceof Number)
+                    f.invoke(objectToAssign, ((Number) value).shortValue());
+                else if (paramTypes[0] == Byte.TYPE && value instanceof Number)
+                    f.invoke(objectToAssign, ((Number) value).byteValue());
+                else if (paramTypes[0] == Float.TYPE && value instanceof Number)
+                    f.invoke(objectToAssign, ((Number) value).floatValue());
+                else {
+                    try {
+                        f.invoke(objectToAssign, value);
+                    } catch (IllegalArgumentException e) {
+                        // There may be more methods that fits the name.
+                        continue;
+                    }
+                }
+                return true;
+            }
+            parseErrors.add(new CellParseError(cell.getName(), cell.getStringValue(), null,
+                    "Skipped assigning cell - No method called " + sSetMethodName + "() found in class "
+                            + objectToAssign.getClass().getName() + " that fits the cell " + cell));
+        } catch (SecurityException e) {
+            parseErrors.add(new CellParseError(cell.getName(), cell.getStringValue(), null,
+                    "Skipped assigning cell - The method " + sSetMethodName + "() in class "
+                            + objectToAssign.getClass().getName() + " does not have public access - " + e));
+        }
+        return false;
     }
 
 }

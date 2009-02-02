@@ -1,11 +1,14 @@
 package org.jsapar.input;
 
 import java.io.IOException;
+import java.io.Reader;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
+import org.jsapar.output.JavaOutputter;
 
 /**
  * This class is the starting point for parsing a file (or other source). <br>
@@ -59,29 +62,6 @@ public class Parser implements ParsingEventListener {
 
     /**
      * Reads characters from the reader and parses them into a Document. If there is an error while
-     * parsing, this method will throw an exception of type org.jsapar.input.ParseException. <br>
-     * Use this method only if you are sure that the whole file can be parsed into memory. If the
-     * file is too big, a OutOfMemory exception will be thrown. For large files use the parse method
-     * instead.<br>
-     * <br>
-     * This method will clear all existing ParseSchemas and replace them with the supplied schema.<br>
-     * 
-     * @deprecated Deprecated since version 0.4.0. Use build(Reader) instead.
-     * 
-     * @param reader
-     * @param schema
-     *            The ParseSchema to use to build the document.
-     * @return A complete Document representing the parsed input buffer.
-     * @throws JSaParException
-     */
-    @Deprecated
-    public org.jsapar.Document build(java.io.Reader reader, ParseSchema schema) throws JSaParException {
-        this.schema = schema;
-        return build(reader);
-    }
-
-    /**
-     * Reads characters from the reader and parses them into a Document. If there is an error while
      * parsing a cell, this method will add a CellParseError object to the supplied parseError list.
      * If there is an error reading the input or an error at the structure of the input, a
      * JSaParException will be thrown.<br>
@@ -100,31 +80,18 @@ public class Parser implements ParsingEventListener {
     }
 
     /**
-     * Reads characters from the reader and parses them into a Document. If there is an error while
-     * parsing a cell, this method will add a CellParseError object to the supplied parseError list.
-     * If there is an error reading the input or an error at the structure of the input, a
-     * JSaParException will be thrown.<br>
-     * Use this method only if you are sure that the whole file can be parsed into memory. If the
-     * file is too big, a OutOfMemory exception will be thrown. For large files use the parse method
-     * instead.
-     * 
-     * <br>
-     * This method will clear all existing ParseSchemas and replace them with the supplied schema.<br>
-     * 
-     * @deprecated Deprecated since version 0.4.0. Use build(Reader) instead.
-     * 
      * @param reader
-     * @param schema
-     *            The ParseSchema to use to build the document.
      * @param parseErrors
-     * @return A complete Document representing the parsed input buffer.
+     *            Supply an empty list of CellParseError and this method will populate the list if
+     *            errors are found while parsing.
+     * @return A collection of java objects. The class of each java object is determined by the
+     *         lineType of each line.
      * @throws JSaParException
      */
-    @Deprecated
-    public Document build(java.io.Reader reader, ParseSchema schema, List<CellParseError> parseErrors)
-            throws JSaParException {
-        this.schema = schema;
-        return build(reader, parseErrors);
+    @SuppressWarnings("unchecked")
+    public List buildJava(Reader reader, List<CellParseError> parseErrors) throws JSaParException {
+        JavaBuilder javaBuilder = new JavaBuilder(parseErrors);
+        return javaBuilder.build(reader);
     }
 
     /**
@@ -145,29 +112,6 @@ public class Parser implements ParsingEventListener {
         } catch (IOException e) {
             throw new ParseException("Failed to read input", e);
         }
-    }
-
-    /**
-     * Reads characters from the reader and parses them into a Line. Once a Line is completed, a
-     * LineParsedEvent is generated to all registered event listeners. If there is an error while
-     * parsing a line, a LineErrorEvent is generated to all registered event listeners <br>
-     * Before calling this method you have to call addParsingEventListener to be able to handle the
-     * result<br>
-     * If there is an error reading the input or an error at the structure of the input, a
-     * JSaParException will be thrown.
-     * 
-     * <br>
-     * This method will clear all existing ParseSchemas and replace them with the supplied schema.<br>
-     * 
-     * @deprecated Deprecated since version 0.4.0. Use parse(Reader) instead.
-     * @param reader
-     * @param schema
-     * @throws JSaParException
-     */
-    @Deprecated
-    public void parse(java.io.Reader reader, ParseSchema schema) throws JSaParException {
-        this.schema = schema;
-        parse(reader);
     }
 
     /**
@@ -274,6 +218,56 @@ public class Parser implements ParsingEventListener {
                 throw new ParseException("Failed to read input", e);
             }
             return this.document;
+        }
+    }
+
+    /**
+     * Private class that converts the events from the parser into a list of Java object. This
+     * builder adds errors to a list of CellParseErrors.
+     * 
+     * @author stejon0
+     * 
+     */
+    @SuppressWarnings("unchecked")
+    private class JavaBuilder {
+        private List objects = new LinkedList();
+        private List<CellParseError> parseErrors;
+        private JavaOutputter outputter = new JavaOutputter();
+
+        public JavaBuilder(List<CellParseError> parseErrors) {
+            this.parseErrors = parseErrors;
+        }
+
+        public List build(java.io.Reader reader) throws JSaParException {
+            addParsingEventListener(new ParsingEventListener() {
+
+                @Override
+                public void lineErrorErrorEvent(LineErrorEvent event) {
+                    parseErrors.add(event.getCellParseError());
+                }
+
+                @Override
+                public void lineParsedEvent(LineParsedEvent event) {
+                    List<CellParseError> currentParseErrors = new LinkedList<CellParseError>();
+                    try {
+                        objects.add(outputter.createObject(event.getLine(), currentParseErrors));
+                    } catch (Exception e) {
+                        currentParseErrors.add(new CellParseError(event.getLineNumber(), "", "", null,
+                                "Skipped creating object - " + e));
+                    }
+                    for (CellParseError parseError : currentParseErrors) {
+                        parseError.setLineNumber(event.getLineNumber());
+                    }
+                    parseErrors.addAll(currentParseErrors);
+                }
+            });
+
+            try {
+                schema.parse(reader, Parser.this);
+            } catch (IOException e) {
+                throw new ParseException("Failed to read input", e);
+            }
+            return this.objects;
         }
     }
 }

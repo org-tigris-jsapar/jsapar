@@ -75,6 +75,10 @@ public class TestPerson {
 	return luckyNumber;
     }
 
+    public void setLuckyNumber(String theNumber){
+        this.luckyNumber = Long.valueOf(theNumber);
+    }
+
     /**
      * @param happyNumber
      *            the happyNumber to set
@@ -82,7 +86,7 @@ public class TestPerson {
     public void setLuckyNumber(long happyNumber) {
 	this.luckyNumber = happyNumber;
     }
-
+    
     /**
      * @return the birthTime
      */

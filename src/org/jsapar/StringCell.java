@@ -53,6 +53,29 @@ public class StringCell extends Cell implements Comparable<StringCell> {
     }
 
     /**
+     * Creates a string cell without any name with the supplied value.
+     * @param chValue
+     */
+    public StringCell(char chValue) {
+        super(CellType.STRING);
+        StringBuilder sb = new StringBuilder();
+        sb.append(chValue);
+        this.stringValue = sb.toString();
+    }
+
+    /**
+     * Creates a string cell with the supplied name and value.
+     * 
+     * @param sName
+     * @param chValue
+     */
+    public StringCell(String sName, char chValue) {
+        super(sName, CellType.STRING);
+        StringBuilder sb = new StringBuilder();
+        sb.append(chValue);
+        this.stringValue = sb.toString();
+    }
+    /**
      * Creates a string cell with the supplied name and value. The format parameter is used to parse the supplied value.
      * @param name
      * @param value

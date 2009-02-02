@@ -8,6 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 
 import org.jsapar.input.CellParseError;
 import org.jsapar.input.ParseSchema;
@@ -163,5 +169,30 @@ public class JSaParExamplesTest {
         outWriter.close();
 
         Assert.assertTrue(outFile.isFile());
+    }
+
+    @Test
+    public final void testExampleCsvToJava07() throws SchemaException, IOException, JSaParException, ParseException {
+        Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");
+        Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
+        Reader fileReader = new FileReader("samples/07_Names.csv");
+        Parser parser = new Parser(xmlBuilder.build(schemaReader));
+        List<CellParseError> parseErrors = new LinkedList<CellParseError>();
+        List<TestPerson> people = parser.buildJava(fileReader, parseErrors);
+        fileReader.close();
+        if(parseErrors.size()>0)
+            System.out.println("Errors: " + parseErrors);
+
+        assertEquals(0, parseErrors.size());
+        assertEquals(2, people.size());
+        assertEquals("Erik", people.get(0).getFirstName());
+        assertEquals("Svensson", people.get(0).getLastName());
+        assertEquals(45, people.get(0).getShoeSize());
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        assertEquals(df.parse("1901-01-13 13:45"), people.get(0).getBirthTime());
+        
+        assertEquals("Fredrik", people.get(1).getFirstName());
+        assertEquals("Larsson", people.get(1).getLastName());
+        assertEquals(4711, people.get(1).getLuckyNumber());
     }
 }
