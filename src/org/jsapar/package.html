@@ -10,6 +10,8 @@
 The JSaPar package provides a parser for flat and CSV (Comma Separated
 Values) files.
 <br/><br/>
+The files for the examples below are provided in the <tt>samples</tt> folder of the project. The JUnit test <tt>org.jsapar.JSaParExamplesTest.java</tt> 
+contains a more comprehensive set of examples of how to use the package. 
 <p>
 Example of reading <b>CSV file</b> into a Document object according to an xml-schema:
 <table style="font-family: monospace" border="1" >
@@ -45,5 +47,25 @@ Example of converting a <b>Fixed width file</b> into a <b>CSV file</b> according
 	</tr>
 </table>
 </p>
+
+<p>
+Example of converting a <b>CSV file</b> into a list of <b>Java objects</b> according to an xml-schema:
+<table style="font-family: monospace" border="1" >
+	<tr>
+		<td>
+        Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");<br/>
+        Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();<br/>
+        Reader fileReader = new FileReader("samples/07_Names.csv");<br/>
+        Parser parser = new Parser(xmlBuilder.build(schemaReader));<br/>
+        List<CellParseError> parseErrors = new LinkedList<CellParseError>()<br/>
+        List<TestPerson> people = parser.buildJava(fileReader, parseErrors);<br/>
+        fileReader.close();<br/>
+		<td />
+	</tr>
+</table>
+</p>
+
+
+
 </body>
 </html>
