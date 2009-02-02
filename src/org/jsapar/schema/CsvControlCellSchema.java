@@ -25,6 +25,7 @@ public class CsvControlCellSchema extends CsvSchema {
      * Regular expression determining the separator between cells within a row.
      */
     private String controlCellSeparator = ";";
+    private boolean writeControlCell = true;
 
     /**
      * @return the controlCellSeparator
@@ -56,12 +57,12 @@ public class CsvControlCellSchema extends CsvSchema {
 
         while (itLines.hasNext()) {
             Line line = itLines.next();
-            CsvSchemaLine schemaLine = getSchemaLineByType(line.getLineType());
+            SchemaLine schemaLine = getSchemaLine(line.getLineType());
             if (schemaLine == null)
                 throw new JSaParException("Could not find schema line of type " + line.getLineType());
             writeControlCell(writer, schemaLine.getLineTypeControlValue());
 
-            ((CsvSchemaLine) schemaLine).output(line, writer);
+            schemaLine.output(line, writer);
 
             if (itLines.hasNext())
                 writer.write(getLineSeparator());
@@ -79,8 +80,10 @@ public class CsvControlCellSchema extends CsvSchema {
      * @throws IOException
      */
     private void writeControlCell(Writer writer, String controlValue) throws OutputException, IOException {
-        writer.append(controlValue);
-        writer.append(this.getControlCellSeparator());
+        if (writeControlCell) {
+            writer.append(controlValue);
+            writer.append(this.getControlCellSeparator());
+        }
     }
 
     /**
@@ -91,18 +94,6 @@ public class CsvControlCellSchema extends CsvSchema {
     public CsvSchemaLine getSchemaLineByControlValue(String sLineTypeControlValue) {
         for (CsvSchemaLine lineSchema : this.getCsvSchemaLines()) {
             if (lineSchema.getLineTypeControlValue().equals(sLineTypeControlValue))
-                return lineSchema;
-        }
-        return null;
-    }
-
-    /**
-     * @param sLineType
-     * @return A schema line of type FixedWitdthSchemaLine which has the supplied line type.
-     */
-    public CsvSchemaLine getSchemaLineByType(String sLineType) {
-        for (CsvSchemaLine lineSchema : this.getCsvSchemaLines()) {
-            if (lineSchema.getLineType().equals(sLineType))
                 return lineSchema;
         }
         return null;
@@ -186,7 +177,7 @@ public class CsvControlCellSchema extends CsvSchema {
      */
     @Override
     public boolean outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
-        SchemaLine schemaLine = getSchemaLineByType(line.getLineType());
+        SchemaLine schemaLine = getSchemaLine(line.getLineType());
         if (schemaLine == null)
             return false;
 
@@ -195,5 +186,20 @@ public class CsvControlCellSchema extends CsvSchema {
         writeControlCell(writer, schemaLine.getLineTypeControlValue());
         schemaLine.output(line, writer);
         return true;
+    }
+
+    /**
+     * @return the writeControlCell
+     */
+    public boolean isWriteControlCell() {
+        return writeControlCell;
+    }
+
+    /**
+     * @param writeControlCell
+     *            the writeControlCell to set
+     */
+    public void setWriteControlCell(boolean writeControlCell) {
+        this.writeControlCell = writeControlCell;
     }
 }

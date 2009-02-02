@@ -201,4 +201,14 @@ public class FixedWidthSchema extends Schema {
     public void outputBefore(Writer writer) throws IOException, JSaParException {
     }
 
+    @Override
+    public SchemaLine getSchemaLine(String lineType) {
+        for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
+            if (lineSchema.getLineType().equals(lineType)) {
+                return lineSchema;
+            }
+        }
+        return null;
+    }
+
 }

@@ -206,4 +206,16 @@ public class CsvSchema extends Schema {
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.Schema#getSchemaLine(java.lang.String)
+     */
+    @Override
+    public SchemaLine getSchemaLine(String lineType) {
+        for (CsvSchemaLine lineSchema : this.getCsvSchemaLines()) {
+            if (lineSchema.getLineType().equals(lineType))
+                return lineSchema;
+        }
+        return null;
+    }
+
 }

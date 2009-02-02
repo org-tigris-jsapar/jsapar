@@ -142,6 +142,51 @@ public class CsvControlCellSchemaTest {
 
         assertEquals(sExpected, writer.toString());
     }
+    
+    @Test
+    public void testOutput_DontWriteControlCell() throws IOException, JSaParException {
+        CsvControlCellSchema schema = new CsvControlCellSchema();
+        schema.setWriteControlCell(false);
+
+        CsvSchemaLine schemaLine = new CsvSchemaLine("Address", "A");
+        schemaLine.addSchemaCell(new CsvSchemaCell("Street"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("ZipCode"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("City"));
+        schemaLine.setCellSeparator(":");
+        schema.addSchemaLine(schemaLine);
+
+        schemaLine = new CsvSchemaLine("Name", "N");
+        schemaLine.addSchemaCell(new CsvSchemaCell("First name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
+        schema.addSchemaLine(schemaLine);
+
+        Document doc = new Document();
+
+        Line line = new Line("Name");
+        line.addCell(new StringCell("Jonas"));
+        line.addCell(new StringCell("Stenberg"));
+        doc.addLine(line);
+
+        line = new Line("Address");
+        line.addCell(new StringCell("Storgatan 4"));
+        line.addCell(new StringCell("12345"));
+        line.addCell(new StringCell("Bortastaden"));
+        doc.addLine(line);
+
+        line = new Line("Name");
+        line.addCell(new StringCell("Nils"));
+        line.addCell(new StringCell("Nilsson"));
+        doc.addLine(line);
+
+        StringWriter writer = new StringWriter();
+        schema.output(doc.getLineIterator(), writer);
+
+        String sLineSep = System.getProperty("line.separator");
+        String sExpected = "Jonas;Stenberg" + sLineSep + "Storgatan 4:12345:Bortastaden" + sLineSep
+                + "Nils;Nilsson";
+
+        assertEquals(sExpected, writer.toString());
+    }
 
     /**
      * Test method for {@link org.jsapar.schema.CsvControlCellSchema#getControlCellSeparator()}.

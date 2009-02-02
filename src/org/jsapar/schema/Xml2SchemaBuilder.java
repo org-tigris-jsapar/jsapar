@@ -51,6 +51,7 @@ public class Xml2SchemaBuilder {
     private static final String ATTRIB_SCHEMA_CELL_MAX = "max";
     private static final String ATTRIB_CSV_QUOTE_CHAR = "quotechar";
     private static final String ATTRIB_SCHEMA_LINE_IGNORE_READ_EMPTY_LINES = "ignorereademptylines";
+    private static final String ATTRIB_SCHEMA_WRITE_CONTROL_CELL = "writecontrolcell";
 
     private static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
     private static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
@@ -232,8 +233,12 @@ public class Xml2SchemaBuilder {
 
 	assignFixedWidthSchema(schema, xmlSchema);
 
-	Element xmlControlCell = getChild(xmlSchema, ELEMENT_FW_SCHEMA_CONTROLCELL);
+	Node xmlWriteControlCell = xmlSchema.getAttributeNode(ATTRIB_SCHEMA_WRITE_CONTROL_CELL);
+        if(xmlWriteControlCell != null)
+            schema.setWriteControlCell(getBooleanValue(xmlWriteControlCell));
+        
 
+	Element xmlControlCell = getChild(xmlSchema, ELEMENT_FW_SCHEMA_CONTROLCELL);
 	Node xmlControlCellLength = xmlControlCell.getAttributeNode(ATTRIB_FW_SCHEMA_CONTROLCELLL_ENGTH);
 	if (xmlControlCellLength != null)
 	    schema.setControlCellLength(getIntValue(xmlControlCellLength));
@@ -366,6 +371,13 @@ public class Xml2SchemaBuilder {
 	if (sSeparator != null)
 	    schema.setControlCellSeparator(sSeparator);
 
+        if (sSeparator != null)
+            schema.setControlCellSeparator(sSeparator);
+	
+        Node xmlWriteControlCell = xmlSchema.getAttributeNode(ATTRIB_SCHEMA_WRITE_CONTROL_CELL);
+        if(xmlWriteControlCell != null)
+            schema.setWriteControlCell(getBooleanValue(xmlWriteControlCell));
+        
 	return schema;
     }
 

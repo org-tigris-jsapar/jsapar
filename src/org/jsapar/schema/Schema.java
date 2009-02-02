@@ -158,7 +158,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
     }
 
     @SuppressWarnings("unchecked")
-    public abstract List getSchemaLines();
+    protected abstract List getSchemaLines();
 
     /**
      * @param lineNumber
@@ -176,6 +176,12 @@ public abstract class Schema implements Cloneable, ParseSchema {
 	}
 	return null;
     }
+    
+    /**
+     * @param sLineType
+     * @return The schema line with the supplied line type name. Null if no such schema line was found.
+     */
+    public abstract SchemaLine getSchemaLine(String lineType);
 
     /**
      * This method should only be called by a Outputter class. Don't use this directly in your code.

@@ -33,6 +33,7 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
 
     private int controlCellLength;
     private FixedWidthSchemaCell.Alignment controlCellAlignment = Alignment.LEFT;
+    private boolean writeControlCell = true;
 
     /**
      * 
@@ -74,18 +75,6 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
         return null;
     }
 
-    /**
-     * @param sLineType
-     * @return A schema line of type FixedWitdthSchemaLine which has the supplied line type.
-     */
-    public FixedWidthSchemaLine getSchemaLineByType(String sLineType) {
-        for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
-            if (lineSchema.getLineType().equals(sLineType)) {
-                return lineSchema;
-            }
-        }
-        return null;
-    }
 
     /*
      * (non-Javadoc)
@@ -149,7 +138,7 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
 
         while (itLines.hasNext()) {
             Line line = itLines.next();
-            FixedWidthSchemaLine schemaLine = getSchemaLineByType(line.getLineType());
+            SchemaLine schemaLine = getSchemaLine(line.getLineType());
             if (schemaLine == null)
                 throw new JSaParException("Could not find schema line of type " + line.getLineType());
             writeControlCell(writer, schemaLine.getLineTypeControlValue());
@@ -170,7 +159,8 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
      * @throws IOException
      */
     private void writeControlCell(Writer writer, String controlValue) throws OutputException, IOException {
-        FixedWidthSchemaCell.output(controlValue, writer, ' ', getControlCellLength(), getControlCellAlignment());
+        if(writeControlCell)
+            FixedWidthSchemaCell.output(controlValue, writer, ' ', getControlCellLength(), getControlCellAlignment());
     }
 
     /**
@@ -228,7 +218,7 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
 
     @Override
     public boolean outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
-        SchemaLine schemaLine = getSchemaLineByType(line.getLineType());
+        SchemaLine schemaLine = getSchemaLine(line.getLineType());
         if (schemaLine == null)
             return false;
         
@@ -237,5 +227,19 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
         writeControlCell(writer, schemaLine.getLineTypeControlValue());
         schemaLine.output(line, writer);
         return true;
+    }
+
+    /**
+     * @return the writeControlCell
+     */
+    public boolean isWriteControlCell() {
+        return writeControlCell;
+    }
+
+    /**
+     * @param writeControlCell the writeControlCell to set
+     */
+    public void setWriteControlCell(boolean writeControlCell) {
+        this.writeControlCell = writeControlCell;
     }
 }

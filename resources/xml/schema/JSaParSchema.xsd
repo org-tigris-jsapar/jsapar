@@ -150,6 +150,11 @@ Note that the number formats are parsed according to the specified locale.</xsd:
             </xsd:annotation>
           </xsd:element>
         </xsd:sequence>
+        <xsd:attribute default="true" name="writecontrolcell" type="xsd:boolean">
+          <xsd:annotation>
+            <xsd:documentation>Specifies if the control cell should be written for output. If false, the control cell is discarded in the output field. Default is true. </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -220,10 +225,15 @@ center
   <xsd:complexType name="CsvControlCellSchema">
     <xsd:complexContent mixed="false">
       <xsd:extension base="CsvSchema">
-        <xsd:attribute name="controlcellseparator" type="xsd:string" use="required">
+        <xsd:attribute default=";" name="controlcellseparator" type="xsd:string">
           <xsd:annotation>
             <xsd:documentation>A sequence of characters that are used to delimit the control cell from the rest of the line. Default is a single ';' character.
 						</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute default="true" name="writecontrolcell" type="xsd:boolean">
+          <xsd:annotation>
+            <xsd:documentation>Specifies if the control cell should be written for output. If false, the control cell is discarded in the output field. Default is true. </xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
       </xsd:extension>
