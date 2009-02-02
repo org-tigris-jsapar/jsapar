@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.jsapar.Cell;
 import org.jsapar.Document;
-import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.input.CellParseError;
 
