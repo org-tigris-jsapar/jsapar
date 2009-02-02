@@ -171,6 +171,7 @@ public class JSaParExamplesTest {
         Assert.assertTrue(outFile.isFile());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public final void testExampleCsvToJava07() throws SchemaException, IOException, JSaParException, ParseException {
         Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");
