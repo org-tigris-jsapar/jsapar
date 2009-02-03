@@ -12,20 +12,20 @@ import org.jsapar.output.JavaOutputter;
 /**
  * This class is the starting point for parsing a file (or other source). <br>
  * <br>
- * You have two alternatives: <br>
- * Either you use the build methods to build a complete Document from the input source. <br>
- * The second alternative is to use the parse method. In that case you will receive a callback event
- * for each line that is parsed. <br>
+ * You have the following options:
+ * <ol>
+ * <li>Use one of the build() methods to build a complete org.jsapar.Document from the input source.
+ * </li>
+ * <li>Use the parse() method. In that case you will receive a callback event for each line that is
+ * parsed.</li>
+ * <li>Use the buildJava() method to build java objects directly. There are quite a few requirement
+ * that have to be fulfilled if that method is supposed to work.</li>
+ * </ol>
+ * 
  * For large sources of data when it is essential not over-load the memory, the parse method will be
  * the preferred choice since you never have to load everything into the memory. The build methods
  * on the other hand are slightly easier to use and understand.<br>
  * <br>
- * You have to add at least one ParseSchema before using an instance of Parser. You can do this
- * either by using the constructor with one or a list of ParseSchema, or you can add it after
- * construction with the addSchema() method.<br>
- * <br>
- * If more than one schema is present, they are used in the order they were added. The input buffer
- * is read until end of buffer is reached.
  * 
  * @author stejon0
  * 
@@ -79,6 +79,10 @@ public class Parser implements ParsingEventListener {
     }
 
     /**
+     * Reads characters from the reader and parses them into a list of java objects denoted by the
+     * schema. See org.jsapar.input.JavaBuilder for more information about how to build java objects
+     * from an input source.
+     * 
      * @param reader
      * @param parseErrors
      *            Supply an empty list of CellParseError and this method will populate the list if
