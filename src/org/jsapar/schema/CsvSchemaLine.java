@@ -291,6 +291,12 @@ public class CsvSchemaLine extends SchemaLine {
     }
 
     /**
+     * @return true if quote character is used, false otherwise.
+     */
+    public boolean isQuoteCharUsed(){
+        return this.quoteChar == 0 ? false : true;
+    }
+    /**
      * @param quoteChar
      *            the quote character to set
      */

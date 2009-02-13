@@ -18,45 +18,7 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-public class Xml2SchemaBuilder {
-    private final static String ELEMENT_CSV_SCHEMA = "csvschema";
-    private final static String ELEMENT_CSV_CONTROL_CELL_SCHEMA = "csvcontrolcellschema";
-    private final static String ELEMENT_FIXED_WIDTH_SCHEMA = "fixedwidthschema";
-    private final static String ELEMENT_FIXED_WIDTH_CONTROL_CELL_SCHEMA = "fixedwidthcontrolcellschema";
-    private final static String ELEMENT_LOCALE = "locale";
-    private final static String ELEMENT_FORMAT = "format";
-    private static final String ATTRIB_FW_SCHEMA_FILL_CHARACTER = "fillcharacter";
-    private static final String ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS = "trimfillcharacters";
-    private static final String ATTRIB_SCHEMA_CELL_NAME = "name";
-    private static final String ATTRIB_FW_SCHEMA_CELL_LENGTH = "length";
-    private static final String ATTRIB_SCHEMA_LINE_LINETYPE = "linetype";
-    private static final String ATTRIB_SCHEMA_LINE_LINETYPE_CONTROL_VALUE = "linetypecontrolvalue";
-    private static final String ATTRIB_SCHEMA_LINE_OCCURS = "occurs";
-    private static final String ATTRIB_CSV_SCHEMA_CELL_SEPARATOR = "cellseparator";
-    private static final String ATTRIB_CSV_SCHEMA_CONTROL_CELL_SEPARATOR = "controlcellseparator";
-    private static final String ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA = "firstlineasschema";
-    private static final String ATTRIB_LOCALE_LANGUAGE = "language";
-    private static final String ATTRIB_LOCALE_COUNTRY = "country";
-    private static final String ATTRIB_SCHEMA_LINESEPARATOR = "lineseparator";
-    private static final String ATTRIB_SCHEMA_CELL_IGNOREREAD = "ignoreread";
-    private static final String ATTRIB_FW_SCHEMA_CONTROLCELLL_ENGTH = "length";
-    private static final String ATTRIB_FW_SCHEMA_CONTROLCELL_ALLIGNMENT = "allignment";
-    private static final String ATTRIB_FW_SCHEMA_CELL_ALLIGNMENT = "allignment";
-    private static final String ELEMENT_FW_SCHEMA_CONTROLCELL = "controlcell";
-    private static final String ELEMENT_SCHEMA_LINE = "line";
-    private static final String ELEMENT_SCHEMA_LINE_CELL = "cell";
-    private static final String ATTRIB_SCHEMA_CELL_MANDATORY = "mandatory";
-    private static final String ELEMENT_RANGE = "range";
-    private static final String ATTRIB_SCHEMA_CELL_MIN = "min";
-    private static final String ATTRIB_SCHEMA_CELL_MAX = "max";
-    private static final String ATTRIB_CSV_QUOTE_CHAR = "quotechar";
-    private static final String ATTRIB_SCHEMA_LINE_IGNORE_READ_EMPTY_LINES = "ignorereademptylines";
-    private static final String ATTRIB_SCHEMA_WRITE_CONTROL_CELL = "writecontrolcell";
-
-    private static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
-    private static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
-    private static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
-    public static final String JSAPAR_XML_SCHEMA = "http://jsapar.tigris.org/JSaParSchema/1.0";
+public class Xml2SchemaBuilder implements SchemaXmlTypes{
 
     /**
      * Utility function to retreive first matching child element.

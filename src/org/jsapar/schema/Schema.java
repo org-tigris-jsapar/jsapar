@@ -25,6 +25,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
 	OCCURS, CONTROL_CELL
     };
 
+    private java.util.Locale locale = Locale.getDefault();
     private String lineSeparator = System.getProperty("line.separator");
 
     /**
@@ -55,8 +56,6 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @throws JSaParException
      */
     public abstract void outputAfter(Writer writer) throws IOException, JSaParException;
-
-    private java.util.Locale locale = Locale.getDefault();
 
     /**
      * @return the lineSeparator
