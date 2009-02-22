@@ -35,6 +35,7 @@ public interface SchemaXmlTypes {
     public static final String ATTRIB_CSV_QUOTE_CHAR = "quotechar";
     public static final String ATTRIB_SCHEMA_LINE_IGNORE_READ_EMPTY_LINES = "ignorereademptylines";
     public static final String ATTRIB_SCHEMA_WRITE_CONTROL_CELL = "writecontrolcell";
+    public static final String ATTRIB_SCHEMA_CELL_DEFAULT_VALUE = "default";
 
     public static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
     public static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";

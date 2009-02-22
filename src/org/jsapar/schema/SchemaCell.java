@@ -26,6 +26,7 @@ public abstract class SchemaCell implements Cloneable {
     private boolean mandatory = false;
     private Cell minValue = null;
     private Cell maxValue = null;
+    private Cell defaultValue = null;
     private Locale locale = Locale.getDefault();
 
     public SchemaCell() {
@@ -98,8 +99,12 @@ public abstract class SchemaCell implements Cloneable {
         // If the cell is mandatory, don't accept empty string.
         if (sValue.length() <= 0) {
             if (isMandatory()) {
-                throw new ParseException(new CellParseError(getName(), "", getCellFormat(),
+                throw new ParseException(new CellParseError(getName(),
+                        "",
+                        getCellFormat(),
                         "Mandatory cell requires a value."));
+            } else if (defaultValue != null) {
+                return defaultValue.makeCopy(getName());
             } else {
                 return new EmptyCell(getName(), this.cellFormat.getCellType());
             }
@@ -329,4 +334,27 @@ public abstract class SchemaCell implements Cloneable {
         Cell cell = SchemaCell.makeCell(this.getCellFormat().getCellType(), "Max", value, locale);
         this.maxValue = cell;
     }
+
+    public Cell getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(Cell defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public void setDefaultValue(String sDefaultValue) throws ParseException {
+        this.defaultValue = makeCell(sDefaultValue);
+    }
+
+    /**
+     * Formats a cell to a string according to the rules of this schema.
+     * 
+     * @param cell
+     * @return
+     */
+    public String format(Cell cell) {
+        return cell.getStringValue(getCellFormat().getFormat());
+    }
+
 }

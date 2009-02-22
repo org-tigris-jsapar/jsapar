@@ -9,6 +9,7 @@ import java.io.StringWriter;
 
 import junit.framework.Assert;
 
+import org.jsapar.StringCell;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -117,7 +118,9 @@ public class Schema2XmlExtractorTest {
         StringWriter writer = new StringWriter();
         CsvControlCellSchema schema = new CsvControlCellSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine("Names", "N");
-        schemaLine.addSchemaCell(new CsvSchemaCell("First name"));
+        CsvSchemaCell firstNameCell = new CsvSchemaCell("First name");
+        firstNameCell.setDefaultValue(new StringCell("Default", "John"));
+        schemaLine.addSchemaCell(firstNameCell);
         schemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
         schema.addSchemaLine(schemaLine);
         

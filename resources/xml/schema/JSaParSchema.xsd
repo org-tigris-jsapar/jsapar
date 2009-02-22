@@ -66,37 +66,65 @@ Default is true.</xsd:documentation>
     </xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="SchemaCell">
-    <xsd:sequence>
-      <xsd:element minOccurs="0" maxOccurs="1" name="format" type="CellFormat" />
-      <xsd:element minOccurs="0" maxOccurs="1" name="range" type="CellValueRange">
-        <xsd:annotation>
-          <xsd:documentation>Not used in current version!!
-Specifies a valid range for the cell value. </xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element minOccurs="0" maxOccurs="1" name="locale" type="Locale">
-        <xsd:annotation>
-          <xsd:documentation>The locale of this cell. Overrides the locale setting fot the whole schema.</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-    </xsd:sequence>
-    <xsd:attribute name="name" type="xsd:string">
-      <xsd:annotation>
-        <xsd:documentation>The name of the cell. All Cell objects created with this SchemaCell will have this name. When writing output, the name of the Cell object have to match this name if the cell is to be written.</xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute name="ignoreread" type="xsd:boolean">
-      <xsd:annotation>
-        <xsd:documentation>Default is false.
-true = Ignore this cell when reading. Proceed to next cell. This means that the cell have to exist in the input file but it will not be stored in the resulting Document.
-false = Read and store this cell.</xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute default="false" name="mandatory" type="xsd:boolean">
-      <xsd:annotation>
-        <xsd:documentation>States if this cell have to contain a value or not. If this attribute is false, an empty value is accepted as long as the parsing mechanism can handle it for the given format. If this attribute is true, a parsing error is reported back. Default is false.</xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
+  	<xsd:sequence>
+  		<xsd:element minOccurs="0" maxOccurs="1" name="format"
+  			type="CellFormat" />
+  		<xsd:element minOccurs="0" maxOccurs="1" name="range"
+  			type="CellValueRange">
+  			<xsd:annotation>
+  				<xsd:documentation>
+  					Not used in current version!! Specifies a valid
+  					range for the cell value.
+  				</xsd:documentation>
+  			</xsd:annotation>
+  		</xsd:element>
+  		<xsd:element minOccurs="0" maxOccurs="1" name="locale"
+  			type="Locale">
+  			<xsd:annotation>
+  				<xsd:documentation>
+  					The locale of this cell. Overrides the locale
+  					setting fot the whole schema.
+  				</xsd:documentation>
+  			</xsd:annotation>
+  		</xsd:element>
+  	</xsd:sequence>
+  	<xsd:attribute name="name" type="xsd:string">
+  		<xsd:annotation>
+  			<xsd:documentation>
+  				The name of the cell. All Cell objects created with
+  				this SchemaCell will have this name. When writing
+  				output, the name of the Cell object have to match this
+  				name if the cell is to be written.
+  			</xsd:documentation>
+  		</xsd:annotation>
+  	</xsd:attribute>
+  	<xsd:attribute name="ignoreread" type="xsd:boolean">
+  		<xsd:annotation>
+  			<xsd:documentation>
+  				Default is false. true = Ignore this cell when
+  				reading. Proceed to next cell. This means that the
+  				cell have to exist in the input file but it will not
+  				be stored in the resulting Document. false = Read and
+  				store this cell.
+  			</xsd:documentation>
+  		</xsd:annotation>
+  	</xsd:attribute>
+  	<xsd:attribute default="false" name="mandatory"
+  		type="xsd:boolean">
+  		<xsd:annotation>
+  			<xsd:documentation>
+  				States if this cell have to contain a value or not. If
+  				this attribute is false, an empty value is accepted as
+  				long as the parsing mechanism can handle it for the
+  				given format. If this attribute is true, a parsing
+  				error is reported back. Default is false.
+  			</xsd:documentation>
+  		</xsd:annotation>
+  	</xsd:attribute>
+  	<xsd:attribute name="default" type="xsd:string">
+  		<xsd:annotation>
+  			<xsd:documentation>The default value of this cell. This value is used if the cell does not conatin any value. The value should be formatted according to the rules of the schema cell itself. Can not be used if the cell is mandatory.</xsd:documentation>
+  		</xsd:annotation></xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="CellFormat">
     <xsd:attribute name="type" use="required">

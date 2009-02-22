@@ -1,6 +1,5 @@
 package org.jsapar.schema;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
@@ -14,65 +13,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.jsapar.Cell.CellType;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 public class Schema2XmlExtractor implements SchemaXmlTypes {
-
-    /**
-     * Utility function to retreive first matching child element.
-     * 
-     * @param parentElement
-     * @param sChildName
-     * @return
-     */
-    private Element getChild(Element parentElement, String sChildName) {
-        org.w3c.dom.NodeList nodes = parentElement.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, sChildName);
-        for (int i = 0; i < nodes.getLength(); i++) {
-            org.w3c.dom.Node child = nodes.item(i);
-            if (child instanceof org.w3c.dom.Element) {
-                return (org.w3c.dom.Element) child;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Utility function to convert a boolean xml node into a boolean.
-     * 
-     * @param node
-     * @return
-     * @throws SchemaException
-     */
-    private boolean getBooleanValue(Node node) throws SchemaException {
-        final String value = node.getNodeValue().trim();
-        if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1")) {
-            return true;
-        } else if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("0")) {
-            return false;
-        } else {
-            throw new SchemaException("Failed to parse boolean node: " + node);
-        }
-    }
-
-    private String getStringValue(Node node) {
-        return node.getNodeValue().trim();
-    }
-
-    private String getAttributeValue(Element parent, String name) {
-        Node child = parent.getAttributeNode(name);
-        if (child == null)
-            return null;
-        else
-            return child.getNodeValue();
-    }
-
-    private int getIntValue(Node node) {
-        return Integer.parseInt(node.getNodeValue().trim());
-    }
 
     public org.w3c.dom.Document extractXmlDocument(Schema schema) throws SchemaException {
         try {
@@ -391,6 +335,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
         xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_NAME, cell.getName());
         xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_IGNOREREAD, String.valueOf(cell.isIgnoreRead()));
         xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_MANDATORY, String.valueOf(cell.isMandatory()));
+        
+        if(cell.getDefaultValue() != null)
+            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_DEFAULT_VALUE, cell.format(cell.getDefaultValue()));
 
         Element xmlFormat = extractCellFormat(xmlDocument, cell.getCellFormat());
         xmlSchemaCell.appendChild(xmlFormat);
@@ -409,9 +356,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     private Element extractCellRange(Document xmlDocument, SchemaCell cell) throws SchemaException {
         Element xmlRange = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_RANGE);
         if (cell.getMinValue() != null)
-            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MIN, cell.getMinValue().getStringValue());
+            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MIN, cell.format( cell.getMinValue()));
         if (cell.getMaxValue() != null)
-            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MAX, cell.getMaxValue().getStringValue());
+            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MAX, cell.format( cell.getMaxValue()));
         return xmlRange;
     }
 
@@ -436,51 +383,4 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
         return xmlFormat;
     }
 
-    /**
-     * Transforms from xml schema type to CellType enum.
-     * 
-     * @param sType
-     *            The xml representation of the type.
-     * @return The CellType value
-     * @throws SchemaException
-     */
-    private CellType getCellType(String sType) throws SchemaException {
-        if (sType.equals("string"))
-            return CellType.STRING;
-
-        if (sType.equals("integer"))
-            return CellType.INTEGER;
-
-        if (sType.equals("date"))
-            return CellType.DATE;
-
-        if (sType.equals("float"))
-            return CellType.FLOAT;
-
-        if (sType.equals("decimal"))
-            return CellType.DECIMAL;
-
-        if (sType.equals("boolean"))
-            return CellType.BOOLEAN;
-
-        throw new SchemaException("Unknown cell format type: " + sType);
-
-    }
-
-
-    /**
-     * Gets a mandatory xml attribute from a xml element. If the element does not exist, a
-     * SchemaException is thrown.
-     * 
-     * @param xmlElement
-     * @param sAttributeName
-     * @return The xml attribute.
-     * @throws SchemaException
-     */
-    private static Attr getMandatoryAttribute(Element xmlElement, String sAttributeName) throws SchemaException {
-        Node xmlAttribute = xmlElement.getAttributeNode(sAttributeName);
-        if (xmlAttribute == null || !(xmlAttribute instanceof Attr))
-            throw new SchemaException("Missing mandatory attribute: " + sAttributeName + " of element " + xmlElement);
-        return (Attr) xmlAttribute;
-    }
 }

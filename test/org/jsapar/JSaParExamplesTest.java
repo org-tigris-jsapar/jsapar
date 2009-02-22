@@ -193,6 +193,6 @@ public class JSaParExamplesTest {
         
         assertEquals("Fredrik", people.get(1).getFirstName());
         assertEquals("Larsson", people.get(1).getLastName());
-        assertEquals(4711, people.get(1).getLuckyNumber());
+        assertEquals(17, people.get(1).getLuckyNumber());
     }
 }

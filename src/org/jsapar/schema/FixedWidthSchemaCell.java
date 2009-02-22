@@ -168,7 +168,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
      * @throws OutputException
      */
     void output(Cell cell, Writer writer, char fillCharacter) throws IOException, JSaParException {
-	String sValue = cell.getStringValue(getCellFormat().getFormat());
+	String sValue = format(cell);
 	output(sValue, writer, fillCharacter, getLength(), getAlignment());
     }
 
