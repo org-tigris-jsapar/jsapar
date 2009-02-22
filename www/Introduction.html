@@ -11,9 +11,38 @@
 </head>
 <body>
 <h2>Java Schema Parser</h2>
-The JSaPar package provides a parser for flat and CSV (Comma Separated
-Values) files. 
-<br/><br/>
+The javadoc within the package contains more comprehensive documentation regarding the classes mentioned below. <br/><br/>
+The JSaPar package is a java library that provides a parser for flat and CSV (Comma Separated Values) files. 
+The concept is that a schema class denotes the way a file should be parsed or written. The schema class can be built by specifying a xml-document or it can be constructed programmatically by using java code.
+The output of the parser is usually a org.jsapar.Document object that contains a list of org.jsapar.Line objects which contains a list of org.jsapar.Cell objects. <br/> <br/>
+Supported file formats:
+<ul>
+<li><b>Fixed width </b><i>- Also refered to as flat file. Each cell is described only by its positions within the line. The type of the line is denoted by its position within the file.</i></li>
+<li><b>Fixed width contol value </b><i>- The same as Fixed width above except that each line type is denoted by a control value in the leading characters of each line.</i></li>
+<li><b>CSV </b><i>- (Comma Separated Values) Each cell is limited by a separator character (or characters). The type of the line is denoted by its position within the file.</i></li>
+<li><b>CSV contol value </b><i>- The same as CSV above except that each line type is denoted by a control value in the leading cell of each line.</i></li>
+</ul>
+ 
+<h2>Events for each line</h2>
+For very large files there can be a problem to build the complete org.jsapar.Document in the memory before further processing. 
+It may simply take up to much memory. 
+In that case you may choose to get an event for each line that is parsed instead. 
+You do that by registering a sub-class of org.jsapar.ParsingEventListener to the org.jsapar.input.Parser. 
+That way you can process one line at a time, thus freeing memory as you go along.   
+<h2>Converter</h2>
+If you are only interesting in converting a file of one format into another, you can use the org.jsapar.io.Converter where you specify the input and the output schema for the conversion. 
+The converter uses the event mechanism under the hood, thus it reads, converts and writes one line at a time. 
+This means it is very lean regarding memory usage. 
+<h2>Building java objects</h2>
+Use the method org.jsapar.Parser.buildJava() in order to build java objects for each line in a file (or input). 
+Note that in order to be able to use this feature, the schema have to be carefully written. 
+For instance, the line type (name) of the line within the schema have to contain the complete class name of the java class to build for each line. 
+<h2>Converting java objects into a file</h2>
+Use the class org.jsapar.input.JavaBuilder in order to convert java objects into a org.jsapar.Document, which can be used to produce the output file according to a schema.
+<h2>Using xml as input</h2>
+It is possilbe to build a org.jsapar.Document by using a xml document according to the XMLDocumentFormat.xsl (http://jsapar.tigris.org/XMLDocumentFormat/1.0). 
+Use the class org.jsapar.input.XmlDocumentParser in order to convert a xml document into a org.jsapar.Document.  
+<h2>Examples</h2>
 The files for the examples below are provided in the <tt>samples</tt> folder of the project. The JUnit test <tt>org.jsapar.JSaParExamplesTest.java</tt> 
 contains a more comprehensive set of examples of how to use the package. 
 <p>

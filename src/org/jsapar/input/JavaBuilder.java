@@ -24,6 +24,7 @@ import org.jsapar.Line;
 import org.jsapar.StringCell;
 
 /**
+ * Uses a collection of java objects to build a org.jsapar.Document.
  * @author stejon0
  * 
  */

@@ -169,6 +169,14 @@ Svn branch root : ${svn.branch.url}
             <fileset dir="${basedir}">
                 <include name="*.txt"/>
             </fileset>
+            <fileset dir="${basedir}">
+                <include name="samples/*"/>
+            </fileset>
+		</copy>
+		<copy todir="${dist.dir}/samples">
+            <fileset dir="${basedir}/test/org/jsapar">
+                <include name="JSaParExamplesTest.java"/>
+            </fileset>
 		</copy>
 
 		<jar destfile="${dist.lib.dir}/${project.name}-${patch.version.string}.jar">
