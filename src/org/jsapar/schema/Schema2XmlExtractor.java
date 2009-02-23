@@ -40,6 +40,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             org.w3c.dom.Document xmlDocument = builder.newDocument();
+            xmlDocument.setXmlStandalone(false);
             Element xmlRoot = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_ROOT);
             xmlDocument.appendChild(xmlRoot);
 
@@ -77,18 +78,20 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
             Transformer t  = TransformerFactory.newInstance().newTransformer();
             t.setOutputProperty(OutputKeys.INDENT, "yes");
+            t.setOutputProperty(OutputKeys.METHOD, "xml");
             t.transform(new DOMSource(xmlDocument), new StreamResult(writer));
             
-            // XERCES 1 or 2 additionnal classes.
+            // I can't get this to work with schema.
 //            OutputFormat outputFormat = new OutputFormat("XML", "UTF-8", true);
 //            outputFormat.setIndent(2);
 //            outputFormat.setIndenting(true);
+//            outputFormat.setStandalone(false);
 ////            outputFormat.setDoctype(JSAPAR_XML_SCHEMA, "JSaParSchema.xsd");
 //            XMLSerializer serializer = new XMLSerializer(writer, outputFormat);
 //            // As a DOM Serializer
 //            serializer.asDOMSerializer();
 //            serializer.serialize(xmlDocument.getDocumentElement());
-
+//
 //        } catch (IOException e) {
 //            throw new SchemaException("Failed to generate schema. Failed to write to output.", e);
         } catch (TransformerException e) {
