@@ -1,9 +1,13 @@
 package org.jsapar.io;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
@@ -13,6 +17,7 @@ import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseSchema;
 import org.jsapar.input.ParsingEventListener;
 import org.jsapar.schema.Schema;
+import org.jsapar.schema.SchemaException;
 
 /**
  * Reads buffer using an input schema and writes to another buffer using an output schema. By adding
@@ -141,6 +146,113 @@ public class Converter {
      */
     public void setOutputSchema(Schema outputSchema) {
         this.outputSchema = outputSchema;
+    }
+
+    /**
+     * Reads command line arguments into property structure.
+     * 
+     * @param properties
+     *            The properties to be filled with arguments.
+     * @param args
+     *            The arguments.
+     * @return
+     */
+    private static void readArgs(Properties properties, String[] args) {
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i];
+            if (arg.length() > 1 && arg.charAt(0) == '-') {
+                if (args.length > i + 1) {
+                    properties.setProperty(arg.substring(1, arg.length()), args[i + 1]);
+                    i++; // Skip next.
+                }
+            }
+        }
+    }
+
+    private static void checkMandatory(Properties properties, String key) throws JSaParException {
+        if (null == properties.getProperty(key))
+            throw new JSaParException("Mandatory argument -" + key + " is missing.");
+    }
+
+    /**
+     * @param args
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws JSaParException
+     */
+    private static Properties readConfig(String[] args) throws FileNotFoundException, IOException, JSaParException {
+        Properties properties = new Properties();
+        if (args.length == 1) {
+            properties.load(new FileReader(args[1]));
+        } else if (args.length > 1) {
+            readArgs(properties, args);
+        }
+        // Check mandatory arguments
+        checkMandatory(properties, "in.schema");
+        checkMandatory(properties, "out.schema");
+        checkMandatory(properties, "in.file");
+        return properties;
+    }
+
+    /**
+     * @param fileName
+     * @return
+     * @throws SchemaException
+     * @throws IOException
+     */
+    private static Schema loadSchemaFromXmlFile(String fileName) throws SchemaException, IOException {
+        Reader schemaReader = new FileReader(fileName);
+        org.jsapar.schema.Xml2SchemaBuilder builder = new org.jsapar.schema.Xml2SchemaBuilder();
+        Schema schema = builder.build(schemaReader);
+        schemaReader.close();
+        return schema;
+    }
+
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        final String applicationName = "jsapar.jar";
+        Properties properties;
+        try {
+            properties = readConfig(args);
+        } catch (Exception e) {
+            System.out.println(e.getLocalizedMessage());
+            System.out.println("");
+            System.out.println("Usage:");
+            System.out.println(" 1. " + applicationName + " <property file name> ");
+            System.out.println(" 2. " + applicationName
+                    + " -in.schema <input schem name> -out.schema <output schema name>");
+            System.out.println("               -in.file <input file name> [-out.file <output file name>]");
+            System.out.println("");
+            System.out.println("Alternative 1. above reads the arguments from a property file.");
+            return;
+        }
+
+        try {
+            Schema inputSchema = loadSchemaFromXmlFile(properties.getProperty("in.schema"));
+            Schema outputSchema = loadSchemaFromXmlFile(properties.getProperty("out.schema"));
+
+            String inFileName = properties.getProperty("in.file");
+            Reader inputFileReader = new java.io.FileReader(inFileName);
+            java.io.Writer writer = new java.io.FileWriter(properties.getProperty("out.file", inFileName + ".out"));
+
+            Converter converter = new Converter(inputSchema, outputSchema);
+            java.util.List<CellParseError> parseErrors = converter.convert(inputFileReader, writer);
+
+            if (parseErrors.size() > 0)
+                System.out.println("===> Found errors while converting file " + inFileName + ": "
+                        + System.getProperty("line.separator") + parseErrors);
+            else
+                System.out.println("Successfully converted file " + inFileName);
+
+            inputFileReader.close();
+            writer.close();
+        } catch (Throwable t) {
+            System.err.println("Failed to convert file.");
+            t.printStackTrace(System.err);
+        }
     }
 
 }
