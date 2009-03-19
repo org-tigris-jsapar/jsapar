@@ -339,8 +339,8 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
         xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_IGNOREREAD, String.valueOf(cell.isIgnoreRead()));
         xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_MANDATORY, String.valueOf(cell.isMandatory()));
         
-        if(cell.getDefaultValue() != null)
-            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_DEFAULT_VALUE, cell.format(cell.getDefaultValue()));
+        if(cell.getDefaultCell() != null)
+            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_DEFAULT_VALUE, cell.format(cell.getDefaultCell()));
 
         Element xmlFormat = extractCellFormat(xmlDocument, cell.getCellFormat());
         xmlSchemaCell.appendChild(xmlFormat);

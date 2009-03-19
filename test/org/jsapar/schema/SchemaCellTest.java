@@ -10,6 +10,8 @@ import static org.junit.Assert.fail;
 import java.util.Locale;
 
 import org.jsapar.Cell;
+import org.jsapar.EmptyCell;
+import org.jsapar.FloatCell;
 import org.jsapar.IntegerCell;
 import org.jsapar.StringCell;
 import org.jsapar.Cell.CellType;
@@ -81,7 +83,7 @@ public class SchemaCellTest {
     public void testMakeCell_DefaultString() throws ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell();
         schemaCell.setName("test");
-        schemaCell.setDefaultValue(new StringCell("TheDefault"));
+        schemaCell.setDefaultCell(new StringCell("TheDefault"));
 
         Cell cell = schemaCell.makeCell("");
         assertEquals("TheDefault", cell.getStringValue());
@@ -93,7 +95,7 @@ public class SchemaCellTest {
      * @throws ParseException
      */
     @Test
-    public void testSetDefaultValue_makeCell() throws ParseException {
+    public void testMakeCell_DefaultValue() throws ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell();
         schemaCell.setName("test");
         schemaCell.setDefaultValue("TheDefault");
@@ -102,6 +104,70 @@ public class SchemaCellTest {
         assertEquals("TheDefault", cell.getStringValue());
     }
 
+    /**
+     * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
+     * 
+     * @throws ParseException
+     * @throws SchemaException 
+     */
+    @Test
+    public void testMakeCell_DefaultValue_float() throws ParseException, SchemaException {
+        TestSchemaCell schemaCell = new TestSchemaCell();
+        schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
+        schemaCell.setName("test");
+        schemaCell.setDefaultValue("123456,78901");
+
+        Cell cell = schemaCell.makeCell("");
+        assertEquals(123456.78901, ((FloatCell)cell).getNumberValue().doubleValue(), 0.0001);
+    }
+    
+    /**
+     * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
+     * 
+     * @throws ParseException
+     */
+    @Test
+    public void testFormat_emptyString_DefaultValue() throws ParseException {
+        TestSchemaCell schemaCell = new TestSchemaCell();
+        schemaCell.setName("test");
+        schemaCell.setDefaultValue("TheDefault");
+
+        Cell cell = new StringCell("Test", "");
+        assertEquals("TheDefault", schemaCell.format(cell));
+    }
+
+    /**
+     * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
+     * 
+     * @throws ParseException
+     */
+    @Test
+    public void testFormat_empty_DefaultValue() throws ParseException {
+        TestSchemaCell schemaCell = new TestSchemaCell();
+        schemaCell.setName("test");
+        schemaCell.setDefaultValue("TheDefault");
+
+        Cell cell = new EmptyCell("Test", CellType.STRING);
+        assertEquals("TheDefault", schemaCell.format(cell));
+    }
+
+    /**
+     * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
+     * 
+     * @throws ParseException
+     * @throws SchemaException 
+     */
+    @Test
+    public void testFormat_DefaultValue_float() throws ParseException, SchemaException {
+        TestSchemaCell schemaCell = new TestSchemaCell();
+        schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
+        schemaCell.setName("test");
+        schemaCell.setDefaultValue("123456,78901");
+
+        String value = schemaCell.format(new EmptyCell(CellType.FLOAT));
+        assertEquals("123456,78901", value);
+    }
+    
     /**
      * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
      * 

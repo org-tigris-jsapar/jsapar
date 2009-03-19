@@ -84,8 +84,10 @@ public class JSaParExamplesTest {
         assertEquals(3, document.getNumberOfLines());
         assertEquals("Erik", document.getLine(0).getCell(0).getStringValue());
         assertEquals("Svensson", document.getLine(0).getCell(1).getStringValue());
+        assertEquals("37", document.getLine(0).getCell("Age").getStringValue());
         assertEquals("Fredrik", document.getLine(1).getCell(0).getStringValue());
         assertEquals("Larsson", document.getLine(1).getCell(1).getStringValue());
+        assertEquals("17", document.getLine(1).getCell("Age").getStringValue());
     }
 
     /**

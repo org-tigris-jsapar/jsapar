@@ -26,7 +26,8 @@ public abstract class SchemaCell implements Cloneable {
     private boolean mandatory = false;
     private Cell minValue = null;
     private Cell maxValue = null;
-    private Cell defaultValue = null;
+    private Cell defaultCell = null;
+    private String defaultValue = null;
     private Locale locale = Locale.getDefault();
 
     public SchemaCell() {
@@ -99,12 +100,10 @@ public abstract class SchemaCell implements Cloneable {
         // If the cell is mandatory, don't accept empty string.
         if (sValue.length() <= 0) {
             if (isMandatory()) {
-                throw new ParseException(new CellParseError(getName(),
-                        "",
-                        getCellFormat(),
+                throw new ParseException(new CellParseError(getName(), "", getCellFormat(),
                         "Mandatory cell requires a value."));
-            } else if (defaultValue != null) {
-                return defaultValue.makeCopy(getName());
+            } else if (defaultCell != null) {
+                return defaultCell.makeCopy(getName());
             } else {
                 return new EmptyCell(getName(), this.cellFormat.getCellType());
             }
@@ -335,16 +334,45 @@ public abstract class SchemaCell implements Cloneable {
         this.maxValue = cell;
     }
 
-    public Cell getDefaultValue() {
-        return defaultValue;
+    /**
+     * @return The default cell. The value of the default cell will be used if input/output is
+     *         missing.
+     */
+    public Cell getDefaultCell() {
+        return defaultCell;
     }
 
-    public void setDefaultValue(Cell defaultValue) {
-        this.defaultValue = defaultValue;
+    /**
+     * @param defaultCell
+     *            The default cell. The value of the default cell will be used if input/output is
+     *            missing. The name of the cell has no importance, it will not be used.
+     */
+    public void setDefaultCell(Cell defaultCell) {
+        this.defaultCell = defaultCell.makeCopy(getName());
+        this.defaultValue = getDefaultCell().getStringValue(getCellFormat().getFormat());
     }
 
+    /**
+     * Sets the default value as a string. The default value have to be parsable according to the
+     * schema format. As long as it is parsable, it will be used exactly as is even though it might
+     * not look the same as if it was formatted from a value.
+     * 
+     * @param sDefaultValue
+     *            The default value formatted according to this schema. Will be used if input/output
+     *            is missing for this cell.
+     * @throws ParseException
+     */
     public void setDefaultValue(String sDefaultValue) throws ParseException {
-        this.defaultValue = makeCell(sDefaultValue);
+        this.defaultCell = makeCell(sDefaultValue);
+        this.defaultValue = sDefaultValue;
+    }
+
+    /**
+     * @return The default value formatted according to this schema. Will be used if input/output is
+     *         missing.
+     */
+    public String getDefaultValue() {
+        return defaultValue;
     }
 
     /**
@@ -354,7 +382,10 @@ public abstract class SchemaCell implements Cloneable {
      * @return
      */
     public String format(Cell cell) {
-        return cell.getStringValue(getCellFormat().getFormat());
+        String value = cell.getStringValue(getCellFormat().getFormat());
+        if (value.length() <= 0)
+            return getDefaultValue();
+        return value;
     }
 
 }

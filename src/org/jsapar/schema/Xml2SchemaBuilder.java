@@ -460,7 +460,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
             Node xmlDefault = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_DEFAULT_VALUE);
             if (xmlDefault != null)
-                cell.setDefaultValue(cell.makeCell(getStringValue(xmlDefault)));
+                cell.setDefaultCell(cell.makeCell(getStringValue(xmlDefault)));
 
             Element xmlFormat = getChild(xmlSchemaCell, ELEMENT_FORMAT);
             if (xmlFormat != null)

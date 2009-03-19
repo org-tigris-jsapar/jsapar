@@ -119,7 +119,7 @@ public class Schema2XmlExtractorTest {
         CsvControlCellSchema schema = new CsvControlCellSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine("Names", "N");
         CsvSchemaCell firstNameCell = new CsvSchemaCell("First name");
-        firstNameCell.setDefaultValue(new StringCell("Default", "John"));
+        firstNameCell.setDefaultCell(new StringCell("Default", "John"));
         schemaLine.addSchemaCell(firstNameCell);
         schemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
         schema.addSchemaLine(schemaLine);
