@@ -95,6 +95,20 @@ public class SchemaCellTest {
      * @throws ParseException
      */
     @Test
+    public void testMakeCell_missing_no_default() throws ParseException {
+        TestSchemaCell schemaCell = new TestSchemaCell();
+        schemaCell.setName("test");
+
+        Cell cell = schemaCell.makeCell("");
+        assertEquals("", cell.getStringValue());
+    }
+    
+    /**
+     * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
+     * 
+     * @throws ParseException
+     */
+    @Test
     public void testMakeCell_DefaultValue() throws ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell();
         schemaCell.setName("test");
