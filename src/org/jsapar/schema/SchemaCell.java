@@ -383,8 +383,11 @@ public abstract class SchemaCell implements Cloneable {
      */
     public String format(Cell cell) {
         String value = cell.getStringValue(getCellFormat().getFormat());
-        if (value.length() <= 0)
-            return getDefaultValue();
+        if (value.length() <= 0){
+            String sDefaultValue = getDefaultValue();
+            if(sDefaultValue != null)
+                return sDefaultValue;
+        }
         return value;
     }
 
