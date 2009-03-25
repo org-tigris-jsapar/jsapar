@@ -107,7 +107,7 @@
 	<target name="tag" depends="update-build-number, init-build-number,init-dist" description="Creates new tag in svn from HEAD.">
 
 		<exec executable="svn" dir=".">
-			<arg line="copy ${svn.branch.url} ${dist.svn.tag.url} -m &quot;Build ${dist.tag}&quot; " />
+			<arg line="copy --parents ${svn.branch.url} ${dist.svn.tag.url} -m &quot;Build ${dist.tag}&quot; " />
 		</exec>
 
 		<echo> Created new tag in subversion: ${dist.tag} at ${dist.svn.tag.url} </echo>
