@@ -281,7 +281,7 @@ public class CSVSchemaTest {
 	    listener = new ParsingEventListener() {
 
 		@Override
-		public void lineErrorErrorEvent(LineErrorEvent event) throws ParseException {
+		public void lineErrorEvent(LineErrorEvent event) throws ParseException {
 		    throw new ParseException(event.getCellParseError());
 		}
 

@@ -17,7 +17,7 @@ import org.junit.Test;
 public class CSVSchemaLineTest extends TestCase {
 
     private class NullParsingEventListener implements ParsingEventListener {
-	public void lineErrorErrorEvent(LineErrorEvent event) throws ParseException {
+	public void lineErrorEvent(LineErrorEvent event) throws ParseException {
 	}
 
 	public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
@@ -31,7 +31,7 @@ public class CSVSchemaLineTest extends TestCase {
 	boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
 
 	    @Override
-	    public void lineErrorErrorEvent(LineErrorEvent event) throws ParseException {
+	    public void lineErrorEvent(LineErrorEvent event) throws ParseException {
 	    }
 
 	    @Override
@@ -53,7 +53,7 @@ public class CSVSchemaLineTest extends TestCase {
 	boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
 
 	    @Override
-	    public void lineErrorErrorEvent(LineErrorEvent event) throws ParseException {
+	    public void lineErrorEvent(LineErrorEvent event) throws ParseException {
 	    }
 
 	    @Override
@@ -121,7 +121,7 @@ public class CSVSchemaLineTest extends TestCase {
 	boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
 
 	    @Override
-	    public void lineErrorErrorEvent(LineErrorEvent event) throws ParseException {
+	    public void lineErrorEvent(LineErrorEvent event) throws ParseException {
 		// TODO Auto-generated method stub
 
 	    }

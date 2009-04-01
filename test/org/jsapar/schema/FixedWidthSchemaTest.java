@@ -104,7 +104,7 @@ public class FixedWidthSchemaTest {
 	    listener = new ParsingEventListener() {
 
 		@Override
-		public void lineErrorErrorEvent(LineErrorEvent event)
+		public void lineErrorEvent(LineErrorEvent event)
 			throws ParseException {
 		    throw new ParseException(event.getCellParseError());
 		}

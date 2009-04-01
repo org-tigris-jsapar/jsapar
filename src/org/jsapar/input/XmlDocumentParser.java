@@ -191,7 +191,7 @@ public class XmlDocumentParser implements org.jsapar.input.ParseSchema {
 	    CellParseError error = new CellParseError(this.currentLineNumber,
 		    this.currentCellName, "", null, e.getMessage());
 	    try {
-		this.listener.lineErrorErrorEvent(new LineErrorEvent(this,
+		this.listener.lineErrorEvent(new LineErrorEvent(this,
 			error));
 	    } catch (ParseException e1) {
 		// If the event handler throws back exception, throw the
@@ -212,7 +212,7 @@ public class XmlDocumentParser implements org.jsapar.input.ParseSchema {
 	    CellParseError error = new CellParseError(this.currentLineNumber,
 		    this.currentCellName, "", null, e.getMessage());
 	    try {
-		this.listener.lineErrorErrorEvent(new LineErrorEvent(this,
+		this.listener.lineErrorEvent(new LineErrorEvent(this,
 			error));
 	    } catch (ParseException e1) {
 		// If the event handler throws back exception, throw the
@@ -234,7 +234,7 @@ public class XmlDocumentParser implements org.jsapar.input.ParseSchema {
 	    CellParseError error = new CellParseError(this.currentLineNumber,
 		    this.currentCellName, "", null, e.getMessage());
 	    try {
-		this.listener.lineErrorErrorEvent(new LineErrorEvent(this,
+		this.listener.lineErrorEvent(new LineErrorEvent(this,
 			error));
 	    } catch (ParseException e1) {
 		// If the event handler throws back exception, throw the

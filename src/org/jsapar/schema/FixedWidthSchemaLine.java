@@ -124,7 +124,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
 		    line.addCell(cell);
 		} catch (ParseException pe) {
 		    pe.getCellParseError().setLineNumber(nLineNumber);
-		    listener.lineErrorErrorEvent(new LineErrorEvent(this, pe.getCellParseError()));
+		    listener.lineErrorEvent(new LineErrorEvent(this, pe.getCellParseError()));
 		}
 	    }
 	}

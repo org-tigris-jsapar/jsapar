@@ -132,9 +132,9 @@ public class Parser implements ParsingEventListener {
      * @throws ParseException
      */
     @Override
-    public void lineErrorErrorEvent(LineErrorEvent event) throws ParseException {
+    public void lineErrorEvent(LineErrorEvent event) throws ParseException {
         for (ParsingEventListener l : this.parsingEventListeners) {
-            l.lineErrorErrorEvent(event);
+            l.lineErrorEvent(event);
         }
     }
 
@@ -169,7 +169,7 @@ public class Parser implements ParsingEventListener {
             addParsingEventListener(new ParsingEventListener() {
 
                 @Override
-                public void lineErrorErrorEvent(LineErrorEvent event) {
+                public void lineErrorEvent(LineErrorEvent event) {
                     parseErrors.add(event.getCellParseError());
                 }
 
@@ -205,7 +205,7 @@ public class Parser implements ParsingEventListener {
             addParsingEventListener(new ParsingEventListener() {
 
                 @Override
-                public void lineErrorErrorEvent(LineErrorEvent event) throws ParseException {
+                public void lineErrorEvent(LineErrorEvent event) throws ParseException {
                     throw new ParseException(event.getCellParseError());
                 }
 
@@ -245,7 +245,7 @@ public class Parser implements ParsingEventListener {
             addParsingEventListener(new ParsingEventListener() {
 
                 @Override
-                public void lineErrorErrorEvent(LineErrorEvent event) {
+                public void lineErrorEvent(LineErrorEvent event) {
                     parseErrors.add(event.getCellParseError());
                 }
 

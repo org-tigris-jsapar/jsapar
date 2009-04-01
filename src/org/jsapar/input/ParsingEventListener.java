@@ -31,5 +31,5 @@ public interface ParsingEventListener extends EventListener {
      * @param event The event that contains the error information.
      * @throws ParseException
      */
-    void lineErrorErrorEvent(LineErrorEvent event) throws ParseException;
+    void lineErrorEvent(LineErrorEvent event) throws ParseException;
 }

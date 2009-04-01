@@ -92,7 +92,7 @@ public class Converter {
         }
 
         @Override
-        public void lineErrorErrorEvent(LineErrorEvent event) {
+        public void lineErrorEvent(LineErrorEvent event) {
             parseErrors.add(event.getCellParseError());
         }
 

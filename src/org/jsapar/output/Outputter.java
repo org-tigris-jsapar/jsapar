@@ -66,7 +66,7 @@ public class Outputter {
      */
     @Deprecated
     public void output(Document document, Schema schema, java.io.Writer writer) throws JSaParException {
-        this.schema=schema;
+        this.schema = schema;
         output(document, writer);
     }
 
@@ -87,8 +87,29 @@ public class Outputter {
     }
 
     /**
+     * Writes the single line to a {@link java.io.Writer} according to the supplied line type within
+     * the schema.
+     * 
+     * @param line
+     * @param schemaLine
+     * @param writer
+     * @throws JSaParException
+     */
+    public void outputLine(Line line, String lineType, java.io.Writer writer) throws JSaParException {
+        try {
+            SchemaLine schemaLine = schema.getSchemaLine(lineType);
+            if (schemaLine == null)
+                throw new OutputException("Line type [" + lineType + "] not found within schema ");
+            schemaLine.output(line, writer);
+        } catch (IOException e) {
+            throw new OutputException("Failed to write to buffert.", e);
+        }
+    }
+
+    /**
      * Writes the single line to a {@link java.io.Writer} according to the supplied schema for the
-     * supplied line.
+     * supplied line. Note that the this is a static method and does not use the member schema of an
+     * instance of Outputter.
      * 
      * @param line
      * @param schema
@@ -98,10 +119,28 @@ public class Outputter {
      * @param writer
      * @throws JSaParException
      */
-    public void outputLine(Line line, Schema schema, long lineNumberForSchema, java.io.Writer writer)
+    public static void outputLine(Line line, Schema schema, long lineNumberForSchema, java.io.Writer writer)
             throws JSaParException {
         try {
             schema.outputLine(line, lineNumberForSchema, writer);
+        } catch (IOException e) {
+            throw new OutputException("Failed to write to buffert.", e);
+        }
+    }
+
+    /**
+     * Writes the single line to a {@link java.io.Writer} according to the member schema of this
+     * instance.
+     * 
+     * @param line
+     * @param lineNumber
+     *            The line number for this schema. 
+     * @param writer
+     * @throws JSaParException
+     */
+    public void outputLine(Line line, long lineNumber, java.io.Writer writer) throws JSaParException {
+        try {
+            this.schema.outputLine(line, lineNumber, writer);
         } catch (IOException e) {
             throw new OutputException("Failed to write to buffert.", e);
         }

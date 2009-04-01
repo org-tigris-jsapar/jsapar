@@ -23,7 +23,7 @@ public class FixedWidthSchemaLineTest {
     private class NullParsingEventListener implements ParsingEventListener {
 
 	@Override
-	public void lineErrorErrorEvent(LineErrorEvent event) throws ParseException {
+	public void lineErrorEvent(LineErrorEvent event) throws ParseException {
 	    throw new ParseException(event.getCellParseError());
 	}
 
@@ -48,7 +48,7 @@ public class FixedWidthSchemaLineTest {
 	boolean rc = schemaLine.parse(1, reader, new ParsingEventListener() {
 
 	    @Override
-	    public void lineErrorErrorEvent(LineErrorEvent event) throws ParseException {
+	    public void lineErrorEvent(LineErrorEvent event) throws ParseException {
 		throw new ParseException(event.getCellParseError());
 	    }
 

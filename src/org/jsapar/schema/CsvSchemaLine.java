@@ -105,7 +105,7 @@ public class CsvSchemaLine extends SchemaLine {
                     cell = schemaCell.makeCell(sCell);
                 } catch (ParseException e) {
                     e.getCellParseError().setLineNumber(nLineNumber);
-                    listener.lineErrorErrorEvent(new LineErrorEvent(this, e.getCellParseError()));
+                    listener.lineErrorEvent(new LineErrorEvent(this, e.getCellParseError()));
                 }
             } else {
                 cell = new StringCell(sCell);
