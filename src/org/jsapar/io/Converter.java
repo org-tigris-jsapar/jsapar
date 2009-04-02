@@ -184,10 +184,13 @@ public class Converter {
     private static Properties readConfig(String[] args) throws FileNotFoundException, IOException, JSaParException {
         Properties properties = new Properties();
         if (args.length == 1) {
-            properties.load(new FileReader(args[1]));
+            properties.load(new FileReader(args[0]));
         } else if (args.length > 1) {
             readArgs(properties, args);
+        } else {
+            throw new JSaParException("Too few arguments");
         }
+
         // Check mandatory arguments
         checkMandatory(properties, "in.schema");
         checkMandatory(properties, "out.schema");
@@ -218,7 +221,7 @@ public class Converter {
         try {
             properties = readConfig(args);
         } catch (Exception e) {
-            System.out.println(e.getLocalizedMessage());
+            System.out.println(e.getClass().getSimpleName() + ": " + e.getMessage());
             System.out.println("");
             System.out.println("Usage:");
             System.out.println(" 1. " + applicationName + " <property file name> ");

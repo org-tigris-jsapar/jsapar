@@ -6,6 +6,7 @@
 	== Properties Start
 	==================================
 	-->
+	<property environment="env" />
 	<property name="property.file" value="build.properties" />
 	<property name="build.version.file" value="build_version.properties" />
 	<property name="project.basedir" value="${basedir}" />
@@ -20,7 +21,6 @@
 	<property name="dist.docs.dir" value="${dist.dir}/docs" />
 	<property name="dist.javadoc.dir" value="${dist.docs.dir}/api" />
 
-
 	<!-- Load property file -->
 	<loadproperties srcFile="${property.file}" />
 	<property name="patch.version.string" value="${version.major}.${version.minor}.${version.patch}" />
@@ -29,6 +29,14 @@
 	<path id="build.classpath">
 	</path>
 
+	<!-- Unix vs. Windows -->
+	<condition property="host.name" value="${env.HOSTNAME}" else="${env.COMPUTERNAME}">
+		<isset property="env.HOSTNAME"/>
+	</condition>
+
+	<tstamp>
+		<format property="build.start.time" pattern="yyyy-MM-dd hh:mm:ss Z" />
+	</tstamp>
 	<!--==================================
 	== Banner
 	==================================-->
@@ -36,6 +44,12 @@
 		<filter token="VERSION_MAJOR" value="${version.major}" />
 		<filter token="VERSION_MINOR" value="${version.minor}" />
 		<filter token="VERSION_PATCH" value="${version.patch}" />
+		<filter token="VERSION_STRING" value="${patch.version.string}" />
+		<filter token="PROJECT_NAME" value="${ant.project.name}" />
+		<filter token="USER_NAME" value="${user.name}" />
+		<filter token="HOST_NAME" value="${host.name}" />
+		<filter token="JDK_VERSION" value="${java.runtime.version}" />
+		<filter token="TIME" value="${build.start.time}" />
 
 		<echo>${project.name} project</echo>
 		<echo message="Project version : ${patch.version.string}" />
@@ -160,6 +174,7 @@ Svn branch root : ${svn.branch.url}
 	== Build distribution package locally. 
 	==================================-->
 	<target name="dist" depends="build, javadocs, init-dist" description="Creates distribution of current version">
+		<filter token="BUILD_NUMBER" value="${dist.build.number}" />
 		<copy todir="${dist.dir}">
 			<fileset dir="${basedir}/resources">
 				<include name="xml/schema/*.xsd"/>
@@ -180,8 +195,14 @@ Svn branch root : ${svn.branch.url}
                 <include name="JSaParExamplesTest.java"/>
             </fileset>
 		</copy>
+		<copy todir="${build.dir}" filtering="true">
+            <fileset dir="${src.dir}">
+                <include name="META-INF/**"/>
+            </fileset>
+		</copy>
 
-		<jar destfile="${dist.lib.dir}/${project.name}-${patch.version.string}.jar">
+		
+		<jar destfile="${dist.lib.dir}/${project.name}-${patch.version.string}.jar" manifest="${build.dir}/META-INF/MANIFEST.MF">
 			<fileset dir="${build.dir}">
 				<include name="**/*.class"/>
 			</fileset>
