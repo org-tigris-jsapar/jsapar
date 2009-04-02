@@ -16,6 +16,7 @@ import org.junit.Test;
 
 public class CSVSchemaLineTest extends TestCase {
 
+    
     private class NullParsingEventListener implements ParsingEventListener {
 	public void lineErrorEvent(LineErrorEvent event) throws ParseException {
 	}
@@ -24,6 +25,20 @@ public class CSVSchemaLineTest extends TestCase {
 	}
     }
 
+    @Test
+    public final void testCSVSchemaLine()  {
+        CsvSchemaLine schemaLine = new CsvSchemaLine();
+        assertEquals("", schemaLine.getLineType());
+        assertEquals("", schemaLine.getLineTypeControlValue());
+    }
+
+    @Test
+    public final void testCSVSchemaLine_String()  {
+        CsvSchemaLine schemaLine = new CsvSchemaLine("LineType");
+        assertEquals("LineType", schemaLine.getLineType());
+        assertEquals("LineType", schemaLine.getLineTypeControlValue());
+    }
+    
     @Test
     public void testBuild() throws JSaParException {
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);

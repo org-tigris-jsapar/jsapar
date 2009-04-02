@@ -17,7 +17,6 @@ import org.jsapar.input.ParsingEventListener;
 import org.junit.Test;
 
 public class CSVSchemaTest {
-
     @Test
     public final void testParse_oneLine() throws IOException, JSaParException {
 	CsvSchema schema = new CsvSchema();

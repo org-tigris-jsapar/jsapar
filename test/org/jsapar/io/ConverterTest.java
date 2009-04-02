@@ -53,7 +53,7 @@ public class ConverterTest {
 		+ System.getProperty("line.separator") + "Frida Bergsten ";
 	;
 	org.jsapar.schema.FixedWidthSchema inputSchema = new org.jsapar.schema.FixedWidthSchema();
-	FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine();
+	FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine("NameFixed");
 	inputSchemaLine
 		.addSchemaCell(new FixedWidthSchemaCell("First name", 6));
 	inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 9));
@@ -61,7 +61,7 @@ public class ConverterTest {
 	inputSchema.addSchemaLine(inputSchemaLine);
 
 	org.jsapar.schema.CsvSchema outputSchema = new org.jsapar.schema.CsvSchema();
-	CsvSchemaLine outputSchemaLine = new CsvSchemaLine();
+	CsvSchemaLine outputSchemaLine = new CsvSchemaLine("NameCsv");
 	outputSchemaLine.addSchemaCell(new CsvSchemaCell("First name"));
 	outputSchemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
 	outputSchemaLine.setCellSeparator(";");
@@ -71,6 +71,8 @@ public class ConverterTest {
 	StringReader reader = new StringReader(toParse);
 	Converter converter = new Converter(inputSchema, outputSchema);
 	converter.convert(reader, writer);
+	reader.close();
+	writer.close();
 	String sResult = writer.getBuffer().toString();
 	String sExpected = "Jonas;Stenberg"
 		+ System.getProperty("line.separator") + "Frida;Bergsten";

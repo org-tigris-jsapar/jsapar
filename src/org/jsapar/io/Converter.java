@@ -65,14 +65,28 @@ public class Converter {
     public java.util.List<CellParseError> convert(java.io.Reader reader, java.io.Writer writer) throws IOException,
             JSaParException {
 
-        DocumentWriter outputter = new DocumentWriter(outputSchema, writer);
+        DocumentWriter outputter = new DocumentWriter(writer);
         // TODO Create a DocumentWriter that supports line type by control cell.
 
+        return doConvert(reader, writer, outputter);
+
+    }
+
+    /**
+     * @param reader
+     * @param writer
+     * @param outputter
+     * @return
+     * @throws IOException
+     * @throws JSaParException
+     */
+    protected java.util.List<CellParseError> doConvert(java.io.Reader reader,
+                                                       java.io.Writer writer,
+                                                       DocumentWriter outputter) throws IOException, JSaParException {
         outputSchema.outputBefore(writer);
         inputSchema.parse(reader, outputter);
         outputSchema.outputAfter(writer);
         return outputter.getParseErrors();
-
     }
 
     /**
@@ -81,13 +95,11 @@ public class Converter {
      * @author stejon0
      * 
      */
-    private class DocumentWriter implements ParsingEventListener {
+    protected class DocumentWriter implements ParsingEventListener {
         private List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        private Schema outputSchema;
         private java.io.Writer writer;
 
-        public DocumentWriter(Schema outputSchema, Writer writer) throws JSaParException {
-            this.outputSchema = outputSchema;
+        public DocumentWriter(Writer writer) throws JSaParException {
             this.writer = writer;
         }
 
@@ -115,6 +127,14 @@ public class Converter {
         public List<CellParseError> getParseErrors() {
             return parseErrors;
         }
+
+        /**
+         * @return the writer
+         */
+        protected java.io.Writer getWriter() {
+            return writer;
+        }
+
 
     }
 
@@ -256,6 +276,13 @@ public class Converter {
             System.err.println("Failed to convert file.");
             t.printStackTrace(System.err);
         }
+    }
+
+    /**
+     * @return the manipulators
+     */
+    protected List<LineManipulator> getManipulators() {
+        return manipulators;
     }
 
 }

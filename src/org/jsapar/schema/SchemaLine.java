@@ -11,12 +11,13 @@ import org.jsapar.input.ParsingEventListener;
 
 public abstract class SchemaLine implements Cloneable {
     private static final int OCCURS_INFINITE = Integer.MAX_VALUE;
+    private static final String NOT_SET="";
 
-    private int occurs = 1;
+    private int occurs = OCCURS_INFINITE;
 
-    private String lineType;
+    private String lineType=NOT_SET;
 
-    private String lineTypeControlValue;
+    private String lineTypeControlValue=NOT_SET;
 
     private boolean ignoreReadEmptyLines = true;
 
@@ -156,7 +157,7 @@ public abstract class SchemaLine implements Cloneable {
      */
     public void setLineType(String lineType) {
         this.lineType = lineType;
-        if (this.lineTypeControlValue == null)
+        if (this.lineTypeControlValue == NOT_SET)
             this.lineTypeControlValue = lineType;
     }
 
@@ -173,7 +174,7 @@ public abstract class SchemaLine implements Cloneable {
      */
     public void setLineTypeControlValue(String lineTypeControlValue) {
         this.lineTypeControlValue = lineTypeControlValue;
-        if (this.lineType == null)
+        if (this.lineType == NOT_SET)
             this.lineType = lineTypeControlValue;
     }
 
@@ -187,7 +188,7 @@ public abstract class SchemaLine implements Cloneable {
         StringBuilder sb = new StringBuilder();
         sb.append("SchemaLine lineType=");
         sb.append(this.lineType);
-        if (this.lineTypeControlValue != null) {
+        if (this.lineTypeControlValue != NOT_SET) {
             sb.append(" lineTypeControlValue=");
             sb.append(this.lineTypeControlValue);
         }

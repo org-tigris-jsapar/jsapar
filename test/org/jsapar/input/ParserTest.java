@@ -32,6 +32,7 @@ public class ParserTest {
         assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
     }
 
+    
     @Test
     public void testBuild_fixed_twoLines() throws JSaParException {
         String toParse = "JonasStenberg" + System.getProperty("line.separator") + "FridaStenberg";
@@ -53,6 +54,27 @@ public class ParserTest {
         assertEquals("Stenberg", doc.getLine(1).getCell("Last name").getStringValue());
     }
 
+    @Test
+    public void testBuild_fixed_twoLines_lineType() throws JSaParException {
+        String toParse = "JonasStenberg" + System.getProperty("line.separator") + "FridaStenberg";
+        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        schema.addSchemaLine(schemaLine);
+
+        Parser builder = new Parser(schema);
+        Reader reader = new StringReader(toParse);
+        Document doc = builder.build(reader);
+
+        assertEquals(2, doc.getNumberOfLines());
+        assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
+        assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
+
+        assertEquals("Frida", doc.getLine(1).getCell(0).getStringValue());
+        assertEquals("Stenberg", doc.getLine(1).getCell("Last name").getStringValue());
+    }
+    
     @Test
     public void testBuild_fixed_twoLines_toLong() throws JSaParException {
         String toParse = "Jonas " + System.getProperty("line.separator") + "Frida";
