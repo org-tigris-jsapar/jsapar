@@ -223,7 +223,7 @@ public class FixedWidthSchemaCellTest {
         NumberCell cell = (NumberCell) schemaElment.build(reader, true, ' ');
         double value = cell.getNumberValue().doubleValue();
 
-        assertEquals(1.234e6, value);
+        assertEquals(1.234e6, value, 0.001);
     }
 
     @Test

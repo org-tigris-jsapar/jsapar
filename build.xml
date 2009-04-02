@@ -13,6 +13,7 @@
 	<!-- distribution props	-->
 	<property name="build.dir.name" value="ant_build" />
 	<property name="build.dir" value="${basedir}/${build.dir.name}" />
+	<property name="test.build.dir" value="${basedir}/ant_test_build" />
 	<property name="tag.dir" value="${basedir}/ant_tag" />
 	<property name="dist.dir" value="${basedir}/dist" />
 	<property name="dist.lib.dir" value="${dist.dir}/lib" />
@@ -25,7 +26,8 @@
 	<property name="patch.version.string" value="${version.major}.${version.minor}.${version.patch}" />
 	<property name="minor.version.string" value="${version.major}.${version.minor}" />
 
-	<property name="build.classpath" value="" />
+	<path id="build.classpath">
+	</path>
 
 	<!--==================================
 	== Banner
@@ -40,7 +42,6 @@
 		<echo message="Ant version     : ${ant.version}" />
 		<echo message="Svn branch root : ${svn.branch.url}" />
 		<echo message="Java home       : ${java.home}" />
-		<echo message="Classpath       : ${build.classpath}" />
 	</target>
 
 	<!--==================================
@@ -143,6 +144,7 @@ Svn branch root : ${svn.branch.url}
 	==================================-->
 	<target name="init-build-local" depends="banner" unless="src.dir">
 		<property name="src.dir" value="${project.basedir}/src" />
+		<property name="test.src.dir" value="${project.basedir}/test" />
 	</target>
 
 	<!--==================================
@@ -151,7 +153,7 @@ Svn branch root : ${svn.branch.url}
 	<target name="build" depends="init-build-local, banner, init" description="Builds current version">
 		<delete dir="${build.dir}" />
 		<mkdir dir="${build.dir}" />
-		<javac srcdir="${src.dir}" destdir="${build.dir}" classpath="${build.classpath}"/>
+		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath"/>
 	</target>
 
 	<!--==================================
@@ -216,7 +218,46 @@ Svn branch root : ${svn.branch.url}
 	== Build javadocs locally. 
 	==================================-->
 	<target name="javadocs" depends="build" description="Creates javadocs for current version">
-		<javadoc sourcepath="${src.dir}" destdir="${dist.javadoc.dir}" author="true" version="true" bottom="${javadoc.bottom}" classpath="${build.classpath}" />
+		<javadoc sourcepath="${src.dir}" destdir="${dist.javadoc.dir}" author="true" version="true" bottom="${javadoc.bottom}" classpathref="build.classpath" />
 	</target>
 
+	<!--==================================
+	== Compiles resources necessary for testing by using the locally checked out files.
+	==================================-->
+	<target name="build-tests" depends="build">
+		<mkdir dir="${test.build.dir}" />
+		<javac srcdir="${test.src.dir}" destdir="${test.build.dir}"  includes="**/*Test.java">
+			<classpath>
+				<path refid="build.classpath"/>
+				<pathelement location="${build.dir}"/>
+			</classpath>
+		</javac>
+		<echo message="Compiled" />
+	</target>
+	
+	<!--==================================
+	== Run unit test. Requires junit-X.X.jar to be in the ant/lib dir.
+	==================================-->
+	<target name="test" depends="build, build-tests " description="Run JUnit test">
+		<property name="test.report.dir" value="${test.build.dir}/reports"/>
+		<mkdir dir="${test.report.dir}"/>
+
+		<junit printsummary="yes" haltonerror="true">
+			<formatter type="xml"/>
+
+			<classpath>
+				<path refid="build.classpath"/>
+				<pathelement location="${test.build.dir}"/>
+				<pathelement location="${build.dir}"/>
+				<pathelement location="resources"/>
+			</classpath>
+
+			<batchtest todir="${test.report.dir}">
+				<fileset dir="${test.src.dir}">
+					<include name="**/*Test.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
 </project>

@@ -280,7 +280,8 @@ public class SchemaCellTest {
     public void testMakeCell_Integer() throws SchemaException, ParseException, java.text.ParseException {
         Cell cell;
         cell = SchemaCell.makeCell(Cell.CellType.INTEGER, "number", "12345", Locale.getDefault());
-        assertEquals(12345, cell.getValue());
+        assertEquals(IntegerCell.class, cell.getClass());
+        assertEquals(12345, ((IntegerCell)cell).getNumberValue().intValue());
     }
 
     /**
@@ -297,7 +298,8 @@ public class SchemaCellTest {
         schemaCell.setDefaultValue("42");
         Cell cell;
         cell = schemaCell.makeCell("");
-        assertEquals(42, cell.getValue());
+        assertEquals(IntegerCell.class, cell.getClass());
+        assertEquals(42, ((IntegerCell)cell).getNumberValue().intValue());
         assertEquals("A number", cell.getName());
     }
 
@@ -347,7 +349,8 @@ public class SchemaCellTest {
         schemaCell.setMaxValue(new IntegerCell(54321));
 
         Cell cell = schemaCell.makeCell("12345");
-        assertEquals(12345, cell.getValue());
+        assertEquals(IntegerCell.class, cell.getClass());
+        assertEquals(12345, ((IntegerCell)cell).getNumberValue().intValue());
 
     }
 
