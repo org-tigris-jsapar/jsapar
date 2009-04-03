@@ -34,9 +34,14 @@ public abstract class SchemaCell implements Cloneable {
     }
 
     public SchemaCell(String sName) {
-        this.name = sName;
+        this(sName, CELL_FORMAT_PROTOTYPE);
     }
 
+    public SchemaCell(String sName, SchemaCellFormat cellFormat) {
+        this.cellFormat = cellFormat;
+        this.name = sName;
+    }
+    
     /**
      * Indicates if this cell should be ignored after reading it from the buffer. If ignoreRead is
      * true the cell will not be stored to the current Line object.

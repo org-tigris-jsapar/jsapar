@@ -68,6 +68,21 @@ public class FixedWidthSchemaCell extends SchemaCell {
     }
 
     /**
+     * Creates a fixed with schema cell with specified name, length and format.
+     * 
+     * @param sName
+     *            The name of the cell
+     * @param nLength
+     *            The length of the cell
+     * @param cellFormat
+     *            The format of the cell
+     */
+    public FixedWidthSchemaCell(String sName, int nLength, SchemaCellFormat cellFormat) {
+        super(sName, cellFormat);
+        this.length = nLength;
+    }
+
+    /**
      * Creates a fixed with schema cell with specified length.
      * 
      * @param nLength

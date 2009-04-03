@@ -12,6 +12,10 @@ public class CsvSchemaCell extends SchemaCell {
         super(sName);
     }
 
+    public CsvSchemaCell(String sName, SchemaCellFormat cellFormat) {
+        super(sName, cellFormat);
+    }
+    
     public CsvSchemaCell() {
         super();
     }
