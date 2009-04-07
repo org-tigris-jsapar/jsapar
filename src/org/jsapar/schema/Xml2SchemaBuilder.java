@@ -200,11 +200,11 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
             schema.setWriteControlCell(getBooleanValue(xmlWriteControlCell));
 
         Element xmlControlCell = getChild(xmlSchema, ELEMENT_FW_SCHEMA_CONTROLCELL);
-        Node xmlControlCellLength = xmlControlCell.getAttributeNode(ATTRIB_FW_SCHEMA_CONTROLCELLL_ENGTH);
+        Node xmlControlCellLength = xmlControlCell.getAttributeNode(ATTRIB_FW_SCHEMA_CONTROLCELLL_LENGTH);
         if (xmlControlCellLength != null)
             schema.setControlCellLength(getIntValue(xmlControlCellLength));
 
-        Node xmlControlCellAllignment = xmlControlCell.getAttributeNode(ATTRIB_FW_SCHEMA_CONTROLCELL_ALLIGNMENT);
+        Node xmlControlCellAllignment = xmlControlCell.getAttributeNode(ATTRIB_FW_SCHEMA_CELL_ALIGNMENT);
         if (xmlControlCellAllignment != null) {
             String sControlCellAllignment = getStringValue(xmlControlCellAllignment);
             if (sControlCellAllignment.equals("left"))
@@ -214,7 +214,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
             else if (sControlCellAllignment.equals("right"))
                 schema.setControlCellAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
             else {
-                throw new SchemaException("Invalid value for attribute: " + ATTRIB_FW_SCHEMA_CONTROLCELL_ALLIGNMENT
+                throw new SchemaException("Invalid value for attribute: " + ATTRIB_FW_SCHEMA_CELL_ALIGNMENT
                         + "=" + sControlCellAllignment);
             }
         }
@@ -265,15 +265,15 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
         FixedWidthSchemaCell cell = new FixedWidthSchemaCell(nLength);
 
-        Node xmlAllignment = xmlSchemaCell.getAttributeNode(ATTRIB_FW_SCHEMA_CELL_ALLIGNMENT);
+        Node xmlAllignment = xmlSchemaCell.getAttributeNode(ATTRIB_FW_SCHEMA_CELL_ALIGNMENT);
         if (xmlAllignment == null || getStringValue(xmlAllignment).equals("left"))
             cell.setAlignment(FixedWidthSchemaCell.Alignment.LEFT);
         else if (getStringValue(xmlAllignment).equals("center"))
             cell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
         else if (getStringValue(xmlAllignment).equals("right"))
-            cell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
+            cell.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
         else {
-            throw new SchemaException("Invalid value for attribute: " + ATTRIB_FW_SCHEMA_CELL_ALLIGNMENT + "="
+            throw new SchemaException("Invalid value for attribute: " + ATTRIB_FW_SCHEMA_CELL_ALIGNMENT + "="
                     + getStringValue(xmlAllignment));
         }
 

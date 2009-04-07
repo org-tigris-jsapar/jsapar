@@ -6,6 +6,7 @@ package org.jsapar.schema;
 import static org.junit.Assert.assertEquals;
 
 import org.jsapar.Cell.CellType;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -20,13 +21,14 @@ public class Xml2SchemaBuilderTest {
      * @throws SchemaException
      */
     @Test
-    public final void testBuild_FixedLength() throws SchemaException {
+    public final void testBuild_FixedWidth() throws SchemaException {
 
         String sXmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema/1.0\" >"
-                + "<fixedwidthschema lineseparator=\"&#13;&#10;\"><line occurs=\"*\">"
+                + "<fixedwidthschema lineseparator=\"&#13;&#10;\">" 
+                + "<line occurs=\"*\" linetype=\"Person\">"
                 + "<cell name=\"First name\" length=\"5\"/>" + "<cell name=\"Last name\" length=\"8\"/>"
-                + "<cell name=\"Shoe size\" length=\"8\"><format type=\"integer\"/></cell>"
+                + "<cell name=\"Shoe size\" length=\"8\" alignment=\"right\"><format type=\"integer\"/></cell>"
                 + "</line></fixedwidthschema></schema>";
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
@@ -45,6 +47,10 @@ public class Xml2SchemaBuilderTest {
         assertEquals(CellType.INTEGER, fwSchema.getFixedWidthSchemaLines().get(0).getSchemaCells().get(2)
                 .getCellFormat().getCellType());
 
+        SchemaLine schemaLine = fwSchema.getSchemaLine("Person");
+        Assert.assertNotNull(schemaLine);
+        FixedWidthSchemaCell schemaCell = ((FixedWidthSchemaLine)schemaLine).getSchemaCells().get(2);
+        assertEquals( FixedWidthSchemaCell.Alignment.RIGHT, schemaCell.getAlignment() );
     }
 
     @Test

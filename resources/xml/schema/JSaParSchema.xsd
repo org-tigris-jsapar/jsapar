@@ -222,7 +222,7 @@ If false, value is left as is.
             <xsd:documentation>The length of the cell, i.e. the number of characters it occupies.</xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="allignment" use="optional">
+        <xsd:attribute name="alignment" use="optional">
           <xsd:annotation>
             <xsd:documentation>Defines the cell alignment. The remaining space is filled with the fill-character of the parent document schema. Have to be one of the following:
 left

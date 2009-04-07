@@ -142,8 +142,8 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
         Element xmlControlCell = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_FW_SCHEMA_CONTROLCELL);
         xmlSchema.appendChild(xmlControlCell);
 
-        xmlControlCell.setAttribute(ATTRIB_FW_SCHEMA_CONTROLCELLL_ENGTH, String.valueOf(schema.getControlCellLength()));
-        xmlControlCell.setAttribute(ATTRIB_FW_SCHEMA_CONTROLCELL_ALLIGNMENT, schema.getControlCellAlignment()
+        xmlControlCell.setAttribute(ATTRIB_FW_SCHEMA_CONTROLCELLL_LENGTH, String.valueOf(schema.getControlCellLength()));
+        xmlControlCell.setAttribute(ATTRIB_FW_SCHEMA_CELL_ALIGNMENT, schema.getControlCellAlignment()
                 .toString().toLowerCase());
 
         assignFixedWidthSchema(xmlDocument, xmlSchema, schema);
@@ -190,7 +190,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
         xmlSchemaCell.setAttribute(ATTRIB_FW_SCHEMA_CELL_LENGTH, String.valueOf(schemaCell.getLength()));
         xmlSchemaCell
-                .setAttribute(ATTRIB_FW_SCHEMA_CELL_ALLIGNMENT, schemaCell.getAlignment().toString().toLowerCase());
+                .setAttribute(ATTRIB_FW_SCHEMA_CELL_ALIGNMENT, schemaCell.getAlignment().toString().toLowerCase());
 
         assignSchemaCellBase(xmlDocument, xmlSchemaCell, schemaCell);
         return xmlSchemaCell;
