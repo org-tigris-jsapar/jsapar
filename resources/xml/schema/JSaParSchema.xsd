@@ -329,9 +329,9 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
         <xsd:documentation>The length of the control cell</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="allignment" use="optional">
+    <xsd:attribute name="alignment" use="optional">
       <xsd:annotation>
-        <xsd:documentation>Defines the cell allignment. Only used when writing, not when reading. The remaining space is filled with the fill-character of the parent document schema.
+        <xsd:documentation>Defines the cell alignment. Only used when writing, not when reading. The remaining space is filled with the fill-character of the parent document schema.
                     	</xsd:documentation>
       </xsd:annotation>
       <xsd:simpleType>
