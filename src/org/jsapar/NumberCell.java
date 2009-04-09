@@ -6,10 +6,9 @@ import java.text.ParseException;
 import java.text.ParsePosition;
 import java.util.Locale;
 
-
 /**
- * Class containging the cell numberValue as a string representation. Each line
- * contains a list of cells.
+ * Class containging the cell numberValue as a string representation. Each line contains a list of
+ * cells.
  * 
  * @author Jonas
  * 
@@ -26,52 +25,51 @@ public abstract class NumberCell extends Cell {
     private Number numberValue;
 
     public NumberCell(CellType cellType) {
-	super(cellType);
+        super(cellType);
 
     }
 
     public NumberCell(Number value, CellType cellType) {
-	super(cellType);
-	this.numberValue = value;
+        super(cellType);
+        this.numberValue = value;
     }
 
     public NumberCell(String sName, Number value, CellType cellType) {
-	super(sName, cellType);
-	this.numberValue = value;
+        super(sName, cellType);
+        this.numberValue = value;
     }
 
-    public NumberCell(String name, String value, Format format, CellType cellType)
-	    throws ParseException {
-	super(name, cellType);
-	setValue(value, format);
+    public NumberCell(String name, String value, Format format, CellType cellType) throws ParseException {
+        super(name, cellType);
+        setValue(value, format);
     }
 
     public NumberCell(String name, String value, Locale locale, CellType cellType) throws ParseException {
-    	super(name, cellType);
-    	setValue(value, locale);
-	}
+        super(name, cellType);
+        setValue(value, locale);
+    }
 
-	/**
+    /**
      * @return the numberValue
      */
     @Override
     public Object getValue() {
-	return this.numberValue;
+        return this.numberValue;
     }
 
     /**
      * @param value
-     *                the decimal value to set
+     *            the decimal value to set
      */
     public void setNumberValue(Number value) {
-	this.numberValue = value;
+        this.numberValue = value;
     }
 
     /**
      * @return The string numberValue of this cell.
      */
     public Number getNumberValue() {
-	return this.numberValue;
+        return this.numberValue;
     }
 
     /*
@@ -81,10 +79,10 @@ public abstract class NumberCell extends Cell {
      */
     @Override
     public String getStringValue(Format format) throws IllegalArgumentException {
-	if (format != null)
-	    return format.format(this.numberValue);
-	else
-	    return this.numberValue.toString();
+        if (format != null)
+            return format.format(this.numberValue);
+        else
+            return this.numberValue.toString();
     }
 
     /*
@@ -94,14 +92,14 @@ public abstract class NumberCell extends Cell {
      */
     @Override
     public void setValue(String value, Format format) throws ParseException {
-	ParsePosition pos=new ParsePosition(0);
-	this.numberValue = (Number) format.parseObject(value, pos);
-	
-	if(pos.getIndex() < value.length())
-		// It is not acceptable to parse only a part of the string.
-		throw new java.text.ParseException("Invalid characters found while parsing number.", pos.getIndex());
+        ParsePosition pos = new ParsePosition(0);
+        this.numberValue = (Number) format.parseObject(value, pos);
+
+        if (pos.getIndex() < value.length())
+            // It is not acceptable to parse only a part of the string.
+            throw new java.text.ParseException("Invalid characters found while parsing number.", pos.getIndex());
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -109,8 +107,8 @@ public abstract class NumberCell extends Cell {
      */
     @Override
     public void setValue(String value, Locale locale) throws ParseException {
-	    Format format = NumberFormat.getInstance(locale);
-	    setValue(value, format);
+        Format format = NumberFormat.getInstance(locale);
+        setValue(value, format);
     }
 
 }
