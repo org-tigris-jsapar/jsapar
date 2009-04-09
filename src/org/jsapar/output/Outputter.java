@@ -164,4 +164,18 @@ public class Outputter {
         }
     }
 
+    /**
+     * @return the schema
+     */
+    public Schema getSchema() {
+        return schema;
+    }
+
+    /**
+     * @param schema the schema to set
+     */
+    public void setSchema(Schema schema) {
+        this.schema = schema;
+    }
+
 }

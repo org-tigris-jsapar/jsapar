@@ -123,7 +123,21 @@ public class Parser implements ParsingEventListener {
      * @param eventListener
      */
     public void addParsingEventListener(ParsingEventListener eventListener) {
+        if (eventListener == null)
+            return;
         this.parsingEventListeners.add(eventListener);
+    }
+
+    /**
+     * Removes the first occurrence of a registered event listener if it is present (optional
+     * operation). If the list does not contain the element, it is unchanged. Uses equals() for
+     * comparison.
+     * 
+     * @return true if a listener was removed, false if there was no action.
+     * @param eventListener
+     */
+    public boolean removeParsingEventListener(ParsingEventListener eventListener) {
+        return this.parsingEventListeners.remove(eventListener);
     }
 
     /**
@@ -273,4 +287,5 @@ public class Parser implements ParsingEventListener {
             return this.objects;
         }
     }
+
 }
