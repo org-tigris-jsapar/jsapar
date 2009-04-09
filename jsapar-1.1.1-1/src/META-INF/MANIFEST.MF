@@ -1,0 +1,11 @@
+Manifest-version: 1.0 
+Main-Class: org.jsapar.io.Converter
+Product-Name:  JSaPar
+Product-version: @VERSION_STRING@-@BUILD_NUMBER@
+Built-By: @USER_NAME@ at @HOST_NAME@
+Build-Jdk: @JDK_VERSION@
+Build-Time: @TIME@
+Specification-Title: Java based Schema Parser 
+Specification-Version: @VERSION_STRING@
+Implementation-Title: jsapar
+Implementation-Version: @VERSION_STRING@-@BUILD_NUMBER@
