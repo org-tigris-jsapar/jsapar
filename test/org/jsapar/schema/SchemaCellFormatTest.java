@@ -3,8 +3,6 @@
  */
 package org.jsapar.schema;
 
-import static org.junit.Assert.*;
-
 import java.util.Locale;
 
 import junit.framework.Assert;
