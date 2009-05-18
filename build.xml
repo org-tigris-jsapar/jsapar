@@ -141,8 +141,8 @@
 		<exec executable="svn" dir=".">
 			<arg line="export --force ${dist.svn.tag.url} ${dist.tag.dir}" />
 		</exec>
-		<exec executable="svn" dir="." output="${dist.tag.dir}/change_log.txt">
-			<arg line="--limit 100 -v log ${dist.svn.tag.url}" />
+		<exec executable="svn" dir="." output="${dist.tag.dir}/change_log_${dist.tag}.txt">
+			<arg line="--limit 100 log ${dist.svn.tag.url}" />
 		</exec>
 		<echo file="${dist.tag.dir}/version.txt">
 ${project.name} ${patch.version.string} build ${dist.build.number}
@@ -189,6 +189,7 @@ Svn branch root : ${svn.branch.url}
             <fileset dir="${basedir}">
                 <include name="samples/*"/>
             </fileset>
+				
 		</copy>
 		<copy todir="${dist.dir}/samples">
             <fileset dir="${basedir}/test/org/jsapar">
@@ -226,6 +227,9 @@ Svn branch root : ${svn.branch.url}
 		<ant antfile="build.xml" dir="${dist.tag.dir}" target="dist" inheritall="no" />
 		<copy todir="${dist.dir}" filtering="false">
 			<fileset dir="${dist.tag.dir}/dist" includes="*.zip" />
+            <fileset dir="${dist.tag.dir}" >
+                <include name="change_log*.txt"/>
+            </fileset>
 		</copy>
 	</target>
 
