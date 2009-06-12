@@ -1,6 +1,5 @@
 package org.jsapar.schema;
 
-import java.io.InputStream;
 import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -20,15 +19,6 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
     public org.w3c.dom.Document extractXmlDocument(Schema schema) throws SchemaException {
         try {
-            String schemaFileName = "/xml/schema/JSaParSchema.xsd";
-            InputStream schemaStream = Xml2SchemaBuilder.class.getResourceAsStream(schemaFileName);
-
-            if (schemaStream == null)
-                throw new SchemaException("Could not find schema file: " + schemaFileName);
-            // File schemaFile = new
-            // File("resources/xml/schema/JSaParSchema.xsd");
-
-            // javax.xml.validation.Schema xmlSchema;
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setIgnoringElementContentWhitespace(true);
             factory.setIgnoringComments(true);
@@ -36,11 +26,10 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
             factory.setNamespaceAware(true);
             factory.setValidating(true);
             factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
-            factory.setAttribute(JAXP_SCHEMA_SOURCE, schemaStream);
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             org.w3c.dom.Document xmlDocument = builder.newDocument();
-            xmlDocument.setXmlStandalone(false);
+            xmlDocument.setXmlStandalone(true);
             Element xmlRoot = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_ROOT);
             xmlDocument.appendChild(xmlRoot);
 
