@@ -30,7 +30,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
      * Creates an empty schema line.
      */
     public FixedWidthSchemaLine() {
-	super();
+        super();
     }
 
     /**
@@ -41,7 +41,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
      *            The number of times this schema line is used while parsing or writing.
      */
     public FixedWidthSchemaLine(int nOccurs) {
-	super(nOccurs);
+        super(nOccurs);
     }
 
     /**
@@ -52,7 +52,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
      *            lineType of the generated Line.
      */
     public FixedWidthSchemaLine(String lineType) {
-	super(lineType);
+        super(lineType);
     }
 
     /**
@@ -64,14 +64,14 @@ public class FixedWidthSchemaLine extends SchemaLine {
      *            The tag that determines which type of line it is.
      */
     public FixedWidthSchemaLine(String lineType, String lineTypeControlValue) {
-	super(lineType, lineTypeControlValue);
+        super(lineType, lineTypeControlValue);
     }
 
     /**
      * @return the cells
      */
     public java.util.List<FixedWidthSchemaCell> getSchemaCells() {
-	return schemaCells;
+        return schemaCells;
     }
 
     /**
@@ -80,18 +80,21 @@ public class FixedWidthSchemaLine extends SchemaLine {
      * @param schemaCell
      */
     public void addSchemaCell(FixedWidthSchemaCell schemaCell) {
-	this.schemaCells.add(schemaCell);
+        this.schemaCells.add(schemaCell);
     }
 
-    /* (non-Javadoc)
-     * @see org.jsapar.schema.SchemaLine#parse(long, java.lang.String, org.jsapar.input.ParsingEventListener)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.jsapar.schema.SchemaLine#parse(long, java.lang.String,
+     * org.jsapar.input.ParsingEventListener)
      */
     @Override
     boolean parse(long nLineNumber, String sLine, ParsingEventListener listener) throws IOException, JSaParException {
-	if (sLine.length() <= 0)
-	    return handleEmptyLine(nLineNumber, listener);
-	java.io.Reader reader = new java.io.StringReader(sLine);
-	return parse(nLineNumber, reader, listener);
+        if (sLine.length() <= 0)
+            return handleEmptyLine(nLineNumber, listener);
+        java.io.Reader reader = new java.io.StringReader(sLine);
+        return parse(nLineNumber, reader, listener);
     }
 
     /**
@@ -110,30 +113,30 @@ public class FixedWidthSchemaLine extends SchemaLine {
      */
     boolean parse(long nLineNumber, Reader reader, ParsingEventListener listener) throws IOException, JSaParException {
 
-	Line line = new Line(getLineType(), getSchemaCells().size());
-	for (FixedWidthSchemaCell schemaCell : getSchemaCells()) {
-	    if (schemaCell.isIgnoreRead()) {
-		long nSkipped = reader.skip(schemaCell.getLength());
-		if (nSkipped != schemaCell.getLength())
-		    break;
-	    } else {
-		try {
-		    Cell cell = schemaCell.build(reader, isTrimFillCharacters(), getFillCharacter());
-		    if (cell == null)
-			break;
-		    line.addCell(cell);
-		} catch (ParseException pe) {
-		    pe.getCellParseError().setLineNumber(nLineNumber);
-		    listener.lineErrorEvent(new LineErrorEvent(this, pe.getCellParseError()));
-		}
-	    }
-	}
-	if (line.getNumberOfCells() <= 0)
-	    return false;
-	else
-	    listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
+        Line line = new Line(getLineType(), getSchemaCells().size());
+        for (FixedWidthSchemaCell schemaCell : getSchemaCells()) {
+            if (schemaCell.isIgnoreRead()) {
+                long nSkipped = reader.skip(schemaCell.getLength());
+                if (nSkipped != schemaCell.getLength())
+                    break;
+            } else {
+                try {
+                    Cell cell = schemaCell.build(reader, isTrimFillCharacters(), getFillCharacter());
+                    if (cell == null)
+                        break;
+                    line.addCell(cell);
+                } catch (ParseException pe) {
+                    pe.getCellParseError().setLineNumber(nLineNumber);
+                    listener.lineErrorEvent(new LineErrorEvent(this, pe.getCellParseError()));
+                }
+            }
+        }
+        if (line.getNumberOfCells() <= 0)
+            return false;
+        else
+            listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
 
-	return true;
+        return true;
     }
 
     /**
@@ -156,17 +159,17 @@ public class FixedWidthSchemaLine extends SchemaLine {
      */
     @Override
     public void output(Line line, Writer writer) throws IOException, JSaParException {
-	Iterator<FixedWidthSchemaCell> iter = getSchemaCells().iterator();
+        Iterator<FixedWidthSchemaCell> iter = getSchemaCells().iterator();
 
-	// Iterate all schema cells.
-	for (int i = 0; iter.hasNext(); i++) {
-	    FixedWidthSchemaCell schemaCell = iter.next();
-	    Cell cell = findCell(line, schemaCell, i);
-	    if (cell == null)
-		schemaCell.outputEmptyCell(writer, getFillCharacter());
-	    else
-		schemaCell.output(cell, writer, getFillCharacter());
-	}
+        // Iterate all schema cells.
+        for (int i = 0; iter.hasNext(); i++) {
+            FixedWidthSchemaCell schemaCell = iter.next();
+            Cell cell = findCell(line, schemaCell, i);
+            if (cell == null)
+                schemaCell.outputEmptyCell(writer, getFillCharacter());
+            else
+                schemaCell.output(cell, writer, getFillCharacter());
+        }
     }
 
     /**
@@ -177,10 +180,10 @@ public class FixedWidthSchemaLine extends SchemaLine {
      * @throws JSaParException
      */
     void outputByIndex(Line line, Writer writer, FixedWidthSchema schema) throws IOException, JSaParException {
-	Iterator<FixedWidthSchemaCell> iter = getSchemaCells().iterator();
-	for (int i = 0; iter.hasNext(); i++) {
-	    iter.next().output(line.getCell(i), writer, getFillCharacter());
-	}
+        Iterator<FixedWidthSchemaCell> iter = getSchemaCells().iterator();
+        for (int i = 0; iter.hasNext(); i++) {
+            iter.next().output(line.getCell(i), writer, getFillCharacter());
+        }
     }
 
     /*
@@ -189,13 +192,13 @@ public class FixedWidthSchemaLine extends SchemaLine {
      * @see java.lang.Object#clone()
      */
     public FixedWidthSchemaLine clone() throws CloneNotSupportedException {
-	FixedWidthSchemaLine line = (FixedWidthSchemaLine) super.clone();
+        FixedWidthSchemaLine line = (FixedWidthSchemaLine) super.clone();
 
-	line.schemaCells = new java.util.LinkedList<FixedWidthSchemaCell>();
-	for (FixedWidthSchemaCell cell : this.schemaCells) {
-	    line.addSchemaCell(cell.clone());
-	}
-	return line;
+        line.schemaCells = new java.util.LinkedList<FixedWidthSchemaCell>();
+        for (FixedWidthSchemaCell cell : this.schemaCells) {
+            line.addSchemaCell(cell.clone());
+        }
+        return line;
     }
 
     /*
@@ -205,25 +208,25 @@ public class FixedWidthSchemaLine extends SchemaLine {
      */
     @Override
     public String toString() {
-	StringBuilder sb = new StringBuilder();
-	sb.append(super.toString());
-	sb.append(" trimFillCharacters=");
-	sb.append(this.trimFillCharacters);
-	if (this.trimFillCharacters) {
-	    sb.append(" fillCharacter='");
-	    sb.append(this.fillCharacter);
-	    sb.append("'");
-	}
-	sb.append(" schemaCells=");
-	sb.append(this.schemaCells);
-	return sb.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append(super.toString());
+        sb.append(" trimFillCharacters=");
+        sb.append(this.trimFillCharacters);
+        if (this.trimFillCharacters) {
+            sb.append(" fillCharacter='");
+            sb.append(this.fillCharacter);
+            sb.append("'");
+        }
+        sb.append(" schemaCells=");
+        sb.append(this.schemaCells);
+        return sb.toString();
     }
 
     /**
      * @return the trimFillCharacters
      */
     public boolean isTrimFillCharacters() {
-	return trimFillCharacters;
+        return trimFillCharacters;
     }
 
     /**
@@ -231,14 +234,14 @@ public class FixedWidthSchemaLine extends SchemaLine {
      *            the trimFillCharacters to set
      */
     public void setTrimFillCharacters(boolean trimFillCharacters) {
-	this.trimFillCharacters = trimFillCharacters;
+        this.trimFillCharacters = trimFillCharacters;
     }
 
     /**
      * @return the fillCharacter
      */
     public char getFillCharacter() {
-	return fillCharacter;
+        return fillCharacter;
     }
 
     /**
@@ -246,6 +249,36 @@ public class FixedWidthSchemaLine extends SchemaLine {
      *            the fillCharacter to set
      */
     public void setFillCharacter(char fillCharacter) {
-	this.fillCharacter = fillCharacter;
+        this.fillCharacter = fillCharacter;
+    }
+
+    /**
+     * Finds the cell's fist and last positions within a line. First position starts with 1.
+     * 
+     * @param cellName
+     *            The name of the cell to find positions for.
+     * @return The cell positions for the cell with the supplied name, null if no such cell exists.
+     */
+    public FixedWidthCellPositions getCellPositions(String cellName) {
+        FixedWidthCellPositions pos = new FixedWidthCellPositions();
+        for (FixedWidthSchemaCell cell : schemaCells) {
+            pos.increment(cell);
+            if (cell.getName().equals(cellName))
+                return pos;
+        }
+        return null;
+    }
+
+    /**
+     * Finds the cell's fist position within a line. First position starts with 1.
+     * 
+     * @param cellName
+     *            The name of the cell to find positions for.
+     * @return The cell's first position for the cell with the supplied name, -1 if no such cell
+     *         exists.
+     */
+    public int getCellFirstPosition(String cellName) {
+        FixedWidthCellPositions pos = getCellPositions(cellName);
+        return pos != null ? pos.getFirst() : -1;
     }
 }
