@@ -308,4 +308,25 @@ public class Line implements Serializable {
         sb.append(this.cellsByIndex);
         return sb.toString();
     }
+
+    /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or
+     * replaces an existing cell if there already is one with the same name.
+     * 
+     * @param cellName The name of the cell to add/replace.
+     * @param value The string value to set.
+     */
+    public void setCellValue(String cellName, String value) {
+        this.replaceCell(new StringCell(cellName, value));
+    }
+
+    /**
+     * Utility function that gets the string cell value of the specified cell.
+     * @param cellName
+     * @return
+     */
+    public String getStringCellValue(String cellName){
+        return this.getCell(cellName).getStringValue();
+    }
+    
 }
