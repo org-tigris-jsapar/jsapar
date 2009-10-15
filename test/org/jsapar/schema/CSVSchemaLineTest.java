@@ -3,8 +3,6 @@ package org.jsapar.schema;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import junit.framework.TestCase;
-
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
@@ -12,9 +10,10 @@ import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
+import static  org.junit.Assert.*;
 import org.junit.Test;
 
-public class CSVSchemaLineTest extends TestCase {
+public class CSVSchemaLineTest  {
 
     
     private class NullParsingEventListener implements ParsingEventListener {
@@ -127,34 +126,104 @@ public class CSVSchemaLineTest extends TestCase {
 
     @Test
     public void testBuild_withNames() throws JSaParException {
-	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
-	schemaLine.setCellSeparator(";-)");
-	schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
-	schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setCellSeparator(";-)");
+        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
 
-	String sLine = "Jonas;-)Stenberg";
-	boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+        String sLine = "Jonas;-)Stenberg";
+        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
 
-	    @Override
-	    public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-		// TODO Auto-generated method stub
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+                // TODO Auto-generated method stub
 
-	    }
+            }
 
-	    @Override
-	    public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
-		Line line = event.getLine();
-		assertEquals("Jonas", line.getCell(0).getStringValue());
-		assertEquals("Stenberg", line.getCell(1).getStringValue());
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+                Line line = event.getLine();
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Stenberg", line.getCell(1).getStringValue());
 
-		assertEquals("First Name", line.getCell(0).getName());
-		assertEquals("Last Name", line.getCell(1).getName());
-	    }
-	});
-	assertEquals(true, rc);
+                assertEquals("First Name", line.getCell(0).getName());
+                assertEquals("Last Name", line.getCell(1).getName());
+            }
+        });
+        assertEquals(true, rc);
 
     }
 
+    @Test
+    public void testBuild_withDefault() throws JSaParException {
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setCellSeparator(";-)");
+        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
+        CsvSchemaCell happyCell = new CsvSchemaCell("Happy");
+        happyCell.setDefaultValue("yes");
+        schemaLine.addSchemaCell(happyCell);
+        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+
+        String sLine = "Jonas;-);-)Stenberg";
+        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+                Line line = event.getLine();
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Jonas", line.getStringCellValue("First Name"));
+                assertEquals("Stenberg", line.getCell(2).getStringValue());
+                assertEquals("yes", line.getStringCellValue("Happy"));
+
+                assertEquals("First Name", line.getCell(0).getName());
+                assertEquals("Last Name", line.getCell(2).getName());
+            }
+        });
+        assertEquals(true, rc);
+
+    }
+
+    @Test
+    public void testBuild_withDefaultLast() throws JSaParException {
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setCellSeparator(";-)");
+        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+        CsvSchemaCell happyCell = new CsvSchemaCell("Happy");
+        happyCell.setDefaultValue("yes");
+        schemaLine.addSchemaCell(happyCell);
+
+        String sLine = "Jonas;-)Stenberg";
+        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+                Line line = event.getLine();
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Jonas", line.getStringCellValue("First Name"));
+                assertEquals("Stenberg", line.getCell(1).getStringValue());
+                assertEquals("yes", line.getStringCellValue("Happy"));
+
+                assertEquals("First Name", line.getCell(0).getName());
+                assertEquals("Last Name", line.getCell(1).getName());
+            }
+        });
+        assertEquals(true, rc);
+
+    }
+    
     @Test
     public void testOutput() throws IOException, JSaParException {
 

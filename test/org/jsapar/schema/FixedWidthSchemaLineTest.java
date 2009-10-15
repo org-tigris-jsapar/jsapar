@@ -71,6 +71,41 @@ public class FixedWidthSchemaLineTest {
         assertEquals(true, rc);
     }
 
+    @Test
+    public void testBuild_defaultLast() throws IOException, JSaParException {
+        String toParse = "JonasStenberg";
+        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        FixedWidthSchemaCell cityCell = new FixedWidthSchemaCell("City", 8);
+        cityCell.setDefaultValue("Falun");
+        schemaLine.addSchemaCell(cityCell);
+        schema.addSchemaLine(schemaLine);
+
+        Reader reader = new StringReader(toParse);
+        boolean rc = schemaLine.parse(1, reader, new ParsingEventListener() {
+
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+                throw new ParseException(event.getCellParseError());
+            }
+
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) {
+                Line line = event.getLine();
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Stenberg", line.getCell("Last name").getStringValue());
+                assertEquals("Falun", line.getStringCellValue("City"));
+
+                assertEquals("Last name", line.getCell(1).getName());
+
+            }
+        });
+
+        assertEquals(true, rc);
+    }
+    
     @Test(expected = org.jsapar.input.ParseException.class)
     public void testBuild_parseError() throws IOException, JSaParException {
         String toParse = "JonasStenbergFortione";

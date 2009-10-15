@@ -109,7 +109,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
     Cell build(Reader reader, boolean trimFillCharacters, char fillCharacter) throws IOException, ParseException {
 
         int nOffset = 0;
-        int nLength = this.length; // The actuall length
+        int nLength = this.length; // The actual length
 
         char[] buffer = new char[nLength];
         int nRead = reader.read(buffer, 0, nLength);

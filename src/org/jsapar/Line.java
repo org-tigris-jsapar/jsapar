@@ -326,7 +326,8 @@ public class Line implements Serializable {
      * @return
      */
     public String getStringCellValue(String cellName){
-        return this.getCell(cellName).getStringValue();
+        Cell cell = this.getCell(cellName); 
+        return (cell!=null) ? cell.getStringValue() : null;
     }
     
 }

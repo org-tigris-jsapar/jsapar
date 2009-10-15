@@ -22,6 +22,7 @@ import org.jsapar.input.ParsingEventListener;
  */
 public class FixedWidthSchemaLine extends SchemaLine {
 
+    private static final String EMPTY_STRING = "";
     private java.util.List<FixedWidthSchemaCell> schemaCells = new java.util.LinkedList<FixedWidthSchemaCell>();
     private boolean trimFillCharacters = false;
     private char fillCharacter = ' ';
@@ -114,16 +115,33 @@ public class FixedWidthSchemaLine extends SchemaLine {
     boolean parse(long nLineNumber, Reader reader, ParsingEventListener listener) throws IOException, JSaParException {
 
         Line line = new Line(getLineType(), getSchemaCells().size());
+        boolean setDefaultsOnly = false;
+        boolean oneRead = false;
+
         for (FixedWidthSchemaCell schemaCell : getSchemaCells()) {
-            if (schemaCell.isIgnoreRead()) {
+            if (setDefaultsOnly) {
+                if (schemaCell.getDefaultCell() != null)
+                    line.addCell(schemaCell.makeCell(EMPTY_STRING));
+                continue;
+            } else if (schemaCell.isIgnoreRead()) {
                 long nSkipped = reader.skip(schemaCell.getLength());
-                if (nSkipped != schemaCell.getLength())
-                    break;
+                if (nSkipped != schemaCell.getLength()) {
+                    if (oneRead)
+                        setDefaultsOnly = true;
+                    continue;
+                }
             } else {
                 try {
                     Cell cell = schemaCell.build(reader, isTrimFillCharacters(), getFillCharacter());
-                    if (cell == null)
-                        break;
+                    if (cell == null) {
+                        if (oneRead){
+                            setDefaultsOnly = true;
+                            if(schemaCell.getDefaultCell() != null)
+                                line.addCell(schemaCell.makeCell(EMPTY_STRING));
+                        }
+                        continue;
+                    }
+                    oneRead = true;
                     line.addCell(cell);
                 } catch (ParseException pe) {
                     pe.getCellParseError().setLineNumber(nLineNumber);
@@ -133,8 +151,8 @@ public class FixedWidthSchemaLine extends SchemaLine {
         }
         if (line.getNumberOfCells() <= 0)
             return false;
-        else
-            listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
+
+        listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
 
         return true;
     }

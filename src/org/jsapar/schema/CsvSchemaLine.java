@@ -23,6 +23,7 @@ import org.jsapar.input.ParsingEventListener;
  */
 public class CsvSchemaLine extends SchemaLine {
 
+    private static final String EMPTY_STRING = "";
     private java.util.List<CsvSchemaCell> schemaCells = new java.util.LinkedList<CsvSchemaCell>();
     private boolean firstLineAsSchema = false;
 
@@ -117,6 +118,14 @@ public class CsvSchemaLine extends SchemaLine {
         if (line.getNumberOfCells() <= 0)
             return false;
 
+        // We have to fill all the default values for remaining cells.
+        while(itSchemaCell.hasNext()){
+            CsvSchemaCell schemaCell = itSchemaCell.next();
+            if(schemaCell.getDefaultCell() != null){
+                line.addCell(schemaCell.makeCell(EMPTY_STRING));
+            }
+        }
+            
         listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
         return true;
     }
