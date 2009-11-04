@@ -2,6 +2,8 @@ package org.jsapar.schema;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -211,4 +213,15 @@ public class FixedWidthSchemaLineTest {
         
     }
     
+    @Test
+    public void testGetSchemaCell(){
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
+        FixedWidthSchemaCell cell1 = new FixedWidthSchemaCell("First name", 5); 
+        schemaLine.addSchemaCell(cell1);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+
+        assertNull(schemaLine.getSchemaCell("Does not exist"));
+        assertSame(cell1, schemaLine.getSchemaCell("First name"));
+        
+    }
 }

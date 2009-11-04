@@ -71,6 +71,7 @@ public class CsvSchemaLine extends SchemaLine {
         return schemaCells;
     }
 
+    
     /**
      * Adds a schema cell to this row.
      * 
@@ -335,5 +336,17 @@ public class CsvSchemaLine extends SchemaLine {
      */
     public void outputHeaderLine(Writer writer) throws IOException, JSaParException {
         output(this.buildHeaderLineFromSchema(), writer);
+    }
+
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.SchemaLine#getSchemaCell(java.lang.String)
+     */
+    @Override
+    public SchemaCell getSchemaCell(String cellName) {
+        for (CsvSchemaCell schemaCell : this.getSchemaCells()) {
+            if(schemaCell.getName().equals(cellName))
+                return schemaCell;
+        }
+        return null;
     }
 }

@@ -10,16 +10,13 @@ import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParsingEventListener;
 
 public abstract class SchemaLine implements Cloneable {
-    private static final int OCCURS_INFINITE = Integer.MAX_VALUE;
-    private static final String NOT_SET="";
+    private static final int    OCCURS_INFINITE      = Integer.MAX_VALUE;
+    private static final String NOT_SET              = "";
 
-    private int occurs = OCCURS_INFINITE;
-
-    private String lineType=NOT_SET;
-
-    private String lineTypeControlValue=NOT_SET;
-
-    private boolean ignoreReadEmptyLines = true;
+    private int                 occurs               = OCCURS_INFINITE;
+    private String              lineType             = NOT_SET;
+    private String              lineTypeControlValue = NOT_SET;
+    private boolean             ignoreReadEmptyLines = true;
 
     public SchemaLine() {
         this.occurs = OCCURS_INFINITE;
@@ -86,6 +83,16 @@ public abstract class SchemaLine implements Cloneable {
     public boolean isOccursInfinitely() {
         return this.occurs == OCCURS_INFINITE;
     }
+
+    /**
+     * Finds a schema cell with the specified name. This method probably performs a linear search,
+     * thus the performance is poor if there are many cells on a line.
+     * 
+     * @param cellName
+     *            The name of the schema cell to find.
+     * @return The schema cell with the supplied name or null if no such cell was found.
+     */
+    public abstract SchemaCell getSchemaCell(String cellName);
 
     /**
      * Finds the cell to use for output. Each cell is identified from the schema by the name of the

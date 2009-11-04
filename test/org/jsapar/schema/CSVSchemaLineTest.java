@@ -261,4 +261,16 @@ public class CSVSchemaLineTest  {
 
     }
 
+    @Test
+    public void testGetSchemaCell(){
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setCellSeparator(";-)");
+        CsvSchemaCell cell1 = new CsvSchemaCell("First Name");
+        schemaLine.addSchemaCell(cell1);
+        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+        
+        assertNull(schemaLine.getSchemaCell("Does not exist"));
+        assertSame(cell1, schemaLine.getSchemaCell("First Name"));
+        
+    }
 }

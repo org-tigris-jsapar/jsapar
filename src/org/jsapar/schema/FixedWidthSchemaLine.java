@@ -299,4 +299,13 @@ public class FixedWidthSchemaLine extends SchemaLine {
         FixedWidthCellPositions pos = getCellPositions(cellName);
         return pos != null ? pos.getFirst() : -1;
     }
+
+    @Override
+    public SchemaCell getSchemaCell(String cellName) {
+        for (FixedWidthSchemaCell schemaCell : schemaCells) {
+            if (schemaCell.getName().equals(cellName))
+                return schemaCell;
+        }
+        return null;
+    }
 }
