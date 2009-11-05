@@ -248,6 +248,10 @@ public abstract class SchemaCell implements Cloneable {
             sb.append(" cellFormat=");
             sb.append(this.cellFormat);
         }
+        if (this.defaultValue != null){
+            sb.append(" defaultValue=");
+            sb.append(this.defaultValue);
+        }
 
         if (this.ignoreRead)
             sb.append(" IGNOREREAD");
