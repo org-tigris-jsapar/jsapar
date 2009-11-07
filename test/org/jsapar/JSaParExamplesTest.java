@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -15,10 +16,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.jsapar.input.CellParseError;
+import org.jsapar.input.JavaBuilder;
 import org.jsapar.input.ParseSchema;
 import org.jsapar.input.Parser;
 import org.jsapar.input.XmlDocumentParser;
 import org.jsapar.io.Converter;
+import org.jsapar.output.Outputter;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.junit.Assert;
@@ -33,6 +36,7 @@ import org.junit.Test;
  * 
  */
 public class JSaParExamplesTest {
+    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Test
     public final void testExampleCsv01() throws SchemaException, IOException, JSaParException {
@@ -197,4 +201,29 @@ public class JSaParExamplesTest {
         assertEquals("Larsson", people.get(1).getLastName());
         assertEquals(17, people.get(1).getLuckyNumber());
     }
+    
+    @Test
+    public final void testExampleJavaToCsv08() throws SchemaException, IOException, JSaParException, ParseException {
+
+        List<TestPerson> people = new LinkedList<TestPerson>();
+        people.add(new TestPerson("Nils", "Holgersson", 4, 4711, dateFormat.parse("1902-08-07 12:43:22")));
+        people.add(new TestPerson("Jonathan", "Lejonhjärta", 37, 17, dateFormat.parse("1955-03-17 12:33:12")));
+        
+        Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");
+        Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
+        Outputter outputter = new Outputter(xmlBuilder.build(schemaReader));
+
+        JavaBuilder javaBuilder=new JavaBuilder();
+        Document doc = javaBuilder.build(people);
+        
+        StringWriter writer = new StringWriter();
+        outputter.output(doc, writer);
+        
+        String result=writer.toString();
+        String[] resultLines = result.split("\r\n");
+        System.out.println(result);
+        assertEquals("Nils;;Holgersson;4;4711;1902-08-07 12:43", resultLines[0]);
+        assertEquals("Jonathan;;Lejonhjärta;37;17;1955-03-17 12:33", resultLines[1]);
+    }
+    
 }

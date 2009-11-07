@@ -3,6 +3,8 @@
  */
 package org.jsapar;
 
+import java.util.Date;
+
 /**
  * Utility class for the tests. This class is used by the test classes.
  * 
@@ -17,7 +19,17 @@ public class TestPerson {
     long luckyNumber;
     java.util.Date birthTime;
 
-    /**
+    public TestPerson(String firstName, String lastName, int shoeSize,
+			long luckyNumber, Date birthTime) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.shoeSize = shoeSize;
+		this.luckyNumber = luckyNumber;
+		this.birthTime = birthTime;
+	}
+
+	/**
      * 
      */
     public TestPerson() {
