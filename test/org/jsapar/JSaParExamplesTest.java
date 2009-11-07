@@ -215,6 +215,7 @@ public class JSaParExamplesTest {
 
         JavaBuilder javaBuilder=new JavaBuilder();
         Document doc = javaBuilder.build(people);
+        System.out.println("The document:" + doc);
         
         StringWriter writer = new StringWriter();
         outputter.output(doc, writer);
