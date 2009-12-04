@@ -1,6 +1,9 @@
 package org.jsapar;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
@@ -132,6 +135,15 @@ public class LineTest {
     }
 
     @Test
+    public void testGetSetStringCellValue() throws JSaParException {
+        Line line = new Line("TestLine");
+        line.addCell(new StringCell("FirstName", "Nils"));
+        line.setCellValue("LastName", "Svensson");
+        assertEquals("Nils", line.getStringCellValue("FirstName"));
+        assertEquals("Svensson", line.getStringCellValue("LastName"));
+    }
+
+    @Test
     public void testGetNumberOfCells() throws JSaParException {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
@@ -182,4 +194,36 @@ public class LineTest {
         assertEquals("Svensson", line.getCell("LastName").getStringValue());
     }
 
+    @Test
+    public void testGetIntCellValue() throws JSaParException{
+        Line line = new Line("TestLine");
+        line.addCell(new IntegerCell("shoeSize", 42));
+        line.addCell(new FloatCell("pi", 3.141));
+        line.setCellValue("aStringValue", "17");
+        line.setCellValue("anIntValue", 4711);
+        
+        assertEquals(42, line.getIntCellValue("shoeSize"));
+        assertEquals(17, line.getIntCellValue("aStringValue"));
+        assertEquals(3, line.getIntCellValue("pi"));
+        assertEquals(4711, line.getIntCellValue("anIntValue"));
+        
+    }
+    
+    @Test(expected=JSaParException.class)
+    public void testGetIntCellValue_dont_exist() throws JSaParException{
+        Line line = new Line("TestLine");
+        
+        line.getIntCellValue("shoeSize");
+        Assert.fail("Should throw exception");
+    }
+
+    @Test(expected=NumberFormatException.class)
+    public void testGetIntCellValue_not_parsable() throws JSaParException{
+        Line line = new Line("TestLine");
+        line.setCellValue("aStringValue", "ABC");
+        
+        line.getIntCellValue("aStringValue");
+        Assert.fail("Should throw exception");
+    }
+    
 }

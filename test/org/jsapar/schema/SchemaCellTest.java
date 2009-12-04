@@ -171,12 +171,39 @@ public class SchemaCellTest {
      * @throws ParseException
      */
     @Test
+    public void testFormat_null_DefaultValue() throws ParseException {
+        TestSchemaCell schemaCell = new TestSchemaCell();
+        schemaCell.setName("test");
+        schemaCell.setDefaultValue("TheDefault");
+
+        assertEquals("TheDefault", schemaCell.format(null));
+    }
+    
+    /**
+     * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
+     * 
+     * @throws ParseException
+     */
+    @Test
     public void testFormat_empty_no_default() throws ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell();
         schemaCell.setName("test");
 
         Cell cell = new EmptyCell("Test", CellType.STRING);
         assertEquals("", schemaCell.format(cell));
+    }
+
+    /**
+     * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
+     * 
+     * @throws ParseException
+     */
+    @Test
+    public void testFormat_null_no_default() throws ParseException {
+        TestSchemaCell schemaCell = new TestSchemaCell();
+        schemaCell.setName("test");
+
+        assertEquals("", schemaCell.format(null));
     }
     
     /**

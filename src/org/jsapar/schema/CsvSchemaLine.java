@@ -231,8 +231,8 @@ public class CsvSchemaLine extends SchemaLine {
             Cell cell = findCell(line, schemaCell, i);
             char quoteChar = getQuoteChar();
 
-            if (cell != null)
-                schemaCell.output(cell, writer, sCellSeparator, quoteChar);
+            schemaCell.output(cell, writer, sCellSeparator, quoteChar);
+
             if (iter.hasNext())
                 writer.write(sCellSeparator);
         }

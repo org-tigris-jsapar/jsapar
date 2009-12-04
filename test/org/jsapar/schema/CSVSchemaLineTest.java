@@ -262,6 +262,26 @@ public class CSVSchemaLineTest  {
     }
 
     @Test
+    public void testOutput_default() throws IOException, JSaParException {
+
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setCellSeparator(";-)");
+        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
+        CsvSchemaCell lastNameSchema = new CsvSchemaCell("Last Name");
+        lastNameSchema.setDefaultValue("Svensson");
+        schemaLine.addSchemaCell(lastNameSchema);
+
+        Line line = new Line();
+        line.addCell(new StringCell("First Name", "Jonas"));
+        StringWriter writer = new StringWriter();
+
+        schemaLine.output(line, writer);
+
+        assertEquals("Jonas;-)Svensson", writer.toString());
+
+    }
+    
+    @Test
     public void testGetSchemaCell(){
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");

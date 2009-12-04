@@ -16,17 +16,17 @@ public class Line implements Serializable {
     /**
      * 
      */
-    private static final long serialVersionUID = 6026541900371948402L;
-    private static final String EMPTY = "";
+    private static final long               serialVersionUID = 6026541900371948402L;
+    private static final String             EMPTY            = "";
 
-    private java.util.ArrayList<Cell> cellsByIndex = null;
+    private java.util.ArrayList<Cell>       cellsByIndex     = null;
 
-    private java.util.HashMap<String, Cell> cellsByName = null;
+    private java.util.HashMap<String, Cell> cellsByName      = null;
 
     /**
      * Line type.
      */
-    private String lineType = EMPTY;
+    private String                          lineType         = EMPTY;
 
     /**
      * Creates an empty line without any cells.
@@ -308,26 +308,116 @@ public class Line implements Serializable {
         sb.append(this.cellsByIndex);
         return sb.toString();
     }
+    
+    /**
+     * @param cellName
+     * @return True if there is a cell with the specified name, false otherwise.
+     */
+    boolean isCell(String cellName){
+        return this.getCell(cellName) != null ? true : false;
+    }
 
     /**
      * Utility function that adds a cell with the specified name and value to the end of the line or
      * replaces an existing cell if there already is one with the same name.
      * 
-     * @param cellName The name of the cell to add/replace.
-     * @param value The string value to set.
+     * @param cellName
+     *            The name of the cell to add/replace.
+     * @param value
+     *            The string value to set.
      */
     public void setCellValue(String cellName, String value) {
         this.replaceCell(new StringCell(cellName, value));
     }
 
     /**
-     * Utility function that gets the string cell value of the specified cell.
+     * Utility function that adds a cell with the specified name and value to the end of the line or
+     * replaces an existing cell if there already is one with the same name.
+     * 
      * @param cellName
-     * @return
+     *            The name of the cell to add/replace.
+     * @param value
+     *            The integer value to set.
      */
-    public String getStringCellValue(String cellName){
-        Cell cell = this.getCell(cellName); 
-        return (cell!=null) ? cell.getStringValue() : null;
+    public void setCellValue(String cellName, int value) {
+        this.replaceCell(new IntegerCell(cellName, value));
+    }
+
+    /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or
+     * replaces an existing cell if there already is one with the same name.
+     * 
+     * @param cellName
+     *            The name of the cell to add/replace.
+     * @param value
+     *            The double value to set.
+     */
+    public void setCellValue(String cellName, double value) {
+        this.replaceCell(new FloatCell(cellName, value));
+    }
+    
+    /**
+     * Utility function that gets the string cell value of the specified cell.
+     * 
+     * @param cellName
+     * @return The value of the specified cell or null if there is no such cell.
+     */
+    public String getStringCellValue(String cellName) {
+        Cell cell = this.getCell(cellName);
+        return (cell != null) ? cell.getStringValue() : null;
+    }
+
+    /**
+     * @param cellName
+     * @return The cell with the specified name.
+     * @throws JSaParException if the cell does not exist.
+     */
+    private Cell getExistingCell(String cellName) throws JSaParException {
+        Cell cell = this.getCell(cellName);
+        if (cell == null)
+            throw new JSaParException("There is no cell with the name '" + cellName + "' in this line");
+        return cell;
+    }
+
+    /**
+     * Utility function that gets the integer cell value of the specified cell. If the specified
+     * cell does not exist, a JSaparException is thrown. Tries to parse an integer value if cell is
+     * not of type IntegerCell. Throws a NumberFormatException if the value is not a parable integer.
+     * 
+     * @param cellName
+     * @return The integer value of the cell with the specified name.
+     * @throws JSaParException
+     *             , NumberFormatException
+     */
+    public int getIntCellValue(String cellName) throws JSaParException, NumberFormatException {
+        Cell cell = getExistingCell(cellName);
+        if (cell instanceof NumberCell) {
+            NumberCell numberCell = (NumberCell) cell;
+            return numberCell.getNumberValue().intValue();
+        }
+
+        return Integer.parseInt(cell.getStringValue());
+    }
+
+    
+    /**
+     * Utility function that gets the double cell value of the specified cell. If the specified
+     * cell does not exist, a JSaparException is thrown. Tries to parse a double value if cell is
+     * not of type IntegerCell. Throws a NumberFormatException if the value is not a parable double.
+     * 
+     * @param cellName
+     * @return The double value of the cell with the specified name.
+     * @throws JSaParException
+     *             , NumberFormatException
+     */
+    public double getDoubleCellValue(String cellName) throws JSaParException, NumberFormatException {
+        Cell cell = getExistingCell(cellName);
+        if (cell instanceof NumberCell) {
+            NumberCell numberCell = (NumberCell) cell;
+            return numberCell.getNumberValue().doubleValue();
+        }
+
+        return Double.parseDouble(cell.getStringValue());
     }
     
 }

@@ -18,17 +18,19 @@ import org.jsapar.utils.StringUtils;
 
 public abstract class SchemaCell implements Cloneable {
 
+    private static final String           EMPTY_STRING          = "";
+
     private final static SchemaCellFormat CELL_FORMAT_PROTOTYPE = new SchemaCellFormat(CellType.STRING);
 
-    private String name;
-    private SchemaCellFormat cellFormat = CELL_FORMAT_PROTOTYPE;
-    private boolean ignoreRead = false;
-    private boolean mandatory = false;
-    private Cell minValue = null;
-    private Cell maxValue = null;
-    private Cell defaultCell = null;
-    private String defaultValue = null;
-    private Locale locale = Locale.getDefault();
+    private String                        name;
+    private SchemaCellFormat              cellFormat            = CELL_FORMAT_PROTOTYPE;
+    private boolean                       ignoreRead            = false;
+    private boolean                       mandatory             = false;
+    private Cell                          minValue              = null;
+    private Cell                          maxValue              = null;
+    private Cell                          defaultCell           = null;
+    private String                        defaultValue          = null;
+    private Locale                        locale                = Locale.getDefault();
 
     public SchemaCell() {
     }
@@ -41,7 +43,7 @@ public abstract class SchemaCell implements Cloneable {
         this.cellFormat = cellFormat;
         this.name = sName;
     }
-    
+
     /**
      * Indicates if this cell should be ignored after reading it from the buffer. If ignoreRead is
      * true the cell will not be stored to the current Line object.
@@ -105,7 +107,7 @@ public abstract class SchemaCell implements Cloneable {
         // If the cell is mandatory, don't accept empty string.
         if (sValue.length() <= 0) {
             if (isMandatory()) {
-                throw new ParseException(new CellParseError(getName(), "", getCellFormat(),
+                throw new ParseException(new CellParseError(getName(), EMPTY_STRING, getCellFormat(),
                         "Mandatory cell requires a value."));
             } else if (defaultCell != null) {
                 return defaultCell.makeCopy(getName());
@@ -248,7 +250,7 @@ public abstract class SchemaCell implements Cloneable {
             sb.append(" cellFormat=");
             sb.append(this.cellFormat);
         }
-        if (this.defaultValue != null){
+        if (this.defaultValue != null) {
             sb.append(" defaultValue=");
             sb.append(this.defaultValue);
         }
@@ -385,17 +387,28 @@ public abstract class SchemaCell implements Cloneable {
     }
 
     /**
+     * @return The default value if it is not null or empty string otherwise.
+     */
+    private String getDefaultValueOrEmpty() {
+        return defaultValue == null ? EMPTY_STRING : defaultValue;
+    }
+
+    /**
      * Formats a cell to a string according to the rules of this schema.
      * 
      * @param cell
-     * @return
+     *            The cell to format. If this parameter is null or an empty string, the default
+     *            value will be returned or if there is no default value, an empty string will be
+     *            returned.
+     * @return The formatted value for this cell.
      */
     public String format(Cell cell) {
+        if (cell == null) {
+            return getDefaultValueOrEmpty();
+        }
         String value = cell.getStringValue(getCellFormat().getFormat());
-        if (value.length() <= 0){
-            String sDefaultValue = getDefaultValue();
-            if(sDefaultValue != null)
-                return sDefaultValue;
+        if (value.length() <= 0) {
+            return getDefaultValueOrEmpty();
         }
         return value;
     }
