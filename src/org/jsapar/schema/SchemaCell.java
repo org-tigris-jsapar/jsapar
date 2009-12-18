@@ -13,12 +13,14 @@ import org.jsapar.IntegerCell;
 import org.jsapar.StringCell;
 import org.jsapar.Cell.CellType;
 import org.jsapar.input.CellParseError;
+import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.ParseException;
+import org.jsapar.input.ParsingEventListener;
 import org.jsapar.utils.StringUtils;
 
 public abstract class SchemaCell implements Cloneable {
 
-    private static final String           EMPTY_STRING          = "";
+    protected static final String         EMPTY_STRING          = "";
 
     private final static SchemaCellFormat CELL_FORMAT_PROTOTYPE = new SchemaCellFormat(CellType.STRING);
 
@@ -94,7 +96,48 @@ public abstract class SchemaCell implements Cloneable {
     }
 
     /**
-     * Creates a cell with a parsed value according to the schema specification for this cell.
+     * Creates a cell with a parsed value according to the schema specification for this cell. This
+     * method does not throw exception of mandatory cell does not exist. Instead it reports an error
+     * event and continues.
+     * 
+     * @param sValue
+     * @param listener
+     * @param nLineNumber
+     * @return A new cell of a type according to the schema specified. Returns null if there is no
+     *         value.
+     * @throws ParseException
+     */
+    public Cell makeCell(String sValue, ParsingEventListener listener, long nLineNumber) throws ParseException {
+        if (sValue.length() <= 0) {
+            checkIfMandatory(listener, nLineNumber);
+
+            if (defaultCell != null) {
+                return defaultCell.makeCopy(getName());
+            } else {
+                return new EmptyCell(getName(), this.cellFormat.getCellType());
+            }
+        }
+        return makeCell(sValue);
+    }
+
+    /**
+     * Checks if cell is mandatory and in that case fires an error event.
+     * 
+     * @param listener
+     * @param nLineNumber
+     * @throws ParseException
+     */
+    public void checkIfMandatory(ParsingEventListener listener, long nLineNumber) throws ParseException {
+        if (isMandatory()) {
+            CellParseError e = new CellParseError(nLineNumber, getName(), EMPTY_STRING, getCellFormat(),
+                    "Mandatory cell requires a value.");
+            listener.lineErrorEvent(new LineErrorEvent(this, e));
+        }
+    }
+
+    /**
+     * Creates a cell with a parsed value according to the schema specification for this cell. Does
+     * not check if cell is mandatory!!
      * 
      * @param sValue
      * @return A new cell of a type according to the schema specified. Returns null if there is no
@@ -104,12 +147,9 @@ public abstract class SchemaCell implements Cloneable {
      */
     public Cell makeCell(String sValue) throws ParseException {
 
-        // If the cell is mandatory, don't accept empty string.
+        // If the cell is empty, check if default value exists.
         if (sValue.length() <= 0) {
-            if (isMandatory()) {
-                throw new ParseException(new CellParseError(getName(), EMPTY_STRING, getCellFormat(),
-                        "Mandatory cell requires a value."));
-            } else if (defaultCell != null) {
+            if (defaultCell != null) {
                 return defaultCell.makeCopy(getName());
             } else {
                 return new EmptyCell(getName(), this.cellFormat.getCellType());

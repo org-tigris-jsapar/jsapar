@@ -121,7 +121,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
         for (FixedWidthSchemaCell schemaCell : getSchemaCells()) {
             if (setDefaultsOnly) {
                 if (schemaCell.getDefaultCell() != null)
-                    line.addCell(schemaCell.makeCell(EMPTY_STRING));
+                    line.addCell(schemaCell.makeCell(EMPTY_STRING, listener, nLineNumber));
                 continue;
             } else if (schemaCell.isIgnoreRead()) {
                 long nSkipped = reader.skip(schemaCell.getLength());
@@ -132,7 +132,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
                 }
             } else {
                 try {
-                    Cell cell = schemaCell.build(reader, isTrimFillCharacters(), getFillCharacter());
+                    Cell cell = schemaCell.build(reader, isTrimFillCharacters(), getFillCharacter(), listener, nLineNumber);
                     if (cell == null) {
                         if (oneRead){
                             setDefaultsOnly = true;
@@ -141,6 +141,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
                         }
                         continue;
                     }
+
                     oneRead = true;
                     line.addCell(cell);
                 } catch (ParseException pe) {

@@ -15,6 +15,7 @@ import org.junit.Test;
 
 public class CSVSchemaLineTest  {
 
+    boolean foundError=false;
     
     private class NullParsingEventListener implements ParsingEventListener {
 	public void lineErrorEvent(LineErrorEvent event) throws ParseException {
@@ -189,6 +190,42 @@ public class CSVSchemaLineTest  {
 
     }
 
+    @Test
+    public void testBuild_default_and_mandatory() throws JSaParException {
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setCellSeparator(";-)");
+        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
+        CsvSchemaCell happyCell = new CsvSchemaCell("Happy");
+        happyCell.setDefaultValue("yes");
+        happyCell.setMandatory(true);
+        schemaLine.addSchemaCell(happyCell);
+        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+
+        String sLine = "Jonas;-);-)Stenberg";
+        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+                assertEquals("Happy", event.getCellParseError().getCellName());
+                foundError = true;
+            }
+
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+                Line line = event.getLine();
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Jonas", line.getStringCellValue("First Name"));
+                assertEquals("Stenberg", line.getCell(2).getStringValue());
+                assertEquals("yes", line.getStringCellValue("Happy"));
+
+                assertEquals("First Name", line.getCell(0).getName());
+                assertEquals("Last Name", line.getCell(2).getName());
+            }
+        });
+        assertEquals(true, rc);
+        assertEquals(true, foundError);
+    }
+    
     @Test
     public void testBuild_withDefaultLast() throws JSaParException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);

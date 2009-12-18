@@ -104,7 +104,7 @@ public class CsvSchemaLine extends SchemaLine {
                 if (schemaCell.isIgnoreRead())
                     continue;
                 try {
-                    cell = schemaCell.makeCell(sCell);
+                    cell = schemaCell.makeCell(sCell, listener, nLineNumber);
                 } catch (ParseException e) {
                     e.getCellParseError().setLineNumber(nLineNumber);
                     listener.lineErrorEvent(new LineErrorEvent(this, e.getCellParseError()));
@@ -123,7 +123,7 @@ public class CsvSchemaLine extends SchemaLine {
         while(itSchemaCell.hasNext()){
             CsvSchemaCell schemaCell = itSchemaCell.next();
             if(schemaCell.getDefaultCell() != null){
-                line.addCell(schemaCell.makeCell(EMPTY_STRING));
+                line.addCell(schemaCell.makeCell(EMPTY_STRING, listener, nLineNumber));
             }
         }
             

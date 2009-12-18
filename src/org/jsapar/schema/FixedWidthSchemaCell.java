@@ -5,10 +5,12 @@ import java.io.Reader;
 import java.io.Writer;
 
 import org.jsapar.Cell;
-import org.jsapar.EmptyCell;
 import org.jsapar.JSaParException;
 import org.jsapar.Cell.CellType;
+import org.jsapar.input.CellParseError;
+import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.ParseException;
+import org.jsapar.input.ParsingEventListener;
 import org.jsapar.output.OutputException;
 
 /**
@@ -32,7 +34,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
     /**
      * The length of the cell.
      */
-    private int length;
+    private int       length;
 
     /**
      * The alignment of the cell content within the allocated space. Default is Alignment.LEFT.
@@ -102,11 +104,17 @@ public class FixedWidthSchemaCell extends SchemaCell {
      *            of any other type, the value is trimmed any way before parsing.
      * @param fillCharacter
      *            The fill character to ignore if trimFillCharacters is true.
+     * @param nLineNumber
+     * @param listener
      * @return A Cell filled with the parsed cell value and with the name of this schema cell.
      * @throws IOException
      * @throws ParseException
      */
-    Cell build(Reader reader, boolean trimFillCharacters, char fillCharacter) throws IOException, ParseException {
+    Cell build(Reader reader,
+               boolean trimFillCharacters,
+               char fillCharacter,
+               ParsingEventListener listener,
+               long nLineNumber) throws IOException, ParseException {
 
         int nOffset = 0;
         int nLength = this.length; // The actual length
@@ -114,10 +122,12 @@ public class FixedWidthSchemaCell extends SchemaCell {
         char[] buffer = new char[nLength];
         int nRead = reader.read(buffer, 0, nLength);
         if (nRead <= 0) {
+            checkIfMandatory(listener, nLineNumber);
             if (this.length <= 0)
-                return new EmptyCell(getName(), getCellFormat().getCellType());
-            else
+                return makeCell(EMPTY_STRING);
+            else{
                 return null;
+            }
         }
         nLength = nRead;
         if (trimFillCharacters || getCellFormat().getCellType() != CellType.STRING) {
@@ -129,7 +139,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
             }
             nLength -= nOffset;
         }
-        Cell cell = makeCell(new String(buffer, nOffset, nLength));
+        Cell cell = makeCell(new String(buffer, nOffset, nLength), listener, nLineNumber);
         return cell;
     }
 

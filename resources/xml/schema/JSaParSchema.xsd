@@ -112,32 +112,31 @@ Default is true.</xsd:documentation>
   	<xsd:attribute default="false" name="mandatory"
   		type="xsd:boolean">
   		<xsd:annotation>
-  			<xsd:documentation>
-  				States if this cell have to contain a value or not. If
-  				this attribute is false, an empty value is accepted as
-  				long as the parsing mechanism can handle it for the
-  				given format. If this attribute is true, a parsing
-  				error is reported back. Default is false.
+         <xsd:documentation>States if this cell have to contain a value or not. If
+            this attribute is false, an empty value is accepted as
+            long as the parsing mechanism can handle it for the
+            given format. If this attribute is true, a parsing
+            error is reported back. Default is false.
   			</xsd:documentation>
   		</xsd:annotation>
   	</xsd:attribute>
   	<xsd:attribute name="default" type="xsd:string">
   		<xsd:annotation>
-  			<xsd:documentation>The default value of this cell. This value is used if the cell does not conatin any value. The value should be formatted according to the rules of the schema cell itself. Can not be used if the cell is mandatory.</xsd:documentation>
+  		   <xsd:documentation>The default value of this cell. This value is used if the cell does not conatin any value. The value should be formatted according to the rules of the schema cell itself. </xsd:documentation>
   		</xsd:annotation></xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="CellFormat">
     <xsd:attribute name="type" use="required">
       <xsd:annotation>
         <xsd:documentation>The type of the cell. Default is "string".
-Have to be one of the following:
-string
-date
-decimal
-integer
-float
-boolean
-Note that the number formats are parsed according to the specified locale.</xsd:documentation>
+            Have to be one of the following:
+               string
+               date
+               decimal
+               integer
+               float
+               boolean
+            Note that the number formats are parsed according to the specified locale.</xsd:documentation>
       </xsd:annotation>
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">

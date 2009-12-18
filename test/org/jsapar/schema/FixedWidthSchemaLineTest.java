@@ -20,9 +20,12 @@ import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
+import org.junit.Before;
 import org.junit.Test;
 
 public class FixedWidthSchemaLineTest {
+    
+    
 
     private class NullParsingEventListener implements ParsingEventListener {
 
@@ -34,7 +37,14 @@ public class FixedWidthSchemaLineTest {
         @Override
         public void lineParsedEvent(LineParsedEvent event) {
         }
-    };
+    }
+
+    protected boolean foundError = false;
+    
+    @Before
+    public void setup(){
+        foundError = false;
+    }
 
     @Test
     public void testBuild() throws IOException, JSaParException {
@@ -107,6 +117,45 @@ public class FixedWidthSchemaLineTest {
 
         assertEquals(true, rc);
     }
+
+    @Test
+    public void testBuild_default_and_mandatory() throws IOException, JSaParException {
+        String toParse = "JonasStenberg";
+        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        FixedWidthSchemaCell cityCell = new FixedWidthSchemaCell("City", 8);
+        cityCell.setDefaultValue("Falun");
+        cityCell.setMandatory(true);
+        schemaLine.addSchemaCell(cityCell);
+        schema.addSchemaLine(schemaLine);
+
+        Reader reader = new StringReader(toParse);
+        boolean rc = schemaLine.parse(1, reader, new ParsingEventListener() {
+
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+                assertEquals("City", event.getCellParseError().getCellName());
+                foundError=true;
+            }
+
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) {
+                Line line = event.getLine();
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Stenberg", line.getCell("Last name").getStringValue());
+                assertEquals("Falun", line.getStringCellValue("City"));
+
+                assertEquals("Last name", line.getCell(1).getName());
+
+            }
+        });
+
+        assertEquals(true, rc);
+        assertEquals(true, foundError);
+    }
+
     
     @Test(expected = org.jsapar.input.ParseException.class)
     public void testBuild_parseError() throws IOException, JSaParException {
