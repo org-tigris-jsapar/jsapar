@@ -7,8 +7,6 @@ import java.io.Writer;
 import org.jsapar.Cell;
 import org.jsapar.JSaParException;
 import org.jsapar.Cell.CellType;
-import org.jsapar.input.CellParseError;
-import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
 import org.jsapar.output.OutputException;
