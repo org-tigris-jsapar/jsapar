@@ -25,7 +25,7 @@ public class Xml2SchemaBuilderTest {
 
         String sXmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema/1.0\" >"
-                + "<fixedwidthschema lineseparator=\"&#13;&#10;\">" 
+                + "<fixedwidthschema lineseparator=\"\\r\\n\">" 
                 + "<line occurs=\"*\" linetype=\"Person\">"
                 + "<cell name=\"First name\" length=\"5\"/>" + "<cell name=\"Last name\" length=\"8\"/>"
                 + "<cell name=\"Shoe size\" length=\"8\" alignment=\"right\"><format type=\"integer\" pattern=\"00000000\"/></cell>"

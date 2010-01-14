@@ -329,12 +329,11 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         assignCsvSchema(schema, xmlSchema);
 
         String sSeparator = getAttributeValue(xmlSchema, ATTRIB_CSV_SCHEMA_CONTROL_CELL_SEPARATOR);
-        if (sSeparator != null)
+        if (sSeparator != null){
+            sSeparator = replaceEscapes2Java(sSeparator);
             schema.setControlCellSeparator(sSeparator);
-
-        if (sSeparator != null)
-            schema.setControlCellSeparator(sSeparator);
-
+        }
+        
         Node xmlWriteControlCell = xmlSchema.getAttributeNode(ATTRIB_SCHEMA_WRITE_CONTROL_CELL);
         if (xmlWriteControlCell != null)
             schema.setWriteControlCell(getBooleanValue(xmlWriteControlCell));
@@ -354,9 +353,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         assignSchemaLineBase(schemaLine, xmlSchemaLine);
 
         String sSeparator = getAttributeValue(xmlSchemaLine, ATTRIB_CSV_SCHEMA_CELL_SEPARATOR);
-        if (sSeparator != null)
+        if (sSeparator != null){
+            sSeparator = replaceEscapes2Java(sSeparator);
             schemaLine.setCellSeparator(sSeparator);
-
+        }
         Node xmlFirstLineAsSchema = xmlSchemaLine.getAttributeNode(ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA);
         if (xmlFirstLineAsSchema != null)
             schemaLine.setFirstLineAsSchema(getBooleanValue(xmlFirstLineAsSchema));
@@ -398,6 +398,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     private void assignSchemaBase(Schema schema, Element xmlSchema) throws SchemaException {
         String sSeparator = getAttributeValue(xmlSchema, ATTRIB_SCHEMA_LINESEPARATOR);
         if (sSeparator != null) {
+            sSeparator = replaceEscapes2Java(sSeparator);
             schema.setLineSeparator(sSeparator);
         }
 
@@ -405,6 +406,18 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         if (xmlLocale != null)
             schema.setLocale(buildLocale(xmlLocale));
 
+    }
+
+    /**
+     * @param sToReplace
+     * @return
+     */
+    private String replaceEscapes2Java(String sToReplace) {
+        sToReplace = sToReplace.replaceAll("\\\\r", "\r");
+        sToReplace = sToReplace.replaceAll("\\\\n", "\n");
+        sToReplace = sToReplace.replaceAll("\\\\t", "\t");
+        sToReplace = sToReplace.replaceAll("\\\\f", "\f");
+        return sToReplace;
     }
 
     /**

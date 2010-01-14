@@ -232,7 +232,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
             throws SchemaException {
         Element xmlSchema = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_CSV_CONTROL_CELL_SCHEMA);
 
-        xmlSchema.setAttribute(ATTRIB_CSV_SCHEMA_CONTROL_CELL_SEPARATOR, schema.getControlCellSeparator());
+        xmlSchema.setAttribute(ATTRIB_CSV_SCHEMA_CONTROL_CELL_SEPARATOR, replaceJava2Escapes(schema.getControlCellSeparator()));
         xmlSchema.setAttribute(ATTRIB_SCHEMA_WRITE_CONTROL_CELL, String.valueOf(schema.isWriteControlCell()));
 
         assignCsvSchema(xmlDocument, xmlSchema, schema);
@@ -252,7 +252,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
         assignSchemaLineBase(xmlSchemaLine, schemaLine);
 
-        xmlSchemaLine.setAttribute(ATTRIB_CSV_SCHEMA_CELL_SEPARATOR, schemaLine.getCellSeparator());
+        xmlSchemaLine.setAttribute(ATTRIB_CSV_SCHEMA_CELL_SEPARATOR, replaceJava2Escapes(schemaLine.getCellSeparator()));
         xmlSchemaLine.setAttribute(ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA, String.valueOf(schemaLine.isFirstLineAsSchema()));
         
         if(schemaLine.isQuoteCharUsed())
@@ -288,6 +288,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      */
     private void assignSchemaBase(Document xmlDocument, Element xmlSchema, Schema schema) throws SchemaException {
         String lineSeparator = schema.getLineSeparator();
+        lineSeparator = replaceJava2Escapes(lineSeparator);
         xmlSchema.setAttribute(ATTRIB_SCHEMA_LINESEPARATOR, lineSeparator);
 
         Element xmlLocale = extractLocale(xmlDocument, schema.getLocale());
@@ -375,4 +376,16 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
         return xmlFormat;
     }
 
+    /**
+     * @param sToReplace
+     * @return
+     */
+    private String replaceJava2Escapes(String sToReplace) {
+        sToReplace = sToReplace.replaceAll("\r", "\\\\r");
+        sToReplace = sToReplace.replaceAll("\n", "\\\\n");
+        sToReplace = sToReplace.replaceAll("\t", "\\\\t");
+        sToReplace = sToReplace.replaceAll("\f", "\\\\f");
+        return sToReplace;
+    }
+    
 }
