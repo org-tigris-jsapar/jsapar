@@ -3,6 +3,8 @@ package org.jsapar;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import org.jsapar.Cell.CellType;
+
 /**
  * A line is one row of the input buffer. Each line contains a list of cells. Cells can be retrieved
  * either by index O(1) or by name O(n). Note that the class is not synchronized internally. If
@@ -257,7 +259,7 @@ public class Line implements Serializable {
      * Gets a cell with specified name. Name is specified by the schema.
      * 
      * @param name
-     * @return The cell
+     * @return The cell or null if there is no cell with specified name.
      */
     public Cell getCell(String name) {
         return this.cellsByName.get(name);
@@ -350,6 +352,19 @@ public class Line implements Serializable {
      * @param cellName
      *            The name of the cell to add/replace.
      * @param value
+     *            The long integer value to set.
+     */
+    public void setCellValue(String cellName, long value) {
+        this.replaceCell(new IntegerCell(cellName, value));
+    }
+    
+    /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or
+     * replaces an existing cell if there already is one with the same name.
+     * 
+     * @param cellName
+     *            The name of the cell to add/replace.
+     * @param value
      *            The double value to set.
      */
     public void setCellValue(String cellName, double value) {
@@ -419,5 +434,37 @@ public class Line implements Serializable {
 
         return Double.parseDouble(cell.getStringValue());
     }
+
+    /**
+     * @param cellName
+     * @return true if the cell with the specified name contains a value. 
+     */
+    public boolean isCellSet(String cellName) {
+        Cell cell = getCell(cellName);
+        if(cell == null)
+            return false;
+        
+        if(cell instanceof EmptyCell)
+            return false;
+        
+        return true;
+    }
+
+    /**
+     * @param cellName
+     * @param type
+     * @return true if the cell with the specified name contains a value of the specified type. 
+     */
+    public boolean isCellSet(String cellName, CellType type) {
+        Cell cell = getCell(cellName);
+        if(cell == null)
+            return false;
+        
+        if(cell instanceof EmptyCell)
+            return false;
+        
+        return cell.getCellType().equals(type);
+    }
+
     
 }

@@ -23,7 +23,6 @@ public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
      */
     public IntegerCell() {
 	super(CellType.INTEGER);
-	// TODO Auto-generated constructor stub
     }
 
     /**
@@ -31,7 +30,6 @@ public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
      */
     public IntegerCell(Integer value) {
 	super(value, CellType.INTEGER);
-	// TODO Auto-generated constructor stub
     }
 
     /**
@@ -39,7 +37,6 @@ public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
      */
     public IntegerCell(Long value) {
 	super(value, CellType.INTEGER);
-	// TODO Auto-generated constructor stub
     }
 
     /**
@@ -48,7 +45,6 @@ public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
      */
     public IntegerCell(String name, Integer value) {
 	super(name, value, CellType.INTEGER);
-	// TODO Auto-generated constructor stub
     }
 
     /**
@@ -57,7 +53,6 @@ public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
      */
     public IntegerCell(String name, Long value) {
 	super(name, value, CellType.INTEGER);
-	// TODO Auto-generated constructor stub
     }
 
     /**
