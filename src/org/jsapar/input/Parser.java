@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
+import org.jsapar.io.MaxErrorsExceededException;
 import org.jsapar.output.JavaOutputter;
 
 /**
@@ -32,7 +33,7 @@ import org.jsapar.output.JavaOutputter;
  */
 public class Parser implements ParsingEventListener {
     private List<ParsingEventListener> parsingEventListeners = new LinkedList<ParsingEventListener>();
-    ParseSchema schema;
+    ParseSchema                        schema;
 
     /**
      * Creates a Parser with a schema.
@@ -75,6 +76,29 @@ public class Parser implements ParsingEventListener {
      */
     public Document build(java.io.Reader reader, List<CellParseError> parseErrors) throws JSaParException {
         DocumentBuilder docBuilder = new DocumentBuilder(parseErrors);
+        return docBuilder.build(reader);
+    }
+
+    /**
+     * Reads characters from the reader and parses them into a Document. If there is an error while
+     * parsing a cell, this method will add a CellParseError object to the supplied parseError list.
+     * If the number of errors exceeds the supplied maxNumberOfErrors, a MaxErrorsExceededException
+     * is thrown. .<br/>
+     * If there is an error reading the input or an error at the structure of the input, a
+     * JSaParException will be thrown.<br/>
+     * Use this method only if you are sure that the whole file can be parsed into memory. If the
+     * file is too big, a OutOfMemory exception will be thrown. For large files use the parse method
+     * instead.
+     * 
+     * @param reader
+     * @param parseErrors
+     * @param maxNumberOfErrors The maximum number of errors accepted.
+     * @return A complete Document representing the parsed input buffer.
+     * @throws JSaParException
+     */
+    public Document build(java.io.Reader reader, List<CellParseError> parseErrors, int maxNumberOfErrors)
+            throws JSaParException {
+        DocumentBuilder docBuilder = new DocumentBuilder(parseErrors, maxNumberOfErrors);
         return docBuilder.build(reader);
     }
 
@@ -172,19 +196,27 @@ public class Parser implements ParsingEventListener {
      * 
      */
     private class DocumentBuilder {
-        private Document document = new Document();
+        private Document             document          = new Document();
         private List<CellParseError> parseErrors;
+        private int                  maxNumberOfErrors = Integer.MAX_VALUE;
 
         public DocumentBuilder(List<CellParseError> parseErrors) {
             this.parseErrors = parseErrors;
+        }
+
+        public DocumentBuilder(List<CellParseError> parseErrors, int maxNumberOfErrors) {
+            this(parseErrors);
+            this.maxNumberOfErrors = maxNumberOfErrors;
         }
 
         public Document build(java.io.Reader reader) throws JSaParException {
             addParsingEventListener(new ParsingEventListener() {
 
                 @Override
-                public void lineErrorEvent(LineErrorEvent event) {
+                public void lineErrorEvent(LineErrorEvent event) throws MaxErrorsExceededException {
                     parseErrors.add(event.getCellParseError());
+                    if (parseErrors.size() > maxNumberOfErrors)
+                        throw new MaxErrorsExceededException(parseErrors);
                 }
 
                 @Override
@@ -247,9 +279,9 @@ public class Parser implements ParsingEventListener {
      */
     @SuppressWarnings("unchecked")
     private class JavaBuilder {
-        private List objects = new LinkedList();
+        private List                 objects   = new LinkedList();
         private List<CellParseError> parseErrors;
-        private JavaOutputter outputter = new JavaOutputter();
+        private JavaOutputter        outputter = new JavaOutputter();
 
         public JavaBuilder(List<CellParseError> parseErrors) {
             this.parseErrors = parseErrors;

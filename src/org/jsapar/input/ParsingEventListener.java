@@ -6,6 +6,7 @@ package org.jsapar.input;
 import java.util.EventListener;
 
 import org.jsapar.JSaParException;
+import org.jsapar.io.MaxErrorsExceededException;
 
 /**
  * Interface for receiving event call-backs while parsing.
@@ -30,6 +31,7 @@ public interface ParsingEventListener extends EventListener {
      * 
      * @param event The event that contains the error information.
      * @throws ParseException
+     * @throws MaxErrorsExceededException 
      */
-    void lineErrorEvent(LineErrorEvent event) throws ParseException;
+    void lineErrorEvent(LineErrorEvent event) throws ParseException, MaxErrorsExceededException;
 }

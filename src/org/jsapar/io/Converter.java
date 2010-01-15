@@ -33,6 +33,7 @@ public class Converter {
     private List<LineManipulator> manipulators = new java.util.LinkedList<LineManipulator>();
     private ParseSchema inputSchema;
     private Schema outputSchema;
+    private int maxNumberOfErrors = Integer.MAX_VALUE;
 
     /**
      * Creates a Converter object with the specified schemas.
@@ -104,8 +105,10 @@ public class Converter {
         }
 
         @Override
-        public void lineErrorEvent(LineErrorEvent event) {
+        public void lineErrorEvent(LineErrorEvent event) throws MaxErrorsExceededException {
             parseErrors.add(event.getCellParseError());
+            if(parseErrors.size()>maxNumberOfErrors)
+                throw new MaxErrorsExceededException(parseErrors);
         }
 
         @Override
@@ -283,6 +286,21 @@ public class Converter {
      */
     protected List<LineManipulator> getManipulators() {
         return manipulators;
+    }
+
+    /**
+     * When the number of errors exceeds maxNumberOfErrors, an MaxErrorsExceededException exception is thrown. 
+     * @param maxNumberOfErrors the maxNumberOfErrors to set
+     */
+    public void setMaxNumberOfErrors(int maxNumberOfErrors) {
+        this.maxNumberOfErrors = maxNumberOfErrors;
+    }
+
+    /**
+     * @return the maxNumberOfErrors
+     */
+    public int getMaxNumberOfErrors() {
+        return maxNumberOfErrors;
     }
 
 }

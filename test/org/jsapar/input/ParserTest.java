@@ -4,11 +4,18 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import junit.framework.Assert;
 
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
+import org.jsapar.Cell.CellType;
+import org.jsapar.io.MaxErrorsExceededException;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
+import org.jsapar.schema.SchemaCellFormat;
 import org.junit.Test;
 
 
@@ -32,6 +39,53 @@ public class ParserTest {
         assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
     }
 
+    @Test(expected=ParseException.class)
+    public void testBuild_error_throws() throws JSaParException {
+        String toParse = "JonasAAA";
+        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Shoe size", 3, new SchemaCellFormat(CellType.INTEGER)));
+        schema.addSchemaLine(schemaLine);
+
+        Parser builder = new Parser(schema);
+        Reader reader = new StringReader(toParse);
+        builder.build(reader);
+    }
+
+    @Test
+    public void testBuild_error_list() throws JSaParException {
+        String toParse = "JonasAAA";
+        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Shoe size", 3, new SchemaCellFormat(CellType.INTEGER)));
+        schema.addSchemaLine(schemaLine);
+
+        Parser builder = new Parser(schema);
+        Reader reader = new StringReader(toParse);
+        List<CellParseError> parseErrors = new ArrayList<CellParseError>();
+        builder.build(reader, parseErrors);
+        Assert.assertEquals(1, parseErrors.size());
+        Assert.assertEquals("Shoe size", parseErrors.get(0).getCellName());
+        Assert.assertEquals(1, parseErrors.get(0).getLineNumber());
+    }
+
+    @Test(expected=MaxErrorsExceededException.class)
+    public void testBuild_error_list_max() throws JSaParException {
+        String toParse = "JonasAAA";
+        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Shoe size", 3, new SchemaCellFormat(CellType.INTEGER)));
+        schema.addSchemaLine(schemaLine);
+
+        Parser builder = new Parser(schema);
+        Reader reader = new StringReader(toParse);
+        List<CellParseError> parseErrors = new ArrayList<CellParseError>();
+        builder.build(reader, parseErrors, 0);
+    }
+    
     
     @Test
     public void testBuild_fixed_twoLines() throws JSaParException {

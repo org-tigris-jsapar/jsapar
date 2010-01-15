@@ -93,6 +93,7 @@ public class ParseException extends JSaParException {
         this.cellParseError = parseError;
     }
 
+    @Override
     public String getMessage() {
         String sMessage = super.getMessage();
         if (cellParseError != null)
