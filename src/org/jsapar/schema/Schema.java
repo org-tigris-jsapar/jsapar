@@ -148,8 +148,8 @@ public abstract class Schema implements Cloneable, ParseSchema {
         StringBuilder sb = new StringBuilder();
         sb.append(" lineSeparator=");
         String ls = this.lineSeparator;
-        // ls.replaceAll("\\n", "/n");
-        // ls.replaceAll("\\r", "/r");
+//        ls.replaceAll("\n", "\\\\n");
+//        ls.replaceAll("\r", "\\\\r");
         sb.append(ls);
         sb.append(" locale=");
         sb.append(this.locale);

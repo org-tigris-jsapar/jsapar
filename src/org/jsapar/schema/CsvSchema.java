@@ -149,7 +149,7 @@ public class CsvSchema extends Schema {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString());
-        sb.append("'");
+
         sb.append(" schemaLines=");
         sb.append(this.schemaLines);
         return sb.toString();
