@@ -1,5 +1,5 @@
 Manifest-version: 1.0 
-Main-Class: org.jsapar.io.Converter
+Main-Class: org.jsapar.io.FilterConverterMain
 Product-Name:  JSaPar
 Product-version: @VERSION_STRING@-@BUILD_NUMBER@
 Built-By: @USER_NAME@ at @HOST_NAME@

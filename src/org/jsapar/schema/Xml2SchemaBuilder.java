@@ -1,7 +1,10 @@
 package org.jsapar.schema;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -579,4 +582,23 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
             throw new SchemaException("Missing mandatory attribute: " + sAttributeName + " of element " + xmlElement);
         return (Attr) xmlAttribute;
     }
+    
+    /**
+     * Utility function for loading a schema from an xml file.
+     * @param fileName
+     * @return
+     * @throws SchemaException
+     * @throws IOException
+     */
+    public static Schema loadSchemaFromXmlFile(File file) throws SchemaException, IOException {
+        Reader schemaReader = new FileReader(file);
+        try {
+            org.jsapar.schema.Xml2SchemaBuilder builder = new org.jsapar.schema.Xml2SchemaBuilder();
+            Schema schema = builder.build(schemaReader);
+            return schema;
+        } finally {
+            schemaReader.close();
+        }
+    }
+    
 }

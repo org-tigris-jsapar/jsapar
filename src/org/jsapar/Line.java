@@ -19,7 +19,7 @@ public class Line implements Serializable {
      * 
      */
     private static final long               serialVersionUID = 6026541900371948402L;
-    private static final String             EMPTY            = "";
+    public static final String             EMPTY            = "";
 
     private java.util.ArrayList<Cell>       cellsByIndex     = null;
 
