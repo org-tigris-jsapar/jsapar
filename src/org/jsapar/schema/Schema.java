@@ -16,6 +16,8 @@ import org.jsapar.input.ParsingEventListener;
  * parsed or how the lines of a Document should be written. Usually the parse and output methods are
  * called from one of the in, out or io classes.
  * 
+ * @see Xml2SchemaBuilder, Schema2XmlExtractor
+ * 
  * @author Jonas
  * 
  */

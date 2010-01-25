@@ -20,6 +20,8 @@ import org.jsapar.schema.Schema;
  * output. The method manipulate() of all added LineManipulators are called for each line that are
  * parsed successfully.
  * 
+ * @see FilterConverter
+ * 
  * @author stejon0
  * 
  */

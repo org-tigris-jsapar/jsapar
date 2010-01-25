@@ -9,6 +9,7 @@ import org.jsapar.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.io.MaxErrorsExceededException;
 import org.jsapar.output.JavaOutputter;
+import org.jsapar.output.Outputter;
 
 /**
  * This class is the starting point for parsing a file (or other source). <br>
@@ -28,6 +29,7 @@ import org.jsapar.output.JavaOutputter;
  * on the other hand are slightly easier to use and understand.<br>
  * <br>
  * 
+ * @see Outputter, Converter, FilterConverter
  * @author stejon0
  * 
  */

@@ -5,6 +5,13 @@ import java.io.IOException;
 import org.jsapar.JSaParException;
 
 
+/**
+ * Common interface for all schemas that can be used for parsing.
+ * 
+ * @see Parser
+ * @author stejon0
+ *
+ */
 public interface ParseSchema {
 
     /**
