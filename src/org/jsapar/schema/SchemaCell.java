@@ -447,6 +447,9 @@ public abstract class SchemaCell implements Cloneable {
             return getDefaultValueOrEmpty();
         }
         String value = cell.getStringValue(getCellFormat().getFormat());
+        if(value == null){
+            return getDefaultValueOrEmpty();
+        }
         if (value.length() <= 0) {
             return getDefaultValueOrEmpty();
         }

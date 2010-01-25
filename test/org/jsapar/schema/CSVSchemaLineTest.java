@@ -281,6 +281,47 @@ public class CSVSchemaLineTest  {
     }
 
     @Test
+    public void testOutput_not_found_in_line() throws IOException, JSaParException {
+
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setCellSeparator(";-)");
+        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("Shoe size"));
+
+        Line line = new Line();
+        line.addCell(new StringCell("First Name", "Jonas"));
+        line.addCell(new StringCell("Last Name", "Stenberg"));
+        StringWriter writer = new StringWriter();
+
+        schemaLine.output(line, writer);
+
+        assertEquals("Jonas;-)Stenberg;-)", writer.toString());
+
+    }
+
+    @Test
+    public void testOutput_null_value() throws IOException, JSaParException {
+
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setCellSeparator(";-)");
+        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("Shoe size"));
+
+        Line line = new Line();
+        line.addCell(new StringCell("First Name", "Jonas"));
+        line.addCell(new StringCell("Last Name", "Stenberg"));
+        line.addCell(new StringCell("Shoe size", null));
+        StringWriter writer = new StringWriter();
+
+        schemaLine.output(line, writer);
+
+        assertEquals("Jonas;-)Stenberg;-)", writer.toString());
+
+    }
+    
+    @Test
     public void testOutput_reorder() throws IOException, JSaParException {
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
