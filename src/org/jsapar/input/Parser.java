@@ -9,7 +9,6 @@ import org.jsapar.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.io.MaxErrorsExceededException;
 import org.jsapar.output.JavaOutputter;
-import org.jsapar.output.Outputter;
 
 /**
  * This class is the starting point for parsing a file (or other source). <br>

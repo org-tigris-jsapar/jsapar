@@ -24,7 +24,7 @@ import org.jsapar.schema.Schema;
  * considered when choosing the line type of the output schema line. This means that lines with a
  * type that does not exist in the output schema will be discarded in the output.
  * <p/>
- * Also it is possible to add your own line filter which can cause lines to be discarded from the
+ * It is also possible to add your own line filter which can cause lines to be discarded from the
  * output depending of their contents. Add your own implementation of LineFilter in order to be able
  * to discard lines.
  * 
@@ -46,7 +46,6 @@ public class FilterConverter extends Converter {
      */
     public FilterConverter(ParseSchema inputSchema, Schema outputSchema) {
         super(inputSchema, outputSchema);
-        // TODO Auto-generated constructor stub
     }
 
     /**
