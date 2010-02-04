@@ -144,4 +144,60 @@ public class SchemaCellFormat implements Cloneable {
         return pattern;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((cellType == null) ? 0 : cellType.hashCode());
+        result = prime * result + ((format == null) ? 0 : format.hashCode());
+        result = prime * result + ((pattern == null) ? 0 : pattern.hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof SchemaCellFormat)) {
+            return false;
+        }
+        SchemaCellFormat other = (SchemaCellFormat) obj;
+        if (cellType == null) {
+            if (other.cellType != null) {
+                return false;
+            }
+        } else if (!cellType.equals(other.cellType)) {
+            return false;
+        }
+        if (format == null) {
+            if (other.format != null) {
+                return false;
+            }
+        } else if (!format.equals(other.format)) {
+            return false;
+        }
+        if (pattern == null) {
+            if (other.pattern != null) {
+                return false;
+            }
+        } else if (!pattern.equals(other.pattern)) {
+            return false;
+        }
+        return true;
+    }
+    
 }

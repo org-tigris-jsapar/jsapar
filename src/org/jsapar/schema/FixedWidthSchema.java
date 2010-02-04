@@ -36,7 +36,7 @@ public class FixedWidthSchema extends Schema {
      * @return the schemaLines
      */
     public java.util.List<FixedWidthSchemaLine> getFixedWidthSchemaLines() {
-	return schemaLines;
+        return schemaLines;
     }
 
     /**
@@ -44,7 +44,7 @@ public class FixedWidthSchema extends Schema {
      *            the schemaLines to set
      */
     public void setSchemaLines(java.util.List<FixedWidthSchemaLine> schemaLines) {
-	this.schemaLines = schemaLines;
+        this.schemaLines = schemaLines;
     }
 
     /**
@@ -52,7 +52,7 @@ public class FixedWidthSchema extends Schema {
      *            the schemaLines to set
      */
     public void addSchemaLine(FixedWidthSchemaLine schemaLine) {
-	this.schemaLines.add(schemaLine);
+        this.schemaLines.add(schemaLine);
     }
 
     /**
@@ -68,11 +68,11 @@ public class FixedWidthSchema extends Schema {
      */
     @Override
     public void parse(java.io.Reader reader, ParsingEventListener listener) throws IOException, JSaParException {
-	if (getLineSeparator().length() > 0) {
-	    parseByOccursLinesSeparated(reader, listener);
-	} else {
-	    parseByOccursFlatFile(reader, listener);
-	}
+        if (getLineSeparator().length() > 0) {
+            parseByOccursLinesSeparated(reader, listener);
+        } else {
+            parseByOccursFlatFile(reader, listener);
+        }
     }
 
     /**
@@ -87,17 +87,17 @@ public class FixedWidthSchema extends Schema {
      * @throws java.io.IOException
      */
     protected void parseByOccursFlatFile(java.io.Reader reader, ParsingEventListener listener) throws IOException,
-	    JSaParException {
-	long nLineNumber = 0;
-	for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
-	    for (int i = 0; i < lineSchema.getOccurs(); i++) {
-		nLineNumber++;
-		boolean isLineFound = lineSchema.parse(nLineNumber, reader, listener);
-		if (!isLineFound) {
-		    break; // End of stream.
-		}
-	    }
-	}
+            JSaParException {
+        long nLineNumber = 0;
+        for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
+            for (int i = 0; i < lineSchema.getOccurs(); i++) {
+                nLineNumber++;
+                boolean isLineFound = lineSchema.parse(nLineNumber, reader, listener);
+                if (!isLineFound) {
+                    break; // End of stream.
+                }
+            }
+        }
     }
 
     /**
@@ -112,22 +112,22 @@ public class FixedWidthSchema extends Schema {
      * @throws JSaParException
      */
     protected void parseByOccursLinesSeparated(java.io.Reader reader, ParsingEventListener listener)
-	    throws IOException, JSaParException {
+            throws IOException, JSaParException {
 
-	long nLineNumber = 0; // First line is 1
-	for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
-	    for (int i = 0; i < lineSchema.getOccurs(); i++) {
-		nLineNumber++;
-		String sLine = parseLine(reader);
-		if(sLine == null)
-		    return; // End of buffer
+        long nLineNumber = 0; // First line is 1
+        for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
+            for (int i = 0; i < lineSchema.getOccurs(); i++) {
+                nLineNumber++;
+                String sLine = parseLine(reader);
+                if (sLine == null)
+                    return; // End of buffer
 
-		boolean isLineFound = lineSchema.parse(nLineNumber, sLine, listener);
-		if (!isLineFound) {
-		    return; // End of stream.
-		}
-	    }
-	}
+                boolean isLineFound = lineSchema.parse(nLineNumber, sLine, listener);
+                if (!isLineFound) {
+                    return; // End of stream.
+                }
+            }
+        }
     }
 
     /*
@@ -138,23 +138,23 @@ public class FixedWidthSchema extends Schema {
     @Override
     public void output(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {
 
-	for (SchemaLine lineSchema : getFixedWidthSchemaLines()) {
-	    for (int i = 0; i < lineSchema.getOccurs(); i++) {
-		if (!itLines.hasNext()) {
-		    return;
-		}
-		Line line = itLines.next();
-		((FixedWidthSchemaLine) lineSchema).output(line, writer);
+        for (SchemaLine lineSchema : getFixedWidthSchemaLines()) {
+            for (int i = 0; i < lineSchema.getOccurs(); i++) {
+                if (!itLines.hasNext()) {
+                    return;
+                }
+                Line line = itLines.next();
+                ((FixedWidthSchemaLine) lineSchema).output(line, writer);
 
-		if (itLines.hasNext()) {
-		    if (getLineSeparator().length() > 0) {
-			writer.write(getLineSeparator());
-		    }
-		} else {
-		    return;
-		}
-	    }
-	}
+                if (itLines.hasNext()) {
+                    if (getLineSeparator().length() > 0) {
+                        writer.write(getLineSeparator());
+                    }
+                } else {
+                    return;
+                }
+            }
+        }
     }
 
     /*
@@ -164,13 +164,13 @@ public class FixedWidthSchema extends Schema {
      */
     @Override
     public FixedWidthSchema clone() throws CloneNotSupportedException {
-	FixedWidthSchema schema = (FixedWidthSchema) super.clone();
+        FixedWidthSchema schema = (FixedWidthSchema) super.clone();
 
-	schema.schemaLines = new java.util.LinkedList<FixedWidthSchemaLine>();
-	for (FixedWidthSchemaLine line : this.schemaLines) {
-	    schema.addSchemaLine(line.clone());
-	}
-	return schema;
+        schema.schemaLines = new java.util.LinkedList<FixedWidthSchemaLine>();
+        for (FixedWidthSchemaLine line : this.schemaLines) {
+            schema.addSchemaLine(line.clone());
+        }
+        return schema;
     }
 
     /*
@@ -180,17 +180,17 @@ public class FixedWidthSchema extends Schema {
      */
     @Override
     public String toString() {
-	StringBuilder sb = new StringBuilder();
-	sb.append(super.toString());
-	sb.append(" schemaLines=");
-	sb.append(this.schemaLines);
-	return sb.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append(super.toString());
+        sb.append(" schemaLines=");
+        sb.append(this.schemaLines);
+        return sb.toString();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public List getSchemaLines() {
-	return this.schemaLines;
+        return this.schemaLines;
     }
 
     @Override
@@ -209,6 +209,16 @@ public class FixedWidthSchema extends Schema {
             }
         }
         return null;
+    }
+
+    @Override
+    public int getSchemaLinesCount() {
+        return this.schemaLines.size();
+    }
+
+    @Override
+    public SchemaLine getSchemaLineAt(int index) {
+        return this.schemaLines.get(index);
     }
 
 }

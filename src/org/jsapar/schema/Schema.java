@@ -140,6 +140,12 @@ public abstract class Schema implements Cloneable, ParseSchema {
         return (Schema) super.clone();
     }
 
+    /**
+     * @return list of all schema lines.
+     */
+    @SuppressWarnings("unchecked")
+    protected abstract List getSchemaLines();
+
     /*
      * (non-Javadoc)
      * 
@@ -150,16 +156,13 @@ public abstract class Schema implements Cloneable, ParseSchema {
         StringBuilder sb = new StringBuilder();
         sb.append(" lineSeparator=");
         String ls = this.lineSeparator;
-//        ls.replaceAll("\n", "\\\\n");
-//        ls.replaceAll("\r", "\\\\r");
+        // ls.replaceAll("\n", "\\\\n");
+        // ls.replaceAll("\r", "\\\\r");
         sb.append(ls);
         sb.append(" locale=");
         sb.append(this.locale);
         return sb.toString();
     }
-
-    @SuppressWarnings("unchecked")
-    protected abstract List getSchemaLines();
 
     /**
      * @param lineNumber
@@ -211,8 +214,8 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * This method should only be called by a Outputter class. Don't use this directly in your code.
      * Use a Outputter instead.
      * 
-     * This method writes a line according to the schema line, with the same line type, which is found
-     * in this schema.
+     * This method writes a line according to the schema line, with the same line type, which is
+     * found in this schema.
      * 
      * @param line
      * @param lineNumber
@@ -229,6 +232,32 @@ public abstract class Schema implements Cloneable, ParseSchema {
         schemaLine.output(line, writer);
         writer.append(getLineSeparator());
         return true;
+    }
+
+    /**
+     * @return Number of schema lines of this schema.
+     */
+    public abstract int getSchemaLinesCount();
+
+    /**
+     * @param index
+     * @return The schema line with the specified index.
+     */
+    public abstract SchemaLine getSchemaLineAt(int index);
+
+    /**
+     * @param line
+     *            The line to find index for.
+     * @return The index (starting from 0) of which the supplied line have within the schema. -1 if
+     *         no such line is found.
+     */
+    public int getIndexOf(SchemaLine line) {
+        for (int i = 0; i < getSchemaLinesCount(); i++) {
+            if (line.equals(getSchemaLineAt(i))) {
+                return i;
+            }
+        }
+        return -1;
     }
 
 }

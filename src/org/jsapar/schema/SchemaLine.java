@@ -270,5 +270,70 @@ public abstract class SchemaLine implements Cloneable {
         }
         return true;
     }
+    
+    
+    /**
+     * @return Number of cells in a line
+     */
+    public abstract int getSchemaCellsCount();
+
+    /**
+     * @param index
+     * @return The schema cell with the specified index.
+     */
+    public abstract SchemaCell getSchemaCellAt(int index);
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((lineType == null) ? 0 : lineType.hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof SchemaLine)) {
+            return false;
+        }
+        SchemaLine other = (SchemaLine) obj;
+        if (lineType == null) {
+            if (other.lineType != null) {
+                return false;
+            }
+        } else if (!lineType.equals(other.lineType)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param cell
+     * @return The index of the supplied cell within this line. -1 if the cell was not found.
+     */
+    public int getIndexOf(SchemaCell cell) {
+        for (int i = 0; i < getSchemaCellsCount(); i++) {
+            if (cell.equals(getSchemaCellAt(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
 }

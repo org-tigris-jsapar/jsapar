@@ -23,7 +23,7 @@ import org.jsapar.input.ParsingEventListener;
 public class FixedWidthSchemaLine extends SchemaLine {
 
     private static final String EMPTY_STRING = "";
-    private java.util.List<FixedWidthSchemaCell> schemaCells = new java.util.LinkedList<FixedWidthSchemaCell>();
+    private java.util.List<FixedWidthSchemaCell> schemaCells = new java.util.ArrayList<FixedWidthSchemaCell>();
     private boolean trimFillCharacters = false;
     private char fillCharacter = ' ';
 
@@ -132,11 +132,12 @@ public class FixedWidthSchemaLine extends SchemaLine {
                 }
             } else {
                 try {
-                    Cell cell = schemaCell.build(reader, isTrimFillCharacters(), getFillCharacter(), listener, nLineNumber);
+                    Cell cell = schemaCell.build(reader, isTrimFillCharacters(), getFillCharacter(), listener,
+                            nLineNumber);
                     if (cell == null) {
-                        if (oneRead){
+                        if (oneRead) {
                             setDefaultsOnly = true;
-                            if(schemaCell.getDefaultCell() != null)
+                            if (schemaCell.getDefaultCell() != null)
                                 line.addCell(schemaCell.makeCell(EMPTY_STRING));
                         }
                         continue;
@@ -309,4 +310,31 @@ public class FixedWidthSchemaLine extends SchemaLine {
         }
         return null;
     }
+
+    @Override
+    public int getSchemaCellsCount() {
+        return this.schemaCells.size();
+    }
+
+    @Override
+    public SchemaCell getSchemaCellAt(int index) {
+        return this.schemaCells.get(index);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (!(obj instanceof FixedWidthSchemaLine)) {
+            return false;
+        }
+        return true;
+    }
+
 }

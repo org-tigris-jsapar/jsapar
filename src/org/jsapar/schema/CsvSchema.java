@@ -113,8 +113,10 @@ public class CsvSchema extends Schema {
      * @throws IOException
      * @throws JSaParException
      */
-    private long parseLinesByOccurs(CsvSchemaLine lineSchema, long nLineNumber, Reader reader,
-            ParsingEventListener listener) throws IOException, JSaParException {
+    private long parseLinesByOccurs(CsvSchemaLine lineSchema,
+                                    long nLineNumber,
+                                    Reader reader,
+                                    ParsingEventListener listener) throws IOException, JSaParException {
         long nStartLine = nLineNumber;
         for (int i = 0; i < lineSchema.getOccurs(); i++) {
             nLineNumber++;
@@ -206,7 +208,9 @@ public class CsvSchema extends Schema {
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.jsapar.schema.Schema#getSchemaLine(java.lang.String)
      */
     @Override
@@ -216,6 +220,16 @@ public class CsvSchema extends Schema {
                 return lineSchema;
         }
         return null;
+    }
+
+    @Override
+    public int getSchemaLinesCount() {
+        return this.schemaLines.size();
+    }
+
+    @Override
+    public SchemaLine getSchemaLineAt(int index) {
+        return this.schemaLines.get(index);
     }
 
 }

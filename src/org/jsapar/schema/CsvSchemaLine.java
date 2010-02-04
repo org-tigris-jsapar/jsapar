@@ -24,7 +24,7 @@ import org.jsapar.input.ParsingEventListener;
 public class CsvSchemaLine extends SchemaLine {
 
     private static final String EMPTY_STRING = "";
-    private java.util.List<CsvSchemaCell> schemaCells = new java.util.LinkedList<CsvSchemaCell>();
+    private java.util.List<CsvSchemaCell> schemaCells = new java.util.ArrayList<CsvSchemaCell>();
     private boolean firstLineAsSchema = false;
 
     private String cellSeparator = ";";
@@ -71,7 +71,6 @@ public class CsvSchemaLine extends SchemaLine {
         return schemaCells;
     }
 
-    
     /**
      * Adds a schema cell to this row.
      * 
@@ -126,7 +125,7 @@ public class CsvSchemaLine extends SchemaLine {
                 line.addCell(schemaCell.makeCell(EMPTY_STRING, listener, nLineNumber));
             }
         }
-            
+
         listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
         return true;
     }
@@ -305,6 +304,7 @@ public class CsvSchemaLine extends SchemaLine {
     public boolean isQuoteCharUsed(){
         return this.quoteChar == 0 ? false : true;
     }
+
     /**
      * @param quoteChar
      *            the quote character to set
@@ -338,15 +338,44 @@ public class CsvSchemaLine extends SchemaLine {
         output(this.buildHeaderLineFromSchema(), writer);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.jsapar.schema.SchemaLine#getSchemaCell(java.lang.String)
      */
     @Override
     public SchemaCell getSchemaCell(String cellName) {
         for (CsvSchemaCell schemaCell : this.getSchemaCells()) {
-            if(schemaCell.getName().equals(cellName))
+            if (schemaCell.getName().equals(cellName))
                 return schemaCell;
         }
         return null;
     }
+
+    @Override
+    public int getSchemaCellsCount() {
+        return this.schemaCells.size();
+    }
+
+    @Override
+    public SchemaCell getSchemaCellAt(int index) {
+        return this.schemaCells.get(index);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) {
+            return false;
+        }
+        if (!(obj instanceof CsvSchemaLine)) {
+            return false;
+        }
+        return true;
+    }
+
 }
