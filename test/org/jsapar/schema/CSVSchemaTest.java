@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import org.jsapar.Document;
+import org.jsapar.IntegerCell;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
+import org.jsapar.Cell.CellType;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
@@ -123,11 +125,14 @@ public class CSVSchemaTest {
     public final void testParse_firstLineAsHeader() throws IOException, JSaParException {
 	CsvSchema schema = new CsvSchema();
 	CsvSchemaLine schemaLine = new CsvSchemaLine();
+	CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe Size", new SchemaCellFormat(CellType.INTEGER));
+	shoeSizeCell.setDefaultValue("43");
+	schemaLine.addSchemaCell(shoeSizeCell);
 	schemaLine.setFirstLineAsSchema(true);
 	schema.addSchemaLine(schemaLine);
 
 	String sLineSep = System.getProperty("line.separator");
-	String sToParse = "First Name;Last Name" + sLineSep + "Jonas;Stenberg" + sLineSep + "Nils;Nilsson";
+	String sToParse = "First Name;Last Name;Shoe Size" + sLineSep + "Jonas;Stenberg;41" + sLineSep + "Nils;Nilsson;";
 	java.io.Reader reader = new java.io.StringReader(sToParse);
 	DocumentBuilder builder = new DocumentBuilder();
 	Document doc = builder.build(reader, schema);
@@ -135,10 +140,12 @@ public class CSVSchemaTest {
 	Line line = doc.getLine(0);
 	assertEquals("Jonas", line.getCell("First Name").getStringValue());
 	assertEquals("Stenberg", line.getCell("Last Name").getStringValue());
+	assertEquals(41, line.getIntCellValue("Shoe Size"));
 
 	line = doc.getLine(1);
 	assertEquals("Nils", line.getCell("First Name").getStringValue());
 	assertEquals("Nilsson", line.getCell("Last Name").getStringValue());
+        assertEquals(43, line.getIntCellValue("Shoe Size"));
     }
 
     @Test
@@ -254,20 +261,23 @@ public class CSVSchemaTest {
 	schema.addSchemaLine(schemaLine);
 
 	schemaLine = new CsvSchemaLine();
-	schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
-	schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+	schemaLine.addSchemaCell(new CsvSchemaCell("First name"));
+	schemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
+	CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe size", new SchemaCellFormat(CellType.INTEGER));
+	shoeSizeCell.setDefaultValue("41");
+	schemaLine.addSchemaCell(shoeSizeCell);
 	schemaLine.setFirstLineAsSchema(true);
 	schema.addSchemaLine(schemaLine);
 
 	Line line1 = new Line();
-	line1.addCell(new StringCell("Jonas"));
-	line1.addCell(new StringCell("Stenberg"));
+	line1.addCell(new StringCell("First name", "Jonas"));
+	line1.addCell(new StringCell("Last name", "Stenberg"));
 
 	StringWriter writer = new StringWriter();
 	schema.outputLine(line1, 2, writer);
 
 	String sLineSep = System.getProperty("line.separator");
-	String sExpected = sLineSep + "First Name;Last Name" + sLineSep + "Jonas;Stenberg";
+	String sExpected = sLineSep + "First name;Last name;Shoe size" + sLineSep + "Jonas;Stenberg;41";
 
 	assertEquals(sExpected, writer.toString());
     }

@@ -345,6 +345,15 @@ public class CsvSchemaLine extends SchemaLine {
      */
     @Override
     public SchemaCell getSchemaCell(String cellName) {
+        return getCsvSchemaCell(cellName);
+    }
+
+    /**
+     * @param cellName
+     * @return CsvSchemaCell with specified name that is attached to this line or null if no such
+     *         cell exist.
+     */
+    public CsvSchemaCell getCsvSchemaCell(String cellName) {
         for (CsvSchemaCell schemaCell : this.getSchemaCells()) {
             if (schemaCell.getName().equals(cellName))
                 return schemaCell;

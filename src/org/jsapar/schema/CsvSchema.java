@@ -55,7 +55,11 @@ public class CsvSchema extends Schema {
 
         String[] asCells = schemaLine.split(sHeaderLine);
         for (String sCell : asCells) {
-            schemaLine.addSchemaCell(new CsvSchemaCell(sCell));
+            CsvSchemaCell masterCell = masterLineSchema.getCsvSchemaCell(sCell);
+            if(masterCell != null)
+                schemaLine.addSchemaCell(masterCell);
+            else
+                schemaLine.addSchemaCell(new CsvSchemaCell(sCell));
         }
         return schemaLine;
     }
