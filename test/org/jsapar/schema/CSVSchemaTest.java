@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import org.jsapar.Document;
-import org.jsapar.IntegerCell;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
