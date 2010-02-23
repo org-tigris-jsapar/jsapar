@@ -184,14 +184,22 @@ public class CsvSchemaLine extends SchemaLine {
             throw new ParseException("Missing end quote character");
         sFound = sToSplit.substring(nIndex, nFoundEnd);
         nIndex = nFoundEnd + 1;
-        int nFoundSplit = sToSplit.indexOf(sCellSeparator, nIndex);
-        if (nFoundSplit > nIndex) {
+
+        // Reached end of line
+        if(nIndex >= sToSplit.length()){
+            cells.add(sFound);
+            return;
+        }
+        
+        // Check that we have cell separator
+        if(!sToSplit.regionMatches(nIndex, sCellSeparator, 0, sCellSeparator.length())){
             throw new ParseException(
                     "Miss-placed quote character. End quote character has to be the last character of the cell");
         }
+        
         cells.add(sFound);
-        if (nIndex < sToSplit.length())
-            splitQuoted(cells, sToSplit.substring(nIndex, sToSplit.length()), sCellSeparator, quoteChar);
+        nIndex += sCellSeparator.length();
+        splitQuoted(cells, sToSplit.substring(nIndex, sToSplit.length()), sCellSeparator, quoteChar);
     }
 
     /**
