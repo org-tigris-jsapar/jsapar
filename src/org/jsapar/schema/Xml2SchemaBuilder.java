@@ -607,17 +607,21 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      *            A class that specifies the base for the relative location of the resource. If this
      *            parameter is null, the resource name has to specify the resource with an absolute
      *            path.
-     * @param resouceName The name of the resouce to load.
-     * @return A newly created schema from the xml resource.
+     * @param resourceName
+     *            The name of the resource to load.
+     * @return A newly created schema from the supplied xml resource.
      * @throws SchemaException
      * @throws IOException
      */
     @SuppressWarnings("unchecked")
-    public static Schema loadSchemaFromXmlResource(Class resourceBaseClass, String resouceName) throws SchemaException,
+    public static Schema loadSchemaFromXmlResource(Class resourceBaseClass, String resourceName) throws SchemaException,
             IOException {
         if (resourceBaseClass == null)
             resourceBaseClass = Xml2SchemaBuilder.class;
         InputStream is = resourceBaseClass.getResourceAsStream("ixformatter_inputschema.xml");
+        if (is == null)
+            throw new SchemaException("Failed to load resource [" + resourceName + "] from class "
+                    + resourceBaseClass.getName());
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         try {
             Schema schema = schemaBuilder.build(new InputStreamReader(is));
