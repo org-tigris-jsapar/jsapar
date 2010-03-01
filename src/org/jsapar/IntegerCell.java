@@ -58,6 +58,22 @@ public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
     /**
      * @param name
      * @param value
+     */
+    public IntegerCell(String name, Short value) {
+        super(name, value, CellType.INTEGER);
+    }
+
+    /**
+     * @param name
+     * @param value
+     */
+    public IntegerCell(String name, Byte value) {
+        super(name, value, CellType.INTEGER);
+    }
+
+    /**
+     * @param name
+     * @param value
      * @param format
      * @throws ParseException
      */
@@ -70,7 +86,8 @@ public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
     	super(name, value, locale, CellType.INTEGER);
 	}
 
-	/* (non-Javadoc)
+
+    /* (non-Javadoc)
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override

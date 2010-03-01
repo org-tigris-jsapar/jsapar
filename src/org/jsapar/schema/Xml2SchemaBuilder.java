@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.text.ParseException;
 import java.util.Locale;
@@ -586,19 +587,44 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     /**
      * Utility function for loading a schema from an xml file.
      * @param fileName
-     * @return
+     * @return A newly created schema from the xml file.
      * @throws SchemaException
      * @throws IOException
      */
     public static Schema loadSchemaFromXmlFile(File file) throws SchemaException, IOException {
         Reader schemaReader = new FileReader(file);
         try {
-            org.jsapar.schema.Xml2SchemaBuilder builder = new org.jsapar.schema.Xml2SchemaBuilder();
+            Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
             Schema schema = builder.build(schemaReader);
             return schema;
         } finally {
             schemaReader.close();
         }
     }
-    
+
+    /**
+     * @param resourceBaseClass
+     *            A class that specifies the base for the relative location of the resource. If this
+     *            parameter is null, the resource name has to specify the resource with an absolute
+     *            path.
+     * @param resouceName The name of the resouce to load.
+     * @return A newly created schema from the xml resource.
+     * @throws SchemaException
+     * @throws IOException
+     */
+    @SuppressWarnings("unchecked")
+    public static Schema loadSchemaFromXmlResource(Class resourceBaseClass, String resouceName) throws SchemaException,
+            IOException {
+        if (resourceBaseClass == null)
+            resourceBaseClass = Xml2SchemaBuilder.class;
+        InputStream is = resourceBaseClass.getResourceAsStream("ixformatter_inputschema.xml");
+        Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
+        try {
+            Schema schema = schemaBuilder.build(new InputStreamReader(is));
+            return schema;
+        } finally {
+            is.close();
+        }
+    }
+
 }

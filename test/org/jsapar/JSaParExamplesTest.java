@@ -206,8 +206,8 @@ public class JSaParExamplesTest {
     public final void testExampleJavaToCsv08() throws SchemaException, IOException, JSaParException, ParseException {
 
         List<TestPerson> people = new LinkedList<TestPerson>();
-        people.add(new TestPerson("Nils", "Holgersson", 4, 4711, dateFormat.parse("1902-08-07 12:43:22")));
-        people.add(new TestPerson("Jonathan", "Lejonhjärta", 37, 17, dateFormat.parse("1955-03-17 12:33:12")));
+        people.add(new TestPerson("Nils", "Holgersson", (short)4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9));
+        people.add(new TestPerson("Jonathan", "Lejonhjärta", (short)37, 17, dateFormat.parse("1955-03-17 12:33:12"), 123456));
         
         Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();

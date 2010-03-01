@@ -90,10 +90,12 @@ public class JavaBuilder {
                         line.addCell(new DateCell(sAttributeName, (Date) f.invoke(object)));
                     } else if (returnType.isAssignableFrom(Calendar.class)) {
                         line.addCell(new DateCell(sAttributeName, ((Calendar) f.invoke(object)).getTime()));
-                    } else if (returnType.isAssignableFrom(Integer.TYPE) || returnType.isAssignableFrom(Integer.class)
-                            || returnType.isAssignableFrom(Short.TYPE) || returnType.isAssignableFrom(Short.class)
-                            || returnType.isAssignableFrom(Byte.TYPE) || returnType.isAssignableFrom(Byte.class)) {
+                    } else if (returnType.isAssignableFrom(Integer.TYPE) || returnType.isAssignableFrom(Integer.class)) {
                         line.addCell(new IntegerCell(sAttributeName, (Integer) f.invoke(object)));
+                    } else if (returnType.isAssignableFrom(Byte.TYPE) || returnType.isAssignableFrom(Byte.class)) {
+                        line.addCell(new IntegerCell(sAttributeName, (Byte) f.invoke(object)));
+                    } else if (returnType.isAssignableFrom(Short.TYPE) || returnType.isAssignableFrom(Short.class)) {
+                        line.addCell(new IntegerCell(sAttributeName, (Short) f.invoke(object)));
                     } else if (returnType.isAssignableFrom(Long.TYPE) || returnType.isAssignableFrom(Long.class)) {
                         line.addCell(new IntegerCell(sAttributeName, (Long) f.invoke(object)));
                     } else if (returnType.isAssignableFrom(Boolean.TYPE) || returnType.isAssignableFrom(Boolean.class)) {

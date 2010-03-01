@@ -13,23 +13,24 @@ import java.util.Date;
  */
 public class TestPerson {
 
-    String firstName;
-    String lastName;
-    int shoeSize;
-    long luckyNumber;
-    java.util.Date birthTime;
+    private String         firstName;
+    private String         lastName;
+    private short          shoeSize;
+    private long           luckyNumber;
+    private int            streetNumber;
+    private java.util.Date birthTime;
 
-    public TestPerson(String firstName, String lastName, int shoeSize,
-			long luckyNumber, Date birthTime) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.shoeSize = shoeSize;
-		this.luckyNumber = luckyNumber;
-		this.birthTime = birthTime;
-	}
+    public TestPerson(String firstName, String lastName, short shoeSize, long luckyNumber, Date birthTime, int streetNumber) {
+        super();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.shoeSize = shoeSize;
+        this.setStreetNumber(streetNumber);
+        this.luckyNumber = luckyNumber;
+        this.birthTime = birthTime;
+    }
 
-	/**
+    /**
      * 
      */
     public TestPerson() {
@@ -39,7 +40,7 @@ public class TestPerson {
      * @return the firstName
      */
     public String getFirstName() {
-	return firstName;
+        return firstName;
     }
 
     /**
@@ -47,14 +48,14 @@ public class TestPerson {
      *            the firstName to set
      */
     public void setFirstName(String firstName) {
-	this.firstName = firstName;
+        this.firstName = firstName;
     }
 
     /**
      * @return the lastName
      */
     public String getLastName() {
-	return lastName;
+        return lastName;
     }
 
     /**
@@ -62,32 +63,32 @@ public class TestPerson {
      *            the lastName to set
      */
     public void setLastName(String lastName) {
-	this.lastName = lastName;
+        this.lastName = lastName;
     }
 
     /**
      * @return the shoeSize
      */
-    public int getShoeSize() {
-	return shoeSize;
+    public short getShoeSize() {
+        return shoeSize;
     }
 
     /**
      * @param shoeSize
      *            the shoeSize to set
      */
-    public void setShoeSize(int shoeSize) {
-	this.shoeSize = shoeSize;
+    public void setShoeSize(short shoeSize) {
+        this.shoeSize = shoeSize;
     }
 
     /**
      * @return the happyNumber
      */
     public long getLuckyNumber() {
-	return luckyNumber;
+        return luckyNumber;
     }
 
-    public void setLuckyNumber(String theNumber){
+    public void setLuckyNumber(String theNumber) {
         this.luckyNumber = Long.valueOf(theNumber);
     }
 
@@ -96,14 +97,14 @@ public class TestPerson {
      *            the happyNumber to set
      */
     public void setLuckyNumber(long happyNumber) {
-	this.luckyNumber = happyNumber;
+        this.luckyNumber = happyNumber;
     }
-    
+
     /**
      * @return the birthTime
      */
     public java.util.Date getBirthTime() {
-	return birthTime;
+        return birthTime;
     }
 
     /**
@@ -111,7 +112,21 @@ public class TestPerson {
      *            the birthTime to set
      */
     public void setBirthTime(java.util.Date birthTime) {
-	this.birthTime = birthTime;
+        this.birthTime = birthTime;
+    }
+
+    /**
+     * @param streetNumber the streetNumber to set
+     */
+    public void setStreetNumber(int streetNumber) {
+        this.streetNumber = streetNumber;
+    }
+
+    /**
+     * @return the streetNumber
+     */
+    public int getStreetNumber() {
+        return streetNumber;
     }
 
 }
