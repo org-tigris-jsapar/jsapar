@@ -75,6 +75,10 @@ public class ParseException extends JSaParException {
         this.cellParseError = cellParseError;
     }
 
+    public ParseException(Exception e) {
+        super(e);
+    }
+
     /**
      * Returns the cell parse error information. Can be null if the parse exception does not origin
      * from a cell parsing.

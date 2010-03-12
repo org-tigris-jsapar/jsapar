@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.text.ParsePosition;
 import java.util.Locale;
 
+import org.jsapar.schema.SchemaException;
+
 /**
  * Class containging the cell numberValue as a string representation. Each line contains a list of
  * cells.
@@ -109,6 +111,30 @@ public abstract class NumberCell extends Cell {
     public void setValue(String value, Locale locale) throws ParseException {
         Format format = NumberFormat.getInstance(locale);
         setValue(value, format);
+    }
+
+    /* (non-Javadoc)
+     * @see org.jsapar.Cell#compareValueTo(org.jsapar.Cell)
+     */
+    @Override
+    public int compareValueTo(Cell right) throws SchemaException {
+        if(right instanceof BigDecimalCell){
+            return -right.compareValueTo(this);
+        }
+        if(right instanceof NumberCell){
+            Number nRight = ((NumberCell)right).getNumberValue();
+            double dLeft = getNumberValue().doubleValue();
+            double dRight = nRight.doubleValue();
+            if(dLeft < dRight)
+                return -1;
+            else if(dLeft > dRight)
+                return 1;
+            else
+                return 0;
+        }
+        else{
+            throw new SchemaException("Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType());
+        }
     }
 
 }

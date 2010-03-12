@@ -3,6 +3,7 @@
  */
 package org.jsapar;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
@@ -10,6 +11,7 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
+import org.jsapar.schema.SchemaException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -98,4 +100,32 @@ public class NumberCellTest {
         Assert.assertEquals(3141.59, cell.getNumberValue().doubleValue(), 0.001);
     }
 
+    @Test
+    public void testCompareValueTo_gt() throws SchemaException{
+        FloatCell left = new FloatCell(10.1);
+        IntegerCell right = new IntegerCell(10);
+        Assert.assertEquals(true, left.compareValueTo(right) > 0 );
+    }
+    
+    @Test
+    public void testCompareValueTo_eq() throws SchemaException{
+        NumberCell left = new FloatCell(10.1);
+        NumberCell right = new FloatCell(10.1);
+        Assert.assertEquals(true, left.compareValueTo(right) == 0 );
+    }
+
+    @Test
+    public void testCompareValueTo_lt() throws SchemaException{
+        NumberCell left = new FloatCell(0.1);
+        NumberCell right = new FloatCell(10.1);
+        Assert.assertEquals(true, left.compareValueTo(right) < 0 );
+    }
+
+    @Test
+    public void testCompareValueTo_lt_big() throws SchemaException{
+        NumberCell left = new FloatCell(10.1);
+        NumberCell right = new BigDecimalCell(new BigDecimal(1000011010100.1321));
+        Assert.assertEquals(true, left.compareValueTo(right) < 0 );
+    }
+    
 }

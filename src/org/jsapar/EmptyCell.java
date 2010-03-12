@@ -7,6 +7,8 @@ import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
 
+import org.jsapar.schema.SchemaException;
+
 
 /**
  * @author stejon0
@@ -73,5 +75,11 @@ public class EmptyCell extends Cell implements Comparable<EmptyCell>{
 	@Override
 	public void setValue(String value, Locale locale) throws ParseException {
 	}
+
+    @Override
+    public int compareValueTo(Cell right) throws SchemaException {
+        // Everything is equal to empty cell :-S.
+        return 0;
+    }
     
 }

@@ -4,6 +4,8 @@ import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
 
+import org.jsapar.schema.SchemaException;
+
 /**
  * Class containging the cell stringValue as a string representation. Each line
  * contains a list of cells.
@@ -11,7 +13,7 @@ import java.util.Locale;
  * @author Jonas
  * 
  */
-public class StringCell extends Cell implements Comparable<StringCell> {
+public class StringCell extends Cell  {
 
     /**
      * 
@@ -141,13 +143,15 @@ public class StringCell extends Cell implements Comparable<StringCell> {
 
     }
 
-    @Override
-    public int compareTo(StringCell right) {
-	return this.getStringValue().compareTo(right.getStringValue());
-    }
+
 
     @Override
     public void setValue(String value, Locale locale) throws ParseException {
 	this.stringValue = value;
+    }
+
+    @Override
+    public int compareValueTo(Cell right) throws SchemaException {
+        return getStringValue().compareTo(right.getStringValue());
     }
 }

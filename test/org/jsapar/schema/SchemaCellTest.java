@@ -18,7 +18,6 @@ import org.jsapar.Cell.CellType;
 import org.jsapar.input.ParseException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -382,33 +381,23 @@ public class SchemaCellTest {
     }
 
     /**
+     * @throws ParseException 
      * @throws ParseException
      */
-    @Ignore("Implementation not ready yet")
-    @Test
-    public void testMakeCell_Integer_MinRangeNotValid() {
+    @Test(expected = ParseException.class)
+    public void testMakeCell_Integer_MinRangeNotValid() throws ParseException {
 
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
         schemaCell.setMinValue(new IntegerCell(54321));
         schemaCell.setMaxValue(new IntegerCell(54322));
-        @SuppressWarnings("unused")
-        Cell cell;
-        try {
-            cell = schemaCell.makeCell("12345");
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return;
-        }
-        fail("Should throw exception for min value.");
-
+        schemaCell.makeCell("12345");
     }
 
     /**
      * @throws ParseException
      * @throws ParseException
      */
-    @Ignore("Implementation not ready yet")
     @Test(expected = ParseException.class)
     public void testMakeCell_Integer_MaxRangeNotValid() throws ParseException {
 
@@ -416,10 +405,7 @@ public class SchemaCellTest {
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
         schemaCell.setMinValue(new IntegerCell(0));
         schemaCell.setMaxValue(new IntegerCell(100));
-        @SuppressWarnings("unused")
-        Cell cell;
-        cell = schemaCell.makeCell("12345");
-
+        schemaCell.makeCell("12345");
     }
 
     /**

@@ -353,14 +353,16 @@ public abstract class SchemaCell implements Cloneable {
      * 
      * @param cell
      * @throws SchemaException
+     * @throws ParseException
+     * @throws SchemaException
      */
     protected void validateRange(Cell cell) throws SchemaException {
-        /*
-         * if (this.minValue != null && cell.compareTo(this.minValue) < 0) throw new
-         * SchemaException("The value is below minimum range limit."); else if (this.maxValue !=
-         * null && cell.compareTo(this.maxValue) > 0) throw new
-         * SchemaException("The value is above maximum range limit.");
-         */
+
+        if (this.minValue != null && cell.compareValueTo(this.minValue) < 0)
+            throw new SchemaException("The value is below minimum range limit.");
+        else if (this.maxValue != null && cell.compareValueTo(this.maxValue) > 0)
+            throw new SchemaException("The value is above maximum range limit.");
+
     }
 
     /**
@@ -447,7 +449,7 @@ public abstract class SchemaCell implements Cloneable {
             return getDefaultValueOrEmpty();
         }
         String value = cell.getStringValue(getCellFormat().getFormat());
-        if(value == null){
+        if (value == null) {
             return getDefaultValueOrEmpty();
         }
         if (value.length() <= 0) {
@@ -502,6 +504,6 @@ public abstract class SchemaCell implements Cloneable {
             return false;
         }
         return true;
-    }    
-    
+    }
+
 }

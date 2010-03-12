@@ -4,6 +4,8 @@ import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
 
+import org.jsapar.schema.SchemaException;
+
 /**
  * Class containging the cell booleanValue as a string representation. Each line
  * contains a list of cells.
@@ -11,7 +13,7 @@ import java.util.Locale;
  * @author Jonas
  * 
  */
-public class BooleanCell extends Cell implements Comparable<BooleanCell> {
+public class BooleanCell extends Cell  {
 
 	/**
      * 
@@ -95,10 +97,6 @@ public class BooleanCell extends Cell implements Comparable<BooleanCell> {
 		this.booleanValue = (Boolean) format.parseObject(value);
 	}
 
-	@Override
-	public int compareTo(BooleanCell right) {
-		return this.getBooleanValue().compareTo(right.getBooleanValue());
-	}
 
 	@Override
 	public void setValue(String value, Locale locale) throws ParseException {
@@ -118,4 +116,18 @@ public class BooleanCell extends Cell implements Comparable<BooleanCell> {
 					+ value, 0);
 		}
 	}
+
+    /* (non-Javadoc)
+     * @see org.jsapar.Cell#compareValueTo(org.jsapar.Cell)
+     */
+    @Override
+    public int compareValueTo(Cell right) throws SchemaException {
+        if(right instanceof BooleanCell){
+            Boolean bRight = ((BooleanCell)right).getBooleanValue();
+            return getBooleanValue().compareTo(bRight);
+        }
+        else{
+            throw new SchemaException("Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType());
+        }
+    }
 }

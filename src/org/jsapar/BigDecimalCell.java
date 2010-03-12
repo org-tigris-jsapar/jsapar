@@ -6,6 +6,8 @@ import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
 
+import org.jsapar.schema.SchemaException;
+
 /**
  * Class containging the cell decimalValue as a string representation. Each line contains a list of
  * cells.
@@ -13,7 +15,7 @@ import java.util.Locale;
  * @author Jonas
  * 
  */
-public class BigDecimalCell extends NumberCell implements java.lang.Comparable<BigDecimalCell> {
+public class BigDecimalCell extends NumberCell  {
 
     /**
      * 
@@ -81,13 +83,21 @@ public class BigDecimalCell extends NumberCell implements java.lang.Comparable<B
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
+    /* (non-Javadoc)
+     * @see org.jsapar.NumberCell#compareValueTo(org.jsapar.Cell)
      */
     @Override
-    public int compareTo(BigDecimalCell right) {
-        return getBigDecimalValue().compareTo(right.getBigDecimalValue());
+    public int compareValueTo(Cell right) throws SchemaException {
+        if(right instanceof BigDecimalCell){
+            BigDecimal bdRight = (((BigDecimalCell)right).getBigDecimalValue());
+            return getBigDecimalValue().compareTo(bdRight);
+        }
+        else if(right instanceof NumberCell){
+            BigDecimal bdRight = new BigDecimal(((NumberCell)right).getNumberValue().doubleValue());
+            return getBigDecimalValue().compareTo(bdRight);
+        }
+        else{
+            throw new SchemaException("Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType());
+        }
     }
 }

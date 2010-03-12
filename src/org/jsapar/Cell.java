@@ -3,6 +3,8 @@ package org.jsapar;
 import java.text.ParseException;
 import java.util.Locale;
 
+import org.jsapar.schema.SchemaException;
+
 /**
  * Abstract class which represents a parsable item on a line in the original document. A cell has a
  * name and a value. A cell can be only exist as one of the sub-classes of this class. The type of
@@ -29,9 +31,9 @@ public abstract class Cell implements java.io.Serializable, Cloneable {
     /**
      * The name of the cell. Can be null if there is no name.
      */
-    private String name;
+    private String            name;
 
-    private CellType cellType = CellType.STRING;
+    private CellType          cellType         = CellType.STRING;
 
     /**
      * Creates an empty cell.
@@ -158,11 +160,12 @@ public abstract class Cell implements java.io.Serializable, Cloneable {
 
     /**
      * Creates a copy of this cell but with the supplied name.
+     * 
      * @param sNewName
-     * @return A copy of this cell but with the new name. 
+     * @return A copy of this cell but with the new name.
      * @throws JSaParException
      */
-    public Cell makeCopy(String sNewName)  {
+    public Cell makeCopy(String sNewName) {
         try {
             Cell clone = (Cell) this.clone();
             clone.setName(sNewName);
@@ -171,4 +174,13 @@ public abstract class Cell implements java.io.Serializable, Cloneable {
             return null;
         }
     }
+
+    /**
+     * Compares value of this cell with the value of the supplied cell. 
+     * 
+     * @param right
+     * @return a negative integer, zero, or a positive integer as this cell's value is less than, equal to, or greater than the specified cell's value. 
+     * @throws SchemaException
+     */
+    public abstract int compareValueTo(Cell right) throws SchemaException;
 }

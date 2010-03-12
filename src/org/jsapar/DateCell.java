@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 
+import org.jsapar.schema.SchemaException;
+
 /**
  * Class containging the cell dateValue as a string representation. Each line contains a list of
  * cells.
@@ -127,4 +129,19 @@ public class DateCell extends Cell implements Comparable<DateCell> {
         return clone;
     }
 
+    /* (non-Javadoc)
+     * @see org.jsapar.Cell#compareValueTo(org.jsapar.Cell)
+     */
+    @Override
+    public int compareValueTo(Cell right) throws SchemaException {
+        if(right instanceof DateCell){
+            Date dateRight = ((DateCell)right).getDateValue();
+            return getDateValue().compareTo(dateRight);
+        }
+        else{
+            throw new SchemaException("Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType());
+        }
+    }
+
+    
 }
