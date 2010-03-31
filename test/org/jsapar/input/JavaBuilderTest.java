@@ -82,16 +82,18 @@ public class JavaBuilderTest {
         person.setLuckyNumber(123456787901234567L);
         person.setShoeSize((short)42);
         person.setStreetNumber(4711);
+        person.setDoor('A');
 
         JavaBuilder builder = new JavaBuilder();
         Line line = builder.buildLine(person);
         assertEquals("org.jsapar.TestPerson", line.getLineType());
-        assertEquals(6, line.getNumberOfCells());
+        assertEquals(7, line.getNumberOfCells());
         assertEquals("Jonas", line.getCell("firstName").getStringValue());
         assertEquals(42, ((IntegerCell) line.getCell("shoeSize")).getNumberValue().shortValue());
         assertEquals(4711, ((IntegerCell) line.getCell("streetNumber")).getNumberValue().intValue());
         assertEquals(birthTime, ((DateCell) line.getCell("birthTime")).getDateValue());
         assertEquals(123456787901234567L, ((IntegerCell) line.getCell("luckyNumber")).getNumberValue().longValue());
+        assertEquals("A", line.getStringCellValue("door"));
     }
 
 }

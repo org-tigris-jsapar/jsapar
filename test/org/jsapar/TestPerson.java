@@ -18,9 +18,11 @@ public class TestPerson {
     private short          shoeSize;
     private long           luckyNumber;
     private int            streetNumber;
+    private char           door;
+    
     private java.util.Date birthTime;
 
-    public TestPerson(String firstName, String lastName, short shoeSize, long luckyNumber, Date birthTime, int streetNumber) {
+    public TestPerson(String firstName, String lastName, short shoeSize, long luckyNumber, Date birthTime, int streetNumber, char door) {
         super();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -28,6 +30,7 @@ public class TestPerson {
         this.setStreetNumber(streetNumber);
         this.luckyNumber = luckyNumber;
         this.birthTime = birthTime;
+        this.door = door;
     }
 
     /**
@@ -127,6 +130,20 @@ public class TestPerson {
      */
     public int getStreetNumber() {
         return streetNumber;
+    }
+
+    /**
+     * @param door the door to set
+     */
+    public void setDoor(char door) {
+        this.door = door;
+    }
+
+    /**
+     * @return the door
+     */
+    public char getDoor() {
+        return door;
     }
 
 }

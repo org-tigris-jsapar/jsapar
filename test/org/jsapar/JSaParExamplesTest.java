@@ -196,18 +196,20 @@ public class JSaParExamplesTest {
         assertEquals(45, people.get(0).getShoeSize());
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         assertEquals(df.parse("1901-01-13 13:45"), people.get(0).getBirthTime());
+        assertEquals('A', people.get(0).getDoor());
         
         assertEquals("Fredrik", people.get(1).getFirstName());
         assertEquals("Larsson", people.get(1).getLastName());
         assertEquals(17, people.get(1).getLuckyNumber());
+        assertEquals('C', people.get(1).getDoor());
     }
     
     @Test
     public final void testExampleJavaToCsv08() throws SchemaException, IOException, JSaParException, ParseException {
 
         List<TestPerson> people = new LinkedList<TestPerson>();
-        people.add(new TestPerson("Nils", "Holgersson", (short)4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9));
-        people.add(new TestPerson("Jonathan", "Lejonhj√§rta", (short)37, 17, dateFormat.parse("1955-03-17 12:33:12"), 123456));
+        people.add(new TestPerson("Nils", "Holgersson", (short)4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9, 'A'));
+        people.add(new TestPerson("Jonathan", "Lejonhj‰rta", (short)37, 17, dateFormat.parse("1955-03-17 12:33:12"), 123456, 'C'));
         
         Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
@@ -223,8 +225,8 @@ public class JSaParExamplesTest {
         String result=writer.toString();
         String[] resultLines = result.split("\r\n");
         System.out.println(result);
-        assertEquals("Nils;;Holgersson;4;4711;1902-08-07 12:43", resultLines[0]);
-        assertEquals("Jonathan;;Lejonhj√§rta;37;17;1955-03-17 12:33", resultLines[1]);
+        assertEquals("Nils;;Holgersson;4;4711;1902-08-07 12:43;A", resultLines[0]);
+        assertEquals("Jonathan;;Lejonhj‰rta;37;17;1955-03-17 12:33;C", resultLines[1]);
     }
     
 }

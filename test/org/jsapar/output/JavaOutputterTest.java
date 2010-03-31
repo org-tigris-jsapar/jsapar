@@ -47,6 +47,7 @@ public class JavaOutputterTest {
         line1.addCell(new IntegerCell("shoeSize", 42));
         line1.addCell(new DateCell("birthTime", this.birthTime ));
         line1.addCell(new IntegerCell("luckyNumber", 123456787901234567L));
+        line1.addCell(new StringCell("door", "A"));
 //      line1.addCell(new StringCell("NeverUsed", "Should not be assigned"));
         
 
@@ -60,12 +61,13 @@ public class JavaOutputterTest {
         JavaOutputter outputter = new JavaOutputter();
 	List<CellParseError> parseErrors = new LinkedList<CellParseError>();
         java.util.List<TestPerson> objects = outputter.createJavaObjects(document, parseErrors);
-        assertEquals(0, parseErrors.size());
+        assertEquals("The errors: " + parseErrors, 0, parseErrors.size());
 	assertEquals(2, objects.size());
 	assertEquals("Jonas",  objects.get(0).getFirstName());
 	assertEquals(42,  objects.get(0).getShoeSize());
 	assertEquals(this.birthTime, ((TestPerson) objects.get(0)).getBirthTime());
 	assertEquals(123456787901234567L, ((TestPerson) objects.get(0)).getLuckyNumber());
+        assertEquals('A',  objects.get(0).getDoor());
 	assertEquals("Bergsten", ((TestPerson) objects.get(1)).getLastName());
     }
 
@@ -83,7 +85,7 @@ public class JavaOutputterTest {
         JavaOutputter outputter = new JavaOutputter();
         List<CellParseError> parseErrors = new LinkedList<CellParseError>();
         java.util.List objects = outputter.createJavaObjects(document, parseErrors);
-        assertEquals(0, parseErrors.size());
+        assertEquals("The errors: " + parseErrors, 0, parseErrors.size());
         assertEquals(1, objects.size());
         assertEquals(42, ((TestPerson) objects.get(0)).getShoeSize());
     }

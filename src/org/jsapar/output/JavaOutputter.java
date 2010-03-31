@@ -166,6 +166,12 @@ public class JavaOutputter {
                     f.invoke(objectToAssign, ((Number) value).byteValue());
                 else if (paramTypes[0] == Float.TYPE && value instanceof Number)
                     f.invoke(objectToAssign, ((Number) value).floatValue());
+                // Will squeeze in first character of any datatype's string representation.
+                else if (paramTypes[0] == Character.TYPE ){
+                    String sValue = value.toString();
+                    if(!sValue.isEmpty())
+                        f.invoke(objectToAssign, sValue.charAt(0));
+                }
                 else {
                     try {
                         f.invoke(objectToAssign, value);
