@@ -20,7 +20,7 @@ public abstract class Cell implements java.io.Serializable, Cloneable {
      * 
      */
     public enum CellType {
-        STRING, DATE, INTEGER, BOOLEAN, FLOAT, DECIMAL, CUSTOM
+        STRING, DATE, INTEGER, BOOLEAN, FLOAT, DECIMAL, CHARACTER, CUSTOM
     }
 
     /**

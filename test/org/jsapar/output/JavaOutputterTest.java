@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jsapar.CharacterCell;
 import org.jsapar.DateCell;
 import org.jsapar.Document;
 import org.jsapar.IntegerCell;
@@ -47,7 +48,7 @@ public class JavaOutputterTest {
         line1.addCell(new IntegerCell("shoeSize", 42));
         line1.addCell(new DateCell("birthTime", this.birthTime ));
         line1.addCell(new IntegerCell("luckyNumber", 123456787901234567L));
-        line1.addCell(new StringCell("door", "A"));
+        line1.addCell(new CharacterCell("door", 'A'));
 //      line1.addCell(new StringCell("NeverUsed", "Should not be assigned"));
         
 

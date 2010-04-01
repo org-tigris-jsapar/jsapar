@@ -155,7 +155,7 @@ public class JavaOutputter {
                 Class[] paramTypes = f.getParameterTypes();
                 if (paramTypes.length != 1 || !f.getName().equals(sSetMethodName))
                     continue;
-                
+
                 Object value = cell.getValue();
                 // Casts between simple types does not work automatically
                 if (paramTypes[0] == Integer.TYPE && value instanceof Number)
@@ -167,12 +167,15 @@ public class JavaOutputter {
                 else if (paramTypes[0] == Float.TYPE && value instanceof Number)
                     f.invoke(objectToAssign, ((Number) value).floatValue());
                 // Will squeeze in first character of any datatype's string representation.
-                else if (paramTypes[0] == Character.TYPE ){
-                    String sValue = value.toString();
-                    if(!sValue.isEmpty())
-                        f.invoke(objectToAssign, sValue.charAt(0));
-                }
-                else {
+                else if (paramTypes[0] == Character.TYPE) {
+                    if (value instanceof Character) {
+                        f.invoke(objectToAssign, ((Character) value).charValue());
+                    } else {
+                        String sValue = value.toString();
+                        if (!sValue.isEmpty())
+                            f.invoke(objectToAssign, sValue.charAt(0));
+                    }
+                } else {
                     try {
                         f.invoke(objectToAssign, value);
                     } catch (IllegalArgumentException e) {

@@ -6,6 +6,7 @@ import java.util.Locale;
 import org.jsapar.BigDecimalCell;
 import org.jsapar.BooleanCell;
 import org.jsapar.Cell;
+import org.jsapar.CharacterCell;
 import org.jsapar.DateCell;
 import org.jsapar.EmptyCell;
 import org.jsapar.FloatCell;
@@ -211,6 +212,8 @@ public abstract class SchemaCell implements Cloneable {
             return new IntegerCell(sName, sValue, format);
         case FLOAT:
             return new FloatCell(sName, sValue, format);
+        case CHARACTER:
+            return new CharacterCell(sName, sValue, format);
         case CUSTOM:
         default:
             throw new SchemaException("Cell type not implemented: " + cellType);
@@ -245,6 +248,8 @@ public abstract class SchemaCell implements Cloneable {
             return new IntegerCell(sName, sValue, locale);
         case FLOAT:
             return new FloatCell(sName, sValue, locale);
+        case CHARACTER:
+            return new CharacterCell(sName, sValue);
         case CUSTOM:
         default:
             throw new SchemaException("Cell type not implemented: " + cellType);

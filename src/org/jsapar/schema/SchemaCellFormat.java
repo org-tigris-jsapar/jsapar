@@ -93,6 +93,9 @@ public class SchemaCellFormat implements Cloneable {
             decFormat.setParseBigDecimal(true);
             this.format = decFormat;
             break;
+        case CHARACTER:
+            this.format = null;
+            break;
         case CUSTOM:
             throw new SchemaException("CUSTOM cell type formatter can not be created without specifying a formatter.");
         case BOOLEAN:

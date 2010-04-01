@@ -10,7 +10,7 @@
       <cell name="shoeSize" ><format type="integer"/></cell>
       <cell name="luckyNumber" default="17" ><format type="integer"/></cell>
       <cell name="birthTime" > <format type="date" pattern="yyyy-MM-dd HH:mm"/></cell>
-      <cell name="door" > <format type="string"/></cell>
+      <cell name="door" > <format type="character"/></cell>
     </line>
   </csvschema>
 </schema>

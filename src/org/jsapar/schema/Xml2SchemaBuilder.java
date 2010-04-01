@@ -548,6 +548,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         if (sType.equals("boolean"))
             return CellType.BOOLEAN;
 
+        if (sType.equals("character"))
+            return CellType.CHARACTER;
+        
         throw new SchemaException("Unknown cell format type: " + sType);
 
     }

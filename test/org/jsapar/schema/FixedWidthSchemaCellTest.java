@@ -233,7 +233,8 @@ public class FixedWidthSchemaCellTest {
     public final void testBuild_floatExp() throws IOException, JSaParException, SchemaException {
         String toParse = "1,234E6 ";
         FixedWidthSchemaCell schemaElment = new FixedWidthSchemaCell("Float", 8);
-        schemaElment.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.###E0"));
+        schemaElment.setLocale(new Locale("sv", "SE"));
+        schemaElment.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.###E0", schemaElment.getLocale()));
 
         Reader reader = new StringReader(toParse);
         NumberCell cell = (NumberCell) schemaElment.build(reader, true, ' ', new TestParsingEventListener(), 1);
