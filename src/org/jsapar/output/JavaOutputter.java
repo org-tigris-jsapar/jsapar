@@ -34,8 +34,18 @@ public class JavaOutputter {
             try {
                 Object o = this.createObject(line, parseErrors);
                 objects.add(o);
-            } catch (Exception e) {
-                parseErrors.add(new CellParseError("", "", null, "Skipped creating object - " + e));
+            } catch (InstantiationException e) {
+                parseErrors.add(new CellParseError("", "", null,
+                        "Failed to instantiate object. Skipped creating object - " + e));
+            } catch (IllegalAccessException e) {
+                parseErrors.add(new CellParseError("", "", null,
+                        "Failed to call set method. Skipped creating object - " + e));
+            } catch (ClassNotFoundException e) {
+                parseErrors.add(new CellParseError("", "", null,
+                        "Class not found. Skipped creating object - " + e));
+            } catch (Throwable e) {
+                parseErrors.add(new CellParseError(0, "", "", null,
+                        "Skipped creating object - " + e.getMessage(), e));
             }
         }
         return objects;

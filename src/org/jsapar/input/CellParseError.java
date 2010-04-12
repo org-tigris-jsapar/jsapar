@@ -1,5 +1,8 @@
 package org.jsapar.input;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.jsapar.schema.SchemaCellFormat;
 
 /**
@@ -16,6 +19,7 @@ public class CellParseError {
     String cellValue = null;
     SchemaCellFormat cellFormat = null;
     String errorDescription = null;
+    private Throwable exception;
 
     /**
      * @param lineNumber
@@ -46,6 +50,23 @@ public class CellParseError {
 	this.cellValue = cellValue;
 	this.cellFormat = cellFormat;
 	this.errorDescription = errorDescription;
+    }
+
+    /**
+     * @param lineNumber
+     * @param cellName
+     * @param cellValue
+     * @param cellFormat
+     * @param errorDescription
+     */
+    public CellParseError(long lineNumber, String cellName, String cellValue,
+            SchemaCellFormat cellFormat, String errorDescription, Throwable e) {
+        this.lineNumber = lineNumber;
+        this.cellName = cellName;
+        this.cellValue = cellValue;
+        this.cellFormat = cellFormat;
+        this.errorDescription = errorDescription;
+        this.setException(e);
     }
 
     /**
@@ -145,8 +166,23 @@ public class CellParseError {
 	    sb.append(" - Expected format: ");
 	    sb.append(this.cellFormat);
 	}
+        if (exception != null) {
+            StringWriter stackWriter = new StringWriter();
+            sb.append("- Exception: ");
+            exception.printStackTrace(new PrintWriter(stackWriter));
+            sb.append(stackWriter.toString());
+            stackWriter.toString();
+        }
 	sb.append(" }");
 	return sb.toString();
+    }
+
+    public void setException(Throwable exception) {
+        this.exception = exception;
+    }
+
+    public Throwable getException() {
+        return exception;
     }
 
 }
