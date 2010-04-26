@@ -61,6 +61,28 @@ public class CSVSchemaLineTest  {
     }
 
     @Test
+    public void testBuild_2byte_unicode() throws JSaParException {
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setCellSeparator("\uFFD0");
+        String sLine = "Jonas\uFFD0Stenberg\uFFD0Hemvägen 19\uFFD0111 22\uFFD0Stockholm";
+        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            }
+
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+                Line line = event.getLine();
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Stenberg", line.getCell(1).getStringValue());
+            }
+        });
+
+        assertEquals(true, rc);
+    }
+    
+    @Test
     public void testBuild_quoted() throws JSaParException {
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schemaLine.setQuoteChar('\"');
@@ -331,6 +353,25 @@ public class CSVSchemaLineTest  {
 
     }
 
+    @Test
+    public void testOutput_2byte_unicode() throws IOException, JSaParException {
+
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setCellSeparator("\uFFD0");
+        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+
+        Line line = new Line();
+        line.addCell(new StringCell("First Name", "Jonas"));
+        line.addCell(new StringCell("Last Name", "Stenberg"));
+        StringWriter writer = new StringWriter();
+
+        schemaLine.output(line, writer);
+
+        assertEquals("Jonas\uFFD0Stenberg", writer.toString());
+    }
+
+    
     @Test
     public void testOutput_not_found_in_line() throws IOException, JSaParException {
 
