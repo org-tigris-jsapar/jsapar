@@ -15,8 +15,10 @@ import org.jsapar.IntegerCell;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.TestPerson;
+import org.jsapar.TestPostAddress;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -96,4 +98,21 @@ public class JavaBuilderTest {
         assertEquals("A", line.getStringCellValue("door"));
     }
 
+    /**
+     * Test method for {@link org.jsapar.input.JavaBuilder#buildLine(java.lang.Object)}.
+     * This is not yet implemented so this test should still fail.
+     * @throws JSaParException
+     */
+    @Ignore
+    @Test
+    public void testBuildLine_subClass() throws JSaParException {
+        TestPerson person = new TestPerson();
+        person.setAddress(new TestPostAddress("Stigen", "Staden"));
+        JavaBuilder builder = new JavaBuilder();
+        Line line = builder.buildLine(person);
+        assertEquals("org.jsapar.TestPerson", line.getLineType());
+        assertEquals("Stigen", line.getStringCellValue("address.street"));
+        assertEquals("Staden", line.getStringCellValue("address.town"));
+    }
+    
 }

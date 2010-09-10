@@ -60,16 +60,16 @@ public class JavaOutputterTest {
         document.addLine(line2);
 
         JavaOutputter outputter = new JavaOutputter();
-	List<CellParseError> parseErrors = new LinkedList<CellParseError>();
+        List<CellParseError> parseErrors = new LinkedList<CellParseError>();
         java.util.List<TestPerson> objects = outputter.createJavaObjects(document, parseErrors);
         assertEquals("The errors: " + parseErrors, 0, parseErrors.size());
-	assertEquals(2, objects.size());
-	assertEquals("Jonas",  objects.get(0).getFirstName());
-	assertEquals(42,  objects.get(0).getShoeSize());
-	assertEquals(this.birthTime, ((TestPerson) objects.get(0)).getBirthTime());
-	assertEquals(123456787901234567L, ((TestPerson) objects.get(0)).getLuckyNumber());
-        assertEquals('A',  objects.get(0).getDoor());
-	assertEquals("Bergsten", ((TestPerson) objects.get(1)).getLastName());
+        assertEquals(2, objects.size());
+        assertEquals("Jonas", objects.get(0).getFirstName());
+        assertEquals(42, objects.get(0).getShoeSize());
+        assertEquals(this.birthTime, ((TestPerson) objects.get(0)).getBirthTime());
+        assertEquals(123456787901234567L, ((TestPerson) objects.get(0)).getLuckyNumber());
+        assertEquals('A', objects.get(0).getDoor());
+        assertEquals("Bergsten", ((TestPerson) objects.get(1)).getLastName());
     }
 
 
@@ -125,6 +125,31 @@ public class JavaOutputterTest {
         assertEquals(1, parseErrors.size());
         Assert.assertNull(objects.get(0).getFirstName());
         System.out.println("The (expected) error: " + parseErrors);
+    }
+
+    /**
+     * This feature is not yet implemented so it is still expected to fail.
+     * @throws JSaParException
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    @Ignore
+    public final void testCreateJavaObjects_subclass() throws JSaParException {
+        Document document = new Document();
+        Line line1 = new Line("org.jsapar.TestPerson");
+        line1.addCell(new StringCell("address.street", "Stigen"));
+        line1.addCell(new StringCell("address.town", "Staden"));
+        
+
+        document.addLine(line1);
+
+        JavaOutputter outputter = new JavaOutputter();
+        List<CellParseError> parseErrors = new LinkedList<CellParseError>();
+        java.util.List<TestPerson> objects = outputter.createJavaObjects(document, parseErrors);
+        assertEquals("The errors: " + parseErrors, 0, parseErrors.size());
+        assertEquals(1, objects.size());
+        assertEquals("Stigen", (objects.get(0)).getAddress().getStreet());
+        assertEquals("Staden", (objects.get(0)).getAddress().getTown());
     }
     
     @Test

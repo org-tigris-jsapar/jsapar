@@ -19,6 +19,7 @@ public class TestPerson {
     private long           luckyNumber;
     private int            streetNumber;
     private char           door;
+    private TestPostAddress    address;
     
     private java.util.Date birthTime;
 
@@ -145,5 +146,13 @@ public class TestPerson {
     public char getDoor() {
         return door;
     }
+
+	public void setAddress(TestPostAddress address) {
+		this.address = address;
+	}
+
+	public TestPostAddress getAddress() {
+		return address;
+	}
 
 }
