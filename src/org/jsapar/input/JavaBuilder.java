@@ -10,6 +10,8 @@ import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,9 +31,10 @@ import org.jsapar.StringCell;
  * 
  */
 public class JavaBuilder {
-
+    
     protected static Logger logger = Logger.getLogger("org.jsapar");
 
+    private int maxSubLevels = 100;
     /**
      * @param <T>
      *            Type of the object of which the document will be built.
@@ -41,7 +44,6 @@ public class JavaBuilder {
      *         supplied.
      * @throws JSaParException
      */
-    @SuppressWarnings("unchecked")
     public Document build(Collection objects) throws JSaParException {
         Document doc = new Document();
         for (Object object : objects) {
@@ -61,35 +63,52 @@ public class JavaBuilder {
      * @return A Line object containing cells according to the getter method of the supplied object.
      * @throws JSaParException
      */
-    @SuppressWarnings("unchecked")
     public Line buildLine(Object object) throws JSaParException {
 
+        Line line = new Line(object.getClass().getName());
+        Set<Object> visited = new HashSet<Object>();
+        this.buildLine(line, object, null, visited);
+        return line;
+    }
+    
+
+    @SuppressWarnings("unchecked")
+    private void buildLine(Line line, Object object, String prefix, Set<Object> visited) throws JSaParException {
+
+        // First we avoid loops.
+        if(visited.contains(object) || visited.size()  >  maxSubLevels)
+            return;
+        
         Method[] methods = object.getClass().getMethods();
         Object[] logInfo = new Object[] { object.getClass().getName(), null };
-
-        Line line = new Line(object.getClass().getName());
 
         for (Method f : methods) {
             try {
                 String sMethodName = f.getName();
                 if (f.getParameterTypes().length == 0 && sMethodName.length() > 3
                         && sMethodName.substring(0, 3).equals("get")) {
-                    String sAttributeName = f.getName().substring(3, 4).toLowerCase();
-                    sAttributeName += f.getName().substring(4, sMethodName.length());
+                    String sAttributeName = makeAttributeName(prefix, sMethodName);
                     logInfo[1] = sAttributeName;
+                    @SuppressWarnings("rawtypes")
                     Class returnType = f.getReturnType();
 
                     if (returnType.isAssignableFrom(Class.class)) {
                         continue;
                     } else if (returnType.isAssignableFrom(String.class)) {
-                        line.addCell(new StringCell(sAttributeName, (String) f.invoke(object)));
+                        String value = (String) f.invoke(object);
+                        if (value != null)
+                            line.addCell(new StringCell(sAttributeName, value));
                     } else if (returnType.isAssignableFrom(Character.TYPE)
                             || returnType.isAssignableFrom(Character.class)) {
                         line.addCell(new StringCell(sAttributeName, (Character) f.invoke(object)));
                     } else if (returnType.isAssignableFrom(Date.class)) {
-                        line.addCell(new DateCell(sAttributeName, (Date) f.invoke(object)));
+                        Date value = (Date) f.invoke(object);
+                        if (value != null)
+                            line.addCell(new DateCell(sAttributeName, value));
                     } else if (returnType.isAssignableFrom(Calendar.class)) {
-                        line.addCell(new DateCell(sAttributeName, ((Calendar) f.invoke(object)).getTime()));
+                        Calendar value = (Calendar) f.invoke(object);
+                        if (value != null)
+                            line.addCell(new DateCell(sAttributeName, value.getTime()));
                     } else if (returnType.isAssignableFrom(Integer.TYPE) || returnType.isAssignableFrom(Integer.class)) {
                         line.addCell(new IntegerCell(sAttributeName, (Integer) f.invoke(object)));
                     } else if (returnType.isAssignableFrom(Byte.TYPE) || returnType.isAssignableFrom(Byte.class)) {
@@ -109,8 +128,14 @@ public class JavaBuilder {
                     } else if (returnType.isAssignableFrom(BigInteger.class)) {
                         line.addCell(new BigDecimalCell(sAttributeName, (BigInteger) f.invoke(object)));
                     } else {
-                        logger.log(Level.FINE, "Skipped building cell - No the type " + returnType
-                                + " of attribute {1} in class {0} is not supported for assigning.", logInfo);
+                        Object subObject = f.invoke(object);
+                        if(subObject == null)
+                            continue;
+                        // We only want to avoid loops not multiple paths to same object.
+                        Set<Object> visitedClone = new HashSet<Object>(visited);
+                        visitedClone.add(object);
+                        // Recursively add sub classes.
+                        this.buildLine(line, subObject, sAttributeName, visitedClone);
                     }
                 }
             } catch (IllegalArgumentException e) {
@@ -118,37 +143,47 @@ public class JavaBuilder {
                         "Skipped building cell for attribute {1} of class {0} - Illegal argument in getter method.",
                         logInfo);
             } catch (IllegalAccessException e) {
-                logger
-                        .log(
-                                Level.INFO,
-                                "Skipped building cell for attribute {1} of class {0} - attibute getter does not have public access.",
-                                logInfo);
+                logger.log(Level.INFO,
+                           "Skipped building cell for attribute {1} of class {0} - attibute getter does not have public access.",
+                           logInfo);
             } catch (InvocationTargetException e) {
                 logger.log(Level.INFO,
                         "Skipped building cell for attribute {1} of class {0} - getter method fails to execute.",
                         logInfo);
             }
         }
-        return line;
     }
-    /*
-     * }
-     * 
-     * while (cellIter.hasNext()) { try { Cell cell = cellIter.next(); if (cell.getName() == null)
-     * continue; String sName = cell.getName(); if (sName != null && sName.length() > 0) { String
-     * sSetMethodName = "set" + sName.substring(0, 1).toUpperCase() + sName.substring(1,
-     * sName.length()); logInfo[1] = sSetMethodName; boolean isSet = false; for (Method f : methods)
-     * { if (f.getName().equals(sSetMethodName)) { f.invoke(objectToAssign, cell.getValue()); isSet
-     * = true; logger.finest("Assigned cell by calling {1} of {0}"); break; } } if (!isSet) {
-     * logger.log(Level.INFO, "Skipped assigning cell - No method called {1}() found in class {0}",
-     * logInfo); } } } catch (SecurityException e) { logInfo[2] = e; logger.log(Level.INFO,
-     * "Skipped assigning cell - The method {1}() in class {0} does not have public access. - {2}",
-     * logInfo); } catch (IllegalArgumentException e) { logInfo[2] = e; logger.log(Level.INFO,
-     * "Skipped assigning cell - The method {1}() in class {0} does accept correct type. - {2}",
-     * logInfo); } catch (IllegalAccessException e) { logInfo[2] = e; logger.log(Level.INFO,
-     * "Skipped assigning cell - The method {1}() in class {0} does not have correct access. - {2}",
-     * logInfo); } catch (InvocationTargetException e) { logInfo[2] = e; logger.log(Level.INFO,
-     * "Skipped assigning cell - The method {1}() in class {0} fails to execute. - {2}", logInfo); }
-     * } return objectToAssign; }
+
+    /**
+     * Creates the attribute name based on get method name.
+     * @param prefix
+     * @param sMethodName
+     * @return The attribute name that is built from the getter name.
      */
+    private String makeAttributeName(String prefix, String sMethodName) {
+        StringBuilder sb = new StringBuilder();
+        if (prefix != null) {
+            sb.append(prefix);
+            sb.append('.');
+        }
+        sb.append(sMethodName.substring(3, 4).toLowerCase());
+        sb.append(sMethodName.substring(4));
+        return sb.toString();
+    }
+
+    /**
+     * Sets maximum number of sub-objects that are read while storing a line object.
+     * @param maxSubLevels
+     */
+    public void setMaxSubLevels(int maxSubLevels) {
+        this.maxSubLevels = maxSubLevels;
+    }
+
+    /**
+     * @return The maximum number of sub-objects that are read while storing a line object.
+     */
+    public int getMaxSubLevels() {
+        return maxSubLevels;
+    }
+
 }

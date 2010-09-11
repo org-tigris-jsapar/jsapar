@@ -20,6 +20,7 @@ public class TestPerson {
     private int            streetNumber;
     private char           door;
     private TestPostAddress    address;
+    private TestPostAddress    workAddress;
     
     private java.util.Date birthTime;
 
@@ -147,12 +148,22 @@ public class TestPerson {
         return door;
     }
 
-	public void setAddress(TestPostAddress address) {
-		this.address = address;
-	}
+    public void setAddress(TestPostAddress address) {
+        this.address = address;
+        address.setOwner(this);
+    }
 
-	public TestPostAddress getAddress() {
-		return address;
-	}
+    public TestPostAddress getAddress() {
+        return address;
+    }
+
+    public void setWorkAddress(TestPostAddress workAddress) {
+        this.workAddress = workAddress;
+        address.setOwner(this);
+    }
+
+    public TestPostAddress getWorkAddress() {
+        return workAddress;
+    }
 
 }

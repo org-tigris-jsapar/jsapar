@@ -17,8 +17,8 @@ import org.jsapar.Line;
 import org.jsapar.TestPerson;
 import org.jsapar.TestPostAddress;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -103,16 +103,64 @@ public class JavaBuilderTest {
      * This is not yet implemented so this test should still fail.
      * @throws JSaParException
      */
-    @Ignore
     @Test
     public void testBuildLine_subClass() throws JSaParException {
         TestPerson person = new TestPerson();
+        person.setFirstName("Jonas");
         person.setAddress(new TestPostAddress("Stigen", "Staden"));
         JavaBuilder builder = new JavaBuilder();
         Line line = builder.buildLine(person);
         assertEquals("org.jsapar.TestPerson", line.getLineType());
         assertEquals("Stigen", line.getStringCellValue("address.street"));
         assertEquals("Staden", line.getStringCellValue("address.town"));
+        
+        // Make sure that loops are avoided.
+        Assert.assertNull(line.getStringCellValue("address.owner.firstName"));
+    }
+
+    /**
+     * Test method for {@link org.jsapar.input.JavaBuilder#buildLine(java.lang.Object)}.
+     * This is not yet implemented so this test should still fail.
+     * @throws JSaParException
+     */
+    @Test
+    public void testBuildLine_subClass_multiplePaths() throws JSaParException {
+        TestPerson person = new TestPerson();
+        person.setAddress(new TestPostAddress("Stigen", "Staden"));
+        person.getAddress().setSubAddress(new TestPostAddress("Road", "Town"));
+        person.setWorkAddress(new TestPostAddress("Gatan", "Byn"));
+        JavaBuilder builder = new JavaBuilder();
+        Line line = builder.buildLine(person);
+        assertEquals("org.jsapar.TestPerson", line.getLineType());
+        assertEquals("Stigen", line.getStringCellValue("address.street"));
+        assertEquals("Staden", line.getStringCellValue("address.town"));
+        assertEquals("Road", line.getStringCellValue("address.subAddress.street"));
+        assertEquals("Town", line.getStringCellValue("address.subAddress.town"));
+        assertEquals("Gatan", line.getStringCellValue("workAddress.street"));
+        assertEquals("Byn", line.getStringCellValue("workAddress.town"));
+    }
+
+    /**
+     * Test method for {@link org.jsapar.input.JavaBuilder#buildLine(java.lang.Object)}.
+     * This is not yet implemented so this test should still fail.
+     * @throws JSaParException
+     */
+    @Test
+    public void testBuildLine_subClass_maxOneLevel() throws JSaParException {
+        TestPerson person = new TestPerson();
+        person.setAddress(new TestPostAddress("Stigen", "Staden"));
+        person.getAddress().setSubAddress(new TestPostAddress("Road", "Town"));
+        person.setWorkAddress(new TestPostAddress("Gatan", "Byn"));
+        JavaBuilder builder = new JavaBuilder();
+        builder.setMaxSubLevels(1);
+        Line line = builder.buildLine(person);
+        assertEquals("org.jsapar.TestPerson", line.getLineType());
+        assertEquals("Stigen", line.getStringCellValue("address.street"));
+        assertEquals("Staden", line.getStringCellValue("address.town"));
+        Assert.assertNull(line.getStringCellValue("address.subAddress.street"));
+        Assert.assertNull(line.getStringCellValue("address.subAddress.town"));
+        assertEquals("Gatan", line.getStringCellValue("workAddress.street"));
+        assertEquals("Byn", line.getStringCellValue("workAddress.town"));
     }
     
 }
