@@ -28,9 +28,9 @@ public class JavaOutputter {
      * @param document
      * @return A list of Java objects.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public java.util.List createJavaObjects(Document document, List<CellParseError> parseErrors) {
-        java.util.List objects = new java.util.ArrayList(document.getNumberOfLines());
+        java.util.List<Object> objects = new java.util.ArrayList<Object>(document.getNumberOfLines());
         java.util.Iterator<Line> lineIter = document.getLineIterator();
         while (lineIter.hasNext()) {
             Line line = lineIter.next();
@@ -60,10 +60,9 @@ public class JavaOutputter {
      * @throws IllegalAccessException
      * @throws ClassNotFoundException
      */
-    @SuppressWarnings("unchecked")
     public Object createObject(Line line, List<CellParseError> parseErrors) throws InstantiationException,
             IllegalAccessException, ClassNotFoundException {
-        Class c = Class.forName(line.getLineType());
+        Class<?> c = Class.forName(line.getLineType());
         Object o = c.newInstance();
         return assign(line, o, parseErrors);
     }
@@ -216,11 +215,10 @@ public class JavaOutputter {
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
      */
-    @SuppressWarnings("unchecked")
     private <T> boolean assignParameterBySignature(T objectToAssign, String sSetMethodName, Cell cell)
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         try {
-            Class type = cell.getValue().getClass();
+            Class<?> type = cell.getValue().getClass();
             Method f = objectToAssign.getClass().getMethod(sSetMethodName, type);
             f.invoke(objectToAssign, cell.getValue());
             return true;
@@ -244,7 +242,6 @@ public class JavaOutputter {
      * @throws IllegalArgumentException
      * @throws InvocationTargetException
      */
-    @SuppressWarnings("unchecked")
     private <T> boolean assignParameterByName(T objectToAssign,
                                               String sSetMethodName,
                                               Cell cell,
@@ -254,7 +251,7 @@ public class JavaOutputter {
         try {
             Method[] methods = objectToAssign.getClass().getMethods();
             for (Method f : methods) {
-                Class[] paramTypes = f.getParameterTypes();
+                Class<?>[] paramTypes = f.getParameterTypes();
                 if (paramTypes.length != 1 || !f.getName().equals(sSetMethodName))
                     continue;
 
