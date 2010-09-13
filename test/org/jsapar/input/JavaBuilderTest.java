@@ -100,7 +100,6 @@ public class JavaBuilderTest {
 
     /**
      * Test method for {@link org.jsapar.input.JavaBuilder#buildLine(java.lang.Object)}.
-     * This is not yet implemented so this test should still fail.
      * @throws JSaParException
      */
     @Test
@@ -120,7 +119,6 @@ public class JavaBuilderTest {
 
     /**
      * Test method for {@link org.jsapar.input.JavaBuilder#buildLine(java.lang.Object)}.
-     * This is not yet implemented so this test should still fail.
      * @throws JSaParException
      */
     @Test
@@ -142,7 +140,6 @@ public class JavaBuilderTest {
 
     /**
      * Test method for {@link org.jsapar.input.JavaBuilder#buildLine(java.lang.Object)}.
-     * This is not yet implemented so this test should still fail.
      * @throws JSaParException
      */
     @Test

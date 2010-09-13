@@ -11,6 +11,8 @@
       <cell name="luckyNumber" default="17" ><format type="integer"/></cell>
       <cell name="birthTime" > <format type="date" pattern="yyyy-MM-dd HH:mm"/></cell>
       <cell name="door" > <format type="character"/></cell>
+      <cell name="address.street" />
+      <cell name="address.town" />
     </line>
   </csvschema>
 </schema>

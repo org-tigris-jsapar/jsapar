@@ -1,6 +1,7 @@
 package org.jsapar.output;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.text.ParseException;
@@ -128,17 +129,16 @@ public class JavaOutputterTest {
     }
 
     /**
-     * This feature is not yet implemented so it is still expected to fail.
      * @throws JSaParException
      */
     @SuppressWarnings("unchecked")
     @Test
-    @Ignore
     public final void testCreateJavaObjects_subclass() throws JSaParException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TestPerson");
         line1.addCell(new StringCell("address.street", "Stigen"));
         line1.addCell(new StringCell("address.town", "Staden"));
+        line1.addCell(new StringCell("address.subAddress.town", "By"));
         
 
         document.addLine(line1);
@@ -148,8 +148,36 @@ public class JavaOutputterTest {
         java.util.List<TestPerson> objects = outputter.createJavaObjects(document, parseErrors);
         assertEquals("The errors: " + parseErrors, 0, parseErrors.size());
         assertEquals(1, objects.size());
+        assertNotNull((objects.get(0)).getAddress());
         assertEquals("Stigen", (objects.get(0)).getAddress().getStreet());
         assertEquals("Staden", (objects.get(0)).getAddress().getTown());
+        assertEquals("By", (objects.get(0)).getAddress().getSubAddress().getTown());
+    }
+
+    /**
+     * @throws JSaParException
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public final void testCreateJavaObjects_subclass_error() throws JSaParException {
+        Document document = new Document();
+        Line line1 = new Line("org.jsapar.TestPerson");
+        line1.addCell(new StringCell("address.doNotExist", "Stigen"));
+        line1.addCell(new StringCell("address.town", "Staden"));
+        line1.addCell(new StringCell("address.subAddress.town", "By"));
+        
+
+        document.addLine(line1);
+
+        JavaOutputter outputter = new JavaOutputter();
+        List<CellParseError> parseErrors = new LinkedList<CellParseError>();
+        java.util.List<TestPerson> objects = outputter.createJavaObjects(document, parseErrors);
+        assertEquals("The errors: " + parseErrors, 1, parseErrors.size());
+        assertEquals(1, objects.size());
+        assertNotNull((objects.get(0)).getAddress());
+        assertEquals("Staden", (objects.get(0)).getAddress().getTown());
+        assertEquals("By", (objects.get(0)).getAddress().getSubAddress().getTown());
+        System.out.println("The (expected) error: " + parseErrors);
     }
     
     @Test
