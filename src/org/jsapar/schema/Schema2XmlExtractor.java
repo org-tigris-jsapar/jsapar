@@ -55,9 +55,10 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     /**
      * Generates a schema from a xml file.
      * 
-     * @param reader
-     *            - A reader linked to the xml file.
-     * @return The file parser schema.
+     * @param writer
+     *            The writer to write to.
+     * @param schema
+     *            The schema to extract.
      * @throws SchemaException
      */
     public void extractXml(java.io.Writer writer, Schema schema) throws SchemaException {

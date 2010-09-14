@@ -73,7 +73,7 @@ public class Converter {
      * @param reader
      * @param writer
      * @param outputter
-     * @return
+     * @return A list of errors that occurred during conversion.
      * @throws IOException
      * @throws JSaParException
      */

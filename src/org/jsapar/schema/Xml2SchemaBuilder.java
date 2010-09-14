@@ -589,7 +589,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     
     /**
      * Utility function for loading a schema from an xml file.
-     * @param fileName
+     * @param file
      * @return A newly created schema from the xml file.
      * @throws SchemaException
      * @throws IOException

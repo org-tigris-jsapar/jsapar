@@ -36,8 +36,6 @@ public class JavaBuilder {
 
     private int maxSubLevels = 100;
     /**
-     * @param <T>
-     *            Type of the object of which the document will be built.
      * @param objects
      *            The collection of objects to use when building the document.
      * @return A document containing a collection of lines which represents the list of objects

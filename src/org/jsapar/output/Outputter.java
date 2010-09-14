@@ -91,7 +91,7 @@ public class Outputter {
      * the schema.
      * 
      * @param line
-     * @param schemaLine
+     * @param lineType
      * @param writer
      * @throws JSaParException
      */

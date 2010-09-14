@@ -93,7 +93,6 @@ public class ConverterMain {
      *            The properties to be filled with arguments.
      * @param args
      *            The arguments.
-     * @return
      */
     protected void readArgs(Properties properties, String[] args) {
         for (int i = 0; i < args.length; i++) {

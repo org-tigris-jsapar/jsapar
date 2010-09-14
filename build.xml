@@ -167,7 +167,7 @@ Svn branch root : ${svn.branch.url}
 	<target name="build" depends="init-build-local, banner, init" description="Builds current version">
 		<delete dir="${build.dir}" />
 		<mkdir dir="${build.dir}" />
-		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" target="${target.java.version}"/>
+		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" target="${target.java.version}" includeantruntime="false"/>
 	</target>
 
 	<!--==================================

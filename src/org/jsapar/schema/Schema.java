@@ -16,7 +16,8 @@ import org.jsapar.input.ParsingEventListener;
  * parsed or how the lines of a Document should be written. Usually the parse and output methods are
  * called from one of the in, out or io classes.
  * 
- * @see Xml2SchemaBuilder, Schema2XmlExtractor
+ * @see Xml2SchemaBuilder
+ * @see Schema2XmlExtractor
  * 
  * @author Jonas
  * 
@@ -182,7 +183,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
     }
 
     /**
-     * @param sLineType
+     * @param lineType
      * @return The schema line with the supplied line type name. Null if no such schema line was
      *         found.
      */
@@ -218,7 +219,6 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * found in this schema.
      * 
      * @param line
-     * @param lineNumber
      * @param writer
      * @throws IOException
      * @throws JSaParException

@@ -28,7 +28,9 @@ import org.jsapar.output.JavaOutputter;
  * on the other hand are slightly easier to use and understand.<br>
  * <br>
  * 
- * @see Outputter, Converter, FilterConverter
+ * @see org.jsapar.output.Outputter
+ * @see org.jsapar.io.Converter
+ * @see org.jsapar.io.FilterConverter
  * @author stejon0
  * 
  */
