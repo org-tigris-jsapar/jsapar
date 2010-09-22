@@ -11,15 +11,15 @@ import org.jsapar.schema.SchemaCellFormat;
  * 
  * @author Jonas Stenberg
  */
-public class CellParseError {
+public final class CellParseError {
 
-    long lineNumber = 0;
+    private final long lineNumber;
     // long cellIndex=0;
-    String cellName = null;
-    String cellValue = null;
-    SchemaCellFormat cellFormat = null;
-    String errorDescription = null;
-    private Throwable exception;
+    private final String cellName;
+    private final String cellValue;
+    private final SchemaCellFormat cellFormat;
+    private final String errorDescription;
+    private final Throwable exception;
 
     /**
      * @param lineNumber
@@ -35,6 +35,7 @@ public class CellParseError {
 	this.cellValue = cellValue;
 	this.cellFormat = cellFormat;
 	this.errorDescription = errorDescription;
+	this.exception = null;
     }
 
     /**
@@ -50,6 +51,7 @@ public class CellParseError {
 	this.cellValue = cellValue;
 	this.cellFormat = cellFormat;
 	this.errorDescription = errorDescription;
+        this.exception = null;
     }
 
     /**
@@ -66,7 +68,21 @@ public class CellParseError {
         this.cellValue = cellValue;
         this.cellFormat = cellFormat;
         this.errorDescription = errorDescription;
-        this.setException(e);
+        this.exception = e;
+    }
+
+    /**
+     * Constructs a new cell parse error containing a copy of supplied error but assigning a new line number.
+     * @param lineNumber
+     * @param error
+     */
+    public CellParseError(long lineNumber, CellParseError error) {
+        this.lineNumber = lineNumber;
+        this.cellName = error.cellName;
+        this.cellValue = error.cellValue;
+        this.cellFormat = error.cellFormat;
+        this.errorDescription = error.errorDescription;
+        this.exception = error.exception;
     }
 
     /**
@@ -76,13 +92,6 @@ public class CellParseError {
 	return lineNumber;
     }
 
-    /**
-     * @param lineNumber
-     *                the lineNumber to set
-     */
-    public void setLineNumber(long lineNumber) {
-	this.lineNumber = lineNumber;
-    }
 
     /**
      * @return the cellName
@@ -91,13 +100,6 @@ public class CellParseError {
 	return cellName;
     }
 
-    /**
-     * @param cellName
-     *                the cellName to set
-     */
-    public void setCellName(String cellName) {
-	this.cellName = cellName;
-    }
 
     /**
      * @return the cellValue
@@ -106,13 +108,6 @@ public class CellParseError {
 	return cellValue;
     }
 
-    /**
-     * @param cellValue
-     *                the cellValue to set
-     */
-    public void setCellValue(String cellValue) {
-	this.cellValue = cellValue;
-    }
 
     /**
      * @return the cellFormat
@@ -121,13 +116,6 @@ public class CellParseError {
 	return cellFormat;
     }
 
-    /**
-     * @param cellFormat
-     *                the cellFormat to set
-     */
-    public void setCellFormat(SchemaCellFormat cellFormat) {
-	this.cellFormat = cellFormat;
-    }
 
     /**
      * @return the errorDescription
@@ -136,13 +124,6 @@ public class CellParseError {
 	return errorDescription;
     }
 
-    /**
-     * @param errorDescription
-     *                the errorDescription to set
-     */
-    public void setErrorDescription(String errorDescription) {
-	this.errorDescription = errorDescription;
-    }
 
     /*
      * (non-Javadoc)
@@ -177,9 +158,6 @@ public class CellParseError {
 	return sb.toString();
     }
 
-    public void setException(Throwable exception) {
-        this.exception = exception;
-    }
 
     public Throwable getException() {
         return exception;

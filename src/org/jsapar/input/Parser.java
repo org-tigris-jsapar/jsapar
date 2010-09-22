@@ -301,25 +301,24 @@ public class Parser implements ParsingEventListener {
                 @Override
                 public void lineParsedEvent(LineParsedEvent event) {
                     List<CellParseError> currentParseErrors = new LinkedList<CellParseError>();
-                        try {
-                            objects.add(outputter.createObject(event.getLine(), currentParseErrors));
-                        } catch (InstantiationException e) {
-                            currentParseErrors.add(new CellParseError(event.getLineNumber(), "", "", null,
-                                    "Failed to instantiate object. Skipped creating object - " + e));
-                        } catch (IllegalAccessException e) {
-                            currentParseErrors.add(new CellParseError(event.getLineNumber(), "", "", null,
-                                    "Failed to call set method. Skipped creating object - " + e));
-                        } catch (ClassNotFoundException e) {
-                            currentParseErrors.add(new CellParseError(event.getLineNumber(), "", "", null,
-                                    "Class not found. Skipped creating object - " + e));
-                        } catch (Throwable e) {
-                            currentParseErrors.add(new CellParseError(event.getLineNumber(), "", "", null,
-                                    "Skipped creating object - " + e.getMessage(), e));
-                        }
-                    for (CellParseError parseError : currentParseErrors) {
-                        parseError.setLineNumber(event.getLineNumber());
+                    try {
+                        objects.add(outputter.createObject(event.getLine(), currentParseErrors));
+                    } catch (InstantiationException e) {
+                        currentParseErrors.add(new CellParseError(event.getLineNumber(), "", "", null,
+                                "Failed to instantiate object. Skipped creating object - " + e));
+                    } catch (IllegalAccessException e) {
+                        currentParseErrors.add(new CellParseError(event.getLineNumber(), "", "", null,
+                                "Failed to call set method. Skipped creating object - " + e));
+                    } catch (ClassNotFoundException e) {
+                        currentParseErrors.add(new CellParseError(event.getLineNumber(), "", "", null,
+                                "Class not found. Skipped creating object - " + e));
+                    } catch (Throwable e) {
+                        currentParseErrors.add(new CellParseError(event.getLineNumber(), "", "", null,
+                                "Skipped creating object - " + e.getMessage(), e));
                     }
-                    parseErrors.addAll(currentParseErrors);
+                    for (CellParseError parseError : currentParseErrors) {
+                        parseErrors.add(new CellParseError(event.getLineNumber(), parseError));
+                    }
                 }
             });
 

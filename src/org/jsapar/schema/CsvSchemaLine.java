@@ -10,6 +10,7 @@ import org.jsapar.Cell;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
+import org.jsapar.input.CellParseError;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
@@ -105,8 +106,9 @@ public class CsvSchemaLine extends SchemaLine {
                 try {
                     cell = schemaCell.makeCell(sCell, listener, nLineNumber);
                 } catch (ParseException e) {
-                    e.getCellParseError().setLineNumber(nLineNumber);
-                    listener.lineErrorEvent(new LineErrorEvent(this, e.getCellParseError()));
+                    CellParseError cellParseError  = e.getCellParseError();
+                    cellParseError = new CellParseError(nLineNumber, cellParseError);
+                    listener.lineErrorEvent(new LineErrorEvent(this, cellParseError));
                 }
             } else {
                 cell = new StringCell(sCell);

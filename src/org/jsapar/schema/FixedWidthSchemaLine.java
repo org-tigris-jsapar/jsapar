@@ -8,6 +8,7 @@ import java.util.Iterator;
 import org.jsapar.Cell;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
+import org.jsapar.input.CellParseError;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
@@ -145,9 +146,10 @@ public class FixedWidthSchemaLine extends SchemaLine {
 
                     oneRead = true;
                     line.addCell(cell);
-                } catch (ParseException pe) {
-                    pe.getCellParseError().setLineNumber(nLineNumber);
-                    listener.lineErrorEvent(new LineErrorEvent(this, pe.getCellParseError()));
+                } catch (ParseException e) {
+                    CellParseError cellParseError = e.getCellParseError();
+                    cellParseError = new CellParseError(nLineNumber, cellParseError);
+                    listener.lineErrorEvent(new LineErrorEvent(this, cellParseError));
                 }
             }
         }
