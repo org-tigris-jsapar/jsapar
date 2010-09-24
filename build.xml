@@ -157,8 +157,9 @@ Svn branch root : ${svn.branch.url}
 	== Initialise build
 	==================================-->
 	<target name="init-build-local" depends="banner" unless="src.dir">
-		<property name="src.dir" value="${project.basedir}/src" />
-		<property name="test.src.dir" value="${project.basedir}/test" />
+		<property name="src.dir" value="${project.basedir}/src/main/java" />
+		<property name="resources.dir" value="${project.basedir}/src/main/resources" />
+		<property name="test.src.dir" value="${project.basedir}/test/main/java" />
 	</target>
 
 	<!--==================================
@@ -176,7 +177,7 @@ Svn branch root : ${svn.branch.url}
 	<target name="dist" depends="build, javadocs, init-dist" description="Creates distribution of current version">
 		<filter token="BUILD_NUMBER" value="${dist.build.number}" />
 		<copy todir="${dist.dir}">
-			<fileset dir="${basedir}/resources">
+			<fileset dir="${resources.dir}">
 				<include name="xml/schema/*.xsd"/>
 			</fileset>
 			<fileset dir="${basedir}">
@@ -207,7 +208,7 @@ Svn branch root : ${svn.branch.url}
 			<fileset dir="${build.dir}">
 				<include name="**/*.class"/>
 			</fileset>
-			<fileset dir="${basedir}/resources">
+			<fileset dir="${resources.dir}">
 				<include name="xml/schema/*.xsd"/>
 			</fileset>
 		</jar>
@@ -274,7 +275,7 @@ Svn branch root : ${svn.branch.url}
 				<path refid="build.classpath"/>
 				<pathelement location="${test.build.dir}"/>
 				<pathelement location="${build.dir}"/>
-				<pathelement location="resources"/>
+				<pathelement location="${resources.dir}"/>
 			</classpath>
 
 			<batchtest todir="${test.report.dir}">
