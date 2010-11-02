@@ -98,38 +98,64 @@ public class CsvSchemaLine extends SchemaLine {
         String[] asCells = this.split(sLine);
         java.util.Iterator<CsvSchemaCell> itSchemaCell = getSchemaCells().iterator();
         for (String sCell : asCells) {
-            Cell cell = null;
             if (itSchemaCell.hasNext()) {
                 CsvSchemaCell schemaCell = itSchemaCell.next();
-                if (schemaCell.isIgnoreRead())
-                    continue;
-                try {
-                    cell = schemaCell.makeCell(sCell, listener, nLineNumber);
-                } catch (ParseException e) {
-                    CellParseError cellParseError  = e.getCellParseError();
-                    cellParseError = new CellParseError(nLineNumber, cellParseError);
-                    listener.lineErrorEvent(new LineErrorEvent(this, cellParseError));
-                }
+                addCellBySchema(line, schemaCell, sCell, listener, nLineNumber);
             } else {
-                cell = new StringCell(sCell);
+                addCellWithoutSchema(line, sCell);
             }
             // If no parse error occurred, add the cell to the line.
-            if (cell != null)
-                line.addCell(cell);
         }
         if (line.getNumberOfCells() <= 0)
             return false;
 
-        // We have to fill all the default values for remaining cells.
+        // We have to fill all the default values and mandatory items for remaining cells.
         while(itSchemaCell.hasNext()){
             CsvSchemaCell schemaCell = itSchemaCell.next();
-            if(schemaCell.getDefaultCell() != null){
-                line.addCell(schemaCell.makeCell(EMPTY_STRING, listener, nLineNumber));
-            }
+            addCellBySchema(line, schemaCell, EMPTY_STRING, listener, nLineNumber);
         }
 
         listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
         return true;
+    }
+
+    /**
+     * @param sCell
+     * @return
+     * @throws JSaParException 
+     */
+    private void addCellWithoutSchema(Line line, String sCell) throws JSaParException {
+        Cell cell;
+        cell = new StringCell(sCell);
+        line.addCell(cell);
+    }
+
+    /**
+     * @param schemaCell
+     * @param sCell
+     * @param listener
+     * @param nLineNumber
+     * @param cell
+     * @return
+     * @throws JSaParException 
+     */
+    private void addCellBySchema(Line line,
+                         CsvSchemaCell schemaCell,
+                          String sCell,
+                          ParsingEventListener listener,
+                          long nLineNumber) throws JSaParException {
+        if (schemaCell.isIgnoreRead())
+            return;
+        
+        try {
+            Cell cell= schemaCell.makeCell(sCell, listener, nLineNumber);
+            if(cell != null)
+                line.addCell(cell);
+        } catch (ParseException e) {
+            CellParseError cellParseError  = e.getCellParseError();
+            cellParseError = new CellParseError(nLineNumber, cellParseError);
+            listener.lineErrorEvent(new LineErrorEvent(this, cellParseError));
+        }
     }
 
     /**

@@ -338,6 +338,34 @@ public class CSVSchemaLineTest  {
 
     }
     
+    @Test(expected=ParseException.class)
+    public void testBuild_withMandatoryLast() throws JSaParException {
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setCellSeparator(";-)");
+        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+        CsvSchemaCell happyCell = new CsvSchemaCell("Happy");
+        happyCell.setMandatory(true);
+        schemaLine.addSchemaCell(happyCell);
+
+        String sLine = "Jonas;-)Stenberg";
+        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+                throw new ParseException(event.getCellParseError());
+            }
+
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+                fail("Expects an error");
+            }
+        });
+        fail("Expects an error");
+
+    }
+    
+    
     @Test
     public void testOutput() throws IOException, JSaParException {
 
