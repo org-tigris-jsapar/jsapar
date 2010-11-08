@@ -90,12 +90,15 @@ public class CsvSchemaLine extends SchemaLine {
     @Override
     boolean parse(long nLineNumber, String sLine, ParsingEventListener listener) throws JSaParException {
 
-        if (sLine.length() <= 0)
-            return handleEmptyLine(nLineNumber, listener);
-
         Line line = new Line(getLineType(), (getSchemaCells().size() > 0) ? getSchemaCells().size() : 10);
 
         String[] asCells = this.split(sLine);
+        
+        // Empty lines are not common. Only test for empty line if there are no more than one cell
+        // after a split.
+        if (asCells.length <= 1 && sLine.trim().isEmpty())
+            return handleEmptyLine(nLineNumber, listener);
+
         java.util.Iterator<CsvSchemaCell> itSchemaCell = getSchemaCells().iterator();
         for (String sCell : asCells) {
             if (itSchemaCell.hasNext()) {
@@ -164,9 +167,6 @@ public class CsvSchemaLine extends SchemaLine {
      * @throws ParseException
      */
     String[] split(String sLine) throws ParseException {
-        if (getQuoteChar() != 0)
-            quoteChar = getQuoteChar();
-
         if (quoteChar == 0)
             return sLine.split(Pattern.quote(getCellSeparator()));
 
