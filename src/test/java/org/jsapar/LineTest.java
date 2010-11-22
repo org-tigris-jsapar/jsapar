@@ -93,6 +93,15 @@ public class LineTest {
         assertEquals("Svensson", line.getCell("LastName").getStringValue());
     }
 
+    @Test(expected = JSaParException.class)
+    public void testAddCellCellInt_twice() throws JSaParException {
+        Line line = new Line("TestLine");
+        line.addCell(new StringCell("FirstName", "Nils"), 0);
+        line.addCell(new StringCell("FirstName", "Svensson"), 0);
+        fail("Should throw exception for duplicate cell names.");
+    }
+
+    
     @Test
     public void testReplaceCell() throws JSaParException {
         Line line = new Line("TestLine");

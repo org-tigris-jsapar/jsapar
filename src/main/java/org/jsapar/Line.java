@@ -18,17 +18,17 @@ public class Line implements Serializable {
     /**
      * 
      */
-    private static final long               serialVersionUID = 6026541900371948402L;
-    public static final String             EMPTY            = "";
+    private static final long serialVersionUID = 6026541900371948402L;
+    public static final String EMPTY = "";
 
-    private java.util.ArrayList<Cell>       cellsByIndex     = null;
+    private java.util.ArrayList<Cell> cellsByIndex = null;
 
-    private java.util.HashMap<String, Cell> cellsByName      = null;
+    private java.util.HashMap<String, Cell> cellsByName = null;
 
     /**
      * Line type.
      */
-    private String                          lineType         = EMPTY;
+    private String lineType = EMPTY;
 
     /**
      * Creates an empty line without any cells.
@@ -200,11 +200,17 @@ public class Line implements Serializable {
      *            The cell to add
      * @param index
      *            The index the cell will have in the line.
+     * @throws JSaParException 
      */
-    public void addCell(Cell cell, int index) {
+    public void addCell(Cell cell, int index) throws JSaParException {
+        if (cell.getName() != null) {
+            Cell oldCell = this.cellsByName.put(cell.getName(), cell);
+            if (oldCell != null)
+                throw new JSaParException("A cell with the name '" + cell.getName()
+                        + "' already exists. Failed to add cell.");
+
+        }
         this.cellsByIndex.add(index, cell);
-        if (cell.getName() != null)
-            this.cellsByName.put(cell.getName(), cell);
     }
 
     /**
@@ -310,12 +316,12 @@ public class Line implements Serializable {
         sb.append(this.cellsByIndex);
         return sb.toString();
     }
-    
+
     /**
      * @param cellName
      * @return True if there is a cell with the specified name, false otherwise.
      */
-    boolean isCell(String cellName){
+    boolean isCell(String cellName) {
         return this.getCell(cellName) != null ? true : false;
     }
 
@@ -357,7 +363,7 @@ public class Line implements Serializable {
     public void setCellValue(String cellName, long value) {
         this.replaceCell(new IntegerCell(cellName, value));
     }
-    
+
     /**
      * Utility function that adds a cell with the specified name and value to the end of the line or
      * replaces an existing cell if there already is one with the same name.
@@ -370,7 +376,7 @@ public class Line implements Serializable {
     public void setCellValue(String cellName, double value) {
         this.replaceCell(new FloatCell(cellName, value));
     }
-    
+
     /**
      * Utility function that gets the string cell value of the specified cell.
      * 
@@ -385,7 +391,8 @@ public class Line implements Serializable {
     /**
      * @param cellName
      * @return The cell with the specified name.
-     * @throws JSaParException if the cell does not exist.
+     * @throws JSaParException
+     *             if the cell does not exist.
      */
     private Cell getExistingCell(String cellName) throws JSaParException {
         Cell cell = this.getCell(cellName);
@@ -397,7 +404,8 @@ public class Line implements Serializable {
     /**
      * Utility function that gets the integer cell value of the specified cell. If the specified
      * cell does not exist, a JSaparException is thrown. Tries to parse an integer value if cell is
-     * not of type IntegerCell. Throws a NumberFormatException if the value is not a parable integer.
+     * not of type IntegerCell. Throws a NumberFormatException if the value is not a parable
+     * integer.
      * 
      * @param cellName
      * @return The integer value of the cell with the specified name.
@@ -414,11 +422,10 @@ public class Line implements Serializable {
         return Integer.parseInt(cell.getStringValue());
     }
 
-    
     /**
-     * Utility function that gets the double cell value of the specified cell. If the specified
-     * cell does not exist, a JSaparException is thrown. Tries to parse a double value if cell is
-     * not of type IntegerCell. Throws a NumberFormatException if the value is not a parable double.
+     * Utility function that gets the double cell value of the specified cell. If the specified cell
+     * does not exist, a JSaparException is thrown. Tries to parse a double value if cell is not of
+     * type IntegerCell. Throws a NumberFormatException if the value is not a parable double.
      * 
      * @param cellName
      * @return The double value of the cell with the specified name.
@@ -437,34 +444,33 @@ public class Line implements Serializable {
 
     /**
      * @param cellName
-     * @return true if the cell with the specified name contains a value. 
+     * @return true if the cell with the specified name contains a value.
      */
     public boolean isCellSet(String cellName) {
         Cell cell = getCell(cellName);
-        if(cell == null)
+        if (cell == null)
             return false;
-        
-        if(cell instanceof EmptyCell)
+
+        if (cell instanceof EmptyCell)
             return false;
-        
+
         return true;
     }
 
     /**
      * @param cellName
      * @param type
-     * @return true if the cell with the specified name contains a value of the specified type. 
+     * @return true if the cell with the specified name contains a value of the specified type.
      */
     public boolean isCellSet(String cellName, CellType type) {
         Cell cell = getCell(cellName);
-        if(cell == null)
+        if (cell == null)
             return false;
-        
-        if(cell instanceof EmptyCell)
+
+        if (cell instanceof EmptyCell)
             return false;
-        
+
         return cell.getCellType().equals(type);
     }
 
-    
 }
