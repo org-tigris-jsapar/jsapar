@@ -103,7 +103,7 @@ public class CSVSchemaTest {
         CsvSchema schema = new CsvSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine();
         schema.addSchemaLine(schemaLine);
-        String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator") + "    " + System.getProperty("line.separator") + "Nils;Nilsson";
+        String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator") + " \t \t  " + System.getProperty("line.separator") + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
         DocumentBuilder builder = new DocumentBuilder();
         Document doc = builder.build(reader, schema);
