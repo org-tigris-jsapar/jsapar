@@ -87,8 +87,42 @@ public class Outputter {
     }
 
     /**
+     * Writes the single line to a {@link java.io.Writer} according to the line type of the line.
+     * The line is terminated by the line separator.
+     * 
+     * @param line
+     * @param lineType
+     * @param writer
+     * @throws JSaParException
+     */
+    public void outputLineLn(Line line, java.io.Writer writer) throws JSaParException {
+        try {
+            SchemaLine schemaLine = schema.getSchemaLine(line.getLineType());
+            if (schemaLine == null)
+                throw new OutputException("Line type [" + line.getLineType() + "] not found within schema ");
+            schemaLine.output(line, writer);
+            writer.write(schema.getLineSeparator());
+        } catch (IOException e) {
+            throw new OutputException("Failed to write to buffert.", e);
+        }
+    }
+
+    /**
+     * Writes the single line to a {@link java.io.Writer} according to the line type of the supplied
+     * line. Note that the line separator is not written by this method.
+     * 
+     * @param line
+     * @param lineType
+     * @param writer
+     * @throws JSaParException
+     */
+    public void outputLine(Line line, java.io.Writer writer) throws JSaParException {
+        outputLine(line, line.getLineType(), writer);
+    }
+
+    /**
      * Writes the single line to a {@link java.io.Writer} according to the supplied line type within
-     * the schema.
+     * the schema. Note that the line separator is not written by this method.
      * 
      * @param line
      * @param lineType
