@@ -621,7 +621,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
             IOException {
         if (resourceBaseClass == null)
             resourceBaseClass = Xml2SchemaBuilder.class;
-        InputStream is = resourceBaseClass.getResourceAsStream("ixformatter_inputschema.xml");
+        InputStream is = resourceBaseClass.getResourceAsStream(resourceName);
         if (is == null)
             throw new SchemaException("Failed to load resource [" + resourceName + "] from class "
                     + resourceBaseClass.getName());
