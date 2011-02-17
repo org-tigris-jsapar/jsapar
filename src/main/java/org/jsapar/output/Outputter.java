@@ -91,7 +91,6 @@ public class Outputter {
      * The line is terminated by the line separator.
      * 
      * @param line
-     * @param lineType
      * @param writer
      * @throws JSaParException
      */
@@ -112,7 +111,6 @@ public class Outputter {
      * line. Note that the line separator is not written by this method.
      * 
      * @param line
-     * @param lineType
      * @param writer
      * @throws JSaParException
      */
