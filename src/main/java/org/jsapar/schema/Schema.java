@@ -103,8 +103,9 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @param reader
      * @return The line as a string or null if end of buffer was encountered.
      * @throws IOException
+     * @throws JSaParException 
      */
-    protected String parseLine(java.io.Reader reader) throws IOException {
+    protected String parseLine(java.io.Reader reader) throws IOException, JSaParException {
         char chLineSeparatorNext = getLineSeparator().charAt(0);
         StringBuilder lineBuilder = new StringBuilder();
         StringBuilder pending = new StringBuilder();
@@ -133,6 +134,8 @@ public abstract class Schema implements Cloneable, ParseSchema {
                 lineBuilder.append(chRead);
             } else
                 lineBuilder.append(chRead);
+            if(lineBuilder.length() > 1000000)
+                throw new JSaParException("Line size exceeds 1M characters. Probably wrong line-separator for the line type within the schema.");
         }
         return lineBuilder.toString();
     }

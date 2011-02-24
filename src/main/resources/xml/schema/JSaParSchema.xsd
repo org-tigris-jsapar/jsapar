@@ -73,8 +73,7 @@ Default is true.</xsd:documentation>
   			type="CellValueRange">
   			<xsd:annotation>
   				<xsd:documentation>
-  					Not used in current version!! Specifies a valid
-  					range for the cell value.
+  					Specifies a valid	range for the cell value.
   				</xsd:documentation>
   			</xsd:annotation>
   		</xsd:element>
@@ -345,9 +344,7 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
   </xsd:complexType>
   <xsd:complexType name="CellValueRange">
     <xsd:annotation>
-      <xsd:documentation>Not used yet!!
-
-Contains a range for a cell value. The format of the min and max attribute are the same as for the parsing of the cell values.</xsd:documentation>
+      <xsd:documentation>Contains a range for a cell value. The format of the min and max attribute are the same as for the parsing of the cell values.</xsd:documentation>
     </xsd:annotation>
     <xsd:attribute name="min" type="xsd:string" use="optional">
       <xsd:annotation>
