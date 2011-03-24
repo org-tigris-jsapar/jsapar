@@ -21,14 +21,6 @@ public class CSVSchemaLineTest  {
 
     boolean foundError=false;
     
-    private class NullParsingEventListener implements ParsingEventListener {
-	public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-	}
-
-	public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
-	}
-    }
-
     @Test
     public final void testCSVSchemaLine()  {
         CsvSchemaLine schemaLine = new CsvSchemaLine();
@@ -90,7 +82,7 @@ public class CSVSchemaLineTest  {
     public void testBuild_quoted() throws JSaParException {
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schemaLine.setQuoteChar('\"');
-	String sLine = "Jonas;Stenberg;\"Hemvägen ;19\";111 22;Stockholm";
+	String sLine = "Jonas;Stenberg;\"Hemvägen ;19\";\"111 22\";Stockholm";
 	boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
 
 	    @Override
@@ -165,27 +157,50 @@ public class CSVSchemaLineTest  {
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schemaLine.setQuoteChar('\"');
 	String sLine = "Jonas;Stenberg;\"Hemvägen ;19;111 22;Stockholm";
-	try {
-	    @SuppressWarnings("unused")
-	    boolean rc = schemaLine.parse(1, sLine, new NullParsingEventListener());
-	} catch (ParseException e) {
-	    return;
-	}
-	fail("Should throw ParseException for missing end quote");
+        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            }
+
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+                Line line = event.getLine();
+                assertEquals(6, line.getNumberOfCells());
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Stenberg", line.getCell(1).getStringValue());
+                assertEquals("\"Hemvägen ", line.getCell(2).getStringValue());
+                assertEquals("19", line.getCell(3).getStringValue());
+            }
+        });
+
+        assertEquals(true, rc);
     }
 
     @Test
     public void testBuild_quoted_miss_placed_start() throws JSaParException {
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schemaLine.setQuoteChar('\"');
-	String sLine = "Jonas;Stenberg;H\"emvägen ;19\";111 22;Stockholm";
-	try {
-	    @SuppressWarnings("unused")
-	    boolean rc = schemaLine.parse(1, sLine, new NullParsingEventListener());
-	} catch (ParseException e) {
-	    return;
-	}
-	fail("Should throw ParseException for miss-placed quote");
+	String sLine = "Jonas;Stenberg;H\"emvägen ;19;111 22;\"Stoc\"kholm\"";
+        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            }
+
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+                Line line = event.getLine();
+                assertEquals(6, line.getNumberOfCells());
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Stenberg", line.getCell(1).getStringValue());
+                assertEquals("H\"emvägen ", line.getCell(2).getStringValue());
+                assertEquals("19", line.getCell(3).getStringValue());
+                assertEquals("Stoc\"kholm", line.getCell(5).getStringValue());
+            }
+        });
+
+        assertEquals(true, rc);
     }
 
     @Test
@@ -193,13 +208,25 @@ public class CSVSchemaLineTest  {
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schemaLine.setQuoteChar('\"');
 	String sLine = "Jonas;Stenberg;\"Hemvägen ;1\"9;111 22;Stockholm";
-	try {
-	    @SuppressWarnings("unused")
-	    boolean rc = schemaLine.parse(1, sLine, new NullParsingEventListener());
-	} catch (ParseException e) {
-	    return;
-	}
-	fail("Should throw ParseException for miss-placed quote");
+        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            }
+
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+                Line line = event.getLine();
+                assertEquals(6, line.getNumberOfCells());
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Stenberg", line.getCell(1).getStringValue());
+                assertEquals("\"Hemvägen ", line.getCell(2).getStringValue());
+                assertEquals("1\"9", line.getCell(3).getStringValue());
+                assertEquals("111 22", line.getCell(4).getStringValue());
+            }
+        });
+
+        assertEquals(true, rc);
     }
 
     @Test
@@ -349,7 +376,7 @@ public class CSVSchemaLineTest  {
         schemaLine.addSchemaCell(happyCell);
 
         String sLine = "Jonas;-)Stenberg";
-        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+        schemaLine.parse(1, sLine, new ParsingEventListener() {
 
             @Override
             public void lineErrorEvent(LineErrorEvent event) throws ParseException {

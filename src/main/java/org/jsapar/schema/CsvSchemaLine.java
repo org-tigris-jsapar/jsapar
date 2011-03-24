@@ -170,13 +170,14 @@ public class CsvSchemaLine extends SchemaLine {
         if (quoteChar == 0)
             return sLine.split(Pattern.quote(getCellSeparator()));
 
-        java.util.List<String> cells = new java.util.ArrayList<String>(sLine.length() / 10);
+        java.util.List<String> cells = new java.util.ArrayList<String>(sLine.length() / 8);
         splitQuoted(cells, sLine, getCellSeparator(), quoteChar);
         return cells.toArray(new String[cells.size()]);
     }
 
     /**
-     * Recursively find all quoted cells.
+     * Recursively find all quoted cells. A quoted cell is where the quote character is the first
+     * and last character in the cell. Any other quote characters within the cells are ignored.
      * 
      * @param cells
      * @param sToSplit
@@ -190,26 +191,41 @@ public class CsvSchemaLine extends SchemaLine {
         if (sToSplit.length() <= 0)
             return;
 
-        int nFoundQuote = sToSplit.indexOf(quoteChar);
-        if (nFoundQuote < 0) {
-            cells.addAll(Arrays.asList(sToSplit.split(sCellSeparator)));
-            return;
-        } else if (nFoundQuote > 0) {
-            String sUnquoted = sToSplit.substring(0, nFoundQuote);
-            if (sUnquoted.lastIndexOf(sCellSeparator) != (sUnquoted.length() - sCellSeparator.length()))
-                throw new ParseException(
-                        "Miss-placed quote character. Start quote character has to be the first character of the cell");
-            String[] asCells = sUnquoted.split(sCellSeparator);
-            cells.addAll(Arrays.asList(asCells));
-            nIndex = nFoundQuote + 1;
-        } else
-            // Quote is the first character.
+        int nFoundQuote = -1;
+        if(sToSplit.charAt(0) == quoteChar){
+            // Quote is the first character in the string.
+            nFoundQuote = 0;
             nIndex++;
+        } else {
+            // Search for quote character at first position after a cell separator. Otherwise ignore quotes.
+            nFoundQuote = sToSplit.indexOf(sCellSeparator + quoteChar);
+
+            if (nFoundQuote < 0) {
+                cells.addAll(Arrays.asList(sToSplit.split(sCellSeparator)));
+                return;
+            } else if (nFoundQuote > 0) {
+                String sUnquoted = sToSplit.substring(0, nFoundQuote);
+                String[] asCells = sUnquoted.split(sCellSeparator);
+                cells.addAll(Arrays.asList(asCells));
+                nIndex = nFoundQuote + sCellSeparator.length() + 1;
+            }
+        }
 
         String sFound;
-        int nFoundEnd = sToSplit.indexOf(quoteChar, nIndex);
-        if (nFoundEnd < 0)
-            throw new ParseException("Missing end quote character");
+        int nFoundEnd = sToSplit.indexOf(quoteChar + sCellSeparator, nIndex);
+        if (nFoundEnd < 0){
+            // Last character is quote
+            if(sToSplit.length()>1 && sToSplit.charAt(sToSplit.length()-1)==quoteChar){
+                sFound = sToSplit.substring(nIndex, sToSplit.length()-1);
+                cells.add(sFound);
+                return;
+            }
+            else{
+                // Only a start quote but no end quote, then ignore the quote. Do a normal split.
+                cells.addAll(Arrays.asList(sToSplit.substring(nIndex-1).split(sCellSeparator)));
+                return;
+            }
+        }
         sFound = sToSplit.substring(nIndex, nFoundEnd);
         nIndex = nFoundEnd + 1;
 
@@ -219,14 +235,9 @@ public class CsvSchemaLine extends SchemaLine {
             return;
         }
         
-        // Check that we have cell separator
-        if(!sToSplit.regionMatches(nIndex, sCellSeparator, 0, sCellSeparator.length())){
-            throw new ParseException(
-                    "Miss-placed quote character. End quote character has to be the last character of the cell");
-        }
-        
         cells.add(sFound);
         nIndex += sCellSeparator.length();
+        // Now handle the rest of the string with a recursive call.
         splitQuoted(cells, sToSplit.substring(nIndex, sToSplit.length()), sCellSeparator, quoteChar);
     }
 
