@@ -64,12 +64,12 @@ public class BooleanFormat extends Format {
      */
     @Override
     public Object parseObject(String toParse, ParsePosition pos) {
-        toParse = toParse.substring(pos.getIndex());
-        if(toParse.startsWith(trueValue)){
+        final boolean ignoreCase = true;
+        if(toParse.regionMatches(ignoreCase, pos.getIndex(), trueValue, 0, trueValue.length())){
             pos.setIndex(pos.getIndex() + trueValue.length());
             return Boolean.TRUE;
         }
-        if(toParse.startsWith(falseValue)){
+        if(toParse.regionMatches(ignoreCase, pos.getIndex(), falseValue, 0, falseValue.length())){
             pos.setIndex(pos.getIndex() + falseValue.length());
             return Boolean.FALSE;
         }
@@ -82,9 +82,9 @@ public class BooleanFormat extends Format {
      * @return true or false depending on value to parse.
      */
     public boolean parse(String toParse){
-        if(toParse.equals(trueValue))
+        if(toParse.equalsIgnoreCase(trueValue))
             return true;
-        else if(toParse.equals(falseValue))
+        else if(toParse.equalsIgnoreCase(falseValue))
             return false;
         else 
             throw new NumberFormatException("Faled to parse [" + toParse + "] to boolean value only [" + trueValue +"] or [" + falseValue + "] is allowed.");

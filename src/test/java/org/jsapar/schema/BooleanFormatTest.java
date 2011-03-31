@@ -6,6 +6,7 @@ package org.jsapar.schema;
 import static org.junit.Assert.*;
 
 import java.text.ParseException;
+import java.text.ParsePosition;
 
 import org.junit.After;
 import org.junit.Before;
@@ -58,12 +59,31 @@ public class BooleanFormatTest {
      * @throws ParseException 
      */
     @Test
-    public void testParseObjectStringParsePosition() throws ParseException {
+    public void testParseObjectString() throws ParseException {
         BooleanFormat f = new BooleanFormat("ja", "nej");
         assertEquals(Boolean.TRUE, f.parseObject("ja"));
+        assertEquals(Boolean.TRUE, f.parseObject("JA"));
         assertEquals(Boolean.FALSE, f.parseObject("nej"));
+        assertEquals(Boolean.FALSE, f.parseObject("NEJ"));
     }
 
+    /**
+     * Test method for {@link org.jsapar.schema.BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
+     * @throws ParseException 
+     */
+    @Test
+    public void testParseObjectStringParsePosition() throws ParseException {
+        BooleanFormat f = new BooleanFormat("ja", "nej");
+        assertEquals(Boolean.TRUE, f.parseObject("   ja", new ParsePosition(3)));
+        
+        ParsePosition pos = new ParsePosition(3);
+        assertEquals(Boolean.TRUE, f.parseObject("   JA  ", pos));
+        assertEquals(5, pos.getIndex());
+        
+        assertEquals(Boolean.FALSE, f.parseObject("   nej ", new ParsePosition(3)));
+        assertEquals(Boolean.FALSE, f.parseObject("   NEJ", new ParsePosition(3)));
+    }
+    
     /**
      * Test method for {@link org.jsapar.schema.BooleanFormat#parse(java.lang.String)}.
      */
@@ -71,7 +91,9 @@ public class BooleanFormatTest {
     public void testParse() {
         BooleanFormat f = new BooleanFormat("ja", "nej");
         assertTrue(f.parse("ja"));
+        assertTrue(f.parse("JA"));
         assertFalse(f.parse("nej"));
+        assertFalse(f.parse("NEJ"));
     }
 
 }

@@ -181,7 +181,7 @@ public class CSVSchemaLineTest  {
     public void testBuild_quoted_miss_placed_start() throws JSaParException {
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schemaLine.setQuoteChar('\"');
-	String sLine = "Jonas;Stenberg;H\"emvägen ;19;111 22;\"Stoc\"kholm\"";
+	String sLine = "Jonas;Stenberg;H\"emvägen ;19;111 \"22\";\"Stoc\"kholm\"";
         boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
 
             @Override
@@ -196,6 +196,7 @@ public class CSVSchemaLineTest  {
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("H\"emvägen ", line.getCell(2).getStringValue());
                 assertEquals("19", line.getCell(3).getStringValue());
+                assertEquals("111 \"22\"", line.getCell(4).getStringValue());
                 assertEquals("Stoc\"kholm", line.getCell(5).getStringValue());
             }
         });
