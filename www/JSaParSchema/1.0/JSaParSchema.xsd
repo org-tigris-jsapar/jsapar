@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--Created with Liquid XML Studio 6.1.18.0 - FREE Community Edition (http://www.liquid-technologies.com)-->
-<xsd:schema xmlns="http://jsapar.tigris.org/JSaParSchema/1.0" elementFormDefault="qualified" targetNamespace="http://jsapar.tigris.org/JSaParSchema/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema elementFormDefault="qualified" targetNamespace="http://jsapar.tigris.org/JSaParSchema/1.0" xmlns="http://jsapar.tigris.org/JSaParSchema/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <xsd:element name="schema">
     <xsd:complexType>
       <xsd:choice>
@@ -73,8 +73,7 @@ Default is true.</xsd:documentation>
   			type="CellValueRange">
   			<xsd:annotation>
   				<xsd:documentation>
-  					Not used in current version!! Specifies a valid
-  					range for the cell value.
+  					Specifies a valid	range for the cell value.
   				</xsd:documentation>
   			</xsd:annotation>
   		</xsd:element>
@@ -112,49 +111,50 @@ Default is true.</xsd:documentation>
   	<xsd:attribute default="false" name="mandatory"
   		type="xsd:boolean">
   		<xsd:annotation>
-  			<xsd:documentation>
-  				States if this cell have to contain a value or not. If
-  				this attribute is false, an empty value is accepted as
-  				long as the parsing mechanism can handle it for the
-  				given format. If this attribute is true, a parsing
-  				error is reported back. Default is false.
+         <xsd:documentation>States if this cell have to contain a value or not. If
+            this attribute is false, an empty value is accepted as
+            long as the parsing mechanism can handle it for the
+            given format. If this attribute is true, a parsing
+            error is reported back. Default is false.
   			</xsd:documentation>
   		</xsd:annotation>
   	</xsd:attribute>
   	<xsd:attribute name="default" type="xsd:string">
   		<xsd:annotation>
-  			<xsd:documentation>The default value of this cell. This value is used if the cell does not conatin any value. The value should be formatted according to the rules of the schema cell itself. Can not be used if the cell is mandatory.</xsd:documentation>
+  		   <xsd:documentation>The default value of this cell. This value is used if the cell does not conatin any value. The value should be formatted according to the rules of the schema cell itself. </xsd:documentation>
   		</xsd:annotation></xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="CellFormat">
     <xsd:attribute name="type" use="required">
       <xsd:annotation>
         <xsd:documentation>The type of the cell. Default is "string".
-Have to be one of the following:
-string
-date
-decimal
-integer
-float
-boolean
-Note that the number formats are parsed according to the specified locale.</xsd:documentation>
+            Have to be one of the following:
+               string
+               date
+               decimal
+               integer
+               float
+               boolean
+            Note that the number formats are parsed according to the specified locale.</xsd:documentation>
       </xsd:annotation>
       <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="string" />
-          <xsd:enumeration value="date" />
-          <xsd:enumeration value="decimal" />
-          <xsd:enumeration value="integer" />
-          <xsd:enumeration value="float" />
-          <xsd:enumeration value="boolean" />
-        </xsd:restriction>
+      	<xsd:restriction base="xsd:string">
+      		<xsd:enumeration value="string" />
+      		<xsd:enumeration value="date" />
+      		<xsd:enumeration value="decimal" />
+      		<xsd:enumeration value="integer" />
+      		<xsd:enumeration value="float" />
+      		<xsd:enumeration value="boolean" />
+      		<xsd:enumeration value="character"></xsd:enumeration>
+      	</xsd:restriction>
       </xsd:simpleType>
     </xsd:attribute>
     <xsd:attribute name="pattern" type="xsd:string" use="optional">
       <xsd:annotation>
-        <xsd:documentation>* If the type is string then the pattern should contain a regular expression to which the value is validated against. This only works while parsing.
+         <xsd:documentation>* If the type is string then the pattern should contain a regular expression to which the value is validated against. This only works while parsing.
 * If the type is any of the numerical types, then the pattern should be described according to the java.text.DecimalFormat (http://java.sun.com/javase/6/docs/api/java/text/DecimalFormat.html).
-* If the type is date, then the pattern should be described according to java.text.SimpleDateFormat (http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html).</xsd:documentation>
+* If the type is date, then the pattern should be described according to java.text.SimpleDateFormat (http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html).
+* If the type is boolean, the pattern should contain the true and false values separated with a ; character. Example: pattern="Y;N" will imply that Y represents true and N to represents false. Comparison while parsing is not case sensitive.</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
   </xsd:complexType>
@@ -287,7 +287,9 @@ center
         </xsd:attribute>
         <xsd:attribute name="quotechar" use="optional">
           <xsd:annotation>
-            <xsd:documentation>Specifies if there is a quote character used to encapsulate cells. Within quotes the cell separator will be ignored.</xsd:documentation>
+             <xsd:documentation>Specifies if there is a quote character used to encapsulate cells. Within quotes the cell separator will be ignored. 
+A cell is considered to be quoted if and only if the first and the last character within the cell is the quote character.
+Any other quote characters are considered to be normal characters and thus becomes part of the cell.</xsd:documentation>
           </xsd:annotation>
           <xsd:simpleType>
             <xsd:restriction base="xsd:string">
@@ -345,9 +347,7 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
   </xsd:complexType>
   <xsd:complexType name="CellValueRange">
     <xsd:annotation>
-      <xsd:documentation>Not used yet!!
-
-Contains a range for a cell value. The format of the min and max attribute are the same as for the parsing of the cell values.</xsd:documentation>
+      <xsd:documentation>Contains a range for a cell value. The format of the min and max attribute are the same as for the parsing of the cell values.</xsd:documentation>
     </xsd:annotation>
     <xsd:attribute name="min" type="xsd:string" use="optional">
       <xsd:annotation>
