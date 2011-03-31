@@ -53,7 +53,7 @@ public class BooleanFormat extends Format {
     /**
      * Formats a boolean value.
      * @param value
-     * @return
+     * @return the string value that represents the supplied boolean value.
      */
     public String format(boolean value){
         return value ? trueValue : falseValue;
