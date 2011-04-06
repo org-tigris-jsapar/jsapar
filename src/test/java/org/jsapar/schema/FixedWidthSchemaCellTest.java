@@ -293,6 +293,17 @@ public class FixedWidthSchemaCellTest {
     }
 
     @Test
+    public final void testOutput_Default() throws IOException, JSaParException {
+        FixedWidthSchemaCell schemaElment = new FixedWidthSchemaCell("Size", 11);
+        schemaElment.setDefaultValue("10");
+
+        Writer writer = new StringWriter();
+        schemaElment.output(null, writer, ' ');
+
+        assertEquals("10         ", writer.toString());
+    }    
+    
+    @Test
     public final void testClone() throws CloneNotSupportedException {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
         schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
