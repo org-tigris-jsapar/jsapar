@@ -204,7 +204,7 @@ Svn branch root : ${svn.branch.url}
 		</copy>
 
 		
-		<jar destfile="${dist.lib.dir}/${project.name}-${patch.version.string}.jar" manifest="${build.dir}/META-INF/MANIFEST.MF">
+		<jar destfile="${dist.lib.dir}/${project.name}-${minor.version.string}.jar" manifest="${build.dir}/META-INF/MANIFEST.MF">
 			<fileset dir="${build.dir}">
 				<include name="**/*.class"/>
 			</fileset>

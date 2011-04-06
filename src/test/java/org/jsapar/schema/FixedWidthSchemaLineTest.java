@@ -182,8 +182,6 @@ public class FixedWidthSchemaLineTest {
         line.addCell(new StringCell("Jonas"));
         line.addCell(new StringCell("Stenberg"));
         line.addCell(new StringCell("Street address", "Spiselvägen 19"));
-        // line.addCell(new StringCell("141 59"));
-        line.addCell(new StringCell("City", "Huddinge"));
 
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
@@ -191,7 +189,9 @@ public class FixedWidthSchemaLineTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street address", 14));
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("City", 8));
+        FixedWidthSchemaCell cityCellSchema = new FixedWidthSchemaCell("City", 8);
+        cityCellSchema.setDefaultValue("Huddinge");
+        schemaLine.addSchemaCell(cityCellSchema);
         schema.addSchemaLine(schemaLine);
 
         java.io.Writer writer = new java.io.StringWriter();
