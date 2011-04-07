@@ -1,13 +1,14 @@
 /**
  * 
  */
-package org.jsapar.schema;
+package org.jsapar.format;
 
 import static org.junit.Assert.*;
 
 import java.text.ParseException;
 import java.text.ParsePosition;
 
+import org.jsapar.format.BooleanFormat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class BooleanFormatTest {
 
 
     /**
-     * Test method for {@link org.jsapar.schema.BooleanFormat#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)}.
+     * Test method for {@link org.jsapar.format.BooleanFormat#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)}.
      */
     @Test
     public void testFormatObjectStringBufferFieldPosition() {
@@ -45,7 +46,7 @@ public class BooleanFormatTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.schema.BooleanFormat#format(boolean)}.
+     * Test method for {@link org.jsapar.format.BooleanFormat#format(boolean)}.
      */
     @Test
     public void testFormatBoolean() {
@@ -55,7 +56,7 @@ public class BooleanFormatTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.schema.BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
+     * Test method for {@link org.jsapar.format.BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
      * @throws ParseException 
      */
     @Test
@@ -68,7 +69,7 @@ public class BooleanFormatTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.schema.BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
+     * Test method for {@link org.jsapar.format.BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
      * @throws ParseException 
      */
     @Test
@@ -85,7 +86,7 @@ public class BooleanFormatTest {
     }
     
     /**
-     * Test method for {@link org.jsapar.schema.BooleanFormat#parse(java.lang.String)}.
+     * Test method for {@link org.jsapar.format.BooleanFormat#parse(java.lang.String)}.
      */
     @Test
     public void testParse() {
