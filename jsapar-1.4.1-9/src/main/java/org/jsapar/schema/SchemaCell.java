@@ -1,0 +1,533 @@
+package org.jsapar.schema;
+
+import java.text.DecimalFormat;
+import java.util.Locale;
+
+import org.jsapar.BigDecimalCell;
+import org.jsapar.BooleanCell;
+import org.jsapar.Cell;
+import org.jsapar.CharacterCell;
+import org.jsapar.DateCell;
+import org.jsapar.EmptyCell;
+import org.jsapar.FloatCell;
+import org.jsapar.IntegerCell;
+import org.jsapar.StringCell;
+import org.jsapar.Cell.CellType;
+import org.jsapar.input.CellParseError;
+import org.jsapar.input.LineErrorEvent;
+import org.jsapar.input.ParseException;
+import org.jsapar.input.ParsingEventListener;
+import org.jsapar.utils.StringUtils;
+
+public abstract class SchemaCell implements Cloneable {
+
+    protected static final String         EMPTY_STRING          = "";
+
+    private final static SchemaCellFormat CELL_FORMAT_PROTOTYPE = new SchemaCellFormat(CellType.STRING);
+
+    private String                        name;
+    private SchemaCellFormat              cellFormat            = CELL_FORMAT_PROTOTYPE;
+    private boolean                       ignoreRead            = false;
+    private boolean                       ignoreWrite = false;
+    private boolean                       mandatory             = false;
+    private Cell                          minValue              = null;
+    private Cell                          maxValue              = null;
+    private Cell                          defaultCell           = null;
+    private String                        defaultValue          = null;
+    private Locale                        locale                = Locale.getDefault();
+
+    public SchemaCell() {
+    }
+
+    public SchemaCell(String sName) {
+        this(sName, CELL_FORMAT_PROTOTYPE);
+    }
+
+    public SchemaCell(String sName, SchemaCellFormat cellFormat) {
+        this.cellFormat = cellFormat;
+        this.name = sName;
+    }
+
+    /**
+     * Indicates if this cell should be ignored after reading it from the buffer. If ignoreRead is
+     * true the cell will not be stored to the current Line object.
+     * 
+     * @return the ignoreRead
+     */
+    public boolean isIgnoreRead() {
+        return ignoreRead;
+    }
+
+    /**
+     * @param ignoreRead
+     *            Indicates if this cell should be ignored after reading it from the buffer. If
+     *            ignoreRead is true the cell will not be stored to the current Line object.
+     */
+    public void setIgnoreRead(boolean ignoreRead) {
+        this.ignoreRead = ignoreRead;
+    }
+
+
+    /**
+     * @return true if the cell should be ignored while writing.
+     */
+    public boolean isIgnoreWrite() {
+        return ignoreWrite;
+    }
+
+    /**
+     * @param ignoreWrite If true, this cell will be blank while writing. 
+     */
+    public void setIgnoreWrite(boolean ignoreWrite) {
+        this.ignoreWrite = ignoreWrite;
+    }
+    
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name
+     *            the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return the cellFormat
+     */
+    public SchemaCellFormat getCellFormat() {
+        return cellFormat;
+    }
+
+    /**
+     * @param cellFormat
+     *            the cellFormat to set
+     */
+    public void setCellFormat(SchemaCellFormat cellFormat) {
+        this.cellFormat = cellFormat;
+    }
+
+    /**
+     * Creates a cell with a parsed value according to the schema specification for this cell. This
+     * method does not throw exception of mandatory cell does not exist. Instead it reports an error
+     * event and continues.
+     * 
+     * @param sValue
+     * @param listener
+     * @param nLineNumber
+     * @return A new cell of a type according to the schema specified. Returns null if there is no
+     *         value.
+     * @throws ParseException
+     */
+    public Cell makeCell(String sValue, ParsingEventListener listener, long nLineNumber) throws ParseException {
+        if (sValue.length() <= 0) {
+            checkIfMandatory(listener, nLineNumber);
+
+            if (defaultCell != null) {
+                return defaultCell.makeCopy(getName());
+            } else {
+                return new EmptyCell(getName(), this.cellFormat.getCellType());
+            }
+        }
+        return makeCell(sValue);
+    }
+
+    /**
+     * Checks if cell is mandatory and in that case fires an error event.
+     * 
+     * @param listener
+     * @param nLineNumber
+     * @throws ParseException
+     */
+    public void checkIfMandatory(ParsingEventListener listener, long nLineNumber) throws ParseException {
+        if (isMandatory()) {
+            CellParseError e = new CellParseError(nLineNumber, getName(), EMPTY_STRING, getCellFormat(),
+                    "Mandatory cell requires a value.");
+            listener.lineErrorEvent(new LineErrorEvent(this, e));
+        }
+    }
+
+    /**
+     * Creates a cell with a parsed value according to the schema specification for this cell. Does
+     * not check if cell is mandatory!!
+     * 
+     * @param sValue
+     * @return A new cell of a type according to the schema specified. Returns null if there is no
+     *         value.
+     * @throws SchemaException
+     * @throws ParseException
+     */
+    public Cell makeCell(String sValue) throws ParseException {
+
+        // If the cell is empty, check if default value exists.
+        if (sValue.length() <= 0) {
+            if (defaultCell != null) {
+                return defaultCell.makeCopy(getName());
+            } else {
+                return new EmptyCell(getName(), this.cellFormat.getCellType());
+            }
+        }
+
+        try {
+            CellType cellType = this.cellFormat.getCellType();
+            Cell cell;
+            if (getCellFormat().getFormat() != null)
+                cell = SchemaCell.makeCell(cellType, getName(), sValue, this.getCellFormat().getFormat());
+            else
+                cell = SchemaCell.makeCell(cellType, getName(), sValue, getLocale());
+            validateRange(cell);
+            return cell;
+        } catch (SchemaException e) {
+            throw new ParseException(new CellParseError(getName(), sValue, getCellFormat(), e.getMessage()), e);
+        } catch (java.text.ParseException e) {
+            throw new ParseException(new CellParseError(getName(), sValue, getCellFormat(), e.getMessage()), e);
+        }
+
+    }
+
+    /**
+     * @param cellType
+     * @param sName
+     * @param sValue
+     * @param format
+     * @return A cell object that has been parsed from the supplied sValue parameter according to
+     *         the supplied format.
+     * @throws ParseE
+     *             , java.lang.Comparable, java.lang.Comparable, java.lang.Comparablexception
+     * @throws java.text.ParseException
+     * @throws SchemaException
+     */
+    public static Cell makeCell(CellType cellType, String sName, String sValue, java.text.Format format)
+            throws java.text.ParseException, SchemaException {
+        switch (cellType) {
+        case STRING:
+            return new StringCell(sName, sValue, format);
+        case DATE:
+            return new DateCell(sName, sValue, format);
+        case DECIMAL:
+            if (format != null && format instanceof DecimalFormat) {
+                // This is necessary because some locales (e.g. swedish)
+                // have non breakable space as grouping character. Naturally
+                // we want to remove all space characters including the
+                // non breakable.
+                DecimalFormat decFormat = (DecimalFormat) format;
+                char groupingSeparator = decFormat.getDecimalFormatSymbols().getGroupingSeparator();
+                if (Character.isSpaceChar(groupingSeparator)) {
+                    sValue = StringUtils.removeAllSpaces(sValue);
+                }
+            }
+            return new BigDecimalCell(sName, sValue, format);
+        case BOOLEAN:
+            return new BooleanCell(sName, sValue, format);
+        case INTEGER:
+            return new IntegerCell(sName, sValue, format);
+        case FLOAT:
+            return new FloatCell(sName, sValue, format);
+        case CHARACTER:
+            return new CharacterCell(sName, sValue, format);
+        case CUSTOM:
+        default:
+            throw new SchemaException("Cell type not implemented: " + cellType);
+
+        }
+    }
+
+    /**
+     * @param cellType
+     * @param sName
+     * @param sValue
+     * @param locale
+     * @return A cell object that has been parsed from the supplied sValue parameter according to
+     *         the default format for supplied type and locale.
+     * @throws ParseE
+     *             , java.lang.Comparable, java.lang.Comparable, java.lang.Comparablexception
+     * @throws java.text.ParseException
+     * @throws SchemaException
+     */
+    public static Cell makeCell(CellType cellType, String sName, String sValue, Locale locale)
+            throws java.text.ParseException, SchemaException {
+        switch (cellType) {
+        case STRING:
+            return new StringCell(sName, sValue);
+        case DATE:
+            return new DateCell(sName, sValue, locale);
+        case DECIMAL:
+            return new BigDecimalCell(sName, sValue, locale);
+        case BOOLEAN:
+            return new BooleanCell(sName, sValue, locale);
+        case INTEGER:
+            return new IntegerCell(sName, sValue, locale);
+        case FLOAT:
+            return new FloatCell(sName, sValue, locale);
+        case CHARACTER:
+            return new CharacterCell(sName, sValue);
+        case CUSTOM:
+        default:
+            throw new SchemaException("Cell type not implemented: " + cellType);
+
+        }
+    }
+
+    /**
+     * Indicates if the corresponding cell is mandatory, that is an error will be reported if it
+     * does not exist while parsing.
+     * 
+     * @return true if the cell is mandatory, false otherwise.
+     */
+    public boolean isMandatory() {
+        return mandatory;
+    }
+
+    /**
+     * @param mandatory
+     *            Indicates if the corresponding cell is mandatory, that is an error will be
+     *            reported if it does not exist while parsing.
+     */
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
+    }
+
+    public SchemaCell clone() throws CloneNotSupportedException {
+        return (SchemaCell) super.clone();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SchemaCell name='");
+        sb.append(this.name);
+        sb.append("'");
+        if (this.cellFormat != null) {
+            sb.append(" cellFormat=");
+            sb.append(this.cellFormat);
+        }
+        if (this.defaultValue != null) {
+            sb.append(" defaultValue=");
+            sb.append(this.defaultValue);
+        }
+
+        if (this.ignoreRead)
+            sb.append(" IGNOREREAD");
+        if (this.mandatory)
+            sb.append(" MANDATORY");
+        return sb.toString();
+    }
+
+    /**
+     * @return the maxValue
+     */
+    public Cell getMaxValue() {
+        return maxValue;
+    }
+
+    /**
+     * @param maxValue
+     *            the maxValue to set
+     */
+    public void setMaxValue(Cell maxValue) {
+        this.maxValue = maxValue;
+    }
+
+    /**
+     * @return the minValue
+     */
+    public Cell getMinValue() {
+        return minValue;
+    }
+
+    /**
+     * @param minValue
+     *            the minValue to set
+     */
+    public void setMinValue(Cell minValue) {
+        this.minValue = minValue;
+    }
+
+    /**
+     * @return the locale
+     */
+    public Locale getLocale() {
+        return locale;
+    }
+
+    /**
+     * @param locale
+     *            the locale to set
+     */
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    /**
+     * Validates that the cell value is within the valid range. Throws a SchemaException if value is
+     * not within borders.
+     * 
+     * @param cell
+     * @throws SchemaException
+     * @throws ParseException
+     * @throws SchemaException
+     */
+    protected void validateRange(Cell cell) throws SchemaException {
+
+        if (this.minValue != null && cell.compareValueTo(this.minValue) < 0)
+            throw new SchemaException("The value is below minimum range limit.");
+        else if (this.maxValue != null && cell.compareValueTo(this.maxValue) > 0)
+            throw new SchemaException("The value is above maximum range limit.");
+
+    }
+
+    /**
+     * @param value
+     * @throws SchemaException
+     * @throws java.text.ParseException
+     */
+    public void setMinValue(String value) throws SchemaException, java.text.ParseException {
+        Locale locale = new Locale("US_en");
+        Cell cell = SchemaCell.makeCell(this.getCellFormat().getCellType(), "Min", value, locale);
+        this.minValue = cell;
+    }
+
+    /**
+     * @param value
+     * @throws SchemaException
+     * @throws java.text.ParseException
+     */
+    public void setMaxValue(String value) throws SchemaException, java.text.ParseException {
+        Locale locale = new Locale("US_en");
+        Cell cell = SchemaCell.makeCell(this.getCellFormat().getCellType(), "Max", value, locale);
+        this.maxValue = cell;
+    }
+
+    /**
+     * @return The default cell. The value of the default cell will be used if input/output is
+     *         missing.
+     */
+    public Cell getDefaultCell() {
+        return defaultCell;
+    }
+
+    /**
+     * @param defaultCell
+     *            The default cell. The value of the default cell will be used if input/output is
+     *            missing. The name of the cell has no importance, it will not be used.
+     */
+    public void setDefaultCell(Cell defaultCell) {
+        this.defaultCell = defaultCell.makeCopy(getName());
+        this.defaultValue = getDefaultCell().getStringValue(getCellFormat().getFormat());
+    }
+
+    /**
+     * Sets the default value as a string. The default value have to be parsable according to the
+     * schema format. As long as it is parsable, it will be used exactly as is even though it might
+     * not look the same as if it was formatted from a value.
+     * 
+     * @param sDefaultValue
+     *            The default value formatted according to this schema. Will be used if input/output
+     *            is missing for this cell.
+     * @throws ParseException
+     */
+    public void setDefaultValue(String sDefaultValue) throws ParseException {
+        this.defaultCell = makeCell(sDefaultValue);
+        this.defaultValue = sDefaultValue;
+    }
+
+    /**
+     * @return The default value formatted according to this schema. Will be used if input/output is
+     *         missing.
+     */
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    /**
+     * @return The default value if it is not null or empty string otherwise.
+     */
+    private String getDefaultValueOrEmpty() {
+        return defaultValue == null ? EMPTY_STRING : defaultValue;
+    }
+
+    /**
+     * Formats a cell to a string according to the rules of this schema.
+     * 
+     * @param cell
+     *            The cell to format. If this parameter is null or an empty string, the default
+     *            value will be returned or if there is no default value, an empty string will be
+     *            returned.
+     * @return The formatted value for this cell.
+     */
+    public String format(Cell cell) {
+        if (this.ignoreWrite )
+            return EMPTY_STRING;
+        
+        if (cell == null) {
+            return getDefaultValueOrEmpty();
+        }
+        String value = cell.getStringValue(getCellFormat().getFormat());
+        if (value == null) {
+            return getDefaultValueOrEmpty();
+        }
+        if (value.length() <= 0) {
+            return getDefaultValueOrEmpty();
+        }
+        return value;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((cellFormat == null) ? 0 : cellFormat.hashCode());
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof SchemaCell)) {
+            return false;
+        }
+        SchemaCell other = (SchemaCell) obj;
+        if (cellFormat == null) {
+            if (other.cellFormat != null) {
+                return false;
+            }
+        } else if (!cellFormat.equals(other.cellFormat)) {
+            return false;
+        }
+        if (name == null) {
+            if (other.name != null) {
+                return false;
+            }
+        } else if (!name.equals(other.name)) {
+            return false;
+        }
+        return true;
+    }
+
+}
