@@ -48,7 +48,7 @@ public class FixedWidthSchemaLineTest {
 
     @Test
     public void testBuild() throws IOException, JSaParException {
-        String toParse = "JonasStenbergSpiselv‰gen 19141 59Huddinge";
+        String toParse = "JonasStenbergSpiselv√§gen 19141 59Huddinge";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
@@ -71,7 +71,7 @@ public class FixedWidthSchemaLineTest {
                 Line line = event.getLine();
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell("Last name").getStringValue());
-                assertEquals("Spiselv‰gen 19", line.getCell(2).getStringValue());
+                assertEquals("Spiselv√§gen 19", line.getCell(2).getStringValue());
                 assertEquals("141 59", line.getCell("Zip code").getStringValue());
                 assertEquals("Huddinge", line.getCell(4).getStringValue());
 
@@ -181,7 +181,7 @@ public class FixedWidthSchemaLineTest {
         Line line = new Line();
         line.addCell(new StringCell("Jonas"));
         line.addCell(new StringCell("Stenberg"));
-        line.addCell(new StringCell("Street address", "Spiselv‰gen 19"));
+        line.addCell(new StringCell("Street address", "Spiselv√§gen 19"));
 
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
@@ -198,9 +198,30 @@ public class FixedWidthSchemaLineTest {
         schemaLine.output(line, writer);
         String sResult = writer.toString();
 
-        assertEquals("JonasStenbergSpiselv‰gen 19      Huddinge", sResult);
+        assertEquals("JonasStenbergSpiselv√§gen 19      Huddinge", sResult);
     }
 
+    @Test
+    public void testOutput_ignorewrite() throws IOException, JSaParException {
+        Line line = new Line();
+        line.addCell(new StringCell("Jonas"));
+        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("Street address", "Spiselv√§gen 19"));
+
+        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
+        FixedWidthSchemaCell firstNameSchema = new FixedWidthSchemaCell("First name", 5);
+        firstNameSchema.setIgnoreWrite(true);
+        schemaLine.addSchemaCell(firstNameSchema);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        schema.addSchemaLine(schemaLine);
+
+        java.io.Writer writer = new java.io.StringWriter();
+        schemaLine.output(line, writer);
+        String sResult = writer.toString();
+
+        assertEquals("     Stenberg", sResult);
+    }    
     @Test
     public final void testClone() throws CloneNotSupportedException {
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine();

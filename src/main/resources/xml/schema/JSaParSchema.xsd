@@ -73,7 +73,7 @@ Default is true.</xsd:documentation>
   			type="CellValueRange">
   			<xsd:annotation>
   				<xsd:documentation>
-  					Specifies a valid	range for the cell value.
+  					Specifies a valid range for the cell value.
   				</xsd:documentation>
   			</xsd:annotation>
   		</xsd:element>
@@ -108,21 +108,33 @@ Default is true.</xsd:documentation>
   			</xsd:documentation>
   		</xsd:annotation>
   	</xsd:attribute>
-  	<xsd:attribute default="false" name="mandatory"
-  		type="xsd:boolean">
+    <xsd:attribute name="ignorewrite" type="xsd:boolean">
+        <xsd:annotation>
+            <xsd:documentation>
+             Default is false. 
+             true = Ignore this cell when writing. This means that the value of the cell will be ignored and 
+             instead a value as if the cell was empty will be written. 
+             false = Write the cell value to the output.
+            </xsd:documentation>
+    	</xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute default="false" name="mandatory" type="xsd:boolean">
   		<xsd:annotation>
-         <xsd:documentation>States if this cell have to contain a value or not. If
-            this attribute is false, an empty value is accepted as
-            long as the parsing mechanism can handle it for the
-            given format. If this attribute is true, a parsing
-            error is reported back. Default is false.
+  			<xsd:documentation>
+  				States if this cell have to contain a value or not. If
+  				this attribute is false, an empty value is accepted as
+  				long as the parsing mechanism can handle it for the
+  				given format. If this attribute is true, a parsing
+  				error is reported back. Default is false.
   			</xsd:documentation>
   		</xsd:annotation>
   	</xsd:attribute>
   	<xsd:attribute name="default" type="xsd:string">
   		<xsd:annotation>
-  		   <xsd:documentation>The default value of this cell. This value is used if the cell does not conatin any value. The value should be formatted according to the rules of the schema cell itself. </xsd:documentation>
-  		</xsd:annotation></xsd:attribute>
+  		    <xsd:documentation>The default value of this cell. This value is used if the cell does not conatin any value. The value should be formatted according to the rules of the schema cell itself.
+  			</xsd:documentation>
+  		</xsd:annotation>
+  	</xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="CellFormat">
     <xsd:attribute name="type" use="required">

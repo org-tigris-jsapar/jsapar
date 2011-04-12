@@ -327,7 +327,10 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     private void assignSchemaCellBase(Document xmlDocument, Element xmlSchemaCell, SchemaCell cell)
             throws SchemaException {
         xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_NAME, cell.getName());
-        xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_IGNOREREAD, String.valueOf(cell.isIgnoreRead()));
+        if(cell.isIgnoreRead())
+            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_IGNOREREAD, String.valueOf(cell.isIgnoreRead()));
+        if(cell.isIgnoreWrite())
+            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_IGNOREWRITE, String.valueOf(cell.isIgnoreWrite()));
         xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_MANDATORY, String.valueOf(cell.isMandatory()));
         
         if(cell.getDefaultCell() != null)

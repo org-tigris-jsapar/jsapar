@@ -28,6 +28,7 @@ public abstract class SchemaCell implements Cloneable {
     private String                        name;
     private SchemaCellFormat              cellFormat            = CELL_FORMAT_PROTOTYPE;
     private boolean                       ignoreRead            = false;
+    private boolean                       ignoreWrite = false;
     private boolean                       mandatory             = false;
     private Cell                          minValue              = null;
     private Cell                          maxValue              = null;
@@ -66,6 +67,21 @@ public abstract class SchemaCell implements Cloneable {
         this.ignoreRead = ignoreRead;
     }
 
+
+    /**
+     * @return true if the cell should be ignored while writing.
+     */
+    public boolean isIgnoreWrite() {
+        return ignoreWrite;
+    }
+
+    /**
+     * @param ignoreWrite If true, this cell will be blank while writing. 
+     */
+    public void setIgnoreWrite(boolean ignoreWrite) {
+        this.ignoreWrite = ignoreWrite;
+    }
+    
     /**
      * @return the name
      */
@@ -450,6 +466,9 @@ public abstract class SchemaCell implements Cloneable {
      * @return The formatted value for this cell.
      */
     public String format(Cell cell) {
+        if (this.ignoreWrite )
+            return EMPTY_STRING;
+        
         if (cell == null) {
             return getDefaultValueOrEmpty();
         }

@@ -23,12 +23,12 @@ public class Xml2SchemaBuilderTest {
     @Test
     public final void testBuild_FixedWidth() throws SchemaException {
 
-        String sXmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema/1.0\" >"
-                + "<fixedwidthschema lineseparator=\"\\r\\n\">" 
-                + "<line occurs=\"*\" linetype=\"Person\">"
-                + "<cell name=\"First name\" length=\"5\"/>" + "<cell name=\"Last name\" length=\"8\"/>"
-                + "<cell name=\"Shoe size\" length=\"8\" alignment=\"right\"><format type=\"integer\" pattern=\"00000000\"/></cell>"
+        String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
+                + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/1.0' >"
+                + "<fixedwidthschema lineseparator='\\r\\n'>" 
+                + "<line occurs='*' linetype='Person'>"
+                + "<cell name='First name' length='5'/>" + "<cell name='Last name' length='8'/>"
+                + "<cell name='Shoe size' length='8' alignment='right'><format type='integer' pattern='00000000'/></cell>"
                 + "</line></fixedwidthschema></schema>";
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
@@ -57,9 +57,9 @@ public class Xml2SchemaBuilderTest {
     @Test
     public final void testBuild_Csv() throws SchemaException {
 
-        String sXmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema/1.0\" >" + "<csvschema><line occurs=\"4\">"
-                + "<cell name=\"First name\"/>" + "<cell name=\"Last name\"/>" + "</line></csvschema></schema>";
+        String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
+                + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/1.0' >" + "<csvschema><line occurs='4'>"
+                + "<cell name='First name'/>" + "<cell name='Last name'/>" + "</line></csvschema></schema>";
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
         java.io.Reader reader = new java.io.StringReader(sXmlSchema);
@@ -73,10 +73,10 @@ public class Xml2SchemaBuilderTest {
     @Test
     public final void testBuild_CsvControlCell() throws SchemaException {
 
-        String sXmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema/1.0\" >"
-                + "<csvcontrolcellschema writecontrolcell=\"false\"><line occurs=\"4\">"
-                + "<cell name=\"First name\"/>" + "<cell name=\"Last name\"/>"
+        String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
+                + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/1.0' >"
+                + "<csvcontrolcellschema writecontrolcell='false'><line occurs='4'>"
+                + "<cell name='First name'/>" + "<cell name='Last name'/>"
                 + "</line></csvcontrolcellschema></schema>";
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
@@ -93,9 +93,9 @@ public class Xml2SchemaBuilderTest {
     @Test
     public final void testBuild_Csv_firstlineasschema() throws SchemaException {
 
-        String sXmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema/1.0\" >"
-                + "<csvschema><line occurs=\"4\" firstlineasschema=\"true\" >" + "</line></csvschema></schema>";
+        String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
+                + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/1.0' >"
+                + "<csvschema><line occurs='4' firstlineasschema='true' >" + "</line></csvschema></schema>";
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
         java.io.Reader reader = new java.io.StringReader(sXmlSchema);
@@ -109,9 +109,9 @@ public class Xml2SchemaBuilderTest {
     @Test
     public final void testBuild_Csv_ignorereademptylines() throws SchemaException {
 
-        String sXmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema/1.0\" >"
-                + "<csvschema><line occurs=\"4\" ignorereademptylines=\"false\" >" + "</line></csvschema></schema>";
+        String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
+                + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/1.0' >"
+                + "<csvschema><line occurs='4' ignorereademptylines='false' >" + "</line></csvschema></schema>";
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
         java.io.Reader reader = new java.io.StringReader(sXmlSchema);
@@ -126,9 +126,9 @@ public class Xml2SchemaBuilderTest {
     public final void testBuild_Csv_firstlineasschema_error() throws SchemaException {
 
         // "yes" is not a valid boolean value.
-        String sXmlSchema = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<schema  xmlns=\"http://jsapar.tigris.org/JSaParSchema/1.0\" >\n"
-                + "<csvschema><line occurs=\"4\" firstlineasschema=\"yes\" >\n" + "</line></csvschema></schema>";
+        String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>\n"
+                + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/1.0' >\n"
+                + "<csvschema><line occurs='4' firstlineasschema='yes' >\n" + "</line></csvschema></schema>";
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
         java.io.Reader reader = new java.io.StringReader(sXmlSchema);

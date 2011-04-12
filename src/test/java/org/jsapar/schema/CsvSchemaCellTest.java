@@ -31,6 +31,18 @@ public class CsvSchemaCellTest {
     }
 
     @Test
+    public final void testOutput_String_ignorewrite() throws IOException {
+        CsvSchemaCell schemaElment = new CsvSchemaCell("First name");
+        schemaElment.setIgnoreWrite(true);
+
+        Writer writer = new StringWriter();
+        Cell cell = new StringCell("Jonas");
+        schemaElment.output(cell, writer, ";",(char)0);
+
+        assertEquals("", writer.toString());
+    }
+    
+    @Test
     public final void testOutput_String_quoted() throws IOException {
 	CsvSchemaCell schemaElment = new CsvSchemaCell("First name");
 

@@ -113,6 +113,10 @@ public abstract class SchemaLine implements Cloneable {
      *         schemaCell.
      */
     protected static Cell findCell(Line line, SchemaCell schemaCell, int nSchemaCellIndex) {
+        // If we should not write the cell, we don't need the cell.
+        if(schemaCell.isIgnoreWrite())
+            return null;
+        
         Cell cellByIndex = null;
         if (nSchemaCellIndex < line.getNumberOfCells())
             cellByIndex = line.getCell(nSchemaCellIndex); 

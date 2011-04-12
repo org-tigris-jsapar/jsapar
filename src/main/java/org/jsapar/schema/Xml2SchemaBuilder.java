@@ -471,6 +471,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
             if (xmlIgnoreRead != null)
                 cell.setIgnoreRead(getBooleanValue(xmlIgnoreRead));
 
+            Node xmlIgnoreWrite = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_IGNOREWRITE);
+            if (xmlIgnoreWrite != null)
+                cell.setIgnoreWrite(getBooleanValue(xmlIgnoreWrite));
+
             Node xmlMandatory = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_MANDATORY);
             if (xmlMandatory != null)
                 cell.setMandatory(getBooleanValue(xmlMandatory));
