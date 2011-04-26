@@ -46,6 +46,16 @@ public class BooleanFormatTest {
     }
 
     /**
+     * Test method for {@link org.jsapar.format.BooleanFormat#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)}.
+     */
+    @Test
+    public void testFormatObjectStringBufferFieldPosition_empty() {
+        BooleanFormat f = new BooleanFormat("ja", "");
+        assertEquals("", f.format(Boolean.FALSE));
+        assertEquals("ja", f.format(Boolean.TRUE));
+    }
+    
+    /**
      * Test method for {@link org.jsapar.format.BooleanFormat#format(boolean)}.
      */
     @Test

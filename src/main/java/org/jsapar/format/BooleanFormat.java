@@ -27,6 +27,8 @@ public class BooleanFormat extends Format {
     public BooleanFormat(String trueValue, String falseValue) {
         this.trueValue = trueValue;
         this.falseValue = falseValue;
+        if(trueValue.equals(falseValue))
+            throw new IllegalArgumentException("true and false values cannot be the same");
     }
 
     /* (non-Javadoc)
@@ -89,5 +91,15 @@ public class BooleanFormat extends Format {
         else 
             throw new NumberFormatException("Faled to parse [" + toParse + "] to boolean value only [" + trueValue +"] or [" + falseValue + "] is allowed.");
     }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "BooleanFormat [trueValue=" + trueValue + ", falseValue=" + falseValue + "]";
+    }
+    
+    
 
 }

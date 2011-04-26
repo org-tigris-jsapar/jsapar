@@ -8,6 +8,7 @@ import java.util.Locale;
 import junit.framework.Assert;
 
 import org.jsapar.Cell.CellType;
+import org.jsapar.format.BooleanFormat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -105,4 +106,14 @@ public class SchemaCellFormatTest {
         Assert.assertEquals("0000", format.getPattern());
     }
 
+    /**
+     * Test method for {@link org.jsapar.schema.SchemaCellFormat#getPattern()}.
+     * @throws SchemaException 
+     */
+    @Test
+    public void testSchemaCellFormat() throws SchemaException {
+        SchemaCellFormat format = new SchemaCellFormat(CellType.BOOLEAN, "yes;");
+        Assert.assertEquals(BooleanFormat.class, format.getFormat().getClass());
+    }
+    
 }

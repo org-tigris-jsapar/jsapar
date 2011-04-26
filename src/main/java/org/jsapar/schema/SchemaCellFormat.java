@@ -101,9 +101,9 @@ public class SchemaCellFormat implements Cloneable {
             throw new SchemaException("CUSTOM cell type formatter can not be created without specifying a formatter.");
         case BOOLEAN:
             String[] aTrueFalse = sPattern.trim().split("\\s*;\\s*");
-            if(aTrueFalse.length != 2)
+            if(aTrueFalse.length < 1 || aTrueFalse.length > 2)
                 throw new SchemaException("Boolean format pattern should only contain two fields separated with ; character");
-            this.format = new BooleanFormat(aTrueFalse[0], aTrueFalse[1]);
+            this.format = new BooleanFormat(aTrueFalse[0], aTrueFalse.length==2 ? aTrueFalse[1] : "");
             break;
         default:
             throw new SchemaException("Unknown cellType supplied: " + cellType);
