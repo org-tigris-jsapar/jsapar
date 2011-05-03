@@ -620,8 +620,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @throws SchemaException
      * @throws IOException
      */
-    @SuppressWarnings("unchecked")
-    public static Schema loadSchemaFromXmlResource(Class resourceBaseClass, String resourceName) throws SchemaException,
+    public static Schema loadSchemaFromXmlResource(Class<?> resourceBaseClass, String resourceName) throws SchemaException,
             IOException {
         if (resourceBaseClass == null)
             resourceBaseClass = Xml2SchemaBuilder.class;

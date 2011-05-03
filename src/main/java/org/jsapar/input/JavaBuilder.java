@@ -42,7 +42,7 @@ public class JavaBuilder {
      *         supplied.
      * @throws JSaParException
      */
-    public Document build(Collection objects) throws JSaParException {
+    public Document build(Collection<?> objects) throws JSaParException {
         Document doc = new Document();
         for (Object object : objects) {
             doc.addLine(buildLine(object));
