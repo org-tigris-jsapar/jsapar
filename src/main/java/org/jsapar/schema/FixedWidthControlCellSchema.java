@@ -193,7 +193,7 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
         this.controlCellLength = controlCellLength;
     }
 
-    public FixedWidthControlCellSchema clone() throws CloneNotSupportedException {
+    public FixedWidthControlCellSchema clone()  {
         FixedWidthControlCellSchema schema = (FixedWidthControlCellSchema) super.clone();
         return schema;
     }

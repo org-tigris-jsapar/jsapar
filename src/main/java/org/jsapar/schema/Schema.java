@@ -140,15 +140,18 @@ public abstract class Schema implements Cloneable, ParseSchema {
         return lineBuilder.toString();
     }
 
-    public Schema clone() throws CloneNotSupportedException {
-        return (Schema) super.clone();
+    public Schema clone(){
+        try {
+            return (Schema) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(e);
+        }
     }
 
     /**
      * @return list of all schema lines.
      */
-    @SuppressWarnings("unchecked")
-    protected abstract List getSchemaLines();
+    protected abstract List<? extends SchemaLine> getSchemaLines();
 
     /*
      * (non-Javadoc)

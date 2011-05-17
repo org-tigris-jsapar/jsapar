@@ -292,8 +292,12 @@ public abstract class SchemaCell implements Cloneable {
         this.mandatory = mandatory;
     }
 
-    public SchemaCell clone() throws CloneNotSupportedException {
-        return (SchemaCell) super.clone();
+    public SchemaCell clone() {
+        try {
+            return (SchemaCell) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(e);
+        }
     }
 
     /*

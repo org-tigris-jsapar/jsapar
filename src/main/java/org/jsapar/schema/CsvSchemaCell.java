@@ -31,7 +31,8 @@ public class CsvSchemaCell extends SchemaCell {
         writer.write(sValue);
     }
 
-    public CsvSchemaCell clone() throws CloneNotSupportedException {
+    @Override
+    public CsvSchemaCell clone() {
         return (CsvSchemaCell) super.clone();
     }
 

@@ -150,9 +150,9 @@ public class CsvControlCellSchema extends CsvSchema {
      * 
      * @see org.jsapar.schema.CsvSchema#clone()
      */
-    public CsvControlCellSchema clone() throws CloneNotSupportedException {
-        CsvControlCellSchema schema = (CsvControlCellSchema) super.clone();
-        return schema;
+    @Override
+    public CsvControlCellSchema clone() {
+        return (CsvControlCellSchema) super.clone();
     }
 
     /*

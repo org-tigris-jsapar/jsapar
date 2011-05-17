@@ -166,12 +166,21 @@ public abstract class Cell implements java.io.Serializable, Cloneable {
      * @throws JSaParException
      */
     public Cell makeCopy(String sNewName) {
+        Cell clone = this.clone();
+        clone.setName(sNewName);
+        return clone;
+    }
+
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#clone()
+     */
+    @Override
+    public Cell clone() {
         try {
-            Cell clone = (Cell) this.clone();
-            clone.setName(sNewName);
-            return clone;
+            return (Cell) super.clone();
         } catch (CloneNotSupportedException e) {
-            return null;
+            throw new AssertionError(e);
         }
     }
 

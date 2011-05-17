@@ -136,8 +136,10 @@ public class CsvSchema extends Schema {
         return nLineNumber - nStartLine;
     }
 
-    public CsvSchema clone() throws CloneNotSupportedException {
-        CsvSchema schema = (CsvSchema) super.clone();
+    @Override
+    public CsvSchema clone() {
+        CsvSchema schema;
+        schema = (CsvSchema) super.clone();
 
         schema.schemaLines = new java.util.ArrayList<CsvSchemaLine>();
         for (CsvSchemaLine line : this.schemaLines) {
@@ -161,9 +163,8 @@ public class CsvSchema extends Schema {
         return sb.toString();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public List getSchemaLines() {
+    public List<? extends SchemaLine> getSchemaLines() {
         return this.schemaLines;
     }
 

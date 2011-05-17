@@ -265,7 +265,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
      * 
      * @see org.jsapar.schema.SchemaCell#clone()
      */
-    public FixedWidthSchemaCell clone() throws CloneNotSupportedException {
+    public FixedWidthSchemaCell clone(){
         return (FixedWidthSchemaCell) super.clone();
     }
 

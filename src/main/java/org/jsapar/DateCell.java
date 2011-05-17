@@ -123,7 +123,7 @@ public class DateCell extends Cell implements Comparable<DateCell> {
      * @see java.lang.Object#clone()
      */
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public DateCell clone() {
         DateCell clone = (DateCell)super.clone();
         clone.dateValue = (Date)this.dateValue.clone();
         return clone;

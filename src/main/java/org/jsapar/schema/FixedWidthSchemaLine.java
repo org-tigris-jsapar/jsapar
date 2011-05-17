@@ -210,8 +210,13 @@ public class FixedWidthSchemaLine extends SchemaLine {
      * 
      * @see java.lang.Object#clone()
      */
-    public FixedWidthSchemaLine clone() throws CloneNotSupportedException {
-        FixedWidthSchemaLine line = (FixedWidthSchemaLine) super.clone();
+    public FixedWidthSchemaLine clone(){
+        FixedWidthSchemaLine line;
+        try {
+            line = (FixedWidthSchemaLine) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(e);
+        }
 
         line.schemaCells = new java.util.LinkedList<FixedWidthSchemaCell>();
         for (FixedWidthSchemaCell cell : this.schemaCells) {

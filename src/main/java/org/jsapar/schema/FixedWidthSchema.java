@@ -163,7 +163,7 @@ public class FixedWidthSchema extends Schema {
      * @see org.jsapar.schema.Schema#clone()
      */
     @Override
-    public FixedWidthSchema clone() throws CloneNotSupportedException {
+    public FixedWidthSchema clone(){
         FixedWidthSchema schema = (FixedWidthSchema) super.clone();
 
         schema.schemaLines = new java.util.LinkedList<FixedWidthSchemaLine>();
@@ -187,9 +187,8 @@ public class FixedWidthSchema extends Schema {
         return sb.toString();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public List getSchemaLines() {
+    public List<? extends SchemaLine> getSchemaLines() {
         return this.schemaLines;
     }
 

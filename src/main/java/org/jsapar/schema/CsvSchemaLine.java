@@ -290,8 +290,13 @@ public class CsvSchemaLine extends SchemaLine {
      * @see java.lang.Object#clone()
      */
     @Override
-    public CsvSchemaLine clone() throws CloneNotSupportedException {
-        CsvSchemaLine line = (CsvSchemaLine) super.clone();
+    public CsvSchemaLine clone(){
+        CsvSchemaLine line;
+        try {
+            line = (CsvSchemaLine) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(e);
+        }
 
         line.schemaCells = new java.util.LinkedList<CsvSchemaCell>();
         for (CsvSchemaCell cell : this.schemaCells) {

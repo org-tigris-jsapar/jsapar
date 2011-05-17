@@ -48,7 +48,7 @@ public class FixedWidthSchemaLineTest {
 
     @Test
     public void testBuild() throws IOException, JSaParException {
-        String toParse = "JonasStenbergSpiselvägen 19141 59Huddinge";
+        String toParse = "JonasStenbergSpiselvagen 19141 59Huddinge";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
@@ -71,7 +71,7 @@ public class FixedWidthSchemaLineTest {
                 Line line = event.getLine();
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell("Last name").getStringValue());
-                assertEquals("Spiselvägen 19", line.getCell(2).getStringValue());
+                assertEquals("Spiselvagen 19", line.getCell(2).getStringValue());
                 assertEquals("141 59", line.getCell("Zip code").getStringValue());
                 assertEquals("Huddinge", line.getCell(4).getStringValue());
 
@@ -181,7 +181,7 @@ public class FixedWidthSchemaLineTest {
         Line line = new Line();
         line.addCell(new StringCell("Jonas"));
         line.addCell(new StringCell("Stenberg"));
-        line.addCell(new StringCell("Street address", "Spiselvägen 19"));
+        line.addCell(new StringCell("Street address", "Spiselvagen 19"));
 
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
@@ -198,7 +198,7 @@ public class FixedWidthSchemaLineTest {
         schemaLine.output(line, writer);
         String sResult = writer.toString();
 
-        assertEquals("JonasStenbergSpiselvägen 19      Huddinge", sResult);
+        assertEquals("JonasStenbergSpiselvagen 19      Huddinge", sResult);
     }
 
     @Test
