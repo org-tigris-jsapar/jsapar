@@ -125,7 +125,7 @@ public abstract class SchemaCell implements Cloneable {
      * @throws ParseException
      */
     public Cell makeCell(String sValue, ParsingEventListener listener, long nLineNumber) throws ParseException {
-        if (sValue.length() <= 0) {
+        if (sValue.isEmpty()) {
             checkIfMandatory(listener, nLineNumber);
 
             if (defaultCell != null) {
@@ -532,6 +532,13 @@ public abstract class SchemaCell implements Cloneable {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @return true if there is a default value, false otherwise.
+     */
+    public boolean isDefaultValue() {
+        return this.defaultCell != null;
     }
 
 }

@@ -121,10 +121,13 @@ public class FixedWidthSchemaLine extends SchemaLine {
 
         for (FixedWidthSchemaCell schemaCell : getSchemaCells()) {
             if (setDefaultsOnly) {
-                if (schemaCell.getDefaultCell() != null)
+                if (schemaCell.isDefaultValue())
                     line.addCell(schemaCell.makeCell(EMPTY_STRING, listener, nLineNumber));
                 continue;
             } else if (schemaCell.isIgnoreRead()) {
+                if(schemaCell.isDefaultValue())
+                    line.addCell(schemaCell.getDefaultCell());
+
                 long nSkipped = reader.skip(schemaCell.getLength());
                 if (nSkipped != schemaCell.getLength()) {
                     if (oneRead)

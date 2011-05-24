@@ -61,7 +61,27 @@ public class CsvSchema extends Schema {
             else
                 schemaLine.addSchemaCell(new CsvSchemaCell(sCell));
         }
+        addDefaultValuesFromMaster(schemaLine, masterLineSchema);
         return schemaLine;
+    }
+
+    /**
+     * Add all cells that has a default value in the master schema last on the line with
+     * ignoreRead=true so that the default values are always set.
+     * 
+     * @param schemaLine
+     * @param masterLineSchema
+     */
+    private void addDefaultValuesFromMaster(CsvSchemaLine schemaLine, CsvSchemaLine masterLineSchema) {
+        for(CsvSchemaCell cell : masterLineSchema.getSchemaCells()){
+            if(cell.getDefaultCell() != null){
+                if(schemaLine.getCsvSchemaCell(cell.getName())==null){
+                    CsvSchemaCell defaultCell = cell.clone();
+                    defaultCell.setIgnoreRead(true);
+                    schemaLine.addSchemaCell(defaultCell);
+                }
+            }
+        }
     }
 
     @Override

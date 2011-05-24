@@ -143,19 +143,22 @@ public class CsvSchemaLine extends SchemaLine {
      * @throws JSaParException
      */
     private void addCellToLineBySchema(Line line,
-                         CsvSchemaCell schemaCell,
-                          String sCell,
-                          ParsingEventListener listener,
-                          long nLineNumber) throws JSaParException {
-        if (schemaCell.isIgnoreRead())
-            return;
-        
+                                       SchemaCell schemaCell,
+                                       String sCell,
+                                       ParsingEventListener listener,
+                                       long nLineNumber) throws JSaParException {
+
         try {
-            Cell cell= schemaCell.makeCell(sCell, listener, nLineNumber);
-            if(cell != null)
+            if (schemaCell.isIgnoreRead()) {
+                if(schemaCell.isDefaultValue())
+                    line.addCell(schemaCell.getDefaultCell());
+                return;
+            }
+            Cell cell = schemaCell.makeCell(sCell, listener, nLineNumber);
+            if (cell != null)
                 line.addCell(cell);
         } catch (ParseException e) {
-            CellParseError cellParseError  = e.getCellParseError();
+            CellParseError cellParseError = e.getCellParseError();
             cellParseError = new CellParseError(nLineNumber, cellParseError);
             listener.lineErrorEvent(new LineErrorEvent(this, cellParseError));
         }

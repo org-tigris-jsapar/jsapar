@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import org.jsapar.BooleanCell;
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
@@ -148,6 +149,9 @@ public class CSVSchemaTest {
 	CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe Size", new SchemaCellFormat(CellType.INTEGER));
 	shoeSizeCell.setDefaultValue("43");
 	schemaLine.addSchemaCell(shoeSizeCell);
+        CsvSchemaCell hasDogCell = new CsvSchemaCell("HasDog", new SchemaCellFormat(CellType.BOOLEAN));
+        hasDogCell.setDefaultValue("false");
+        schemaLine.addSchemaCell(hasDogCell);
 	schemaLine.setFirstLineAsSchema(true);
 	schema.addSchemaLine(schemaLine);
 
@@ -161,11 +165,13 @@ public class CSVSchemaTest {
 	assertEquals("Jonas", line.getCell("First Name").getStringValue());
 	assertEquals("Stenberg", line.getCell("Last Name").getStringValue());
 	assertEquals(41, line.getIntCellValue("Shoe Size"));
+	assertEquals(Boolean.FALSE, ((BooleanCell)line.getCell("HasDog")).getBooleanValue());
 
 	line = doc.getLine(1);
 	assertEquals("Nils", line.getCell("First Name").getStringValue());
 	assertEquals("Nilsson", line.getCell("Last Name").getStringValue());
         assertEquals(43, line.getIntCellValue("Shoe Size"));
+        assertEquals(Boolean.FALSE, ((BooleanCell)line.getCell("HasDog")).getBooleanValue());
     }
 
     @Test
