@@ -92,7 +92,9 @@ public class JavaOutputter {
         return objectToAssign;
     }
 
-    /** Assign supplied cell value to supplied object.
+    /**
+     * Assign supplied cell value to supplied object.
+     * 
      * @param <T>
      * @param cell
      * @param sName
@@ -108,7 +110,7 @@ public class JavaOutputter {
                 String getterMethodName = createGetMethodName(nameLevels[i]);
                 Method getterMethod = currentObject.getClass().getMethod(getterMethodName);
                 Object nextObject = getterMethod.invoke(currentObject);
-                if(nextObject == null){
+                if (nextObject == null) {
                     // If there was no object we have to create it..
                     Class<?> nextClass = getterMethod.getReturnType();
                     try {
@@ -217,6 +219,9 @@ public class JavaOutputter {
      */
     private <T> boolean assignParameterBySignature(T objectToAssign, String sSetMethodName, Cell cell)
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+
+        if(cell.getValue() == null)
+            return false;
         try {
             Class<?> type = cell.getValue().getClass();
             Method f = objectToAssign.getClass().getMethod(sSetMethodName, type);

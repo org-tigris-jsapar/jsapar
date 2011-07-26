@@ -14,7 +14,7 @@ import java.util.Date;
 public class TestPerson {
 
     private String         firstName;
-    private String         lastName;
+    private String         lastName = "Nobody";
     private short          shoeSize;
     private long           luckyNumber;
     private int            streetNumber;

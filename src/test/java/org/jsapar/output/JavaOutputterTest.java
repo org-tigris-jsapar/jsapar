@@ -2,6 +2,7 @@ package org.jsapar.output;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.text.ParseException;
@@ -179,6 +180,30 @@ public class JavaOutputterTest {
         assertEquals("By", (objects.get(0)).getAddress().getSubAddress().getTown());
         System.out.println("The (expected) error: " + parseErrors);
     }
+    
+    /**
+     * @throws JSaParException
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public final void testCreateJavaObjects_null_value() throws JSaParException {
+        Document document = new Document();
+        Line line1 = new Line("org.jsapar.TestPerson");
+        line1.addCell(new StringCell("firstName", "Jonas"));
+        line1.addCell(new StringCell("lastName", null));
+        line1.addCell(new IntegerCell("shoeSize", 42));
+       
+        document.addLine(line1);
+
+        JavaOutputter outputter = new JavaOutputter();
+        List<CellParseError> parseErrors = new LinkedList<CellParseError>();
+        java.util.List<TestPerson> objects = outputter.createJavaObjects(document, parseErrors);
+        assertEquals("Un-expected errors: " + parseErrors, 0, parseErrors.size());
+        assertEquals(1, objects.size());
+        assertEquals("Jonas", objects.get(0).getFirstName());
+        assertNull(objects.get(0).getLastName());
+        assertEquals(42, objects.get(0).getShoeSize());
+    }    
     
     @Test
     @Ignore("Not yet implemented")
