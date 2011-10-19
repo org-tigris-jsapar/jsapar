@@ -118,8 +118,8 @@ public class Parser implements ParsingEventListener {
      *         lineType of each line.
      * @throws JSaParException
      */
-    @SuppressWarnings("unchecked")
-    public List buildJava(Reader reader, List<CellParseError> parseErrors) throws JSaParException {
+    @SuppressWarnings("rawtypes")
+	public List buildJava(Reader reader, List<CellParseError> parseErrors) throws JSaParException {
         JavaBuilder javaBuilder = new JavaBuilder(parseErrors);
         return javaBuilder.build(reader);
     }
@@ -280,9 +280,9 @@ public class Parser implements ParsingEventListener {
      * @author stejon0
      * 
      */
-    @SuppressWarnings("unchecked")
     private class JavaBuilder {
-        private List                 objects   = new LinkedList();
+        @SuppressWarnings("rawtypes")
+		private List              objects   = new LinkedList();
         private List<CellParseError> parseErrors;
         private JavaOutputter        outputter = new JavaOutputter();
 
@@ -290,7 +290,7 @@ public class Parser implements ParsingEventListener {
             this.parseErrors = parseErrors;
         }
 
-        public List build(java.io.Reader reader) throws JSaParException {
+        public List<?> build(java.io.Reader reader) throws JSaParException {
             addParsingEventListener(new ParsingEventListener() {
 
                 @Override
@@ -298,7 +298,8 @@ public class Parser implements ParsingEventListener {
                     parseErrors.add(event.getCellParseError());
                 }
 
-                @Override
+                @SuppressWarnings("unchecked")
+				@Override
                 public void lineParsedEvent(LineParsedEvent event) {
                     List<CellParseError> currentParseErrors = new LinkedList<CellParseError>();
                     try {

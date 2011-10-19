@@ -1,16 +1,16 @@
 package org.jsapar;
 
-public class TestPostAddress {
+public class TstPostAddress {
     private String street;
     private String town;
-    private TestPerson owner;
-    private TestPostAddress subAddress;
+    private TstPerson owner;
+    private TstPostAddress subAddress;
 
-    public TestPostAddress() {
+    public TstPostAddress() {
         super();
     }
 
-    public TestPostAddress(String street, String town) {
+    public TstPostAddress(String street, String town) {
         super();
         this.street = street;
         this.town = town;
@@ -32,19 +32,19 @@ public class TestPostAddress {
         this.town = town;
     }
 
-    public void setOwner(TestPerson owner) {
+    public void setOwner(TstPerson owner) {
         this.owner = owner;
     }
 
-    public TestPerson getOwner() {
+    public TstPerson getOwner() {
         return owner;
     }
 
-    public void setSubAddress(TestPostAddress subAddress) {
+    public void setSubAddress(TstPostAddress subAddress) {
         this.subAddress = subAddress;
     }
 
-    public TestPostAddress getSubAddress() {
+    public TstPostAddress getSubAddress() {
         return subAddress;
     }
 }

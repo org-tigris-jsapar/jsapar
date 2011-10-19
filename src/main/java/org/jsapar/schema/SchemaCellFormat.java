@@ -65,8 +65,6 @@ public class SchemaCellFormat implements Cloneable {
         case STRING:
             if (sPattern != null)
                 this.format = new RegExpFormat(sPattern);
-            else
-                this.format = null;
             break;
         case DATE:
             this.format = new java.text.SimpleDateFormat(sPattern);

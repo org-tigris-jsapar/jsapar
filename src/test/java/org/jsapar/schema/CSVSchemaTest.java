@@ -24,7 +24,7 @@ public class CSVSchemaTest {
 	CsvSchema schema = new CsvSchema();
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schema.addSchemaLine(schemaLine);
-	String sToParse = "Jonas;Stenberg;Hemvägen 19;111 22;Stockholm";
+	String sToParse = "Jonas;Stenberg;Hemgatan 19;111 22;Stockholm";
 	java.io.Reader reader = new java.io.StringReader(sToParse);
 	DocumentBuilder builder = new DocumentBuilder();
 	Document doc = builder.build(reader, schema);
@@ -34,7 +34,7 @@ public class CSVSchemaTest {
 	Line line = doc.getLine(0);
 	assertEquals("Jonas", line.getCell(0).getStringValue());
 	assertEquals("Stenberg", line.getCell(1).getStringValue());
-	assertEquals("Hemvägen 19", line.getCell(2).getStringValue());
+	assertEquals("Hemgatan 19", line.getCell(2).getStringValue());
 	assertEquals("111 22", line.getCell(3).getStringValue());
 	assertEquals("Stockholm", line.getCell(4).getStringValue());
     }
@@ -44,7 +44,7 @@ public class CSVSchemaTest {
 	CsvSchema schema = new CsvSchema();
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schema.addSchemaLine(schemaLine);
-	String sToParse = "Jonas;Stenberg;Hemvägen 19;111 22;Stockholm" + System.getProperty("line.separator");
+	String sToParse = "Jonas;Stenberg;Hemgatan 19;111 22;Stockholm" + System.getProperty("line.separator");
 	java.io.Reader reader = new java.io.StringReader(sToParse);
 	DocumentBuilder builder = new DocumentBuilder();
 	Document doc = builder.build(reader, schema);
@@ -54,7 +54,7 @@ public class CSVSchemaTest {
 	Line line = doc.getLine(0);
 	assertEquals("Jonas", line.getCell(0).getStringValue());
 	assertEquals("Stenberg", line.getCell(1).getStringValue());
-	assertEquals("Hemvägen 19", line.getCell(2).getStringValue());
+	assertEquals("Hemgatan 19", line.getCell(2).getStringValue());
 	assertEquals("111 22", line.getCell(3).getStringValue());
 	assertEquals("Stockholm", line.getCell(4).getStringValue());
     }

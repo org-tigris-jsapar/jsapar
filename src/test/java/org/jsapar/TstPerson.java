@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Jonas Stenberg
  * 
  */
-public class TestPerson {
+public class TstPerson {
 
     private String         firstName;
     private String         lastName = "Nobody";
@@ -19,12 +19,12 @@ public class TestPerson {
     private long           luckyNumber;
     private int            streetNumber;
     private char           door;
-    private TestPostAddress    address;
-    private TestPostAddress    workAddress;
+    private TstPostAddress    address;
+    private TstPostAddress    workAddress;
     
     private java.util.Date birthTime;
 
-    public TestPerson(String firstName, String lastName, short shoeSize, long luckyNumber, Date birthTime, int streetNumber, char door) {
+    public TstPerson(String firstName, String lastName, short shoeSize, long luckyNumber, Date birthTime, int streetNumber, char door) {
         super();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -38,7 +38,7 @@ public class TestPerson {
     /**
      * 
      */
-    public TestPerson() {
+    public TstPerson() {
     }
 
     /**
@@ -148,21 +148,21 @@ public class TestPerson {
         return door;
     }
 
-    public void setAddress(TestPostAddress address) {
+    public void setAddress(TstPostAddress address) {
         this.address = address;
         address.setOwner(this);
     }
 
-    public TestPostAddress getAddress() {
+    public TstPostAddress getAddress() {
         return address;
     }
 
-    public void setWorkAddress(TestPostAddress workAddress) {
+    public void setWorkAddress(TstPostAddress workAddress) {
         this.workAddress = workAddress;
         address.setOwner(this);
     }
 
-    public TestPostAddress getWorkAddress() {
+    public TstPostAddress getWorkAddress() {
         return workAddress;
     }
 

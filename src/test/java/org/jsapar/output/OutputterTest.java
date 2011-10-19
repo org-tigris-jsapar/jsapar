@@ -24,7 +24,7 @@ public class OutputterTest {
 	java.text.DateFormat dateFormat=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	this.birthTime = dateFormat.parse("1971-03-25 23:04:24");
 
-	Line line1 = new Line("org.jsapar.TestPerson");
+	Line line1 = new Line("org.jsapar.TstPerson");
 	line1.addCell(new StringCell("FirstName", "Jonas"));
 	line1.addCell(new StringCell("LastName", "Stenberg"));
 	line1.addCell(new IntegerCell("ShoeSize", 42));
@@ -33,7 +33,7 @@ public class OutputterTest {
 //	line1.addCell(new StringCell("NeverUsed", "Should not be assigned"));
 	
 
-	Line line2 = new Line("org.jsapar.TestPerson");
+	Line line2 = new Line("org.jsapar.TstPerson");
 	line2.addCell(new StringCell("FirstName", "Frida"));
 	line2.addCell(new StringCell("LastName", "Bergsten"));
 
