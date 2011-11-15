@@ -214,34 +214,40 @@ public class CsvSchemaLine extends SchemaLine {
             }
         }
 
-        String sFound;
-        int nFoundEnd = sToSplit.indexOf(quoteChar + sCellSeparator, nIndex);
-        if (nFoundEnd < 0){
-            // Last character is quote
-            if(sToSplit.length()>1 && sToSplit.charAt(sToSplit.length()-1)==quoteChar){
-                sFound = sToSplit.substring(nIndex, sToSplit.length()-1);
+        do {
+            String sFound;
+            int nFoundEnd = sToSplit.indexOf(quoteChar + sCellSeparator, nIndex);
+            if (nFoundEnd < 0) {
+                // Last character is quote
+                if (sToSplit.length() > 1 && sToSplit.charAt(sToSplit.length() - 1) == quoteChar) {
+                    sFound = sToSplit.substring(nIndex, sToSplit.length() - 1);
+                    cells.add(sFound);
+                    return;
+                } else {
+                    // Only a start quote but no end quote, then ignore the quote. Do a normal
+                    // split.
+                    cells.addAll(Arrays.asList(sToSplit.substring(nIndex - 1).split(sCellSeparator)));
+                    return;
+                }
+            }
+            sFound = sToSplit.substring(nIndex, nFoundEnd);
+            nIndex = nFoundEnd + 1;
+
+            // Reached end of line
+            if (nIndex >= sToSplit.length()) {
                 cells.add(sFound);
                 return;
             }
-            else{
-                // Only a start quote but no end quote, then ignore the quote. Do a normal split.
-                cells.addAll(Arrays.asList(sToSplit.substring(nIndex-1).split(sCellSeparator)));
-                return;
-            }
-        }
-        sFound = sToSplit.substring(nIndex, nFoundEnd);
-        nIndex = nFoundEnd + 1;
 
-        // Reached end of line
-        if(nIndex >= sToSplit.length()){
             cells.add(sFound);
-            return;
-        }
+            nIndex += sCellSeparator.length();
+            sToSplit = sToSplit.substring(nIndex);
+            // Continue to pick quoted cells but ignore the first quote since we require it in the condition.
+            nIndex=1;
+        } while (!sToSplit.isEmpty() && sToSplit.charAt(0) == quoteChar);
         
-        cells.add(sFound);
-        nIndex += sCellSeparator.length();
         // Now handle the rest of the string with a recursive call.
-        splitQuoted(cells, sToSplit.substring(nIndex, sToSplit.length()), sCellSeparator, quoteChar);
+        splitQuoted(cells, sToSplit, sCellSeparator, quoteChar);
     }
 
     /**

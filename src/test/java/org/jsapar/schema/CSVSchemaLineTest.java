@@ -153,6 +153,31 @@ public class CSVSchemaLineTest  {
 
         assertEquals(true, rc);
     }
+
+    @Test
+    public void testBuild_quoted_after_unquoted() throws JSaParException {
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setQuoteChar('\"');
+        String sLine = "Jonas;\"Stenberg\";Not quoted;\"Hemvägen ;19\"";
+        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            }
+
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+                Line line = event.getLine();
+                assertEquals(4, line.getNumberOfCells());
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Stenberg", line.getCell(1).getStringValue());
+                assertEquals("Not quoted", line.getCell(2).getStringValue());
+                assertEquals("Hemvägen ;19", line.getCell(3).getStringValue());
+            }
+        });
+
+        assertEquals(true, rc);
+    }
     
     @Test
     public void testBuild_quoted_last_cellsep() throws JSaParException {
