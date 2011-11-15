@@ -55,6 +55,10 @@ public class JSaParExamplesTest {
         assertEquals("false", document.getLine(1).getCell(2).getStringValue());
         assertEquals(Boolean.FALSE, ((BooleanCell)document.getLine(1).getCell(2)).getBooleanValue());
 
+        assertEquals("Alfred", document.getLine(2).getCell("First name").getStringValue());
+        assertEquals("Nilsson", document.getLine(2).getCell("Last name").getStringValue());
+        assertEquals("true", document.getLine(2).getCell("Have dog").getStringValue());
+
         assertEquals("Person", document.getLine(0).getLineType());
         assertEquals("Person", document.getLine(1).getLineType());
     }

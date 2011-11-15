@@ -416,7 +416,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @param sToReplace
      * @return
      */
-    private String replaceEscapes2Java(String sToReplace) {
+    public static String replaceEscapes2Java(String sToReplace) {
         sToReplace = sToReplace.replaceAll("\\\\r", "\r");
         sToReplace = sToReplace.replaceAll("\\\\n", "\n");
         sToReplace = sToReplace.replaceAll("\\\\t", "\t");

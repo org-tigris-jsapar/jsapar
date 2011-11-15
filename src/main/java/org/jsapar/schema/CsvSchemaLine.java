@@ -208,7 +208,7 @@ public class CsvSchemaLine extends SchemaLine {
                 return;
             } else if (nFoundQuote > 0) {
                 String sUnquoted = sToSplit.substring(0, nFoundQuote);
-                String[] asCells = sUnquoted.split(sCellSeparator);
+                String[] asCells = sUnquoted.split(sCellSeparator, -1);
                 cells.addAll(Arrays.asList(asCells));
                 nIndex = nFoundQuote + sCellSeparator.length() + 1;
             }
