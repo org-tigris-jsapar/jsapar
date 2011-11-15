@@ -245,7 +245,8 @@ public class CsvSchemaLine extends SchemaLine {
             // Continue to pick quoted cells but ignore the first quote since we require it in the condition.
             nIndex=1;
         } while (!sToSplit.isEmpty() && sToSplit.charAt(0) == quoteChar);
-        
+
+        // Next cell is not quoted
         // Now handle the rest of the string with a recursive call.
         splitQuoted(cells, sToSplit, sCellSeparator, quoteChar);
     }
