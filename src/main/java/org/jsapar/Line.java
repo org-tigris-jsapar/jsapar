@@ -1,6 +1,7 @@
 package org.jsapar;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Iterator;
 
 import org.jsapar.Cell.CellType;
@@ -404,7 +405,7 @@ public class Line implements Serializable {
     /**
      * Utility function that gets the integer cell value of the specified cell. If the specified
      * cell does not exist, a JSaparException is thrown. Tries to parse an integer value if cell is
-     * not of type IntegerCell. Throws a NumberFormatException if the value is not a parable
+     * not of type IntegerCell. Throws a NumberFormatException if the value is not a parsable
      * integer.
      * 
      * @param cellName
@@ -425,7 +426,7 @@ public class Line implements Serializable {
     /**
      * Utility function that gets the double cell value of the specified cell. If the specified cell
      * does not exist, a JSaparException is thrown. Tries to parse a double value if cell is not of
-     * type IntegerCell. Throws a NumberFormatException if the value is not a parable double.
+     * type FloatCell. Throws a NumberFormatException if the value is not a parsable double.
      * 
      * @param cellName
      * @return The double value of the cell with the specified name.
@@ -442,6 +443,26 @@ public class Line implements Serializable {
         return Double.parseDouble(cell.getStringValue());
     }
 
+    /**
+     * Utility function that gets the BigDecimal cell value of the specified cell. If the specified cell
+     * does not exist, a JSaparException is thrown. Tries to parse a BigDecimal value if cell is not of
+     * type BigDecimalCell. Throws a NumberFormatException if the value is not a parsable BigDecimal.
+     * 
+     * @param cellName
+     * @return The double value of the cell with the specified name.
+     * @throws JSaParException
+     *             , NumberFormatException
+     */
+    public BigDecimal getDecimalCellValue(String cellName) throws JSaParException, NumberFormatException {
+        Cell cell = getExistingCell(cellName);
+        if (cell instanceof BigDecimalCell) {
+            BigDecimalCell numberCell = (BigDecimalCell) cell;
+            return numberCell.getBigDecimalValue();
+        }
+
+        return new BigDecimal(cell.getStringValue());
+    }
+    
     /**
      * @param cellName
      * @return true if the cell with the specified name contains a value.
