@@ -1,6 +1,7 @@
 package org.jsapar.schema;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 
@@ -75,56 +76,87 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
         return null;
     }
 
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.schema.FixedWidthSchema#parse(java.io.Reader,
-     * org.jsapar.input.ParsingEventListener)
+    /**
+     * @param reader
+     * @return
+     * @throws JSaParException
      */
-    @Override
-    public void parse(java.io.Reader reader, ParsingEventListener listener) throws JSaParException {
-        char[] lineSeparatorBuffer = new char[getLineSeparator().length()];
-        char[] controlCellBuffer = new char[getControlCellLength()];
-        FixedWidthSchemaLine lineSchema = null;
-        long nLineNumber = 0; // First line is 1
+    private String readControlCell(Reader reader) throws JSaParException {
         try {
-            do {
-                nLineNumber++;
-                int nRead = reader.read(controlCellBuffer, 0, getControlCellLength());
-                if (nRead < getControlCellLength()) {
-                    break; // End of stream.
-                }
-                String sControlCell = new String(controlCellBuffer);
-                if (lineSchema == null || !lineSchema.getLineTypeControlValue().equals(sControlCell)) {
-                    lineSchema = getSchemaLineByControlValue(sControlCell);
-                }
-                if (lineSchema == null) {
-                    CellParseError error = new CellParseError(nLineNumber, "Control cell", sControlCell, null,
-                            "Invalid Line-type: " + sControlCell);
-                    throw new ParseException(error);
-                }
-
-                boolean isLineFound = lineSchema.parse(nLineNumber, reader, listener);
-                if (!isLineFound) {
-                    break; // End of stream.
-                }
-                if (getLineSeparator().length() > 0) {
-                    nRead = reader.read(lineSeparatorBuffer, 0, getLineSeparator().length());
-                    if (nRead < getLineSeparator().length()) {
-                        break; // End of stream.
-                    }
-                    String sSeparator = new String(lineSeparatorBuffer);
-                    if (!sSeparator.equals(getLineSeparator())) {
-                        CellParseError error = new CellParseError(nLineNumber, "End-of-line", sSeparator, null,
-                                "Unexpected characters '" + sSeparator + "' found when expecting line separator.");
-                        throw new ParseException(error);
-                    }
-                }
-
-            } while (true);
+            char[] controlCellBuffer = new char[getControlCellLength()];
+            int nRead = reader.read(controlCellBuffer, 0, getControlCellLength());
+            if (nRead < getControlCellLength()) {
+                return null; // End of stream.
+            }
+            return new String(controlCellBuffer);
         } catch (IOException ex) {
             throw new JSaParException("Failed to read control cell.", ex);
+        }
+    }
+    
+    /**
+     * @param reader
+     * @param nLineNumber
+     * @return a line schema that matches the control value at the beginning of the line. Returns null if end of stream is reached.
+     * @throws JSaParException if no matching schema is found.
+     */
+    private FixedWidthSchemaLine findSchemaLine(Reader reader, long nLineNumber) throws JSaParException{
+        String sControlCell = readControlCell(reader);
+        if(sControlCell == null)
+            return null;
+
+        FixedWidthSchemaLine lineSchema = getSchemaLineByControlValue(sControlCell);
+        if (lineSchema == null) {
+            CellParseError error = new CellParseError(nLineNumber, "Control cell", sControlCell, null,
+                    "Invalid Line-type: " + sControlCell);
+            throw new ParseException(error);
+        }
+        return lineSchema;
+    }
+
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.FixedWidthSchema#parseByOccursFlatFile(java.io.Reader, org.jsapar.input.ParsingEventListener)
+     */
+    @Override
+    protected void parseByOccursFlatFile(Reader reader, ParsingEventListener listener) throws IOException,
+            JSaParException {
+
+        long nLineNumber = 0; // First line is 1
+        while (true) {
+            nLineNumber++;
+
+            FixedWidthSchemaLine lineSchema = findSchemaLine(reader, nLineNumber);
+            if (lineSchema == null)
+                return;
+            boolean isLineFound = lineSchema.parse(nLineNumber, reader, listener);
+            if (!isLineFound) {
+                return; // End of stream.
+            }
+
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.FixedWidthSchema#parseByOccursLinesSeparated(java.io.Reader, org.jsapar.input.ParsingEventListener)
+     */
+    @Override
+    protected void parseByOccursLinesSeparated(Reader reader, ParsingEventListener listener) throws IOException,
+            JSaParException {
+        long nLineNumber = 0; // First line is 1
+        while (true) {
+            nLineNumber++;
+            FixedWidthSchemaLine lineSchema = findSchemaLine(reader, nLineNumber);
+            if (lineSchema == null)
+                return;
+
+            String sLine = parseLine(reader);
+            if (sLine == null)
+                return; // End of buffer
+            boolean isLineFound = lineSchema.parse(nLineNumber, sLine, listener);
+            if (!isLineFound) {
+                return; // End of stream.
+            }
+
         }
     }
 
