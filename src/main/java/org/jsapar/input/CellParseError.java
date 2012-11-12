@@ -124,6 +124,27 @@ public final class CellParseError {
 	return errorDescription;
     }
 
+    /**
+     * @return A simple message describing the error and it's location.
+     */
+    public String getMessage(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Line=");
+        sb.append(this.lineNumber);
+        sb.append(", Cell='");
+        sb.append(this.cellName);
+        sb.append("'");
+        sb.append(", Value='");
+        sb.append(this.cellValue);
+        sb.append("'");
+        sb.append(" - Parse error: ");
+        sb.append(this.errorDescription);
+        if (cellFormat != null) {
+            sb.append(" - Expected format: ");
+            sb.append(this.cellFormat);
+        }
+        return sb.toString();
+    }
 
     /*
      * (non-Javadoc)
@@ -132,21 +153,9 @@ public final class CellParseError {
      */
     @Override
     public String toString() {
-	StringBuilder sb = new StringBuilder();
-	sb.append("{ Line ");
-	sb.append(this.lineNumber);
-	sb.append(", Cell '");
-	sb.append(this.cellName);
-	sb.append("'");
-	sb.append(", Value='");
-	sb.append(this.cellValue);
-	sb.append("'");
-	sb.append(" - Parse error: ");
-	sb.append(this.errorDescription);
-	if (cellFormat != null) {
-	    sb.append(" - Expected format: ");
-	    sb.append(this.cellFormat);
-	}
+        StringBuilder sb = new StringBuilder();
+        sb.append("{ ");
+        sb.append(getMessage());
         if (exception != null) {
             StringWriter stackWriter = new StringWriter();
             sb.append("- Exception: ");
@@ -154,10 +163,9 @@ public final class CellParseError {
             sb.append(stackWriter.toString());
             stackWriter.toString();
         }
-	sb.append(" }");
-	return sb.toString();
+        sb.append(" }");
+        return sb.toString();
     }
-
 
     public Throwable getException() {
         return exception;
