@@ -316,6 +316,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
         xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_IGNORE_READ_EMPTY_LINES, String.valueOf(line
                 .isIgnoreReadEmptyLines()));
+
+        xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_WRITE_NAMED_CELLS_ONLY, String.valueOf(line
+                .isWriteNamedCellsOnly()));
     }
 
     /**

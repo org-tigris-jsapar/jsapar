@@ -28,8 +28,13 @@
   <xsd:complexType name="SchemaLine">
     <xsd:attribute name="occurs">
       <xsd:annotation>
-        <xsd:documentation>Denotes how many times this type of line occurs. A '*' character denotes that it occurs infinitely amout of	times until the end of input buffer is reached. If the attribute linetypeby is set to controlcell, then this attribute will be ignored.
-				</xsd:documentation>
+        <xsd:documentation>
+          Denotes how many times this type of line occurs. A '*'
+          character denotes that it occurs infinitely amout of times
+          until the end of input buffer is reached. If the attribute
+          linetypeby is set to controlcell, then this attribute will be
+          ignored.
+        </xsd:documentation>
       </xsd:annotation>
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
@@ -39,31 +44,44 @@
     </xsd:attribute>
     <xsd:attribute name="linetype" type="xsd:string" use="optional">
       <xsd:annotation>
-        <xsd:documentation>Specifies the type of the line. If controlcell is used, then this field is mandatory. Otherwise this field can be supplied as information. Line-type can	be regarded as the class of the line if there are many different type of lines. The line types can be denoted by either the occurs attribute at each schema line or by the value of a control cell (the first cell at each line). If control cell is used, also the attibute linetypecontrolvalue is mandatory.
-				</xsd:documentation>
+        <xsd:documentation>
+          Specifies the type of the line. If controlcell is used, then
+          this field is mandatory. Otherwise this field can be supplied
+          as information. Line-type can be regarded as the class of the
+          line if there are many different type of lines. The line types
+          can be denoted by either the occurs attribute at each schema
+          line or by the value of a control cell (the first cell at each
+          line). If control cell is used, also the attibute
+          linetypecontrolvalue is mandatory.
+        </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="linetypecontrolvalue" type="xsd:string" use="optional">
+    <xsd:attribute name="linetypecontrolvalue" type="xsd:string"
+      use="optional">
       <xsd:annotation>
-        <xsd:documentation>If this attribute is set it is used as the control value for this line type. The control value has to
-					be unique among all line types. E.g. a line can have
-					linetype="Employee" and linetypecontrolvalue="E"
-					which means that in when parsing the input, if the
-					first character of each a line is 'E', then the line
-					is concidered to be of linetype Employee. If this
-					attribute is not set, the linetype will be used also
-					as control value.
-				</xsd:documentation>
+        <xsd:documentation>
+          If this attribute is set it is used as the control value for
+          this line type. The control value has to be unique among all
+          line types. E.g. a line can have linetype="Employee" and
+          linetypecontrolvalue="E" which means that in when parsing the
+          input, if the first character of each a line is 'E', then the
+          line is concidered to be of linetype Employee. If this
+          attribute is not set, the linetype will be used also as
+          control value.
+        </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
     <xsd:attribute name="ignorereademptylines" type="xsd:boolean">
       <xsd:annotation>
-        <xsd:documentation>Specifies if empty lines should be ignored while reading.
-true = (default) Empty lines in the input buffer are ignored.
-false = Empty lines generates empty Line objects. Any mandatory cells are ignored within empty line.
-Default is true.</xsd:documentation>
+        <xsd:documentation>
+          Specifies if empty lines should be ignored while reading. true
+          = (default) Empty lines in the input buffer are ignored. false
+          = Empty lines generates empty Line objects. Any mandatory
+          cells are ignored within empty line. Default is true.
+        </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
+    <xsd:attribute name="writenamedcellsonly" type="xsd:boolean"></xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="SchemaCell">
   	<xsd:sequence>

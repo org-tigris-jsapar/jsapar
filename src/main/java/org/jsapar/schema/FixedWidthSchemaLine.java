@@ -189,7 +189,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
         // Iterate all schema cells.
         for (int i = 0; iter.hasNext(); i++) {
             FixedWidthSchemaCell schemaCell = iter.next();
-            Cell cell = findCell(line, schemaCell, i);
+            Cell cell = findCell(line, schemaCell, i, isWriteNamedCellsOnly());
             schemaCell.output(cell, writer, getFillCharacter());
         }
     }

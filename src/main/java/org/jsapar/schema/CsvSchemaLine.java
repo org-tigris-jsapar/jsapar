@@ -284,7 +284,7 @@ public class CsvSchemaLine extends SchemaLine {
         Iterator<CsvSchemaCell> iter = getSchemaCells().iterator();
         for (int i = 0; iter.hasNext(); i++) {
             CsvSchemaCell schemaCell = iter.next();
-            Cell cell = findCell(line, schemaCell, i);
+            Cell cell = findCell(line, schemaCell, i, this.isWriteNamedCellsOnly());
             char quoteChar = getQuoteChar();
 
             schemaCell.output(cell, writer, sCellSeparator, quoteChar);

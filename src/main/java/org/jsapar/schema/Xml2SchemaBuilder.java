@@ -452,6 +452,11 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         Node xmlIgnoreReadEmptyLines = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_IGNORE_READ_EMPTY_LINES);
         if (xmlIgnoreReadEmptyLines != null)
             line.setIgnoreReadEmptyLines(getBooleanValue(xmlIgnoreReadEmptyLines));
+        
+        Node xmlWriteNamedCellsOnly = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_WRITE_NAMED_CELLS_ONLY);
+        if (xmlWriteNamedCellsOnly != null)
+            line.setWriteNamedCellsOnly(getBooleanValue(xmlWriteNamedCellsOnly));
+        
     }
 
     /**

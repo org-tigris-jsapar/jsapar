@@ -17,6 +17,7 @@ public abstract class SchemaLine implements Cloneable {
     private String              lineType             = NOT_SET;
     private String              lineTypeControlValue = NOT_SET;
     private boolean             ignoreReadEmptyLines = true;
+    private boolean             writeNamedCellsOnly  = false;
 
     public SchemaLine() {
         this.occurs = OCCURS_INFINITE;
@@ -109,48 +110,52 @@ public abstract class SchemaLine implements Cloneable {
      *            The schema-cell to use.
      * @param nSchemaCellIndex
      *            The index at which the schema-cell is found.
+     * @param namedCellsOnly Only find named cells
      * @return The cell within the supplied line to use for output according to the supplied
      *         schemaCell.
      */
-    protected static Cell findCell(Line line, SchemaCell schemaCell, int nSchemaCellIndex) {
+    protected static Cell findCell(Line line, SchemaCell schemaCell, int nSchemaCellIndex, boolean namedCellsOnly) {
         // If we should not write the cell, we don't need the cell.
-        if(schemaCell.isIgnoreWrite())
+        if (schemaCell.isIgnoreWrite())
             return null;
-        
+
         Cell cellByIndex = null;
         if (nSchemaCellIndex < line.getNumberOfCells())
-            cellByIndex = line.getCell(nSchemaCellIndex); 
+            cellByIndex = line.getCell(nSchemaCellIndex);
         // Use optimistic matching.
-        if (null != cellByIndex && null == schemaCell.getName()) {
-            // cell = line.getCell(i);
-            if (null == cellByIndex.getName()) {
-                // If both cell and schema cell names are null then it is ok
-                // to use cell by index.
+        if (null != cellByIndex) {
+            if (null == schemaCell.getName()) {
+                // cell = line.getCell(i);
+                if (null == cellByIndex.getName()) {
+                    // If both cell and schema cell names are null then it is ok
+                    // to use cell by index.
+                    if(!namedCellsOnly)
+                        return cellByIndex;
+                } else {
+                    return null;
+                }
+            } else if (namedCellsOnly && null == cellByIndex.getName()) {
+                return null;
+            }
+            else if (schemaCell.getName().equals(cellByIndex.getName())) {
+                // We were lucky.
+                return cellByIndex;
+            }
+        }
+
+        // The optimistic match failed. We take the penalty.
+        Cell cellByName = line.getCell(schemaCell.getName());
+        if (null != cellByName) {
+            return cellByName;
+        } else {
+            if (null == cellByIndex) {
+                return null;
+            } else if (!namedCellsOnly && cellByIndex.getName() == null) {
+                // If it was not found by name we fall back to the
+                // cell with correct index.
                 return cellByIndex;
             } else {
                 return null;
-            }
-        } else {
-            if (null != cellByIndex && null != cellByIndex.getName()
-                    && schemaCell.getName().equals(cellByIndex.getName())) {
-                // We were lucky.
-                return cellByIndex;
-            } else {
-                // The optimistic match failed. We take the penalty.
-                Cell cellByName = line.getCell(schemaCell.getName());
-                if (null != cellByName) {
-                    return cellByName;
-                } else {
-                    if (null == cellByIndex) {
-                        return null;
-                    } else if (cellByIndex.getName() == null) {
-                        // If it was not found by name we fall back to the
-                        // cell with correct index.
-                        return cellByIndex;
-                    } else {
-                        return null;
-                    }
-                }
             }
         }
     }
@@ -338,6 +343,14 @@ public abstract class SchemaLine implements Cloneable {
             }
         }
         return -1;
+    }
+
+    public boolean isWriteNamedCellsOnly() {
+        return writeNamedCellsOnly;
+    }
+
+    public void setWriteNamedCellsOnly(boolean writeNamedCellsOnly) {
+        this.writeNamedCellsOnly = writeNamedCellsOnly;
     }
 
 }
