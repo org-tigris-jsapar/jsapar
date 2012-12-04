@@ -81,7 +81,12 @@
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="writenamedcellsonly" type="xsd:boolean"></xsd:attribute>
+    <xsd:attribute name="writenamedcellsonly" type="xsd:boolean">
+      <xsd:annotation>
+        <xsd:documentation>Default is false.
+If set to true, cells will only be written if they have a named and have the same name as a cell described in the output schema.
+If set to false, cells will be matched from the schema according to their position in the line if a named cell is not found with the same name.</xsd:documentation>
+      </xsd:annotation></xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="SchemaCell">
   	<xsd:sequence>
