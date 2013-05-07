@@ -383,7 +383,7 @@ public class CsvSchemaLine extends SchemaLine {
         Line line = new Line();
 
         for (CsvSchemaCell schemaCell : this.getSchemaCells()) {
-            line.addCell(new StringCell(schemaCell.getName()));
+            line.addCell(new StringCell(schemaCell.getName(), schemaCell.getName()));
         }
 
         return line;
