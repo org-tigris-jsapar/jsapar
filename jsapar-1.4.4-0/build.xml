@@ -1,0 +1,289 @@
+<!-- $Id:  $ -->
+<project name="jsapar" default="dist" basedir=".">
+
+	<!--
+	==================================
+	== Properties Start
+	==================================
+	-->
+	<property environment="env" />
+	<property name="property.file" value="build.properties" />
+	<property name="build.version.file" value="build_version.properties" />
+	<property name="project.basedir" value="${basedir}" />
+
+	<!-- distribution props	-->
+	<property name="build.dir.name" value="ant_build" />
+	<property name="build.dir" value="${basedir}/${build.dir.name}" />
+	<property name="test.build.dir" value="${basedir}/ant_test_build" />
+	<property name="tag.dir" value="${basedir}/ant_tag" />
+	<property name="dist.dir" value="${basedir}/dist" />
+	<property name="dist.lib.dir" value="${dist.dir}/lib" />
+	<property name="dist.docs.dir" value="${dist.dir}/docs" />
+	<property name="dist.javadoc.dir" value="${dist.docs.dir}/api" />
+
+	<!-- Load property file -->
+	<loadproperties srcFile="${property.file}" />
+	<property name="patch.version.string" value="${version.major}.${version.minor}.${version.patch}" />
+	<property name="minor.version.string" value="${version.major}.${version.minor}" />
+
+	<path id="build.classpath">
+	</path>
+
+	<!-- Unix vs. Windows -->
+	<condition property="host.name" value="${env.HOSTNAME}" else="${env.COMPUTERNAME}">
+		<isset property="env.HOSTNAME"/>
+	</condition>
+
+	<tstamp>
+		<format property="build.start.time" pattern="yyyy-MM-dd hh:mm:ss Z" />
+	</tstamp>
+	<!--==================================
+	== Banner
+	==================================-->
+	<target name="banner">
+		<filter token="VERSION_MAJOR" value="${version.major}" />
+		<filter token="VERSION_MINOR" value="${version.minor}" />
+		<filter token="VERSION_PATCH" value="${version.patch}" />
+		<filter token="VERSION_STRING" value="${patch.version.string}" />
+		<filter token="PROJECT_NAME" value="${ant.project.name}" />
+		<filter token="USER_NAME" value="${user.name}" />
+		<filter token="HOST_NAME" value="${host.name}" />
+		<filter token="JDK_VERSION" value="${java.runtime.version}" />
+		<filter token="TIME" value="${build.start.time}" />
+
+		<echo>${project.name} project</echo>
+		<echo message="Project version : ${patch.version.string}" />
+		<echo message="Ant version     : ${ant.version}" />
+		<echo message="Svn branch root : ${svn.branch.url}" />
+		<echo message="Java home       : ${java.home}" />
+	</target>
+
+	<!--==================================
+	== Clean description="Removes folders."
+	==================================-->
+	<target name="clean" depends="banner">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="${tag.dir}" />
+	</target>
+
+	<!--==================================
+	== Init description="Creates folders."
+	==================================-->
+	<target name="init" depends="banner, clean">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+
+	<!--==================================
+	== Ask for build version
+	==================================-->
+	<target name="ask-build-number" unless="dist.build.number" description="Sets additional properties for distribution.">
+		<loadproperties srcFile="${build.version.file}" />
+		<input message="Enter build number to build package for: " defaultvalue="${build.number}" addproperty="dist.build.number" />
+	</target>
+
+	<!--==================================
+	== Load current build number from HEAD
+	==================================-->
+	<target name="update-build-number" depends="banner" unless="${dist.build.number}">
+		<exec executable="svn" dir=".">
+			<arg line="update ${build.version.file}" />
+		</exec>
+	</target>
+
+	<!--==================================
+	== Load build number
+	==================================-->
+	<target name="init-build-number" depends="banner" unless="${dist.build.number}">
+		<loadproperties srcFile="${build.version.file}" />
+		<property name="dist.build.number" value="${build.number}" />
+	</target>
+
+	<!--==================================
+	== Init svn dist
+	==================================-->
+	<target name="init-dist" depends="init, init-build-number">
+		<property name="dist.tag" value="${project.name}-${patch.version.string}-${dist.build.number}" />
+		<property name="dist.svn.tag.url" value="${svn.project.url}/tags/${minor.version.string}/${dist.tag}" />
+		<property name="dist.tag.dir" value="${tag.dir}/${dist.tag}" />
+		<mkdir dir="${dist.lib.dir}" />
+		<mkdir dir="${dist.javadoc.dir}" />
+	</target>
+
+	<!--==================================
+	Create new tag in svn from HEAD
+	1. Read version number file from svn.
+	2. Create tag for build.
+	3. Update version number.
+	4. Commit version number file.
+	==================================-->
+	<target name="tag" depends="update-build-number, init-build-number,init-dist" description="Creates new tag in svn from HEAD.">
+
+		<exec executable="svn" dir=".">
+			<arg line="copy --parents ${svn.branch.url} ${dist.svn.tag.url} -m &quot;Build ${dist.tag}&quot; " />
+		</exec>
+
+		<echo> Created new tag in subversion: ${dist.tag} at ${dist.svn.tag.url} </echo>
+		<buildnumber file="${build.version.file}" />
+		<exec executable="svn" dir=".">
+			<arg line="commit ${build.version.file} -m &quot;Build ${dist.tag}&quot;" />
+		</exec>
+
+	</target>
+
+	<!--==================================
+	== Export from svn
+	==================================-->
+	<target name="export-tag" depends="ask-build-number, init-dist" description="Exports from svn for distribution.">
+		<echo>Note that the SVN tag at ${dist.svn.tag.url} has to exist, otherwise the following operations will fail.</echo>
+		<exec executable="svn" dir=".">
+			<arg line="export --force ${dist.svn.tag.url} ${dist.tag.dir}" />
+		</exec>
+		<exec executable="svn" dir="." output="${dist.tag.dir}/change_log_${dist.tag}.txt">
+			<arg line="--limit 100 log ${dist.svn.tag.url}" />
+		</exec>
+		<echo file="${dist.tag.dir}/version.txt">
+${project.name} ${patch.version.string} build ${dist.build.number}
+
+------------------------------------------
+Ant version     : ${ant.version} 
+Svn branch root : ${svn.branch.url} 
+		</echo>
+	</target>
+
+	<!--==================================
+	== Initialise build
+	==================================-->
+	<target name="init-build-local" depends="banner" unless="src.dir">
+		<property name="src.dir" value="${project.basedir}/src/main/java" />
+		<property name="resources.dir" value="${project.basedir}/src/main/resources" />
+		<property name="test.src.dir" value="${project.basedir}/src/test/java" />
+	</target>
+
+	<!--==================================
+	== Compiles resources and code locally. 
+	==================================-->
+	<target name="build" depends="init-build-local, banner, init" description="Builds current version">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" target="${target.java.version}" includeantruntime="false"/>
+	</target>
+
+	<!--==================================
+	== Build distribution package locally. 
+	==================================-->
+	<target name="dist" depends="build, javadocs, init-dist" description="Creates distribution of current version">
+		<filter token="BUILD_NUMBER" value="${dist.build.number}" />
+		<copy todir="${dist.dir}">
+			<fileset dir="${resources.dir}">
+				<include name="xml/schema/*.xsd"/>
+			</fileset>
+			<fileset dir="${basedir}">
+				<include name="LICENSE"/>
+				<include name="NOTICE"/>
+			</fileset>
+            <fileset dir="${basedir}">
+                <include name="*.txt"/>
+            </fileset>
+            <fileset dir="${basedir}">
+                <include name="samples/*"/>
+            </fileset>
+				
+		</copy>
+		<copy todir="${dist.dir}/samples">
+            <fileset dir="${test.src.dir}/org/jsapar">
+                <include name="JSaParExamplesTest.java"/>
+            </fileset>
+		</copy>
+		<copy todir="${build.dir}" filtering="true">
+            <fileset dir="${src.dir}">
+                <include name="META-INF/**"/>
+            </fileset>
+		</copy>
+
+		
+		<jar destfile="${dist.lib.dir}/${project.name}-${patch.version.string}.jar" manifest="${build.dir}/META-INF/MANIFEST.MF">
+			<fileset dir="${build.dir}">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="${resources.dir}">
+				<include name="xml/schema/*.xsd"/>
+			</fileset>
+		</jar>
+
+		<zip destfile="${dist.dir}/${dist.tag}.zip">
+			<fileset dir="${dist.dir}" includes="**/*"/>
+		</zip>
+	</target>
+
+	<!--==================================
+	== Build package from tag. 
+	==================================-->
+	<target name="dist-tag" depends="export-tag" description="Creates distribution package of specified tag version">
+		<zip destfile="${dist.dir}/${dist.tag}_source.zip">
+			<fileset dir="${dist.tag.dir}" includes="**/*" excludes="www"/>
+		</zip>
+		<ant antfile="build.xml" dir="${dist.tag.dir}" target="dist" inheritall="no" />
+		<copy todir="${dist.dir}" filtering="false">
+			<fileset dir="${dist.tag.dir}/dist" includes="*.zip" />
+            <fileset dir="${dist.tag.dir}" >
+                <include name="change_log*.txt"/>
+            </fileset>
+		</copy>
+	</target>
+
+	<!--==================================
+	== Create a new tag and build package from that tag. 
+	==================================-->
+	<target name="tag-and-dist" depends="tag, dist-tag" description="Tags HEAD revision and creates distribution package for it">
+	</target>
+
+	<!--==================================
+	== Build javadocs locally. 
+	==================================-->
+	<target name="javadocs" depends="build" description="Creates javadocs for current version">
+		<javadoc sourcepath="${src.dir}" destdir="${dist.javadoc.dir}" author="true" version="true" bottom="${javadoc.bottom}" classpathref="build.classpath" />
+	</target>
+
+	<!--==================================
+	== Compiles resources necessary for testing by using the locally checked out files.
+	==================================-->
+	<target name="build-tests" depends="build">
+		<mkdir dir="${test.build.dir}" />
+		<javac srcdir="${test.src.dir}" destdir="${test.build.dir}"  includes="**/*Test.java">
+			<classpath>
+				<path refid="build.classpath"/>
+				<pathelement location="${build.dir}"/>
+			</classpath>
+		</javac>
+		<echo message="Compiled" />
+	</target>
+	
+	<!--==================================
+	== Run unit test. Requires junit-X.X.jar to be in the ant/lib dir.
+	==================================-->
+	<target name="test" depends="build, build-tests " description="Run JUnit test">
+		<property name="test.report.dir" value="${test.build.dir}/reports"/>
+		<mkdir dir="${test.report.dir}"/>
+
+		<junit printsummary="yes" haltonerror="true">
+			<formatter type="xml"/>
+
+			<classpath>
+				<path refid="build.classpath"/>
+				<pathelement location="${test.build.dir}"/>
+				<pathelement location="${build.dir}"/>
+				<pathelement location="${resources.dir}"/>
+			</classpath>
+
+			<batchtest todir="${test.report.dir}">
+				<fileset dir="${test.src.dir}">
+					<include name="**/*Test.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
+</project>
