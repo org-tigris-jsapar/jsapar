@@ -103,9 +103,9 @@ If set to false, cells will be matched from the schema according to their positi
   		<xsd:element minOccurs="0" maxOccurs="1" name="locale"
   			type="Locale">
   			<xsd:annotation>
-  				<xsd:documentation>
+  			  <xsd:documentation>
   					The locale of this cell. Overrides the locale
-  					setting fot the whole schema.
+  					setting for the whole schema.
   				</xsd:documentation>
   			</xsd:annotation>
   		</xsd:element>
