@@ -118,6 +118,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
         Line line = new Line(getLineType(), getSchemaCells().size());
         boolean setDefaultsOnly = false;
         boolean oneRead = false;
+        boolean oneIgnored = false;
 
         for (FixedWidthSchemaCell schemaCell : getSchemaCells()) {
             if (setDefaultsOnly) {
@@ -129,6 +130,9 @@ public class FixedWidthSchemaLine extends SchemaLine {
                     line.addCell(schemaCell.getDefaultCell());
 
                 long nSkipped = reader.skip(schemaCell.getLength());
+                if(nSkipped >0 || schemaCell.getLength()==0)
+                    oneIgnored=true;
+                
                 if (nSkipped != schemaCell.getLength()) {
                     if (oneRead)
                         setDefaultsOnly = true;
@@ -156,7 +160,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
                 }
             }
         }
-        if (line.getNumberOfCells() <= 0)
+        if (line.getNumberOfCells() <= 0 && !oneIgnored)
             return false;
 
         listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));

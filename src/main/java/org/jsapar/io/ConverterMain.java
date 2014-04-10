@@ -4,9 +4,13 @@
 package org.jsapar.io;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.util.Properties;
@@ -40,8 +44,13 @@ public class ConverterMain {
                     .loadSchemaFromXmlFile(new File(properties.getProperty("out.schema")));
 
             String inFileName = properties.getProperty("in.file");
-            Reader inputFileReader = new java.io.FileReader(inFileName);
-            java.io.Writer writer = new java.io.FileWriter(properties.getProperty("out.file", inFileName + ".out"));
+            String inFileEncoding = properties.getProperty("in.file.encoding", null);
+            Reader inputFileReader = inFileEncoding == null ? new java.io.FileReader(inFileName)
+                    : new InputStreamReader(new FileInputStream(inFileName), inFileEncoding);
+            String outFileEncoding = properties.getProperty("out.file.encoding", null);
+            String outFileName = properties.getProperty("out.file", inFileName + ".out");
+            java.io.Writer writer = (outFileEncoding == null) ? new java.io.FileWriter(outFileName)
+                    : new OutputStreamWriter(new FileOutputStream(outFileName), outFileEncoding);
 
             Converter converter = makeConverter(inputSchema, outputSchema);
             java.util.List<CellParseError> parseErrors = converter.convert(inputFileReader, writer);
@@ -71,6 +80,8 @@ public class ConverterMain {
         out.println(" 2. " + getApplicationName()
                 + " -in.schema <input schem name> -out.schema <output schema name>");
         out.println("               -in.file <input file name> [-out.file <output file name>]");
+        out.println("               [-in.file.encoding <input file encoding (or system default is used)>] ");
+        out.println("               [-out.file.encoding <output file encoding (or system default is used)>] ");
         out.println("");
         out.println("Alternative 1. above reads the arguments from a property file.");
     }
