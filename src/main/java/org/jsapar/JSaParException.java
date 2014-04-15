@@ -18,7 +18,6 @@ public class JSaParException extends Exception {
 	 * 
 	 */
 	public JSaParException() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -26,7 +25,6 @@ public class JSaParException extends Exception {
 	 */
 	public JSaParException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -34,7 +32,6 @@ public class JSaParException extends Exception {
 	 */
 	public JSaParException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -42,8 +39,7 @@ public class JSaParException extends Exception {
 	 * @param cause
 	 */
 	public JSaParException(String message, Throwable cause) {
-		super(message, cause);
-		// TODO Auto-generated constructor stub
+        super(message + " - " + cause.getMessage(), cause);
 	}
 
 }
