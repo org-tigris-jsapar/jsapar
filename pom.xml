@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jsapar</groupId>
 	<artifactId>jsapar</artifactId>
-	<version>1.4.5</version>
+	<version>1.4.6-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>jsapar</name>
 	<url>http://jsapar.tigris.org</url>
@@ -16,7 +16,7 @@
 
 	<developers>
 		<developer>
-			<name>Jason Stenberg</name>
+			<name>Jonas Stenberg</name>
 			<roles>
 				<role>Main Developer</role>
 			</roles>
