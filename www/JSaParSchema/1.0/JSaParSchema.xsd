@@ -81,7 +81,12 @@
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="writenamedcellsonly" type="xsd:boolean"></xsd:attribute>
+    <xsd:attribute name="writenamedcellsonly" type="xsd:boolean">
+      <xsd:annotation>
+        <xsd:documentation>Default is false.
+If set to true, cells will only be written if they have a named and have the same name as a cell described in the output schema.
+If set to false, cells will be matched from the schema according to their position in the line if a named cell is not found with the same name.</xsd:documentation>
+      </xsd:annotation></xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="SchemaCell">
   	<xsd:sequence>
@@ -98,9 +103,9 @@
   		<xsd:element minOccurs="0" maxOccurs="1" name="locale"
   			type="Locale">
   			<xsd:annotation>
-  				<xsd:documentation>
+  			  <xsd:documentation>
   					The locale of this cell. Overrides the locale
-  					setting fot the whole schema.
+  					setting for the whole schema.
   				</xsd:documentation>
   			</xsd:annotation>
   		</xsd:element>
@@ -224,15 +229,18 @@
         </xsd:sequence>
         <xsd:attribute name="trimfillcharacters" type="xsd:boolean" use="optional">
           <xsd:annotation>
-            <xsd:documentation>Default value is true.
-If true, all leading and trailing fill-characters are discarded.
-If false, value is left as is. 
-                    	</xsd:documentation>
+            <xsd:documentation>
+              Default value is true. If true, all leading and trailing fill-characters are discarded. If false, value is
+              left as is.
+            </xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute name="fillcharacter" use="optional">
           <xsd:annotation>
-            <xsd:documentation>Specifies the character space character that is used to fill the cells. Default is space character ' ' (ASCII 20) </xsd:documentation>
+            <xsd:documentation>
+              Specifies the character space character that is used to fill the cells. Default is space character ' '
+              (ASCII 20)
+            </xsd:documentation>
           </xsd:annotation>
           <xsd:simpleType>
             <xsd:restriction base="xsd:string">
@@ -241,6 +249,11 @@ If false, value is left as is.
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:attribute>
+        <xsd:attribute name="minlength" type="xsd:int">
+          <xsd:annotation>
+            <xsd:documentation>The minimal length of a fixed with line when writing output.
+If the sum of the length of the cells is less than this minlength then the line is filled with the fillcharacter so that the output will be at least of length minlength.</xsd:documentation>
+          </xsd:annotation></xsd:attribute>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
