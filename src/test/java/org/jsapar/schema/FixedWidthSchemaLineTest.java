@@ -10,12 +10,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import junit.framework.Assert;
-
+import org.jsapar.Cell.CellType;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
-import org.jsapar.Cell.CellType;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
@@ -202,6 +200,32 @@ public class FixedWidthSchemaLineTest {
     }
 
     @Test
+    public void testOutput_minLength() throws IOException, JSaParException {
+        Line line = new Line();
+        line.addCell(new StringCell("Jonas"));
+        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("Street address", "Hemvagen 19"));
+
+        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
+        schemaLine.setMinLength(50);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street address", 14));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
+        FixedWidthSchemaCell cityCellSchema = new FixedWidthSchemaCell("City", 12);
+        cityCellSchema.setDefaultValue("Storstaden");
+        schemaLine.addSchemaCell(cityCellSchema);
+        schema.addSchemaLine(schemaLine);
+
+        java.io.Writer writer = new java.io.StringWriter();
+        schemaLine.output(line, writer);
+        String sResult = writer.toString();
+
+        assertEquals("JonasStenbergHemvagen 19         Storstaden       ", sResult);
+    }
+    
+    @Test
     public void testOutput_ignorewrite() throws IOException, JSaParException {
         Line line = new Line();
         line.addCell(new StringCell("Jonas"));
@@ -249,15 +273,15 @@ public class FixedWidthSchemaLineTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("City", 8));
         
         FixedWidthCellPositions pos = schemaLine.getCellPositions("First name");
-        Assert.assertEquals(1, pos.getFirst());
-        Assert.assertEquals(5, pos.getLast());
+        assertEquals(1, pos.getFirst());
+        assertEquals(5, pos.getLast());
         
         pos = schemaLine.getCellPositions("Street address");
-        Assert.assertEquals(14, pos.getFirst());
-        Assert.assertEquals(27, pos.getLast());
+        assertEquals(14, pos.getFirst());
+        assertEquals(27, pos.getLast());
         
         pos = schemaLine.getCellPositions("does not exist");
-        Assert.assertNull(pos);
+        assertNull(pos);
         
         
     }
@@ -272,13 +296,13 @@ public class FixedWidthSchemaLineTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("City", 8));
         
         int pos = schemaLine.getCellFirstPosition("First name");
-        Assert.assertEquals(1, pos);
+        assertEquals(1, pos);
         
         pos = schemaLine.getCellFirstPosition("Street address");
-        Assert.assertEquals(14, pos);
+        assertEquals(14, pos);
         
         pos = schemaLine.getCellFirstPosition("does not exist");
-        Assert.assertEquals(-1, pos);
+        assertEquals(-1, pos);
         
         
     }

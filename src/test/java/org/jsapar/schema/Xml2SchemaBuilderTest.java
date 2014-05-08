@@ -26,7 +26,7 @@ public class Xml2SchemaBuilderTest {
         String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
                 + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/1.0' >"
                 + "<fixedwidthschema lineseparator='\\r\\n'>" 
-                + "<line occurs='*' linetype='Person'>"
+                + "<line occurs='*' linetype='Person' minlength='240'>"
                 + "<cell name='First name' length='5'/>" + "<cell name='Last name' length='8'/>"
                 + "<cell name='Shoe size' length='8' alignment='right'><format type='integer' pattern='00000000'/></cell>"
                 + "</line></fixedwidthschema></schema>";
@@ -38,6 +38,7 @@ public class Xml2SchemaBuilderTest {
 
         assertEquals("\r\n", fwSchema.getLineSeparator());
 
+        assertEquals(240, fwSchema.getFixedWidthSchemaLines().get(0).getMinLength());
         assertEquals("First name", fwSchema.getFixedWidthSchemaLines().get(0).getSchemaCells().get(0).getName());
         assertEquals("Last name", fwSchema.getFixedWidthSchemaLines().get(0).getSchemaCells().get(1).getName());
 

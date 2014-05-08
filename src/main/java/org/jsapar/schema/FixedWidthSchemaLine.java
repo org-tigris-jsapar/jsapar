@@ -27,6 +27,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
     private java.util.List<FixedWidthSchemaCell> schemaCells = new java.util.ArrayList<FixedWidthSchemaCell>();
     private boolean trimFillCharacters = false;
     private char fillCharacter = ' ';
+    private int minLength = -1;
 
     /**
      * Creates an empty schema line.
@@ -191,10 +192,15 @@ public class FixedWidthSchemaLine extends SchemaLine {
         Iterator<FixedWidthSchemaCell> iter = getSchemaCells().iterator();
 
         // Iterate all schema cells.
+        int totalLength = 0;
         for (int i = 0; iter.hasNext(); i++) {
             FixedWidthSchemaCell schemaCell = iter.next();
+            totalLength += schemaCell.getLength();
             Cell cell = findCell(line, schemaCell, i, isWriteNamedCellsOnly());
             schemaCell.output(cell, writer, getFillCharacter());
+        }
+        if(minLength > totalLength){
+            FixedWidthSchemaCell.fill(writer, getFillCharacter(), minLength-totalLength);
         }
     }
 
@@ -207,8 +213,14 @@ public class FixedWidthSchemaLine extends SchemaLine {
      */
     void outputByIndex(Line line, Writer writer, FixedWidthSchema schema) throws IOException, JSaParException {
         Iterator<FixedWidthSchemaCell> iter = getSchemaCells().iterator();
+        int totalLength = 0;
         for (int i = 0; iter.hasNext(); i++) {
-            iter.next().output(line.getCell(i), writer, getFillCharacter());
+            FixedWidthSchemaCell schemaCell = iter.next();
+            schemaCell.output(line.getCell(i), writer, getFillCharacter());
+            totalLength += schemaCell.getLength();
+        }
+        if(minLength > totalLength){
+            FixedWidthSchemaCell.fill(writer, getFillCharacter(), minLength-totalLength);
         }
     }
 
@@ -346,6 +358,32 @@ public class FixedWidthSchemaLine extends SchemaLine {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @return the minimal length of a line to generate. If the sum of all cells' length do not reach the length of a line, the line will be filled with the fill character.  
+     */
+    public int getMinLength() {
+        return minLength;
+    }
+
+    /**
+     * The minimal length of a line to generate. If the sum of all cells' length do not reach the length of a line, the line will be filled with the fill character.
+     * @param length the length to set
+     */
+    public void setMinLength(int length) {
+        this.minLength = length;
+    }
+    
+    /**
+     * @return The sum of the length of all cells.
+     */
+    public int getTotalCellLenght(){
+        int sum = 0;
+        for (FixedWidthSchemaCell schemaCell : schemaCells) {
+            sum += schemaCell.getLength();
+        }
+        return sum;
     }
 
 }

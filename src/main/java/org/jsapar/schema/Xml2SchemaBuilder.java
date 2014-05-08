@@ -246,6 +246,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         if (xmlTrimFill != null)
             schemaLine.setTrimFillCharacters(getBooleanValue(xmlTrimFill));
 
+        String sMinLength = getAttributeValue(xmlSchemaLine, ATTRIB_FW_SCHEMA_MIN_LENGTH);
+        if (sMinLength != null && !sMinLength.isEmpty())
+            schemaLine.setMinLength(Integer.valueOf(sMinLength));
+        
         NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node child = nodes.item(i);

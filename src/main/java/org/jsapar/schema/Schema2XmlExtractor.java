@@ -158,6 +158,8 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
         xmlSchemaLine.setAttribute(ATTRIB_FW_SCHEMA_FILL_CHARACTER, String.valueOf(schemaLine.getFillCharacter()));
         xmlSchemaLine.setAttribute(ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS, String.valueOf(schemaLine
                 .isTrimFillCharacters()));
+        if(schemaLine.getMinLength()>0)
+            xmlSchemaLine.setAttribute(ATTRIB_FW_SCHEMA_MIN_LENGTH, String.valueOf(schemaLine.getMinLength()));
 
         for (FixedWidthSchemaCell schemaCell : schemaLine.getSchemaCells()) {
             Element xmlCell = extractFixedWidthSchemaCell(xmlDocument, schemaCell);
@@ -308,10 +310,10 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
         String sOccurs = line.isOccursInfinitely() ? "*" : String.valueOf(line.getOccurs());
         xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_OCCURS, sOccurs);
 
-        if (line.getLineType() != null)
+        if (line.getLineType() != null && !line.getLineType().isEmpty())
             xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_LINETYPE, line.getLineType());
 
-        if (line.getLineTypeControlValue() != null)
+        if (line.getLineTypeControlValue() != null && !line.getLineTypeControlValue().isEmpty())
             xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_LINETYPE_CONTROL_VALUE, line.getLineTypeControlValue());
 
         xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_IGNORE_READ_EMPTY_LINES, String.valueOf(line
@@ -388,10 +390,10 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @return
      */
     private String replaceJava2Escapes(String sToReplace) {
-        sToReplace = sToReplace.replaceAll("\r", "\\\\r");
-        sToReplace = sToReplace.replaceAll("\n", "\\\\n");
-        sToReplace = sToReplace.replaceAll("\t", "\\\\t");
-        sToReplace = sToReplace.replaceAll("\f", "\\\\f");
+        sToReplace = sToReplace.replace("\r", "\\r");
+        sToReplace = sToReplace.replace("\n", "\\n");
+        sToReplace = sToReplace.replace("\t", "\\t");
+        sToReplace = sToReplace.replace("\f", "\\f");
         return sToReplace;
     }
     

@@ -162,7 +162,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
      * @param nSize
      * @throws IOException
      */
-    private static void fill(Writer writer, char ch, int nSize) throws IOException {
+    public static void fill(Writer writer, char ch, int nSize) throws IOException {
         for (int i = 0; i < nSize; i++) {
             writer.write(ch);
         }

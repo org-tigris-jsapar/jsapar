@@ -9,6 +9,7 @@ public interface SchemaXmlTypes {
     public final static String ELEMENT_LOCALE = "locale";
     public final static String ELEMENT_FORMAT = "format";
     public static final String ATTRIB_FW_SCHEMA_FILL_CHARACTER = "fillcharacter";
+    public static final String ATTRIB_FW_SCHEMA_MIN_LENGTH= "minlength";
     public static final String ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS = "trimfillcharacters";
     public static final String ATTRIB_SCHEMA_CELL_NAME = "name";
     public static final String ATTRIB_FW_SCHEMA_CELL_LENGTH = "length";

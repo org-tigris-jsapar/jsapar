@@ -3,11 +3,12 @@
  */
 package org.jsapar.schema;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-
-import junit.framework.Assert;
 
 import org.jsapar.StringCell;
 import org.junit.After;
@@ -44,6 +45,7 @@ public class Schema2XmlExtractorTest {
         StringWriter writer = new StringWriter();
         FixedWidthSchema schema = new FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
+        schemaLine.setMinLength(240);
         schema.setLineSeparator("");
 
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
@@ -54,9 +56,9 @@ public class Schema2XmlExtractorTest {
         extractor.extractXml(writer, schema);
         
         String sXml = writer.toString();
-//        System.out.println(sXml);
+        System.out.println(sXml);
         
-        Assert.assertNotNull(sXml);
+        assertNotNull(sXml);
         // TODO Add more accurate tests.
     }
 
@@ -80,7 +82,7 @@ public class Schema2XmlExtractorTest {
         String sXml = writer.toString();
 //        System.out.println(sXml);
         
-        Assert.assertNotNull(sXml);
+        assertNotNull(sXml);
         // TODO Add more accurate tests.
         
     }
@@ -105,7 +107,7 @@ public class Schema2XmlExtractorTest {
         String sXml = writer.toString();
 //        System.out.println(sXml);
         
-        Assert.assertNotNull(sXml);
+        assertNotNull(sXml);
         // TODO Add more accurate tests.
     }
 
@@ -130,13 +132,13 @@ public class Schema2XmlExtractorTest {
         String sXml = writer.toString();
         System.out.println(sXml);
         
-        Assert.assertNotNull(sXml);
+        assertNotNull(sXml);
 
         Reader reader = new StringReader(sXml);
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
         Schema schema2 = builder.build(reader);
         
-        Assert.assertEquals(schema.getLineSeparator(), schema2.getLineSeparator());
+        assertEquals(schema.getLineSeparator(), schema2.getLineSeparator());
         // TODO Add more accurate tests.
         
     }
