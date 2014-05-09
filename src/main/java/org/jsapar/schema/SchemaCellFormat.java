@@ -8,6 +8,7 @@ import java.util.Locale;
 
 import org.jsapar.Cell.CellType;
 import org.jsapar.format.BooleanFormat;
+import org.jsapar.format.RegExpFormat;
 
 public class SchemaCellFormat implements Cloneable {
     private CellType cellType = CellType.STRING;
