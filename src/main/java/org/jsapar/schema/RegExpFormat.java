@@ -35,8 +35,9 @@ public class RegExpFormat extends Format {
 	public StringBuffer format(Object obj, StringBuffer toAppendTo,
 			FieldPosition pos) {
 		String sValue = String.valueOf(obj);
-		int nEnd = Math.min(sValue.length(), pos.getEndIndex());
-		toAppendTo.append(sValue.substring(pos.getBeginIndex(), nEnd));
+        if(!this.pattern.matcher(sValue).matches())
+            throw new IllegalArgumentException("Value ["+sValue+"] does not match regular expression ["+this.pattern.pattern()+"].");
+		toAppendTo.append(sValue);
 		return toAppendTo;
 	}
 

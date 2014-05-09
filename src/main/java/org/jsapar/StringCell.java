@@ -123,8 +123,9 @@ public class StringCell extends Cell  {
      */
     @Override
     public String getStringValue(Format format) throws IllegalArgumentException {
-	if (format != null)
+	if (format != null){
 	    return format.format(this.stringValue);
+	}
 	else
 	    return this.stringValue;
     }

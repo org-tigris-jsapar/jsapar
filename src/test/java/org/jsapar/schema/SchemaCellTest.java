@@ -221,6 +221,53 @@ public class SchemaCellTest {
         String value = schemaCell.format(new EmptyCell(CellType.FLOAT));
         assertEquals("123456,78901", value);
     }
+
+    /**
+     * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
+     * 
+     * @throws ParseException
+     * @throws SchemaException 
+     */
+    @Test
+    public void testFormat() throws ParseException, SchemaException {
+        TestSchemaCell schemaCell = new TestSchemaCell();
+        schemaCell.setName("test");
+
+        String value = schemaCell.format(new StringCell("A"));
+        assertEquals("A", value);
+    }    
+
+    /**
+     * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
+     * 
+     * @throws ParseException
+     * @throws SchemaException 
+     */
+    @Test
+    public void testFormat_Regexp() throws SchemaException {
+        TestSchemaCell schemaCell = new TestSchemaCell();
+        schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING, "A|B", new Locale("sv","SE")));
+        schemaCell.setName("test");
+
+        String value = schemaCell.format(new StringCell("A"));
+        assertEquals("A", value);
+    }
+    
+    /**
+     * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
+     * 
+     * @throws ParseException
+     * @throws SchemaException 
+     */
+    @Test(expected=IllegalArgumentException.class)
+    public void testFormat_Regexp_fail() throws SchemaException {
+        TestSchemaCell schemaCell = new TestSchemaCell();
+        schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING, "A|B", new Locale("sv","SE")));
+        schemaCell.setName("test");
+
+        schemaCell.format(new StringCell("C"));
+        fail("Should throw exception");
+    }    
     
     /**
      * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
@@ -244,20 +291,15 @@ public class SchemaCellTest {
      * @throws ParseException
      * @throws SchemaException
      */
-    @Test
-    public void testMakeCell_RegExp_fail() throws SchemaException {
+    @Test(expected=ParseException.class)
+    public void testMakeCell_RegExp_fail() throws SchemaException, ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell();
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING, "[A-Z]{3}[0-9]{0,3}de"));
         schemaCell.setName("test");
 
         @SuppressWarnings("unused")
         Cell cell;
-        try {
-            cell = schemaCell.makeCell("AB1C123de");
-        } catch (ParseException e) {
-            // e.printStackTrace();
-            return;
-        }
+        cell = schemaCell.makeCell("AB1C123de");
         fail("Should throw ParseException for invalid RegExp validation.");
     }
 
