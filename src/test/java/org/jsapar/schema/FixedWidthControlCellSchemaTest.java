@@ -52,40 +52,66 @@ public class FixedWidthControlCellSchemaTest {
      */
     @Test
     public void testOutput() throws IOException, JSaParException {
-	FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema(1);
-	schema.setLineSeparator("");
-	FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Address");
-	schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street", 10));
-	schemaLine.addSchemaCell(new FixedWidthSchemaCell("ZipCode", 6));
-	schema.addSchemaLine(schemaLine);
+        FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema(1);
+        schema.setLineSeparator("");
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Address");
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street", 10));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("ZipCode", 6));
+        schema.addSchemaLine(schemaLine);
 
-	schemaLine = new FixedWidthSchemaLine("Name");
-	schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-	schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-	schema.addSchemaLine(schemaLine);
+        schemaLine = new FixedWidthSchemaLine("Name");
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        schema.addSchemaLine(schemaLine);
 
-	Document doc = new Document();
+        Document doc = new Document();
 
-	Line line = new Line("Name");
-	line.addCell(new StringCell("Jonas"));
-	line.addCell(new StringCell("Stenberg"));
-	doc.addLine(line);
+        Line line = new Line("Name");
+        line.addCell(new StringCell("Jonas"));
+        line.addCell(new StringCell("Stenberg"));
+        doc.addLine(line);
 
-	line = new Line("Address");
-	line.addCell(new StringCell("Storgatan"));
-	line.addCell(new StringCell("123 45"));
-	doc.addLine(line);
+        line = new Line("Address");
+        line.addCell(new StringCell("Storgatan"));
+        line.addCell(new StringCell("123 45"));
+        doc.addLine(line);
 
-	line = new Line("Name");
-	line.addCell(new StringCell("Fred"));
-	line.addCell(new StringCell("Bergsten"));
-	doc.addLine(line);
+        line = new Line("Name");
+        line.addCell(new StringCell("Fred"));
+        line.addCell(new StringCell("Bergsten"));
+        doc.addLine(line);
 
-	StringWriter writer = new StringWriter();
-	schema.output(doc.getLineIterator(), writer);
+        StringWriter writer = new StringWriter();
+        schema.output(doc.getLineIterator(), writer);
 
-	String sExpected = "NJonasStenbergAStorgatan 123 45NFred Bergsten";
-	assertEquals(sExpected, writer.toString());
+        String sExpected = "NJonasStenbergAStorgatan 123 45NFred Bergsten";
+        assertEquals(sExpected, writer.toString());
+    }
+
+    /**
+     * Test method for {@link org.jsapar.schema.FixedWidthControlCellSchema#output(org.jsapar.Document, java.io.Writer)}.
+     * @throws JSaParException 
+     * @throws IOException 
+     */
+    @Test
+    public void testOutputLine() throws IOException, JSaParException {
+        FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema(1);
+        schema.setLineSeparator("");
+
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name");
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        schemaLine.setLineTypeControlValue("N");
+        schema.addSchemaLine(schemaLine);
+
+        Line line = new Line("Name");
+        line.addCell(new StringCell("Jonas"));
+        line.addCell(new StringCell("Stenberg"));
+
+        StringWriter writer = new StringWriter();
+        schema.outputLine(line, writer);
+
+        assertEquals("NJonasStenberg", writer.toString());
     }
 
     @Test

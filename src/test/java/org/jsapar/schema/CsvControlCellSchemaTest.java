@@ -100,6 +100,37 @@ public class CsvControlCellSchemaTest {
      * @throws JSaParException
      */
     @Test
+    public void testOutputLine() throws IOException, JSaParException {
+        CsvControlCellSchema schema = new CsvControlCellSchema();
+        schema.setControlCellSeparator(":->");
+
+        CsvSchemaLine schemaLine = new CsvSchemaLine("Name");
+        schemaLine.addSchemaCell(new CsvSchemaCell("First name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
+        schema.addSchemaLine(schemaLine);
+        schema.setLineSeparator("*");
+
+
+        Line line = new Line("Name");
+        line.addCell(new StringCell("Jonas"));
+        line.addCell(new StringCell("Stenberg"));
+
+
+        StringWriter writer = new StringWriter();
+        schema.outputLine(line, writer);
+
+        String sExpected = "Name:->Jonas;Stenberg*";
+
+        assertEquals(sExpected, writer.toString());
+    }    
+    /**
+     * Test method for
+     * {@link org.jsapar.schema.CsvControlCellSchema#output(org.jsapar.Document, java.io.Writer)} .
+     * 
+     * @throws IOException
+     * @throws JSaParException
+     */
+    @Test
     public void testOutput_ControlValueNotType() throws IOException, JSaParException {
         CsvControlCellSchema schema = new CsvControlCellSchema();
         schema.setControlCellSeparator(":->");

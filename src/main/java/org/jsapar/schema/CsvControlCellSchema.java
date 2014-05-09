@@ -85,6 +85,8 @@ public class CsvControlCellSchema extends CsvSchema {
             writer.append(this.getControlCellSeparator());
         }
     }
+    
+    
 
     /**
      * @param sLineTypeControlValue
@@ -183,9 +185,19 @@ public class CsvControlCellSchema extends CsvSchema {
 
         if (lineNumber > 1)
             writer.append(getLineSeparator());
-        writeControlCell(writer, schemaLine.getLineTypeControlValue());
-        schemaLine.output(line, writer);
+        outputLine(schemaLine, line, writer);
         return true;
+    }
+    
+    
+
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.Schema#outputLine(org.jsapar.schema.SchemaLine, org.jsapar.Line, java.io.Writer)
+     */
+    @Override
+    protected void outputLine(SchemaLine schemaLine, Line line, Writer writer) throws IOException, JSaParException {
+        writeControlCell(writer, schemaLine.getLineTypeControlValue());
+        super.outputLine(schemaLine, line, writer);
     }
 
     /**
@@ -202,4 +214,13 @@ public class CsvControlCellSchema extends CsvSchema {
     public void setWriteControlCell(boolean writeControlCell) {
         this.writeControlCell = writeControlCell;
     }
+    
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.Schema#writeLinePrefix(org.jsapar.schema.SchemaLine, java.io.Writer)
+     */
+    @Override
+    public void writeLinePrefix(SchemaLine schemaLine, Writer writer) throws OutputException, IOException {
+        writeControlCell(writer, schemaLine.getLineTypeControlValue());
+    }
+    
 }

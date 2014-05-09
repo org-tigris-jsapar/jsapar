@@ -144,7 +144,7 @@ public class FixedWidthSchema extends Schema {
                     return;
                 }
                 Line line = itLines.next();
-                ((FixedWidthSchemaLine) lineSchema).output(line, writer);
+                outputLine(lineSchema, line, writer);
 
                 if (itLines.hasNext()) {
                     if (getLineSeparator().length() > 0) {

@@ -10,6 +10,7 @@ import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.input.ParseSchema;
 import org.jsapar.input.ParsingEventListener;
+import org.jsapar.output.OutputException;
 
 /**
  * Abstract base class for all type of jsapar schemas. A schema describes how the buffer should be
@@ -213,7 +214,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
         }
         if (lineNumber > 1)
             writer.append(getLineSeparator());
-        schemaLine.output(line, writer);
+        outputLine(schemaLine, line, writer);
         return true;
     }
 
@@ -235,9 +236,13 @@ public abstract class Schema implements Cloneable, ParseSchema {
         if (schemaLine == null) {
             return false;
         }
-        schemaLine.output(line, writer);
+        outputLine(schemaLine, line, writer);
         writer.append(getLineSeparator());
         return true;
+    }
+
+    protected void outputLine(SchemaLine schemaLine, Line line, Writer writer) throws IOException, JSaParException {
+        schemaLine.output(line, writer);
     }
 
     /**
@@ -264,6 +269,15 @@ public abstract class Schema implements Cloneable, ParseSchema {
             }
         }
         return -1;
+    }
+
+    /**
+     * @param schemaLine
+     * @param writer
+     * @throws IOException 
+     * @throws OutputException 
+     */
+    public void writeLinePrefix(SchemaLine schemaLine, Writer writer) throws OutputException, IOException {
     }
 
 }

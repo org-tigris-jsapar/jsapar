@@ -173,8 +173,7 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
             SchemaLine schemaLine = getSchemaLine(line.getLineType());
             if (schemaLine == null)
                 throw new JSaParException("Could not find schema line of type " + line.getLineType());
-            writeControlCell(writer, schemaLine.getLineTypeControlValue());
-            schemaLine.output(line, writer);
+            outputLine(schemaLine, line, writer);
 
             if (itLines.hasNext() && getLineSeparator().length() > 0) {
                 writer.write(getLineSeparator());
@@ -194,6 +193,8 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
         if(writeControlCell)
             FixedWidthSchemaCell.output(controlValue, writer, ' ', getControlCellLength(), getControlCellAlignment());
     }
+
+
 
     /**
      * @return the controlCellAlignment
@@ -248,17 +249,14 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
         return sb.toString();
     }
 
+    
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.Schema#outputLine(org.jsapar.schema.SchemaLine, org.jsapar.Line, java.io.Writer)
+     */
     @Override
-    public boolean outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
-        SchemaLine schemaLine = getSchemaLine(line.getLineType());
-        if (schemaLine == null)
-            return false;
-        
-        if (lineNumber > 1)
-            writer.append(getLineSeparator());
+    protected void outputLine(SchemaLine schemaLine, Line line, Writer writer) throws IOException, JSaParException {
         writeControlCell(writer, schemaLine.getLineTypeControlValue());
-        schemaLine.output(line, writer);
-        return true;
+        super.outputLine(schemaLine, line, writer);
     }
 
     /**
@@ -274,4 +272,14 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
     public void setWriteControlCell(boolean writeControlCell) {
         this.writeControlCell = writeControlCell;
     }
+
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.Schema#writeLinePrefix(org.jsapar.schema.SchemaLine, java.io.Writer)
+     */
+    @Override
+    public void writeLinePrefix(SchemaLine schemaLine, Writer writer) throws OutputException, IOException {
+        writeControlCell(writer, schemaLine.getLineTypeControlValue());
+    }
+    
+    
 }
