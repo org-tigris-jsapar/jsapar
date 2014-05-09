@@ -269,6 +269,35 @@ public class FixedWidthSchemaCellTest {
     }
 
     @Test
+    public final void testOutput_Center_overflow_even() throws IOException, JSaParException {
+        FixedWidthSchemaCell schemaElment = new FixedWidthSchemaCell("First name", 7);
+        schemaElment.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
+
+        Writer writer = new StringWriter();
+        Cell cell = new StringCell("000Jonas000");
+        schemaElment.output(cell, writer, ' ');
+
+        assertEquals("0Jonas0", writer.toString());
+    }
+
+    /**
+     * Overflow is an odd number
+     * @throws IOException
+     * @throws JSaParException
+     */
+    @Test
+    public final void testOutput_Center_overflow_odd() throws IOException, JSaParException {
+        FixedWidthSchemaCell schemaElment = new FixedWidthSchemaCell("First name", 6);
+        schemaElment.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
+
+        Writer writer = new StringWriter();
+        Cell cell = new StringCell("000Jonas000");
+        schemaElment.output(cell, writer, ' ');
+
+        assertEquals("0Jonas", writer.toString());
+    }
+    
+    @Test
     public final void testOutput_Left() throws IOException, JSaParException {
         FixedWidthSchemaCell schemaElment = new FixedWidthSchemaCell("First name", 11);
         schemaElment.setAlignment(FixedWidthSchemaCell.Alignment.LEFT);
@@ -281,6 +310,17 @@ public class FixedWidthSchemaCellTest {
     }
 
     @Test
+    public final void testOutput_Exact() throws IOException, JSaParException {
+        FixedWidthSchemaCell schemaElment = new FixedWidthSchemaCell("First name", 5);
+
+        Writer writer = new StringWriter();
+        Cell cell = new StringCell("Jonas");
+        schemaElment.output(cell, writer, ' ');
+
+        assertEquals("Jonas", writer.toString());
+    }
+    
+    @Test
     public final void testOutput_Rigth() throws IOException, JSaParException {
         FixedWidthSchemaCell schemaElment = new FixedWidthSchemaCell("First name", 11);
         schemaElment.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
@@ -292,6 +332,18 @@ public class FixedWidthSchemaCellTest {
         assertEquals("******Jonas", writer.toString());
     }
 
+    @Test
+    public final void testOutput_Rigth_overflow() throws IOException, JSaParException {
+        FixedWidthSchemaCell schemaElment = new FixedWidthSchemaCell("First name", 6);
+        schemaElment.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
+
+        Writer writer = new StringWriter();
+        Cell cell = new StringCell("0000Jonas");
+        schemaElment.output(cell, writer, '*');
+
+        assertEquals("0Jonas", writer.toString());
+    }
+    
     @Test
     public final void testOutput_Default() throws IOException, JSaParException {
         FixedWidthSchemaCell schemaElment = new FixedWidthSchemaCell("Size", 11);

@@ -217,31 +217,44 @@ public class FixedWidthSchemaCell extends SchemaCell {
      */
     static void output(String sValue, Writer writer, char fillCharacter, int length, Alignment alignment)
             throws IOException, OutputException {
-        // If the cell value is larger than the cell length, we have to cut the
-        // value.
-        if (sValue.length() >= length) {
-            writer.write(sValue.substring(0, length));
+        if (sValue.length() == length) {
+            writer.write(sValue);
             return;
-        }
-        // Otherwise use the alignment of the schema.
-        int nToFill = length - sValue.length();
-        switch (alignment) {
-        case LEFT:
-            writer.write(sValue);
-            fill(writer, fillCharacter, nToFill);
-            break;
-        case RIGHT:
-            fill(writer, fillCharacter, nToFill);
-            writer.write(sValue);
-            break;
-        case CENTER:
-            int nLeft = nToFill / 2;
-            fill(writer, fillCharacter, nLeft);
-            writer.write(sValue);
-            fill(writer, fillCharacter, nToFill - nLeft);
-            break;
-        default:
-            throw new OutputException("Unknown allignment style for cell schema.");
+        } else if (sValue.length() > length) {
+            // If the cell value is larger than the cell length, we have to cut the value.
+            switch (alignment) {
+            case RIGHT:
+                writer.write(sValue, sValue.length() - length, length);
+                return;
+            case LEFT:
+                writer.write(sValue, 0, length);
+                return;
+            case CENTER:
+                writer.write(sValue, (sValue.length()-length)/2, length);
+                return;
+            }
+            return;
+        } else {
+            // Otherwise use the alignment of the schema.
+            int nToFill = length - sValue.length();
+            switch (alignment) {
+            case LEFT:
+                writer.write(sValue);
+                fill(writer, fillCharacter, nToFill);
+                break;
+            case RIGHT:
+                fill(writer, fillCharacter, nToFill);
+                writer.write(sValue);
+                break;
+            case CENTER:
+                int nLeft = nToFill / 2;
+                fill(writer, fillCharacter, nLeft);
+                writer.write(sValue);
+                fill(writer, fillCharacter, nToFill - nLeft);
+                break;
+            default:
+                throw new OutputException("Unknown allignment style for cell schema.");
+            }
         }
     }
 
