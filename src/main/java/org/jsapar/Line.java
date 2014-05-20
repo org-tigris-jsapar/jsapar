@@ -446,7 +446,7 @@ public class Line implements Serializable {
     /**
      * Utility function that gets the integer cell value of the specified cell. If the specified
      * cell does not exist, a JSaparException is thrown. Tries to parse an integer value if cell is
-     * not of type IntegerCell. Throws a NumberFormatException if the value is not a parsable
+     * not of type NumberCell. Throws a NumberFormatException if the value is not a parsable
      * integer.
      * 
      * @param cellName
@@ -464,6 +464,27 @@ public class Line implements Serializable {
         return Integer.parseInt(cell.getStringValue());
     }
 
+    /**
+     * Utility function that gets the long integer cell value of the specified cell. If the specified
+     * cell does not exist, a JSaparException is thrown. Tries to parse a long integer value if cell is
+     * not of type NumberCell. Throws a NumberFormatException if the value is not a parsable
+     * integer.
+     * 
+     * @param cellName
+     * @return The long integer value of the cell with the specified name.
+     * @throws JSaParException
+     *             , NumberFormatException
+     */
+    public long getLongCellValue(String cellName) throws JSaParException, NumberFormatException {
+        Cell cell = getExistingCell(cellName);
+        if (cell instanceof NumberCell) {
+            NumberCell numberCell = (NumberCell) cell;
+            return numberCell.getNumberValue().longValue();
+        }
+
+        return Long.parseLong(cell.getStringValue());
+    }
+    
     /**
      * Utility function that gets the double cell value of the specified cell. If the specified cell
      * does not exist, a JSaparException is thrown. Tries to parse a double value if cell is not of
