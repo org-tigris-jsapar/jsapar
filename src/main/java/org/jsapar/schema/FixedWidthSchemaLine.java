@@ -361,15 +361,20 @@ public class FixedWidthSchemaLine extends SchemaLine {
     }
 
     /**
-     * @return the minimal length of a line to generate. If the sum of all cells' length do not reach the length of a line, the line will be filled with the fill character.  
+     * @return the minimal length of a line to generate. If the sum of all cells' length do not reach the length of a
+     *         line, the line will be filled with the fill character.
      */
     public int getMinLength() {
         return minLength;
     }
 
     /**
-     * The minimal length of a line to generate. If the sum of all cells' length do not reach the length of a line, the line will be filled with the fill character.
-     * @param length the length to set
+     * The minimal length of a line to generate. If the sum of all cells' length do not reach the length of a line, the
+     * line will be filled with the fill character. Use the method addFillerCellToReachMinLength() to make sure that
+     * minLength is also used while reading.
+     * 
+     * @param length
+     *            the length to set
      */
     public void setMinLength(int length) {
         this.minLength = length;
