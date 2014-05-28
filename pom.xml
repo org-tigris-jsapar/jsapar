@@ -1,3 +1,16 @@
+<!--
+The library is not yet available at any public Maven repository.
+To deploy the library to our local maven artifactory instance (http://se-devtools-i01:8081/artifactory) I use the following commands:
+  
+SNAPSHOT
+========
+mvn deploy -DaltDeploymentRepository=central::default::http://se-devtools-i01:8081/artifactory/ext-snapshot-local
+
+RELEASE
+=======
+mvn deploy -DaltDeploymentRepository=central::default::http://se-devtools-i01:8081/artifactory/ext-release-local
+ -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
