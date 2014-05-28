@@ -7,15 +7,14 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
+import org.jsapar.Cell.CellType;
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
-import org.jsapar.Cell.CellType;
 import org.jsapar.io.MaxErrorsExceededException;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 import org.jsapar.schema.SchemaCellFormat;
+import org.junit.Assert;
 import org.junit.Test;
 
 

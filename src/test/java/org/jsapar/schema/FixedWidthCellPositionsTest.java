@@ -3,7 +3,8 @@
  */
 package org.jsapar.schema;
 
-import junit.framework.Assert;
+
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -53,12 +54,12 @@ public class FixedWidthCellPositionsTest {
         FixedWidthSchemaCell cell = new FixedWidthSchemaCell("test", 17);
         FixedWidthCellPositions pos = new FixedWidthCellPositions();
         pos.increment(cell);
-        Assert.assertEquals(1, pos.getFirst());
-        Assert.assertEquals(17, pos.getLast());
+        assertEquals(1, pos.getFirst());
+        assertEquals(17, pos.getLast());
 
         pos.increment(cell);
-        Assert.assertEquals(18, pos.getFirst());
-        Assert.assertEquals(34, pos.getLast());
+        assertEquals(18, pos.getFirst());
+        assertEquals(34, pos.getLast());
     }
 
 }

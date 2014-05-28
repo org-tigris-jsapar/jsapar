@@ -3,9 +3,9 @@
  */
 package org.jsapar.schema;
 
-import java.util.Locale;
+import static org.junit.Assert.*;
 
-import junit.framework.Assert;
+import java.util.Locale;
 
 import org.jsapar.Cell.CellType;
 import org.jsapar.format.BooleanFormat;
@@ -41,7 +41,7 @@ public class SchemaCellFormatTest {
     public void testSetFormat_intPattern() throws SchemaException {
         SchemaCellFormat format = new SchemaCellFormat();
         format.setFormat(CellType.INTEGER, "0000", Locale.FRANCE);
-        Assert.assertEquals("0042", format.getFormat().format(42));
+        assertEquals("0042", format.getFormat().format(42));
     }
 
     /**
@@ -52,7 +52,7 @@ public class SchemaCellFormatTest {
     public void testSetFormat_int() throws SchemaException {
         SchemaCellFormat format = new SchemaCellFormat();
         format.setFormat(CellType.INTEGER, "", Locale.FRANCE);
-        Assert.assertEquals("42", format.getFormat().format(42));
+        assertEquals("42", format.getFormat().format(42));
     }
 
     /**
@@ -63,7 +63,7 @@ public class SchemaCellFormatTest {
     public void testSetFormat_floatPattern() throws SchemaException {
         SchemaCellFormat format = new SchemaCellFormat();
         format.setFormat(CellType.FLOAT, "0000.000", Locale.FRANCE);
-        Assert.assertEquals("0042,300", format.getFormat().format(42.3));
+        assertEquals("0042,300", format.getFormat().format(42.3));
     }
 
     /**
@@ -74,7 +74,7 @@ public class SchemaCellFormatTest {
     public void testSetFormat_float() throws SchemaException {
         SchemaCellFormat format = new SchemaCellFormat();
         format.setFormat(CellType.FLOAT, "", Locale.FRANCE);
-        Assert.assertEquals("42,3", format.getFormat().format(42.3));
+        assertEquals("42,3", format.getFormat().format(42.3));
     }
     /**
      * Test method for {@link org.jsapar.schema.SchemaCellFormat#getCellType()}.
@@ -82,7 +82,7 @@ public class SchemaCellFormatTest {
     @Test
     public void testGetCellType() {
         SchemaCellFormat format = new SchemaCellFormat(CellType.INTEGER);
-        Assert.assertEquals(CellType.INTEGER, format.getCellType());
+        assertEquals(CellType.INTEGER, format.getCellType());
     }
 
 
@@ -92,7 +92,7 @@ public class SchemaCellFormatTest {
     @Test
     public void testToString() {
         SchemaCellFormat format = new SchemaCellFormat(CellType.INTEGER);
-        Assert.assertEquals("CellType=INTEGER", format.toString());
+        assertEquals("CellType=INTEGER", format.toString());
     }
 
     /**
@@ -103,7 +103,7 @@ public class SchemaCellFormatTest {
     public void testGetPattern() throws SchemaException {
         SchemaCellFormat format = new SchemaCellFormat();
         format.setFormat(CellType.INTEGER, "0000", Locale.FRANCE);
-        Assert.assertEquals("0000", format.getPattern());
+        assertEquals("0000", format.getPattern());
     }
 
     /**
@@ -113,7 +113,7 @@ public class SchemaCellFormatTest {
     @Test
     public void testSchemaCellFormat() throws SchemaException {
         SchemaCellFormat format = new SchemaCellFormat(CellType.BOOLEAN, "yes;");
-        Assert.assertEquals(BooleanFormat.class, format.getFormat().getClass());
+        assertEquals(BooleanFormat.class, format.getFormat().getClass());
     }
     
 }

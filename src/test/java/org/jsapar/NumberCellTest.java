@@ -9,10 +9,9 @@ import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.Locale;
 
-import junit.framework.Assert;
-
 import org.jsapar.schema.SchemaException;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
