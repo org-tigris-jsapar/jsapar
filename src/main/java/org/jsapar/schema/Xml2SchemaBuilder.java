@@ -169,6 +169,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         FixedWidthSchema schema = new FixedWidthSchema();
 
         assignFixedWidthSchema(schema, xmlSchema);
+        schema.addFillerCellsToReachLineMinLength();
         return schema;
     }
 
@@ -222,6 +223,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
                         + "=" + sControlCellAllignment);
             }
         }
+        schema.addFillerCellsToReachLineMinLength();
         return schema;
     }
 

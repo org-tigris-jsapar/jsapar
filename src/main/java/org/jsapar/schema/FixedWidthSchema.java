@@ -220,4 +220,16 @@ public class FixedWidthSchema extends Schema {
         return this.schemaLines.get(index);
     }
 
+    /**
+     * Adds a schema cell at the end of each line to make sure that the total length generated/parsed will always be at
+     * least the minLength of the line. The name of the added cell will be _fillToMinLength_. The length of the added
+     * cell will be the difference between all minLength of the line and the cells added so far. Adding more schema
+     * cells after calling this method will add those cells after the filler cell which will probably lead to unexpected
+     * behavior.
+     */
+    public void addFillerCellsToReachLineMinLength(){
+        for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
+            lineSchema.addFillerCellToReachMinLength();
+        }
+    }
 }

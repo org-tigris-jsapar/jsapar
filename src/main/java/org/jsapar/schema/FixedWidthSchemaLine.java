@@ -376,6 +376,24 @@ public class FixedWidthSchemaLine extends SchemaLine {
     }
     
     /**
+     * Adds a schema cell at the end of the line to make sure that the total length generated/parsed will always be at
+     * least the minLength of the line. The name of the added cell will be _fillToMinLength_. The length of the added
+     * cell will be the difference between all minLength of the line and the cells added so far. Adding more schema
+     * cells after calling this method will add those cells after the filler cell which will probably lead to unexpected
+     * behavior.
+     */
+    public void addFillerCellToReachMinLength() {
+        if (getMinLength() <= 0)
+            return;
+
+        int diff = getMinLength() - getTotalCellLenght();
+        if (diff > 0) {
+            addSchemaCell(new FixedWidthSchemaCell("_fillToMinLength_", diff));
+        }
+
+    }
+
+    /**
      * @return The sum of the length of all cells.
      */
     public int getTotalCellLenght(){

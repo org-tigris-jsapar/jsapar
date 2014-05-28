@@ -318,4 +318,18 @@ public class FixedWidthSchemaLineTest {
         assertSame(cell1, schemaLine.getSchemaCell("First name"));
         
     }
+    
+    @Test
+    public void testAddFillerCellToReachMinLength(){
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
+        schemaLine.setMinLength(10);
+        FixedWidthSchemaCell cell1 = new FixedWidthSchemaCell("First name", 5);
+        schemaLine.addSchemaCell(cell1);
+        assertEquals(5, schemaLine.getTotalCellLenght());
+        assertEquals(1, schemaLine.getSchemaCellsCount());
+        
+        schemaLine.addFillerCellToReachMinLength();
+        assertEquals(10, schemaLine.getTotalCellLenght());
+        assertEquals(2, schemaLine.getSchemaCellsCount());
+    }
 }
