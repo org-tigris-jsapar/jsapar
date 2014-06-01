@@ -5,8 +5,8 @@ import java.io.Reader;
 import java.io.Writer;
 
 import org.jsapar.Cell;
+import org.jsapar.CellType;
 import org.jsapar.JSaParException;
-import org.jsapar.Cell.CellType;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
 import org.jsapar.output.OutputException;
@@ -26,7 +26,65 @@ public class FixedWidthSchemaCell extends SchemaCell {
      */
     public enum Alignment {
 
-        LEFT, CENTER, RIGHT
+        LEFT{
+            @Override
+            void fit(Writer writer, int length, String sValue) throws IOException {
+                writer.write(sValue, 0, length);
+            }
+
+            @Override
+            void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException {
+                    writer.write(sValue);
+                    FixedWidthSchemaCell.fill(writer, fillCharacter, nToFill);
+            }
+        },
+        CENTER {
+            @Override
+            void fit(Writer writer, int length, String sValue) throws IOException {
+                writer.write(sValue, (sValue.length()-length)/2, length);
+            }
+
+            @Override
+            void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException {
+                int nLeft = nToFill / 2;
+                FixedWidthSchemaCell.fill(writer, fillCharacter, nLeft);
+                writer.write(sValue);
+                FixedWidthSchemaCell.fill(writer, fillCharacter, nToFill - nLeft);
+            }
+        },
+        RIGHT{
+            @Override
+            void fit(Writer writer, int length, String sValue) throws IOException {
+                writer.write(sValue, sValue.length() - length, length);
+            }
+
+            @Override
+            void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException {
+                FixedWidthSchemaCell.fill(writer, fillCharacter, nToFill);
+                writer.write(sValue);
+            }
+            
+        };
+        
+        
+        /**
+         * Fits supplied value to supplied length, cutting in the correct end.
+         * @param writer
+         * @param length
+         * @param sValue
+         * @throws IOException
+         */
+        abstract void fit(Writer writer, int length, String sValue) throws IOException;
+        
+        /**
+         * Padds supplied value in the correct end with the supplied number of characters
+         * @param writer
+         * @param nToFill
+         * @param sValue
+         * @param fillCharacter
+         * @throws IOException
+         */
+        abstract void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException;
     };
 
     /**
@@ -222,39 +280,12 @@ public class FixedWidthSchemaCell extends SchemaCell {
             return;
         } else if (sValue.length() > length) {
             // If the cell value is larger than the cell length, we have to cut the value.
-            switch (alignment) {
-            case RIGHT:
-                writer.write(sValue, sValue.length() - length, length);
-                return;
-            case LEFT:
-                writer.write(sValue, 0, length);
-                return;
-            case CENTER:
-                writer.write(sValue, (sValue.length()-length)/2, length);
-                return;
-            }
+            alignment.fit(writer, length, sValue);
             return;
         } else {
             // Otherwise use the alignment of the schema.
             int nToFill = length - sValue.length();
-            switch (alignment) {
-            case LEFT:
-                writer.write(sValue);
-                fill(writer, fillCharacter, nToFill);
-                break;
-            case RIGHT:
-                fill(writer, fillCharacter, nToFill);
-                writer.write(sValue);
-                break;
-            case CENTER:
-                int nLeft = nToFill / 2;
-                fill(writer, fillCharacter, nLeft);
-                writer.write(sValue);
-                fill(writer, fillCharacter, nToFill - nLeft);
-                break;
-            default:
-                throw new OutputException("Unknown allignment style for cell schema.");
-            }
+            alignment.padd(writer, nToFill, sValue, fillCharacter);
         }
     }
 

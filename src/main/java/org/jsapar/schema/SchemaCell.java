@@ -1,23 +1,21 @@
 package org.jsapar.schema;
 
-import java.text.DecimalFormat;
 import java.util.Locale;
 
 import org.jsapar.BigDecimalCell;
 import org.jsapar.BooleanCell;
 import org.jsapar.Cell;
+import org.jsapar.CellType;
 import org.jsapar.CharacterCell;
 import org.jsapar.DateCell;
 import org.jsapar.EmptyCell;
 import org.jsapar.FloatCell;
 import org.jsapar.IntegerCell;
 import org.jsapar.StringCell;
-import org.jsapar.Cell.CellType;
 import org.jsapar.input.CellParseError;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
-import org.jsapar.utils.StringUtils;
 
 public abstract class SchemaCell implements Cloneable {
 
@@ -191,6 +189,7 @@ public abstract class SchemaCell implements Cloneable {
     }
 
     /**
+     * If you have created a custom type you need to override this method and handle the custom type.
      * @param cellType
      * @param sName
      * @param sValue
@@ -204,37 +203,7 @@ public abstract class SchemaCell implements Cloneable {
      */
     public static Cell makeCell(CellType cellType, String sName, String sValue, java.text.Format format)
             throws java.text.ParseException, SchemaException {
-        switch (cellType) {
-        case STRING:
-            return new StringCell(sName, sValue, format);
-        case DATE:
-            return new DateCell(sName, sValue, format);
-        case DECIMAL:
-            if (format != null && format instanceof DecimalFormat) {
-                // This is necessary because some locales (e.g. swedish)
-                // have non breakable space as grouping character. Naturally
-                // we want to remove all space characters including the
-                // non breakable.
-                DecimalFormat decFormat = (DecimalFormat) format;
-                char groupingSeparator = decFormat.getDecimalFormatSymbols().getGroupingSeparator();
-                if (Character.isSpaceChar(groupingSeparator)) {
-                    sValue = StringUtils.removeAllSpaces(sValue);
-                }
-            }
-            return new BigDecimalCell(sName, sValue, format);
-        case BOOLEAN:
-            return new BooleanCell(sName, sValue, format);
-        case INTEGER:
-            return new IntegerCell(sName, sValue, format);
-        case FLOAT:
-            return new FloatCell(sName, sValue, format);
-        case CHARACTER:
-            return new CharacterCell(sName, sValue, format);
-        case CUSTOM:
-        default:
-            throw new SchemaException("Cell type not implemented: " + cellType);
-
-        }
+        return cellType.makeCell(sName, sValue, format);
     }
 
     /**
@@ -251,26 +220,7 @@ public abstract class SchemaCell implements Cloneable {
      */
     public static Cell makeCell(CellType cellType, String sName, String sValue, Locale locale)
             throws java.text.ParseException, SchemaException {
-        switch (cellType) {
-        case STRING:
-            return new StringCell(sName, sValue);
-        case DATE:
-            return new DateCell(sName, sValue, locale);
-        case DECIMAL:
-            return new BigDecimalCell(sName, sValue, locale);
-        case BOOLEAN:
-            return new BooleanCell(sName, sValue, locale);
-        case INTEGER:
-            return new IntegerCell(sName, sValue, locale);
-        case FLOAT:
-            return new FloatCell(sName, sValue, locale);
-        case CHARACTER:
-            return new CharacterCell(sName, sValue);
-        case CUSTOM:
-        default:
-            throw new SchemaException("Cell type not implemented: " + cellType);
-
-        }
+        return cellType.makeCell(sName, sValue, locale);
     }
 
     /**

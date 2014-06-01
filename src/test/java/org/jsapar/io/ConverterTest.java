@@ -8,10 +8,10 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
 
+import org.jsapar.CellType;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
-import org.jsapar.Cell.CellType;
 import org.jsapar.input.CellParseError;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;

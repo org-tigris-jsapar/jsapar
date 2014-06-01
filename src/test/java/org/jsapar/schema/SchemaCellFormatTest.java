@@ -3,11 +3,11 @@
  */
 package org.jsapar.schema;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Locale;
 
-import org.jsapar.Cell.CellType;
+import org.jsapar.CellType;
 import org.jsapar.format.BooleanFormat;
 import org.junit.After;
 import org.junit.Before;

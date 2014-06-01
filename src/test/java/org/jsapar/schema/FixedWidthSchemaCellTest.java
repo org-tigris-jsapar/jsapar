@@ -16,11 +16,11 @@ import java.util.Locale;
 import org.jsapar.BigDecimalCell;
 import org.jsapar.BooleanCell;
 import org.jsapar.Cell;
+import org.jsapar.CellType;
 import org.jsapar.DateCell;
 import org.jsapar.JSaParException;
 import org.jsapar.NumberCell;
 import org.jsapar.StringCell;
-import org.jsapar.Cell.CellType;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
@@ -108,7 +108,7 @@ public class FixedWidthSchemaCellTest {
     public final void testBuildEmptyOptionalInteger() throws IOException, ParseException {
         String toParse = "           ";
         FixedWidthSchemaCell schemaElment = new FixedWidthSchemaCell("ShoeSize", 11);
-        schemaElment.setCellFormat(new SchemaCellFormat(Cell.CellType.INTEGER));
+        schemaElment.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
 
         Reader reader = new StringReader(toParse);
         Cell cell;

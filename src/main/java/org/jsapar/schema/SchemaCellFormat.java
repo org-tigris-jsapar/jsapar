@@ -1,14 +1,9 @@
 package org.jsapar.schema;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.Format;
-import java.text.NumberFormat;
 import java.util.Locale;
 
-import org.jsapar.Cell.CellType;
-import org.jsapar.format.BooleanFormat;
-import org.jsapar.format.RegExpFormat;
+import org.jsapar.CellType;
 
 public class SchemaCellFormat implements Cloneable {
     private CellType cellType = CellType.STRING;
@@ -62,52 +57,7 @@ public class SchemaCellFormat implements Cloneable {
             this.format = null;
             return;
         }
-        switch (cellType) {
-        case STRING:
-            if (sPattern != null)
-                this.format = new RegExpFormat(sPattern);
-            break;
-        case DATE:
-            this.format = new java.text.SimpleDateFormat(sPattern);
-            break;
-        case INTEGER:
-            if (locale == null)
-                locale = Locale.getDefault();
-            if (sPattern != null && sPattern.length() > 0)
-                this.format = new java.text.DecimalFormat(sPattern, new DecimalFormatSymbols(locale));
-            else
-                this.format = NumberFormat.getIntegerInstance(locale);
-            break;
-        case FLOAT:
-            if (locale == null)
-                locale = Locale.getDefault();
-            if (sPattern != null && sPattern.length() > 0)
-                this.format = new java.text.DecimalFormat(sPattern, new DecimalFormatSymbols(locale));
-            else
-                this.format = NumberFormat.getInstance(locale);
-            break;
-        case DECIMAL:
-            if (locale == null)
-                locale = Locale.getDefault();
-            DecimalFormat decFormat = new java.text.DecimalFormat(sPattern, new DecimalFormatSymbols(locale));
-            decFormat.setParseBigDecimal(true);
-            this.format = decFormat;
-            break;
-        case CHARACTER:
-            this.format = null;
-            break;
-        case CUSTOM:
-            throw new SchemaException("CUSTOM cell type formatter can not be created without specifying a formatter.");
-        case BOOLEAN:
-            String[] aTrueFalse = sPattern.trim().split("\\s*;\\s*");
-            if(aTrueFalse.length < 1 || aTrueFalse.length > 2)
-                throw new SchemaException("Boolean format pattern should only contain two fields separated with ; character");
-            this.format = new BooleanFormat(aTrueFalse[0], aTrueFalse.length==2 ? aTrueFalse[1] : "");
-            break;
-        default:
-            throw new SchemaException("Unknown cellType supplied: " + cellType);
-
-        }
+        this.format = cellType.makeFormat(sPattern, locale);
     }
 
     /**

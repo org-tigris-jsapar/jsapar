@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.jsapar.Cell.CellType;
+import org.jsapar.CellType;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;

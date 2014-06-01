@@ -6,8 +6,6 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.Iterator;
 
-import org.jsapar.Cell.CellType;
-
 /**
  * A line is one row of the input buffer. Each line contains a list of cells. Cells can be retrieved
  * either by index O(1) or by name O(n). Note that the class is not synchronized internally. If

@@ -10,11 +10,11 @@ import static org.junit.Assert.fail;
 import java.util.Locale;
 
 import org.jsapar.Cell;
+import org.jsapar.CellType;
 import org.jsapar.EmptyCell;
 import org.jsapar.FloatCell;
 import org.jsapar.IntegerCell;
 import org.jsapar.StringCell;
-import org.jsapar.Cell.CellType;
 import org.jsapar.input.ParseException;
 import org.junit.After;
 import org.junit.Before;
@@ -315,7 +315,7 @@ public class SchemaCellTest {
     @Test
     public void testMakeCell_CellTypeStringStringFormat() throws ParseException, SchemaException,
             java.text.ParseException {
-        Cell cell = SchemaCell.makeCell(Cell.CellType.STRING, "test", "the value", Locale.getDefault());
+        Cell cell = SchemaCell.makeCell(CellType.STRING, "test", "the value", Locale.getDefault());
         assertEquals("the value", cell.getStringValue());
     }
 
@@ -329,7 +329,7 @@ public class SchemaCellTest {
         @SuppressWarnings("unused")
         Cell cell;
         try {
-            cell = SchemaCell.makeCell(Cell.CellType.INTEGER, "number", "123A45", Locale.getDefault());
+            cell = SchemaCell.makeCell(CellType.INTEGER, "number", "123A45", Locale.getDefault());
         } catch (java.text.ParseException e) {
             // e.printStackTrace();
             return;
@@ -347,7 +347,7 @@ public class SchemaCellTest {
     @Test
     public void testMakeCell_Integer() throws SchemaException, ParseException, java.text.ParseException {
         Cell cell;
-        cell = SchemaCell.makeCell(Cell.CellType.INTEGER, "number", "12345", Locale.getDefault());
+        cell = SchemaCell.makeCell(CellType.INTEGER, "number", "12345", Locale.getDefault());
         assertEquals(IntegerCell.class, cell.getClass());
         assertEquals(12345, ((IntegerCell)cell).getNumberValue().intValue());
     }
@@ -382,7 +382,7 @@ public class SchemaCellTest {
         Cell cell;
         Locale locale = new Locale("UK_en");
         try {
-            cell = SchemaCell.makeCell(Cell.CellType.FLOAT, "number", "12.3A45", locale);
+            cell = SchemaCell.makeCell(CellType.FLOAT, "number", "12.3A45", locale);
         } catch (java.text.ParseException e) {
             // e.printStackTrace();
             return;
@@ -401,7 +401,7 @@ public class SchemaCellTest {
     public void testMakeCell_Float() throws SchemaException, ParseException, java.text.ParseException {
         Cell cell;
         Locale locale = new Locale("UK_en");
-        cell = SchemaCell.makeCell(Cell.CellType.FLOAT, "number", "12.345", locale);
+        cell = SchemaCell.makeCell(CellType.FLOAT, "number", "12.345", locale);
         assertEquals(12.345, cell.getValue());
     }
 

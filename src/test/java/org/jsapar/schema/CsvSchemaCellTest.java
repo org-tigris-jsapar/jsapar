@@ -11,9 +11,9 @@ import java.util.Locale;
 import org.jsapar.BigDecimalCell;
 import org.jsapar.BooleanCell;
 import org.jsapar.Cell;
+import org.jsapar.CellType;
 import org.jsapar.IntegerCell;
 import org.jsapar.StringCell;
-import org.jsapar.Cell.CellType;
 import org.junit.Test;
 
 

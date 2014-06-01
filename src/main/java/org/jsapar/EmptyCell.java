@@ -33,7 +33,7 @@ public class EmptyCell extends Cell implements Comparable<EmptyCell>{
 	 * @param cellType
 	 */
 	public EmptyCell(String name, CellType cellType) {
-		super(name, ((cellType == null) ? Cell.CellType.STRING : cellType) );
+		super(name, ((cellType == null) ? CellType.STRING : cellType) );
 	}
 
 	/* (non-Javadoc)

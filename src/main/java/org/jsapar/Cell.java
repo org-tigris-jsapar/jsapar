@@ -19,9 +19,6 @@ public abstract class Cell implements java.io.Serializable, Cloneable {
      * Denotes the type of the cell.
      * 
      */
-    public enum CellType {
-        STRING, DATE, INTEGER, BOOLEAN, FLOAT, DECIMAL, CHARACTER, CUSTOM
-    }
 
     /**
      * 

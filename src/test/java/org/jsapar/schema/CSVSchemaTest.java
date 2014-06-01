@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import org.jsapar.BooleanCell;
+import org.jsapar.CellType;
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
-import org.jsapar.Cell.CellType;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;

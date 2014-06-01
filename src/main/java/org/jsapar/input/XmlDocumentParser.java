@@ -18,6 +18,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.jsapar.Cell;
+import org.jsapar.CellType;
 import org.jsapar.DateCell;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
@@ -67,14 +68,14 @@ public class XmlDocumentParser implements org.jsapar.input.ParseSchema {
 	}
     }
 
-    private Cell.CellType makeCellType(String sXmlCellType) {
-	return (Cell.CellType) Enum.valueOf(Cell.CellType.class, sXmlCellType
+    private CellType makeCellType(String sXmlCellType) {
+	return (CellType) Enum.valueOf(CellType.class, sXmlCellType
 		.toUpperCase());
     }
 
     private class JsaparSAXHandler extends org.xml.sax.helpers.DefaultHandler {
 	private Line currentLine;
-	private Cell.CellType currentCellType;
+	private CellType currentCellType;
 	private String currentCellName;
 	private Cell currentCell;
 	private boolean cellStarted = false;
@@ -130,7 +131,7 @@ public class XmlDocumentParser implements org.jsapar.input.ParseSchema {
 				.getValue(i));
 		}
 		if (this.currentCellType == null)
-		    this.currentCellType = Cell.CellType.STRING;
+		    this.currentCellType = CellType.STRING;
 	    } else if (localName.equals("line")) {
 		this.currentLine = new Line();
 		this.currentLineNumber++;
@@ -149,7 +150,7 @@ public class XmlDocumentParser implements org.jsapar.input.ParseSchema {
 	    if (this.cellStarted) {
 		String sValue = new String(ch, start, length);
 		try {
-		    if (this.currentCellType == Cell.CellType.DATE) {
+		    if (this.currentCellType == CellType.DATE) {
 			this.makeDateCell(sValue);
 		    } else {
 			this.currentCell = SchemaCell.makeCell(
