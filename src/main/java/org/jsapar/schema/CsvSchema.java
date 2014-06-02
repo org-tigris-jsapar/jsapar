@@ -40,8 +40,9 @@ public class CsvSchema extends Schema {
     /**
      * Builds a CsvSchemaLine from a header line.
      * 
-     * @param sHeaderLine
-     * @return
+     * @param masterLineSchema The base to use while creating csv schema. May add formatting, defaults etc.
+     * @param sHeaderLine The header line to use while building the schema.
+     * @return A CsvSchemaLine created from the header line.
      * @throws CloneNotSupportedException
      * @throws ParseException
      */

@@ -174,7 +174,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
 
     /**
      * @param lineNumber
-     * @return
+     * @return The line-schema for supplied line number.
      */
     private SchemaLine getSchemaLine(long lineNumber) {
         long nLineMax = 0;

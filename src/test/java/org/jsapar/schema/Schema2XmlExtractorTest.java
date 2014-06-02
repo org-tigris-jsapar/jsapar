@@ -56,7 +56,7 @@ public class Schema2XmlExtractorTest {
         extractor.extractXml(writer, schema);
         
         String sXml = writer.toString();
-        System.out.println(sXml);
+//        System.out.println(sXml);
         
         assertNotNull(sXml);
         // TODO Add more accurate tests.

@@ -536,7 +536,6 @@ public class Line implements Serializable {
      * @param cellName
      * @param defaultValue
      * @return The boolean value of the cell with the supplied name.
-     * @throws 
      */
     public boolean getCellValue(String cellName, boolean defaultValue)  {
         Cell cell = getCell(cellName);
@@ -598,9 +597,8 @@ public class Line implements Serializable {
      * cell does not exist or if it is not a DateCell, a JSaparException is thrown. 
      * 
      * @param cellName
-     * @return
-     * @throws JSaParException
-     * @throws NumberFormatException
+     * @return The date value of the specified cell.
+     * @throws JSaParException if the cell is not of type DateCell.
      */
     public Date getDateCellValue(String cellName) throws JSaParException {
         Cell cell = getExistingCell(cellName);
@@ -642,7 +640,7 @@ public class Line implements Serializable {
      * supplied default value is returned. 
      * 
      * @param cellName
-     * @param defaultValue
+     * @param enumClass The class of the enum to convert the value into.
      * @return The enum cell value if the cell.
      * @throws JSaParException
      *             If if specified cell does not exist.

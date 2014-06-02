@@ -150,12 +150,10 @@ public class JavaOutputter {
     }
 
     /**
-     * @param <T>
      * @param cell
      * @param sName
      * @param objectToAssign
      * @param parseErrors
-     * @return
      */
     private void assignAttribute(Cell cell, String sName, Object objectToAssign, List<CellParseError> parseErrors) {
         String sSetMethodName = createSetMethodName(sName);

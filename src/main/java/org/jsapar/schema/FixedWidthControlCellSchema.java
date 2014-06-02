@@ -78,7 +78,7 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
 
     /**
      * @param reader
-     * @return
+     * @return The controll cell value that was read.
      * @throws JSaParException
      */
     private String readControlCell(Reader reader) throws JSaParException {

@@ -90,8 +90,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     }
 
     /**
-     * @param xmlSchema
-     * @return
+     * @param xmlDocument
+     * @param schema
+     * @return The schema element
      * @throws SchemaException
      */
     private Element extractFixedWidthSchema(Document xmlDocument, FixedWidthSchema schema) throws SchemaException {
@@ -103,8 +104,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     }
 
     /**
+     * @param xmlDocument
      * @param xmlSchema
-     * @return
+     * @param schema
      * @throws SchemaException
      */
     private void assignFixedWidthSchema(Document xmlDocument, Element xmlSchema, FixedWidthSchema schema)
@@ -119,8 +121,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     }
 
     /**
-     * @param xmlSchema
-     * @return
+     * @param xmlDocument
+     * @param schema
+     * @return The schema element
      * @throws SchemaException
      */
     private Element extractFixedWidthControlCellSchema(Document xmlDocument, FixedWidthControlCellSchema schema)
@@ -146,7 +149,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * 
      * @param xmlDocument
      * @param schemaLine
-     * @return
+     * @return The line schema element
      * @throws SchemaException
      */
     private Element extractFixedWidthSchemaLine(Document xmlDocument, FixedWidthSchemaLine schemaLine)
@@ -170,11 +173,10 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
     /**
      * Builds the cell part of a file schema from an xml input
-     * 
-     * @param xmlSchemaCell
-     * @return
+     * @param xmlDocument
+     * @param schemaCell
+     * @return The cell schema element
      * @throws SchemaException
-     * @throws DataConversionException
      */
     private Element extractFixedWidthSchemaCell(Document xmlDocument, FixedWidthSchemaCell schemaCell)
             throws SchemaException {
