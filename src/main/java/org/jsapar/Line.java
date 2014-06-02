@@ -346,6 +346,19 @@ public class Line implements Serializable {
      * @param cellName
      *            The name of the cell to add/replace.
      * @param value
+     *            The string value to set.
+     */
+    public <E extends Enum<E>> void setCellValue(String cellName, E value) {
+        this.setCellValue(cellName, value.toString());
+    }
+    
+    /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or
+     * replaces an existing cell if there already is one with the same name.
+     * 
+     * @param cellName
+     *            The name of the cell to add/replace.
+     * @param value
      *            The integer value to set.
      */
     public void setCellValue(String cellName, int value) {
