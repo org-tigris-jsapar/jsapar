@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.tigris.jsapar</groupId>
 	<artifactId>jsapar</artifactId>
-	<version>1.5.0</version>
+	<version>1.5.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>jsapar</name>
 	<url>http://jsapar.tigris.org</url>
@@ -149,9 +149,9 @@
   
   
 	<scm>
-      <url>scm:svn:http://jsapar.tigris.org/svn/jsapar/tags/jsapar-1.5.0</url>
-      <developerConnection>scm:svn:http://jsapar.tigris.org/svn/jsapar/tags/jsapar-1.5.0</developerConnection>
-	  <connection>scm:svn:http://jsapar.tigris.org/svn/jsapar/tags/jsapar-1.5.0</connection>
+      <url>http://jsapar.tigris.org/svn/jsapar</url>
+      <developerConnection>scm:svn:http://jsapar.tigris.org/svn/jsapar/trunk</developerConnection>
+	  <connection>scm:svn:http://jsapar.tigris.org/svn/jsapar</connection>
 	</scm>
 	<organization>
 	  <url>http://jsapar.tigris.org/</url>
