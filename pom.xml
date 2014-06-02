@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.tigris.jsapar</groupId>
 	<artifactId>jsapar</artifactId>
-	<version>1.5.0-SNAPSHOT</version>
+	<version>1.5.0</version>
 	<packaging>jar</packaging>
 	<name>jsapar</name>
 	<url>http://jsapar.tigris.org</url>
@@ -150,8 +149,8 @@
   
   
 	<scm>
-      <url>http://jsapar.tigris.org/svn/jsapar</url>
-	  <connection>scm:svn:http://jsapar.tigris.org/svn/jsapar</connection>
+      <url>http://jsapar.tigris.org/svn/jsapar/jsapar-1.5.0</url>
+	  <connection>scm:svn:http://jsapar.tigris.org/svn/jsapar/jsapar-1.5.0</connection>
 	</scm>
 	<organization>
 	  <url>http://jsapar.tigris.org/</url>
