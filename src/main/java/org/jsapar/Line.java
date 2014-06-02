@@ -624,6 +624,47 @@ public class Line implements Serializable {
         throw new JSaParException("The cell " + cell + " is not of type DateCell.");
     }
 
+    /**
+     * Utility function that gets the enum cell value of the specified cell. If the specified cell does not exist, the
+     * supplied default value is returned. 
+     * 
+     * @param cellName
+     * @param defaultValue
+     * @return The enum cell value if the cell.
+     * @throws JSaParException
+     *             If if specified cell does not exist.
+     * @throws IllegalArgumentException
+     *             If the enum type of the defaultValue does not have an enum constant with the name equal to the value
+     *             of the specified cell.
+     */
+    public <E extends Enum<E>> E getEnumCellValue(String cellName, Class<E> enumClass) throws JSaParException, IllegalArgumentException {
+        Cell cell = getExistingCell(cellName);
+        String s = cell.getStringValue();
+        return (E) Enum.valueOf(enumClass, s);
+    }
+    
+    /**
+     * Utility function that gets the Enum cell value of the specified cell. If the specified cell does not exist, the
+     * supplied default value is returned. 
+     * 
+     * @param cellName
+     * @param defaultValue 
+     * @return The enum cell value if the cell exist and can be converted to an enum. Returns the defaultValue if the cell does
+     *         not exist.
+     * @throws IllegalArgumentException
+     *             If the enum type of the defaultValue does not have an enum constant with the name equal to the value
+     *             of the specified cell.
+     */
+    @SuppressWarnings("unchecked")
+    public <E extends Enum<E>> E getCellValue(String cellName, E defaultValue) throws IllegalArgumentException {
+        Cell cell = getCell(cellName);
+        if(cell == null || cell instanceof EmptyCell)
+            return defaultValue;
+
+        String s = cell.getStringValue();
+        return (E) Enum.valueOf(defaultValue.getClass(), s);
+    }
+    
     
     /**
      * Utility function that gets the double cell value of the specified cell. If the specified cell

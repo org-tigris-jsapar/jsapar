@@ -1,8 +1,6 @@
 package org.jsapar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -143,6 +141,26 @@ public class LineTest {
         assertEquals("Nils", line.getCell("FirstName").getStringValue());
     }
 
+    enum Testing{
+        FIRST, SECOND, THIRD
+    }
+    
+    @Test
+    public void testGetCellValue_Enum() throws JSaParException {
+        Line line = new Line("TestLine");
+        line.addCell(new StringCell("Type", "FIRST"));
+        assertEquals(Testing.FIRST, line.getCellValue("Type", Testing.SECOND));
+        assertEquals(Testing.SECOND, line.getCellValue("Type does not exist", Testing.SECOND));
+        assertNull( line.getCellValue("Type does not exist", (Testing)null));
+    }
+
+    @Test
+    public void testGetEnumCellValue() throws JSaParException {
+        Line line = new Line("TestLine");
+        line.addCell(new StringCell("Type", "FIRST"));
+        assertEquals(Testing.FIRST, line.getEnumCellValue("Type", Testing.class));
+    }
+    
     @Test
     public void testGetSetStringCellValue() throws JSaParException {
         Line line = new Line("TestLine");
