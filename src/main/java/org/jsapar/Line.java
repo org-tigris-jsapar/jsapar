@@ -427,6 +427,20 @@ public class Line implements Serializable {
         Cell cell = this.getCell(cellName);
         return (cell != null) ? cell.getStringValue() : null;
     }
+    
+    /**
+     * Utility function that gets the string cell value of the specified cell.
+     * 
+     * @param cellName
+     * @param defaultValue
+     * @return The value of the specified cell. Returns the default value if there is no cell with supplied name or if the cell is empty.
+     */
+    public String getCellValue(String cellName, String defaultValue) {
+        Cell cell = getCell(cellName);
+        if(cell == null || cell instanceof EmptyCell || cell.getStringValue().isEmpty())
+            return defaultValue;
+        return cell.getStringValue();
+    }
 
     /**
      * @param cellName
@@ -463,6 +477,67 @@ public class Line implements Serializable {
     }
 
     /**
+     * Utility function that gets the integer cell value of the specified cell. If the specified
+     * cell does not exist, the defaultValue is returned. Tries to parse an integer value if cell is
+     * not of type NumberCell. Throws a NumberFormatException if the value is not a parsable
+     * integer.
+     * @param cellName
+     * @param defaultValue
+     * @return The integer value of the cell with the specified name.
+     * @throws NumberFormatException
+     */
+    public int getCellValue(String cellName, int defaultValue) throws NumberFormatException {
+        Cell cell = getCell(cellName);
+        if(cell == null || cell instanceof EmptyCell)
+            return defaultValue;
+        if (cell instanceof NumberCell) {
+            NumberCell numberCell = (NumberCell) cell;
+            return numberCell.getNumberValue().intValue();
+        }
+
+        return Integer.parseInt(cell.getStringValue());
+    }
+
+    /**
+     * Utility function that gets the boolean cell value of the specified cell. If the specified
+     * cell does not exist, a JSaparException is thrown. Tries to parse a boolean value if cell is
+     * not of type BooleanCell. 
+     * @param cellName
+     * @return The boolean value of the cell with the supplied name.
+     * @throws JSaParException
+     */
+    public boolean getBooleanCellValue(String cellName) throws JSaParException  {
+        Cell cell = getExistingCell(cellName);
+        if (cell instanceof BooleanCell) {
+            BooleanCell booleanCell = (BooleanCell) cell;
+            return booleanCell.getBooleanValue();
+        }
+
+        return Boolean.valueOf(cell.getStringValue());
+    }
+    
+    /**
+     * Utility function that gets the boolean cell value of the specified cell. If the specified
+     * cell does not exist, the defaultValue is returned. Tries to parse a boolean value if cell is
+     * not of type BooleanCell. 
+     * @param cellName
+     * @param defaultValue
+     * @return The boolean value of the cell with the supplied name.
+     * @throws 
+     */
+    public boolean getCellValue(String cellName, boolean defaultValue)  {
+        Cell cell = getCell(cellName);
+        if(cell == null || cell instanceof EmptyCell)
+            return defaultValue;
+        if (cell instanceof BooleanCell) {
+            BooleanCell booleanCell = (BooleanCell) cell;
+            return booleanCell.getBooleanValue();
+        }
+
+        return Boolean.valueOf(cell.getStringValue());
+    }
+    
+    /**
      * Utility function that gets the long integer cell value of the specified cell. If the specified
      * cell does not exist, a JSaparException is thrown. Tries to parse a long integer value if cell is
      * not of type NumberCell. Throws a NumberFormatException if the value is not a parsable
@@ -482,6 +557,73 @@ public class Line implements Serializable {
 
         return Long.parseLong(cell.getStringValue());
     }
+
+    /**
+     * Utility function that gets the long integer cell value of the specified cell. If the specified
+     * cell does not exist, the supplied default value is returned. Tries to parse a long integer value if cell is
+     * not of type NumberCell. Throws a NumberFormatException if the value is not a parsable
+     * integer.
+     * @param cellName
+     * @param defaultValue
+     * @return The long integer value of the cell with the specified name.
+     * @throws NumberFormatException
+     */
+    public long getCellValue(String cellName, long defaultValue) throws NumberFormatException {
+        Cell cell = getCell(cellName);
+        if(cell == null || cell instanceof EmptyCell)
+            return defaultValue;
+        if (cell instanceof NumberCell) {
+            NumberCell numberCell = (NumberCell) cell;
+            return numberCell.getNumberValue().longValue();
+        }
+
+        return Long.parseLong(cell.getStringValue());
+    }
+    
+    /**
+     * Utility function that gets the date cell value of the specified cell. If the specified
+     * cell does not exist or if it is not a DateCell, a JSaparException is thrown. 
+     * 
+     * @param cellName
+     * @return
+     * @throws JSaParException
+     * @throws NumberFormatException
+     */
+    public Date getDateCellValue(String cellName) throws JSaParException {
+        Cell cell = getExistingCell(cellName);
+        if (cell instanceof DateCell) {
+            DateCell dateCell = (DateCell) cell;
+            return dateCell.getDateValue();
+        }
+
+        throw new JSaParException("The cell " + cell + " is not of type DateCell.");
+    }
+    
+    /**
+     * Utility function that gets the date cell value of the specified cell. If the specified
+     * cell does not exist, the supplied default value is returned. If if it is not a DateCell, a JSaparException is thrown. 
+     * @param cellName
+     * @param defaultValue
+     * @return The date cell value if the cell exist and is of type DateCell. Returns the defaultValue if the cell does not exist. 
+     * @throws JSaParException If if it is not a DateCell.
+     */
+    public Date getCellValue(String cellName, Date defaultValue) throws JSaParException {
+        Cell cell = getCell(cellName);
+        if(cell == null || cell instanceof EmptyCell)
+            return defaultValue;
+        
+        if (cell instanceof DateCell) {
+            DateCell dateCell = (DateCell) cell;
+            return dateCell.getDateValue();
+        }
+        else if (cell instanceof StringCell){
+            if(cell.getStringValue().isEmpty())
+                return defaultValue;
+        }
+
+        throw new JSaParException("The cell " + cell + " is not of type DateCell.");
+    }
+
     
     /**
      * Utility function that gets the double cell value of the specified cell. If the specified cell
@@ -502,11 +644,34 @@ public class Line implements Serializable {
 
         return Double.parseDouble(cell.getStringValue());
     }
+    
+    /**
+     * Utility function that gets the double cell value of the specified cell. If the specified cell does not exist, the
+     * supplied defaultValue is returned. Tries to parse a double value if cell is not of type FloatCell. Throws a
+     * NumberFormatException if the value is not a parsable double.
+     * 
+     * @param cellName
+     * @param defaultValue
+     * @return The double value of the cell with the specified name.
+     * @throws NumberFormatException
+     */
+    public double getCellValue(String cellName, double defaultValue) throws NumberFormatException {
+        Cell cell = getCell(cellName);
+        if(cell == null || cell instanceof EmptyCell)
+            return defaultValue;
+        
+        if (cell instanceof NumberCell) {
+            NumberCell numberCell = (NumberCell) cell;
+            return numberCell.getNumberValue().doubleValue();
+        }
+
+        return Double.parseDouble(cell.getStringValue());
+    }
 
     /**
-     * Utility function that gets the BigDecimal cell value of the specified cell. If the specified cell
-     * does not exist, a JSaparException is thrown. Tries to parse a BigDecimal value if cell is not of
-     * type BigDecimalCell. Throws a NumberFormatException if the value is not a parsable BigDecimal.
+     * Utility function that gets the BigDecimal cell value of the specified cell. If the specified cell does not exist,
+     * a JSaparException is thrown. Tries to parse a BigDecimal value if cell is not of type BigDecimalCell. Throws a
+     * NumberFormatException if the value is not a parsable BigDecimal.
      * 
      * @param cellName
      * @return The double value of the cell with the specified name.
@@ -522,7 +687,71 @@ public class Line implements Serializable {
 
         return new BigDecimal(cell.getStringValue());
     }
-    
+
+    /**
+     * Utility function that gets the BigDecimal cell value of the specified cell. If the specified cell does not exist,
+     * a JSaParException is thrown. Tries to parse a BigDecimal value if cell is not of type BigDecimalCell. Throws a
+     * NumberFormatException if the value is not a parsable BigDecimal.
+     * 
+     * @param cellName
+     * @return The double value of the cell with the specified name.
+     * @throws JSaParException
+     *             , NumberFormatException
+     */
+    public BigDecimal getCellValue(String cellName, BigDecimal defaultValue) throws NumberFormatException {
+        Cell cell = getCell(cellName);
+        if (cell == null || cell instanceof EmptyCell)
+            return defaultValue;
+
+        if (cell instanceof BigDecimalCell) {
+            BigDecimalCell numberCell = (BigDecimalCell) cell;
+            return numberCell.getBigDecimalValue();
+        }
+
+        return new BigDecimal(cell.getStringValue());
+    }
+
+    /**
+     * Utility function that gets the BigInteger cell value of the specified cell. If the specified cell does not exist,
+     * the supplied defaultValue is returned. Tries to parse a BigInteger value if cell is not of type DecimalCell. Throws a
+     * NumberFormatException if the value is not a parsable BigDecimal.
+     * 
+     * @param cellName
+     * @return The double value of the cell with the specified name.
+     * @throws JSaParException
+     *             , NumberFormatException
+     */
+    public BigInteger getBigIntegerCellValue(String cellName) throws NumberFormatException, JSaParException {
+        Cell cell = getExistingCell(cellName);
+        if (cell instanceof BigDecimalCell) {
+            BigDecimalCell numberCell = (BigDecimalCell) cell;
+            return numberCell.getBigIntegerValue();
+        }
+
+        return new BigInteger(cell.getStringValue());
+    }    
+    /**
+     * Utility function that gets the BigInteger cell value of the specified cell. If the specified cell does not exist,
+     * the supplied defaultValue is returned. Tries to parse a BigInteger value if cell is not of type DecimalCell. Throws a
+     * NumberFormatException if the value is not a parsable BigDecimal.
+     * 
+     * @param cellName
+     * @return The double value of the cell with the specified name.
+     * @throws JSaParException
+     *             , NumberFormatException
+     */
+    public BigInteger getCellValue(String cellName, BigInteger defaultValue) throws NumberFormatException {
+        Cell cell = getCell(cellName);
+        if(cell == null || cell instanceof EmptyCell)
+            return defaultValue;
+        
+        if (cell instanceof BigDecimalCell) {
+            BigDecimalCell numberCell = (BigDecimalCell) cell;
+            return numberCell.getBigIntegerValue();
+        }
+
+        return new BigInteger(cell.getStringValue());
+    }    
     /**
      * @param cellName
      * @return true if the cell with the specified name contains a value.

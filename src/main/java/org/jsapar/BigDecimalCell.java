@@ -63,10 +63,17 @@ public class BigDecimalCell extends NumberCell  {
     }
 
     /**
-     * @return The string decimalValue of this cell.
+     * @return The value of this cell as a BigDecimal.
      */
     public BigDecimal getBigDecimalValue() {
         return (BigDecimal) super.getNumberValue();
+    }
+    
+    /**
+     * @return The value of this cell as a BigInteger
+     */
+    public BigInteger getBigIntegerValue(){
+        return getBigDecimalValue().toBigInteger();
     }
 
     /*
