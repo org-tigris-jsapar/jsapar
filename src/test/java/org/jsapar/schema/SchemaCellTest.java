@@ -139,8 +139,12 @@ public class SchemaCellTest {
         schemaCell.setName("test");
         schemaCell.setEmptyPattern("NULL");
 
-        Cell cell = schemaCell.makeCell("NULL");
-        assertTrue(cell instanceof EmptyCell);
+        Cell nonEmptyCell = schemaCell.makeCell("1,25");
+        assertEquals(1.25, ((FloatCell)nonEmptyCell).getNumberValue().doubleValue(), 0.0001);
+
+        Cell emptyCell = schemaCell.makeCell("NULL");
+        assertTrue(emptyCell instanceof EmptyCell);
+        
     }
     
     @Test
