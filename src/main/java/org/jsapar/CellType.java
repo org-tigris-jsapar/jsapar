@@ -49,6 +49,8 @@ public enum CellType {
 
         @Override
         public Format makeFormat(String sPattern, Locale locale) {
+            if(sPattern == null || sPattern.isEmpty())
+                sPattern = "yyyy-MM-dd HH:mm:ss.SSS"; // Default to ISO date time format.
             return new java.text.SimpleDateFormat(sPattern);
         }
     },

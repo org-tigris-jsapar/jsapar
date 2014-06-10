@@ -28,7 +28,7 @@ public class Xml2SchemaBuilderTest {
                 + "<fixedwidthschema lineseparator='\\r\\n'>" 
                 + "<line occurs='*' linetype='Person' minlength='240'>"
                 + "<cell name='First name' length='5'/>" + "<cell name='Last name' length='8'/>"
-                + "<cell name='Shoe size' length='8' alignment='right'><format type='integer' pattern='00000000'/></cell>"
+                + "<cell name='Shoe size' emptypattern='NULL' length='8' alignment='right'><format type='integer' pattern='00000000'/></cell>"
                 + "</line></fixedwidthschema></schema>";
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
@@ -38,14 +38,19 @@ public class Xml2SchemaBuilderTest {
 
         assertEquals("\r\n", fwSchema.getLineSeparator());
 
-        assertEquals(240, fwSchema.getFixedWidthSchemaLines().get(0).getMinLength());
-        assertEquals("First name", fwSchema.getFixedWidthSchemaLines().get(0).getSchemaCells().get(0).getName());
-        assertEquals("Last name", fwSchema.getFixedWidthSchemaLines().get(0).getSchemaCells().get(1).getName());
+        FixedWidthSchemaLine firstLineSchema = fwSchema.getFixedWidthSchemaLines().get(0);
+        assertEquals(240, firstLineSchema.getMinLength());
+        FixedWidthSchemaCell firstNameSchema = firstLineSchema.getSchemaCells().get(0);
+        assertEquals("First name", firstNameSchema.getName());
+        FixedWidthSchemaCell lastNameSchema = firstLineSchema.getSchemaCells().get(1);
+        assertEquals("Last name", lastNameSchema.getName());
 
-        assertEquals(5, fwSchema.getFixedWidthSchemaLines().get(0).getSchemaCells().get(0).getLength());
-        assertEquals(8, fwSchema.getFixedWidthSchemaLines().get(0).getSchemaCells().get(1).getLength());
+        assertEquals(5, firstNameSchema.getLength());
+        assertEquals(8, lastNameSchema.getLength());
+        FixedWidthSchemaCell shoeSizeSchema = firstLineSchema.getSchemaCells().get(2);
+        assertEquals("NULL", shoeSizeSchema.getEmptyPattern().pattern());
 
-        assertEquals(CellType.INTEGER, fwSchema.getFixedWidthSchemaLines().get(0).getSchemaCells().get(2)
+        assertEquals(CellType.INTEGER, shoeSizeSchema
                 .getCellFormat().getCellType());
 
         SchemaLine schemaLine = fwSchema.getSchemaLine("Person");

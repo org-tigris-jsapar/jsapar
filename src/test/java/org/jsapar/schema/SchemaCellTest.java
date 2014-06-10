@@ -3,9 +3,7 @@
  */
 package org.jsapar.schema;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.Locale;
 
@@ -134,6 +132,29 @@ public class SchemaCellTest {
         assertEquals(123456.78901, ((FloatCell)cell).getNumberValue().doubleValue(), 0.0001);
     }
     
+    @Test
+    public void testMakeCell_empty_pattern() throws ParseException, SchemaException {
+        TestSchemaCell schemaCell = new TestSchemaCell();
+        schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
+        schemaCell.setName("test");
+        schemaCell.setEmptyPattern("NULL");
+
+        Cell cell = schemaCell.makeCell("NULL");
+        assertTrue(cell instanceof EmptyCell);
+    }
+    
+    @Test
+    public void testMakeCell_empty_pattern_default() throws ParseException, SchemaException {
+        TestSchemaCell schemaCell = new TestSchemaCell();
+        schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
+        schemaCell.setName("test");
+        schemaCell.setEmptyPattern("NULL");
+        schemaCell.setDefaultValue("123456,78901");
+
+        Cell cell = schemaCell.makeCell("NULL");
+        assertEquals(123456.78901, ((FloatCell)cell).getNumberValue().doubleValue(), 0.0001);
+    }
+    
     /**
      * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
      * 
@@ -192,6 +213,7 @@ public class SchemaCellTest {
         assertEquals("", schemaCell.format(cell));
     }
 
+    
     /**
      * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
      * 

@@ -495,6 +495,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
             if (xmlDefault != null)
                 cell.setDefaultCell(cell.makeCell(getStringValue(xmlDefault)));
 
+            String sEmptyPattern = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_EMPTY_PATTERN);
+            if (sEmptyPattern != null)
+                cell.setEmptyPattern(sEmptyPattern);
+            
             Element xmlFormat = getChild(xmlSchemaCell, ELEMENT_FORMAT);
             if (xmlFormat != null)
                 assignCellFormat(cell, xmlFormat, locale);

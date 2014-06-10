@@ -1,17 +1,11 @@
 package org.jsapar.schema;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
 
-import org.jsapar.BigDecimalCell;
-import org.jsapar.BooleanCell;
 import org.jsapar.Cell;
 import org.jsapar.CellType;
-import org.jsapar.CharacterCell;
-import org.jsapar.DateCell;
 import org.jsapar.EmptyCell;
-import org.jsapar.FloatCell;
-import org.jsapar.IntegerCell;
-import org.jsapar.StringCell;
 import org.jsapar.input.CellParseError;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.ParseException;
@@ -33,6 +27,7 @@ public abstract class SchemaCell implements Cloneable {
     private Cell                          defaultCell           = null;
     private String                        defaultValue          = null;
     private Locale                        locale                = Locale.getDefault();
+    private Pattern                       emptyPattern          = null;
 
     public SchemaCell() {
     }
@@ -163,7 +158,7 @@ public abstract class SchemaCell implements Cloneable {
     public Cell makeCell(String sValue) throws ParseException {
 
         // If the cell is empty, check if default value exists.
-        if (sValue.length() <= 0) {
+        if (sValue.length() <= 0 || (emptyPattern != null && emptyPattern.matcher(sValue).matches())) {
             if (defaultCell != null) {
                 return defaultCell.makeCopy(getName());
             } else {
@@ -491,4 +486,33 @@ public abstract class SchemaCell implements Cloneable {
         return this.defaultCell != null;
     }
 
+    /**
+     * @return the emptyPattern
+     */
+    public Pattern getEmptyPattern() {
+        return emptyPattern;
+    }
+
+    /**
+     * The empty pattern can be used to ignore cells that contains a text that should be regared as empty. For instance
+     * the cell might contain the text NULL to indicate that there is no value even though this is a date or a numeric field.
+     * 
+     * @param emptyPattern the regexp pattern that will be matched against to determine if this cell is empty
+     */
+    public void setEmptyPattern(Pattern emptyPattern) {
+        this.emptyPattern = emptyPattern;
+    }
+
+    /**
+     * The empty pattern can be used to ignore cells that contains a text that should be regared as empty. For instance
+     * the cell might contain the text NULL to indicate that there is no value even though this is a date or a numeric field.
+     * 
+     * @param emptyPattern
+     *            the regexp pattern string that will be matched against to determine if this cell is empty
+     */
+    public void setEmptyPattern(String sEmptyPattern) {
+        if(sEmptyPattern != null && !sEmptyPattern.isEmpty())
+            this.emptyPattern = Pattern.compile(sEmptyPattern);
+    }
+    
 }
