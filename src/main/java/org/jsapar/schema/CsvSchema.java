@@ -20,6 +20,7 @@ import org.jsapar.input.ParsingEventListener;
  */
 public class CsvSchema extends Schema {
 
+    private static final String UTF8_BOM_STR = "\ufeff";
     private java.util.ArrayList<CsvSchemaLine> schemaLines = new java.util.ArrayList<CsvSchemaLine>(4);
 
     /**
@@ -54,6 +55,8 @@ public class CsvSchema extends Schema {
 
         schemaLine.setOccursInfinitely();
 
+        sHeaderLine = removeLeadingByteOrderMark(sHeaderLine);
+        
         String[] asCells = schemaLine.split(sHeaderLine);
         for (String sCell : asCells) {
             CsvSchemaCell masterCell = masterLineSchema.getCsvSchemaCell(sCell);
@@ -64,6 +67,21 @@ public class CsvSchema extends Schema {
         }
         addDefaultValuesFromMaster(schemaLine, masterLineSchema);
         return schemaLine;
+    }
+
+    /**
+     * Normally the byte order mark should be removed from the input buffer before parsing but in case this is forgotten
+     * we do it again because it is so hard to trace the error if it is not done at all when using the header line as a
+     * schema.
+     * 
+     * @param sHeaderLine
+     * @return
+     */
+    private String removeLeadingByteOrderMark(String sHeaderLine) {
+        if (sHeaderLine.startsWith(UTF8_BOM_STR))
+            return sHeaderLine.substring(UTF8_BOM_STR.length());
+        else
+            return sHeaderLine;
     }
 
     /**

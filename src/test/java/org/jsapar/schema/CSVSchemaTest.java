@@ -156,7 +156,7 @@ public class CSVSchemaTest {
 	schema.addSchemaLine(schemaLine);
 
 	String sLineSep = System.getProperty("line.separator");
-	String sToParse = "First Name;Last Name;Shoe Size" + sLineSep + "Jonas;Stenberg;41" + sLineSep + "Nils;Nilsson;";
+	String sToParse = "\ufeffFirst Name;Last Name;Shoe Size" + sLineSep + "Jonas;Stenberg;41" + sLineSep + "Nils;Nilsson;";
 	java.io.Reader reader = new java.io.StringReader(sToParse);
 	DocumentBuilder builder = new DocumentBuilder();
 	Document doc = builder.build(reader, schema);
