@@ -117,7 +117,7 @@ public class CsvControlCellSchemaTest {
 
 
         StringWriter writer = new StringWriter();
-        schema.outputLine(line, writer);
+        schema.outputLineLn(line, writer);
 
         String sExpected = "Name:->Jonas;Stenberg*";
 

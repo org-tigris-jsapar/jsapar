@@ -223,7 +223,32 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * Use a Outputter instead.
      * 
      * This method writes a line according to the schema line, with the same line type, which is
-     * found in this schema.
+     * found in this schema. 
+     * 
+     * Line is terminated with line separator; 
+     * 
+     * @param line
+     * @param writer
+     * @throws IOException
+     * @throws JSaParException
+     * @return false if no matching schema line was found. true otherwise.
+     */
+    public boolean outputLineLn(Line line, Writer writer) throws IOException, JSaParException {
+        if( outputLine(line, writer) ){
+            writer.append(getLineSeparator());
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * This method should only be called by a Outputter class. Don't use this directly in your code.
+     * Use a Outputter instead.
+     * 
+     * This method writes a line according to the schema line, with the same line type, which is
+     * found in this schema. 
+     * 
+     * No line separator is written;
      * 
      * @param line
      * @param writer
@@ -237,10 +262,10 @@ public abstract class Schema implements Cloneable, ParseSchema {
             return false;
         }
         outputLine(schemaLine, line, writer);
-        writer.append(getLineSeparator());
         return true;
     }
-
+    
+    
     protected void outputLine(SchemaLine schemaLine, Line line, Writer writer) throws IOException, JSaParException {
         schemaLine.output(line, writer);
     }

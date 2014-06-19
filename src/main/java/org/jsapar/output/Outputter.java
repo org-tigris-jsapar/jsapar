@@ -65,7 +65,7 @@ public class Outputter {
      */
     public void outputLine(Line line, SchemaLine schemaLine, java.io.Writer writer) throws JSaParException {
         try {
-            schemaLine.output(line, writer);
+            schema.outputLine(line, writer);
         } catch (IOException e) {
             throw new OutputException("Failed to write to buffert.", e);
         }
@@ -81,7 +81,7 @@ public class Outputter {
      */
     public void outputLineLn(Line line, java.io.Writer writer) throws JSaParException {
         try {
-            schema.outputLine(line, writer);
+            schema.outputLineLn(line, writer);
         } catch (IOException e) {
             throw new OutputException("Failed to write to buffert.", e);
         }

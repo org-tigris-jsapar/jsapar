@@ -109,7 +109,7 @@ public class FixedWidthControlCellSchemaTest {
         line.addCell(new StringCell("Stenberg"));
 
         StringWriter writer = new StringWriter();
-        schema.outputLine(line, writer);
+        schema.outputLineLn(line, writer);
 
         assertEquals("NJonasStenberg", writer.toString());
     }
@@ -131,7 +131,7 @@ public class FixedWidthControlCellSchemaTest {
         line.addCell(new StringCell("Stenberg"));
 
         StringWriter writer = new StringWriter();
-        schema.outputLine(line, writer);
+        schema.outputLineLn(line, writer);
 
         String result = writer.toString();
         assertEquals(25, result.length());
@@ -156,7 +156,7 @@ public class FixedWidthControlCellSchemaTest {
         line.addCell(new StringCell("Stenberg"));
 
         StringWriter writer = new StringWriter();
-        schema.outputLine(line, writer);
+        schema.outputLineLn(line, writer);
 
         String result = writer.toString();
         assertEquals(25, result.length());
