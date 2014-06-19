@@ -81,6 +81,31 @@ public class OutputterTest {
 
         assertEquals("NJonasStenberg", writer.toString());
     }
+
     
+    @Test
+    public void testOutputLine_FixedWidthControllCell_minLength() throws IOException, JSaParException {
+        FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema(1);
+        schema.setLineSeparator("");
+
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name");
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        schemaLine.setLineTypeControlValue("N");
+        schemaLine.setMinLength(20);
+        schema.addSchemaLine(schemaLine);
+
+        Line line = new Line("Name");
+        line.addCell(new StringCell("Jonas"));
+        line.addCell(new StringCell("Stenberg"));
+
+        StringWriter writer = new StringWriter();
+        Outputter outputter = new Outputter(schema);
+        outputter.outputLine(line, writer);
+
+        String result = writer.toString();
+        assertEquals(20, result.length());
+        assertEquals("NJonasStenberg      ", result);
+    }    
 
 }

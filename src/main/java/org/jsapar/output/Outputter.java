@@ -11,7 +11,6 @@ import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.Schema;
-import org.jsapar.schema.SchemaLine;
 
 /**
  * This class contains methods for transforming a Document into an output. E.g. if you want to write
@@ -55,22 +54,7 @@ public class Outputter {
         }
     }
 
-    /**
-     * Writes the single line to a {@link java.io.Writer} according to the supplied schema line.
-     * 
-     * @param line
-     * @param schemaLine
-     * @param writer
-     * @throws JSaParException
-     */
-    public void outputLine(Line line, SchemaLine schemaLine, java.io.Writer writer) throws JSaParException {
-        try {
-            schema.outputLine(line, writer);
-        } catch (IOException e) {
-            throw new OutputException("Failed to write to buffert.", e);
-        }
-    }
-
+    
     /**
      * Writes the single line to a {@link java.io.Writer} according to the line type of the line.
      * The line is terminated by the line separator.
@@ -81,9 +65,10 @@ public class Outputter {
      */
     public void outputLineLn(Line line, java.io.Writer writer) throws JSaParException {
         try {
-            schema.outputLineLn(line, writer);
+            if(!schema.outputLineLn(line, writer))
+                throw new OutputException("Line type [" + line.getLineType() + "] not found within schema.");
         } catch (IOException e) {
-            throw new OutputException("Failed to write to buffert.", e);
+            throw new OutputException("Failed to write line.", e);
         }
     }
 
@@ -97,14 +82,10 @@ public class Outputter {
      */
     public void outputLine(Line line, java.io.Writer writer) throws JSaParException {
         try {
-            String lineType = line.getLineType();
-            SchemaLine schemaLine = schema.getSchemaLine(lineType );
-            if (schemaLine == null)
-                throw new OutputException("Line type [" + lineType + "] not found within schema ");
-            schema.writeLinePrefix(schemaLine, writer);
-            schemaLine.output(line, writer);
+            if(!schema.outputLine(line, writer))
+                throw new OutputException("Line type [" + line.getLineType() + "] not found within schema.");
         } catch (IOException e) {
-            throw new OutputException("Failed to write to buffert.", e);
+            throw new OutputException("Failed to write line.", e);
         }
     }
 
