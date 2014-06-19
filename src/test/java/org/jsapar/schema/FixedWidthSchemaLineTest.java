@@ -328,8 +328,8 @@ public class FixedWidthSchemaLineTest {
         assertEquals(5, schemaLine.getTotalCellLenght());
         assertEquals(1, schemaLine.getSchemaCellsCount());
         
-        schemaLine.addFillerCellToReachMinLength();
-        assertEquals(10, schemaLine.getTotalCellLenght());
+        schemaLine.addFillerCellToReachMinLength(2);
+        assertEquals(8, schemaLine.getTotalCellLenght());
         assertEquals(2, schemaLine.getSchemaCellsCount());
     }
 }

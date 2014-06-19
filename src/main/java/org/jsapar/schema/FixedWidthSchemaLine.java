@@ -390,12 +390,13 @@ public class FixedWidthSchemaLine extends SchemaLine {
      * cell will be the difference between all minLength of the line and the cells added so far. Adding more schema
      * cells after calling this method will add those cells after the filler cell which will probably lead to unexpected
      * behavior.
+     * @param offset The number of bytes written before the line schema writes all the cells.
      */
-    public void addFillerCellToReachMinLength() {
+    public void addFillerCellToReachMinLength( int offset) {
         if (getMinLength() <= 0)
             return;
 
-        int diff = getMinLength() - getTotalCellLenght();
+        int diff = getMinLength() - getTotalCellLenght() - offset;
         if (diff > 0) {
             addSchemaCell(new FixedWidthSchemaCell("_fillToMinLength_", diff));
         }

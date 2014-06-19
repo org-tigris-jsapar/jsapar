@@ -229,7 +229,7 @@ public class FixedWidthSchema extends Schema {
      */
     public void addFillerCellsToReachLineMinLength(){
         for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
-            lineSchema.addFillerCellToReachMinLength();
+            lineSchema.addFillerCellToReachMinLength(0);
         }
     }
 }

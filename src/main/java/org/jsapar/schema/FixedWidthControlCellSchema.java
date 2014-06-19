@@ -286,6 +286,17 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
     public void writeLinePrefix(SchemaLine schemaLine, Writer writer) throws OutputException, IOException {
         writeControlCell(writer, schemaLine.getLineTypeControlValue());
     }
+
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.FixedWidthSchema#addFillerCellsToReachLineMinLength()
+     */
+    @Override
+    public void addFillerCellsToReachLineMinLength() {
+        for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
+            lineSchema.addFillerCellToReachMinLength(this.controlCellLength);
+        }
+    }
     
+
     
 }
