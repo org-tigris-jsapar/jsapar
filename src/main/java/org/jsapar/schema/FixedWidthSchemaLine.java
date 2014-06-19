@@ -189,10 +189,33 @@ public class FixedWidthSchemaLine extends SchemaLine {
      */
     @Override
     public void output(Line line, Writer writer) throws IOException, JSaParException {
+        output(line, writer, 0);
+    }
+
+    /**
+     * Writes a line to the writer. Each cell is identified from the schema by the name of the cell. If the schema-cell
+     * has no name, the cell at the same position in the line is used under the condition that it also lacks name.
+     * 
+     * If the schema-cell has a name the cell with the same name is used. If no such cell is found and the cell att the
+     * same position lacks name, it is used instead.
+     * 
+     * If no corresponding cell is found for a schema-cell, the positions are filled with the schema fill character.
+     * 
+     * @param line
+     *            The line to write to the writer
+     * @param writer
+     *            The writer to write to.
+     * @param offset
+     *            The number of characters that has already been written on this line.
+     * 
+     * @throws IOException
+     * @throws JSaParException
+     */
+    public void output(Line line, Writer writer, int offset) throws IOException, JSaParException {
         Iterator<FixedWidthSchemaCell> iter = getSchemaCells().iterator();
 
         // Iterate all schema cells.
-        int totalLength = 0;
+        int totalLength = offset;
         for (int i = 0; iter.hasNext(); i++) {
             FixedWidthSchemaCell schemaCell = iter.next();
             totalLength += schemaCell.getLength();
@@ -203,26 +226,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
             FixedWidthSchemaCell.fill(writer, getFillCharacter(), minLength-totalLength);
         }
     }
-
-    /**
-     * @param line
-     * @param writer
-     * @param schema
-     * @throws IOException
-     * @throws JSaParException
-     */
-    void outputByIndex(Line line, Writer writer, FixedWidthSchema schema) throws IOException, JSaParException {
-        Iterator<FixedWidthSchemaCell> iter = getSchemaCells().iterator();
-        int totalLength = 0;
-        for (int i = 0; iter.hasNext(); i++) {
-            FixedWidthSchemaCell schemaCell = iter.next();
-            schemaCell.output(line.getCell(i), writer, getFillCharacter());
-            totalLength += schemaCell.getLength();
-        }
-        if(minLength > totalLength){
-            FixedWidthSchemaCell.fill(writer, getFillCharacter(), minLength-totalLength);
-        }
-    }
+    
 
     /*
      * (non-Javadoc)

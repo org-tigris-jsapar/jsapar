@@ -189,9 +189,12 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
      * @throws OutputException
      * @throws IOException
      */
-    private void writeControlCell(Writer writer, String controlValue) throws OutputException, IOException {
-        if(writeControlCell)
+    private boolean writeControlCell(Writer writer, String controlValue) throws OutputException, IOException {
+        if(writeControlCell){
             FixedWidthSchemaCell.output(controlValue, writer, ' ', getControlCellLength(), getControlCellAlignment());
+            return true;
+        }
+        return false;
     }
 
 
@@ -255,8 +258,11 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
      */
     @Override
     protected void outputLine(SchemaLine schemaLine, Line line, Writer writer) throws IOException, JSaParException {
-        writeControlCell(writer, schemaLine.getLineTypeControlValue());
-        super.outputLine(schemaLine, line, writer);
+        int offset=0;
+        if(writeControlCell(writer, schemaLine.getLineTypeControlValue())){
+            offset = controlCellLength;
+        }
+        ((FixedWidthSchemaLine)schemaLine).output(line, writer, offset);
     }
 
     /**

@@ -115,6 +115,54 @@ public class FixedWidthControlCellSchemaTest {
     }
 
     @Test
+    public void testOutputLine_minLength() throws IOException, JSaParException {
+        FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema(1);
+        schema.setLineSeparator("");
+
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name");
+        schemaLine.setMinLength(25);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        schemaLine.setLineTypeControlValue("N");
+        schema.addSchemaLine(schemaLine);
+
+        Line line = new Line("Name");
+        line.addCell(new StringCell("Jonas"));
+        line.addCell(new StringCell("Stenberg"));
+
+        StringWriter writer = new StringWriter();
+        schema.outputLine(line, writer);
+
+        String result = writer.toString();
+        assertEquals(25, result.length());
+        assertEquals("NJonasStenberg           ", result);
+    }
+
+    @Test
+    public void testOutputLine_noControl_minLength() throws IOException, JSaParException {
+        FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema(1);
+        schema.setLineSeparator("");
+        schema.setWriteControlCell(false);
+
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name");
+        schemaLine.setMinLength(25);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        schemaLine.setLineTypeControlValue("N");
+        schema.addSchemaLine(schemaLine);
+
+        Line line = new Line("Name");
+        line.addCell(new StringCell("Jonas"));
+        line.addCell(new StringCell("Stenberg"));
+
+        StringWriter writer = new StringWriter();
+        schema.outputLine(line, writer);
+
+        String result = writer.toString();
+        assertEquals(25, result.length());
+        assertEquals("JonasStenberg            ", result);
+    }    
+    @Test
     public void testOutput_DontWriteControlCell() throws IOException, JSaParException {
         FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema(1);
         schema.setWriteControlCell(false);
