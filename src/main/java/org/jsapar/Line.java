@@ -170,7 +170,8 @@ public class Line implements Serializable {
     }
 
     /**
-     * Adds a cell to the line end of the line, replacing any existing cell with the same name.
+     * Adds a cell to the line end of the line, replacing any existing cell with the same name. If the value of the
+     * supplied cell is null, any existing cell is removed but no new cell will be added.
      * 
      * @param cell
      *            The cell to add
@@ -178,6 +179,9 @@ public class Line implements Serializable {
      * @throws JSaParException
      */
     public Cell replaceCell(Cell cell) {
+        if(cell.getValue() == null)
+            return removeCell(cell.getName());
+        
         Cell foundCell = null;
         if (cell.getName() != null) {
             foundCell = this.cellsByName.put(cell.getName(), cell);
@@ -336,7 +340,10 @@ public class Line implements Serializable {
      *            The string value to set.
      */
     public void setCellValue(String cellName, String value) {
-        this.replaceCell(new StringCell(cellName, value));
+        if(value==null)
+            removeCell(cellName);
+        else
+            this.replaceCell(new StringCell(cellName, value));
     }
 
     /**
@@ -349,7 +356,10 @@ public class Line implements Serializable {
      *            The string value to set.
      */
     public <E extends Enum<E>> void setCellValue(String cellName, E value) {
-        this.setCellValue(cellName, value.toString());
+        if(value==null)
+            removeCell(cellName);
+        else
+            this.setCellValue(cellName, value.toString());
     }
     
     /**
@@ -401,7 +411,10 @@ public class Line implements Serializable {
      *            The date value to set.
      */
     public void setCellValue(String cellName, Date value) {
-        this.replaceCell(new DateCell(cellName, value));
+        if(value==null)
+            removeCell(cellName);
+        else
+            this.replaceCell(new DateCell(cellName, value));
     }
     
     /**
@@ -414,7 +427,10 @@ public class Line implements Serializable {
      *            The value to set.
      */
     public void setCellValue(String cellName, BigDecimal value) {
-        this.replaceCell(new BigDecimalCell(cellName, value));
+        if(value==null)
+            removeCell(cellName);
+        else
+            this.replaceCell(new BigDecimalCell(cellName, value));
     }
 
     /**
@@ -427,7 +443,10 @@ public class Line implements Serializable {
      *            The value to set.
      */
     public void setCellValue(String cellName, BigInteger value) {
-        this.replaceCell(new BigDecimalCell(cellName, value));
+        if(value==null)
+            removeCell(cellName);
+        else
+            this.replaceCell(new BigDecimalCell(cellName, value));
     }
     
     /**

@@ -1,6 +1,12 @@
 package org.jsapar;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
+import java.util.Date;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -251,6 +257,25 @@ public class LineTest {
         
         line.getIntCellValue("aStringValue");
         Assert.fail("Should throw exception");
+    }
+    
+    @Test
+    public void testSetCellValueString_null(){
+        Line line = new Line("TestLine");
+        line.setCellValue("aStringValue", "ABC");
+        assertEquals("ABC", line.getStringCellValue("aStringValue"));
+        line.setCellValue("aStringValue", (String)null);
+        assertFalse(line.isCell("aStringValue"));
+    }
+    
+    @Test
+    public void testSetCellValueString_date() throws JSaParException{
+        Line line = new Line("TestLine");
+        Date date = new Date();
+        line.setCellValue("aDateValue", date);
+        assertEquals(date, line.getDateCellValue("aDateValue"));
+        line.setCellValue("aDateValue", (Date)null);
+        assertFalse(line.isCell("aDateValue"));
     }
     
 }
