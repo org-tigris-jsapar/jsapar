@@ -337,7 +337,7 @@ public class Line implements Serializable {
      * @param cellName
      *            The name of the cell to add/replace.
      * @param value
-     *            The string value to set.
+     *            The string value to set. If null, existing value will be removed but no new value will be set. 
      */
     public void setCellValue(String cellName, String value) {
         if(value==null)
@@ -353,7 +353,7 @@ public class Line implements Serializable {
      * @param cellName
      *            The name of the cell to add/replace.
      * @param value
-     *            The string value to set.
+     *            The string value to set. If null, existing value will be removed but no new value will be set.
      */
     public <E extends Enum<E>> void setCellValue(String cellName, E value) {
         if(value==null)
@@ -408,7 +408,7 @@ public class Line implements Serializable {
      * @param cellName
      *            The name of the cell to add/replace.
      * @param value
-     *            The date value to set.
+     *            The date value to set. If null, existing value will be removed but no new value will be set.
      */
     public void setCellValue(String cellName, Date value) {
         if(value==null)
@@ -424,7 +424,7 @@ public class Line implements Serializable {
      * @param cellName
      *            The name of the cell to add/replace.
      * @param value
-     *            The value to set.
+     *            The value to set. If null, existing value will be removed but no new value will be set.
      */
     public void setCellValue(String cellName, BigDecimal value) {
         if(value==null)
@@ -440,7 +440,7 @@ public class Line implements Serializable {
      * @param cellName
      *            The name of the cell to add/replace.
      * @param value
-     *            The value to set.
+     *            The value to set. If null, existing value will be removed but no new value will be set.
      */
     public void setCellValue(String cellName, BigInteger value) {
         if(value==null)
