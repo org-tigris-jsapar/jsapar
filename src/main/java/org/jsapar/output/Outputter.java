@@ -42,18 +42,30 @@ public class Outputter {
      * @throws JSaParException
      */
     public void output(Document document, java.io.Writer writer) throws JSaParException {
+        output(document.getLineIterator(), writer);
+    }
+
+    /**
+     * Writes the document to a {@link java.io.Writer} according to the schemas of this outputter. Note that you have to
+     * add at least one schema to the instance of Outputter before calling this method.
+     * 
+     * @param lineIterator
+     *            An iterator that iterates over a collection of lines. Can be used to build lines on-the-fly if you
+     *            don't want to store them all in memory.
+     * @param writer
+     * @throws JSaParException
+     */
+    public void output(Iterator<Line> lineIterator, java.io.Writer writer) throws JSaParException {
         try {
-            Iterator<Line> itLines = document.getLineIterator();
             schema.outputBefore(writer);
-            schema.output(itLines, writer);
+            schema.output(lineIterator, writer);
             schema.outputAfter(writer);
-            if (!itLines.hasNext())
+            if (!lineIterator.hasNext())
                 return;
         } catch (IOException e) {
             throw new OutputException("Failed to write to buffert.", e);
         }
-    }
-
+    }    
     
     /**
      * Writes the single line to a {@link java.io.Writer} according to the line type of the line.
@@ -130,6 +142,18 @@ public class Outputter {
         }
     }
 
+    /**
+     * Writes the header line if the first line is schema.
+     * 
+     * @param schemaLine
+     * @param writer
+     * @throws JSaParException
+     */
+    public void outputCsvHeaderLine(String lineType, java.io.Writer writer) throws JSaParException {
+        outputCsvHeaderLine((CsvSchemaLine)this.schema.getSchemaLine(lineType), writer);
+    }
+    
+    
     /**
      * Writes the header line if the first line is schema.
      * 
