@@ -79,6 +79,8 @@ public class BooleanCell extends Cell  {
 	 */
 	@Override
 	public String getStringValue(Format format) throws IllegalArgumentException {
+	    if(this.booleanValue == null)
+	        return null;
 		if (format != null)
 			return format.format(this.booleanValue);
 		else

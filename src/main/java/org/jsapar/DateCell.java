@@ -82,6 +82,8 @@ public class DateCell extends Cell implements Comparable<DateCell> {
      */
     @Override
     public String getStringValue(Format format) throws IllegalArgumentException {
+        if(this.dateValue == null)
+            return null;
         if (format != null)
             return format.format(this.dateValue);
         else

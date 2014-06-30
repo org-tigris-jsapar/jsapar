@@ -74,6 +74,8 @@ public class CharacterCell extends Cell {
 
     @Override
     public String getStringValue(Format format) throws IllegalArgumentException {
+        if(characterValue == null)
+            return null;
         if (format != null)
             return format.format(this.characterValue);
         else

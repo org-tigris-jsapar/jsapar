@@ -81,6 +81,8 @@ public abstract class NumberCell extends Cell {
      */
     @Override
     public String getStringValue(Format format) throws IllegalArgumentException {
+        if(this.numberValue == null)
+            return null;
         if (format != null)
             return format.format(this.numberValue);
         else
