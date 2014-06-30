@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.jsapar.BooleanCell;
 import org.jsapar.CellType;
@@ -289,9 +291,13 @@ public class CSVSchemaTest {
 	schemaLine = new CsvSchemaLine();
 	schemaLine.addSchemaCell(new CsvSchemaCell("First name"));
 	schemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
+	
 	CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe size", new SchemaCellFormat(CellType.INTEGER));
 	shoeSizeCell.setDefaultValue("41");
 	schemaLine.addSchemaCell(shoeSizeCell);
+	
+    schemaLine.addSchemaCell(new CsvSchemaCell("Birth date", new SchemaCellFormat(CellType.DATE, new SimpleDateFormat("yyyy-MM-dd"))));
+    
 	schemaLine.setFirstLineAsSchema(true);
 	schema.addSchemaLine(schemaLine);
 
@@ -303,7 +309,7 @@ public class CSVSchemaTest {
 	schema.outputLine(line1, 2, writer);
 
 	String sLineSep = System.getProperty("line.separator");
-	String sExpected = sLineSep + "First name;Last name;Shoe size" + sLineSep + "Jonas;Stenberg;41";
+	String sExpected = sLineSep + "First name;Last name;Shoe size;Birth date" + sLineSep + "Jonas;Stenberg;41;";
 
 	assertEquals(sExpected, writer.toString());
     }

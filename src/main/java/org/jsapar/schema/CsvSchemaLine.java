@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import org.jsapar.Cell;
+import org.jsapar.CellType;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
@@ -301,20 +302,25 @@ public class CsvSchemaLine extends SchemaLine {
      */
     @Override
     public CsvSchemaLine clone(){
-        CsvSchemaLine line;
-        try {
-            line = (CsvSchemaLine) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError(e);
-        }
+        CsvSchemaLine line = cloneWithoutCells();
 
-        line.schemaCells = new java.util.LinkedList<CsvSchemaCell>();
         for (CsvSchemaCell cell : this.schemaCells) {
             line.addSchemaCell(cell.clone());
         }
         return line;
     }
 
+    protected CsvSchemaLine cloneWithoutCells(){
+        CsvSchemaLine line;
+        try {
+            line = (CsvSchemaLine) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(e);
+        }
+        line.schemaCells = new java.util.LinkedList<CsvSchemaCell>();
+
+        return line;
+    }    
     /*
      * (non-Javadoc)
      * 
@@ -397,7 +403,11 @@ public class CsvSchemaLine extends SchemaLine {
      * @throws JSaParException
      */
     public void outputHeaderLine(Writer writer) throws IOException, JSaParException {
-        output(this.buildHeaderLineFromSchema(), writer);
+        CsvSchemaLine unformattedSchemaLine = this.clone();
+        for(CsvSchemaCell schemaCell:unformattedSchemaLine.getSchemaCells()){
+            schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING));
+        }
+        unformattedSchemaLine.output(this.buildHeaderLineFromSchema(), writer);
     }
 
     /*
