@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.jsapar.BooleanCell;
 import org.jsapar.CellType;
