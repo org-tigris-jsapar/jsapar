@@ -117,11 +117,14 @@ public class Line implements Serializable {
     }
 
     /**
-     * Adds a cell to the end of the line.
+     * Adds a cell to the end of the line. Requires that there is not already a cell with the same name within this
+     * line. Use method replaceCell() instead if you don't care if a cell with the same name already exist.
      * 
      * @param cell
      *            The cell to add
      * @throws JSaParException
+     *             if cell with the same name already exist. Use method replaceCell() instead if you don't care if a
+     *             cell with the same name already exist.
      */
     public void addCell(Cell cell) throws JSaParException {
         this.cellsByIndex.add(cell);
@@ -176,7 +179,6 @@ public class Line implements Serializable {
      * @param cell
      *            The cell to add
      * @return The replaced cell or null if there were no cell within the line with the same name.
-     * @throws JSaParException
      */
     public Cell replaceCell(Cell cell) {
         if(cell.getValue() == null)
@@ -221,8 +223,8 @@ public class Line implements Serializable {
     /**
      * Replaces a cell at specified index of a line. First cell has index 0.<br>
      * Note that if the line contains another cell with the name same name as the supplied cell,
-     * both that cell and the cell at the specified index will be removed. This can lead to quite
-     * unexpected behavior since this also affects the index of all cells to the left of the second
+     * both that cell and the cell at the specified index will be removed. This can lead to 
+     * unexpected behavior since this also affects the index of all cells with higher index than the 
      * removed cell.
      * 
      * @param cell
