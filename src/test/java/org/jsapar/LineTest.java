@@ -1,10 +1,6 @@
 package org.jsapar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.Date;
 
@@ -276,6 +272,29 @@ public class LineTest {
         assertEquals(date, line.getDateCellValue("aDateValue"));
         line.setCellValue("aDateValue", (Date)null);
         assertFalse(line.isCell("aDateValue"));
+    }
+
+    @Test
+    public void testSetCellValue_boolean() throws JSaParException{
+        Line line = new Line("TestLine");
+        boolean t = true;
+        boolean f = false;
+        line.setCellValue("aTrueValue", t);
+        line.setCellValue("aFalseValue", f);
+        assertTrue(line.getBooleanCellValue("aTrueValue"));
+        assertTrue(line.getCellValue("aTrueValue", false));
+        assertFalse(line.getCellValue("anotherValue", false));
+        assertFalse(line.getBooleanCellValue("aFalseValue"));
+    }
+
+    @Test
+    public void testSetCellValue_char() throws JSaParException{
+        Line line = new Line("TestLine");
+        char ch = 'A';
+        line.setCellValue("aCharValue", ch);
+        assertEquals('A', line.getCharCellValue("aCharValue"));
+        assertEquals('A', line.getCellValue("aCharValue", 'B'));
+        assertEquals('B', line.getCellValue("another", 'B'));
     }
     
 }

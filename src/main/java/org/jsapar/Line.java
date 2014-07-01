@@ -402,6 +402,32 @@ public class Line implements Serializable {
     }
 
     /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or replaces an
+     * existing cell if there already is one with the same name.
+     * 
+     * @param cellName
+     *            The name of the cell to add/replace.
+     * @param value
+     *            The boolean value to set.
+     */
+    public void setCellValue(String cellName, boolean value) {
+        this.replaceCell(new BooleanCell(cellName, value));
+    }
+
+    /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or replaces an
+     * existing cell if there already is one with the same name.
+     * 
+     * @param cellName
+     *            The name of the cell to add/replace.
+     * @param value
+     *            The character value to set.
+     */
+    public void setCellValue(String cellName, char value) {
+        this.replaceCell(new CharacterCell(cellName, value));
+    }
+    
+    /**
      * Utility function that adds a cell with the specified name and value to the end of the line or
      * replaces an existing cell if there already is one with the same name.
      * 
@@ -528,6 +554,57 @@ public class Line implements Serializable {
         }
 
         return Integer.parseInt(cell.getStringValue());
+    }
+    
+    
+    /**
+     * Utility function that gets the char cell value of the specified cell. If the specified cell does not exist, a
+     * JSaparException is thrown. Tries to parse a character value if cell is not of type CharacterCell. Throws a
+     * NumberFormatException if the value is not a parsable character.
+     * 
+     * @param cellName
+     * @return The char value of the cell with the specified name.
+     * @throws JSaParException
+     *             , NumberFormatException
+     */
+    public char getCharCellValue(String cellName) throws JSaParException, NumberFormatException {
+        Cell cell = getExistingCell(cellName);
+        if (cell instanceof CharacterCell) {
+            CharacterCell chCell = (CharacterCell) cell;
+            return chCell.getCharacterValue();
+        }
+
+        String s = cell.getStringValue();
+        if (s.isEmpty())
+            throw new NumberFormatException("Could not convert string cell [" + cellName
+                    + "] to a character since string is empty.");
+        return s.charAt(0);
+    }
+
+    /**
+     * Utility function that gets the character cell value of the specified cell. If the specified cell does not exist,
+     * the defaultValue is returned. Tries to parse a character value if cell is not of type CharacterCell. Throws a
+     * NumberFormatException if the value is not a parsable character.
+     * 
+     * @param cellName
+     * @param defaultValue
+     * @return The char value of the cell with the specified name.
+     * @throws NumberFormatException
+     */
+    public char getCellValue(String cellName, char defaultValue) throws NumberFormatException {
+        Cell cell = getCell(cellName);
+        if (cell == null || cell instanceof EmptyCell)
+            return defaultValue;
+        if (cell instanceof CharacterCell) {
+            CharacterCell chCell = (CharacterCell) cell;
+            return chCell.getCharacterValue();
+        }
+
+        String s = cell.getStringValue();
+        if (s.isEmpty())
+            throw new NumberFormatException("Could not convert string cell [" + cellName
+                    + "] to a character since string is empty.");
+        return s.charAt(0);
     }
 
     /**

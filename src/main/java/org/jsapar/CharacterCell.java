@@ -68,7 +68,7 @@ public class CharacterCell extends Cell {
     /**
      * @return the value of this cell as a character
      */
-    private Character getCharacterValue() {
+    public Character getCharacterValue() {
         return characterValue;
     }
 
