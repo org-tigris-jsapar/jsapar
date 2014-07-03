@@ -626,17 +626,37 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     }
 
     /**
+     * Loads a schema from specified resource using default character encoding.
+     * 
      * @param resourceBaseClass
-     *            A class that specifies the base for the relative location of the resource. If this
-     *            parameter is null, the resource name has to specify the resource with an absolute
-     *            path.
+     *            A class that specifies the base for the relative location of the resource. If this parameter is null,
+     *            the resource name has to specify the resource with an absolute path.
      * @param resourceName
      *            The name of the resource to load.
      * @return A newly created schema from the supplied xml resource.
      * @throws SchemaException
      * @throws IOException
      */
-    public static Schema loadSchemaFromXmlResource(Class<?> resourceBaseClass, String resourceName) throws SchemaException,
+    public static Schema loadSchemaFromXmlResource(Class<?> resourceBaseClass, String resourceName)
+            throws SchemaException, IOException {
+        return loadSchemaFromXmlResource(resourceBaseClass, resourceName, null);
+    }    
+    
+    /**
+     * Loads a schema from specified resource using supplied character encoding.
+     * 
+     * @param resourceBaseClass
+     *            A class that specifies the base for the relative location of the resource. If this parameter is null,
+     *            the resource name has to specify the resource with an absolute path.
+     * @param resourceName
+     *            The name of the resource to load.
+     * @param encoding
+     *            The character encoding to use while reading resource.
+     * @return A newly created schema from the supplied xml resource.
+     * @throws SchemaException
+     * @throws IOException
+     */
+    public static Schema loadSchemaFromXmlResource(Class<?> resourceBaseClass, String resourceName, String encoding) throws SchemaException,
             IOException {
         if (resourceBaseClass == null)
             resourceBaseClass = Xml2SchemaBuilder.class;
@@ -646,7 +666,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
                     + resourceBaseClass.getName());
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         try {
-            Schema schema = schemaBuilder.build(new InputStreamReader(is));
+            Schema schema = schemaBuilder.build(new InputStreamReader(is, encoding));
             return schema;
         } finally {
             is.close();
