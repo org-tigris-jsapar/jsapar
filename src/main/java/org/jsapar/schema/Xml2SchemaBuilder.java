@@ -1,6 +1,7 @@
 package org.jsapar.schema;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -615,7 +616,20 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @throws IOException
      */
     public static Schema loadSchemaFromXmlFile(File file) throws SchemaException, IOException {
-        Reader schemaReader = new FileReader(file);
+        return loadSchemaFromXmlFile(file, null);
+    }
+    
+    /**
+     * Utility function for loading a schema from an xml file.
+     * @param file
+     * @param encoding The character encoding to use while reading file.
+     * @return A newly created schema from the xml file.
+     * @throws SchemaException
+     * @throws IOException
+     */
+    public static Schema loadSchemaFromXmlFile(File file, String encoding) throws SchemaException, IOException {
+        InputStream is = new FileInputStream(file);
+        Reader schemaReader = new InputStreamReader(is, encoding);
         try {
             Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
             Schema schema = builder.build(schemaReader);
