@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -615,7 +616,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @throws IOException
      */
     public static Schema loadSchemaFromXmlFile(File file) throws SchemaException, IOException {
-        return loadSchemaFromXmlFile(file, null);
+        return loadSchemaFromXmlFile(file, Charset.defaultCharset().name());
     }
     
     /**
@@ -652,7 +653,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      */
     public static Schema loadSchemaFromXmlResource(Class<?> resourceBaseClass, String resourceName)
             throws SchemaException, IOException {
-        return loadSchemaFromXmlResource(resourceBaseClass, resourceName, null);
+        return loadSchemaFromXmlResource(resourceBaseClass, resourceName, Charset.defaultCharset().name());
     }    
     
     /**
