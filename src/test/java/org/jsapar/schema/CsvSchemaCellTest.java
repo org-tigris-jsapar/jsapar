@@ -43,7 +43,7 @@ public class CsvSchemaCellTest {
     }
     
     @Test
-    public final void testOutput_String_quoted() throws IOException {
+    public final void testOutput_String_quoted_contains_separator() throws IOException {
 	CsvSchemaCell schemaElment = new CsvSchemaCell("First name");
 
 	Writer writer = new StringWriter();
@@ -52,6 +52,17 @@ public class CsvSchemaCellTest {
 
 	assertEquals("'Here; we come'", writer.toString());
     }
+    
+    @Test
+    public final void testOutput_String_quoted_starts_with_quote() throws IOException {
+    CsvSchemaCell schemaElment = new CsvSchemaCell("First name");
+
+    Writer writer = new StringWriter();
+    Cell cell = new StringCell("'Here we come'");
+    schemaElment.output(cell, writer, ";",'\'');
+
+    assertEquals("''Here we come''", writer.toString());
+    }    
 
     @Test
     public final void testOutput_String_quote_not_used() throws IOException {

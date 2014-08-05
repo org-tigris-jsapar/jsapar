@@ -25,7 +25,7 @@ public class CsvSchemaCell extends SchemaCell {
         if (quoteChar == 0)
             sValue = sValue.replace(cellSeparator, replaceString);
         else {
-            if (sValue.indexOf(cellSeparator) > 0)
+            if (sValue.contains(cellSeparator) || sValue.charAt(0) ==quoteChar)
                 sValue = quoteChar + sValue + quoteChar;
         }
         writer.write(sValue);
