@@ -22,10 +22,13 @@ public class CsvSchemaCell extends SchemaCell {
 
     void output(Cell cell, Writer writer, String cellSeparator, char quoteChar) throws IOException {
         String sValue = format(cell);
+        if(sValue.isEmpty())
+            return;
+        
         if (quoteChar == 0)
             sValue = sValue.replace(cellSeparator, replaceString);
         else {
-            if (sValue.contains(cellSeparator) || (!sValue.isEmpty() && sValue.charAt(0) ==quoteChar))
+            if (sValue.contains(cellSeparator) || sValue.charAt(0) ==quoteChar)
                 sValue = quoteChar + sValue + quoteChar;
         }
         writer.write(sValue);
