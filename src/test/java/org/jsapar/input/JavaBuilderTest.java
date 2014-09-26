@@ -89,7 +89,7 @@ public class JavaBuilderTest {
         JavaBuilder builder = new JavaBuilder();
         Line line = builder.buildLine(person);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
-        assertEquals(7, line.getNumberOfCells());
+        assertEquals(8, line.getNumberOfCells());
         assertEquals("Jonas", line.getCell("firstName").getStringValue());
         assertEquals(42, ((IntegerCell) line.getCell("shoeSize")).getNumberValue().shortValue());
         assertEquals(4711, ((IntegerCell) line.getCell("streetNumber")).getNumberValue().intValue());
