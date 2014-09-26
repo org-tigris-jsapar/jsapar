@@ -156,6 +156,9 @@ public class JavaOutputter {
      * @param parseErrors
      */
     private void assignAttribute(Cell cell, String sName, Object objectToAssign, List<CellParseError> parseErrors) {
+        if(cell.isEmpty() )
+            return;
+
         String sSetMethodName = createSetMethodName(sName);
         try {
             boolean success = assignParameterBySignature(objectToAssign, sSetMethodName, cell);

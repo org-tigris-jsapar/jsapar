@@ -189,4 +189,11 @@ public abstract class Cell implements java.io.Serializable, Cloneable {
      * @throws SchemaException
      */
     public abstract int compareValueTo(Cell right) throws SchemaException;
+    
+    /**
+     * @return true if the cell is not set to any value, false otherwise.
+     */
+    public boolean isEmpty(){
+        return false;
+    }
 }

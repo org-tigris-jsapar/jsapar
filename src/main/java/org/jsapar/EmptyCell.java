@@ -81,5 +81,14 @@ public class EmptyCell extends Cell implements Comparable<EmptyCell>{
         // Everything is equal to empty cell :-S.
         return 0;
     }
+
+    /* (non-Javadoc)
+     * @see org.jsapar.Cell#isEmpty()
+     */
+    @Override
+    public boolean isEmpty() {
+        return true;
+    }
+
     
 }

@@ -9,9 +9,12 @@ import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jsapar.CellType;
 import org.jsapar.CharacterCell;
 import org.jsapar.DateCell;
 import org.jsapar.Document;
+import org.jsapar.EmptyCell;
+import org.jsapar.FloatCell;
 import org.jsapar.IntegerCell;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
@@ -51,12 +54,14 @@ public class JavaOutputterTest {
         line1.addCell(new DateCell("birthTime", this.birthTime ));
         line1.addCell(new IntegerCell("luckyNumber", 123456787901234567L));
         line1.addCell(new CharacterCell("door", 'A'));
+        line1.addCell(new FloatCell("length", 123.45D));
 //      line1.addCell(new StringCell("NeverUsed", "Should not be assigned"));
         
 
         Line line2 = new Line("org.jsapar.TstPerson");
         line2.addCell(new StringCell("FirstName", "Frida"));
         line2.addCell(new StringCell("LastName", "Bergsten"));
+        line2.addCell(new EmptyCell("length", CellType.FLOAT));
 
         document.addLine(line1);
         document.addLine(line2);
@@ -66,12 +71,16 @@ public class JavaOutputterTest {
         java.util.List<TstPerson> objects = outputter.createJavaObjects(document, parseErrors);
         assertEquals("The errors: " + parseErrors, 0, parseErrors.size());
         assertEquals(2, objects.size());
-        assertEquals("Jonas", objects.get(0).getFirstName());
-        assertEquals(42, objects.get(0).getShoeSize());
-        assertEquals(this.birthTime, ((TstPerson) objects.get(0)).getBirthTime());
-        assertEquals(123456787901234567L, ((TstPerson) objects.get(0)).getLuckyNumber());
-        assertEquals('A', objects.get(0).getDoor());
-        assertEquals("Bergsten", ((TstPerson) objects.get(1)).getLastName());
+        TstPerson firstPerson = objects.get(0);
+        assertEquals("Jonas", firstPerson.getFirstName());
+        assertEquals(42, firstPerson.getShoeSize());
+        assertEquals(this.birthTime,  firstPerson.getBirthTime());
+        assertEquals(123456787901234567L, firstPerson.getLuckyNumber());
+        assertEquals('A', firstPerson.getDoor());
+        assertEquals(123.45D, firstPerson.getLength(), 0.01);
+        TstPerson secondPerson = objects.get(1);
+        assertEquals("Bergsten", secondPerson.getLastName());
+        assertEquals(0.0D, secondPerson.getLength(), 0.01);
     }
 
 

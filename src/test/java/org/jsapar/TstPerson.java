@@ -21,6 +21,7 @@ public class TstPerson {
     private char           door;
     private TstPostAddress    address;
     private TstPostAddress    workAddress;
+    private double         length;
     
     private java.util.Date birthTime;
 
@@ -164,6 +165,20 @@ public class TstPerson {
 
     public TstPostAddress getWorkAddress() {
         return workAddress;
+    }
+
+    /**
+     * @return the length
+     */
+    public double getLength() {
+        return length;
+    }
+
+    /**
+     * @param length the length to set
+     */
+    public void setLength(double length) {
+        this.length = length;
     }
 
 }
