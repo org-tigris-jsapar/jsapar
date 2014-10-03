@@ -144,7 +144,7 @@ public class CsvSchemaLine extends SchemaLine {
      * @throws JSaParException
      */
     private void addCellToLineBySchema(Line line,
-                                       SchemaCell schemaCell,
+                                       CsvSchemaCell schemaCell,
                                        String sCell,
                                        ParsingEventListener listener,
                                        long nLineNumber) throws JSaParException {
@@ -155,6 +155,8 @@ public class CsvSchemaLine extends SchemaLine {
                     line.addCell(schemaCell.getDefaultCell());
                 return;
             }
+            if(schemaCell.isMaxLength() && sCell.length() > schemaCell.getMaxLength())
+                sCell = sCell.substring(0, schemaCell.getMaxLength());
             Cell cell = schemaCell.makeCell(sCell, listener, nLineNumber);
             if (cell != null)
                 line.addCell(cell);

@@ -124,4 +124,37 @@ public class CsvSchemaCellTest {
     	assertEquals("With\u00A0love", writer.toString());
     }
     
+    @Test
+    public final void testOutput_maxLength() throws IOException {
+        CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
+        schemaElement.setMaxLength(4);
+        Writer writer = new StringWriter();
+        Cell cell = new StringCell("Jonas");
+        schemaElement.output(cell, writer, ";", (char) 0);
+
+        assertEquals("Jona", writer.toString());
+    }
+
+    @Test
+    public final void testOutput_maxLength_quoted() throws IOException {
+        CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
+        schemaElement.setMaxLength(4);
+        Writer writer = new StringWriter();
+        Cell cell = new StringCell("J;onas");
+        schemaElement.output(cell, writer, ";", '"');
+
+        assertEquals("\"J;\"", writer.toString());
+    }
+
+    @Test
+    public final void testOutput_maxLength_replace() throws IOException {
+        CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
+        schemaElement.setMaxLength(4);
+        Writer writer = new StringWriter();
+        Cell cell = new StringCell("J;onas");
+        schemaElement.output(cell, writer, ";", (char)0);
+
+        assertEquals("J\u00A0on", writer.toString());
+    }
+    
 }

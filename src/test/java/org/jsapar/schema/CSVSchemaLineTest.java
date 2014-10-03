@@ -36,28 +36,27 @@ public class CSVSchemaLineTest  {
     }
     
     @Test
-    public void testBuild() throws JSaParException {
-	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
-	String sLine = "Jonas;Stenberg;Hemvägen 19;111 22;Stockholm";
-	boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+    public void testParse() throws JSaParException {
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        String sLine = "Jonas;Stenberg;Hemvägen 19;111 22;Stockholm";
+        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
 
-	    @Override
-	    public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-	    }
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            }
 
-	    @Override
-	    public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
-		Line line = event.getLine();
-		assertEquals("Jonas", line.getCell(0).getStringValue());
-		assertEquals("Stenberg", line.getCell(1).getStringValue());
-	    }
-	});
-
-	assertEquals(true, rc);
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+                Line line = event.getLine();
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Stenberg", line.getCell(1).getStringValue());
+            }
+        });
+        assertEquals(true, rc);
     }
 
     @Test
-    public void testBuild_2byte_unicode() throws JSaParException {
+    public void testParse_2byte_unicode() throws JSaParException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator("\uFFD0");
         String sLine = "Jonas\uFFD0Stenberg\uFFD0Hemvägen 19\uFFD0111 22\uFFD0Stockholm";
@@ -79,7 +78,7 @@ public class CSVSchemaLineTest  {
     }
     
     @Test
-    public void testBuild_quoted() throws JSaParException {
+    public void testParse_quoted() throws JSaParException {
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schemaLine.setQuoteChar('\"');
 	String sLine = "Jonas;Stenberg;\"\";\"Hemvägen ;19\";\"\"111 22\"\";Stockholm";
@@ -106,7 +105,7 @@ public class CSVSchemaLineTest  {
     }
 
     @Test
-    public void testBuild_quoted_last() throws JSaParException {
+    public void testParse_quoted_last() throws JSaParException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setQuoteChar('\"');
         String sLine = "Jonas;Stenberg;\"Hemvägen ;19\"";
@@ -130,7 +129,7 @@ public class CSVSchemaLineTest  {
     }
 
     @Test
-    public void testBuild_quoted_after_empty() throws JSaParException {
+    public void testParse_quoted_after_empty() throws JSaParException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setQuoteChar('\"');
         String sLine = "Jonas;Stenberg;;\"Hemvägen ;19\"";
@@ -155,7 +154,7 @@ public class CSVSchemaLineTest  {
     }
 
     @Test
-    public void testBuild_quoted_after_unquoted() throws JSaParException {
+    public void testParse_quoted_after_unquoted() throws JSaParException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setQuoteChar('\"');
         String sLine = "Jonas;\"Stenberg\";Not quoted;\"Hemvägen ;19\"";
@@ -180,7 +179,7 @@ public class CSVSchemaLineTest  {
     }
     
     @Test
-    public void testBuild_quoted_last_cellsep() throws JSaParException {
+    public void testParse_quoted_last_cellsep() throws JSaParException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setQuoteChar('\"');
         String sLine = "Jonas;Stenberg;\"Hemvägen ;19\";";
@@ -204,7 +203,7 @@ public class CSVSchemaLineTest  {
     }
     
     @Test
-    public void testBuild_quoted_missing_end() throws JSaParException {
+    public void testParse_quoted_missing_end() throws JSaParException {
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schemaLine.setQuoteChar('\"');
 	String sLine = "Jonas;Stenberg;\"Hemvägen ;19;111 22;Stockholm";
@@ -229,7 +228,7 @@ public class CSVSchemaLineTest  {
     }
 
     @Test
-    public void testBuild_quoted_miss_placed_start() throws JSaParException {
+    public void testParse_quoted_miss_placed_start() throws JSaParException {
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schemaLine.setQuoteChar('\"');
 	String sLine = "Jonas;Stenberg;H\"emvägen ;19;111 \"22\";\"Stoc\"kholm\"";
@@ -256,7 +255,7 @@ public class CSVSchemaLineTest  {
     }
 
     @Test
-    public void testBuild_quoted_miss_placed_end() throws JSaParException {
+    public void testParse_quoted_miss_placed_end() throws JSaParException {
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schemaLine.setQuoteChar('\"');
 	String sLine = "Jonas;Stenberg;\"Hemvägen ;1\"9;111 22;Stockholm";
@@ -282,7 +281,7 @@ public class CSVSchemaLineTest  {
     }
 
     @Test
-    public void testBuild_withNames() throws JSaParException {
+    public void testParse_withNames() throws JSaParException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
         schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
@@ -310,9 +309,41 @@ public class CSVSchemaLineTest  {
         assertEquals(true, rc);
 
     }
+    
+    @Test
+    public void testParse_maxLength() throws JSaParException {
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setCellSeparator(";");
+        CsvSchemaCell schemaFirstName = new CsvSchemaCell("First Name");
+        schemaFirstName.setMaxLength(15);
+        schemaLine.addSchemaCell(schemaFirstName);
+        CsvSchemaCell schemaLastName = new CsvSchemaCell("Last Name");
+        schemaLastName.setMaxLength(5);
+        schemaLine.addSchemaCell(schemaLastName);
+
+        String sLine = "Jonas;Stenberg";
+        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+                Line line = event.getLine();
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Stenb", line.getCell(1).getStringValue());
+            }
+        });
+        assertEquals(true, rc);
+
+    }
+    
 
     @Test
-    public void testBuild_withDefault() throws JSaParException {
+    public void testParse_withDefault() throws JSaParException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
         schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
@@ -326,8 +357,6 @@ public class CSVSchemaLineTest  {
 
             @Override
             public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
@@ -347,7 +376,7 @@ public class CSVSchemaLineTest  {
     }
 
     @Test
-    public void testBuild_default_and_mandatory() throws JSaParException {
+    public void testParse_default_and_mandatory() throws JSaParException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
         schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
@@ -383,7 +412,7 @@ public class CSVSchemaLineTest  {
     }
     
     @Test
-    public void testBuild_withDefaultLast() throws JSaParException {
+    public void testParse_withDefaultLast() throws JSaParException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
         schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
@@ -418,7 +447,7 @@ public class CSVSchemaLineTest  {
     }
     
     @Test(expected=ParseException.class)
-    public void testBuild_withMandatoryLast() throws JSaParException {
+    public void testParse_withMandatoryLast() throws JSaParException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
         schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));

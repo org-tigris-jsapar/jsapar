@@ -279,6 +279,8 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     private Element extractCsvSchemaCell(Document xmlDocument, CsvSchemaCell schemaCell) throws SchemaException {
 
         Element xmlSchemaCell = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
+        xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_MAX_LENGTH, String.valueOf(schemaCell.getMaxLength()));
+
         assignSchemaCellBase(xmlDocument, xmlSchemaCell, schemaCell);
         return xmlSchemaCell;
 

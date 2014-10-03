@@ -394,6 +394,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     private CsvSchemaCell buildCsvSchemaCell(Element xmlSchemaCell, Locale locale) throws SchemaException {
 
         CsvSchemaCell cell = new CsvSchemaCell();
+        Node xmlMaxLength = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_MAX_LENGTH);
+        if (xmlMaxLength != null)
+            cell.setMaxLength(getIntValue(xmlMaxLength));
+        
         assignSchemaCellBase(cell, xmlSchemaCell, locale);
         return cell;
 
