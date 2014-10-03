@@ -8,6 +8,11 @@ import org.jsapar.Cell;
 public class CsvSchemaCell extends SchemaCell {
     private final static String replaceString = "\u00A0"; // non-breaking space
 
+    /**
+     * The maximum number of characters that are read or written to/from the cell. Input and output
+     * value will be silently truncated to this length. If you want to get an error when field is to
+     * long, use the format regexp pattern instead.
+     */
     private int maxLength=-1;
     
     public CsvSchemaCell(String sName) {
@@ -54,7 +59,10 @@ public class CsvSchemaCell extends SchemaCell {
     }
 
     /**
-     * The maximum number of characters that are read or written to/from the cell.
+     * The maximum number of characters that are read or written to/from the cell. Input and output
+     * value will be silently truncated to this length. If you want to get an error when field is to
+     * long, use the format regexp pattern instead.
+     * 
      * @return the maxLength
      */
     public int getMaxLength() {
@@ -62,9 +70,13 @@ public class CsvSchemaCell extends SchemaCell {
     }
 
     /**
-     * The maximum number of characters that are read or written to/from the cell.
-     * Set to a positive value if maxLength should be used. 
-     * @param maxLength the maxLength to set
+     * The maximum number of characters that are read or written to/from the cell. Input and output
+     * value will be silently truncated to this length. If you want to get an error when field is to
+     * long, use the format regexp pattern instead. <br/>
+     * Set to a positive value if maxLength should be used.
+     * 
+     * @param maxLength
+     *            the maxLength to set
      */
     public void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
