@@ -166,15 +166,15 @@ You can use a regexp pattern that will be matched to determine if a cell is empt
             Note that the number formats are parsed according to the specified locale.</xsd:documentation>
       </xsd:annotation>
       <xsd:simpleType>
-      	<xsd:restriction base="xsd:string">
-      		<xsd:enumeration value="string" />
-      		<xsd:enumeration value="date" />
-      		<xsd:enumeration value="decimal" />
-      		<xsd:enumeration value="integer" />
-      		<xsd:enumeration value="float" />
-      		<xsd:enumeration value="boolean" />
-      		<xsd:enumeration value="character"></xsd:enumeration>
-      	</xsd:restriction>
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="string" />
+            <xsd:enumeration value="date" />
+            <xsd:enumeration value="decimal" />
+            <xsd:enumeration value="integer" />
+            <xsd:enumeration value="float" />
+            <xsd:enumeration value="boolean" />
+            <xsd:enumeration value="character"></xsd:enumeration>
+        </xsd:restriction>
       </xsd:simpleType>
     </xsd:attribute>
     <xsd:attribute name="pattern" type="xsd:string" use="optional">
@@ -202,7 +202,7 @@ You can use a regexp pattern that will be matched to determine if a cell is empt
           <xsd:element minOccurs="1" maxOccurs="1" name="controlcell" type="FixedWidthSchemaControlCell">
             <xsd:annotation>
               <xsd:documentation>The control cell occurs as the first cell at each line and denotes which type of line the rest of the line is. This element tells how the control cell is to be parsed or written.
-                    		</xsd:documentation>
+                            </xsd:documentation>
             </xsd:annotation>
           </xsd:element>
         </xsd:sequence>
@@ -264,7 +264,7 @@ If the sum of the length of the cells is less than this minlength then the line 
 left
 right
 center
-           	</xsd:documentation>
+            </xsd:documentation>
           </xsd:annotation>
           <xsd:simpleType>
             <xsd:restriction base="xsd:string">
@@ -292,7 +292,7 @@ center
         <xsd:attribute default=";" name="controlcellseparator" type="xsd:string">
           <xsd:annotation>
             <xsd:documentation>A sequence of characters that are used to delimit the control cell from the rest of the line. Default is a single ';' character.
-						</xsd:documentation>
+                        </xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute default="true" name="writecontrolcell" type="xsd:boolean">
@@ -307,18 +307,18 @@ center
     <xsd:complexContent mixed="false">
       <xsd:extension base="SchemaLine">
         <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="cell" type="SchemaCell" />
+          <xsd:element name="cell" type="CsvSchemaCell" />
         </xsd:sequence>
         <xsd:attribute name="cellseparator" type="xsd:string" use="optional">
           <xsd:annotation>
             <xsd:documentation>A sequence of characters that are used to delimit each cell of this line. 
-                    	</xsd:documentation>
+                        </xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute name="firstlineasschema" type="xsd:boolean">
           <xsd:annotation>
             <xsd:documentation>Specifies if the first line of this type contains a header that should be used as schema. In that case all cells will be considered of type string and no validation will be made.
-						</xsd:documentation>
+                        </xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute name="quotechar" use="optional">
@@ -370,7 +370,7 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
     <xsd:attribute name="alignment" use="optional">
       <xsd:annotation>
         <xsd:documentation>Defines the cell alignment. Only used when writing, not when reading. The remaining space is filled with the fill-character of the parent document schema.
-                    	</xsd:documentation>
+                        </xsd:documentation>
       </xsd:annotation>
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
@@ -395,5 +395,18 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
         <xsd:documentation>The largest value allowed for this cell.</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:complexType name="CsvSchemaCell">
+    <xsd:complexContent>
+      <xsd:extension base="SchemaCell">
+        <xsd:attribute name="maxlength" type="xsd:int">
+          <xsd:annotation>
+            <xsd:documentation>Available since version 1.6.0.
+The maximum length of the cell to read or write. While reading and writing, cell value will be silently trunkated to this length. 
+If you want that an error should occur if length is too long, then you should specify that in the format regexp pattern instead.</xsd:documentation>
+          </xsd:annotation></xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
   </xsd:complexType>
 </xsd:schema>
