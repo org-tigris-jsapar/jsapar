@@ -27,6 +27,14 @@ public class CsvSchemaCell extends SchemaCell {
         super();
     }
 
+    /**
+     * Writes the cell to the supplied writer, including quote character if necessary.
+     * @param cell
+     * @param writer
+     * @param cellSeparator
+     * @param quoteChar
+     * @throws IOException
+     */
     void output(Cell cell, Writer writer, String cellSeparator, char quoteChar) throws IOException {
         String sValue = format(cell);
         if(sValue.isEmpty())
@@ -35,7 +43,6 @@ public class CsvSchemaCell extends SchemaCell {
         
         if (quoteChar == 0){
             sValue = sValue.replace(cellSeparator, replaceString);
-            sValue = applyMaxLength(sValue, getMaxLength());
         }
         else {
             if (sValue.contains(cellSeparator) || sValue.charAt(0) ==quoteChar){
@@ -45,7 +52,23 @@ public class CsvSchemaCell extends SchemaCell {
         }
         writer.write(sValue);
     }
+    
+    /* (non-Javadoc)
+     * @see org.jsapar.schema.SchemaCell#format(org.jsapar.Cell)
+     */
+    @Override
+    public String format(Cell cell) {
+        String value = super.format(cell);
+        return applyMaxLength(value, maxLength);
+    }
 
+
+    /**
+     * Same as Groovy String method take(int)
+     * @param sValue
+     * @param maxLength2
+     * @return The sValue, truncated if necessary to fit maxLength2
+     */
     private String applyMaxLength(String sValue, int maxLength2) {
         if(isMaxLength() && sValue.length()>maxLength2)
             return sValue.substring(0, Math.max(maxLength2, 0));
@@ -88,4 +111,5 @@ public class CsvSchemaCell extends SchemaCell {
     public boolean isMaxLength(){
         return this.maxLength > 0;
     }
+
 }

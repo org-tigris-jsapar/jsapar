@@ -247,6 +247,22 @@ public class SchemaCellTest {
         String value = schemaCell.format(new EmptyCell(CellType.FLOAT));
         assertEquals("123456,78901", value);
     }
+    
+    /**
+     * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
+     * 
+     * @throws ParseException
+     * @throws SchemaException 
+     */
+    @Test
+    public void testFormat_empty_integer() throws ParseException, SchemaException {
+        TestSchemaCell schemaCell = new TestSchemaCell();
+        schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
+        schemaCell.setName("test");
+
+        String value = schemaCell.format(new EmptyCell(CellType.INTEGER));
+        assertEquals("", value);
+    }    
 
     /**
      * Test method for {@link org.jsapar.schema.SchemaCell#makeCell(java.lang.String)}.
