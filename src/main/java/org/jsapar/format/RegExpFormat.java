@@ -61,7 +61,7 @@ public class RegExpFormat extends Format {
 	@Override
 	public Object parseObject(String source) throws ParseException {
 		if(!this.pattern.matcher(source).matches())
-			throw new ParseException("Value does not match regular expression.", 0);
+			throw new ParseException("Value ["+source+"] does not match regular expression ["+this.pattern.pattern()+"].", 0);
 		return source;
 	}
 
