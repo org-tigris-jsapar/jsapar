@@ -101,7 +101,7 @@ public abstract class SchemaLine implements Cloneable {
      * the condition that it also lacks name.
      * 
      * If the schema-cell has a name the cell with the same name is used. If no such cell is found
-     * and the cell att the same position lacks name, it is used instead.
+     * and the cell at the same position lacks name, it is used instead.
      * 
      * 
      * @param line
@@ -135,9 +135,8 @@ public abstract class SchemaLine implements Cloneable {
                     return null;
                 }
             } else if (namedCellsOnly && null == cellByIndex.getName()) {
-                return null;
-            }
-            else if (schemaCell.getName().equals(cellByIndex.getName())) {
+                // Do nothing. We will find named cell later.
+            } else if (schemaCell.getName().equals(cellByIndex.getName())) {
                 // We were lucky.
                 return cellByIndex;
             }

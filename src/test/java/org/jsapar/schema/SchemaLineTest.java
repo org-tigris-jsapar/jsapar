@@ -80,6 +80,27 @@ public class SchemaLineTest {
         Cell c = instance.doFindCell(line, schemaCell, 0, false);
         assertEquals(first, c);
     }    
+
+    @Test
+    public void testFindCell_notNamedExtra_namedOnly() throws JSaParException {
+        SchemaLineMock instance = new SchemaLineMock();
+        Line line = new Line();
+        
+        Cell first = new StringCell("First", "ett");
+        line.addCell(first);
+
+        Cell second = new StringCell("Second", "två");
+        line.addCell(second);
+
+        // Cell with no name
+        Cell third = new StringCell("tre");
+        line.addCell(third);
+        
+        SchemaCell schemaCell = new SchemaCell("Second") {};
+        
+        Cell c = instance.doFindCell(line, schemaCell, 2, true);
+        assertEquals(second, c);
+    }    
     
     @Test
     public void testFindCell_notFound() throws JSaParException {
