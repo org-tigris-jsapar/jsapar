@@ -497,7 +497,7 @@ public class Line implements Serializable {
      */
     public String getCellValue(String cellName, String defaultValue) {
         Cell cell = getCell(cellName);
-        if(cell == null || cell instanceof EmptyCell || cell.getStringValue().isEmpty())
+        if(cell == null || cell.isEmpty() || cell.getStringValue()==null || cell.getStringValue().isEmpty())
             return defaultValue;
         return cell.getStringValue();
     }
@@ -532,8 +532,14 @@ public class Line implements Serializable {
             NumberCell numberCell = (NumberCell) cell;
             return numberCell.getNumberValue().intValue();
         }
+        if(cell.isEmpty())
+            throw new JSaParException("The cell ["+cell+"] does not have a value and thus cannot be parsed into an integer value.");
 
-        return Integer.parseInt(cell.getStringValue());
+        try {
+            return Integer.parseInt(cell.getStringValue());
+        } catch (NumberFormatException e) {
+            throw new JSaParNumberFormatException("Error while trying to convert cell ["+cell+"] to an integer value." , e);
+        }
     }
 
     /**
@@ -544,18 +550,22 @@ public class Line implements Serializable {
      * @param cellName
      * @param defaultValue
      * @return The integer value of the cell with the specified name.
-     * @throws NumberFormatException
+     * @throws JSaParException 
      */
     public int getCellValue(String cellName, int defaultValue) throws NumberFormatException {
         Cell cell = getCell(cellName);
-        if(cell == null || cell instanceof EmptyCell)
+        if(cell == null || cell.isEmpty())
             return defaultValue;
         if (cell instanceof NumberCell) {
             NumberCell numberCell = (NumberCell) cell;
             return numberCell.getNumberValue().intValue();
         }
 
-        return Integer.parseInt(cell.getStringValue());
+        try {
+            return Integer.parseInt(cell.getStringValue());
+        } catch (NumberFormatException e) {
+            throw new JSaParNumberFormatException("Error while trying to convert cell ["+cell+"] to an integer value." , e);
+        }
     }
     
     
@@ -578,7 +588,7 @@ public class Line implements Serializable {
 
         String s = cell.getStringValue();
         if (s.isEmpty())
-            throw new NumberFormatException("Could not convert string cell [" + cellName
+            throw new NumberFormatException("Could not convert string cell [" + cell
                     + "] to a character since string is empty.");
         return s.charAt(0);
     }
@@ -595,7 +605,7 @@ public class Line implements Serializable {
      */
     public char getCellValue(String cellName, char defaultValue) throws NumberFormatException {
         Cell cell = getCell(cellName);
-        if (cell == null || cell instanceof EmptyCell)
+        if (cell == null || cell.isEmpty())
             return defaultValue;
         if (cell instanceof CharacterCell) {
             CharacterCell chCell = (CharacterCell) cell;
@@ -604,7 +614,7 @@ public class Line implements Serializable {
 
         String s = cell.getStringValue();
         if (s.isEmpty())
-            throw new NumberFormatException("Could not convert string cell [" + cellName
+            throw new NumberFormatException("Could not convert string cell [" + cell
                     + "] to a character since string is empty.");
         return s.charAt(0);
     }
@@ -637,7 +647,7 @@ public class Line implements Serializable {
      */
     public boolean getCellValue(String cellName, boolean defaultValue)  {
         Cell cell = getCell(cellName);
-        if(cell == null || cell instanceof EmptyCell)
+        if(cell == null || cell.isEmpty())
             return defaultValue;
         if (cell instanceof BooleanCell) {
             BooleanCell booleanCell = (BooleanCell) cell;
@@ -665,7 +675,12 @@ public class Line implements Serializable {
             return numberCell.getNumberValue().longValue();
         }
 
-        return Long.parseLong(cell.getStringValue());
+        try {
+            return Long.parseLong(cell.getStringValue());
+        } catch (NumberFormatException e) {
+            throw new JSaParNumberFormatException("Error while trying to convert cell ["+cell+"] to a long integer value." , e);
+        }
+        
     }
 
     /**
@@ -680,14 +695,18 @@ public class Line implements Serializable {
      */
     public long getCellValue(String cellName, long defaultValue) throws NumberFormatException {
         Cell cell = getCell(cellName);
-        if(cell == null || cell instanceof EmptyCell)
+        if(cell == null || cell.isEmpty())
             return defaultValue;
         if (cell instanceof NumberCell) {
             NumberCell numberCell = (NumberCell) cell;
             return numberCell.getNumberValue().longValue();
         }
 
-        return Long.parseLong(cell.getStringValue());
+        try {
+            return Long.parseLong(cell.getStringValue());
+        } catch (NumberFormatException e) {
+            throw new JSaParNumberFormatException("Error while trying to convert cell ["+cell+"] to a long integer value." , e);
+        }
     }
     
     /**
@@ -718,7 +737,7 @@ public class Line implements Serializable {
      */
     public Date getCellValue(String cellName, Date defaultValue) throws JSaParException {
         Cell cell = getCell(cellName);
-        if(cell == null || cell instanceof EmptyCell)
+        if(cell == null || cell.isEmpty())
             return defaultValue;
         
         if (cell instanceof DateCell) {
@@ -749,7 +768,12 @@ public class Line implements Serializable {
     public <E extends Enum<E>> E getEnumCellValue(String cellName, Class<E> enumClass) throws JSaParException, IllegalArgumentException {
         Cell cell = getExistingCell(cellName);
         String s = cell.getStringValue();
-        return (E) Enum.valueOf(enumClass, s);
+        
+        try {
+            return (E) Enum.valueOf(enumClass, s);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error while trying to convert cell ["+cell+"] to an enum value of type "+enumClass.getSimpleName()+"." , e);
+        }
     }
     
     /**
@@ -767,11 +791,15 @@ public class Line implements Serializable {
     @SuppressWarnings("unchecked")
     public <E extends Enum<E>> E getCellValue(String cellName, E defaultValue) throws IllegalArgumentException {
         Cell cell = getCell(cellName);
-        if(cell == null || cell instanceof EmptyCell)
+        if(cell == null || cell.isEmpty())
             return defaultValue;
 
         String s = cell.getStringValue();
-        return (E) Enum.valueOf(defaultValue.getClass(), s);
+        try {
+            return (E) Enum.valueOf(defaultValue.getClass(), s);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error while trying to convert cell ["+cell+"] to an enum value of type "+defaultValue.getClass().getSimpleName()+"." , e);
+        }
     }
     
     
@@ -791,8 +819,14 @@ public class Line implements Serializable {
             NumberCell numberCell = (NumberCell) cell;
             return numberCell.getNumberValue().doubleValue();
         }
+        if(cell.isEmpty())
+            throw new JSaParException("The cell ["+cell+"] does not have a value and thus cannot be parsed into a floating point value.");
 
-        return Double.parseDouble(cell.getStringValue());
+        try {
+            return Double.parseDouble(cell.getStringValue());
+        } catch (NumberFormatException e) {
+            throw new JSaParNumberFormatException("Error while trying to convert cell ["+cell+"] to a floating point value." , e);
+        }
     }
     
     /**
@@ -804,18 +838,23 @@ public class Line implements Serializable {
      * @param defaultValue
      * @return The double value of the cell with the specified name.
      * @throws NumberFormatException
+     * @throws JSaParException 
      */
     public double getCellValue(String cellName, double defaultValue) throws NumberFormatException {
         Cell cell = getCell(cellName);
-        if(cell == null || cell instanceof EmptyCell)
+        if(cell == null || cell.isEmpty())
             return defaultValue;
         
         if (cell instanceof NumberCell) {
             NumberCell numberCell = (NumberCell) cell;
             return numberCell.getNumberValue().doubleValue();
         }
-
-        return Double.parseDouble(cell.getStringValue());
+        
+        try {
+            return Double.parseDouble(cell.getStringValue());
+        } catch (NumberFormatException e) {
+            throw new JSaParNumberFormatException("Error while trying to convert cell ["+cell+"] to a floating point value." , e);
+        }
     }
 
     /**
@@ -834,8 +873,17 @@ public class Line implements Serializable {
             BigDecimalCell numberCell = (BigDecimalCell) cell;
             return numberCell.getBigDecimalValue();
         }
+        
+        if(cell.isEmpty())
+            throw new JSaParException("The cell ["+cell+"] does not have a value and thus cannot be parsed into a decimal value.");
 
-        return new BigDecimal(cell.getStringValue());
+
+        try {
+            return new BigDecimal(cell.getStringValue());
+        } catch (NumberFormatException e) {
+            throw new JSaParNumberFormatException("Error while trying to convert cell ["+cell+"] to a decimal value." , e);
+        }
+        
     }
 
     /**
@@ -848,9 +896,9 @@ public class Line implements Serializable {
      * @throws JSaParException
      *             , NumberFormatException
      */
-    public BigDecimal getCellValue(String cellName, BigDecimal defaultValue) throws NumberFormatException {
+    public BigDecimal getCellValue(String cellName, BigDecimal defaultValue) throws NumberFormatException  {
         Cell cell = getCell(cellName);
-        if (cell == null || cell instanceof EmptyCell)
+        if (cell == null || cell.isEmpty())
             return defaultValue;
 
         if (cell instanceof BigDecimalCell) {
@@ -858,7 +906,11 @@ public class Line implements Serializable {
             return numberCell.getBigDecimalValue();
         }
 
-        return new BigDecimal(cell.getStringValue());
+        try {
+            return new BigDecimal(cell.getStringValue());
+        } catch (NumberFormatException e) {
+            throw new JSaParNumberFormatException("Error while trying to convert cell ["+cell+"] to a decimal value." , e);
+        }
     }
 
     /**
@@ -871,14 +923,21 @@ public class Line implements Serializable {
      * @throws JSaParException
      *             , NumberFormatException
      */
-    public BigInteger getBigIntegerCellValue(String cellName) throws NumberFormatException, JSaParException {
+    public BigInteger getBigIntegerCellValue(String cellName) throws JSaParException, NumberFormatException {
         Cell cell = getExistingCell(cellName);
         if (cell instanceof BigDecimalCell) {
             BigDecimalCell numberCell = (BigDecimalCell) cell;
             return numberCell.getBigIntegerValue();
         }
+        if(cell.isEmpty())
+            throw new JSaParException("The cell ["+cell+"] does not have a value and thus cannot be parsed into an integer value.");
 
-        return new BigInteger(cell.getStringValue());
+        try {
+            return new BigInteger(cell.getStringValue());
+        } catch (NumberFormatException e) {
+            throw new JSaParNumberFormatException("Error while trying to convert cell ["+cell+"] to an integer value." , e);
+        }
+        
     }    
     /**
      * Utility function that gets the BigInteger cell value of the specified cell. If the specified cell does not exist,
@@ -892,7 +951,7 @@ public class Line implements Serializable {
      */
     public BigInteger getCellValue(String cellName, BigInteger defaultValue) throws NumberFormatException {
         Cell cell = getCell(cellName);
-        if(cell == null || cell instanceof EmptyCell)
+        if(cell == null || cell.isEmpty())
             return defaultValue;
         
         if (cell instanceof BigDecimalCell) {
@@ -900,7 +959,11 @@ public class Line implements Serializable {
             return numberCell.getBigIntegerValue();
         }
 
-        return new BigInteger(cell.getStringValue());
+        try {
+            return new BigInteger(cell.getStringValue());
+        } catch (NumberFormatException e) {
+            throw new JSaParNumberFormatException("Error while trying to convert cell ["+cell+"] to an integer value." , e);
+        }
     }    
     /**
      * @param cellName
@@ -911,7 +974,7 @@ public class Line implements Serializable {
         if (cell == null)
             return false;
 
-        if (cell instanceof EmptyCell)
+        if (cell.isEmpty())
             return false;
 
         return true;
@@ -927,7 +990,7 @@ public class Line implements Serializable {
         if (cell == null)
             return false;
 
-        if (cell instanceof EmptyCell)
+        if (cell.isEmpty())
             return false;
 
         return cell.getCellType().equals(type);

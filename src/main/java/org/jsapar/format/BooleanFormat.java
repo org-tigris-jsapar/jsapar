@@ -21,6 +21,9 @@ public class BooleanFormat extends Format {
      */
     private static final long serialVersionUID = -281569113302316449L;
 
+    public BooleanFormat() {
+        this("true", "false");
+    }
     /**
      * 
      */

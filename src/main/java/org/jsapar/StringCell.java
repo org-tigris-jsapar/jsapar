@@ -29,7 +29,7 @@ public class StringCell extends Cell  {
      * Creates an empty cell without any name or value.
      */
     public StringCell() {
-	super(CellType.STRING);
+        super(CellType.STRING);
 
     }
 
@@ -39,8 +39,8 @@ public class StringCell extends Cell  {
      * @param sValue
      */
     public StringCell(String sValue) {
-	super(CellType.STRING);
-	this.stringValue = sValue;
+        super(CellType.STRING);
+        this.stringValue = sValue;
     }
 
     /**
