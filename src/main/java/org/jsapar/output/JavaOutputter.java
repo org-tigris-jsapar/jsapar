@@ -17,7 +17,6 @@ import org.jsapar.input.CellParseError;
  */
 public class JavaOutputter {
 
-    private static final String GET_PREFIX = "get";
     private static final String SET_PREFIX = "set";
     
     private JavaBeanFactory beanFactory = new JavaBeanFactoryDefault();
