@@ -19,6 +19,8 @@ public class JavaOutputter {
 
     private static final String GET_PREFIX = "get";
     private static final String SET_PREFIX = "set";
+    
+    private JavaBeanFactory beanFactory = new JavaBeanFactoryDefault();
 
     /**
      * Creates a list of java objects. For this method to work, the lineType attribute of each line
@@ -62,8 +64,7 @@ public class JavaOutputter {
      */
     public Object createObject(Line line, List<CellParseError> parseErrors) throws InstantiationException,
             IllegalAccessException, ClassNotFoundException {
-        Class<?> c = Class.forName(line.getLineType());
-        Object o = c.newInstance();
+        Object o = beanFactory.createBean(line);
         return assign(line, o, parseErrors);
     }
 
@@ -106,27 +107,15 @@ public class JavaOutputter {
             String[] nameLevels = sName.split("\\.");
             Object currentObject = objectToAssign;
             for (int i = 0; i + 1 < nameLevels.length; i++) {
-                // First invoke the getter method.
-                String getterMethodName = createGetMethodName(nameLevels[i]);
-                Method getterMethod = currentObject.getClass().getMethod(getterMethodName);
-                Object nextObject = getterMethod.invoke(currentObject);
-                if (nextObject == null) {
-                    // If there was no object we have to create it..
-                    Class<?> nextClass = getterMethod.getReturnType();
-                    try {
-                        nextObject = nextClass.newInstance();
-                    } catch (InstantiationException e) {
-                        parseErrors.add(new CellParseError(cell.getName(), cell.getStringValue(), null,
-                                "Skipped assigning cell - Failed to execute default constructor for class"
-                                        + nextClass.getName() + " - " + e));
-                        return;
-                    }
-                    // And assign it by using the setter.
-                    String setterMethodName = createSetMethodName(nameLevels[i]);
-                    currentObject.getClass().getMethod(setterMethodName, nextClass).invoke(currentObject, nextObject);
+                try {
+                    // Continue looping to next object.
+                    currentObject = beanFactory.findOrCreateChildBean(currentObject, nameLevels[i]);
+                } catch (InstantiationException e) {
+                    parseErrors.add(new CellParseError(cell.getName(), cell.getStringValue(), null,
+                            "Skipped assigning cell - Failed to execute default constructor for class accessed by "
+                                    + nameLevels[i] + " - " + e));
+                    return;
                 }
-                // Continue looping to next object.
-                currentObject = nextObject;
             }
             sName = nameLevels[nameLevels.length - 1];
             assignAttribute(cell, sName, currentObject, parseErrors);
@@ -144,7 +133,7 @@ public class JavaOutputter {
                             + objectToAssign.getClass().getName() + " - " + e));
         } catch (NoSuchMethodException e) {
             parseErrors.add(new CellParseError(cell.getName(), cell.getStringValue(), null,
-                    "Skipped assigning cell - The missing getter or setter method in class "
+                    "Skipped assigning cell - Missing getter or setter method in class "
                             + objectToAssign.getClass().getName() + " or sub class - " + e));
         }
     }
@@ -187,13 +176,7 @@ public class JavaOutputter {
         return createBeanMethodName(SET_PREFIX, sAttributeName);
     }
 
-    /**
-     * @param sAttributeName
-     * @return The get method that corresponds to this attribute.
-     */
-    private String createGetMethodName(String sAttributeName) {
-        return createBeanMethodName(GET_PREFIX, sAttributeName);
-    }
+
 
     /**
      * @param prefix
@@ -299,6 +282,14 @@ public class JavaOutputter {
                             + objectToAssign.getClass().getName() + " does not have public access - " + e));
         }
         return false;
+    }
+
+    public JavaBeanFactory getBeanFactory() {
+        return beanFactory;
+    }
+
+    public void setBeanFactory(JavaBeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
     }
 
 }
