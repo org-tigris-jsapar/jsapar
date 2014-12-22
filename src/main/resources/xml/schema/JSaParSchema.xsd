@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--Created with Liquid XML Studio 6.1.18.0 - FREE Community Edition (http://www.liquid-technologies.com)-->
-<xsd:schema elementFormDefault="qualified" targetNamespace="http://jsapar.tigris.org/JSaParSchema/1.0" xmlns="http://jsapar.tigris.org/JSaParSchema/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema elementFormDefault="qualified" targetNamespace="http://jsapar.tigris.org/JSaParSchema/1.7" xmlns="http://jsapar.tigris.org/JSaParSchema/1.7" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <xsd:element name="schema">
     <xsd:complexType>
       <xsd:choice>
@@ -218,7 +218,10 @@ You can use a regexp pattern that will be matched to determine if a cell is empt
     <xsd:complexContent mixed="false">
       <xsd:extension base="SchemaLine">
         <xsd:sequence minOccurs="1" maxOccurs="unbounded">
-          <xsd:element name="cell" type="FixedWidthSchemaCell" />
+          <xsd:choice>
+            <xsd:element name="cell" type="FixedWidthSchemaCell" />
+            <xsd:element name="recordcell" type="FixedWidthRecordCellSchema"></xsd:element>
+          </xsd:choice>
         </xsd:sequence>
         <xsd:attribute name="trimfillcharacters" type="xsd:boolean" use="optional">
           <xsd:annotation>
@@ -228,25 +231,23 @@ You can use a regexp pattern that will be matched to determine if a cell is empt
             </xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="fillcharacter" use="optional">
+        <xsd:attribute name="fillcharacter" use="optional" default=" " type="FillCharacter">
           <xsd:annotation>
             <xsd:documentation>
               Specifies the character space character that is used to fill the cells. Default is space character ' '
               (ASCII 20)
             </xsd:documentation>
           </xsd:annotation>
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:string">
-              <xsd:maxLength value="1" />
-              <xsd:minLength value="1" />
-            </xsd:restriction>
-          </xsd:simpleType>
         </xsd:attribute>
         <xsd:attribute name="minlength" type="xsd:int">
           <xsd:annotation>
-            <xsd:documentation>The minimal length of a fixed with line when writing output.
-If the sum of the length of the cells is less than this minlength then the line is filled with the fillcharacter so that the output will be at least of length minlength.</xsd:documentation>
-          </xsd:annotation></xsd:attribute>
+            <xsd:documentation>
+              The minimal length of a fixed with line when writing output. If the sum of the length of the cells is less
+              than this minlength then the line is filled with the fillcharacter so that the output will be at least of
+              length minlength.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -258,7 +259,7 @@ If the sum of the length of the cells is less than this minlength then the line 
             <xsd:documentation>The length of the cell, i.e. the number of characters it occupies.</xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="alignment" use="optional">
+                <xsd:attribute name="alignment" use="optional" type="Alignment">
           <xsd:annotation>
             <xsd:documentation>Defines the cell alignment. The remaining space is filled with the fill-character of the parent document schema. Have to be one of the following:
 left
@@ -266,15 +267,8 @@ right
 center
            	</xsd:documentation>
           </xsd:annotation>
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:string">
-              <xsd:enumeration value="left" />
-              <xsd:enumeration value="right" />
-              <xsd:enumeration value="center" />
-            </xsd:restriction>
-          </xsd:simpleType>
         </xsd:attribute>
-      </xsd:extension>
+            </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="CsvSchema">
@@ -307,7 +301,10 @@ center
     <xsd:complexContent mixed="false">
       <xsd:extension base="SchemaLine">
         <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="cell" type="CsvSchemaCell" />
+          <xsd:choice>
+            <xsd:element name="cell" type="CsvSchemaCell" />
+            <xsd:element name="recordcell" type="CsvRecordCellSchema"></xsd:element>
+          </xsd:choice>
         </xsd:sequence>
         <xsd:attribute name="cellseparator" type="xsd:string" use="optional">
           <xsd:annotation>
@@ -367,18 +364,11 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
         <xsd:documentation>The length of the control cell</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="alignment" use="optional">
+    <xsd:attribute name="alignment" use="optional" type="Alignment">
       <xsd:annotation>
         <xsd:documentation>Defines the cell alignment. Only used when writing, not when reading. The remaining space is filled with the fill-character of the parent document schema.
                     	</xsd:documentation>
       </xsd:annotation>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="left" />
-          <xsd:enumeration value="right" />
-          <xsd:enumeration value="center" />
-        </xsd:restriction>
-      </xsd:simpleType>
     </xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="CellValueRange">
@@ -409,4 +399,236 @@ If you want that an error should occur if length is too long, then you should sp
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+
+  <xsd:complexType name="FixedWidthRecordCellSchema">
+    <xsd:complexContent>
+      <xsd:extension base="RecordCellSchema">
+        <xsd:attribute name="length" type="xsd:int" use="required">
+          <xsd:annotation>
+            <xsd:documentation>The length of the cell, i.e. the number of characters it occupies.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="alignment" use="optional" type="Alignment">
+          <xsd:annotation>
+            <xsd:documentation>
+              Defines the cell alignment. The remaining space is filled with the fill-character of the parent document
+              schema. Have to be one of the following: left right center
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="RecordCellSchema">
+    <xsd:choice>
+      <xsd:element name="fixedwithcontrolcellrecord" type="RecordFixedWidthControlCell"></xsd:element>
+      <xsd:element name="fixedwithrecord" type="RecordFixedWidth"></xsd:element>
+      <xsd:element name="csvcontrolcellrecord" type="RecordCsvControlCell"></xsd:element>
+      <xsd:element name="csvrecord" type="RecordCsv"></xsd:element>
+    </xsd:choice>
+    <xsd:attribute name="name" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          The name of the cell. All Cell objects created with this SchemaCell will have this name. When writing output,
+          the name of the Cell object have to match this name if the cell is to be written.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="ignoreread" type="xsd:boolean">
+      <xsd:annotation>
+        <xsd:documentation>
+          Default is false. true = Ignore this cell when reading. Proceed to next cell. This means that the cell have to
+          exist in the input file but it will not be stored in the resulting Document. false = Read and store this cell.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="ignorewrite" type="xsd:boolean">
+      <xsd:annotation>
+        <xsd:documentation>
+          Default is false. true = Ignore this cell when writing. This means that the value of the cell will be ignored
+          and instead a value as if the cell was empty will be written. false = Write the cell value to the output.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute default="false" name="mandatory" type="xsd:boolean">
+      <xsd:annotation>
+        <xsd:documentation>
+          States if this cell have to contain a value or not. If this attribute is false, an empty value is accepted as
+          long as the parsing mechanism can handle it for the given format. If this attribute is true, a parsing error
+          is reported back. Default is false.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="default" type="xsd:string">
+      <xsd:annotation>
+        <xsd:documentation>
+          The default value of this cell. This value is used if the cell does not conatin any value. The value should be
+          formatted according to the rules of the schema cell itself.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="emptypattern" type="xsd:string">
+      <xsd:annotation>
+        <xsd:documentation>
+          The empty pattern can be used to ignore cells that contains a text even though they should be regared as
+          empty. For instance, the cell may contain the text NULL to indicate that there is no value even though this is
+          a date or a numeric field. You can use a regexp pattern that will be matched to determine if a cell is empty.
+          E.g. set the value "NULL" if you want to ignore all cells with the value NULL. If this attribute is not set,
+          only cells without any text will be regared as empty.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:simpleType name="Alignment">
+        <xsd:annotation>
+          <xsd:documentation>Defines the cell alignment. The remaining space is filled with the fill-character of the parent document schema. Have to be one of the following:
+left
+right
+center</xsd:documentation></xsd:annotation>
+        <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="left" />
+              <xsd:enumeration value="right" />
+              <xsd:enumeration value="center" />
+            </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="RecordFixedWidthControlCell">
+        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
+          <xsd:element minOccurs="1" maxOccurs="1" name="controlcell" type="FixedWidthSchemaControlCell">
+            <xsd:annotation>
+              <xsd:documentation>The control cell occurs as the first cell at each line and denotes which type of line the rest of the line is. This element tells how the control cell is to be parsed or written.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="record" type="FixedWidthSchemaRecord" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+        </xsd:sequence>
+        <xsd:attribute default="true" name="writecontrolcell" type="xsd:boolean">
+          <xsd:annotation>
+            <xsd:documentation>Specifies if the control cell should be written for output. If false, the control cell is discarded in the output field. Default is true. </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+  </xsd:complexType>
+  
+    <xsd:complexType name="RecordFixedWidth">
+      <xsd:sequence>
+        <xsd:element name="record" type="FixedWidthSchemaRecord" maxOccurs="1" minOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>The definition of the content of this record. This means that this defines the cells within the fixed width record.</xsd:documentation>
+          </xsd:annotation></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="RecordCsvControlCell">
+      <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="controlcell" type="FixedWidthSchemaControlCell">
+            <xsd:annotation>
+              <xsd:documentation>The control cell occurs as the first cell at each line and denotes which type of line the rest of the line is. This element tells how the control cell is to be parsed or written.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+            <xsd:element name="record" type="CsvSchemaRecord" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+      </xsd:sequence>
+      <xsd:attribute default=";" name="controlcellseparator" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            A sequence of characters that are used to delimit the control cell from the rest of the record. Default is a
+            single ';' character.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute default="true" name="writecontrolcell" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation>
+            Specifies if the control cell should be written for output. If false, the control cell is discarded in the
+            output field. Default is true.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="RecordCsv">
+      <xsd:sequence>
+        <xsd:element name="record" type="CsvSchemaRecord" maxOccurs="1" minOccurs="1"></xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SchemaRecord">
+    <xsd:attribute name="recordtype" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          Specifies the type of the record. Record-type can be regarded as the class of the record if there are many 
+          different type of records. cell (the first cell at each
+          line). If control cell is used, the attibute
+          linetypecontrolvalue is mandatory.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="recordtypecontrolvalue" type="xsd:string"
+      use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          If this attribute is set it is used as the control value for
+          this record type. The control value has to be unique among all
+          record types. E.g. a record can have recordtype="Employee" and
+          recordtypecontrolvalue="E" which means that in when parsing the
+          input, if the first character of a record is 'E', then the
+          record is concidered to be of recordtype Employee. If this
+          attribute is not set, the recordtype will be used also as
+          control value.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    </xsd:complexType>
+    
+    <xsd:complexType name="FixedWidthSchemaRecord">
+      <xsd:complexContent>
+        <xsd:extension base="SchemaRecord">
+        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
+          <xsd:choice>
+            <xsd:element name="cell" type="FixedWidthSchemaCell" />
+            <xsd:element name="recordcell" type="FixedWidthRecordCellSchema"></xsd:element>
+          </xsd:choice>
+        </xsd:sequence>
+          <xsd:attribute name="fillcharacter" use="optional" default=" " type="FillCharacter">
+            <xsd:annotation>
+              <xsd:documentation>
+                Specifies the character space character that is used to fill the cells. Default is space character ' '
+                (ASCII 20)
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:simpleType name="FillCharacter">
+        <xsd:annotation>
+          <xsd:documentation>Specifies the character space character that is used to fill the cells.</xsd:documentation></xsd:annotation>
+        <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="1" />
+              <xsd:minLength value="1" />
+            </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="CsvSchemaRecord">
+      <xsd:complexContent>
+        <xsd:extension base="SchemaRecord">
+        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
+          <xsd:choice>
+            <xsd:element name="cell" type="FixedWidthSchemaCell" />
+            <xsd:element name="recordcell" type="FixedWidthRecordCellSchema"></xsd:element>
+          </xsd:choice>
+        </xsd:sequence>
+        </xsd:extension>
+
+      </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="CsvRecordCellSchema">
+      <xsd:complexContent>
+        <xsd:extension base="RecordCellSchema"></xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
 </xsd:schema>
