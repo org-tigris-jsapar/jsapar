@@ -306,9 +306,9 @@ center
             <xsd:element name="recordcell" type="CsvRecordCellSchema"></xsd:element>
           </xsd:choice>
         </xsd:sequence>
-        <xsd:attribute name="cellseparator" type="xsd:string" use="optional">
+        <xsd:attribute name="cellseparator" type="xsd:string" use="optional" default=";">
           <xsd:annotation>
-            <xsd:documentation>A sequence of characters that are used to delimit each cell of this line. 
+            <xsd:documentation>A sequence of characters that are used to delimit each cell of this line. Default is the semi colon character: ';'
                     	</xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
@@ -405,7 +405,7 @@ If you want that an error should occur if length is too long, then you should sp
       <xsd:extension base="RecordCellSchema">
         <xsd:attribute name="length" type="xsd:int" use="required">
           <xsd:annotation>
-            <xsd:documentation>The length of the cell, i.e. the number of characters it occupies.</xsd:documentation>
+            <xsd:documentation>The length of the whole recordcell, i.e. the number of characters it occupies.</xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute name="alignment" use="optional" type="Alignment">
@@ -530,11 +530,9 @@ center</xsd:documentation></xsd:annotation>
           </xsd:element>
             <xsd:element name="record" type="CsvSchemaRecord" maxOccurs="unbounded" minOccurs="1"></xsd:element>
       </xsd:sequence>
-      <xsd:attribute default=";" name="controlcellseparator" type="xsd:string">
+      <xsd:attribute default="|" name="controlcellseparator" type="xsd:string">
         <xsd:annotation>
-          <xsd:documentation>
-            A sequence of characters that are used to delimit the control cell from the rest of the record. Default is a
-            single ';' character.
+          <xsd:documentation>A sequence of characters that are used to delimit the control cell from the rest of the record. Default is a single '|' character. Please note that if the enclosing line is of type CSV, the record needs to be either enclosed by quote characters or you need to use a different cell separator for the record.
           </xsd:documentation>
         </xsd:annotation>
       </xsd:attribute>
@@ -615,17 +613,23 @@ center</xsd:documentation></xsd:annotation>
     <xsd:complexType name="CsvSchemaRecord">
       <xsd:complexContent>
         <xsd:extension base="SchemaRecord">
-        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
-          <xsd:choice>
-            <xsd:element name="cell" type="FixedWidthSchemaCell" />
-            <xsd:element name="recordcell" type="FixedWidthRecordCellSchema"></xsd:element>
-          </xsd:choice>
-        </xsd:sequence>
+          <xsd:sequence minOccurs="1" maxOccurs="unbounded">
+            <xsd:choice>
+              <xsd:element name="cell" type="CsvSchemaCell" />
+              <xsd:element name="recordcell" type="CsvRecordCellSchema"></xsd:element>
+            </xsd:choice>
+          </xsd:sequence>
+          <xsd:attribute name="cellseparator" type="xsd:string" use="optional" default="|">
+            <xsd:annotation>
+              <xsd:documentation>A sequence of characters that are used to delimit each cell of this line. Default is the character: '|'. Please note that if the enclosing line is of type CSV, the record needs to be either enclosed by quote characters or you need to use a different cell separator for the record. 
+                          </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
         </xsd:extension>
 
       </xsd:complexContent>
     </xsd:complexType>
-
+    
     <xsd:complexType name="CsvRecordCellSchema">
       <xsd:complexContent>
         <xsd:extension base="RecordCellSchema"></xsd:extension>
