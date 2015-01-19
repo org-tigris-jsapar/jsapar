@@ -169,9 +169,9 @@
   
   
 	<scm>
-      <url>scm:svn:http://jsapar.tigris.org/svn/jsapar/tags/jsapar-1.6.2</url>
-      <developerConnection>scm:svn:http://jsapar.tigris.org/svn/jsapar/tags/jsapar-1.6.2</developerConnection>
-	  <connection>scm:svn:http://jsapar.tigris.org/svn/jsapar/tags/jsapar-1.6.2</connection>
+      <url>http://jsapar.tigris.org/svn/jsapar</url>
+      <developerConnection>scm:svn:http://jsapar.tigris.org/svn/jsapar/branches/jsapar-1.6</developerConnection>
+      <connection>scm:svn:http://jsapar.tigris.org/svn/jsapar</connection>
 	</scm>
 	<organization>
 	  <url>http://jsapar.tigris.org/</url>
