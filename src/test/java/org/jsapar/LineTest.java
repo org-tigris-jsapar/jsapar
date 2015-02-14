@@ -143,6 +143,25 @@ public class LineTest {
         assertEquals("Nils", line.getCell("FirstName").getStringValue());
     }
 
+    @Test
+    public void testGetCellStringRecord() throws JSaParException {
+        Line line = new Line("TestLine");
+        RecordCell personRecord = new RecordCell("Person");
+        line.addCell(personRecord);
+        personRecord.addCell(new StringCell("FirstName", "Nils"));
+        personRecord.addCell(new StringCell("LastName", "Svensson"));
+        RecordCell dogRecord = new RecordCell("Dog");
+        personRecord.addCell(dogRecord);
+        dogRecord.addCell(new StringCell("Name", "Fido"));
+        assertSame(personRecord, line.getCell("Person"));
+        assertEquals("Nils", line.getCell("Person.FirstName").getStringValue());
+        assertEquals("Svensson", line.getCell("Person.LastName").getStringValue());
+        assertEquals("Fido", line.getCell("Person.Dog.Name").getStringValue());
+        assertNull(line.getCell("Person."));
+        assertNull(line.getCell(".FirstName"));
+        assertNull(line.getCell("FirstName"));
+    }
+    
     enum Testing{
         FIRST, SECOND, THIRD
     }

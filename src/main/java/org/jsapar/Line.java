@@ -127,9 +127,10 @@ public class Line implements Serializable {
      *             cell with the same name already exist.
      */
     public void addCell(Cell cell) throws JSaParException {
-        this.cellsByIndex.add(cell);
-        if (cell.getName() != null)
+        if (cell.getName() != null){
             addCellByName(cell);
+        }
+        this.cellsByIndex.add(cell);
     }
 
     /**
@@ -269,13 +270,26 @@ public class Line implements Serializable {
     }
 
     /**
-     * Gets a cell with specified name. Name is specified by the schema.
+     * Gets a cell with specified name. Name is specified by the schema. Record cell values can be reached by using the dot notation.<br/>
+     * E.g. A cell named "Second" belonging to a record cell named "Record" can be fetched by using the name  "Record.Second" 
      * 
      * @param name
      * @return The cell or null if there is no cell with specified name.
      */
     public Cell getCell(String name) {
-        return this.cellsByName.get(name);
+        Cell found = this.cellsByName.get(name);
+        if(found != null)
+            return found;
+        
+        int dotIndex = name.indexOf('.');
+        if(dotIndex < 1)
+            return null;
+        
+        found = this.cellsByName.get(name.substring(0, dotIndex));
+        if(found == null || !(found instanceof RecordCell))
+            return null;
+        RecordCell record = (RecordCell) found;
+        return record.getCell(name.substring(dotIndex+1));
     }
 
     /**

@@ -219,8 +219,15 @@ You can use a regexp pattern that will be matched to determine if a cell is empt
       <xsd:extension base="SchemaLine">
         <xsd:sequence minOccurs="1" maxOccurs="unbounded">
           <xsd:choice>
-            <xsd:element name="cell" type="FixedWidthSchemaCell" />
-            <xsd:element name="recordcell" type="FixedWidthRecordCellSchema"></xsd:element>
+            <xsd:element name="cell" type="FixedWidthSchemaCell" >
+              <xsd:annotation>
+                <xsd:documentation>One specific cell within a line.</xsd:documentation>
+              </xsd:annotation></xsd:element>
+            <xsd:element name="recordcell" type="FixedWidthSchemaRecordCell">
+              <xsd:annotation>
+                <xsd:documentation>A recordcell is a cell that can contain multiple cells by itself. The record may have a different parsing method than the rest of the line. For instance, a record of a fixed-width line can by itself be parsed as a CSV. 
+This can be useful for instance when using a control value that is not positioned at the beginning of a line since you may specify different record types depending on the control value within the record cell. </xsd:documentation>
+              </xsd:annotation></xsd:element>
           </xsd:choice>
         </xsd:sequence>
         <xsd:attribute name="trimfillcharacters" type="xsd:boolean" use="optional">
@@ -302,8 +309,14 @@ center
       <xsd:extension base="SchemaLine">
         <xsd:sequence minOccurs="0" maxOccurs="unbounded">
           <xsd:choice>
-            <xsd:element name="cell" type="CsvSchemaCell" />
-            <xsd:element name="recordcell" type="CsvRecordCellSchema"></xsd:element>
+            <xsd:element name="cell" type="CsvSchemaCell" >
+              <xsd:annotation>
+                <xsd:documentation>One specific cell within a line.</xsd:documentation>
+              </xsd:annotation></xsd:element>
+            <xsd:element name="recordcell" type="CsvSchemaRecordCell">
+              <xsd:annotation>
+                <xsd:documentation>A recordcell is a cell that can contain multiple cells by itself. The record may have a different parsing method than the rest of the line. For instance, a record of a fixed-width line can by itself be parsed as a CSV. 
+This can be useful for instance when using a control value that is not positioned at the beginning of a line since you may specify different record types depending on the control value within the record cell.</xsd:documentation></xsd:annotation></xsd:element>
           </xsd:choice>
         </xsd:sequence>
         <xsd:attribute name="cellseparator" type="xsd:string" use="optional" default=";">
@@ -400,9 +413,9 @@ If you want that an error should occur if length is too long, then you should sp
     </xsd:complexContent>
   </xsd:complexType>
 
-  <xsd:complexType name="FixedWidthRecordCellSchema">
+  <xsd:complexType name="FixedWidthSchemaRecordCell">
     <xsd:complexContent>
-      <xsd:extension base="RecordCellSchema">
+      <xsd:extension base="SchemaRecordCell">
         <xsd:attribute name="length" type="xsd:int" use="required">
           <xsd:annotation>
             <xsd:documentation>The length of the whole recordcell, i.e. the number of characters it occupies.</xsd:documentation>
@@ -420,7 +433,7 @@ If you want that an error should occur if length is too long, then you should sp
     </xsd:complexContent>
   </xsd:complexType>
 
-  <xsd:complexType name="RecordCellSchema">
+  <xsd:complexType name="SchemaRecordCell">
     <xsd:choice>
       <xsd:element name="fixedwithcontrolcellrecord" type="RecordFixedWidthControlCell"></xsd:element>
       <xsd:element name="fixedwithrecord" type="RecordFixedWidth"></xsd:element>
@@ -586,7 +599,7 @@ center</xsd:documentation></xsd:annotation>
         <xsd:sequence minOccurs="1" maxOccurs="unbounded">
           <xsd:choice>
             <xsd:element name="cell" type="FixedWidthSchemaCell" />
-            <xsd:element name="recordcell" type="FixedWidthRecordCellSchema"></xsd:element>
+            <xsd:element name="recordcell" type="FixedWidthSchemaRecordCell"></xsd:element>
           </xsd:choice>
         </xsd:sequence>
           <xsd:attribute name="fillcharacter" use="optional" default=" " type="FillCharacter">
@@ -594,6 +607,14 @@ center</xsd:documentation></xsd:annotation>
               <xsd:documentation>
                 Specifies the character space character that is used to fill the cells. Default is space character ' '
                 (ASCII 20)
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="trimfillcharacters" type="xsd:boolean" use="optional">
+            <xsd:annotation>
+              <xsd:documentation>
+                Default value is true. If true, all leading and trailing fill-characters are discarded. If false, value is
+                left as is.
               </xsd:documentation>
             </xsd:annotation>
           </xsd:attribute>
@@ -616,7 +637,7 @@ center</xsd:documentation></xsd:annotation>
           <xsd:sequence minOccurs="1" maxOccurs="unbounded">
             <xsd:choice>
               <xsd:element name="cell" type="CsvSchemaCell" />
-              <xsd:element name="recordcell" type="CsvRecordCellSchema"></xsd:element>
+              <xsd:element name="recordcell" type="CsvSchemaRecordCell"></xsd:element>
             </xsd:choice>
           </xsd:sequence>
           <xsd:attribute name="cellseparator" type="xsd:string" use="optional" default="|">
@@ -630,9 +651,9 @@ center</xsd:documentation></xsd:annotation>
       </xsd:complexContent>
     </xsd:complexType>
     
-    <xsd:complexType name="CsvRecordCellSchema">
+    <xsd:complexType name="CsvSchemaRecordCell">
       <xsd:complexContent>
-        <xsd:extension base="RecordCellSchema"></xsd:extension>
+        <xsd:extension base="SchemaRecordCell"></xsd:extension>
       </xsd:complexContent>
     </xsd:complexType>
 </xsd:schema>
