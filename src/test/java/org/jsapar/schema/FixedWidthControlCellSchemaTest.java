@@ -231,11 +231,11 @@ public class FixedWidthControlCellSchemaTest {
 	assertEquals("Stenberg", doc.getLine(0).getCell("Last name")
 		.getStringValue());
 
-	assertEquals("Storgatan ", doc.getLine(1).getCell(0).getStringValue());
+	assertEquals("Storgatan", doc.getLine(1).getCell(0).getStringValue());
 	assertEquals("123 45", doc.getLine(1).getCell("Zip code")
 		.getStringValue());
 
-	assertEquals("Fred ", doc.getLine(2).getCell(0).getStringValue());
+	assertEquals("Fred", doc.getLine(2).getCell(0).getStringValue());
 	assertEquals("Bergsten", doc.getLine(2).getCell("Last name")
 		.getStringValue());
     }
@@ -270,11 +270,11 @@ public class FixedWidthControlCellSchemaTest {
     assertEquals("Stenberg", doc.getLine(0).getCell("Last name")
         .getStringValue());
 
-    assertEquals("Storgatan ", doc.getLine(1).getCell(0).getStringValue());
+    assertEquals("Storgatan", doc.getLine(1).getCell(0).getStringValue());
     assertEquals("123 45", doc.getLine(1).getCell("Zip code")
         .getStringValue());
 
-    assertEquals("Fred ", doc.getLine(2).getCell(0).getStringValue());
+    assertEquals("Fred", doc.getLine(2).getCell(0).getStringValue());
     assertEquals("Bergsten", doc.getLine(2).getCell("Last name")
         .getStringValue());
     }

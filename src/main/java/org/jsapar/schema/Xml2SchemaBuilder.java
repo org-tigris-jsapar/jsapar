@@ -25,6 +25,7 @@ import org.xml.sax.SAXParseException;
 
 public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
+
     /**
      * Utility function to retreive first matching child element.
      * 
@@ -253,13 +254,109 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         if (sMinLength != null && !sMinLength.isEmpty())
             schemaLine.setMinLength(Integer.valueOf(sMinLength));
         
-        NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
+        NodeList nodes = xmlSchemaLine.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node child = nodes.item(i);
-            if (child instanceof Element)
-                schemaLine.addSchemaCell(buildFixedWidthSchemaCell((Element) child, locale));
+            if (child instanceof Element){
+                Element element = (Element)child;
+                if(element.getNamespaceURI().equals(JSAPAR_XML_SCHEMA)){
+                    String localName = element.getLocalName();
+                    if(localName.equals(ELEMENT_SCHEMA_LINE_CELL))
+                        schemaLine.addSchemaCell(buildFixedWidthSchemaCell(element, locale));
+                    else if(localName.equals(ELEMENT_SCHEMA_LINE_RECORDCELL)){
+                        schemaLine.addSchemaCell(buildFixedWidthSchemaRecordCell(element, locale));
+                    }
+                }
+            }
         }
         return schemaLine;
+    }
+
+    private FixedWidthSchemaCell buildFixedWidthSchemaRecordCell(Element xmlSchemaRecordCell, Locale locale) throws SchemaException {
+        int nLength = getIntValue(getMandatoryAttribute(xmlSchemaRecordCell, ATTRIB_FW_SCHEMA_CELL_LENGTH));
+        FixedWidthSchemaRecordCell cell = new FixedWidthSchemaRecordCell(nLength);
+
+        assignFixedWidthSchemaCell(xmlSchemaRecordCell, locale, cell);
+        
+        Element xmlRecord = getChild(xmlSchemaRecordCell, ELEMENT_CSV_RECORD);
+        if (null != xmlRecord)
+            cell.setRecord( buildCsvRecord(xmlRecord, locale) );
+
+        xmlRecord = getChild(xmlSchemaRecordCell, ELEMENT_FIXED_WIDTH_RECORD);
+        if (null != xmlRecord)
+            cell.setRecord( buildFixedWidthRecord(xmlRecord, locale) );
+
+        xmlRecord = getChild(xmlSchemaRecordCell, ELEMENT_CSV_CONTROL_CELL_RECORD);
+        if (null != xmlRecord)
+            cell.setRecord( buildCsvControlCellRecord(xmlRecord, locale) );
+
+        xmlRecord = getChild(xmlSchemaRecordCell, ELEMENT_FIXED_WIDTH_CONTROL_CELL_RECORD);
+        if (null != xmlRecord)
+            cell.setRecord( buildFixedWidthControlCellRecord(xmlRecord, locale) );
+        
+        return cell;
+    }
+
+    private Record buildCsvRecord(Element xmlRecord, Locale locale) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private FixedWidthRecord buildFixedWidthRecord(Element xmlRecord, Locale locale) throws SchemaException {
+        FixedWidthRecord record = new FixedWidthRecord();
+        
+        Element xmlSchemaRecord = getChild(xmlRecord, ELEMENT_RECORD);
+        if (null != xmlSchemaRecord)
+            record.setSchemaRecord( buildFixedWidthSchemaRecord(xmlSchemaRecord, locale) );
+        
+        return record;
+    }
+
+    private Record buildCsvControlCellRecord(Element xmlRecord, Locale locale) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private Record buildFixedWidthControlCellRecord(Element xmlRecord, Locale locale) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private FixedWidthSchemaRecord buildFixedWidthSchemaRecord(Element xmlSchemaRecord, Locale locale) throws SchemaException {
+        FixedWidthSchemaRecord schemaRecord = new FixedWidthSchemaRecord();
+
+        assignSchemaRecordBase(schemaRecord, xmlSchemaRecord);
+
+        String sFillChar = getAttributeValue(xmlSchemaRecord, ATTRIB_FW_SCHEMA_FILL_CHARACTER);
+        if (sFillChar != null)
+            schemaRecord.setFillCharacter(sFillChar.charAt(0));
+
+        Node xmlTrimFill = xmlSchemaRecord.getAttributeNode(ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS);
+        if (xmlTrimFill != null)
+            schemaRecord.setTrimFillCharacters(getBooleanValue(xmlTrimFill));
+
+        NodeList nodes = xmlSchemaRecord.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            org.w3c.dom.Node child = nodes.item(i);
+            if (child instanceof Element){
+                Element element = (Element)child;
+                if(element.getNamespaceURI().equals(JSAPAR_XML_SCHEMA)){
+                    String localName = element.getLocalName();
+                    if(localName.equals(ELEMENT_SCHEMA_LINE_CELL))
+                        schemaRecord.addSchemaCell(buildFixedWidthSchemaCell(element, locale));
+                    else if(localName.equals(ELEMENT_SCHEMA_LINE_RECORDCELL)){
+                        schemaRecord.addSchemaCell(buildFixedWidthSchemaRecordCell(element, locale));
+                    }
+                }
+            }
+        }
+        return schemaRecord;
+    }
+
+    
+    private void assignSchemaRecordBase(FixedWidthSchemaRecord schemaRecord, Element xmlSchemaRecord) {
+        // TODO Auto-generated method stub
+        
     }
 
     /**
@@ -271,10 +368,16 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @throws DataConversionException
      */
     private FixedWidthSchemaCell buildFixedWidthSchemaCell(Element xmlSchemaCell, Locale locale) throws SchemaException {
-
         int nLength = getIntValue(getMandatoryAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_CELL_LENGTH));
-
         FixedWidthSchemaCell cell = new FixedWidthSchemaCell(nLength);
+
+        return assignFixedWidthSchemaCell(xmlSchemaCell, locale, cell);
+    }
+
+    protected FixedWidthSchemaCell assignFixedWidthSchemaCell(Element xmlSchemaCell,
+                                                              Locale locale,
+                                                              FixedWidthSchemaCell cell) throws SchemaException {
+
 
         Node xmlAllignment = xmlSchemaCell.getAttributeNode(ATTRIB_FW_SCHEMA_CELL_ALIGNMENT);
         if (xmlAllignment == null || getStringValue(xmlAllignment).equals("left"))

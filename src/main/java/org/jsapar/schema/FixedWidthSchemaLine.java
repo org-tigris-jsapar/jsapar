@@ -25,7 +25,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
 
     private static final String EMPTY_STRING = "";
     private java.util.List<FixedWidthSchemaCell> schemaCells = new java.util.ArrayList<FixedWidthSchemaCell>();
-    private boolean trimFillCharacters = false;
+    private boolean trimFillCharacters = true;
     private char fillCharacter = ' ';
     private int minLength = -1;
 
@@ -83,6 +83,8 @@ public class FixedWidthSchemaLine extends SchemaLine {
      * @param schemaCell
      */
     public void addSchemaCell(FixedWidthSchemaCell schemaCell) {
+        if(schemaCell == null)
+            throw new IllegalArgumentException("Cell schema cannot be null.");
         this.schemaCells.add(schemaCell);
     }
 
