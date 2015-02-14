@@ -1,4 +1,6 @@
-package org.jsapar.schema;
+package org.jsapar.schema.record;
+
+import org.jsapar.schema.FixedWidthSchemaCell;
 
 public class FixedWidthSchemaRecord extends SchemaRecord {
 

@@ -1,8 +1,10 @@
 package org.jsapar.schema;
 
+import org.jsapar.schema.record.RecordDescription;
+
 public class FixedWidthSchemaRecordCell extends FixedWidthSchemaCell {
     
-    private Record record;
+    private RecordDescription record;
 
     public FixedWidthSchemaRecordCell(String sName, int nLength, Alignment alignment) {
         super(sName, nLength, alignment);
@@ -23,14 +25,14 @@ public class FixedWidthSchemaRecordCell extends FixedWidthSchemaCell {
     /**
      * @return the record
      */
-    public Record getRecord() {
+    public RecordDescription getRecord() {
         return record;
     }
 
     /**
      * @param record the record to set
      */
-    public void setRecord(Record record) {
+    public void setRecord(RecordDescription record) {
         this.record = record;
     }
 

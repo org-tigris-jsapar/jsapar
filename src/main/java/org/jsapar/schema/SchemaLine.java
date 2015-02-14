@@ -42,6 +42,16 @@ public abstract class SchemaLine implements Cloneable {
     public SchemaLine(String lineType) {
         this.setLineType(lineType);
     }
+    
+    /**
+     * Creates a SchemaLine with the supplied line type and occurs supplied number of times.
+     * @param lineType
+     * @param nOccurs
+     */
+    public SchemaLine(String lineType, int nOccurs){
+    	this.setLineType(lineType);
+    	this.setOccurs(nOccurs);
+    }
 
     /**
      * Creates a SchemaLine with the supplied line type and control value.

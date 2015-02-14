@@ -535,12 +535,6 @@ center</xsd:documentation></xsd:annotation>
     
     <xsd:complexType name="RecordCsvControlCell">
       <xsd:sequence>
-            <xsd:element minOccurs="1" maxOccurs="1" name="controlcell" type="FixedWidthSchemaControlCell">
-            <xsd:annotation>
-              <xsd:documentation>The control cell occurs as the first cell at each line and denotes which type of line the rest of the line is. This element tells how the control cell is to be parsed or written.
-                            </xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
             <xsd:element name="record" type="CsvSchemaRecord" maxOccurs="unbounded" minOccurs="1"></xsd:element>
       </xsd:sequence>
       <xsd:attribute default="|" name="controlcellseparator" type="xsd:string">

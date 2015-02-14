@@ -15,6 +15,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.jsapar.CellType;
+import org.jsapar.schema.record.FixedWidthRecordDescription;
+import org.jsapar.schema.record.FixedWidthSchemaRecord;
+import org.jsapar.schema.record.RecordDescription;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -297,27 +300,27 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         return cell;
     }
 
-    private Record buildCsvRecord(Element xmlRecord, Locale locale) {
+    private RecordDescription buildCsvRecord(Element xmlRecord, Locale locale) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    private FixedWidthRecord buildFixedWidthRecord(Element xmlRecord, Locale locale) throws SchemaException {
-        FixedWidthRecord record = new FixedWidthRecord();
+    private FixedWidthRecordDescription buildFixedWidthRecord(Element xmlRecord, Locale locale) throws SchemaException {
+        FixedWidthRecordDescription record = new FixedWidthRecordDescription();
         
         Element xmlSchemaRecord = getChild(xmlRecord, ELEMENT_RECORD);
         if (null != xmlSchemaRecord)
-            record.setSchemaRecord( buildFixedWidthSchemaRecord(xmlSchemaRecord, locale) );
+            record.setRecordSchema( buildFixedWidthSchemaRecord(xmlSchemaRecord, locale) );
         
         return record;
     }
 
-    private Record buildCsvControlCellRecord(Element xmlRecord, Locale locale) {
+    private RecordDescription buildCsvControlCellRecord(Element xmlRecord, Locale locale) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    private Record buildFixedWidthControlCellRecord(Element xmlRecord, Locale locale) {
+    private RecordDescription buildFixedWidthControlCellRecord(Element xmlRecord, Locale locale) {
         // TODO Auto-generated method stub
         return null;
     }

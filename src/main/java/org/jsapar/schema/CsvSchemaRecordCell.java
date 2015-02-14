@@ -1,8 +1,10 @@
 package org.jsapar.schema;
 
+import org.jsapar.schema.record.RecordDescription;
+
 public class CsvSchemaRecordCell extends CsvSchemaCell {
     
-    Record record;
+    private RecordDescription record;
 
     public CsvSchemaRecordCell(String sName) {
         super(sName);

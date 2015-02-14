@@ -1,4 +1,4 @@
-package org.jsapar.schema;
+package org.jsapar.schema.record;
 
 public class SchemaRecord {
 
