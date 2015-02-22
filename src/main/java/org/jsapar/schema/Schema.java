@@ -1,6 +1,7 @@
 package org.jsapar.schema;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
@@ -299,10 +300,38 @@ public abstract class Schema implements Cloneable, ParseSchema {
     /**
      * @param schemaLine
      * @param writer
-     * @throws IOException 
-     * @throws OutputException 
+     * @throws IOException
+     * @throws OutputException
      */
     public void writeLinePrefix(SchemaLine schemaLine, Writer writer) throws OutputException, IOException {
     }
 
+    /**
+     * Loads a schema instance from an xml that is read from the supplied xmlReader. The xml needs to comply to the
+     * JSaParSchema.xsd.
+     * 
+     * @param xmlReader
+     *            The reader to read the xml from.
+     * @return A new schema instance created based on the xml.
+     * @throws SchemaException
+     *             if the supplied xml does not comply to the JSaParSchema.xsd or if there is any other error while
+     *             loading a schema.
+     */
+    public static Schema loadFromXml(Reader xmlReader) throws SchemaException {
+        Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
+        return schemaBuilder.build(xmlReader);
+    }
+
+    /**
+     * Saves this schema instance as xml that complies to the JSaParSchema.xsd.
+     * 
+     * @param xmlWriter
+     *            The writer where the xml is written.
+     * @throws SchemaException
+     *             if there is an error while writing the xml.
+     */
+    public void storeAsXml(Writer xmlWriter) throws SchemaException {
+        Schema2XmlExtractor extractor = new Schema2XmlExtractor();
+        extractor.extractXml(xmlWriter, this);
+    }
 }
