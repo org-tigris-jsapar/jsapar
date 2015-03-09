@@ -308,7 +308,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
 
     /**
      * Loads a schema instance from an xml that is read from the supplied reader. The xml needs to comply to the
-     * JSaParSchema.xsd.
+     * JSaParSchema.xsd otherwise a SchemaException is thrown.
      * 
      * @param reader
      *            The reader to read the xml from. Caller is responsible for closing the reader.
@@ -317,20 +317,20 @@ public abstract class Schema implements Cloneable, ParseSchema {
      *             if the supplied xml does not comply to the JSaParSchema.xsd or if there is any other error while
      *             loading a schema.
      */
-    public static Schema loadFromXml(Reader reader) throws SchemaException {
+    public static Schema importFromXml(Reader reader) throws SchemaException {
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         return schemaBuilder.build(reader);
     }
 
     /**
-     * Saves this schema instance as xml that complies to the JSaParSchema.xsd.
+     * Exports this schema instance as xml that complies to the JSaParSchema.xsd.
      * 
      * @param writer
      *            The writer where the xml is written. Caller is responsible for closing the writer.
      * @throws SchemaException
      *             if there is an error while writing the xml.
      */
-    public void storeAsXml(Writer writer) throws SchemaException {
+    public void exportToXml(Writer writer) throws SchemaException {
         Schema2XmlExtractor extractor = new Schema2XmlExtractor();
         extractor.extractXml(writer, this);
     }

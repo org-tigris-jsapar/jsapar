@@ -220,7 +220,7 @@ public class Document implements Serializable {
      * @return A Document with lines and cells as defined in the input xml.
      * @throws JSaParException If there is an error while reading the xml.
      */
-    public static Document loadFromXml(Reader reader) throws JSaParException{
+    public static Document importFromXml(Reader reader) throws JSaParException{
         ParseSchema schema = new XmlDocumentParser();
         Parser docBuilder = new Parser(schema);
         return docBuilder.build(reader);
@@ -231,7 +231,7 @@ public class Document implements Serializable {
      * @param writer
      */
     @SuppressWarnings("unused")
-    private void saveAsXml(Writer writer){
+    private void exportToXml(Writer writer){
         //...
     }
 }
