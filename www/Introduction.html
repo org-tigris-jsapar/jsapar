@@ -40,7 +40,7 @@ For instance, the line type (name) of the line within the schema have to contain
 <h2>Converting java objects into a file</h2>
 Use the class org.jsapar.input.JavaBuilder in order to convert java objects into a org.jsapar.Document, which can be used to produce the output file according to a schema.
 <h2>Using xml as input</h2>
-It is possilbe to build a org.jsapar.Document by using a xml document according to the XMLDocumentFormat.xsl (http://jsapar.tigris.org/XMLDocumentFormat/1.0). 
+It is possilbe to build a org.jsapar.Document by using a xml document according to the XMLDocumentFormat.xsd (http://jsapar.tigris.org/XMLDocumentFormat/1.0). 
 Use the class org.jsapar.input.XmlDocumentParser in order to convert a xml document into a org.jsapar.Document.  
 <h2>Examples</h2>
 The files for the examples below are provided in the <tt>samples</tt> folder of the project. The JUnit test <tt>org.jsapar.JSaParExamplesTest.java</tt> 
@@ -50,12 +50,11 @@ Example of reading <b>CSV file</b> into a Document object according to an xml-sc
 <table style="font-family: monospace" border="1" >
 	<tr>
 		<td><tt>
-        Reader schemaReader = new FileReader("samples/01_CsvSchema.xml");<br/>
-        Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();<br/>
-        Reader fileReader = new FileReader("samples/01_Names.csv");<br/>
-        Parser parser = new Parser(xmlBuilder.build(schemaReader));<br/>
-        Document document = parser.build(fileReader);<br/>
-        fileReader.close();<br/>
+        try(Reader schemaReader = new FileReader("samples/01_CsvSchema.xml");Reader fileReader = new FileReader("samples/01_Names.csv")){<br/>
+        &nbsp;&nbsp;Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();<br/>
+        &nbsp;&nbsp;Parser parser = new Parser(xmlBuilder.build(schemaReader));<br/>
+        &nbsp;&nbsp;Document document = parser.build(fileReader);<br/>
+        }<br/>
 		</tt></td>
 	</tr>
 </table>
