@@ -209,12 +209,14 @@ public class CsvSchemaLine extends SchemaLine {
             if (nFoundQuote < 0) {
                 cells.addAll(Arrays.asList(sToSplit.split(sCellSeparator)));
                 return;
-            } else if (nFoundQuote >= 0) {
+            } else if (nFoundQuote > 0) {
                 String sUnquoted = sToSplit.substring(0, nFoundQuote);
                 String[] asCells = sUnquoted.split(sCellSeparator, -1);
                 cells.addAll(Arrays.asList(asCells));
-                nIndex = nFoundQuote + sCellSeparator.length() + 1;
+            } else {
+                cells.add("");
             }
+            nIndex = nFoundQuote + sCellSeparator.length() + 1;
         }
 
         String quoteSeparator = quoteChar + sCellSeparator;
