@@ -6,13 +6,6 @@ public interface SchemaXmlTypes {
     public final static String ELEMENT_CSV_CONTROL_CELL_SCHEMA = "csvcontrolcellschema";
     public final static String ELEMENT_FIXED_WIDTH_SCHEMA = "fixedwidthschema";
     public final static String ELEMENT_FIXED_WIDTH_CONTROL_CELL_SCHEMA = "fixedwidthcontrolcellschema";
-    
-    public final static String ELEMENT_RECORD = "record";
-    public final static String ELEMENT_CSV_RECORD = "csvrecord";
-    public final static String ELEMENT_CSV_CONTROL_CELL_RECORD = "csvcontrolcellrecord";
-    public final static String ELEMENT_FIXED_WIDTH_RECORD = "fixedwidthrecord";
-    public final static String ELEMENT_FIXED_WIDTH_CONTROL_CELL_RECORD = "fixedwidthcontrolcellrecord";
-    
     public final static String ELEMENT_LOCALE = "locale";
     public final static String ELEMENT_FORMAT = "format";
     public static final String ATTRIB_FW_SCHEMA_FILL_CHARACTER = "fillcharacter";
@@ -36,7 +29,6 @@ public interface SchemaXmlTypes {
     public static final String ELEMENT_FW_SCHEMA_CONTROLCELL = "controlcell";
     public static final String ELEMENT_SCHEMA_LINE = "line";
     public static final String ELEMENT_SCHEMA_LINE_CELL = "cell";
-    public static final String ELEMENT_SCHEMA_LINE_RECORDCELL = "recordcell";
     public static final String ATTRIB_SCHEMA_CELL_MANDATORY = "mandatory";
     public static final String ELEMENT_RANGE = "range";
     public static final String ATTRIB_SCHEMA_CELL_MIN = "min";
@@ -52,6 +44,6 @@ public interface SchemaXmlTypes {
     public static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
     public static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
     public static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
-    public static final String JSAPAR_XML_SCHEMA = "http://jsapar.tigris.org/JSaParSchema/1.7";
+    public static final String JSAPAR_XML_SCHEMA = "http://jsapar.tigris.org/JSaParSchema/1.0";
 
 }
