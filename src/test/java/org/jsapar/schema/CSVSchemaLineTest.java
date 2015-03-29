@@ -1,6 +1,7 @@
 package org.jsapar.schema;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
@@ -153,6 +154,31 @@ public class CSVSchemaLineTest  {
         assertEquals(true, rc);
     }
 
+    @Test
+    public void testParse_one_unquoted_empty_between_quoted() throws JSaParException {
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setQuoteChar('\"');
+        String sLine = "Jonas;\"Stenberg\";;\"Hemvägen ;19\"";
+        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            }
+
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+                Line line = event.getLine();
+                assertEquals(4, line.getNumberOfCells());
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Stenberg", line.getCell(1).getStringValue());
+                assertEquals("", line.getCell(2).getStringValue());
+                assertEquals("Hemvägen ;19", line.getCell(3).getStringValue());
+            }
+        });
+
+        assertEquals(true, rc);
+    }
+    
     @Test
     public void testParse_quoted_after_unquoted() throws JSaParException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);

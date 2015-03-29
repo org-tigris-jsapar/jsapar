@@ -213,13 +213,16 @@ public class CsvSchemaLine extends SchemaLine {
                 String sUnquoted = sToSplit.substring(0, nFoundQuote);
                 String[] asCells = sUnquoted.split(sCellSeparator, -1);
                 cells.addAll(Arrays.asList(asCells));
-                nIndex = nFoundQuote + sCellSeparator.length() + 1;
+            } else {
+                cells.add("");
             }
+            nIndex = nFoundQuote + sCellSeparator.length() + 1;
         }
 
+        String quoteSeparator = quoteChar + sCellSeparator;
         do {
             String sFound;
-            int nFoundEnd = sToSplit.indexOf(quoteChar + sCellSeparator, nIndex);
+            int nFoundEnd = sToSplit.indexOf(quoteSeparator, nIndex);
             if (nFoundEnd < 0) {
                 // Last character is quote
                 if (sToSplit.length() > 1 && sToSplit.charAt(sToSplit.length() - 1) == quoteChar) {
@@ -235,14 +238,13 @@ public class CsvSchemaLine extends SchemaLine {
             }
             sFound = sToSplit.substring(nIndex, nFoundEnd);
             nIndex = nFoundEnd + 1;
+            cells.add(sFound);
 
             // Reached end of line
             if (nIndex >= sToSplit.length()) {
-                cells.add(sFound);
                 return;
             }
 
-            cells.add(sFound);
             nIndex += sCellSeparator.length();
             sToSplit = sToSplit.substring(nIndex);
             // Continue to pick quoted cells but ignore the first quote since we require it in the condition.
