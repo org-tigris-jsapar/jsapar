@@ -1,6 +1,6 @@
 package org.jsapar;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileReader;
@@ -12,7 +12,6 @@ import java.io.Writer;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -245,48 +244,4 @@ public class JSaParExamplesTest {
         assertEquals("Jonathan;;Lionheart;37;17;1955-03-17 12:33;C;Path;City", resultLines[1]);
     }
     
-
-    /**
-     * @throws SchemaException
-     * @throws IOException
-     * @throws JSaParException
-     */
-    @Test
-    public final void testExampleFixedWidthControllCellNotFirst08() throws SchemaException, IOException, JSaParException {
-        Reader schemaReader = new FileReader("samples/08_FixedWidthControlCellNotAtFirstPosition.xml");
-        Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
-        Reader fileReader = new FileReader("samples/08_Names.txt");
-        Parser parser = new Parser(builder.build(schemaReader));
-        Document document = parser.build(fileReader);
-        fileReader.close();
-
-        Iterator<Line> lineIter = document.getLineIterator();
-        Line line1 = lineIter.next();
-        assertEquals("Line", line1.getLineType());
-        
-        Cell cell1_1 = line1.getCell("Prefix");
-        assertNotNull(cell1_1);
-        assertEquals("Prefix", cell1_1.getName());
-        assertEquals("AAAA", cell1_1.getStringValue());
-        
-        Cell cell1_2 = line1.getCell("Content");
-        assertNotNull(cell1_2);
-        assertEquals("Content", cell1_2.getName());
-        assertEquals("H04_Names.txt   2007-07-07", cell1_2.getStringValue());
-        
-        assertEquals("04_Names.txt", line1.getStringCellValue("Content.FileName"));
-        assertTrue(cell1_2 instanceof RecordCell);
-        RecordCell record = (RecordCell) cell1_2;
-        assertEquals("04_Names.txt", record.getStringCellValue("FileName") );
-        assertEquals("2007-07-07", line1.getCell("Created date").getStringValue());
-        assertEquals("Header", line1.getLineType());
-        
-        assertEquals("Erik", document.getLine(1).getCell("First name").getStringValue());
-        assertEquals("Svensson", document.getLine(1).getCell("Last name").getStringValue());
-        
-        assertEquals("Fredrik", document.getLine(2).getCell(0).getStringValue());
-        assertEquals("Larsson", document.getLine(2).getCell(1).getStringValue());
-        
-        assertEquals("2", document.getLine(3).getCell(0).getStringValue());
-    }    
 }

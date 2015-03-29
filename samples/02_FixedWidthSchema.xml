@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://jsapar.tigris.org/JSaParSchema/1.7" >
+<schema xmlns="http://jsapar.tigris.org/JSaParSchema/1.0" >
   <fixedwidthschema lineseparator="&#13;&#10;">
     <line occurs="*" trimfillcharacters="false">
       <cell name="First name" length="8"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jsp:schema xmlns:jsp="http://jsapar.tigris.org/JSaParSchema/1.7" 
+<jsp:schema xmlns:jsp="http://jsapar.tigris.org/JSaParSchema/1.0" 
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/1.7 ../xml/schema/JSaParSchema.xsd ">
+        xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/1.0 ../xml/schema/JSaParSchema.xsd ">
   <jsp:fixedwidthschema lineseparator="" >
     <jsp:line occurs="*" trimfillcharacters="true">
       <jsp:cell name="First name" length="8"/>

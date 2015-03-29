@@ -162,22 +162,6 @@ public enum CellType {
             return null;
         }
     },
-    RECORD {
-        @Override
-        public Cell makeCell(String sName, String sValue, Format format) throws SchemaException {
-            throw new SchemaException("Record Cell type needs to override makeCell method.");
-        }
-
-        @Override
-        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException, SchemaException {
-            throw new SchemaException("Record Cell type needs to override makeCell method.");
-        }
-
-        @Override
-        public Format makeFormat(String sPattern, Locale locale) throws SchemaException {
-            throw new SchemaException("RECORD cell type formatter can not be created without specifying a formatter.");
-        }
-    },
     CUSTOM {
         @Override
         public Cell makeCell(String sName, String sValue, Format format) throws SchemaException {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://jsapar.tigris.org/JSaParSchema/1.7" 
+<schema xmlns="http://jsapar.tigris.org/JSaParSchema/1.0" 
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/1.7 ../resources/xml/schema/JSaParSchema.xsd ">
+        xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/1.0 ../resources/xml/schema/JSaParSchema.xsd ">
   <fixedwidthcontrolcellschema lineseparator="&#13;&#10;">
     <line linetype="Header" linetypecontrolvalue="H" trimfillcharacters="true">
       <cell name="FileName" length="15"/>
