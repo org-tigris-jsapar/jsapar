@@ -88,7 +88,7 @@ public enum CellType {
 
         @Override
         public Format makeFormat(String sPattern, Locale locale) throws SchemaException {
-            String[] aTrueFalse = sPattern.trim().split("\\s*;\\s*");
+            String[] aTrueFalse = sPattern.trim().split("\\s*[;,|:]\\s*");
             if(aTrueFalse.length < 1 || aTrueFalse.length > 2)
                 throw new SchemaException("Boolean format pattern should only contain two fields separated with ; character");
             return new BooleanFormat(aTrueFalse[0], aTrueFalse.length==2 ? aTrueFalse[1] : "");
