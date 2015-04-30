@@ -35,6 +35,8 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
     private int controlCellLength;
     private FixedWidthSchemaCell.Alignment controlCellAlignment = Alignment.LEFT;
     private boolean writeControlCell = true;
+    
+    private boolean errorIfUndefinedLineType = true;
 
     /**
      * 
@@ -68,8 +70,9 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
      * @return A schema line of type FixedWitdthSchemaLine which has the supplied line type.
      */
     public FixedWidthSchemaLine getSchemaLineByControlValue(String sLineTypeControlValue) {
+        final String trimmedControlValue = sLineTypeControlValue.trim();
         for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
-            if (lineSchema.getLineTypeControlValue().equals(sLineTypeControlValue)) {
+            if (lineSchema.getLineTypeControlValue().equals(trimmedControlValue)) {
                 return lineSchema;
             }
         }
@@ -107,9 +110,14 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
 
         FixedWidthSchemaLine lineSchema = getSchemaLineByControlValue(sControlCell);
         if (lineSchema == null) {
-            CellParseError error = new CellParseError(nLineNumber, "Control cell", sControlCell, null,
-                    "Invalid Line-type: " + sControlCell);
-            throw new ParseException(error);
+            if (errorIfUndefinedLineType || this.getLineSeparator().isEmpty()) {
+                CellParseError error = new CellParseError(nLineNumber, "Control cell", sControlCell, null,
+                        "Invalid Line-type: " + sControlCell);
+                throw new ParseException(error);
+            } else
+                
+                return null;
+
         }
         return lineSchema;
     }
@@ -146,12 +154,12 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
         while (true) {
             nLineNumber++;
             FixedWidthSchemaLine lineSchema = findSchemaLine(reader, nLineNumber);
-            if (lineSchema == null)
-                return;
 
             String sLine = parseLine(reader);
             if (sLine == null)
                 return; // End of buffer
+            if (lineSchema == null)
+                continue;
             boolean isLineFound = lineSchema.parse(nLineNumber, sLine, listener);
             if (!isLineFound) {
                 return; // End of stream.
@@ -295,6 +303,23 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
         for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
             lineSchema.addFillerCellToReachMinLength(this.controlCellLength);
         }
+    }
+
+    /**
+     * @return  true if there will be an error while parsing and the control cell does not match any defined line type.
+     * false if undefined line types are silently ignored.
+     */
+    public boolean isErrorIfUndefinedLineType() {
+        return errorIfUndefinedLineType;
+    }
+
+    /**
+     * Set to true if there should be an error while parsing and the control cell does not match any defined line type.
+     * Set to false if undefined line types should be silently ignored.
+     * @param errorIfUndefinedLineType
+     */
+    public void setErrorIfUndefinedLineType(boolean errorIfUndefinedLineType) {
+        this.errorIfUndefinedLineType = errorIfUndefinedLineType;
     }
     
 

@@ -198,7 +198,7 @@ public abstract class SchemaLine implements Cloneable {
      *            the lineTypeControlValue to set
      */
     public void setLineTypeControlValue(String lineTypeControlValue) {
-        this.lineTypeControlValue = lineTypeControlValue;
+        this.lineTypeControlValue = lineTypeControlValue.trim();
         if (this.lineType == NOT_SET)
             this.lineType = lineTypeControlValue;
     }

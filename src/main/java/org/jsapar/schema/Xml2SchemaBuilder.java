@@ -10,6 +10,7 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Locale;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -52,13 +53,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      */
     private boolean getBooleanValue(Node node) throws SchemaException {
         final String value = node.getNodeValue().trim();
-        if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("1")) {
-            return true;
-        } else if (value.equalsIgnoreCase("false") || value.equalsIgnoreCase("0")) {
-            return false;
-        } else {
-            throw new SchemaException("Failed to parse boolean node: " + node);
-        }
+        return DatatypeConverter.parseBoolean(value);
     }
 
     private String getStringValue(Node node) {
@@ -225,7 +220,16 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
             }
         }
         schema.addFillerCellsToReachLineMinLength();
+        schema.setErrorIfUndefinedLineType(getBooleanAttribute(xmlSchema,
+                ATTRIB_FW_SCHEMA_ERROR_IF_UNDEFINED_LINE_TYPE, true));
         return schema;
+    }
+
+    private boolean getBooleanAttribute(Element xmlElement, String attributeName, boolean defaultValue) {
+        String sValue = xmlElement.getAttribute(attributeName);
+        if(sValue.isEmpty())
+            return defaultValue;
+        return DatatypeConverter.parseBoolean(sValue);
     }
 
     /**

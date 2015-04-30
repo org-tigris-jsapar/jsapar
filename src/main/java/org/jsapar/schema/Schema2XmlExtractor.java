@@ -2,6 +2,7 @@ package org.jsapar.schema;
 
 import java.util.Locale;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -130,7 +131,8 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
             throws SchemaException {
         Element xmlSchema = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_FIXED_WIDTH_CONTROL_CELL_SCHEMA);
 
-        xmlSchema.setAttribute(ATTRIB_SCHEMA_WRITE_CONTROL_CELL, String.valueOf(schema.isWriteControlCell()));
+        xmlSchema.setAttribute(ATTRIB_SCHEMA_WRITE_CONTROL_CELL, DatatypeConverter.printBoolean(schema.isWriteControlCell()));
+        xmlSchema.setAttribute(ATTRIB_FW_SCHEMA_ERROR_IF_UNDEFINED_LINE_TYPE, DatatypeConverter.printBoolean(schema.isErrorIfUndefinedLineType()));
 
         Element xmlControlCell = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_FW_SCHEMA_CONTROLCELL);
         xmlSchema.appendChild(xmlControlCell);

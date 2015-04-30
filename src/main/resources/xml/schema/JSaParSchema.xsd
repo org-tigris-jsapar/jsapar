@@ -196,23 +196,41 @@ You can use a regexp pattern that will be matched to determine if a cell is empt
     </xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="FixedWidthControlCellSchema">
-    <xsd:complexContent mixed="false">
-      <xsd:extension base="FixedWidthSchema">
-        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
-          <xsd:element minOccurs="1" maxOccurs="1" name="controlcell" type="FixedWidthSchemaControlCell">
-            <xsd:annotation>
-              <xsd:documentation>The control cell occurs as the first cell at each line and denotes which type of line the rest of the line is. This element tells how the control cell is to be parsed or written.
-                    		</xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-        </xsd:sequence>
-        <xsd:attribute default="true" name="writecontrolcell" type="xsd:boolean">
-          <xsd:annotation>
-            <xsd:documentation>Specifies if the control cell should be written for output. If false, the control cell is discarded in the output field. Default is true. </xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-      </xsd:extension>
-    </xsd:complexContent>
+  	<xsd:complexContent mixed="false">
+  		<xsd:extension base="FixedWidthSchema">
+  			<xsd:sequence minOccurs="1" maxOccurs="unbounded">
+  				<xsd:element minOccurs="1" maxOccurs="1"
+  					name="controlcell" type="FixedWidthSchemaControlCell">
+  					<xsd:annotation>
+  						<xsd:documentation>
+  							The control cell occurs as the first cell
+  							at each line and denotes which type of
+  							line the rest of the line is. This element
+  							tells how the control cell is to be parsed
+  							or written.
+  						</xsd:documentation>
+  					</xsd:annotation>
+  				</xsd:element>
+  			</xsd:sequence>
+  			<xsd:attribute default="true" name="writecontrolcell"
+  				type="xsd:boolean">
+  				<xsd:annotation>
+  					<xsd:documentation>
+  						Specifies if the control cell should be
+  						written for output. If false, the control cell
+  						is discarded in the output field. Default is
+  						true.
+  					</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:attribute>
+  			<xsd:attribute name="errorIfUndefinedLineType" type="xsd:boolean" default="true">
+  				<xsd:annotation>
+  					<xsd:documentation>Set to true if there should be an error while parsing a line and the control cell does not match any defined line type.
+Set to false if undefined line types should be silently ignored.
+Please note that for a schema where the lines are not separated by any line separator character, undefined lines always cause an error. There is no way for the parser to know the length of the line otherwise.</xsd:documentation>
+  				</xsd:annotation></xsd:attribute>
+  		</xsd:extension>
+  	</xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="FixedWidthSchemaLine">
     <xsd:complexContent mixed="false">
