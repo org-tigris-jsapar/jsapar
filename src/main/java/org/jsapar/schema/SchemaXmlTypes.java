@@ -25,7 +25,7 @@ public interface SchemaXmlTypes {
     public static final String ATTRIB_SCHEMA_CELL_IGNOREREAD = "ignoreread";
     public static final String ATTRIB_SCHEMA_CELL_IGNOREWRITE = "ignorewrite";
     public static final String ATTRIB_FW_SCHEMA_CONTROLCELLL_LENGTH = "length";
-    public static final String ATTRIB_FW_SCHEMA_ERROR_IF_UNDEFINED_LINE_TYPE = "errorIfUndefinedLineType";
+    public static final String ATTRIB_FW_SCHEMA_ERROR_IF_UNDEFINED_LINE_TYPE = "errorifundefinedlinetype";
     public static final String ATTRIB_FW_SCHEMA_CELL_ALIGNMENT = "alignment";
     public static final String ELEMENT_FW_SCHEMA_CONTROLCELL = "controlcell";
     public static final String ELEMENT_SCHEMA_LINE = "line";

@@ -223,7 +223,7 @@ You can use a regexp pattern that will be matched to determine if a cell is empt
   					</xsd:documentation>
   				</xsd:annotation>
   			</xsd:attribute>
-  			<xsd:attribute name="errorIfUndefinedLineType" type="xsd:boolean" default="true">
+  			<xsd:attribute name="errorifundefinedlinetype" type="xsd:boolean" default="true">
   				<xsd:annotation>
   					<xsd:documentation>Set to true if there should be an error while parsing a line and the control cell does not match any defined line type.
 Set to false if undefined line types should be silently ignored.
