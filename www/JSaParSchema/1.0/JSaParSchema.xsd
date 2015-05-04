@@ -166,15 +166,15 @@ You can use a regexp pattern that will be matched to determine if a cell is empt
             Note that the number formats are parsed according to the specified locale.</xsd:documentation>
       </xsd:annotation>
       <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="string" />
-            <xsd:enumeration value="date" />
-            <xsd:enumeration value="decimal" />
-            <xsd:enumeration value="integer" />
-            <xsd:enumeration value="float" />
-            <xsd:enumeration value="boolean" />
-            <xsd:enumeration value="character"></xsd:enumeration>
-        </xsd:restriction>
+      	<xsd:restriction base="xsd:string">
+      		<xsd:enumeration value="string" />
+      		<xsd:enumeration value="date" />
+      		<xsd:enumeration value="decimal" />
+      		<xsd:enumeration value="integer" />
+      		<xsd:enumeration value="float" />
+      		<xsd:enumeration value="boolean" />
+      		<xsd:enumeration value="character"></xsd:enumeration>
+      	</xsd:restriction>
       </xsd:simpleType>
     </xsd:attribute>
     <xsd:attribute name="pattern" type="xsd:string" use="optional">
@@ -196,23 +196,41 @@ You can use a regexp pattern that will be matched to determine if a cell is empt
     </xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="FixedWidthControlCellSchema">
-    <xsd:complexContent mixed="false">
-      <xsd:extension base="FixedWidthSchema">
-        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
-          <xsd:element minOccurs="1" maxOccurs="1" name="controlcell" type="FixedWidthSchemaControlCell">
-            <xsd:annotation>
-              <xsd:documentation>The control cell occurs as the first cell at each line and denotes which type of line the rest of the line is. This element tells how the control cell is to be parsed or written.
-                            </xsd:documentation>
-            </xsd:annotation>
-          </xsd:element>
-        </xsd:sequence>
-        <xsd:attribute default="true" name="writecontrolcell" type="xsd:boolean">
-          <xsd:annotation>
-            <xsd:documentation>Specifies if the control cell should be written for output. If false, the control cell is discarded in the output field. Default is true. </xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-      </xsd:extension>
-    </xsd:complexContent>
+  	<xsd:complexContent mixed="false">
+  		<xsd:extension base="FixedWidthSchema">
+  			<xsd:sequence minOccurs="1" maxOccurs="unbounded">
+  				<xsd:element minOccurs="1" maxOccurs="1"
+  					name="controlcell" type="FixedWidthSchemaControlCell">
+  					<xsd:annotation>
+  						<xsd:documentation>
+  							The control cell occurs as the first cell
+  							at each line and denotes which type of
+  							line the rest of the line is. This element
+  							tells how the control cell is to be parsed
+  							or written.
+  						</xsd:documentation>
+  					</xsd:annotation>
+  				</xsd:element>
+  			</xsd:sequence>
+  			<xsd:attribute default="true" name="writecontrolcell"
+  				type="xsd:boolean">
+  				<xsd:annotation>
+  					<xsd:documentation>
+  						Specifies if the control cell should be
+  						written for output. If false, the control cell
+  						is discarded in the output field. Default is
+  						true.
+  					</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:attribute>
+  			<xsd:attribute name="errorifundefinedlinetype" type="xsd:boolean" default="true">
+  				<xsd:annotation>
+  					<xsd:documentation>Set to true if there should be an error while parsing a line and the control cell does not match any defined line type.
+Set to false if undefined line types should be silently ignored.
+Please note that for a schema where the lines are not separated by any line separator character, undefined lines always cause an error. There is no way for the parser to know the length of the line otherwise.</xsd:documentation>
+  				</xsd:annotation></xsd:attribute>
+  		</xsd:extension>
+  	</xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="FixedWidthSchemaLine">
     <xsd:complexContent mixed="false">
@@ -264,7 +282,7 @@ If the sum of the length of the cells is less than this minlength then the line 
 left
 right
 center
-            </xsd:documentation>
+           	</xsd:documentation>
           </xsd:annotation>
           <xsd:simpleType>
             <xsd:restriction base="xsd:string">
@@ -292,7 +310,7 @@ center
         <xsd:attribute default=";" name="controlcellseparator" type="xsd:string">
           <xsd:annotation>
             <xsd:documentation>A sequence of characters that are used to delimit the control cell from the rest of the line. Default is a single ';' character.
-                        </xsd:documentation>
+						</xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute default="true" name="writecontrolcell" type="xsd:boolean">
@@ -312,13 +330,13 @@ center
         <xsd:attribute name="cellseparator" type="xsd:string" use="optional">
           <xsd:annotation>
             <xsd:documentation>A sequence of characters that are used to delimit each cell of this line. 
-                        </xsd:documentation>
+                    	</xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute name="firstlineasschema" type="xsd:boolean">
           <xsd:annotation>
             <xsd:documentation>Specifies if the first line of this type contains a header that should be used as schema. In that case all cells will be considered of type string and no validation will be made.
-                        </xsd:documentation>
+						</xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute name="quotechar" use="optional">
@@ -370,7 +388,7 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
     <xsd:attribute name="alignment" use="optional">
       <xsd:annotation>
         <xsd:documentation>Defines the cell alignment. Only used when writing, not when reading. The remaining space is filled with the fill-character of the parent document schema.
-                        </xsd:documentation>
+                    	</xsd:documentation>
       </xsd:annotation>
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
