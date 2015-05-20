@@ -15,7 +15,7 @@ import org.jsapar.output.OutputException;
 
 /**
  * Abstract base class for all type of jsapar schemas. A schema describes how the buffer should be
- * parsed or how the lines of a Document should be written. Usually the parse and output methods are
+ * parsed or how the lines of a {@link org.jsapar.Document} should be written. Usually the parse and output methods are
  * called from one of the in, out or io classes.
  * 
  * @see Xml2SchemaBuilder
@@ -26,11 +26,21 @@ import org.jsapar.output.OutputException;
  */
 public abstract class Schema implements Cloneable, ParseSchema {
 
+    /**
+     *  Defines how to determine which line type to use. 
+     */
     public enum LineTypeByTypes {
-        OCCURS, CONTROL_CELL
+        /**
+         * The occurs field in {@link SchemaLine} determine how many lines that are expected of the type. 
+         */
+        OCCURS, 
+        /**
+         * There is a control cell on each line that determines the line type.
+         */
+        CONTROL_CELL
     };
 
-    private java.util.Locale locale = Locale.getDefault();
+    private Locale locale = Locale.getDefault();
     private String lineSeparator = System.getProperty("line.separator");
 
     /**
@@ -83,7 +93,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
     /**
      * @return the locale
      */
-    public java.util.Locale getLocale() {
+    public Locale getLocale() {
         return locale;
     }
 
@@ -91,12 +101,12 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @param locale
      *            the locale to set
      */
-    public void setLocale(java.util.Locale locale) {
+    public void setLocale(Locale locale) {
         this.locale = locale;
     }
 
     @Override
-    public abstract void parse(java.io.Reader reader, ParsingEventListener listener) throws JSaParException,
+    public abstract void parse(Reader reader, ParsingEventListener listener) throws JSaParException,
             IOException;
 
     /**
@@ -107,7 +117,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @throws IOException
      * @throws JSaParException 
      */
-    protected String parseLine(java.io.Reader reader) throws IOException, JSaParException {
+    protected String parseLine(Reader reader) throws IOException, JSaParException {
         char chLineSeparatorNext = getLineSeparator().charAt(0);
         StringBuilder lineBuilder = new StringBuilder();
         StringBuilder pending = new StringBuilder();
@@ -220,8 +230,8 @@ public abstract class Schema implements Cloneable, ParseSchema {
     }
 
     /**
-     * This method should only be called by a Outputter class. Don't use this directly in your code.
-     * Use a Outputter instead.
+     * This method should only be called by a {@link org.jsapar.output.Outputter} class. Don't use this directly in your code.
+     * Use a {@link org.jsapar.output.Outputter} instead.
      * 
      * This method writes a line according to the schema line, with the same line type, which is
      * found in this schema. 
@@ -243,8 +253,8 @@ public abstract class Schema implements Cloneable, ParseSchema {
     }
 
     /**
-     * This method should only be called by a Outputter class. Don't use this directly in your code.
-     * Use a Outputter instead.
+     * This method should only be called by a {@link org.jsapar.output.Outputter} class. Don't use this directly in your code.
+     * Use a {@link org.jsapar.output.Outputter} instead.
      * 
      * This method writes a line according to the schema line, with the same line type, which is
      * found in this schema. 

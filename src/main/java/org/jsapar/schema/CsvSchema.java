@@ -20,6 +20,9 @@ import org.jsapar.input.ParsingEventListener;
  */
 public class CsvSchema extends Schema {
 
+    /**
+     * Byte order marker. Some editors (usually in Windows) adds a byte order marker to xml files. 
+     */
     private static final String UTF8_BOM_STR = "\ufeff";
     private java.util.ArrayList<CsvSchemaLine> schemaLines = new java.util.ArrayList<CsvSchemaLine>(4);
 
