@@ -2,6 +2,7 @@ package org.jsapar.schema;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.Writer;
 import java.util.Iterator;
 
@@ -153,16 +154,19 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
         long nLineNumber = 0; // First line is 1
         while (true) {
             nLineNumber++;
-            FixedWidthSchemaLine lineSchema = findSchemaLine(reader, nLineNumber);
-
             String sLine = parseLine(reader);
             if (sLine == null)
                 return; // End of buffer
-            if (lineSchema == null)
+            if(sLine.isEmpty()) // Empty line
                 continue;
-            boolean isLineFound = lineSchema.parse(nLineNumber, sLine, listener);
-            if (!isLineFound) {
-                return; // End of stream.
+            try(Reader lineReader = new StringReader(sLine)){
+                FixedWidthSchemaLine lineSchema = findSchemaLine(lineReader, nLineNumber);
+                if (lineSchema == null)
+                    continue;
+                boolean isLineFound = lineSchema.parse(nLineNumber, lineReader, listener);
+                if (!isLineFound) {
+                    return; // End of stream.
+                }
             }
 
         }
