@@ -225,13 +225,14 @@ public class CsvSchemaLine extends SchemaLine {
             int nFoundEnd = sToSplit.indexOf(quoteSeparator, nIndex);
             if (nFoundEnd < 0) {
                 // Last character is quote
-                if (sToSplit.length() > 1 && sToSplit.charAt(sToSplit.length() - 1) == quoteChar) {
+                if (nIndex < sToSplit.length() && sToSplit.length() > 1 && sToSplit.charAt(sToSplit.length() - 1) == quoteChar) {
                     sFound = sToSplit.substring(nIndex, sToSplit.length() - 1);
                     cells.add(sFound);
                     return;
                 } else {
                     // Only a start quote but no end quote, then ignore the quote. Do a normal
                     // split.
+                    // TODO handle multi-line cells with quotes. 
                     cells.addAll(Arrays.asList(sToSplit.substring(nIndex - 1).split(sCellSeparator)));
                     return;
                 }

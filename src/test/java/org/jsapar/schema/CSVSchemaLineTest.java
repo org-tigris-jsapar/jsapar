@@ -254,6 +254,29 @@ public class CSVSchemaLineTest  {
     }
 
     @Test
+    public void testParse_quoted_line_break() throws JSaParException {
+    CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+    schemaLine.setQuoteChar('\"');
+    String sLine = "Jonas;Stenberg;\"";
+        boolean rc = schemaLine.parse(1, sLine, new ParsingEventListener() {
+
+            @Override
+            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            }
+
+            @Override
+            public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
+                Line line = event.getLine();
+                assertEquals(3, line.getNumberOfCells());
+                assertEquals("Jonas", line.getCell(0).getStringValue());
+                assertEquals("Stenberg", line.getCell(1).getStringValue());
+                assertEquals("\"", line.getCell(2).getStringValue());
+            }
+        });
+
+        assertEquals(true, rc);
+    }    
+    @Test
     public void testParse_quoted_miss_placed_start() throws JSaParException {
 	CsvSchemaLine schemaLine = new CsvSchemaLine(1);
 	schemaLine.setQuoteChar('\"');
