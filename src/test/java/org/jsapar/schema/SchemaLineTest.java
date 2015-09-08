@@ -138,12 +138,6 @@ public class SchemaLineTest {
         }
 
         @Override
-        boolean parse(long lineNumber, String line, ParsingEventListener listener) throws JSaParException, IOException {
-            fail("Not yet implemented");
-            return false;
-        }
-
-        @Override
         public int getSchemaCellsCount() {
             fail("Not yet implemented");
             return 0;

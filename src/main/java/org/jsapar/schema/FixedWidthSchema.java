@@ -8,6 +8,8 @@ import java.util.List;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.input.ParsingEventListener;
+import org.jsapar.input.parse.LineReader;
+import org.jsapar.input.parse.ReaderLineReader;
 
 /**
  * Defines a schema for a fixed position buffer. Each cell is defined by a fixed number of
@@ -115,10 +117,11 @@ public class FixedWidthSchema extends Schema {
             throws IOException, JSaParException {
 
         long nLineNumber = 0; // First line is 1
+        LineReader lineReader = new ReaderLineReader(this.getLineSeparator(), reader);
         for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
             for (int i = 0; i < lineSchema.getOccurs(); i++) {
                 nLineNumber++;
-                String sLine = parseLine(reader);
+                String sLine = lineReader.readLine();
                 if (sLine == null)
                     return; // End of buffer
 

@@ -10,6 +10,8 @@ import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
+import org.jsapar.input.parse.LineReader;
+import org.jsapar.input.parse.ReaderLineReader;
 
 /**
  * Defines a schema for a fixed position buffer. Each cell is defined by a fixed number of
@@ -48,10 +50,11 @@ public class CsvSchema extends Schema {
      * @param sHeaderLine The header line to use while building the schema.
      * @return A CsvSchemaLine created from the header line.
      * @throws CloneNotSupportedException
-     * @throws ParseException
+     * @throws JSaParException 
+     * @throws IOException 
      */
     private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, String sHeaderLine)
-            throws CloneNotSupportedException, ParseException {
+            throws CloneNotSupportedException, IOException, JSaParException {
 
         CsvSchemaLine schemaLine = masterLineSchema.clone();
         schemaLine.getSchemaCells().clear();
@@ -60,7 +63,7 @@ public class CsvSchema extends Schema {
 
         sHeaderLine = removeLeadingByteOrderMark(sHeaderLine);
         
-        String[] asCells = schemaLine.split(sHeaderLine);
+        String[] asCells = schemaLine.makeCellSplitter(null).split(sHeaderLine);
         for (String sCell : asCells) {
             CsvSchemaCell masterCell = masterLineSchema.getCsvSchemaCell(sCell);
             if(masterCell != null)
@@ -133,11 +136,12 @@ public class CsvSchema extends Schema {
     public void parse(java.io.Reader reader, ParsingEventListener listener) throws IOException, JSaParException {
 
         long nLineNumber = 0; // First line is 1
+        LineReader lineReader = new ReaderLineReader(this.getLineSeparator(), reader);
         for (CsvSchemaLine lineSchema : getCsvSchemaLines()) {
 
             if (lineSchema.isFirstLineAsSchema()) {
                 try {
-                    String sHeaderLine = parseLine(reader);
+                    String sHeaderLine = lineReader.readLine();
                     if (sHeaderLine == null)
                         return;
                     lineSchema = buildSchemaFromHeader(lineSchema, sHeaderLine);
@@ -163,14 +167,15 @@ public class CsvSchema extends Schema {
                                     long nLineNumber,
                                     Reader reader,
                                     ParsingEventListener listener) throws IOException, JSaParException {
+        LineReader lineReader = new ReaderLineReader(this.getLineSeparator(), reader);
         long nStartLine = nLineNumber;
         for (int i = 0; i < lineSchema.getOccurs(); i++) {
             nLineNumber++;
-            String sLine = parseLine(reader);
+            String sLine = lineReader.readLine();
             if (sLine == null)
                 break;
 
-            boolean isLineParsed = lineSchema.parse(nLineNumber, sLine, listener);
+            boolean isLineParsed = lineSchema.parse(nLineNumber, sLine, listener, lineReader);
             if (!isLineParsed)
                 break;
         }

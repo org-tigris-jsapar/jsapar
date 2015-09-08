@@ -11,6 +11,8 @@ import org.jsapar.Line;
 import org.jsapar.input.CellParseError;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
+import org.jsapar.input.parse.LineReader;
+import org.jsapar.input.parse.ReaderLineReader;
 import org.jsapar.output.OutputException;
 import org.jsapar.schema.FixedWidthSchemaCell.Alignment;
 
@@ -152,18 +154,19 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
     protected void parseByOccursLinesSeparated(Reader reader, ParsingEventListener listener) throws IOException,
             JSaParException {
         long nLineNumber = 0; // First line is 1
+        LineReader lineReader = new ReaderLineReader(this.getLineSeparator(), reader);
         while (true) {
             nLineNumber++;
-            String sLine = parseLine(reader);
+            String sLine = lineReader.readLine();
             if (sLine == null)
                 return; // End of buffer
             if(sLine.isEmpty()) // Empty line
                 continue;
-            try(Reader lineReader = new StringReader(sLine)){
-                FixedWidthSchemaLine lineSchema = findSchemaLine(lineReader, nLineNumber);
+            try(Reader lineStringReader = new StringReader(sLine)){
+                FixedWidthSchemaLine lineSchema = findSchemaLine(lineStringReader, nLineNumber);
                 if (lineSchema == null)
                     continue;
-                boolean isLineFound = lineSchema.parse(nLineNumber, lineReader, listener);
+                boolean isLineFound = lineSchema.parse(nLineNumber, lineStringReader, listener);
                 if (!isLineFound) {
                     return; // End of stream.
                 }

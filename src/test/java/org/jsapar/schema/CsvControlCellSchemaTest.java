@@ -270,6 +270,7 @@ public class CsvControlCellSchemaTest {
         DocumentBuilder builder = new DocumentBuilder();
         Document doc = builder.build(reader, schema);
 
+        assertEquals(2, doc.getNumberOfLines());
         Line line = doc.getLine(0);
         assertEquals("Name", line.getLineType());
         assertEquals("Jonas", line.getCell(0).getStringValue());

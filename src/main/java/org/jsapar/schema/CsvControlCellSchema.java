@@ -10,6 +10,8 @@ import org.jsapar.Line;
 import org.jsapar.input.CellParseError;
 import org.jsapar.input.ParseException;
 import org.jsapar.input.ParsingEventListener;
+import org.jsapar.input.parse.LineReader;
+import org.jsapar.input.parse.ReaderLineReader;
 import org.jsapar.output.OutputException;
 
 /**
@@ -109,11 +111,13 @@ public class CsvControlCellSchema extends CsvSchema {
     @Override
     public void parse(Reader reader, ParsingEventListener listener) throws JSaParException {
         CsvSchemaLine lineSchema = null;
+        LineReader lineReader = new ReaderLineReader(this.getLineSeparator(), reader);
+
         long nLineNumber = 0; // First line is 1
         try {
             do {
                 String sControlCell;
-                String sLine = parseLine(reader);
+                String sLine = lineReader.readLine();
                 if (sLine == null || sLine.length() == 0)
                     break;
 
@@ -136,7 +140,7 @@ public class CsvControlCellSchema extends CsvSchema {
                     throw new ParseException(error);
                 }
 
-                boolean isLineParsed = lineSchema.parse(nLineNumber, sLine, listener);
+                boolean isLineParsed = lineSchema.parse(nLineNumber, sLine, listener, lineReader);
                 if (!isLineParsed)
                     break;
 

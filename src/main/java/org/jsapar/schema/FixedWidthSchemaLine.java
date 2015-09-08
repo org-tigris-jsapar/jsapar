@@ -88,13 +88,20 @@ public class FixedWidthSchemaLine extends SchemaLine {
         this.schemaCells.add(schemaCell);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Reads characters from the line and generates a LineParsedEvent to the listener when it has
+     * been parsed.
      * 
-     * @see org.jsapar.schema.SchemaLine#parse(long, java.lang.String,
-     * org.jsapar.input.ParsingEventListener)
+     * @param nLineNumber
+     *            The current line number while parsing.
+     * @param sLine
+     *            The line to parse
+     * @param listener
+     *            The listener to generate call-backs to.
+     * @return true if a line was found. false if there were no cells within this line.
+     * @throws IOException
+     * @throws JSaParException
      */
-    @Override
     boolean parse(long nLineNumber, String sLine, ParsingEventListener listener) throws IOException, JSaParException {
         if (sLine.trim().isEmpty())
             return handleEmptyLine(nLineNumber, listener);
