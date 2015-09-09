@@ -1,4 +1,4 @@
-package org.jsapar.input.parse;
+package org.jsapar.input.parse.csv;
 
 import java.io.IOException;
 import java.util.regex.Pattern;

@@ -7,9 +7,7 @@ import java.util.List;
 
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
-import org.jsapar.input.ParsingEventListener;
-import org.jsapar.input.parse.LineReader;
-import org.jsapar.input.parse.ReaderLineReader;
+import org.jsapar.input.ParseSchema;
 
 /**
  * Defines a schema for a fixed position buffer. Each cell is defined by a fixed number of
@@ -27,7 +25,7 @@ import org.jsapar.input.parse.ReaderLineReader;
  * @author Jonas Stenberg
  * 
  */
-public class FixedWidthSchema extends Schema {
+public class FixedWidthSchema extends Schema implements ParseSchema {
 
     /**
      * A list of fixed with schema lines which builds up this schema.
@@ -57,81 +55,7 @@ public class FixedWidthSchema extends Schema {
         this.schemaLines.add(schemaLine);
     }
 
-    /**
-     * Builds a document from a reader using a schema where the line types are denoted by the occurs
-     * field in the schema.
-     * 
-     * @param reader
-     *            The reader to parse input from
-     * @param listener
-     *            The listener which will receive events for each parsed line.
-     * @throws java.io.IOException
-     * @throws JSaParException
-     */
-    @Override
-    public void parse(java.io.Reader reader, ParsingEventListener listener) throws IOException, JSaParException {
-        if (getLineSeparator().length() > 0) {
-            parseByOccursLinesSeparated(reader, listener);
-        } else {
-            parseByOccursFlatFile(reader, listener);
-        }
-    }
 
-    /**
-     * Builds a document from a reader using a schema where the line types are denoted by the occurs
-     * field in the schema and the lines are not separated by any line separator character.
-     * 
-     * @param reader
-     *            The reader to parse input from
-     * @param listener
-     *            The listener which will receive events for each parsed line.
-     * @throws org.jsapar.JSaParException
-     * @throws java.io.IOException
-     */
-    protected void parseByOccursFlatFile(java.io.Reader reader, ParsingEventListener listener) throws IOException,
-            JSaParException {
-        long nLineNumber = 0;
-        for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
-            for (int i = 0; i < lineSchema.getOccurs(); i++) {
-                nLineNumber++;
-                boolean isLineFound = lineSchema.parse(nLineNumber, reader, listener);
-                if (!isLineFound) {
-                    break; // End of stream.
-                }
-            }
-        }
-    }
-
-    /**
-     * Builds a document from a reader using a schema where the line types are denoted by the occurs
-     * field in the schema and the lines are separated by line separator character.
-     * 
-     * @param reader
-     *            The reader to parse input from
-     * @param listener
-     *            The listener which will receive events for each parsed line.
-     * @throws IOException
-     * @throws JSaParException
-     */
-    protected void parseByOccursLinesSeparated(java.io.Reader reader, ParsingEventListener listener)
-            throws IOException, JSaParException {
-
-        long nLineNumber = 0; // First line is 1
-        LineReader lineReader = new ReaderLineReader(this.getLineSeparator(), reader);
-        for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
-            for (int i = 0; i < lineSchema.getOccurs(); i++) {
-                nLineNumber++;
-                String sLine = lineReader.readLine();
-                if (sLine == null)
-                    return; // End of buffer
-
-                boolean isLineFound = lineSchema.parse(nLineNumber, sLine, listener);
-                if (!isLineFound) {
-                    return; // End of stream.
-                }
-            }
-        }
-    }
 
     /*
      * (non-Javadoc)

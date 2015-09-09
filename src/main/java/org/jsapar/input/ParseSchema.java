@@ -23,7 +23,7 @@ public interface ParseSchema {
      * @throws IOException
      * @throws JSaParException
      */
-    public abstract void parse(java.io.Reader reader, ParsingEventListener listener)
-	    throws IOException, JSaParException;
+//    public abstract void parse(java.io.Reader reader, ParsingEventListener listener)
+//	    throws IOException, JSaParException;
 
 }

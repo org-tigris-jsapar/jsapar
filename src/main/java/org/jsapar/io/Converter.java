@@ -12,6 +12,7 @@ import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseSchema;
 import org.jsapar.input.ParsingEventListener;
+import org.jsapar.input.parse.SchemaParserFactory;
 import org.jsapar.schema.Schema;
 
 /**
@@ -31,6 +32,7 @@ public class Converter {
     private ParseSchema           inputSchema;
     private Schema                outputSchema;
     private int                   maxNumberOfErrors = Integer.MAX_VALUE;
+    private SchemaParserFactory   parserFactory     = new SchemaParserFactory();
 
     /**
      * Creates a Converter object with the specified schemas.
@@ -81,7 +83,7 @@ public class Converter {
                                                        java.io.Writer writer,
                                                        DocumentWriter outputter) throws IOException, JSaParException {
         outputSchema.outputBefore(writer);
-        inputSchema.parse(reader, outputter);
+        parserFactory .makeParser(inputSchema, reader).parse(outputter);
         outputSchema.outputAfter(writer);
         return outputter.getParseErrors();
     }

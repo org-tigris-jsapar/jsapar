@@ -19,11 +19,11 @@ import org.jsapar.input.CellParseError;
 import org.jsapar.input.JavaBuilder;
 import org.jsapar.input.ParseSchema;
 import org.jsapar.input.Parser;
-import org.jsapar.input.XmlDocumentParser;
 import org.jsapar.io.Converter;
 import org.jsapar.output.Outputter;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
+import org.jsapar.schema.XmlSchema;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -129,7 +129,7 @@ public class JSaParExamplesTest {
     @Test
     public final void testExampleXml05() throws SchemaException, IOException, JSaParException {
         java.util.List<CellParseError> parseErrors = new java.util.LinkedList<CellParseError>();
-        ParseSchema schema = new XmlDocumentParser();
+        ParseSchema schema = new XmlSchema();
         Reader fileReader = new FileReader("samples/05_Names.xml");
         Parser parser = new Parser(schema);
         Document document = parser.build(fileReader, parseErrors);

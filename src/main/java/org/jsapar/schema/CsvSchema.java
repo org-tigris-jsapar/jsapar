@@ -132,56 +132,8 @@ public class CsvSchema extends Schema {
         }
     }
 
-    @Override
-    public void parse(java.io.Reader reader, ParsingEventListener listener) throws IOException, JSaParException {
 
-        long nLineNumber = 0; // First line is 1
-        LineReader lineReader = new ReaderLineReader(this.getLineSeparator(), reader);
-        for (CsvSchemaLine lineSchema : getCsvSchemaLines()) {
 
-            if (lineSchema.isFirstLineAsSchema()) {
-                try {
-                    String sHeaderLine = lineReader.readLine();
-                    if (sHeaderLine == null)
-                        return;
-                    lineSchema = buildSchemaFromHeader(lineSchema, sHeaderLine);
-                } catch (CloneNotSupportedException e) {
-                    throw new ParseException("Failed to create header schema.", e);
-                }
-            }
-            nLineNumber += parseLinesByOccurs(lineSchema, nLineNumber, reader, listener);
-        }
-    }
-
-    /**
-     * @param lineSchema
-     * @param nLineNumber
-     * @param reader
-     * @param listener
-     *            The event listener to report paring events back to.
-     * @return Number of lines that were parsed (including failed ones).
-     * @throws IOException
-     * @throws JSaParException
-     */
-    private long parseLinesByOccurs(CsvSchemaLine lineSchema,
-                                    long nLineNumber,
-                                    Reader reader,
-                                    ParsingEventListener listener) throws IOException, JSaParException {
-        LineReader lineReader = new ReaderLineReader(this.getLineSeparator(), reader);
-        long nStartLine = nLineNumber;
-        for (int i = 0; i < lineSchema.getOccurs(); i++) {
-            nLineNumber++;
-            String sLine = lineReader.readLine();
-            if (sLine == null)
-                break;
-
-            boolean isLineParsed = lineSchema.parse(nLineNumber, sLine, listener, lineReader);
-            if (!isLineParsed)
-                break;
-        }
-
-        return nLineNumber - nStartLine;
-    }
 
     @Override
     public CsvSchema clone() {

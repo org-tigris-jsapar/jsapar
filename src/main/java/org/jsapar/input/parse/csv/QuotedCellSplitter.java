@@ -1,12 +1,13 @@
 /**
  * 
  */
-package org.jsapar.input.parse;
+package org.jsapar.input.parse.csv;
 
 import java.io.IOException;
 import java.util.Arrays;
 
 import org.jsapar.JSaParException;
+import org.jsapar.input.parse.LineReader;
 
 /**
  * @author stejon0

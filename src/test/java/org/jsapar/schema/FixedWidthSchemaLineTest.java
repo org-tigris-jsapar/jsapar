@@ -7,10 +7,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 
-import org.jsapar.CellType;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
@@ -44,135 +41,6 @@ public class FixedWidthSchemaLineTest {
         foundError = false;
     }
 
-    @Test
-    public void testBuild() throws IOException, JSaParException {
-        String toParse = "JonasStenbergSpiselvagen 19141 59Huddinge";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street address", 14));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("City", 8));
-        schema.addSchemaLine(schemaLine);
-
-        Reader reader = new StringReader(toParse);
-        boolean rc = schemaLine.parse(1, reader, new ParsingEventListener() {
-
-            @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                throw new ParseException(event.getCellParseError());
-            }
-
-            @Override
-            public void lineParsedEvent(LineParsedEvent event) {
-                Line line = event.getLine();
-                assertEquals("Jonas", line.getCell(0).getStringValue());
-                assertEquals("Stenberg", line.getCell("Last name").getStringValue());
-                assertEquals("Spiselvagen 19", line.getCell(2).getStringValue());
-                assertEquals("141 59", line.getCell("Zip code").getStringValue());
-                assertEquals("Huddinge", line.getCell(4).getStringValue());
-
-                assertEquals("Last name", line.getCell(1).getName());
-                assertEquals("Zip code", line.getCell(3).getName());
-            }
-        });
-
-        assertEquals(true, rc);
-    }
-
-    @Test
-    public void testBuild_defaultLast() throws IOException, JSaParException {
-        String toParse = "JonasStenberg";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        FixedWidthSchemaCell cityCell = new FixedWidthSchemaCell("City", 8);
-        cityCell.setDefaultValue("Falun");
-        schemaLine.addSchemaCell(cityCell);
-        schema.addSchemaLine(schemaLine);
-
-        Reader reader = new StringReader(toParse);
-        boolean rc = schemaLine.parse(1, reader, new ParsingEventListener() {
-
-            @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                throw new ParseException(event.getCellParseError());
-            }
-
-            @Override
-            public void lineParsedEvent(LineParsedEvent event) {
-                Line line = event.getLine();
-                assertEquals("Jonas", line.getCell(0).getStringValue());
-                assertEquals("Stenberg", line.getCell("Last name").getStringValue());
-                assertEquals("Falun", line.getStringCellValue("City"));
-
-                assertEquals("Last name", line.getCell(1).getName());
-
-            }
-        });
-
-        assertEquals(true, rc);
-    }
-
-    @Test
-    public void testBuild_default_and_mandatory() throws IOException, JSaParException {
-        String toParse = "JonasStenberg";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        FixedWidthSchemaCell cityCell = new FixedWidthSchemaCell("City", 8);
-        cityCell.setDefaultValue("Falun");
-        cityCell.setMandatory(true);
-        schemaLine.addSchemaCell(cityCell);
-        schema.addSchemaLine(schemaLine);
-
-        Reader reader = new StringReader(toParse);
-        boolean rc = schemaLine.parse(1, reader, new ParsingEventListener() {
-
-            @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                assertEquals("City", event.getCellParseError().getCellName());
-                foundError=true;
-            }
-
-            @Override
-            public void lineParsedEvent(LineParsedEvent event) {
-                Line line = event.getLine();
-                assertEquals("Jonas", line.getCell(0).getStringValue());
-                assertEquals("Stenberg", line.getCell("Last name").getStringValue());
-                assertEquals("Falun", line.getStringCellValue("City"));
-
-                assertEquals("Last name", line.getCell(1).getName());
-
-            }
-        });
-
-        assertEquals(true, rc);
-        assertEquals(true, foundError);
-    }
-
-    
-    @Test(expected = org.jsapar.input.ParseException.class)
-    public void testBuild_parseError() throws IOException, JSaParException {
-        String toParse = "JonasStenbergFortione";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-
-        FixedWidthSchemaCell shoeSizeSchema = new FixedWidthSchemaCell("Shoe size", 8);
-        shoeSizeSchema.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
-        schemaLine.addSchemaCell(shoeSizeSchema);
-
-        schema.addSchemaLine(schemaLine);
-
-        Reader reader = new StringReader(toParse);
-        @SuppressWarnings("unused")
-        boolean rc = schemaLine.parse(1, reader, new NullParsingEventListener());
-    }
 
     @Test
     public void testOutput() throws IOException, JSaParException {

@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import org.jsapar.JSaParException;
+import org.jsapar.input.parse.csv.CellSplitter;
+import org.jsapar.input.parse.csv.QuotedCellSplitter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

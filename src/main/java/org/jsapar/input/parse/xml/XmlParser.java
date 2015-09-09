@@ -1,4 +1,4 @@
-package org.jsapar.input;
+package org.jsapar.input.parse.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,18 +22,40 @@ import org.jsapar.CellType;
 import org.jsapar.DateCell;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
+import org.jsapar.input.CellParseError;
+import org.jsapar.input.LineErrorEvent;
+import org.jsapar.input.LineParsedEvent;
+import org.jsapar.input.ParseException;
+import org.jsapar.input.ParsingEventListener;
+import org.jsapar.input.parse.SchemaParser;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.Xml2SchemaBuilder;
+import org.jsapar.schema.XmlSchema;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-public class XmlDocumentParser implements org.jsapar.input.ParseSchema {
+public class XmlParser implements SchemaParser {
     // private final static String SCHEMA_LANGUAGE =
     // "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
+    
+    private Reader reader;
+    
+    
+    /**
+     * Currently not used for anything but might be useful in the future.
+     */
+    @SuppressWarnings("unused")
+    private XmlSchema xmlSchema;
+    
+
+    public XmlParser(Reader reader, XmlSchema xmlSchema) {
+        this.reader = reader;
+        this.xmlSchema = xmlSchema;
+    }
 
     @Override
-    public void parse(Reader reader, ParsingEventListener listener)
+    public void parse(ParsingEventListener listener)
 	    throws IOException, JSaParException {
 
 	String schemaFileName = "/xml/schema/XMLDocumentFormat.xsd";

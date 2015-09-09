@@ -9,15 +9,10 @@ import org.jsapar.CellType;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.StringCell;
-import org.jsapar.input.CellParseError;
-import org.jsapar.input.LineErrorEvent;
-import org.jsapar.input.LineParsedEvent;
-import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
-import org.jsapar.input.parse.CellSplitter;
 import org.jsapar.input.parse.LineReader;
-import org.jsapar.input.parse.QuotedCellSplitter;
-import org.jsapar.input.parse.SimpleCellSplitter;
+import org.jsapar.input.parse.csv.CellSplitter;
+import org.jsapar.input.parse.csv.QuotedCellSplitter;
+import org.jsapar.input.parse.csv.SimpleCellSplitter;
 
 /**
  * Describes the schema how to parse or write a comma separated line.
@@ -27,7 +22,6 @@ import org.jsapar.input.parse.SimpleCellSplitter;
  */
 public class CsvSchemaLine extends SchemaLine {
 
-    private static final String           EMPTY_STRING      = "";
     private java.util.List<CsvSchemaCell> schemaCells       = new java.util.ArrayList<CsvSchemaCell>();
     private boolean                       firstLineAsSchema = false;
 
@@ -83,87 +77,6 @@ public class CsvSchemaLine extends SchemaLine {
         this.schemaCells.add(cell);
     }
 
-    boolean parse(long nLineNumber, String sLine, ParsingEventListener listener, LineReader lineReader)
-            throws JSaParException, IOException {
-
-        Line line = new Line(getLineType(), (getSchemaCells().size() > 0) ? getSchemaCells().size() : 10);
-
-        // TODO This can be made smarter so that we don't have to create a new cell splitter for each line.
-        String[] asCells = makeCellSplitter(lineReader).split(sLine);
-
-        // Empty lines are not common. Only test for empty line if there are no more than one cell
-        // after a split.
-        if (asCells.length <= 1 && sLine.trim().isEmpty())
-            return handleEmptyLine(nLineNumber, listener);
-
-        java.util.Iterator<CsvSchemaCell> itSchemaCell = getSchemaCells().iterator();
-        for (String sCell : asCells) {
-            if (itSchemaCell.hasNext()) {
-                CsvSchemaCell schemaCell = itSchemaCell.next();
-                addCellToLineBySchema(line, schemaCell, sCell, listener, nLineNumber);
-            } else {
-                addCellToLineWithoutSchema(line, sCell);
-            }
-        }
-        if (line.getNumberOfCells() <= 0)
-            return false;
-
-        // We have to fill all the default values and mandatory items for remaining cells within the schema.
-        while (itSchemaCell.hasNext()) {
-            CsvSchemaCell schemaCell = itSchemaCell.next();
-            addCellToLineBySchema(line, schemaCell, EMPTY_STRING, listener, nLineNumber);
-        }
-
-        listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
-        return true;
-    }
-
-    /**
-     * Adds a cell to the line if there is no schema.
-     * 
-     * @param line
-     * @param sCell
-     * @throws JSaParException
-     */
-    private void addCellToLineWithoutSchema(Line line, String sCell) throws JSaParException {
-        Cell cell;
-        cell = new StringCell(sCell);
-        line.addCell(cell);
-    }
-
-    /**
-     * Adds a cell to the line according to the schema.
-     * 
-     * @param line
-     * @param schemaCell
-     * @param sCell
-     * @param listener
-     * @param nLineNumber
-     * @throws JSaParException
-     */
-    private void addCellToLineBySchema(Line line,
-                                       CsvSchemaCell schemaCell,
-                                       String sCell,
-                                       ParsingEventListener listener,
-                                       long nLineNumber) throws JSaParException {
-
-        try {
-            if (schemaCell.isIgnoreRead()) {
-                if (schemaCell.isDefaultValue())
-                    line.addCell(schemaCell.getDefaultCell());
-                return;
-            }
-            if (schemaCell.isMaxLength() && sCell.length() > schemaCell.getMaxLength())
-                sCell = sCell.substring(0, schemaCell.getMaxLength());
-            Cell cell = schemaCell.makeCell(sCell, listener, nLineNumber);
-            if (cell != null)
-                line.addCell(cell);
-        } catch (ParseException e) {
-            CellParseError cellParseError = e.getCellParseError();
-            cellParseError = new CellParseError(nLineNumber, cellParseError);
-            listener.lineErrorEvent(new LineErrorEvent(this, cellParseError));
-        }
-    }
 
     /**
      * @param sLine

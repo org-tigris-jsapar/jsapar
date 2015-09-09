@@ -1,18 +1,12 @@
 package org.jsapar.schema;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 
 import org.jsapar.Cell;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
-import org.jsapar.input.CellParseError;
-import org.jsapar.input.LineErrorEvent;
-import org.jsapar.input.LineParsedEvent;
-import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
 
 /**
  * This class represents the schema for a line of a fixed with file. Each cell within the line has a
@@ -23,7 +17,6 @@ import org.jsapar.input.ParsingEventListener;
  */
 public class FixedWidthSchemaLine extends SchemaLine {
 
-    private static final String EMPTY_STRING = "";
     private java.util.List<FixedWidthSchemaCell> schemaCells = new java.util.ArrayList<FixedWidthSchemaCell>();
     private boolean trimFillCharacters = true;
     private char fillCharacter = ' ';
@@ -88,95 +81,6 @@ public class FixedWidthSchemaLine extends SchemaLine {
         this.schemaCells.add(schemaCell);
     }
 
-    /**
-     * Reads characters from the line and generates a LineParsedEvent to the listener when it has
-     * been parsed.
-     * 
-     * @param nLineNumber
-     *            The current line number while parsing.
-     * @param sLine
-     *            The line to parse
-     * @param listener
-     *            The listener to generate call-backs to.
-     * @return true if a line was found. false if there were no cells within this line.
-     * @throws IOException
-     * @throws JSaParException
-     */
-    boolean parse(long nLineNumber, String sLine, ParsingEventListener listener) throws IOException, JSaParException {
-        if (sLine.trim().isEmpty())
-            return handleEmptyLine(nLineNumber, listener);
-        java.io.Reader reader = new java.io.StringReader(sLine);
-        return parse(nLineNumber, reader, listener);
-    }
-
-    /**
-     * Reads characters from the reader and parses them into a complete line. The line is sent as an
-     * event to the supplied event listener.
-     * 
-     * @param nLineNumber
-     *            The current line number while parsing.
-     * @param reader
-     *            The reader to read characters from.
-     * @param listener
-     *            The listener to generate call-backs to.
-     * @return true if a line was found. false if end-of-file was found while reading the input.
-     * @throws IOException
-     * @throws JSaParException
-     */
-    boolean parse(long nLineNumber, Reader reader, ParsingEventListener listener) throws IOException, JSaParException {
-
-        Line line = new Line(getLineType(), getSchemaCells().size());
-        boolean setDefaultsOnly = false;
-        boolean oneRead = false;
-        boolean oneIgnored = false;
-
-        for (FixedWidthSchemaCell schemaCell : getSchemaCells()) {
-            if (setDefaultsOnly) {
-                if (schemaCell.isDefaultValue())
-                    line.addCell(schemaCell.makeCell(EMPTY_STRING, listener, nLineNumber));
-                continue;
-            } else if (schemaCell.isIgnoreRead()) {
-                if(schemaCell.isDefaultValue())
-                    line.addCell(schemaCell.getDefaultCell());
-
-                long nSkipped = reader.skip(schemaCell.getLength());
-                if(nSkipped >0 || schemaCell.getLength()==0)
-                    oneIgnored=true;
-                
-                if (nSkipped != schemaCell.getLength()) {
-                    if (oneRead)
-                        setDefaultsOnly = true;
-                    continue;
-                }
-            } else {
-                try {
-                    Cell cell = schemaCell.build(reader, isTrimFillCharacters(), getFillCharacter(), listener,
-                            nLineNumber);
-                    if (cell == null) {
-                        if (oneRead) {
-                            setDefaultsOnly = true;
-                            if (schemaCell.getDefaultCell() != null)
-                                line.addCell(schemaCell.makeCell(EMPTY_STRING));
-                        }
-                        continue;
-                    }
-
-                    oneRead = true;
-                    line.addCell(cell);
-                } catch (ParseException e) {
-                    CellParseError cellParseError = e.getCellParseError();
-                    cellParseError = new CellParseError(nLineNumber, cellParseError);
-                    listener.lineErrorEvent(new LineErrorEvent(this, cellParseError));
-                }
-            }
-        }
-        if (line.getNumberOfCells() <= 0 && !oneIgnored)
-            return false;
-
-        listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
-
-        return true;
-    }
 
     /**
      * Writes a line to the writer. Each cell is identified from the schema by the name of the cell.

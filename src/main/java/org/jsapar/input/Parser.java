@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.jsapar.Document;
 import org.jsapar.JSaParException;
+import org.jsapar.input.parse.SchemaParserFactory;
 import org.jsapar.io.MaxErrorsExceededException;
 import org.jsapar.output.JavaOutputter;
 
@@ -36,6 +37,7 @@ import org.jsapar.output.JavaOutputter;
  */
 public class Parser implements ParsingEventListener {
     private List<ParsingEventListener> parsingEventListeners = new LinkedList<ParsingEventListener>();
+    private SchemaParserFactory        parserFactory         = new SchemaParserFactory();
     ParseSchema                        schema;
 
     /**
@@ -138,7 +140,7 @@ public class Parser implements ParsingEventListener {
      */
     public void parse(java.io.Reader reader) throws JSaParException {
         try {
-            schema.parse(reader, Parser.this);
+            parserFactory.makeParser(this.schema, reader).parse(Parser.this);
         } catch (IOException e) {
             throw new ParseException("Failed to read input", e);
         }
@@ -229,7 +231,7 @@ public class Parser implements ParsingEventListener {
             });
 
             try {
-                schema.parse(reader, Parser.this);
+                parserFactory.makeParser(schema, reader).parse(Parser.this);
             } catch (IOException e) {
                 throw new ParseException("Failed to read input", e);
             }
@@ -265,7 +267,7 @@ public class Parser implements ParsingEventListener {
             });
 
             try {
-                schema.parse(reader, Parser.this);
+                parserFactory.makeParser(schema, reader).parse(Parser.this);
             } catch (IOException e) {
                 throw new ParseException("Failed to read input", e);
             }
@@ -324,7 +326,7 @@ public class Parser implements ParsingEventListener {
             });
 
             try {
-                schema.parse(reader, Parser.this);
+                parserFactory.makeParser(schema, reader).parse(Parser.this);
             } catch (IOException e) {
                 throw new ParseException("Failed to read input", e);
             }

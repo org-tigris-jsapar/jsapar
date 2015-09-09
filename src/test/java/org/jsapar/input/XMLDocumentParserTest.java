@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.jsapar.Document;
 import org.jsapar.IntegerCell;
 import org.jsapar.JSaParException;
+import org.jsapar.schema.XmlSchema;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,7 +27,7 @@ public class XMLDocumentParserTest {
 		+ "</line></document>";
 
 	java.io.Reader reader=new java.io.StringReader(sXml);
-	ParseSchema schema = new XmlDocumentParser();
+	ParseSchema schema = new XmlSchema();
 	Parser docBuilder = new Parser(schema);
 	java.util.List<CellParseError> parseErrors = new java.util.LinkedList<CellParseError>();
 	Document document = docBuilder.build(reader, parseErrors);

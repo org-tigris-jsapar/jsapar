@@ -245,43 +245,6 @@ public class CsvControlCellSchemaTest {
         assertEquals("Address", schema.getSchemaLineByControlValue("A").getLineType());
     }
 
-    /**
-     * Test method for
-     * {@link org.jsapar.schema.CsvControlCellSchema#parse(java.io.Reader, org.jsapar.input.ParsingEventListener)}
-     * .
-     * 
-     * @throws IOException
-     * @throws JSaParException
-     */
-    @Test
-    public void testParse() throws JSaParException, IOException {
-        CsvControlCellSchema schema = new CsvControlCellSchema();
-        schema.setControlCellSeparator(":->");
-        CsvSchemaLine schemaLine = new CsvSchemaLine("Address");
-        schemaLine.setCellSeparator(":");
-        schema.addSchemaLine(schemaLine);
-
-        schemaLine = new CsvSchemaLine("Name");
-        schema.addSchemaLine(schemaLine);
-
-        String sToParse = "Name:->Jonas;Stenberg" + System.getProperty("line.separator")
-                + "Address:->Storgatan 4:12345:Storstan";
-        java.io.Reader reader = new java.io.StringReader(sToParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        Document doc = builder.build(reader, schema);
-
-        assertEquals(2, doc.getNumberOfLines());
-        Line line = doc.getLine(0);
-        assertEquals("Name", line.getLineType());
-        assertEquals("Jonas", line.getCell(0).getStringValue());
-        assertEquals("Stenberg", line.getCell(1).getStringValue());
-
-        line = doc.getLine(1);
-        assertEquals("Address", line.getLineType());
-        assertEquals("Storgatan 4", line.getCell(0).getStringValue());
-        assertEquals("12345", line.getCell(1).getStringValue());
-        assertEquals("Storstan", line.getCell(2).getStringValue());
-    }
 
     /**
      * Test method for {@link org.jsapar.schema.CsvControlCellSchema#clone()}.
@@ -303,30 +266,5 @@ public class CsvControlCellSchemaTest {
         assertEquals(schema.getControlCellSeparator(), clone.getControlCellSeparator());
     }
 
-    private class DocumentBuilder {
-        private Document document = new Document();
-        private ParsingEventListener listener;
-
-        public DocumentBuilder() {
-            listener = new ParsingEventListener() {
-
-                @Override
-                public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                    throw new ParseException(event.getCellParseError());
-                }
-
-                @Override
-                public void lineParsedEvent(LineParsedEvent event) {
-                    document.addLine(event.getLine());
-                }
-            };
-        }
-
-        public Document build(java.io.Reader reader, ParseSchema parser) throws JSaParException, IOException {
-
-            parser.parse(reader, listener);
-            return this.document;
-        }
-    }
 
 }

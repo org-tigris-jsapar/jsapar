@@ -166,7 +166,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
      * @throws IOException
      * @throws ParseException
      */
-    Cell build(Reader reader,
+    public Cell makeCell(Reader reader,
                boolean trimFillCharacters,
                char fillCharacter,
                ParsingEventListener listener,

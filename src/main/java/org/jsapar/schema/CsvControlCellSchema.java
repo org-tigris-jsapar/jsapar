@@ -1,17 +1,11 @@
 package org.jsapar.schema;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
-import org.jsapar.input.CellParseError;
-import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
-import org.jsapar.input.parse.LineReader;
-import org.jsapar.input.parse.ReaderLineReader;
 import org.jsapar.output.OutputException;
 
 /**
@@ -103,53 +97,7 @@ public class CsvControlCellSchema extends CsvSchema {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.schema.CsvSchema#parse(java.io.Reader, org.jsapar.input.ParsingEventListener)
-     */
-    @Override
-    public void parse(Reader reader, ParsingEventListener listener) throws JSaParException {
-        CsvSchemaLine lineSchema = null;
-        LineReader lineReader = new ReaderLineReader(this.getLineSeparator(), reader);
 
-        long nLineNumber = 0; // First line is 1
-        try {
-            do {
-                String sControlCell;
-                String sLine = lineReader.readLine();
-                if (sLine == null || sLine.length() == 0)
-                    break;
-
-                int nIndex = sLine.indexOf(this.getControlCellSeparator());
-                if (nIndex >= 0) {
-                    sControlCell = sLine.substring(0, nIndex);
-                    sLine = sLine.substring(nIndex + getControlCellSeparator().length(), sLine.length());
-                } else { // There is no delimiter, the control cell is the
-                    // complete line.
-                    sControlCell = sLine;
-                    sLine = "";
-                }
-
-                if (lineSchema == null || !lineSchema.getLineTypeControlValue().equals(sControlCell))
-                    lineSchema = getSchemaLineByControlValue(sControlCell);
-
-                if (lineSchema == null) {
-                    CellParseError error = new CellParseError(nLineNumber, "Control cell", sControlCell, null,
-                            "Invalid Line-type: " + sControlCell);
-                    throw new ParseException(error);
-                }
-
-                boolean isLineParsed = lineSchema.parse(nLineNumber, sLine, listener, lineReader);
-                if (!isLineParsed)
-                    break;
-
-            } while (true);
-
-        } catch (IOException ex) {
-            throw new JSaParException("Failed to read control cell.", ex);
-        }
-    }
 
     /*
      * (non-Javadoc)

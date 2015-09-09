@@ -59,7 +59,7 @@ public class FixedWidthSchemaCellTest {
         FixedWidthSchemaCell schemaElment = new FixedWidthSchemaCell("First name", 11);
 
         Reader reader = new StringReader(toParse);
-        Cell cell = schemaElment.build(reader, true, ' ', new TestParsingEventListener(), 1);
+        Cell cell = schemaElment.makeCell(reader, true, ' ', new TestParsingEventListener(), 1);
 
         assertEquals("Jonas", cell.getStringValue());
     }
@@ -70,7 +70,7 @@ public class FixedWidthSchemaCellTest {
         FixedWidthSchemaCell schemaElment = new FixedWidthSchemaCell("First name", 11);
 
         Reader reader = new StringReader(toParse);
-        Cell cell = schemaElment.build(reader, false, ' ', new TestParsingEventListener(), 1);
+        Cell cell = schemaElment.makeCell(reader, false, ' ', new TestParsingEventListener(), 1);
 
         assertEquals("   Jonas   ", cell.getStringValue());
     }
@@ -85,7 +85,7 @@ public class FixedWidthSchemaCellTest {
         @SuppressWarnings("unused")
         Cell cell;
         try {
-            cell = schemaElement.build(reader, true, ' ', new TestParsingEventListener(), 1);
+            cell = schemaElement.makeCell(reader, true, ' ', new TestParsingEventListener(), 1);
             fail("Should throw exception");
 
         } catch (ParseException ex) {
@@ -100,7 +100,7 @@ public class FixedWidthSchemaCellTest {
 
         Reader reader = new StringReader(toParse);
         Cell cell;
-        cell = schemaElment.build(reader, true, ' ', new TestParsingEventListener(), 1);
+        cell = schemaElment.makeCell(reader, true, ' ', new TestParsingEventListener(), 1);
         assertEquals(null, cell.getValue());
     }
 
@@ -112,7 +112,7 @@ public class FixedWidthSchemaCellTest {
 
         Reader reader = new StringReader(toParse);
         Cell cell;
-        cell = schemaElment.build(reader, true, ' ', new TestParsingEventListener(), 1);
+        cell = schemaElment.makeCell(reader, true, ' ', new TestParsingEventListener(), 1);
         assertEquals(null, cell.getValue());
     }
 
@@ -127,7 +127,7 @@ public class FixedWidthSchemaCellTest {
 
         Reader reader = new StringReader(toParse);
         Cell cell;
-        cell = schemaElement.build(reader, false, ' ', new TestParsingEventListener(), 1);
+        cell = schemaElement.makeCell(reader, false, ' ', new TestParsingEventListener(), 1);
         assertEquals("           ", cell.getValue());
     }
 
@@ -137,7 +137,7 @@ public class FixedWidthSchemaCellTest {
         FixedWidthSchemaCell schemaElment = new FixedWidthSchemaCell("First name", 11);
 
         Reader reader = new StringReader(toParse);
-        Cell cell = schemaElment.build(reader, true, ' ', new TestParsingEventListener(), 1);
+        Cell cell = schemaElment.makeCell(reader, true, ' ', new TestParsingEventListener(), 1);
 
         assertEquals(null, cell.getValue());
         assertEquals("", cell.getStringValue());
@@ -150,7 +150,7 @@ public class FixedWidthSchemaCellTest {
         schemaElment.setCellFormat(new SchemaCellFormat(CellType.DATE, "yyyy-MM-dd HH:mm"));
 
         Reader reader = new StringReader(toParse);
-        DateCell cell = (DateCell) schemaElment.build(reader, true, ' ', new TestParsingEventListener(), 1);
+        DateCell cell = (DateCell) schemaElment.makeCell(reader, true, ' ', new TestParsingEventListener(), 1);
         java.util.Date date = cell.getDateValue();
         Calendar calendar = java.util.Calendar.getInstance();
         calendar.setTime(date);
@@ -170,7 +170,7 @@ public class FixedWidthSchemaCellTest {
         // schemaElment.setCellFormat(new SchemaCellFormat(CellType.DECIMAL));
 
         Reader reader = new StringReader(toParse);
-        BigDecimalCell cell = (BigDecimalCell) schemaElment.build(reader, true, ' ', new TestParsingEventListener(), 1);
+        BigDecimalCell cell = (BigDecimalCell) schemaElment.makeCell(reader, true, ' ', new TestParsingEventListener(), 1);
         BigDecimal value = cell.getBigDecimalValue();
 
         assertEquals(new BigDecimal("-123456.78"), value);
@@ -183,7 +183,7 @@ public class FixedWidthSchemaCellTest {
         schemaElment.setCellFormat(new SchemaCellFormat(CellType.DECIMAL, "#,###.#", new Locale("sv", "SE")));
 
         Reader reader = new StringReader(toParse);
-        BigDecimalCell cell = (BigDecimalCell) schemaElment.build(reader, false, ' ', new TestParsingEventListener(), 1);
+        BigDecimalCell cell = (BigDecimalCell) schemaElment.makeCell(reader, false, ' ', new TestParsingEventListener(), 1);
         BigDecimal value = cell.getBigDecimalValue();
 
         assertEquals(new BigDecimal("-123456.78"), value);
@@ -197,7 +197,7 @@ public class FixedWidthSchemaCellTest {
         // schemaElment.setCellFormat(new SchemaCellFormat(CellType.DECIMAL));
 
         Reader reader = new StringReader(toParse);
-        BigDecimalCell cell = (BigDecimalCell) schemaElment.build(reader, true, ' ', new TestParsingEventListener(), 1);
+        BigDecimalCell cell = (BigDecimalCell) schemaElment.makeCell(reader, true, ' ', new TestParsingEventListener(), 1);
         BigDecimal value = cell.getBigDecimalValue();
 
         assertEquals(new BigDecimal("-123456.78"), value);
@@ -210,7 +210,7 @@ public class FixedWidthSchemaCellTest {
         schemaElment.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
 
         Reader reader = new StringReader(toParse);
-        NumberCell cell = (NumberCell) schemaElment.build(reader, true, ' ', new TestParsingEventListener(), 1);
+        NumberCell cell = (NumberCell) schemaElment.makeCell(reader, true, ' ', new TestParsingEventListener(), 1);
         int value = cell.getNumberValue().intValue();
 
         assertEquals(123456, value);
@@ -223,7 +223,7 @@ public class FixedWidthSchemaCellTest {
         schemaElment.setCellFormat(new SchemaCellFormat(CellType.FLOAT));
 
         Reader reader = new StringReader(toParse);
-        NumberCell cell = (NumberCell) schemaElment.build(reader, true, ' ', new TestParsingEventListener(), 1);
+        NumberCell cell = (NumberCell) schemaElment.makeCell(reader, true, ' ', new TestParsingEventListener(), 1);
         double value = cell.getNumberValue().doubleValue();
 
         assertEquals(1123, 234, value);
@@ -237,7 +237,7 @@ public class FixedWidthSchemaCellTest {
         schemaElment.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.###E0", schemaElment.getLocale()));
 
         Reader reader = new StringReader(toParse);
-        NumberCell cell = (NumberCell) schemaElment.build(reader, true, ' ', new TestParsingEventListener(), 1);
+        NumberCell cell = (NumberCell) schemaElment.makeCell(reader, true, ' ', new TestParsingEventListener(), 1);
         double value = cell.getNumberValue().doubleValue();
 
         assertEquals(1.234e6, value, 0.001);
@@ -250,7 +250,7 @@ public class FixedWidthSchemaCellTest {
         schemaElment.setCellFormat(new SchemaCellFormat(CellType.BOOLEAN));
 
         Reader reader = new StringReader(toParse);
-        BooleanCell cell = (BooleanCell) schemaElment.build(reader, true, ' ', new TestParsingEventListener(), 1);
+        BooleanCell cell = (BooleanCell) schemaElment.makeCell(reader, true, ' ', new TestParsingEventListener(), 1);
         boolean value = cell.getBooleanValue();
 
         assertEquals(true, value);
@@ -376,7 +376,7 @@ public class FixedWidthSchemaCellTest {
 
         Reader reader = new StringReader(toParse);
         Cell cell;
-        cell = schemaCell.build(reader, true, ' ', new TestParsingEventListener(), 1);
+        cell = schemaCell.makeCell(reader, true, ' ', new TestParsingEventListener(), 1);
         Assert.assertNotNull(cell);
         Assert.assertNull(cell.getValue());
         Assert.assertEquals("", cell.getStringValue());

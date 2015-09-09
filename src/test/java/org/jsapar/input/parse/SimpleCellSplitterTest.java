@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 
 import org.jsapar.JSaParException;
+import org.jsapar.input.parse.csv.CellSplitter;
+import org.jsapar.input.parse.csv.SimpleCellSplitter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

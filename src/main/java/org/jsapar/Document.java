@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.jsapar.input.ParseSchema;
 import org.jsapar.input.Parser;
-import org.jsapar.input.XmlDocumentParser;
+import org.jsapar.schema.XmlSchema;
 
 /**
  * A document contains multiple lines where each line corresponds to a line of
@@ -221,7 +221,7 @@ public class Document implements Serializable {
      * @throws JSaParException If there is an error while reading the xml.
      */
     public static Document importFromXml(Reader reader) throws JSaParException{
-        ParseSchema schema = new XmlDocumentParser();
+        ParseSchema schema = new XmlSchema();
         Parser docBuilder = new Parser(schema);
         return docBuilder.build(reader);
     }

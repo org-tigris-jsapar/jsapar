@@ -10,7 +10,6 @@ import java.util.Locale;
 import org.jsapar.JSaParException;
 import org.jsapar.Line;
 import org.jsapar.input.ParseSchema;
-import org.jsapar.input.ParsingEventListener;
 import org.jsapar.output.OutputException;
 
 /**
@@ -104,10 +103,6 @@ public abstract class Schema implements Cloneable, ParseSchema {
     public void setLocale(Locale locale) {
         this.locale = locale;
     }
-
-    @Override
-    public abstract void parse(Reader reader, ParsingEventListener listener) throws JSaParException,
-            IOException;
 
 
     public Schema clone(){
