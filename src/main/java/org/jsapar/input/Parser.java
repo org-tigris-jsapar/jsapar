@@ -193,6 +193,14 @@ public class Parser implements ParsingEventListener {
         }
     }
 
+    public SchemaParserFactory getParserFactory() {
+        return parserFactory;
+    }
+
+    public void setParserFactory(SchemaParserFactory parserFactory) {
+        this.parserFactory = parserFactory;
+    }
+
     /**
      * Private class that converts the events from the parser into a Document object. This builder
      * adds errors to a list of CellParseErrors.
@@ -231,7 +239,7 @@ public class Parser implements ParsingEventListener {
             });
 
             try {
-                parserFactory.makeParser(schema, reader).parse(Parser.this);
+                getParserFactory().makeParser(schema, reader).parse(Parser.this);
             } catch (IOException e) {
                 throw new ParseException("Failed to read input", e);
             }
@@ -267,7 +275,7 @@ public class Parser implements ParsingEventListener {
             });
 
             try {
-                parserFactory.makeParser(schema, reader).parse(Parser.this);
+                getParserFactory().makeParser(schema, reader).parse(Parser.this);
             } catch (IOException e) {
                 throw new ParseException("Failed to read input", e);
             }
@@ -326,7 +334,7 @@ public class Parser implements ParsingEventListener {
             });
 
             try {
-                parserFactory.makeParser(schema, reader).parse(Parser.this);
+                getParserFactory().makeParser(schema, reader).parse(Parser.this);
             } catch (IOException e) {
                 throw new ParseException("Failed to read input", e);
             }

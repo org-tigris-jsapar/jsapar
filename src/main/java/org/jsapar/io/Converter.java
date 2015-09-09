@@ -195,4 +195,12 @@ public class Converter {
         return maxNumberOfErrors;
     }
 
+    public SchemaParserFactory getParserFactory() {
+        return parserFactory;
+    }
+
+    public void setParserFactory(SchemaParserFactory parserFactory) {
+        this.parserFactory = parserFactory;
+    }
+
 }
