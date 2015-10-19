@@ -169,12 +169,12 @@ public class JSaParExamplesTest {
 
     @Test
     public final void testConvert01_02() throws IOException, JSaParException {
-        File outFile = new File("samples/02_FixedWidthSchema.xml");
         Reader inSchemaReader = new FileReader("samples/01_CsvSchema.xml");
-        Reader outSchemaReader = new FileReader(outFile);
+        Reader outSchemaReader = new FileReader("samples/02_FixedWidthSchema.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
         Reader inReader = new FileReader("samples/01_Names.csv");
-        Writer outWriter = new FileWriter("samples/02_Names_out.txt");
+        File outFile = new File("samples/02_Names_out.txt");
+        Writer outWriter = new FileWriter(outFile);
         Converter converter = new Converter(xmlBuilder.build(inSchemaReader), xmlBuilder.build(outSchemaReader));
         converter.convert(inReader, outWriter);
         inReader.close();

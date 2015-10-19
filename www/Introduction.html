@@ -65,12 +65,12 @@ Example of converting a <b>Fixed width file</b> into a <b>CSV file</b> according
 <table style="font-family: monospace" border="1" >
 	<tr>
 		<td><tt>
-        File outFile = new File("samples/02_FixedWidthSchema.xml");<br/>
         Reader inSchemaReader = new FileReader("samples/01_CsvSchema.xml");<br/>
-        Reader outSchemaReader = new FileReader(outFile);<br/>
+        Reader outSchemaReader = new FileReader("samples/02_FixedWidthSchema.xml");<br/>
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();<br/>
         Reader inReader = new FileReader("samples/01_Names.csv");<br/>
-        Writer outWriter = new FileWriter("samples/02_Names_out.txt");<br/>
+        File outFile = new File("samples/02_Names_out.txt");<br/>
+        Writer outWriter = new FileWriter(outFile);<br/>
         Converter converter = new Converter(xmlBuilder.build(inSchemaReader), xmlBuilder.build(outSchemaReader));<br/>
         converter.convert(inReader, outWriter);<br/>
         inReader.close();<br/>
