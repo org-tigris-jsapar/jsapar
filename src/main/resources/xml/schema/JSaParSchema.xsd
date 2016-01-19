@@ -65,9 +65,12 @@
           line types. E.g. a line can have linetype="Employee" and
           linetypecontrolvalue="E" which means that in when parsing the
           input, if the first character of each a line is 'E', then the
-          line is concidered to be of linetype Employee. If this
+          line is considered to be of linetype Employee. If this
           attribute is not set, the linetype will be used also as
           control value.
+          Multiple values can be specified separated by the "|" character. This means that while parsing, the schema
+          line will be used for all control values matching any of the specified values. While writing, any of the
+          values might be used by the Outputter, it is not deterministic.
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
@@ -147,7 +150,7 @@ If set to false, cells will be matched from the schema according to their positi
     </xsd:attribute>
     <xsd:attribute name="emptypattern" type="xsd:string">
       <xsd:annotation>
-        <xsd:documentation>The empty pattern can be used to ignore cells that contains a text even though they should be regared as empty. For instance, the cell may contain the text NULL to indicate that there is no value even though this is a date or a numeric field. 
+        <xsd:documentation>The empty pattern can be used to ignore cells that contains a text even though they should be regared as empty. For instance, the cell may contain the text NULL to indicate that there is no value even though this is a date or a numeric field.
 You can use a regexp pattern that will be matched to determine if a cell is empty. E.g. set the value "NULL" if you want to ignore all cells with the value NULL. If this attribute is not set, only cells without any text will be regared as empty.
 </xsd:documentation>
       </xsd:annotation></xsd:attribute>

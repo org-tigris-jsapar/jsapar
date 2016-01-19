@@ -262,7 +262,11 @@ public class JavaOutputter {
                         if (!sValue.isEmpty())
                             f.invoke(objectToAssign, sValue.charAt(0));
                     }
-                } else {
+                }
+                else if(Enum.class.isAssignableFrom( paramTypes[0]) && value instanceof String){
+                    f.invoke(objectToAssign, Enum.valueOf((Class<Enum>)paramTypes[0], String.valueOf(value)));
+                }
+                else {
                     try {
                         f.invoke(objectToAssign, value);
                     } catch (IllegalArgumentException e) {

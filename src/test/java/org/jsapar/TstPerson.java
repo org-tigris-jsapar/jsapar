@@ -22,6 +22,7 @@ public class TstPerson {
     private TstPostAddress    address;
     private TstPostAddress    workAddress;
     private double         length;
+    private TstGender      gender;
     
     private java.util.Date birthTime;
 
@@ -181,4 +182,11 @@ public class TstPerson {
         this.length = length;
     }
 
+    public TstGender getGender() {
+        return gender;
+    }
+
+    public void setGender(TstGender gender) {
+        this.gender = gender;
+    }
 }

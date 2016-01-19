@@ -9,17 +9,7 @@ import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jsapar.CellType;
-import org.jsapar.CharacterCell;
-import org.jsapar.DateCell;
-import org.jsapar.Document;
-import org.jsapar.EmptyCell;
-import org.jsapar.FloatCell;
-import org.jsapar.IntegerCell;
-import org.jsapar.JSaParException;
-import org.jsapar.Line;
-import org.jsapar.StringCell;
-import org.jsapar.TstPerson;
+import org.jsapar.*;
 import org.jsapar.input.CellParseError;
 import org.junit.After;
 import org.junit.Assert;
@@ -55,6 +45,7 @@ public class JavaOutputterTest {
         line1.addCell(new IntegerCell("luckyNumber", 123456787901234567L));
         line1.addCell(new CharacterCell("door", 'A'));
         line1.addCell(new FloatCell("length", 123.45D));
+        line1.addCell(new StringCell("gender", "M"));
 //      line1.addCell(new StringCell("NeverUsed", "Should not be assigned"));
         
 
@@ -67,7 +58,7 @@ public class JavaOutputterTest {
         document.addLine(line2);
 
         JavaOutputter outputter = new JavaOutputter();
-        List<CellParseError> parseErrors = new LinkedList<CellParseError>();
+        List<CellParseError> parseErrors = new LinkedList<>();
         java.util.List<TstPerson> objects = outputter.createJavaObjects(document, parseErrors);
         assertEquals("The errors: " + parseErrors, 0, parseErrors.size());
         assertEquals(2, objects.size());
@@ -75,6 +66,7 @@ public class JavaOutputterTest {
         assertEquals("Jonas", firstPerson.getFirstName());
         assertEquals(42, firstPerson.getShoeSize());
         assertEquals(this.birthTime,  firstPerson.getBirthTime());
+        assertEquals(TstGender.M, firstPerson.getGender());
         assertEquals(123456787901234567L, firstPerson.getLuckyNumber());
         assertEquals('A', firstPerson.getDoor());
         assertEquals(123.45D, firstPerson.getLength(), 0.01);
