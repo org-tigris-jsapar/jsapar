@@ -3,10 +3,10 @@ package org.jsapar.input.parse.fixed;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.jsapar.Cell;
-import org.jsapar.CellType;
+import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
 import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
+import org.jsapar.input.LineEventListener;
 import org.jsapar.input.parse.CellParser;
 import org.jsapar.schema.FixedWidthSchemaCell;
 
@@ -37,7 +37,7 @@ public class FixedWidthCellParser extends CellParser {
                Reader reader,
                boolean trimFillCharacters,
                char fillCharacter,
-               ParsingEventListener listener,
+               LineEventListener listener,
                long nLineNumber) throws IOException, ParseException {
 
         int nOffset = 0;

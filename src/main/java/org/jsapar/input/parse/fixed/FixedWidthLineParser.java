@@ -3,14 +3,14 @@ package org.jsapar.input.parse.fixed;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.jsapar.Cell;
+import org.jsapar.model.Cell;
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
+import org.jsapar.model.Line;
 import org.jsapar.input.CellParseError;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
+import org.jsapar.input.LineEventListener;
 import org.jsapar.input.parse.SchemaLineParser;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
@@ -28,7 +28,7 @@ public class FixedWidthLineParser extends SchemaLineParser {
     }
 
     @Override
-    public boolean parse(long nLineNumber, ParsingEventListener listener) throws JSaParException,
+    public boolean parse(long nLineNumber, LineEventListener listener) throws JSaParException,
             IOException {
         Line line = new Line(lineSchema.getLineType(), lineSchema.getSchemaCells().size());
         boolean setDefaultsOnly = false;

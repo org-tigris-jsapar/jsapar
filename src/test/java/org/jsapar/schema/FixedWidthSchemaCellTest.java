@@ -13,18 +13,18 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Locale;
 
-import org.jsapar.BigDecimalCell;
-import org.jsapar.BooleanCell;
-import org.jsapar.Cell;
-import org.jsapar.CellType;
-import org.jsapar.DateCell;
+import org.jsapar.input.LineEventListener;
+import org.jsapar.model.BigDecimalCell;
+import org.jsapar.model.BooleanCell;
+import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
+import org.jsapar.model.DateCell;
 import org.jsapar.JSaParException;
-import org.jsapar.NumberCell;
-import org.jsapar.StringCell;
+import org.jsapar.model.NumberCell;
+import org.jsapar.model.StringCell;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,7 +40,7 @@ public class FixedWidthSchemaCellTest {
     public void tearDown() {
     }
 
-    private class TestParsingEventListener implements ParsingEventListener{
+    private class TestParsingEventListener implements LineEventListener {
 
         @Override
         public void lineErrorEvent(LineErrorEvent event) throws ParseException {

@@ -3,7 +3,7 @@ package org.jsapar.input;
 import java.io.IOException;
 
 import org.jsapar.JSaParException;
-
+import org.jsapar.Parser;
 
 /**
  * Common interface for all schemas that can be used for parsing.
@@ -23,7 +23,7 @@ public interface ParseSchema {
      * @throws IOException
      * @throws JSaParException
      */
-//    public abstract void parse(java.io.Reader reader, ParsingEventListener listener)
+//    public abstract void parse(java.io.Reader reader, LineEventListener listener)
 //	    throws IOException, JSaParException;
 
 }

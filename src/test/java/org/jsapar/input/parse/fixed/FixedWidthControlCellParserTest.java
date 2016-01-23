@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.jsapar.Document;
+import org.jsapar.input.LineEventListener;
+import org.jsapar.model.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
 import org.jsapar.schema.FixedWidthControlCellSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
@@ -31,7 +31,7 @@ public class FixedWidthControlCellParserTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, org.jsapar.input.ParsingEventListener)}
+     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, LineEventListener)}
      * .
      * 
      * @throws IOException
@@ -70,7 +70,7 @@ public class FixedWidthControlCellParserTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, org.jsapar.input.ParsingEventListener)}
+     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, LineEventListener)}
      * .
      * 
      * @throws IOException
@@ -109,7 +109,7 @@ public class FixedWidthControlCellParserTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, org.jsapar.input.ParsingEventListener)}
+     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, LineEventListener)}
      * .
      * 
      * @throws IOException
@@ -148,7 +148,7 @@ public class FixedWidthControlCellParserTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, org.jsapar.input.ParsingEventListener)}
+     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, LineEventListener)}
      * .
      * 
      * @throws IOException
@@ -173,7 +173,7 @@ public class FixedWidthControlCellParserTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, org.jsapar.input.ParsingEventListener)}
+     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, LineEventListener)}
      * .
      * 
      * @throws IOException
@@ -206,10 +206,10 @@ public class FixedWidthControlCellParserTest {
 
     private class DocumentBuilder {
         private Document             document = new Document();
-        private ParsingEventListener listener;
+        private LineEventListener listener;
 
         public DocumentBuilder() {
-            listener = new ParsingEventListener() {
+            listener = new LineEventListener() {
 
                 @Override
                 public void lineErrorEvent(LineErrorEvent event) throws ParseException {

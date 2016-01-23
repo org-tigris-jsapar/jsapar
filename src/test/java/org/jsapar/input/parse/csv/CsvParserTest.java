@@ -4,15 +4,15 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.jsapar.BooleanCell;
-import org.jsapar.CellType;
-import org.jsapar.Document;
+import org.jsapar.input.LineEventListener;
+import org.jsapar.model.BooleanCell;
+import org.jsapar.model.CellType;
+import org.jsapar.model.Document;
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
+import org.jsapar.model.Line;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
@@ -215,10 +215,10 @@ public class CsvParserTest {
 
     private class DocumentBuilder {
         private Document             document = new Document();
-        private ParsingEventListener listener;
+        private LineEventListener listener;
 
         public DocumentBuilder() {
-            listener = new ParsingEventListener() {
+            listener = new LineEventListener() {
 
                 @Override
                 public void lineErrorEvent(LineErrorEvent event) throws ParseException {

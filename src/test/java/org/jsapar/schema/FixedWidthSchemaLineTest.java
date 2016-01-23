@@ -9,12 +9,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
-import org.jsapar.StringCell;
+import org.jsapar.input.LineEventListener;
+import org.jsapar.model.Line;
+import org.jsapar.model.StringCell;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ public class FixedWidthSchemaLineTest {
     
     
 
-    private class NullParsingEventListener implements ParsingEventListener {
+    private class NullParsingEventListener implements LineEventListener {
 
         @Override
         public void lineErrorEvent(LineErrorEvent event) throws ParseException {

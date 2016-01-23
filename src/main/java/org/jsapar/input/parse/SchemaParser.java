@@ -3,7 +3,7 @@ package org.jsapar.input.parse;
 import java.io.IOException;
 
 import org.jsapar.JSaParException;
-import org.jsapar.input.ParsingEventListener;
+import org.jsapar.input.LineEventListener;
 
 public interface SchemaParser {
 
@@ -15,6 +15,6 @@ public interface SchemaParser {
      * @throws JSaParException
      * @throws IOException
      */
-    public void parse(ParsingEventListener listener) throws JSaParException, IOException;
+    public void parse(LineEventListener listener) throws JSaParException, IOException;
 
 }

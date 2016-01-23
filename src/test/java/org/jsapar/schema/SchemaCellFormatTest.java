@@ -7,8 +7,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Locale;
 
-import org.jsapar.CellType;
+import org.jsapar.model.CellType;
 import org.jsapar.format.BooleanFormat;
+import org.jsapar.model.Cell;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class SchemaCellFormatTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.schema.SchemaCellFormat#setFormat(org.jsapar.Cell.CellType, java.lang.String, java.util.Locale)}.
+     * Test method for {@link org.jsapar.schema.SchemaCellFormat#setFormat(Cell.CellType, java.lang.String, java.util.Locale)}.
      * @throws SchemaException 
      */
     @Test
@@ -45,7 +46,7 @@ public class SchemaCellFormatTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.schema.SchemaCellFormat#setFormat(org.jsapar.Cell.CellType, java.lang.String, java.util.Locale)}.
+     * Test method for {@link org.jsapar.schema.SchemaCellFormat#setFormat(Cell.CellType, java.lang.String, java.util.Locale)}.
      * @throws SchemaException 
      */
     @Test
@@ -56,7 +57,7 @@ public class SchemaCellFormatTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.schema.SchemaCellFormat#setFormat(org.jsapar.Cell.CellType, java.lang.String, java.util.Locale)}.
+     * Test method for {@link org.jsapar.schema.SchemaCellFormat#setFormat(Cell.CellType, java.lang.String, java.util.Locale)}.
      * @throws SchemaException 
      */
     @Test
@@ -67,7 +68,7 @@ public class SchemaCellFormatTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.schema.SchemaCellFormat#setFormat(org.jsapar.Cell.CellType, java.lang.String, java.util.Locale)}.
+     * Test method for {@link org.jsapar.schema.SchemaCellFormat#setFormat(Cell.CellType, java.lang.String, java.util.Locale)}.
      * @throws SchemaException 
      */
     @Test

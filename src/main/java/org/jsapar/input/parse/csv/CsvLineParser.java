@@ -2,15 +2,12 @@ package org.jsapar.input.parse.csv;
 
 import java.io.IOException;
 
-import org.jsapar.Cell;
+import org.jsapar.input.*;
+import org.jsapar.model.Cell;
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
-import org.jsapar.StringCell;
-import org.jsapar.input.CellParseError;
-import org.jsapar.input.LineErrorEvent;
-import org.jsapar.input.LineParsedEvent;
-import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
+import org.jsapar.model.Line;
+import org.jsapar.model.StringCell;
+import org.jsapar.input.LineEventListener;
 import org.jsapar.input.parse.LineReader;
 import org.jsapar.input.parse.SchemaLineParser;
 import org.jsapar.schema.CsvSchemaCell;
@@ -34,10 +31,10 @@ public class CsvLineParser extends SchemaLineParser {
     }
 
     /* (non-Javadoc)
-     * @see org.jsapar.input.parse.SchemaLineParser#parse(long, java.lang.String, org.jsapar.input.ParsingEventListener)
+     * @see org.jsapar.input.parse.SchemaLineParser#parse(long, java.lang.String, org.jsapar.input.LineEventListener)
      */
     @Override
-    public boolean parse(long nLineNumber, ParsingEventListener listener)
+    public boolean parse(long nLineNumber, LineEventListener listener)
             throws JSaParException, IOException {
         String sLine = lineReader.readLine();
         if(sLine == null)
@@ -100,7 +97,7 @@ public class CsvLineParser extends SchemaLineParser {
     private void addCellToLineBySchema(Line line,
                                        CsvSchemaCell schemaCell,
                                        String sCell,
-                                       ParsingEventListener listener,
+                                       LineEventListener listener,
                                        long nLineNumber) throws JSaParException {
 
         try {

@@ -5,7 +5,7 @@ package org.jsapar.schema;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jsapar.CellType;
+import org.jsapar.model.CellType;
 import org.junit.Assert;
 import org.junit.Test;
 

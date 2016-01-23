@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
-import org.jsapar.Cell;
-import org.jsapar.CellType;
+import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
 import org.jsapar.JSaParException;
 import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
-import org.jsapar.output.OutputException;
+import org.jsapar.input.LineEventListener;
+import org.jsapar.compose.ComposeException;
 
 /**
  * Describes how a cell is represented for a fixed with schema.
@@ -169,7 +169,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
     public Cell makeCell(Reader reader,
                boolean trimFillCharacters,
                char fillCharacter,
-               ParsingEventListener listener,
+               LineEventListener listener,
                long nLineNumber) throws IOException, ParseException {
 
         int nOffset = 0;
@@ -248,7 +248,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
      * @param fillCharacter
      *            The fill character to fill empty spaces.
      * @throws IOException
-     * @throws OutputException
+     * @throws ComposeException
      */
     void output(Cell cell, Writer writer, char fillCharacter) throws IOException, JSaParException {
         String sValue = format(cell);
@@ -271,10 +271,10 @@ public class FixedWidthSchemaCell extends SchemaCell {
      * @param format
      *            The format to use.
      * @throws IOException
-     * @throws OutputException
+     * @throws ComposeException
      */
     static void output(String sValue, Writer writer, char fillCharacter, int length, Alignment alignment)
-            throws IOException, OutputException {
+            throws IOException, ComposeException {
         if (sValue.length() == length) {
             writer.write(sValue);
             return;

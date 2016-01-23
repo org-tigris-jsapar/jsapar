@@ -3,7 +3,7 @@ package org.jsapar.schema;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.jsapar.Cell;
+import org.jsapar.model.Cell;
 
 public class CsvSchemaCell extends SchemaCell {
     private final static String replaceString = "\u00A0"; // non-breaking space
@@ -54,7 +54,7 @@ public class CsvSchemaCell extends SchemaCell {
     }
     
     /* (non-Javadoc)
-     * @see org.jsapar.schema.SchemaCell#format(org.jsapar.Cell)
+     * @see org.jsapar.schema.SchemaCell#format(org.jsapar.model.Cell)
      */
     @Override
     public String format(Cell cell) {

@@ -8,13 +8,15 @@ import java.util.List;
 import java.util.Locale;
 
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
+import org.jsapar.Composer;
+import org.jsapar.model.Line;
 import org.jsapar.input.ParseSchema;
-import org.jsapar.output.OutputException;
+import org.jsapar.model.Document;
+import org.jsapar.compose.ComposeException;
 
 /**
  * Abstract base class for all type of jsapar schemas. A schema describes how the buffer should be
- * parsed or how the lines of a {@link org.jsapar.Document} should be written. Usually the parse and output methods are
+ * parsed or how the lines of a {@link Document} should be written. Usually the parse and output methods are
  * called from one of the in, out or io classes.
  * 
  * @see Xml2SchemaBuilder
@@ -43,8 +45,8 @@ public abstract class Schema implements Cloneable, ParseSchema {
     private String lineSeparator = System.getProperty("line.separator");
 
     /**
-     * This method should only be called by a Outputter class. Don't use this directly in your code.
-     * Use a Outputter instead.
+     * This method should only be called by a Composer class. Don't use this directly in your code.
+     * Use a Composer instead.
      * 
      * @param iterator
      * @param writer
@@ -161,8 +163,8 @@ public abstract class Schema implements Cloneable, ParseSchema {
     public abstract SchemaLine getSchemaLine(String lineType);
 
     /**
-     * This method should only be called by a Outputter class. Don't use this directly in your code.
-     * Use a Outputter instead.
+     * This method should only be called by a Composer class. Don't use this directly in your code.
+     * Use a Composer instead.
      * 
      * @param line
      * @param lineNumber
@@ -183,8 +185,8 @@ public abstract class Schema implements Cloneable, ParseSchema {
     }
 
     /**
-     * This method should only be called by a {@link org.jsapar.output.Outputter} class. Don't use this directly in your code.
-     * Use a {@link org.jsapar.output.Outputter} instead.
+     * This method should only be called by a {@link Composer} class. Don't use this directly in your code.
+     * Use a {@link Composer} instead.
      * 
      * This method writes a line according to the schema line, with the same line type, which is
      * found in this schema. 
@@ -206,8 +208,8 @@ public abstract class Schema implements Cloneable, ParseSchema {
     }
 
     /**
-     * This method should only be called by a {@link org.jsapar.output.Outputter} class. Don't use this directly in your code.
-     * Use a {@link org.jsapar.output.Outputter} instead.
+     * This method should only be called by a {@link Composer} class. Don't use this directly in your code.
+     * Use a {@link Composer} instead.
      * 
      * This method writes a line according to the schema line, with the same line type, which is
      * found in this schema. 
@@ -264,9 +266,9 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @param schemaLine
      * @param writer
      * @throws IOException
-     * @throws OutputException
+     * @throws ComposeException
      */
-    public void writeLinePrefix(SchemaLine schemaLine, Writer writer) throws OutputException, IOException {
+    public void writeLinePrefix(SchemaLine schemaLine, Writer writer) throws ComposeException, IOException {
     }
 
     /**

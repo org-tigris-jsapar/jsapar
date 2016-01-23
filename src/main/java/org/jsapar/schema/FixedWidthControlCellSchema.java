@@ -1,19 +1,12 @@
 package org.jsapar.schema;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.io.Writer;
 import java.util.Iterator;
 
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
-import org.jsapar.input.CellParseError;
-import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
-import org.jsapar.input.parse.LineReader;
-import org.jsapar.input.parse.ReaderLineReader;
-import org.jsapar.output.OutputException;
+import org.jsapar.model.Line;
+import org.jsapar.compose.ComposeException;
 import org.jsapar.schema.FixedWidthSchemaCell.Alignment;
 
 /**
@@ -89,7 +82,7 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
     /*
      * (non-Javadoc)
      * 
-     * @see org.jsapar.schema.FixedWidthSchema#output(org.jsapar.Document, java.io.Writer)
+     * @see org.jsapar.schema.FixedWidthSchema#output(org.jsapar.model.Document, java.io.Writer)
      */
     @Override
     public void output(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {
@@ -112,10 +105,10 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
      * 
      * @param writer
      * @param controlValue
-     * @throws OutputException
+     * @throws ComposeException
      * @throws IOException
      */
-    private boolean writeControlCell(Writer writer, String controlValue) throws OutputException, IOException {
+    private boolean writeControlCell(Writer writer, String controlValue) throws ComposeException, IOException {
         if(writeControlCell){
             FixedWidthSchemaCell.output(controlValue, writer, ' ', getControlCellLength(), getControlCellAlignment());
             return true;
@@ -180,7 +173,7 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
 
     
     /* (non-Javadoc)
-     * @see org.jsapar.schema.Schema#outputLine(org.jsapar.schema.SchemaLine, org.jsapar.Line, java.io.Writer)
+     * @see org.jsapar.schema.Schema#outputLine(org.jsapar.schema.SchemaLine, org.jsapar.model.Line, java.io.Writer)
      */
     @Override
     protected void outputLine(SchemaLine schemaLine, Line line, Writer writer) throws IOException, JSaParException {
@@ -209,7 +202,7 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
      * @see org.jsapar.schema.Schema#writeLinePrefix(org.jsapar.schema.SchemaLine, java.io.Writer)
      */
     @Override
-    public void writeLinePrefix(SchemaLine schemaLine, Writer writer) throws OutputException, IOException {
+    public void writeLinePrefix(SchemaLine schemaLine, Writer writer) throws ComposeException, IOException {
         writeControlCell(writer, schemaLine.getLineTypeControlValue());
     }
 

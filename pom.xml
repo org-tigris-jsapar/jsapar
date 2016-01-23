@@ -126,7 +126,7 @@
             <configuration>
               <archive>
                 <manifest>
-                  <mainClass>org.jsapar.io.FilterConverterMain</mainClass>
+                  <mainClass>org.jsapar.FilterConverterMain</mainClass>
                   <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                   <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                 </manifest>

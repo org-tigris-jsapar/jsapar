@@ -15,18 +15,18 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jsapar.BigDecimalCell;
-import org.jsapar.BooleanCell;
-import org.jsapar.DateCell;
-import org.jsapar.Document;
-import org.jsapar.FloatCell;
-import org.jsapar.IntegerCell;
+import org.jsapar.model.BigDecimalCell;
+import org.jsapar.model.BooleanCell;
+import org.jsapar.model.DateCell;
+import org.jsapar.model.Document;
+import org.jsapar.model.FloatCell;
+import org.jsapar.model.IntegerCell;
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
-import org.jsapar.StringCell;
+import org.jsapar.model.Line;
+import org.jsapar.model.StringCell;
 
 /**
- * Uses a collection of java objects to build a org.jsapar.Document.
+ * Uses a collection of java objects to build a org.jsapar.model.Document.
  * @author stejon0
  * 
  */

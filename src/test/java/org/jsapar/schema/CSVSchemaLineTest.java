@@ -10,12 +10,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
-import org.jsapar.StringCell;
-import org.jsapar.input.LineErrorEvent;
-import org.jsapar.input.LineParsedEvent;
-import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
+import org.jsapar.model.Line;
+import org.jsapar.model.StringCell;
 import org.junit.Test;
 
 public class CSVSchemaLineTest  {

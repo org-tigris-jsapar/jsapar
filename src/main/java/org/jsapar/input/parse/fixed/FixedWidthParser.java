@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.jsapar.JSaParException;
-import org.jsapar.input.ParsingEventListener;
+import org.jsapar.input.LineEventListener;
 import org.jsapar.input.parse.LineReader;
 import org.jsapar.input.parse.ReaderLineReader;
 import org.jsapar.input.parse.SchemaParser;
@@ -32,10 +32,10 @@ public class FixedWidthParser implements SchemaParser {
     }
 
     /* (non-Javadoc)
-     * @see org.jsapar.input.parse.SchemaParser#parse(org.jsapar.input.ParsingEventListener)
+     * @see org.jsapar.input.parse.SchemaParser#parse(org.jsapar.input.LineEventListener)
      */
     @Override
-    public void parse(ParsingEventListener listener) throws JSaParException, IOException {
+    public void parse(LineEventListener listener) throws JSaParException, IOException {
         if (schema.getLineSeparator().length() > 0) {
             parseByOccursLinesSeparated(listener);
         } else {
@@ -58,7 +58,7 @@ public class FixedWidthParser implements SchemaParser {
      * @throws org.jsapar.JSaParException
      * @throws java.io.IOException
      */
-    private void parseByOccursFlatFile(ParsingEventListener listener) throws IOException,
+    private void parseByOccursFlatFile(LineEventListener listener) throws IOException,
             JSaParException {
         long nLineNumber = 0;
         for (FixedWidthSchemaLine lineSchema : schema.getFixedWidthSchemaLines()) {
@@ -84,7 +84,7 @@ public class FixedWidthParser implements SchemaParser {
      * @throws IOException
      * @throws JSaParException
      */
-    private void parseByOccursLinesSeparated(ParsingEventListener listener)
+    private void parseByOccursLinesSeparated(LineEventListener listener)
             throws IOException, JSaParException {
         LineReader lineReader = makeLineReader();
 

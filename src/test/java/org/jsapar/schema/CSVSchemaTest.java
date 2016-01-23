@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 
-import org.jsapar.CellType;
-import org.jsapar.Document;
+import org.jsapar.model.CellType;
+import org.jsapar.model.Document;
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
-import org.jsapar.StringCell;
+import org.jsapar.model.Line;
+import org.jsapar.model.StringCell;
 import org.junit.Test;
 
 public class CSVSchemaTest {

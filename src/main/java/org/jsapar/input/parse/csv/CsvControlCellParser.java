@@ -8,7 +8,7 @@ import java.util.Map;
 import org.jsapar.JSaParException;
 import org.jsapar.input.CellParseError;
 import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
+import org.jsapar.input.LineEventListener;
 import org.jsapar.input.parse.BufferedLineReader;
 import org.jsapar.input.parse.SchemaLineParser;
 import org.jsapar.input.parse.SchemaParser;
@@ -29,7 +29,7 @@ public class CsvControlCellParser implements SchemaParser{
 
     
     @Override
-    public void parse(ParsingEventListener listener) throws JSaParException, IOException {
+    public void parse(LineEventListener listener) throws JSaParException, IOException {
         CsvSchemaLine lineSchema = null;
 
         long nLineNumber = 0; // First line is 1

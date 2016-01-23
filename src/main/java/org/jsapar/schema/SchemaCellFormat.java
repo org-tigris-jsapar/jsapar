@@ -3,7 +3,7 @@ package org.jsapar.schema;
 import java.text.Format;
 import java.util.Locale;
 
-import org.jsapar.CellType;
+import org.jsapar.model.CellType;
 
 public class SchemaCellFormat implements Cloneable {
     private CellType cellType = CellType.STRING;

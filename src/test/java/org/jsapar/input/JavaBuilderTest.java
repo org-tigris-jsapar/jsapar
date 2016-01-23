@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.jsapar.DateCell;
-import org.jsapar.Document;
-import org.jsapar.IntegerCell;
+import org.jsapar.model.DateCell;
+import org.jsapar.model.Document;
+import org.jsapar.model.IntegerCell;
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
+import org.jsapar.model.Line;
 import org.jsapar.TstPerson;
 import org.jsapar.TstPostAddress;
 import org.junit.After;

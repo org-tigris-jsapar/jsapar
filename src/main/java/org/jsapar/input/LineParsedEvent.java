@@ -5,7 +5,7 @@ package org.jsapar.input;
 
 import java.util.EventObject;
 
-import org.jsapar.Line;
+import org.jsapar.model.Line;
 
 /**
  * @author stejon0

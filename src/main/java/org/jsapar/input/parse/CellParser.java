@@ -1,12 +1,12 @@
 package org.jsapar.input.parse;
 
-import org.jsapar.Cell;
-import org.jsapar.CellType;
-import org.jsapar.EmptyCell;
+import org.jsapar.input.LineEventListener;
+import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
+import org.jsapar.model.EmptyCell;
 import org.jsapar.input.CellParseError;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
 
@@ -31,7 +31,7 @@ public class CellParser {
      *         value.
      * @throws ParseException
      */
-    public Cell parse(SchemaCell cellSchema, String sValue, ParsingEventListener listener, long nLineNumber) throws ParseException {
+    public Cell parse(SchemaCell cellSchema, String sValue, LineEventListener listener, long nLineNumber) throws ParseException {
         if (sValue.isEmpty()) {
             checkIfMandatory(cellSchema, listener, nLineNumber);
 
@@ -107,7 +107,7 @@ public class CellParser {
      * @param nLineNumber
      * @throws ParseException
      */
-    protected void checkIfMandatory(SchemaCell cellSchema, ParsingEventListener listener, long nLineNumber) throws ParseException {
+    protected void checkIfMandatory(SchemaCell cellSchema, LineEventListener listener, long nLineNumber) throws ParseException {
         if (cellSchema.isMandatory()) {
             CellParseError e = new CellParseError(nLineNumber, cellSchema.getName(), EMPTY_STRING, cellSchema.getCellFormat(),
                     "Mandatory cell requires a value.");

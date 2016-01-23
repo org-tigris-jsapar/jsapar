@@ -17,16 +17,13 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.jsapar.Cell;
-import org.jsapar.CellType;
-import org.jsapar.DateCell;
+import org.jsapar.input.*;
+import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
+import org.jsapar.model.DateCell;
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
-import org.jsapar.input.CellParseError;
-import org.jsapar.input.LineErrorEvent;
-import org.jsapar.input.LineParsedEvent;
-import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
+import org.jsapar.model.Line;
+import org.jsapar.input.LineEventListener;
 import org.jsapar.input.parse.SchemaParser;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.Xml2SchemaBuilder;
@@ -55,7 +52,7 @@ public class XmlParser implements SchemaParser {
     }
 
     @Override
-    public void parse(ParsingEventListener listener)
+    public void parse(LineEventListener listener)
 	    throws IOException, JSaParException {
 
 	String schemaFileName = "/xml/schema/XMLDocumentFormat.xsd";
@@ -101,10 +98,10 @@ public class XmlParser implements SchemaParser {
 	private String currentCellName;
 	private Cell currentCell;
 	private boolean cellStarted = false;
-	private ParsingEventListener listener;
+	private LineEventListener listener;
 	private long currentLineNumber = 1;
 
-	public JsaparSAXHandler(ParsingEventListener listener) {
+	public JsaparSAXHandler(LineEventListener listener) {
 	    this.listener = listener;
 	}
 

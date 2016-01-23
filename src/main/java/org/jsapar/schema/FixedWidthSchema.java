@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
+import org.jsapar.model.Line;
 import org.jsapar.input.ParseSchema;
 
 /**
@@ -71,7 +71,7 @@ public class FixedWidthSchema extends Schema implements ParseSchema {
     /*
      * (non-Javadoc)
      * 
-     * @see org.jsapar.schema.Schema#output(org.jsapar.Document, java.io.Writer)
+     * @see org.jsapar.schema.Schema#output(org.jsapar.model.Document, java.io.Writer)
      */
     @Override
     public void output(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {

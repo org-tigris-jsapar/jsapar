@@ -7,11 +7,10 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.jsapar.Cell;
+import org.jsapar.model.Cell;
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
-import org.jsapar.StringCell;
-import org.jsapar.input.ParsingEventListener;
+import org.jsapar.model.Line;
+import org.jsapar.model.StringCell;
 import org.junit.Test;
 
 public class SchemaLineTest {

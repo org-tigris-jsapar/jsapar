@@ -8,15 +8,10 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import org.jsapar.Document;
+import org.jsapar.model.Document;
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
-import org.jsapar.StringCell;
-import org.jsapar.input.LineErrorEvent;
-import org.jsapar.input.LineParsedEvent;
-import org.jsapar.input.ParseException;
-import org.jsapar.input.ParseSchema;
-import org.jsapar.input.ParsingEventListener;
+import org.jsapar.model.Line;
+import org.jsapar.model.StringCell;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +38,7 @@ public class CsvControlCellSchemaTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.CsvControlCellSchema#output(org.jsapar.Document, java.io.Writer)} .
+     * {@link org.jsapar.schema.CsvControlCellSchema#output(Document, java.io.Writer)} .
      * 
      * @throws IOException
      * @throws JSaParException
@@ -94,7 +89,7 @@ public class CsvControlCellSchemaTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.CsvControlCellSchema#output(org.jsapar.Document, java.io.Writer)} .
+     * {@link org.jsapar.schema.CsvControlCellSchema#output(Document, java.io.Writer)} .
      * 
      * @throws IOException
      * @throws JSaParException
@@ -125,7 +120,7 @@ public class CsvControlCellSchemaTest {
     }    
     /**
      * Test method for
-     * {@link org.jsapar.schema.CsvControlCellSchema#output(org.jsapar.Document, java.io.Writer)} .
+     * {@link org.jsapar.schema.CsvControlCellSchema#output(Document, java.io.Writer)} .
      * 
      * @throws IOException
      * @throws JSaParException

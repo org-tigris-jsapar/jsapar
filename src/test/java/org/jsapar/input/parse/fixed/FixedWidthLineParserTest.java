@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.jsapar.CellType;
+import org.jsapar.input.LineEventListener;
+import org.jsapar.model.CellType;
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
+import org.jsapar.model.Line;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 import org.jsapar.schema.SchemaCellFormat;
@@ -47,7 +47,7 @@ public class FixedWidthLineParserTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthLineParser parser = new FixedWidthLineParser(reader, schemaLine); 
-        boolean rc = parser.parse(1, new ParsingEventListener() {
+        boolean rc = parser.parse(1, new LineEventListener() {
 
             @Override
             public void lineErrorEvent(LineErrorEvent event) throws ParseException {
@@ -85,7 +85,7 @@ public class FixedWidthLineParserTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthLineParser parser = new FixedWidthLineParser(reader, schemaLine); 
-        boolean rc = parser.parse(1, new ParsingEventListener() {
+        boolean rc = parser.parse(1, new LineEventListener() {
 
             @Override
             public void lineErrorEvent(LineErrorEvent event) throws ParseException {
@@ -122,7 +122,7 @@ public class FixedWidthLineParserTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthLineParser parser = new FixedWidthLineParser(reader, schemaLine); 
-        boolean rc = parser.parse(1, new ParsingEventListener() {
+        boolean rc = parser.parse(1, new LineEventListener() {
 
             @Override
             public void lineErrorEvent(LineErrorEvent event) throws ParseException {
@@ -168,7 +168,7 @@ public class FixedWidthLineParserTest {
     }
     
     
-    private class NullParsingEventListener implements ParsingEventListener {
+    private class NullParsingEventListener implements LineEventListener {
 
         @Override
         public void lineErrorEvent(LineErrorEvent event) throws ParseException {

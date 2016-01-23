@@ -1,17 +1,12 @@
 package org.jsapar.schema;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
 
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
-import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
-import org.jsapar.input.parse.LineReader;
-import org.jsapar.input.parse.ReaderLineReader;
+import org.jsapar.model.Line;
 
 /**
  * Defines a schema for a fixed position buffer. Each cell is defined by a fixed number of
@@ -178,7 +173,7 @@ public class CsvSchema extends Schema {
     /*
      * (non-Javadoc)
      * 
-     * @see org.jsapar.schema.Schema#outputLine(org.jsapar.Line, long, java.io.Writer)
+     * @see org.jsapar.schema.Schema#outputLine(org.jsapar.model.Line, long, java.io.Writer)
      */
     @Override
     public boolean outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {

@@ -7,19 +7,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 
-import org.jsapar.Document;
+import org.jsapar.model.Document;
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
-import org.jsapar.StringCell;
-import org.jsapar.input.LineErrorEvent;
-import org.jsapar.input.LineParsedEvent;
-import org.jsapar.input.ParseException;
-import org.jsapar.input.ParseSchema;
-import org.jsapar.input.ParsingEventListener;
+import org.jsapar.model.Line;
+import org.jsapar.model.StringCell;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -46,7 +39,7 @@ public class FixedWidthControlCellSchemaTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.schema.FixedWidthControlCellSchema#output(org.jsapar.Document, java.io.Writer)}.
+     * Test method for {@link org.jsapar.schema.FixedWidthControlCellSchema#output(Document, java.io.Writer)}.
      * @throws JSaParException 
      * @throws IOException 
      */
@@ -89,7 +82,7 @@ public class FixedWidthControlCellSchemaTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.schema.FixedWidthControlCellSchema#output(org.jsapar.Document, java.io.Writer)}.
+     * Test method for {@link org.jsapar.schema.FixedWidthControlCellSchema#output(Document, java.io.Writer)}.
      * @throws JSaParException 
      * @throws IOException 
      */

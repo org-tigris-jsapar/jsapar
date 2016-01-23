@@ -3,13 +3,13 @@ package org.jsapar.schema;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import org.jsapar.Cell;
-import org.jsapar.CellType;
-import org.jsapar.EmptyCell;
+import org.jsapar.input.LineEventListener;
+import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
+import org.jsapar.model.EmptyCell;
 import org.jsapar.input.CellParseError;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
 
 public abstract class SchemaCell implements Cloneable {
 
@@ -117,7 +117,7 @@ public abstract class SchemaCell implements Cloneable {
      *         value.
      * @throws ParseException
      */
-    public Cell makeCell(String sValue, ParsingEventListener listener, long nLineNumber) throws ParseException {
+    public Cell makeCell(String sValue, LineEventListener listener, long nLineNumber) throws ParseException {
         if (sValue.isEmpty()) {
             checkIfMandatory(listener, nLineNumber);
 
@@ -137,7 +137,7 @@ public abstract class SchemaCell implements Cloneable {
      * @param nLineNumber
      * @throws ParseException
      */
-    public void checkIfMandatory(ParsingEventListener listener, long nLineNumber) throws ParseException {
+    public void checkIfMandatory(LineEventListener listener, long nLineNumber) throws ParseException {
         if (isMandatory()) {
             CellParseError e = new CellParseError(nLineNumber, getName(), EMPTY_STRING, getCellFormat(),
                     "Mandatory cell requires a value.");

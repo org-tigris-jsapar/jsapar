@@ -2,8 +2,9 @@ package org.jsapar.input;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jsapar.Document;
-import org.jsapar.IntegerCell;
+import org.jsapar.Parser;
+import org.jsapar.model.Document;
+import org.jsapar.model.IntegerCell;
 import org.jsapar.JSaParException;
 import org.jsapar.schema.XmlSchema;
 import org.junit.Before;

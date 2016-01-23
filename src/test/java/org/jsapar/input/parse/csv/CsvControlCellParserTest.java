@@ -4,13 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
-import org.jsapar.Document;
+import org.jsapar.input.LineEventListener;
+import org.jsapar.model.Document;
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
+import org.jsapar.model.Line;
 import org.jsapar.input.LineErrorEvent;
 import org.jsapar.input.LineParsedEvent;
 import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
 import org.jsapar.schema.CsvControlCellSchema;
 import org.jsapar.schema.CsvSchemaLine;
 import org.junit.After;
@@ -29,7 +29,7 @@ public class CsvControlCellParserTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.CsvControlCellSchema#parse(java.io.Reader, org.jsapar.input.ParsingEventListener)}
+     * {@link org.jsapar.schema.CsvControlCellSchema#parse(java.io.Reader, LineEventListener)}
      * .
      * 
      * @throws IOException
@@ -67,10 +67,10 @@ public class CsvControlCellParserTest {
 
     private class DocumentBuilder {
         private Document document = new Document();
-        private ParsingEventListener listener;
+        private LineEventListener listener;
 
         public DocumentBuilder() {
-            listener = new ParsingEventListener() {
+            listener = new LineEventListener() {
 
                 @Override
                 public void lineErrorEvent(LineErrorEvent event) throws ParseException {

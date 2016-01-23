@@ -18,9 +18,9 @@ import java.util.List;
 import org.jsapar.input.CellParseError;
 import org.jsapar.input.JavaBuilder;
 import org.jsapar.input.ParseSchema;
-import org.jsapar.input.Parser;
-import org.jsapar.io.Converter;
-import org.jsapar.output.Outputter;
+import org.jsapar.model.BooleanCell;
+import org.jsapar.model.Document;
+import org.jsapar.model.IntegerCell;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.jsapar.schema.XmlSchema;
@@ -228,14 +228,14 @@ public class JSaParExamplesTest {
         
         Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-        Outputter outputter = new Outputter(xmlBuilder.build(schemaReader));
+        Composer composer = new Composer(xmlBuilder.build(schemaReader));
 
         JavaBuilder javaBuilder=new JavaBuilder();
         Document doc = javaBuilder.build(people);
         System.out.println("The document:" + doc);
         
         StringWriter writer = new StringWriter();
-        outputter.output(doc, writer);
+        composer.output(doc, writer);
         
         String result=writer.toString();
         String[] resultLines = result.split("\r\n");

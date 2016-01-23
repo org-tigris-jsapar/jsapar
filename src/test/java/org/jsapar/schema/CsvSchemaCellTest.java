@@ -8,12 +8,12 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.Locale;
 
-import org.jsapar.BigDecimalCell;
-import org.jsapar.BooleanCell;
-import org.jsapar.Cell;
-import org.jsapar.CellType;
-import org.jsapar.IntegerCell;
-import org.jsapar.StringCell;
+import org.jsapar.model.BigDecimalCell;
+import org.jsapar.model.BooleanCell;
+import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
+import org.jsapar.model.IntegerCell;
+import org.jsapar.model.StringCell;
 import org.junit.Test;
 
 

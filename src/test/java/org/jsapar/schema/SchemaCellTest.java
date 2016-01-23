@@ -7,12 +7,12 @@ import static org.junit.Assert.*;
 
 import java.util.Locale;
 
-import org.jsapar.Cell;
-import org.jsapar.CellType;
-import org.jsapar.EmptyCell;
-import org.jsapar.FloatCell;
-import org.jsapar.IntegerCell;
-import org.jsapar.StringCell;
+import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
+import org.jsapar.model.EmptyCell;
+import org.jsapar.model.FloatCell;
+import org.jsapar.model.IntegerCell;
+import org.jsapar.model.StringCell;
 import org.jsapar.input.ParseException;
 import org.junit.After;
 import org.junit.Before;
@@ -347,7 +347,7 @@ public class SchemaCellTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.SchemaCell#makeCell(org.jsapar.Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
+     * {@link org.jsapar.schema.SchemaCell#makeCell(Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
      * .
      * 
      * @throws java.text.ParseException
@@ -363,7 +363,7 @@ public class SchemaCellTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.SchemaCell#makeCell(org.jsapar.Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
+     * {@link org.jsapar.schema.SchemaCell#makeCell(Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
      * .
      */
     @Test
@@ -381,7 +381,7 @@ public class SchemaCellTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.SchemaCell#makeCell(org.jsapar.Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
+     * {@link org.jsapar.schema.SchemaCell#makeCell(Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
      * .
      * 
      * @throws java.text.ParseException
@@ -396,7 +396,7 @@ public class SchemaCellTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.SchemaCell#makeCell(org.jsapar.Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
+     * {@link org.jsapar.schema.SchemaCell#makeCell(Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
      * .
      * 
      * @throws java.text.ParseException
@@ -415,7 +415,7 @@ public class SchemaCellTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.SchemaCell#makeCell(org.jsapar.Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
+     * {@link org.jsapar.schema.SchemaCell#makeCell(Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
      * .
      */
     @Test
@@ -434,7 +434,7 @@ public class SchemaCellTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.SchemaCell#makeCell(org.jsapar.Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
+     * {@link org.jsapar.schema.SchemaCell#makeCell(Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
      * .
      * 
      * @throws java.text.ParseException

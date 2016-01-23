@@ -11,8 +11,8 @@ import java.util.Map;
 
 import org.jsapar.JSaParException;
 import org.jsapar.input.CellParseError;
+import org.jsapar.input.LineEventListener;
 import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
 import org.jsapar.input.parse.BufferedLineReader;
 import org.jsapar.input.parse.LineReader;
 import org.jsapar.input.parse.SchemaLineParser;
@@ -40,10 +40,10 @@ public class FixedWidthControlCellParser implements SchemaParser {
     }
 
     /* (non-Javadoc)
-     * @see org.jsapar.input.parse.SchemaParser#parse(org.jsapar.input.ParsingEventListener)
+     * @see org.jsapar.input.parse.SchemaParser#parse(org.jsapar.input.LineEventListener)
      */
     @Override
-    public void parse(ParsingEventListener listener) throws JSaParException, IOException {
+    public void parse(LineEventListener listener) throws JSaParException, IOException {
         if (schema.getLineSeparator().length() > 0) {
             parseByOccursLinesSeparated(listener);
         } else {
@@ -51,7 +51,7 @@ public class FixedWidthControlCellParser implements SchemaParser {
         }
     }
 
-    private void parseByOccursFlatFile(ParsingEventListener listener) throws IOException,
+    private void parseByOccursFlatFile(LineEventListener listener) throws IOException,
             JSaParException {
 
         long nLineNumber = 0; // First line is 1
@@ -84,7 +84,7 @@ public class FixedWidthControlCellParser implements SchemaParser {
     }
 
 
-    private void parseByOccursLinesSeparated(ParsingEventListener listener) throws IOException,
+    private void parseByOccursLinesSeparated(LineEventListener listener) throws IOException,
             JSaParException {
         long nLineNumber = 0; // First line is 1
         BufferedLineReader lineReader = new BufferedLineReader(schema.getLineSeparator(), reader);

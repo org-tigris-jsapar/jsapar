@@ -5,7 +5,7 @@ import java.io.Reader;
 
 import org.jsapar.JSaParException;
 import org.jsapar.input.ParseException;
-import org.jsapar.input.ParsingEventListener;
+import org.jsapar.input.LineEventListener;
 import org.jsapar.input.parse.LineReader;
 import org.jsapar.input.parse.ReaderLineReader;
 import org.jsapar.input.parse.SchemaParser;
@@ -26,7 +26,7 @@ public class CsvParser implements SchemaParser{
     
 
     @Override
-    public void parse(ParsingEventListener listener) throws JSaParException, IOException {
+    public void parse(LineEventListener listener) throws JSaParException, IOException {
         long nLineNumber = 0; // First line is 1
         for (CsvSchemaLine lineSchema : schema.getCsvSchemaLines()) {
 
@@ -106,7 +106,7 @@ public class CsvParser implements SchemaParser{
      */
     private long parseLinesByOccurs(CsvLineParser lineParser,
                                     long nLineNumber,
-                                    ParsingEventListener listener) throws IOException, JSaParException {
+                                    LineEventListener listener) throws IOException, JSaParException {
         long nStartLine = nLineNumber;
         for (int i = 0; i < lineParser.getLineSchema().getOccurs(); i++) {
             nLineNumber++;

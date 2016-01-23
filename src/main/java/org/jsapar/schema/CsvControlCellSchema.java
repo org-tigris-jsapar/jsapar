@@ -5,8 +5,8 @@ import java.io.Writer;
 import java.util.Iterator;
 
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
-import org.jsapar.output.OutputException;
+import org.jsapar.model.Line;
+import org.jsapar.compose.ComposeException;
 
 /**
  * Defines a schema for a fixed position buffer. Each cell is defined by a fixed number of
@@ -46,7 +46,7 @@ public class CsvControlCellSchema extends CsvSchema {
     /*
      * (non-Javadoc)
      * 
-     * @see org.jsapar.schema.CsvSchema#output(org.jsapar.Document, java.io.Writer)
+     * @see org.jsapar.schema.CsvSchema#output(org.jsapar.model.Document, java.io.Writer)
      */
     @Override
     public void output(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {
@@ -72,10 +72,10 @@ public class CsvControlCellSchema extends CsvSchema {
      * 
      * @param writer
      * @param controlValue
-     * @throws OutputException
+     * @throws ComposeException
      * @throws IOException
      */
-    private void writeControlCell(Writer writer, String controlValue) throws OutputException, IOException {
+    private void writeControlCell(Writer writer, String controlValue) throws ComposeException, IOException {
         if (writeControlCell) {
             writer.append(controlValue);
             writer.append(this.getControlCellSeparator());
@@ -127,7 +127,7 @@ public class CsvControlCellSchema extends CsvSchema {
     /*
      * (non-Javadoc)
      * 
-     * @see org.jsapar.schema.Schema#output(org.jsapar.Line, int, java.io.Writer)
+     * @see org.jsapar.schema.Schema#output(org.jsapar.model.Line, int, java.io.Writer)
      */
     @Override
     public boolean outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
@@ -144,7 +144,7 @@ public class CsvControlCellSchema extends CsvSchema {
     
 
     /* (non-Javadoc)
-     * @see org.jsapar.schema.Schema#outputLine(org.jsapar.schema.SchemaLine, org.jsapar.Line, java.io.Writer)
+     * @see org.jsapar.schema.Schema#outputLine(org.jsapar.schema.SchemaLine, org.jsapar.model.Line, java.io.Writer)
      */
     @Override
     protected void outputLine(SchemaLine schemaLine, Line line, Writer writer) throws IOException, JSaParException {
@@ -171,7 +171,7 @@ public class CsvControlCellSchema extends CsvSchema {
      * @see org.jsapar.schema.Schema#writeLinePrefix(org.jsapar.schema.SchemaLine, java.io.Writer)
      */
     @Override
-    public void writeLinePrefix(SchemaLine schemaLine, Writer writer) throws OutputException, IOException {
+    public void writeLinePrefix(SchemaLine schemaLine, Writer writer) throws ComposeException, IOException {
         writeControlCell(writer, schemaLine.getLineTypeControlValue());
     }
     

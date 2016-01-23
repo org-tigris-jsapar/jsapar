@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 
-import org.jsapar.Cell;
-import org.jsapar.CellType;
+import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
-import org.jsapar.StringCell;
+import org.jsapar.model.Line;
+import org.jsapar.model.StringCell;
 import org.jsapar.input.parse.LineReader;
 import org.jsapar.input.parse.csv.CellSplitter;
 import org.jsapar.input.parse.csv.QuotedCellSplitter;
@@ -113,7 +113,7 @@ public class CsvSchemaLine extends SchemaLine {
     /*
      * Writes the cells of the line to the writer. Inserts cell separator between cells. (non-Javadoc)
      * 
-     * @see org.jsapar.schema.SchemaLine#output(org.jsapar.Line, java.io.Writer)
+     * @see org.jsapar.schema.SchemaLine#output(org.jsapar.model.Line, java.io.Writer)
      */
     @Override
     public void output(Line line, Writer writer) throws IOException {

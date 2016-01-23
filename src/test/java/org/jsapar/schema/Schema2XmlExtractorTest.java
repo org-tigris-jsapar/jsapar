@@ -10,7 +10,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import org.jsapar.StringCell;
+import org.jsapar.model.StringCell;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

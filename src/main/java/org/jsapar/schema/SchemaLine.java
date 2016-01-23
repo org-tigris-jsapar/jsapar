@@ -3,11 +3,11 @@ package org.jsapar.schema;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.jsapar.Cell;
+import org.jsapar.model.Cell;
 import org.jsapar.JSaParException;
-import org.jsapar.Line;
+import org.jsapar.model.Line;
 import org.jsapar.input.LineParsedEvent;
-import org.jsapar.input.ParsingEventListener;
+import org.jsapar.input.LineEventListener;
 
 public abstract class SchemaLine implements Cloneable {
     private static final int    OCCURS_INFINITE      = Integer.MAX_VALUE;
@@ -266,7 +266,7 @@ public abstract class SchemaLine implements Cloneable {
      * @return Returns true (always).
      * @throws JSaParException
      */
-    protected boolean handleEmptyLine(long lineNumber, ParsingEventListener listener) throws JSaParException {
+    protected boolean handleEmptyLine(long lineNumber, LineEventListener listener) throws JSaParException {
         if (!isIgnoreReadEmptyLines()) {
             listener.lineParsedEvent(new LineParsedEvent(this, new Line(getLineType()), lineNumber));
         }
