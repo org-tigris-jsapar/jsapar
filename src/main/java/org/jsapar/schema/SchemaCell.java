@@ -29,8 +29,6 @@ public abstract class SchemaCell implements Cloneable {
     private Locale                        locale                = Locale.getDefault();
     private Pattern                       emptyPattern          = null;
 
-    public SchemaCell() {
-    }
 
     public SchemaCell(String sName) {
         this(sName, CELL_FORMAT_PROTOTYPE);

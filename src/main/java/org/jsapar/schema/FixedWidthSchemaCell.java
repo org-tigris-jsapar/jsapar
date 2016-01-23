@@ -140,15 +140,6 @@ public class FixedWidthSchemaCell extends SchemaCell {
         this.length = nLength;
     }
 
-    /**
-     * Creates a fixed with schema cell with specified length.
-     * 
-     * @param nLength
-     *            The length of the cell
-     */
-    public FixedWidthSchemaCell(int nLength) {
-        this.length = nLength;
-    }
 
     /**
      * Builds a Cell from a reader input.

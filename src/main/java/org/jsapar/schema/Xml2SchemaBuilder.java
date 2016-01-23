@@ -277,8 +277,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     private FixedWidthSchemaCell buildFixedWidthSchemaCell(Element xmlSchemaCell, Locale locale) throws SchemaException {
 
         int nLength = getIntValue(getMandatoryAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_CELL_LENGTH));
+        String sName = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_NAME);
 
-        FixedWidthSchemaCell cell = new FixedWidthSchemaCell(nLength);
+        FixedWidthSchemaCell cell = new FixedWidthSchemaCell(sName, nLength);
 
         Node xmlAllignment = xmlSchemaCell.getAttributeNode(ATTRIB_FW_SCHEMA_CELL_ALIGNMENT);
         if (xmlAllignment == null || getStringValue(xmlAllignment).equals("left"))
@@ -397,7 +398,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      */
     private CsvSchemaCell buildCsvSchemaCell(Element xmlSchemaCell, Locale locale) throws SchemaException {
 
-        CsvSchemaCell cell = new CsvSchemaCell();
+        String sName = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_NAME);
+        CsvSchemaCell cell = new CsvSchemaCell(sName);
         Node xmlMaxLength = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_MAX_LENGTH);
         if (xmlMaxLength != null)
             cell.setMaxLength(getIntValue(xmlMaxLength));
@@ -484,9 +486,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      */
     private void assignSchemaCellBase(SchemaCell cell, Element xmlSchemaCell, Locale locale) throws SchemaException {
         try {
-            String sName = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_NAME);
-            if (sName != null)
-                cell.setName(sName);
 
             Node xmlIgnoreRead = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_IGNOREREAD);
             if (xmlIgnoreRead != null)

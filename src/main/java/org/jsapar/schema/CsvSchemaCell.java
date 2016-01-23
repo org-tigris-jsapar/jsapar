@@ -23,10 +23,6 @@ public class CsvSchemaCell extends SchemaCell {
         super(sName, cellFormat);
     }
     
-    public CsvSchemaCell() {
-        super();
-    }
-
     /**
      * Writes the cell to the supplied writer, including quote character if necessary.
      * @param cell

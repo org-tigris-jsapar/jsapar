@@ -51,11 +51,10 @@ public class SchemaLineTest {
         Cell first = new StringCell("First", "one");
         line.addCell(first);
 
-        // Cell wiht no name
         Cell second = new StringCell("two");
         line.addCell(second);
 
-        schemaCell = new SchemaCell() {};
+        schemaCell = new SchemaCell("two") {};
         
         Cell c = instance.doFindCell(line, schemaCell, 1, false);
         assertEquals(second, c);
