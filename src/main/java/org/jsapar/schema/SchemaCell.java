@@ -17,7 +17,7 @@ public abstract class SchemaCell implements Cloneable {
 
     private final static SchemaCellFormat CELL_FORMAT_PROTOTYPE = new SchemaCellFormat(CellType.STRING);
 
-    private String                        name;
+    private final String                  name;
     private SchemaCellFormat              cellFormat            = CELL_FORMAT_PROTOTYPE;
     private boolean                       ignoreRead            = false;
     private boolean                       ignoreWrite = false;
@@ -35,6 +35,8 @@ public abstract class SchemaCell implements Cloneable {
     }
 
     public SchemaCell(String sName, SchemaCellFormat cellFormat) {
+        if(sName == null || sName.isEmpty())
+            throw new IllegalArgumentException("SchemaCell.name cannot be null or empty.");
         this.cellFormat = cellFormat;
         this.name = sName;
     }
@@ -80,13 +82,6 @@ public abstract class SchemaCell implements Cloneable {
         return name;
     }
 
-    /**
-     * @param name
-     *            the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
 
     /**
      * @return the cellFormat
@@ -120,9 +115,9 @@ public abstract class SchemaCell implements Cloneable {
             checkIfMandatory(listener, nLineNumber);
 
             if (defaultCell != null) {
-                return defaultCell.makeCopy(getName());
+                return defaultCell.makeCopy(this.name);
             } else {
-                return new EmptyCell(getName(), this.cellFormat.getCellType());
+                return new EmptyCell(this.name, this.cellFormat.getCellType());
             }
         }
         return makeCell(sValue);
@@ -137,7 +132,7 @@ public abstract class SchemaCell implements Cloneable {
      */
     public void checkIfMandatory(LineEventListener listener, long nLineNumber) throws ParseException {
         if (isMandatory()) {
-            CellParseError e = new CellParseError(nLineNumber, getName(), EMPTY_STRING, getCellFormat(),
+            CellParseError e = new CellParseError(nLineNumber, this.name, EMPTY_STRING, getCellFormat(),
                     "Mandatory cell requires a value.");
             listener.lineErrorEvent(new LineErrorEvent(this, e));
         }
@@ -158,9 +153,9 @@ public abstract class SchemaCell implements Cloneable {
         // If the cell is empty, check if default value exists.
         if (sValue.length() <= 0 || (emptyPattern != null && emptyPattern.matcher(sValue).matches())) {
             if (defaultCell != null) {
-                return defaultCell.makeCopy(getName());
+                return defaultCell.makeCopy(this.name);
             } else {
-                return new EmptyCell(getName(), this.cellFormat.getCellType());
+                return new EmptyCell(this.name, this.cellFormat.getCellType());
             }
         }
 
@@ -168,15 +163,15 @@ public abstract class SchemaCell implements Cloneable {
             CellType cellType = this.cellFormat.getCellType();
             Cell cell;
             if (getCellFormat().getFormat() != null)
-                cell = SchemaCell.makeCell(cellType, getName(), sValue, this.getCellFormat().getFormat());
+                cell = SchemaCell.makeCell(cellType, this.name, sValue, this.getCellFormat().getFormat());
             else
-                cell = SchemaCell.makeCell(cellType, getName(), sValue, getLocale());
+                cell = SchemaCell.makeCell(cellType, this.name, sValue, getLocale());
             validateRange(cell);
             return cell;
         } catch (SchemaException e) {
-            throw new ParseException(new CellParseError(getName(), sValue, getCellFormat(), e.getMessage()), e);
+            throw new ParseException(new CellParseError(this.name, sValue, getCellFormat(), e.getMessage()), e);
         } catch (java.text.ParseException e) {
-            throw new ParseException(new CellParseError(getName(), sValue, getCellFormat(), e.getMessage()), e);
+            throw new ParseException(new CellParseError(this.name, sValue, getCellFormat(), e.getMessage()), e);
         }
 
     }
@@ -189,8 +184,7 @@ public abstract class SchemaCell implements Cloneable {
      * @param format
      * @return A cell object that has been parsed from the supplied sValue parameter according to
      *         the supplied format.
-     * @throws ParseE
-     *             , java.lang.Comparable, java.lang.Comparable, java.lang.Comparablexception
+     * @throws java.lang.Comparable, java.lang.Comparable, java.lang.Comparablexception
      * @throws java.text.ParseException
      * @throws SchemaException
      */
@@ -206,8 +200,7 @@ public abstract class SchemaCell implements Cloneable {
      * @param locale
      * @return A cell object that has been parsed from the supplied sValue parameter according to
      *         the default format for supplied type and locale.
-     * @throws ParseE
-     *             , java.lang.Comparable, java.lang.Comparable, java.lang.Comparablexception
+     * @throws java.lang.Comparable, java.lang.Comparable, java.lang.Comparablexception
      * @throws java.text.ParseException
      * @throws SchemaException
      */
@@ -369,7 +362,7 @@ public abstract class SchemaCell implements Cloneable {
      *            missing. The name of the cell has no importance, it will not be used.
      */
     public void setDefaultCell(Cell defaultCell) {
-        this.defaultCell = defaultCell.makeCopy(getName());
+        this.defaultCell = defaultCell.makeCopy(this.name);
         this.defaultValue = getDefaultCell().getStringValue(getCellFormat().getFormat());
     }
 
@@ -426,52 +419,22 @@ public abstract class SchemaCell implements Cloneable {
         return value;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((cellFormat == null) ? 0 : cellFormat.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof SchemaCell))
+            return false;
+
+        SchemaCell that = (SchemaCell) o;
+
+        return name.equals(that.name);
+
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof SchemaCell)) {
-            return false;
-        }
-        SchemaCell other = (SchemaCell) obj;
-        if (cellFormat == null) {
-            if (other.cellFormat != null) {
-                return false;
-            }
-        } else if (!cellFormat.equals(other.cellFormat)) {
-            return false;
-        }
-        if (name == null) {
-            if (other.name != null) {
-                return false;
-            }
-        } else if (!name.equals(other.name)) {
-            return false;
-        }
-        return true;
+    public int hashCode() {
+        return name.hashCode();
     }
 
     /**
@@ -505,9 +468,9 @@ public abstract class SchemaCell implements Cloneable {
      * @param emptyPattern
      *            the regexp pattern string that will be matched against to determine if this cell is empty
      */
-    public void setEmptyPattern(String sEmptyPattern) {
-        if(sEmptyPattern != null && !sEmptyPattern.isEmpty())
-            this.emptyPattern = Pattern.compile(sEmptyPattern);
+    public void setEmptyPattern(String emptyPattern) {
+        if(emptyPattern != null && !emptyPattern.isEmpty())
+            this.emptyPattern = Pattern.compile(emptyPattern);
     }
     
 }

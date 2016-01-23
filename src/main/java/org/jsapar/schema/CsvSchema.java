@@ -38,71 +38,7 @@ public class CsvSchema extends Schema {
         this.schemaLines.add(schemaLine);
     }
 
-    /**
-     * Builds a CsvSchemaLine from a header line.
-     * 
-     * @param masterLineSchema The base to use while creating csv schema. May add formatting, defaults etc.
-     * @param sHeaderLine The header line to use while building the schema.
-     * @return A CsvSchemaLine created from the header line.
-     * @throws CloneNotSupportedException
-     * @throws JSaParException 
-     * @throws IOException 
-     */
-    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, String sHeaderLine)
-            throws CloneNotSupportedException, IOException, JSaParException {
 
-        CsvSchemaLine schemaLine = masterLineSchema.clone();
-        schemaLine.getSchemaCells().clear();
-
-        schemaLine.setOccursInfinitely();
-
-        sHeaderLine = removeLeadingByteOrderMark(sHeaderLine);
-        
-        String[] asCells = schemaLine.makeCellSplitter(null).split(sHeaderLine);
-        for (String sCell : asCells) {
-            CsvSchemaCell masterCell = masterLineSchema.getCsvSchemaCell(sCell);
-            if(masterCell != null)
-                schemaLine.addSchemaCell(masterCell);
-            else
-                schemaLine.addSchemaCell(new CsvSchemaCell(sCell));
-        }
-        addDefaultValuesFromMaster(schemaLine, masterLineSchema);
-        return schemaLine;
-    }
-
-    /**
-     * Normally the byte order mark should be removed from the input buffer before parsing but in case this is forgotten
-     * we do it again because it is so hard to trace the error if it is not done at all when using the header line as a
-     * schema.
-     * 
-     * @param sHeaderLine
-     * @return
-     */
-    private String removeLeadingByteOrderMark(String sHeaderLine) {
-        if (sHeaderLine.startsWith(UTF8_BOM_STR))
-            return sHeaderLine.substring(UTF8_BOM_STR.length());
-        else
-            return sHeaderLine;
-    }
-
-    /**
-     * Add all cells that has a default value in the master schema last on the line with
-     * ignoreRead=true so that the default values are always set.
-     * 
-     * @param schemaLine
-     * @param masterLineSchema
-     */
-    private void addDefaultValuesFromMaster(CsvSchemaLine schemaLine, CsvSchemaLine masterLineSchema) {
-        for(CsvSchemaCell cell : masterLineSchema.getSchemaCells()){
-            if(cell.getDefaultCell() != null){
-                if(schemaLine.getCsvSchemaCell(cell.getName())==null){
-                    CsvSchemaCell defaultCell = cell.clone();
-                    defaultCell.setIgnoreRead(true);
-                    schemaLine.addSchemaCell(defaultCell);
-                }
-            }
-        }
-    }
 
     @Override
     public void output(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {

@@ -22,7 +22,7 @@ import org.jsapar.input.parse.csv.SimpleCellSplitter;
  */
 public class CsvSchemaLine extends SchemaLine {
 
-    private java.util.List<CsvSchemaCell> schemaCells       = new java.util.ArrayList<CsvSchemaCell>();
+    private java.util.List<CsvSchemaCell> schemaCells       = new java.util.ArrayList<>();
     private boolean                       firstLineAsSchema = false;
 
     private String                        cellSeparator     = ";";
@@ -79,10 +79,8 @@ public class CsvSchemaLine extends SchemaLine {
 
 
     /**
-     * @param sLine
+     * @param lineReader
      * @return An array of all cells found on the line.
-     * @throws JSaParException 
-     * @throws IOException 
      */
     CellSplitter makeCellSplitter(LineReader lineReader) {
         if (quoteChar == 0)
