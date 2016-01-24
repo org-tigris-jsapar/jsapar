@@ -1,5 +1,6 @@
 package org.jsapar.model;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -14,7 +15,7 @@ import org.jsapar.schema.SchemaException;
  * @author Jonas
  * 
  */
-public abstract class Cell implements java.io.Serializable, Cloneable {
+public abstract class Cell implements Serializable, Cloneable {
 
     /**
      * Denotes the type of the cell.

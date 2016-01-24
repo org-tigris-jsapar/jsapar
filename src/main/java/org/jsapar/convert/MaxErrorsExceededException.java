@@ -5,8 +5,8 @@ package org.jsapar.convert;
 
 import java.util.List;
 
-import org.jsapar.input.CellParseError;
-import org.jsapar.input.ParseException;
+import org.jsapar.parse.CellParseError;
+import org.jsapar.parse.ParseException;
 
 /**
  * @author stejon0

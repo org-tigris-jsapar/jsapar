@@ -9,10 +9,10 @@ import org.jsapar.model.CellType;
 import org.jsapar.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
-import org.jsapar.input.parse.LineReader;
-import org.jsapar.input.parse.csv.CellSplitter;
-import org.jsapar.input.parse.csv.QuotedCellSplitter;
-import org.jsapar.input.parse.csv.SimpleCellSplitter;
+import org.jsapar.parse.LineReader;
+import org.jsapar.parse.csv.CellSplitter;
+import org.jsapar.parse.csv.QuotedCellSplitter;
+import org.jsapar.parse.csv.SimpleCellSplitter;
 
 /**
  * Describes the schema how to parse or write a comma separated line.

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.jsapar.input;
+package org.jsapar;
 
 import static org.junit.Assert.assertEquals;
 

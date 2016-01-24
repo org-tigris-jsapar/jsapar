@@ -12,7 +12,7 @@ import org.jsapar.compose.BeanFactoryDefault;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
-import org.jsapar.input.CellParseError;
+import org.jsapar.parse.CellParseError;
 
 /**
  * Uses Java reflection to convert the Document structure into POJO objects.

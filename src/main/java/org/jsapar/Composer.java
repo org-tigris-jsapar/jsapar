@@ -146,7 +146,7 @@ public class Composer {
     /**
      * Writes the header line if the first line is schema.
      * 
-     * @param schemaLine
+     * @param lineType
      * @param writer
      * @throws JSaParException
      */

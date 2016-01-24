@@ -7,8 +7,8 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jsapar.input.CellParseError;
-import org.jsapar.input.ParseException;
+import org.jsapar.parse.CellParseError;
+import org.jsapar.parse.ParseException;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Document;
 import org.jsapar.convert.MaxErrorsExceededException;

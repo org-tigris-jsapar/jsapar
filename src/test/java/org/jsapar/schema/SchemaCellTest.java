@@ -13,7 +13,7 @@ import org.jsapar.model.EmptyCell;
 import org.jsapar.model.FloatCell;
 import org.jsapar.model.IntegerCell;
 import org.jsapar.model.StringCell;
-import org.jsapar.input.ParseException;
+import org.jsapar.parse.ParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -6,8 +6,8 @@ import java.io.Writer;
 import org.jsapar.model.Cell;
 import org.jsapar.JSaParException;
 import org.jsapar.model.Line;
-import org.jsapar.input.LineParsedEvent;
-import org.jsapar.input.LineEventListener;
+import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.LineEventListener;
 
 public abstract class SchemaLine implements Cloneable {
     private static final int    OCCURS_INFINITE      = Integer.MAX_VALUE;

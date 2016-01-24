@@ -3,13 +3,13 @@ package org.jsapar.schema;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import org.jsapar.input.LineEventListener;
+import org.jsapar.parse.LineEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.EmptyCell;
-import org.jsapar.input.CellParseError;
-import org.jsapar.input.LineErrorEvent;
-import org.jsapar.input.ParseException;
+import org.jsapar.parse.CellParseError;
+import org.jsapar.parse.LineErrorEvent;
+import org.jsapar.parse.ParseException;
 
 public abstract class SchemaCell implements Cloneable {
 

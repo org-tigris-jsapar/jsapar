@@ -15,8 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jsapar.input.CellParseError;
-import org.jsapar.input.ParseSchema;
+import org.jsapar.parse.CellParseError;
+import org.jsapar.parse.ParseSchema;
 import org.jsapar.model.BooleanCell;
 import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;

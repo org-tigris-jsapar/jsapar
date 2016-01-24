@@ -10,7 +10,7 @@ import java.util.Locale;
 import org.jsapar.JSaParException;
 import org.jsapar.Composer;
 import org.jsapar.model.Line;
-import org.jsapar.input.ParseSchema;
+import org.jsapar.parse.ParseSchema;
 import org.jsapar.model.Document;
 import org.jsapar.compose.ComposeException;
 

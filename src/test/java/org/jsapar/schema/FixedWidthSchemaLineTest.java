@@ -9,12 +9,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import org.jsapar.JSaParException;
-import org.jsapar.input.LineEventListener;
+import org.jsapar.parse.LineEventListener;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
-import org.jsapar.input.LineErrorEvent;
-import org.jsapar.input.LineParsedEvent;
-import org.jsapar.input.ParseException;
+import org.jsapar.parse.LineErrorEvent;
+import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 

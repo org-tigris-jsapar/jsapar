@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.jsapar.convert.LineManipulator;
 import org.jsapar.convert.MaxErrorsExceededException;
-import org.jsapar.input.*;
+import org.jsapar.parse.*;
 import org.jsapar.model.Line;
-import org.jsapar.input.LineEventListener;
-import org.jsapar.input.parse.SchemaParserFactory;
+import org.jsapar.parse.LineEventListener;
+import org.jsapar.parse.SchemaParserFactory;
 import org.jsapar.schema.Schema;
 
 /**

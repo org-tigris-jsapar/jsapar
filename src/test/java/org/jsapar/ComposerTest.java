@@ -1,4 +1,4 @@
-package org.jsapar.compose;
+package org.jsapar;
 
 import static org.junit.Assert.assertEquals;
 

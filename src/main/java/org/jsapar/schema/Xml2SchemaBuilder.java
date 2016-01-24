@@ -528,7 +528,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
         } catch (ParseException e) {
             throw new SchemaException("Failed to parse value within xml schema. ", e);
-        } catch (org.jsapar.input.ParseException e) {
+        } catch (org.jsapar.parse.ParseException e) {
             throw new SchemaException("Failed to parse value within xml schema. ", e);
         }
 

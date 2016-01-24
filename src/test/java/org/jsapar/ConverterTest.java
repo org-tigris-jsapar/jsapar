@@ -12,7 +12,7 @@ import org.jsapar.convert.LineManipulator;
 import org.jsapar.convert.MaxErrorsExceededException;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
-import org.jsapar.input.CellParseError;
+import org.jsapar.parse.CellParseError;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
@@ -46,7 +46,7 @@ public class ConverterTest {
 
     /**
      * Test method for
-     * {@link Converter#convert(java.io.Reader, org.jsapar.input.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
+     * {@link Converter#convert(java.io.Reader, org.jsapar.parse.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
      * .
      * 
      * @throws JSaParException
@@ -85,7 +85,7 @@ public class ConverterTest {
 
     /**
      * Test method for
-     * {@link Converter#convert(java.io.Reader, org.jsapar.input.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
+     * {@link Converter#convert(java.io.Reader, org.jsapar.parse.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
      * .
      * 
      * @throws JSaParException
@@ -127,7 +127,7 @@ public class ConverterTest {
 
     /**
      * Test method for
-     * {@link Converter#convert(java.io.Reader, org.jsapar.input.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
+     * {@link Converter#convert(java.io.Reader, org.jsapar.parse.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
      * .
      * 
      * @throws JSaParException
@@ -168,7 +168,7 @@ public class ConverterTest {
 
     /**
      * Test method for
-     * {@link Converter#convert(java.io.Reader, org.jsapar.input.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
+     * {@link Converter#convert(java.io.Reader, org.jsapar.parse.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
      * .
      * 
      * @throws JSaParException
@@ -205,7 +205,7 @@ public class ConverterTest {
 
     /**
      * Test method for
-     * {@link Converter#convert(java.io.Reader, org.jsapar.input.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
+     * {@link Converter#convert(java.io.Reader, org.jsapar.parse.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
      * .
      * 
      * @throws JSaParException
@@ -252,7 +252,7 @@ public class ConverterTest {
 
     /**
      * Test method for
-     * {@link Converter#convert(java.io.Reader, org.jsapar.input.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
+     * {@link Converter#convert(java.io.Reader, org.jsapar.parse.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
      * .
      * 
      * @throws JSaParException

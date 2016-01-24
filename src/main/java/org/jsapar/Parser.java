@@ -5,9 +5,9 @@ import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jsapar.input.*;
+import org.jsapar.parse.*;
 import org.jsapar.model.Document;
-import org.jsapar.input.parse.SchemaParserFactory;
+import org.jsapar.parse.SchemaParserFactory;
 import org.jsapar.convert.MaxErrorsExceededException;
 
 /**
@@ -59,7 +59,7 @@ public class Parser implements LineEventListener {
      * @return A complete Document representing the parsed input buffer.
      * @throws JSaParException
      */
-    public Document build(java.io.Reader reader) throws JSaParException {
+    public Document build(Reader reader) throws JSaParException {
         AbortingDocumentBuilder docBuilder = new AbortingDocumentBuilder();
         return docBuilder.build(reader);
     }
@@ -78,7 +78,7 @@ public class Parser implements LineEventListener {
      * @return A complete Document representing the parsed input buffer.
      * @throws JSaParException
      */
-    public Document build(java.io.Reader reader, List<CellParseError> parseErrors) throws JSaParException {
+    public Document build(Reader reader, List<CellParseError> parseErrors) throws JSaParException {
         DocumentBuilder docBuilder = new DocumentBuilder(parseErrors);
         return docBuilder.build(reader);
     }

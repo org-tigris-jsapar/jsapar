@@ -15,7 +15,7 @@ import java.io.PrintStream;
 import java.io.Reader;
 import java.util.Properties;
 
-import org.jsapar.input.CellParseError;
+import org.jsapar.parse.CellParseError;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.Xml2SchemaBuilder;
 

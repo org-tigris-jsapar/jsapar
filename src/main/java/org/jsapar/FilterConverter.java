@@ -9,9 +9,9 @@ import java.io.Writer;
 import org.jsapar.convert.LineFilter;
 import org.jsapar.convert.LineManipulator;
 import org.jsapar.model.Line;
-import org.jsapar.input.CellParseError;
-import org.jsapar.input.LineParsedEvent;
-import org.jsapar.input.ParseSchema;
+import org.jsapar.parse.CellParseError;
+import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.ParseSchema;
 import org.jsapar.schema.Schema;
 
 /**

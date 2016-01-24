@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jsapar.JSaParException;
-import org.jsapar.input.ParseSchema;
+import org.jsapar.parse.ParseSchema;
 import org.jsapar.Parser;
 import org.jsapar.schema.XmlSchema;
 

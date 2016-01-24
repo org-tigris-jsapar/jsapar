@@ -1,4 +1,4 @@
-package org.jsapar.compose;
+package org.jsapar;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -9,8 +9,7 @@ import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jsapar.*;
-import org.jsapar.input.CellParseError;
+import org.jsapar.parse.CellParseError;
 import org.jsapar.model.*;
 import org.junit.After;
 import org.junit.Assert;

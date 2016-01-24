@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.jsapar.JSaParException;
 import org.jsapar.model.Line;
-import org.jsapar.input.ParseSchema;
+import org.jsapar.parse.ParseSchema;
 
 /**
  * Defines a schema for a fixed position buffer. Each cell is defined by a fixed number of
