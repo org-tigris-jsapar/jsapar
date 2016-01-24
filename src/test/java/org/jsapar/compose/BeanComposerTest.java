@@ -60,7 +60,7 @@ public class BeanComposerTest {
 
         BeanComposer outputter = new BeanComposer();
         List<CellParseError> parseErrors = new LinkedList<>();
-        java.util.List<TstPerson> objects = outputter.createJavaObjects(document, parseErrors);
+        java.util.List<TstPerson> objects = outputter.createBeans(document, parseErrors);
         assertEquals("The errors: " + parseErrors, 0, parseErrors.size());
         assertEquals(2, objects.size());
         TstPerson firstPerson = objects.get(0);
@@ -89,7 +89,7 @@ public class BeanComposerTest {
 
         BeanComposer outputter = new BeanComposer();
         List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        java.util.List<TstPerson> objects = outputter.createJavaObjects(document, parseErrors);
+        java.util.List<TstPerson> objects = outputter.createBeans(document, parseErrors);
         assertEquals("The errors: " + parseErrors, 0, parseErrors.size());
         assertEquals(1, objects.size());
         assertEquals(42, ((TstPerson) objects.get(0)).getShoeSize());
@@ -107,7 +107,7 @@ public class BeanComposerTest {
 
         BeanComposer outputter = new BeanComposer();
         List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        java.util.List<TstPerson> objects = outputter.createJavaObjects(document, parseErrors);
+        java.util.List<TstPerson> objects = outputter.createBeans(document, parseErrors);
         assertEquals(0, parseErrors.size());
         assertEquals(1, objects.size());
         assertEquals(1234, (objects.get(0)).getLuckyNumber());
@@ -125,7 +125,7 @@ public class BeanComposerTest {
 
         BeanComposer outputter = new BeanComposer();
         List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        java.util.List<TstPerson> objects = outputter.createJavaObjects(document, parseErrors);
+        java.util.List<TstPerson> objects = outputter.createBeans(document, parseErrors);
         assertEquals(1, parseErrors.size());
         Assert.assertNull(objects.get(0).getFirstName());
         System.out.println("The (expected) error: " + parseErrors);
@@ -148,7 +148,7 @@ public class BeanComposerTest {
 
         BeanComposer outputter = new BeanComposer();
         List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        java.util.List<TstPerson> objects = outputter.createJavaObjects(document, parseErrors);
+        java.util.List<TstPerson> objects = outputter.createBeans(document, parseErrors);
         assertEquals("The errors: " + parseErrors, 0, parseErrors.size());
         assertEquals(1, objects.size());
         assertNotNull((objects.get(0)).getAddress());
@@ -174,7 +174,7 @@ public class BeanComposerTest {
 
         BeanComposer outputter = new BeanComposer();
         List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        java.util.List<TstPerson> objects = outputter.createJavaObjects(document, parseErrors);
+        java.util.List<TstPerson> objects = outputter.createBeans(document, parseErrors);
         assertEquals("The errors: " + parseErrors, 1, parseErrors.size());
         assertEquals(1, objects.size());
         assertNotNull((objects.get(0)).getAddress());
@@ -199,7 +199,7 @@ public class BeanComposerTest {
 
         BeanComposer outputter = new BeanComposer();
         List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        java.util.List<TstPerson> objects = outputter.createJavaObjects(document, parseErrors);
+        java.util.List<TstPerson> objects = outputter.createBeans(document, parseErrors);
         assertEquals("Un-expected errors: " + parseErrors, 0, parseErrors.size());
         assertEquals(1, objects.size());
         assertEquals("Jonas", objects.get(0).getFirstName());

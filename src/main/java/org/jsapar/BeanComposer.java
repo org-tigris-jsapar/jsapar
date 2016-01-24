@@ -1,10 +1,14 @@
-package org.jsapar.compose;
+package org.jsapar;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.jsapar.compose.BeanFactory;
+import org.jsapar.compose.BeanFactoryDefault;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
@@ -20,24 +24,29 @@ public class BeanComposer {
 
     private static final String SET_PREFIX = "set";
     
-    private BeanFactory beanFactory = new BeanFactoryDefault();
+    private BeanFactory         beanFactory        = new BeanFactoryDefault();
+    private Map<String, String> setMethodNameCache = new HashMap<>();
 
     /**
-     * Creates a list of java objects. For this method to work, the lineType attribute of each line
+     * Creates a list of java bean objects. For this method to work, the lineType attribute of each line
      * have to contain the full class name of the class to create for each line. Also the set method
      * for each attribute have to match exactly to the name of each cell.
+     *
+     * You can customize the mapping between line names and the corresponding bean by assigning a custom BeanFactory
+     * implementation.
      * 
-     * @param document
-     * @return A list of Java objects.
+     * @param document       The document to convert to beans.
+     * @param parseErrors    A list which will be populated with errors during this method call.
+     * @return A list of Java bean objects.
      */
     @SuppressWarnings("rawtypes")
-    public java.util.List createJavaObjects(Document document, List<CellParseError> parseErrors) {
+    public java.util.List createBeans(Document document, List<CellParseError> parseErrors) {
         java.util.List<Object> objects = new ArrayList<>(document.getNumberOfLines());
         java.util.Iterator<Line> lineIter = document.getLineIterator();
         while (lineIter.hasNext()) {
             Line line = lineIter.next();
             try {
-                Object o = this.createObject(line, parseErrors);
+                Object o = this.createBean(line, parseErrors);
                 objects.add(o);
             } catch (InstantiationException e) {
                 parseErrors.add(new CellParseError("", "", null,
@@ -62,7 +71,7 @@ public class BeanComposer {
      * @throws IllegalAccessException
      * @throws ClassNotFoundException
      */
-    public Object createObject(Line line, List<CellParseError> parseErrors) throws InstantiationException,
+    public Object createBean(Line line, List<CellParseError> parseErrors) throws InstantiationException,
             IllegalAccessException, ClassNotFoundException {
         Object o = beanFactory.createBean(line);
         return assign(line, o, parseErrors);
@@ -88,7 +97,7 @@ public class BeanComposer {
             if (sName == null || sName.isEmpty())
                 continue;
 
-            doAssign(cell, sName, objectToAssign, parseErrors);
+            assignCellToField(cell, sName, objectToAssign, parseErrors);
         }
         return objectToAssign;
     }
@@ -101,7 +110,7 @@ public class BeanComposer {
      * @param objectToAssign
      * @param parseErrors
      */
-    private void doAssign(Cell cell, String sName, Object objectToAssign, List<CellParseError> parseErrors) {
+    private void assignCellToField(Cell cell, String sName, Object objectToAssign, List<CellParseError> parseErrors) {
         try {
             String[] nameLevels = sName.split("\\.");
             Object currentObject = objectToAssign;
@@ -168,7 +177,13 @@ public class BeanComposer {
      * @return The set method that corresponds to this attribute.
      */
     private String createSetMethodName(String sAttributeName) {
-        return createBeanMethodName(SET_PREFIX, sAttributeName);
+        String methodName = this.setMethodNameCache.get(sAttributeName);
+        if(methodName == null) {
+            methodName = createBeanMethodName(SET_PREFIX, sAttributeName);
+            this.setMethodNameCache.put(sAttributeName, methodName);
+        }
+        return methodName;
+
     }
 
 

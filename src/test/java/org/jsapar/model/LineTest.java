@@ -23,28 +23,28 @@ public class LineTest {
     @Test
     public void testLine() {
         Line line = new Line();
-        assertEquals(0, line.getNumberOfCells());
+        assertEquals(0, line.size());
         assertEquals("", line.getLineType());
     }
 
     @Test
     public void testLineInt() {
         Line line = new Line(3);
-        assertEquals(0, line.getNumberOfCells());
+        assertEquals(0, line.size());
         assertEquals("", line.getLineType());
     }
 
     @Test
     public void testLineString() {
         Line line = new Line("Shoe");
-        assertEquals(0, line.getNumberOfCells());
+        assertEquals(0, line.size());
         assertEquals("Shoe", line.getLineType());
     }
 
     @Test
     public void testLineStringInt() {
         Line line = new Line("Shoe", 3);
-        assertEquals(0, line.getNumberOfCells());
+        assertEquals(0, line.size());
         assertEquals("Shoe", line.getLineType());
     }
 
@@ -123,7 +123,7 @@ public class LineTest {
         line.addCell(new StringCell("LastName", "Svensson"));
 
         line.replaceCell(new StringCell("LastName", "Sven"), 0);
-        assertEquals(1, line.getNumberOfCells());
+        assertEquals(1, line.size());
         assertEquals("Sven", line.getCell(0).getStringValue());
         assertEquals("Sven", line.getCell("LastName").getStringValue());
     }
@@ -152,9 +152,9 @@ public class LineTest {
     public void testGetCellValue_Enum() throws JSaParException {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("Type", "FIRST"));
-        assertEquals(Testing.FIRST, line.getCellValue("Type", Testing.SECOND));
-        assertEquals(Testing.SECOND, line.getCellValue("Type does not exist", Testing.SECOND));
-        assertNull( line.getCellValue("Type does not exist", (Testing)null));
+        assertEquals(Testing.FIRST, line.getEnumCellValue("Type", Testing.SECOND));
+        assertEquals(Testing.SECOND, line.getEnumCellValue("Type does not exist", Testing.SECOND));
+        assertNull( line.getEnumCellValue("Type does not exist", (Testing)null));
     }
 
     @Test
@@ -168,7 +168,7 @@ public class LineTest {
     public void testGetSetStringCellValue() throws JSaParException {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
-        line.setCellValue("LastName", "Svensson");
+        line.setStringCellValue("LastName", "Svensson");
         assertEquals("Nils", line.getStringCellValue("FirstName"));
         assertEquals("Svensson", line.getStringCellValue("LastName"));
     }
@@ -178,7 +178,7 @@ public class LineTest {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         line.addCell(new StringCell("LastName", "Svensson"));
-        assertEquals(2, line.getNumberOfCells());
+        assertEquals(2, line.size());
     }
 
     @Test
@@ -204,7 +204,7 @@ public class LineTest {
         line.addCell(new StringCell("LastName", "Svensson"));
 
         line.removeCell("FirstName");
-        assertEquals(1, line.getNumberOfCells());
+        assertEquals(1, line.size());
         assertEquals("Svensson", line.getCell(0).getStringValue());
         assertEquals("Svensson", line.getCell("LastName").getStringValue());
     }
@@ -219,7 +219,7 @@ public class LineTest {
         line.addCell(new StringCell("LastName", "Svensson"));
 
         line.removeCell(0);
-        assertEquals(1, line.getNumberOfCells());
+        assertEquals(1, line.size());
         assertEquals("Svensson", line.getCell(0).getStringValue());
         assertEquals("Svensson", line.getCell("LastName").getStringValue());
     }
@@ -229,8 +229,8 @@ public class LineTest {
         Line line = new Line("TestLine");
         line.addCell(new IntegerCell("shoeSize", 42));
         line.addCell(new FloatCell("pi", 3.141));
-        line.setCellValue("aStringValue", "17");
-        line.setCellValue("anIntValue", 4711);
+        line.setStringCellValue("aStringValue", "17");
+        line.setIntCellValue("anIntValue", 4711);
         
         assertEquals(42, line.getIntCellValue("shoeSize"));
         assertEquals(17, line.getIntCellValue("aStringValue"));
@@ -250,7 +250,7 @@ public class LineTest {
     @Test(expected=NumberFormatException.class)
     public void testGetIntCellValue_not_parsable() throws JSaParException{
         Line line = new Line("TestLine");
-        line.setCellValue("aStringValue", "ABC");
+        line.setStringCellValue("aStringValue", "ABC");
         
         line.getIntCellValue("aStringValue");
         Assert.fail("Should throw exception");
@@ -259,9 +259,9 @@ public class LineTest {
     @Test
     public void testSetCellValueString_null(){
         Line line = new Line("TestLine");
-        line.setCellValue("aStringValue", "ABC");
+        line.setStringCellValue("aStringValue", "ABC");
         assertEquals("ABC", line.getStringCellValue("aStringValue"));
-        line.setCellValue("aStringValue", (String)null);
+        line.setStringCellValue("aStringValue", (String)null);
         assertFalse(line.isCell("aStringValue"));
     }
     
@@ -269,9 +269,9 @@ public class LineTest {
     public void testSetCellValueString_date() throws JSaParException{
         Line line = new Line("TestLine");
         Date date = new Date();
-        line.setCellValue("aDateValue", date);
+        line.setDateCellValue("aDateValue", date);
         assertEquals(date, line.getDateCellValue("aDateValue"));
-        line.setCellValue("aDateValue", (Date)null);
+        line.setDateCellValue("aDateValue", (Date)null);
         assertFalse(line.isCell("aDateValue"));
     }
 
@@ -280,11 +280,11 @@ public class LineTest {
         Line line = new Line("TestLine");
         boolean t = true;
         boolean f = false;
-        line.setCellValue("aTrueValue", t);
-        line.setCellValue("aFalseValue", f);
+        line.setBooleanCellValue("aTrueValue", t);
+        line.setBooleanCellValue("aFalseValue", f);
         assertTrue(line.getBooleanCellValue("aTrueValue"));
-        assertTrue(line.getCellValue("aTrueValue", false));
-        assertFalse(line.getCellValue("anotherValue", false));
+        assertTrue(line.getBooleanCellValue("aTrueValue", false));
+        assertFalse(line.getBooleanCellValue("anotherValue", false));
         assertFalse(line.getBooleanCellValue("aFalseValue"));
     }
 
@@ -292,10 +292,10 @@ public class LineTest {
     public void testSetCellValue_char() throws JSaParException{
         Line line = new Line("TestLine");
         char ch = 'A';
-        line.setCellValue("aCharValue", ch);
+        line.setCharCellValue("aCharValue", ch);
         assertEquals('A', line.getCharCellValue("aCharValue"));
-        assertEquals('A', line.getCellValue("aCharValue", 'B'));
-        assertEquals('B', line.getCellValue("another", 'B'));
+        assertEquals('A', line.getCharCellValue("aCharValue", 'B'));
+        assertEquals('B', line.getCharCellValue("another", 'B'));
     }
     
 }

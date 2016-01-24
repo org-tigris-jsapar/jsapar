@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.jsapar.input;
+package org.jsapar;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,7 +21,6 @@ import org.jsapar.model.DateCell;
 import org.jsapar.model.Document;
 import org.jsapar.model.FloatCell;
 import org.jsapar.model.IntegerCell;
-import org.jsapar.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 
@@ -30,7 +29,7 @@ import org.jsapar.model.StringCell;
  * @author stejon0
  * 
  */
-public class JavaBuilder {
+public class BeanParser {
     
     protected static Logger logger = Logger.getLogger("org.jsapar");
 
@@ -42,10 +41,10 @@ public class JavaBuilder {
      *         supplied.
      * @throws JSaParException
      */
-    public Document build(Collection<?> objects) throws JSaParException {
+    public Document parse(Collection<?> objects) throws JSaParException {
         Document doc = new Document();
         for (Object object : objects) {
-            doc.addLine(buildLine(object));
+            doc.addLine(parseBean(object));
         }
         return doc;
     }
@@ -61,17 +60,17 @@ public class JavaBuilder {
      * @return A Line object containing cells according to the getter method of the supplied object.
      * @throws JSaParException
      */
-    public Line buildLine(Object object) throws JSaParException {
+    public Line parseBean(Object object) throws JSaParException {
 
         Line line = new Line(object.getClass().getName());
         Set<Object> visited = new HashSet<Object>();
-        this.buildLine(line, object, null, visited);
+        this.parseBean(line, object, null, visited);
         return line;
     }
     
 
     @SuppressWarnings("unchecked")
-    private void buildLine(Line line, Object object, String prefix, Set<Object> visited) throws JSaParException {
+    private void parseBean(Line line, Object object, String prefix, Set<Object> visited) throws JSaParException {
 
         // First we avoid loops.
         if(visited.contains(object) || visited.size()  >  maxSubLevels)
@@ -133,7 +132,7 @@ public class JavaBuilder {
                         Set<Object> visitedClone = new HashSet<Object>(visited);
                         visitedClone.add(object);
                         // Recursively add sub classes.
-                        this.buildLine(line, subObject, sAttributeName, visitedClone);
+                        this.parseBean(line, subObject, sAttributeName, visitedClone);
                     }
                 }
             } catch (IllegalArgumentException e) {

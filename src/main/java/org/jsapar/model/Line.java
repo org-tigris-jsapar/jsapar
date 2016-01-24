@@ -286,7 +286,7 @@ public class Line implements Serializable {
      * 
      * @return the number of cells that this line contains.
      */
-    public int getNumberOfCells() {
+    public int size() {
         return this.cellsByIndex.size();
     }
 
@@ -344,7 +344,7 @@ public class Line implements Serializable {
      * @param value
      *            The string value to set. If null, existing value will be removed but no new value will be set. 
      */
-    public void setCellValue(String cellName, String value) {
+    public void setStringCellValue(String cellName, String value) {
         if(value==null)
             removeCell(cellName);
         else
@@ -360,11 +360,11 @@ public class Line implements Serializable {
      * @param value
      *            The string value to set. If null, existing value will be removed but no new value will be set.
      */
-    public <E extends Enum<E>> void setCellValue(String cellName, E value) {
+    public <E extends Enum<E>> void setEnumCellValue(String cellName, E value) {
         if(value==null)
             removeCell(cellName);
         else
-            this.setCellValue(cellName, value.toString());
+            this.setStringCellValue(cellName, value.toString());
     }
     
     /**
@@ -376,7 +376,7 @@ public class Line implements Serializable {
      * @param value
      *            The integer value to set.
      */
-    public void setCellValue(String cellName, int value) {
+    public void setIntCellValue(String cellName, int value) {
         this.replaceCell(new IntegerCell(cellName, value));
     }
 
@@ -389,7 +389,7 @@ public class Line implements Serializable {
      * @param value
      *            The long integer value to set.
      */
-    public void setCellValue(String cellName, long value) {
+    public void setLongCellValue(String cellName, long value) {
         this.replaceCell(new IntegerCell(cellName, value));
     }
 
@@ -402,7 +402,7 @@ public class Line implements Serializable {
      * @param value
      *            The double value to set.
      */
-    public void setCellValue(String cellName, double value) {
+    public void setDoubleCellValue(String cellName, double value) {
         this.replaceCell(new FloatCell(cellName, value));
     }
 
@@ -415,7 +415,7 @@ public class Line implements Serializable {
      * @param value
      *            The boolean value to set.
      */
-    public void setCellValue(String cellName, boolean value) {
+    public void setBooleanCellValue(String cellName, boolean value) {
         this.replaceCell(new BooleanCell(cellName, value));
     }
 
@@ -428,7 +428,7 @@ public class Line implements Serializable {
      * @param value
      *            The character value to set.
      */
-    public void setCellValue(String cellName, char value) {
+    public void setCharCellValue(String cellName, char value) {
         this.replaceCell(new CharacterCell(cellName, value));
     }
     
@@ -441,7 +441,7 @@ public class Line implements Serializable {
      * @param value
      *            The date value to set. If null, existing value will be removed but no new value will be set.
      */
-    public void setCellValue(String cellName, Date value) {
+    public void setDateCellValue(String cellName, Date value) {
         if(value==null)
             removeCell(cellName);
         else
@@ -457,7 +457,7 @@ public class Line implements Serializable {
      * @param value
      *            The value to set. If null, existing value will be removed but no new value will be set.
      */
-    public void setCellValue(String cellName, BigDecimal value) {
+    public void setDecimalCellValue(String cellName, BigDecimal value) {
         if(value==null)
             removeCell(cellName);
         else
@@ -473,7 +473,7 @@ public class Line implements Serializable {
      * @param value
      *            The value to set. If null, existing value will be removed but no new value will be set.
      */
-    public void setCellValue(String cellName, BigInteger value) {
+    public void setBigIntegerCellValue(String cellName, BigInteger value) {
         if(value==null)
             removeCell(cellName);
         else
@@ -498,7 +498,7 @@ public class Line implements Serializable {
      * @param defaultValue
      * @return The value of the specified cell. Returns the default value if there is no cell with supplied name or if the cell is empty.
      */
-    public String getCellValue(String cellName, String defaultValue) {
+    public String getStringCellValue(String cellName, String defaultValue) {
         Cell cell = getCell(cellName);
         if(cell == null || cell.isEmpty() || cell.getStringValue()==null || cell.getStringValue().isEmpty())
             return defaultValue;
@@ -555,7 +555,7 @@ public class Line implements Serializable {
      * @return The integer value of the cell with the specified name.
      * @throws JSaParException 
      */
-    public int getCellValue(String cellName, int defaultValue) throws NumberFormatException {
+    public int getIntCellValue(String cellName, int defaultValue) throws NumberFormatException {
         Cell cell = getCell(cellName);
         if(cell == null || cell.isEmpty())
             return defaultValue;
@@ -606,7 +606,7 @@ public class Line implements Serializable {
      * @return The char value of the cell with the specified name.
      * @throws NumberFormatException
      */
-    public char getCellValue(String cellName, char defaultValue) throws NumberFormatException {
+    public char getCharCellValue(String cellName, char defaultValue) throws NumberFormatException {
         Cell cell = getCell(cellName);
         if (cell == null || cell.isEmpty())
             return defaultValue;
@@ -648,7 +648,7 @@ public class Line implements Serializable {
      * @param defaultValue
      * @return The boolean value of the cell with the supplied name.
      */
-    public boolean getCellValue(String cellName, boolean defaultValue)  {
+    public boolean getBooleanCellValue(String cellName, boolean defaultValue)  {
         Cell cell = getCell(cellName);
         if(cell == null || cell.isEmpty())
             return defaultValue;
@@ -696,7 +696,7 @@ public class Line implements Serializable {
      * @return The long integer value of the cell with the specified name.
      * @throws NumberFormatException
      */
-    public long getCellValue(String cellName, long defaultValue) throws NumberFormatException {
+    public long getLongCellValue(String cellName, long defaultValue) throws NumberFormatException {
         Cell cell = getCell(cellName);
         if(cell == null || cell.isEmpty())
             return defaultValue;
@@ -738,7 +738,7 @@ public class Line implements Serializable {
      * @return The date cell value if the cell exist and is of type DateCell. Returns the defaultValue if the cell does not exist. 
      * @throws JSaParException If if it is not a DateCell.
      */
-    public Date getCellValue(String cellName, Date defaultValue) throws JSaParException {
+    public Date getDateCellValue(String cellName, Date defaultValue) throws JSaParException {
         Cell cell = getCell(cellName);
         if(cell == null || cell.isEmpty())
             return defaultValue;
@@ -792,7 +792,7 @@ public class Line implements Serializable {
      *             of the specified cell.
      */
     @SuppressWarnings("unchecked")
-    public <E extends Enum<E>> E getCellValue(String cellName, E defaultValue) throws IllegalArgumentException {
+    public <E extends Enum<E>> E getEnumCellValue(String cellName, E defaultValue) throws IllegalArgumentException {
         Cell cell = getCell(cellName);
         if(cell == null || cell.isEmpty())
             return defaultValue;
@@ -843,7 +843,7 @@ public class Line implements Serializable {
      * @throws NumberFormatException
      * @throws JSaParException 
      */
-    public double getCellValue(String cellName, double defaultValue) throws NumberFormatException {
+    public double getDoubleCellValue(String cellName, double defaultValue) throws NumberFormatException {
         Cell cell = getCell(cellName);
         if(cell == null || cell.isEmpty())
             return defaultValue;
@@ -899,7 +899,7 @@ public class Line implements Serializable {
      * @throws JSaParException
      *             , NumberFormatException
      */
-    public BigDecimal getCellValue(String cellName, BigDecimal defaultValue) throws NumberFormatException  {
+    public BigDecimal getDecimalCellValue(String cellName, BigDecimal defaultValue) throws NumberFormatException  {
         Cell cell = getCell(cellName);
         if (cell == null || cell.isEmpty())
             return defaultValue;
@@ -952,7 +952,7 @@ public class Line implements Serializable {
      * @throws JSaParException
      *             , NumberFormatException
      */
-    public BigInteger getCellValue(String cellName, BigInteger defaultValue) throws NumberFormatException {
+    public BigInteger getBigIntegerCellValue(String cellName, BigInteger defaultValue) throws NumberFormatException {
         Cell cell = getCell(cellName);
         if(cell == null || cell.isEmpty())
             return defaultValue;

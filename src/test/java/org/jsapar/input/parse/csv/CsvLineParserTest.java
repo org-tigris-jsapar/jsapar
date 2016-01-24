@@ -88,7 +88,7 @@ public class CsvLineParserTest {
         @Override
         public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
         Line line = event.getLine();
-        assertEquals(6, line.getNumberOfCells());
+        assertEquals(6, line.size());
         assertEquals("Jonas", line.getCell(0).getStringValue());
         assertEquals("Stenberg", line.getCell(1).getStringValue());
         assertEquals("", line.getCell(2).getStringValue());
@@ -115,7 +115,7 @@ public class CsvLineParserTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
-                assertEquals(3, line.getNumberOfCells());
+                assertEquals(3, line.size());
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("Hemvägen ;19", line.getCell(2).getStringValue());
@@ -139,7 +139,7 @@ public class CsvLineParserTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
-                assertEquals(4, line.getNumberOfCells());
+                assertEquals(4, line.size());
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("", line.getCell(2).getStringValue());
@@ -164,7 +164,7 @@ public class CsvLineParserTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
-                assertEquals(4, line.getNumberOfCells());
+                assertEquals(4, line.size());
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("", line.getCell(2).getStringValue());
@@ -189,7 +189,7 @@ public class CsvLineParserTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
-                assertEquals(4, line.getNumberOfCells());
+                assertEquals(4, line.size());
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("Not quoted", line.getCell(2).getStringValue());
@@ -214,7 +214,7 @@ public class CsvLineParserTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
-                assertEquals(3, line.getNumberOfCells());
+                assertEquals(3, line.size());
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("Hemvägen ;19", line.getCell(2).getStringValue());
@@ -238,7 +238,7 @@ public class CsvLineParserTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
-                assertEquals(6, line.getNumberOfCells());
+                assertEquals(6, line.size());
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("\"Hemvägen ", line.getCell(2).getStringValue());
@@ -263,7 +263,7 @@ public class CsvLineParserTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
-                assertEquals(3, line.getNumberOfCells());
+                assertEquals(3, line.size());
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("\"", line.getCell(2).getStringValue());
@@ -288,7 +288,7 @@ public class CsvLineParserTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
-                assertEquals(6, line.getNumberOfCells());
+                assertEquals(6, line.size());
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("H\"emvägen ", line.getCell(2).getStringValue());
@@ -315,7 +315,7 @@ public class CsvLineParserTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
-                assertEquals(6, line.getNumberOfCells());
+                assertEquals(6, line.size());
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("\"Hemvägen ", line.getCell(2).getStringValue());

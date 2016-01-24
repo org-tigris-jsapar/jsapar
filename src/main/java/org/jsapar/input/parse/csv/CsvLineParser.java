@@ -58,7 +58,7 @@ public class CsvLineParser extends SchemaLineParser {
                 addCellToLineWithoutSchema(line, sCell);
             }
         }
-        if (line.getNumberOfCells() <= 0)
+        if (line.size() <= 0)
             return false;
 
         // We have to fill all the default values and mandatory items for remaining cells within the schema.

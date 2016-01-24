@@ -9,7 +9,6 @@ import org.jsapar.input.*;
 import org.jsapar.model.Document;
 import org.jsapar.input.parse.SchemaParserFactory;
 import org.jsapar.convert.MaxErrorsExceededException;
-import org.jsapar.compose.BeanComposer;
 
 /**
  * This class is the starting point for parsing a file (or other source). <br>
@@ -109,7 +108,7 @@ public class Parser implements LineEventListener {
 
     /**
      * Reads characters from the reader and parses them into a list of java objects denoted by the
-     * schema. See org.jsapar.input.JavaBuilder for more information about how to build java objects
+     * schema. See org.jsapar.BeanParser for more information about how to build java objects
      * from an input source.
      * 
      * @param reader
@@ -313,7 +312,7 @@ public class Parser implements LineEventListener {
                 public void lineParsedEvent(LineParsedEvent event) {
                     List<CellParseError> currentParseErrors = new LinkedList<CellParseError>();
                     try {
-                        objects.add(outputter.createObject(event.getLine(), currentParseErrors));
+                        objects.add(outputter.createBean(event.getLine(), currentParseErrors));
                     } catch (InstantiationException e) {
                         currentParseErrors.add(new CellParseError(event.getLineNumber(), "", "", null,
                                 "Failed to instantiate object. Skipped creating object - " + e));

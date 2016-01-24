@@ -75,7 +75,7 @@ public class FixedWidthLineParser extends SchemaLineParser {
                 }
             }
         }
-        if (line.getNumberOfCells() <= 0 && !oneIgnored)
+        if (line.size() <= 0 && !oneIgnored)
             return false;
 
         listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));

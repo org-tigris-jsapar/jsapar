@@ -130,7 +130,7 @@ public abstract class SchemaLine implements Cloneable {
             return null;
 
         Cell cellByIndex = null;
-        if (nSchemaCellIndex < line.getNumberOfCells())
+        if (nSchemaCellIndex < line.size())
             cellByIndex = line.getCell(nSchemaCellIndex);
         // Use optimistic matching.
         if (null != cellByIndex) {

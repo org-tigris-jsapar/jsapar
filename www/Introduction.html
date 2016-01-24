@@ -39,7 +39,7 @@ Use the method org.jsapar.Parser.buildJava() in order to build java objects for 
 Note that in order to be able to use this feature, the schema have to be carefully written. 
 For instance, the line type (name) of the line within the schema have to contain the complete class name of the java class to build for each line. 
 <h2>Converting java objects into a file</h2>
-Use the class org.jsapar.input.JavaBuilder in order to convert java objects into a org.jsapar.model.Document, which can be used to produce the output file according to a schema.
+Use the class org.jsapar.BeanParser in order to convert java objects into a org.jsapar.model.Document, which can be used to produce the output file according to a schema.
 <h2>Using xml as input</h2>
 It is possilbe to build a org.jsapar.model.Document by using a xml document according to the XMLDocumentFormat.xsd (http://jsapar.tigris.org/XMLDocumentFormat/1.0).
 Use the class org.jsapar.input.XmlDocumentParser in order to convert a xml document into a org.jsapar.model.Document.

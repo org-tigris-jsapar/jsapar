@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.jsapar.BeanParser;
 import org.jsapar.model.DateCell;
 import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;
@@ -25,7 +26,7 @@ import org.junit.Test;
  * @author stejon0
  * 
  */
-public class JavaBuilderTest {
+public class BeanParserTest {
     static final Date birthTime = new Date();
 
     /**
@@ -43,7 +44,7 @@ public class JavaBuilderTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.input.JavaBuilder#build(java.util.Collection)}.
+     * Test method for {@link BeanParser#parse(java.util.Collection)}.
      * 
      * @throws JSaParException
      */
@@ -58,8 +59,8 @@ public class JavaBuilderTest {
         person.setFirstName("Test2");
         people.add(person);
 
-        JavaBuilder builder = new JavaBuilder();
-        Document doc = builder.build(people);
+        BeanParser builder = new BeanParser();
+        Document doc = builder.parse(people);
 
         assertEquals(2, doc.getNumberOfLines());
         Line line = doc.getLine(0);
@@ -71,7 +72,7 @@ public class JavaBuilderTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.input.JavaBuilder#buildLine(java.lang.Object)}.
+     * Test method for {@link BeanParser#parseBean(java.lang.Object)}.
      * 
      * @throws JSaParException
      */
@@ -86,10 +87,10 @@ public class JavaBuilderTest {
         person.setStreetNumber(4711);
         person.setDoor('A');
 
-        JavaBuilder builder = new JavaBuilder();
-        Line line = builder.buildLine(person);
+        BeanParser builder = new BeanParser();
+        Line line = builder.parseBean(person);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
-        assertEquals(8, line.getNumberOfCells());
+        assertEquals(8, line.size());
         assertEquals("Jonas", line.getCell("firstName").getStringValue());
         assertEquals(42, ((IntegerCell) line.getCell("shoeSize")).getNumberValue().shortValue());
         assertEquals(4711, ((IntegerCell) line.getCell("streetNumber")).getNumberValue().intValue());
@@ -99,7 +100,7 @@ public class JavaBuilderTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.input.JavaBuilder#buildLine(java.lang.Object)}.
+     * Test method for {@link BeanParser#parseBean(java.lang.Object)}.
      * @throws JSaParException
      */
     @Test
@@ -107,8 +108,8 @@ public class JavaBuilderTest {
         TstPerson person = new TstPerson();
         person.setFirstName("Jonas");
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
-        JavaBuilder builder = new JavaBuilder();
-        Line line = builder.buildLine(person);
+        BeanParser builder = new BeanParser();
+        Line line = builder.parseBean(person);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", line.getStringCellValue("address.street"));
         assertEquals("Staden", line.getStringCellValue("address.town"));
@@ -118,7 +119,7 @@ public class JavaBuilderTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.input.JavaBuilder#buildLine(java.lang.Object)}.
+     * Test method for {@link BeanParser#parseBean(java.lang.Object)}.
      * @throws JSaParException
      */
     @Test
@@ -127,8 +128,8 @@ public class JavaBuilderTest {
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
         person.getAddress().setSubAddress(new TstPostAddress("Road", "Town"));
         person.setWorkAddress(new TstPostAddress("Gatan", "Byn"));
-        JavaBuilder builder = new JavaBuilder();
-        Line line = builder.buildLine(person);
+        BeanParser builder = new BeanParser();
+        Line line = builder.parseBean(person);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", line.getStringCellValue("address.street"));
         assertEquals("Staden", line.getStringCellValue("address.town"));
@@ -139,7 +140,7 @@ public class JavaBuilderTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.input.JavaBuilder#buildLine(java.lang.Object)}.
+     * Test method for {@link BeanParser#parseBean(java.lang.Object)}.
      * @throws JSaParException
      */
     @Test
@@ -148,9 +149,9 @@ public class JavaBuilderTest {
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
         person.getAddress().setSubAddress(new TstPostAddress("Road", "Town"));
         person.setWorkAddress(new TstPostAddress("Gatan", "Byn"));
-        JavaBuilder builder = new JavaBuilder();
+        BeanParser builder = new BeanParser();
         builder.setMaxSubLevels(1);
-        Line line = builder.buildLine(person);
+        Line line = builder.parseBean(person);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", line.getStringCellValue("address.street"));
         assertEquals("Staden", line.getStringCellValue("address.town"));

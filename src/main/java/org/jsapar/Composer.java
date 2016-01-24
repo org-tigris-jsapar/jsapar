@@ -4,11 +4,11 @@
 package org.jsapar;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Iterator;
 
 import org.jsapar.compose.ComposeException;
 import org.jsapar.model.Document;
-import org.jsapar.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.Schema;
@@ -16,7 +16,7 @@ import org.jsapar.schema.Schema;
 /**
  * This class contains methods for transforming a Document into an output. E.g. if you want to write
  * the Document to a file you should first set the schema, then use a {@link java.io.FileWriter} and
- * call the {@link #output(Document, java.io.Writer)} method.
+ * call the {@link #write(Document, java.io.Writer)} method.
  * 
  * @author Jonas Stenberg
  * 
@@ -34,7 +34,7 @@ public class Composer {
     }
 
     /**
-     * Writes the document to a {@link java.io.Writer} according to the schemas of this outputter.
+     * Writes the document to a {@link java.io.Writer} according to the schemas of this composer.
      * Note that you have to add at least one schema to the instance of Composer before calling
      * this method.
      * 
@@ -42,12 +42,12 @@ public class Composer {
      * @param writer
      * @throws JSaParException
      */
-    public void output(Document document, java.io.Writer writer) throws JSaParException {
-        output(document.getLineIterator(), writer);
+    public void write(Document document, Writer writer) throws JSaParException {
+        write(document.getLineIterator(), writer);
     }
 
     /**
-     * Writes the document to a {@link java.io.Writer} according to the schemas of this outputter. Note that you have to
+     * Writes the document to a {@link java.io.Writer} according to the schemas of this composer. Note that you have to
      * add at least one schema to the instance of Composer before calling this method.
      * 
      * @param lineIterator
@@ -56,7 +56,7 @@ public class Composer {
      * @param writer
      * @throws JSaParException
      */
-    public void output(Iterator<Line> lineIterator, java.io.Writer writer) throws JSaParException {
+    public void write(Iterator<Line> lineIterator, java.io.Writer writer) throws JSaParException {
         try {
             schema.outputBefore(writer);
             schema.output(lineIterator, writer);
@@ -76,7 +76,7 @@ public class Composer {
      * @param writer
      * @throws JSaParException
      */
-    public void outputLineLn(Line line, java.io.Writer writer) throws JSaParException {
+    public void writeLineLn(Line line, Writer writer) throws JSaParException {
         try {
             if(!schema.outputLineLn(line, writer))
                 throw new ComposeException("Line type [" + line.getLineType() + "] not found within schema.");
@@ -93,7 +93,7 @@ public class Composer {
      * @param writer
      * @throws JSaParException
      */
-    public void outputLine(Line line, java.io.Writer writer) throws JSaParException {
+    public void writeLine(Line line, Writer writer) throws JSaParException {
         try {
             if(!schema.outputLine(line, writer))
                 throw new ComposeException("Line type [" + line.getLineType() + "] not found within schema.");
@@ -116,7 +116,7 @@ public class Composer {
      * @param writer
      * @throws JSaParException
      */
-    public static void outputLine(Line line, Schema schema, long lineNumberForSchema, java.io.Writer writer)
+    public static void writeLine(Line line, Schema schema, long lineNumberForSchema, java.io.Writer writer)
             throws JSaParException {
         try {
             schema.outputLine(line, lineNumberForSchema, writer);
@@ -135,7 +135,7 @@ public class Composer {
      * @param writer
      * @throws JSaParException
      */
-    public void outputLine(Line line, long lineNumber, java.io.Writer writer) throws JSaParException {
+    public void writeLine(Line line, long lineNumber, Writer writer) throws JSaParException {
         try {
             this.schema.outputLine(line, lineNumber, writer);
         } catch (IOException e) {
@@ -150,8 +150,8 @@ public class Composer {
      * @param writer
      * @throws JSaParException
      */
-    public void outputCsvHeaderLine(String lineType, java.io.Writer writer) throws JSaParException {
-        outputCsvHeaderLine((CsvSchemaLine)this.schema.getSchemaLine(lineType), writer);
+    public void writeCsvHeaderLine(String lineType, Writer writer) throws JSaParException {
+        writeCsvHeaderLine((CsvSchemaLine)this.schema.getSchemaLine(lineType), writer);
     }
     
     
@@ -162,7 +162,7 @@ public class Composer {
      * @param writer
      * @throws JSaParException
      */
-    public void outputCsvHeaderLine(CsvSchemaLine schemaLine, java.io.Writer writer) throws JSaParException {
+    public void writeCsvHeaderLine(CsvSchemaLine schemaLine, Writer writer) throws JSaParException {
         if (!schemaLine.isFirstLineAsSchema())
             throw new JSaParException("The schema line is not of type where first line is schema.");
 

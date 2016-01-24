@@ -56,7 +56,7 @@ public class ComposerTest {
 
         Composer composer = new Composer(schema);
         java.io.Writer writer = new java.io.StringWriter();
-        composer.output(document, writer);
+        composer.write(document, writer);
 
         assertEquals(sExpected, writer.toString());
     }
@@ -78,7 +78,7 @@ public class ComposerTest {
 
         StringWriter writer = new StringWriter();
         Composer composer = new Composer(schema);
-        composer.outputLine(line, writer);
+        composer.writeLine(line, writer);
 
         assertEquals("NJonasStenberg", writer.toString());
     }
@@ -102,7 +102,7 @@ public class ComposerTest {
 
         StringWriter writer = new StringWriter();
         Composer composer = new Composer(schema);
-        composer.outputLine(line, writer);
+        composer.writeLine(line, writer);
 
         String result = writer.toString();
         assertEquals(20, result.length());

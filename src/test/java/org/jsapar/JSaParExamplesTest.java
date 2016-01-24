@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.jsapar.input.CellParseError;
-import org.jsapar.input.JavaBuilder;
 import org.jsapar.input.ParseSchema;
 import org.jsapar.model.BooleanCell;
 import org.jsapar.model.Document;
@@ -230,12 +229,12 @@ public class JSaParExamplesTest {
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
         Composer composer = new Composer(xmlBuilder.build(schemaReader));
 
-        JavaBuilder javaBuilder=new JavaBuilder();
-        Document doc = javaBuilder.build(people);
+        BeanParser beanParser =new BeanParser();
+        Document doc = beanParser.parse(people);
         System.out.println("The document:" + doc);
         
         StringWriter writer = new StringWriter();
-        composer.output(doc, writer);
+        composer.write(doc, writer);
         
         String result=writer.toString();
         String[] resultLines = result.split("\r\n");
