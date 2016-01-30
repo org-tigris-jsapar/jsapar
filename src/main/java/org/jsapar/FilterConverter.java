@@ -102,7 +102,7 @@ public class FilterConverter extends Converter {
                 for (LineManipulator manipulator : getManipulators()) {
                     manipulator.manipulate(line);
                 }
-                getOutputSchema().outputLineLn(line, getWriter());
+                getOutputSchema().writeLineLn(line, getWriter());
             } catch (IOException e) {
                 throw new JSaParException("Failed to write to writer", e);
             }

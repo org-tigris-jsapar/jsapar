@@ -190,7 +190,7 @@ public class JSaParExamplesTest {
         Reader fileReader = new FileReader("samples/07_Names.csv");
         Parser parser = new Parser(xmlBuilder.build(schemaReader));
         List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        List<TstPerson> people = parser.buildJava(fileReader, parseErrors);
+        List<TstPerson> people = parser.buildBeans(fileReader, parseErrors);
         fileReader.close();
 
         assertEquals("The errors" + parseErrors, 0, parseErrors.size());

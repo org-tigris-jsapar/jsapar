@@ -38,7 +38,7 @@ public class CSVSchemaTest {
 	doc.addLine(line2);
 
 	StringWriter writer = new StringWriter();
-	schema.output(doc.getLineIterator(), writer);
+	schema.write(doc.getLineIterator(), writer);
 
 	String sLineSep = System.getProperty("line.separator");
 	String sExpected = "First Name;Last Name" + sLineSep + "Jonas;Stenberg" + sLineSep + "Nils;Nilsson";
@@ -64,7 +64,7 @@ public class CSVSchemaTest {
 	line1.addCell(new StringCell("Stenberg"));
 
 	StringWriter writer = new StringWriter();
-	outputSchema.outputLine(line1, 2, writer);
+	outputSchema.writeLine(line1, 2, writer);
 
 	String sLineSep = System.getProperty("line.separator");
 	String sExpected = sLineSep + "Jonas;Stenberg";
@@ -90,7 +90,7 @@ public class CSVSchemaTest {
 	line1.addCell(new StringCell("Something", "This should not be written"));
 
 	StringWriter writer = new StringWriter();
-	outputSchema.outputLine(line1, 1, writer);
+	outputSchema.writeLine(line1, 1, writer);
 
 	String sExpected = "TheHeader";
 
@@ -122,7 +122,7 @@ public class CSVSchemaTest {
 	line1.addCell(new StringCell("Last name", "Stenberg"));
 
 	StringWriter writer = new StringWriter();
-	schema.outputLine(line1, 2, writer);
+	schema.writeLine(line1, 2, writer);
 
 	String sLineSep = System.getProperty("line.separator");
 	String sExpected = sLineSep + "First name;Last name;Shoe size;Birth date" + sLineSep + "Jonas;Stenberg;41;";

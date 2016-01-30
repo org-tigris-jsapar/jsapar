@@ -53,7 +53,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @throws IOException
      * @throws JSaParException
      */
-    public abstract void output(Iterator<Line> iterator, Writer writer) throws IOException, JSaParException;
+    public abstract void write(Iterator<Line> iterator, Writer writer) throws IOException, JSaParException;
 
     /**
      * Called before output() in order to set up or write file header.
@@ -62,7 +62,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @throws IOException
      * @throws JSaParException
      */
-    public abstract void outputBefore(Writer writer) throws IOException, JSaParException;
+    public abstract void writeBefore(Writer writer) throws IOException, JSaParException;
 
     /**
      * Called after output() in order to clean up or write file footer.
@@ -71,7 +71,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @throws IOException
      * @throws JSaParException
      */
-    public abstract void outputAfter(Writer writer) throws IOException, JSaParException;
+    public abstract void writeAfter(Writer writer) throws IOException, JSaParException;
 
     /**
      * @return the lineSeparator
@@ -173,14 +173,14 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @throws JSaParException
      * @return false if no matching schema line was found. true otherwise.
      */
-    public boolean outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
+    public boolean writeLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
         SchemaLine schemaLine = getSchemaLine(lineNumber);
         if (schemaLine == null) {
             return false;
         }
         if (lineNumber > 1)
             writer.append(getLineSeparator());
-        outputLine(schemaLine, line, writer);
+        writeLine(schemaLine, line, writer);
         return true;
     }
 
@@ -199,8 +199,8 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @throws JSaParException
      * @return false if no matching schema line was found. true otherwise.
      */
-    public boolean outputLineLn(Line line, Writer writer) throws IOException, JSaParException {
-        if( outputLine(line, writer) ){
+    public boolean writeLineLn(Line line, Writer writer) throws IOException, JSaParException {
+        if( writeLine(line, writer) ){
             writer.append(getLineSeparator());
             return true;
         }
@@ -222,17 +222,17 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @throws JSaParException
      * @return false if no matching schema line was found. true otherwise.
      */
-    public boolean outputLine(Line line, Writer writer) throws IOException, JSaParException {
+    public boolean writeLine(Line line, Writer writer) throws IOException, JSaParException {
         SchemaLine schemaLine = getSchemaLine(line.getLineType());
         if (schemaLine == null) {
             return false;
         }
-        outputLine(schemaLine, line, writer);
+        writeLine(schemaLine, line, writer);
         return true;
     }
     
     
-    protected void outputLine(SchemaLine schemaLine, Line line, Writer writer) throws IOException, JSaParException {
+    protected void writeLine(SchemaLine schemaLine, Line line, Writer writer) throws IOException, JSaParException {
         schemaLine.output(line, writer);
     }
 

@@ -80,9 +80,9 @@ public class Converter {
     protected java.util.List<CellParseError> doConvert(java.io.Reader reader,
                                                        java.io.Writer writer,
                                                        DocumentWriter outputter) throws IOException, JSaParException {
-        outputSchema.outputBefore(writer);
+        outputSchema.writeBefore(writer);
         parserFactory .makeParser(inputSchema, reader).parse(outputter);
-        outputSchema.outputAfter(writer);
+        outputSchema.writeAfter(writer);
         return outputter.getParseErrors();
     }
 
@@ -114,7 +114,7 @@ public class Converter {
                 for (LineManipulator manipulator : manipulators) {
                     manipulator.manipulate(line);
                 }
-                outputSchema.outputLine(line, event.getLineNumber(), this.writer);
+                outputSchema.writeLine(line, event.getLineNumber(), this.writer);
             } catch (IOException e) {
                 throw new JSaParException("Failed to write to writer", e);
             }

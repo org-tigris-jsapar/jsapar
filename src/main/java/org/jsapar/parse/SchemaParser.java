@@ -15,6 +15,6 @@ public interface SchemaParser {
      * @throws JSaParException
      * @throws IOException
      */
-    public void parse(LineEventListener listener) throws JSaParException, IOException;
+    void parse(LineEventListener listener) throws JSaParException, IOException;
 
 }

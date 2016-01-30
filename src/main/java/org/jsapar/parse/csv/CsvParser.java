@@ -40,6 +40,7 @@ public class CsvParser implements SchemaParser{
                     throw new ParseException("Failed to create header schema.", e);
                 }
             }
+            //TODO: Cache line parser based on line schema.
             CsvLineParser lineParser = new CsvLineParser(lineReader, lineSchema); 
             nLineNumber += parseLinesByOccurs(lineParser, nLineNumber, listener);
         }
@@ -97,7 +98,6 @@ public class CsvParser implements SchemaParser{
     /**
      * @param lineParser
      * @param nLineNumber
-     * @param reader
      * @param listener
      *            The event listener to report paring events back to.
      * @return Number of lines that were parsed (including failed ones).

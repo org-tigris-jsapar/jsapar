@@ -5,16 +5,12 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import org.jsapar.Composer;
 import org.jsapar.model.DateCell;
 import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;
-import org.jsapar.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
-import org.jsapar.schema.FixedWidthControlCellSchema;
-import org.jsapar.schema.FixedWidthSchemaCell;
-import org.jsapar.schema.FixedWidthSchemaLine;
+import org.jsapar.schema.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,7 +42,7 @@ public class ComposerTest {
     }
 
     @Test
-    public final void testOutput() throws JSaParException {
+    public final void testWrite() throws JSaParException {
         String sExpected = "JonasStenberg" + System.getProperty("line.separator") + "FridaBergsten";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
@@ -60,7 +56,23 @@ public class ComposerTest {
 
         assertEquals(sExpected, writer.toString());
     }
-    
+
+    @Test
+    public final void testWriteCsv() throws JSaParException {
+        String sExpected = "Jonas;Stenberg" + System.getProperty("line.separator") + "Frida;Bergsten";
+        org.jsapar.schema.CsvSchema schema = new org.jsapar.schema.CsvSchema();
+        CsvSchemaLine schemaLine = new CsvSchemaLine(2);
+        schemaLine.addSchemaCell(new CsvSchemaCell("FirstName"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("LastName"));
+        schema.addSchemaLine(schemaLine);
+
+        Composer composer = new Composer(schema);
+        java.io.Writer writer = new java.io.StringWriter();
+        composer.write(document, writer);
+
+        assertEquals(sExpected, writer.toString());
+    }
+
     @Test
     public void testOutputLine_FixedWidthControllCell() throws IOException, JSaParException {
         FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema(1);

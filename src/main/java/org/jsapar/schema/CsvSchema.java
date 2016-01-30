@@ -41,7 +41,7 @@ public class CsvSchema extends Schema {
 
 
     @Override
-    public void output(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {
+    public void write(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {
         for (CsvSchemaLine lineSchema : getCsvSchemaLines()) {
             if (lineSchema.isFirstLineAsSchema()) {
                 lineSchema.outputHeaderLine(writer);
@@ -99,11 +99,11 @@ public class CsvSchema extends Schema {
     }
 
     @Override
-    public void outputAfter(Writer writer) throws IOException, JSaParException {
+    public void writeAfter(Writer writer) throws IOException, JSaParException {
     }
 
     @Override
-    public void outputBefore(Writer writer) throws IOException, JSaParException {
+    public void writeBefore(Writer writer) throws IOException, JSaParException {
     }
 
     /*
@@ -112,7 +112,7 @@ public class CsvSchema extends Schema {
      * @see org.jsapar.schema.Schema#outputLine(org.jsapar.model.Line, long, java.io.Writer)
      */
     @Override
-    public boolean outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
+    public boolean writeLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
         CsvSchemaLine schemaLine = null;
 
         long nLineMax = 0; // The line number for the last line of this schema line.

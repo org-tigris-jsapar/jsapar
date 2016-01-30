@@ -49,7 +49,7 @@ public class CsvControlCellSchema extends CsvSchema {
      * @see org.jsapar.schema.CsvSchema#output(org.jsapar.model.Document, java.io.Writer)
      */
     @Override
-    public void output(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {
+    public void write(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {
 
         while (itLines.hasNext()) {
             Line line = itLines.next();
@@ -130,14 +130,14 @@ public class CsvControlCellSchema extends CsvSchema {
      * @see org.jsapar.schema.Schema#output(org.jsapar.model.Line, int, java.io.Writer)
      */
     @Override
-    public boolean outputLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
+    public boolean writeLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
         SchemaLine schemaLine = getSchemaLine(line.getLineType());
         if (schemaLine == null)
             return false;
 
         if (lineNumber > 1)
             writer.append(getLineSeparator());
-        outputLine(schemaLine, line, writer);
+        writeLine(schemaLine, line, writer);
         return true;
     }
     
@@ -147,9 +147,9 @@ public class CsvControlCellSchema extends CsvSchema {
      * @see org.jsapar.schema.Schema#outputLine(org.jsapar.schema.SchemaLine, org.jsapar.model.Line, java.io.Writer)
      */
     @Override
-    protected void outputLine(SchemaLine schemaLine, Line line, Writer writer) throws IOException, JSaParException {
+    protected void writeLine(SchemaLine schemaLine, Line line, Writer writer) throws IOException, JSaParException {
         writeControlCell(writer, schemaLine.getLineTypeControlValue());
-        super.outputLine(schemaLine, line, writer);
+        super.writeLine(schemaLine, line, writer);
     }
 
     /**

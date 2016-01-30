@@ -75,7 +75,7 @@ public class FixedWidthControlCellSchemaTest {
         doc.addLine(line);
 
         StringWriter writer = new StringWriter();
-        schema.output(doc.getLineIterator(), writer);
+        schema.write(doc.getLineIterator(), writer);
 
         String sExpected = "NJonasStenbergAStorgatan 123 45NFred Bergsten";
         assertEquals(sExpected, writer.toString());
@@ -102,7 +102,7 @@ public class FixedWidthControlCellSchemaTest {
         line.addCell(new StringCell("Stenberg"));
 
         StringWriter writer = new StringWriter();
-        schema.outputLineLn(line, writer);
+        schema.writeLineLn(line, writer);
 
         assertEquals("NJonasStenberg", writer.toString());
     }
@@ -124,7 +124,7 @@ public class FixedWidthControlCellSchemaTest {
         line.addCell(new StringCell("Stenberg"));
 
         StringWriter writer = new StringWriter();
-        schema.outputLineLn(line, writer);
+        schema.writeLineLn(line, writer);
 
         String result = writer.toString();
         assertEquals(25, result.length());
@@ -149,7 +149,7 @@ public class FixedWidthControlCellSchemaTest {
         line.addCell(new StringCell("Stenberg"));
 
         StringWriter writer = new StringWriter();
-        schema.outputLineLn(line, writer);
+        schema.writeLineLn(line, writer);
 
         String result = writer.toString();
         assertEquals(25, result.length());
@@ -188,7 +188,7 @@ public class FixedWidthControlCellSchemaTest {
         doc.addLine(line);
 
         StringWriter writer = new StringWriter();
-        schema.output(doc.getLineIterator(), writer);
+        schema.write(doc.getLineIterator(), writer);
 
         String sExpected = "JonasStenbergStorgatan 123 45Fred Bergsten";
         assertEquals(sExpected, writer.toString());

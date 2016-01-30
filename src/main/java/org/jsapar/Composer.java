@@ -8,6 +8,8 @@ import java.io.Writer;
 import java.util.Iterator;
 
 import org.jsapar.compose.ComposeException;
+import org.jsapar.compose.SchemaComposer;
+import org.jsapar.compose.SchemaComposerFactory;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.schema.CsvSchemaLine;
@@ -23,6 +25,7 @@ import org.jsapar.schema.Schema;
  */
 public class Composer {
     private Schema schema;
+    private SchemaComposerFactory composerFactory = new SchemaComposerFactory();
 
     /**
      * Creates an Composer with a schema.
@@ -58,11 +61,10 @@ public class Composer {
      */
     public void write(Iterator<Line> lineIterator, java.io.Writer writer) throws JSaParException {
         try {
-            schema.outputBefore(writer);
-            schema.output(lineIterator, writer);
-            schema.outputAfter(writer);
-            if (!lineIterator.hasNext())
-                return;
+            SchemaComposer schemaComposer = composerFactory.makeComposer(schema, writer);
+            schemaComposer.beforeCompose();
+            schemaComposer.compose(lineIterator);
+            schemaComposer.afterCompose();
         } catch (IOException e) {
             throw new ComposeException("Failed to write to buffert.", e);
         }
@@ -78,7 +80,7 @@ public class Composer {
      */
     public void writeLineLn(Line line, Writer writer) throws JSaParException {
         try {
-            if(!schema.outputLineLn(line, writer))
+            if(!schema.writeLineLn(line, writer))
                 throw new ComposeException("Line type [" + line.getLineType() + "] not found within schema.");
         } catch (IOException e) {
             throw new ComposeException("Failed to write line.", e);
@@ -95,7 +97,7 @@ public class Composer {
      */
     public void writeLine(Line line, Writer writer) throws JSaParException {
         try {
-            if(!schema.outputLine(line, writer))
+            if(!schema.writeLine(line, writer))
                 throw new ComposeException("Line type [" + line.getLineType() + "] not found within schema.");
         } catch (IOException e) {
             throw new ComposeException("Failed to write line.", e);
@@ -119,7 +121,7 @@ public class Composer {
     public static void writeLine(Line line, Schema schema, long lineNumberForSchema, java.io.Writer writer)
             throws JSaParException {
         try {
-            schema.outputLine(line, lineNumberForSchema, writer);
+            schema.writeLine(line, lineNumberForSchema, writer);
         } catch (IOException e) {
             throw new ComposeException("Failed to write to buffert.", e);
         }
@@ -137,7 +139,7 @@ public class Composer {
      */
     public void writeLine(Line line, long lineNumber, Writer writer) throws JSaParException {
         try {
-            this.schema.outputLine(line, lineNumber, writer);
+            this.schema.writeLine(line, lineNumber, writer);
         } catch (IOException e) {
             throw new ComposeException("Failed to write to buffert.", e);
         }

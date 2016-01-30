@@ -77,7 +77,7 @@ public class FixedWidthParserTest {
         doc.addLine(line2);
 
         java.io.Writer writer = new java.io.StringWriter();
-        schema.output(doc.getLineIterator(), writer);
+        schema.write(doc.getLineIterator(), writer);
 
         assertEquals(sExpected, writer.toString());
     }

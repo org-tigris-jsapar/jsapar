@@ -120,7 +120,7 @@ public class Parser implements LineEventListener {
      * @throws JSaParException
      */
     @SuppressWarnings("rawtypes")
-	public List buildJava(Reader reader, List<CellParseError> parseErrors) throws JSaParException {
+	public List buildBeans(Reader reader, List<CellParseError> parseErrors) throws JSaParException {
         JavaBuilder javaBuilder = new JavaBuilder(parseErrors);
         return javaBuilder.build(reader);
     }
