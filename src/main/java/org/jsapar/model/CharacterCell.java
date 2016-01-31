@@ -16,10 +16,6 @@ public class CharacterCell extends Cell {
 
     private Character characterValue;
 
-    public CharacterCell() {
-        super(CellType.CHARACTER);
-    }
-
     public CharacterCell(String sName) {
         super(sName, CellType.CHARACTER);
     }

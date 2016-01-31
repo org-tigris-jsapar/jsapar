@@ -72,10 +72,10 @@ public class CsvLineParser extends SchemaLineParser {
     }
     
     /**
-     * @param sLine
+     * @param cellSeparator
+     * @param quoteChar
+     * @param lineReader
      * @return An array of all cells found on the line.
-     * @throws JSaParException 
-     * @throws IOException 
      */
     public static CellSplitter makeCellSplitter(String cellSeparator, char quoteChar, LineReader lineReader) {
         if (quoteChar == 0)
@@ -128,7 +128,7 @@ public class CsvLineParser extends SchemaLineParser {
      */
     private void addCellToLineWithoutSchema(Line line, String sCell) throws JSaParException {
         Cell cell;
-        cell = new StringCell(sCell);
+        cell = new StringCell("@@cell-" + (1+line.size()), sCell);
         line.addCell(cell);
     }
     

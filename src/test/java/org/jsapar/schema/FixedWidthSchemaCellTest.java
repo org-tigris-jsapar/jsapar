@@ -262,7 +262,7 @@ public class FixedWidthSchemaCellTest {
         schemaElment.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("Jonas");
+        Cell cell = new StringCell("First name","Jonas");
         schemaElment.output(cell, writer, ' ');
 
         assertEquals("   Jonas   ", writer.toString());
@@ -274,7 +274,7 @@ public class FixedWidthSchemaCellTest {
         schemaElment.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("000Jonas000");
+        Cell cell = new StringCell("First name","000Jonas000");
         schemaElment.output(cell, writer, ' ');
 
         assertEquals("0Jonas0", writer.toString());
@@ -291,7 +291,7 @@ public class FixedWidthSchemaCellTest {
         schemaElment.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("000Jonas000");
+        Cell cell = new StringCell("First name","000Jonas000");
         schemaElment.output(cell, writer, ' ');
 
         assertEquals("0Jonas", writer.toString());
@@ -303,7 +303,7 @@ public class FixedWidthSchemaCellTest {
         schemaElment.setAlignment(FixedWidthSchemaCell.Alignment.LEFT);
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("Jonas");
+        Cell cell = new StringCell("First name","Jonas");
         schemaElment.output(cell, writer, ' ');
 
         assertEquals("Jonas      ", writer.toString());
@@ -314,7 +314,7 @@ public class FixedWidthSchemaCellTest {
         FixedWidthSchemaCell schemaElment = new FixedWidthSchemaCell("First name", 5);
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("Jonas");
+        Cell cell = new StringCell("First name","Jonas");
         schemaElment.output(cell, writer, ' ');
 
         assertEquals("Jonas", writer.toString());
@@ -326,7 +326,7 @@ public class FixedWidthSchemaCellTest {
         schemaElment.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("Jonas");
+        Cell cell = new StringCell("First name","Jonas");
         schemaElment.output(cell, writer, '*');
 
         assertEquals("******Jonas", writer.toString());
@@ -338,7 +338,7 @@ public class FixedWidthSchemaCellTest {
         schemaElment.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("0000Jonas");
+        Cell cell = new StringCell("First name","0000Jonas");
         schemaElment.output(cell, writer, '*');
 
         assertEquals("0Jonas", writer.toString());

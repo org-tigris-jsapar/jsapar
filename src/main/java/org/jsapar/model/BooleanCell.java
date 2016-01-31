@@ -24,14 +24,6 @@ public class BooleanCell extends Cell  {
 	 */
 	private Boolean booleanValue;
 
-	public BooleanCell() {
-		super(CellType.BOOLEAN);
-	}
-
-	public BooleanCell(Boolean value) {
-		super(CellType.BOOLEAN);
-		this.booleanValue = value;
-	}
 
 	public BooleanCell(String sName, Boolean value) {
 		super(sName, CellType.BOOLEAN);

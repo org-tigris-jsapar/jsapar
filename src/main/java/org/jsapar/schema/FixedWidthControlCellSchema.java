@@ -84,7 +84,6 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
      * 
      * @see org.jsapar.schema.FixedWidthSchema#output(org.jsapar.model.Document, java.io.Writer)
      */
-    @Override
     public void write(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {
 
         while (itLines.hasNext()) {

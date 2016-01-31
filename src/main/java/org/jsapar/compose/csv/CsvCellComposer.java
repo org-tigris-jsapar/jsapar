@@ -12,7 +12,7 @@ import java.io.Writer;
 /**
  * Created by stejon0 on 2016-01-30.
  */
-public class CsvCellComposer {
+class CsvCellComposer {
     private final static String REPLACE_STRING = "\u00A0"; // non-breaking space
     CellComposer cellComposer = new CellComposer();
     private Writer writer;

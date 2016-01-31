@@ -15,36 +15,6 @@ import org.junit.Test;
 
 public class CSVSchemaTest {
 
-    @Test
-    public final void testOutput_firstLineAsHeader() throws IOException, JSaParException {
-	CsvSchema schema = new CsvSchema();
-
-	CsvSchemaLine schemaLine = new CsvSchemaLine();
-	schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
-	schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
-	schemaLine.setFirstLineAsSchema(true);
-	schema.addSchemaLine(schemaLine);
-
-	Document doc = new Document();
-
-	Line line1 = new Line();
-	line1.addCell(new StringCell("Jonas"));
-	line1.addCell(new StringCell("Stenberg"));
-	doc.addLine(line1);
-
-	Line line2 = new Line();
-	line2.addCell(new StringCell("Nils"));
-	line2.addCell(new StringCell("Nilsson"));
-	doc.addLine(line2);
-
-	StringWriter writer = new StringWriter();
-	schema.write(doc.getLineIterator(), writer);
-
-	String sLineSep = System.getProperty("line.separator");
-	String sExpected = "First Name;Last Name" + sLineSep + "Jonas;Stenberg" + sLineSep + "Nils;Nilsson";
-
-	assertEquals(sExpected, writer.toString());
-    }
 
     @Test
     public final void testOutputLine() throws IOException, JSaParException {
@@ -60,8 +30,8 @@ public class CSVSchemaTest {
 	outputSchema.addSchemaLine(outputSchemaLine);
 
 	Line line1 = new Line();
-	line1.addCell(new StringCell("Jonas"));
-	line1.addCell(new StringCell("Stenberg"));
+	line1.addCell(new StringCell("First name","Jonas"));
+	line1.addCell(new StringCell("Last name","Stenberg"));
 
 	StringWriter writer = new StringWriter();
 	outputSchema.writeLine(line1, 2, writer);
@@ -107,13 +77,13 @@ public class CSVSchemaTest {
 	schemaLine = new CsvSchemaLine();
 	schemaLine.addSchemaCell(new CsvSchemaCell("First name"));
 	schemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
-	
+
 	CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe size", new SchemaCellFormat(CellType.INTEGER));
 	shoeSizeCell.setDefaultValue("41");
 	schemaLine.addSchemaCell(shoeSizeCell);
-	
+
     schemaLine.addSchemaCell(new CsvSchemaCell("Birth date", new SchemaCellFormat(CellType.DATE, new SimpleDateFormat("yyyy-MM-dd"))));
-    
+
 	schemaLine.setFirstLineAsSchema(true);
 	schema.addSchemaLine(schemaLine);
 

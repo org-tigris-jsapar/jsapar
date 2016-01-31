@@ -26,20 +26,9 @@ public class BigDecimalCell extends NumberCell  {
      * The string representation of the decimalValue of this cell.
      */
 
-    public BigDecimalCell() {
-        super(CellType.DECIMAL);
-    }
-
-    public BigDecimalCell(BigDecimal value) {
-        super(value, CellType.DECIMAL);
-    }
 
     public BigDecimalCell(String sName, BigDecimal value) {
         super(sName, value, CellType.DECIMAL);
-    }
-
-    public BigDecimalCell(BigInteger value) {
-        super(value, CellType.DECIMAL);
     }
 
     public BigDecimalCell(String sName, BigInteger value) {

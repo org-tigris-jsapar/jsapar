@@ -80,9 +80,11 @@ public class Converter {
     protected java.util.List<CellParseError> doConvert(java.io.Reader reader,
                                                        java.io.Writer writer,
                                                        DocumentWriter outputter) throws IOException, JSaParException {
-        outputSchema.writeBefore(writer);
-        parserFactory .makeParser(inputSchema, reader).parse(outputter);
-        outputSchema.writeAfter(writer);
+
+        // TODO while refactoring
+//        outputSchema.writeBefore(writer);
+        parserFactory.makeParser(inputSchema, reader).parse(outputter);
+//        outputSchema.writeAfter(writer);
         return outputter.getParseErrors();
     }
 

@@ -44,34 +44,6 @@ public abstract class Schema implements Cloneable, ParseSchema {
     private Locale locale = Locale.getDefault();
     private String lineSeparator = System.getProperty("line.separator");
 
-    /**
-     * This method should only be called by a Composer class. Don't use this directly in your code.
-     * Use a Composer instead.
-     * 
-     * @param iterator
-     * @param writer
-     * @throws IOException
-     * @throws JSaParException
-     */
-    public abstract void write(Iterator<Line> iterator, Writer writer) throws IOException, JSaParException;
-
-    /**
-     * Called before output() in order to set up or write file header.
-     * 
-     * @param writer
-     * @throws IOException
-     * @throws JSaParException
-     */
-    public abstract void writeBefore(Writer writer) throws IOException, JSaParException;
-
-    /**
-     * Called after output() in order to clean up or write file footer.
-     * 
-     * @param writer
-     * @throws IOException
-     * @throws JSaParException
-     */
-    public abstract void writeAfter(Writer writer) throws IOException, JSaParException;
 
     /**
      * @return the lineSeparator

@@ -21,12 +21,6 @@ public class EmptyCell extends Cell implements Comparable<EmptyCell>{
 	private static final long serialVersionUID = 36481831017227154L;
 	private final static String STRING_VALUE="";
 
-	/**
-	 * @param cellType
-	 */
-	public EmptyCell(CellType cellType) {
-		super(cellType);
-	}
 
 	/**
 	 * @param name

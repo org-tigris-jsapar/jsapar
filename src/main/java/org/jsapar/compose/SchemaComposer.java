@@ -41,4 +41,9 @@ public interface SchemaComposer {
      */
     void afterCompose() throws IOException, JSaParException;
 
+    /** Create a schema line composer for this schema composer.
+     * @param schemaLine
+     * @return A schema line composer.
+     */
+//    SchemaLineComposer makeLineComposer(SchemaLine schemaLine);
 }

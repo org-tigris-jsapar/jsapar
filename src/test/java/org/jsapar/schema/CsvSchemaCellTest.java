@@ -24,7 +24,7 @@ public class CsvSchemaCellTest {
 	CsvSchemaCell schemaElment = new CsvSchemaCell("First name");
 
 	Writer writer = new StringWriter();
-	Cell cell = new StringCell("Jonas");
+	Cell cell = new StringCell("First name","Jonas");
 	schemaElment.output(cell, writer, ";",(char)0);
 
 	assertEquals("Jonas", writer.toString());
@@ -36,7 +36,7 @@ public class CsvSchemaCellTest {
         schemaElment.setIgnoreWrite(true);
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("Jonas");
+        Cell cell = new StringCell("First name","Jonas");
         schemaElment.output(cell, writer, ";",(char)0);
 
         assertEquals("", writer.toString());
@@ -47,7 +47,7 @@ public class CsvSchemaCellTest {
 	CsvSchemaCell schemaElment = new CsvSchemaCell("First name");
 
 	Writer writer = new StringWriter();
-	Cell cell = new StringCell("Here; we come");
+	Cell cell = new StringCell("test","Here; we come");
 	schemaElment.output(cell, writer, ";",'\'');
 
 	assertEquals("'Here; we come'", writer.toString());
@@ -58,7 +58,7 @@ public class CsvSchemaCellTest {
     CsvSchemaCell schemaElment = new CsvSchemaCell("First name");
 
     Writer writer = new StringWriter();
-    Cell cell = new StringCell("'Here we come'");
+    Cell cell = new StringCell("test","'Here we come'");
     schemaElment.output(cell, writer, ";",'\'');
 
     assertEquals("''Here we come''", writer.toString());
@@ -69,7 +69,7 @@ public class CsvSchemaCellTest {
 	CsvSchemaCell schemaElment = new CsvSchemaCell("First name");
 
 	Writer writer = new StringWriter();
-	Cell cell = new StringCell("Joho");
+	Cell cell = new StringCell("test","Joho");
 	schemaElment.output(cell, writer, ";",'\'');
 
 	assertEquals("Joho", writer.toString());
@@ -80,7 +80,7 @@ public class CsvSchemaCellTest {
 	CsvSchemaCell schemaElment = new CsvSchemaCell("Shoe size");
 
 	Writer writer = new StringWriter();
-	Cell cell = new IntegerCell(new Integer(123));
+	Cell cell = new IntegerCell("Shoe size", new Integer(123));
 	schemaElment.output(cell, writer, ";", (char)0);
 
 	assertEquals("123", writer.toString());
@@ -94,7 +94,7 @@ public class CsvSchemaCellTest {
 		new Locale("sv", "SE")));
 
 	Writer writer = new StringWriter();
-	Cell cell = new BigDecimalCell(new BigDecimal("123456.59"));
+	Cell cell = new BigDecimalCell("test", new BigDecimal("123456.59"));
 	schemaElment.output(cell, writer, ";", (char)0);
 
 	// Non breakable space as grouping character.
@@ -107,7 +107,7 @@ public class CsvSchemaCellTest {
 	schemaElment.setCellFormat(new SchemaCellFormat(CellType.BOOLEAN));
 
 	Writer writer = new StringWriter();
-	Cell cell = new BooleanCell(new Boolean(true));
+	Cell cell = new BooleanCell("Loves", new Boolean(true));
 	schemaElment.output(cell, writer, ";", (char)0);
 
 	assertEquals("true", writer.toString());
@@ -118,7 +118,7 @@ public class CsvSchemaCellTest {
     	CsvSchemaCell schemaElment = new CsvSchemaCell("Greeting");
 
     	Writer writer = new StringWriter();
-    	Cell cell = new StringCell("With;-)love");
+    	Cell cell = new StringCell("test","With;-)love");
     	schemaElment.output(cell, writer, ";-)", (char)0);
 
     	assertEquals("With\u00A0love", writer.toString());
@@ -129,7 +129,7 @@ public class CsvSchemaCellTest {
         CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
         schemaElement.setMaxLength(4);
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("Jonas");
+        Cell cell = new StringCell("test","Jonas");
         schemaElement.output(cell, writer, ";", (char) 0);
 
         assertEquals("Jona", writer.toString());
@@ -140,7 +140,7 @@ public class CsvSchemaCellTest {
         CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
         schemaElement.setMaxLength(4);
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("J;onas");
+        Cell cell = new StringCell("test","J;onas");
         schemaElement.output(cell, writer, ";", '"');
 
         assertEquals("\"J;\"", writer.toString());
@@ -151,7 +151,7 @@ public class CsvSchemaCellTest {
         CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
         schemaElement.setMaxLength(4);
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("J;onas");
+        Cell cell = new StringCell("test","J;onas");
         schemaElement.output(cell, writer, ";", (char)0);
 
         assertEquals("J\u00A0on", writer.toString());

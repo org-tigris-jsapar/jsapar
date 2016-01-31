@@ -27,7 +27,7 @@ public class Line implements Serializable {
 
     private java.util.ArrayList<Cell> cellsByIndex = null;
 
-    private java.util.HashMap<String, Cell> cellsByName = null;
+    private java.util.Map<String, Cell> cellsByName = null;
 
     /**
      * Line type.

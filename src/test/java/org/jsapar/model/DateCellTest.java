@@ -49,17 +49,6 @@ public class DateCellTest {
 	assertEquals("2007-10-01T14:05:30.555+02:00", aDate.getXmlValue());
     }
 
-    /**
-     * Test method for
-     * {@link DateCell#DateCell(java.util.Date)}.
-     */
-    @Test
-    public final void testDateCellDate() {
-	DateCell cell = new DateCell();
-	assertNull(cell.getName());
-	assertNull(cell.getValue());
-
-    }
 
     /**
      * Test method for

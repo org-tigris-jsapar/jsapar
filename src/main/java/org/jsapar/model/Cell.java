@@ -1,11 +1,10 @@
 package org.jsapar.model;
 
+import org.jsapar.schema.SchemaException;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Locale;
-
-import org.jsapar.JSaParException;
-import org.jsapar.schema.SchemaException;
 
 /**
  * Abstract class which represents a parsable item on a line in the original document. A cell has a
@@ -30,24 +29,18 @@ public abstract class Cell implements Serializable, Cloneable {
     /**
      * The name of the cell. Can be null if there is no name.
      */
-    private String            name;
+    private String name;
 
-    private CellType          cellType         = CellType.STRING;
-
-    /**
-     * Creates an empty cell.
-     */
-    public Cell(CellType cellType) {
-        this.cellType = cellType;
-    }
+    private final CellType          cellType;
 
     /**
      * Creates a cell with a name.
      * 
-     * @param sName
+     * @param name        The name of the cell
+     * @param cellType    The type of the cell.
      */
-    public Cell(String sName, CellType cellType) {
-        setName(sName);
+    public Cell(String name, CellType cellType) {
+        this.name = name;
         this.cellType = cellType;
     }
 
@@ -58,17 +51,6 @@ public abstract class Cell implements Serializable, Cloneable {
      */
     public String getName() {
         return this.name;
-    }
-
-    /**
-     * Sets the name of the cell. Changing the name of a cell that is part of a line will compromise
-     * the key.
-     * 
-     * @param name
-     *            the name to set
-     */
-    private void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -157,18 +139,6 @@ public abstract class Cell implements Serializable, Cloneable {
         return getStringValue();
     }
 
-    /**
-     * Creates a copy of this cell but with the supplied name.
-     * 
-     * @param sNewName
-     * @return A copy of this cell but with the new name.
-     * @throws JSaParException
-     */
-    public Cell makeCopy(String sNewName) {
-        Cell clone = this.clone();
-        clone.setName(sNewName);
-        return clone;
-    }
 
     
     /* (non-Javadoc)
@@ -186,7 +156,7 @@ public abstract class Cell implements Serializable, Cloneable {
     /**
      * Compares value of this cell with the value of the supplied cell. 
      * 
-     * @param right
+     * @param right The cell to compare to.
      * @return a negative integer, zero, or a positive integer as this cell's value is less than, equal to, or greater than the specified cell's value. 
      * @throws SchemaException
      */
@@ -197,5 +167,16 @@ public abstract class Cell implements Serializable, Cloneable {
      */
     public boolean isEmpty(){
         return false;
+    }
+
+    /**
+     * Creates a copy of this cell but with a new name.
+     * @param name The new name of the copy.
+     * @return a copy of this cell but with a new name.
+     */
+    public Cell makeCopy(String name) {
+        Cell copy= this.clone();
+        copy.name = name;
+        return copy;
     }
 }

@@ -27,23 +27,6 @@ public class StringCell extends Cell {
      */
     private String stringValue;
 
-    /**
-     * Creates an empty cell without any name or value.
-     */
-    public StringCell() {
-        super(CellType.STRING);
-
-    }
-
-    /**
-     * Creates a string cell without any name with the supplied value.
-     * 
-     * @param sValue
-     */
-    public StringCell(String sValue) {
-        super(CellType.STRING);
-        this.stringValue = sValue;
-    }
 
     /**
      * Creates a string cell with the supplied name and value.
@@ -56,16 +39,6 @@ public class StringCell extends Cell {
 	this.stringValue = sValue;
     }
 
-    /**
-     * Creates a string cell without any name with the supplied value.
-     * @param chValue
-     */
-    public StringCell(char chValue) {
-        super(CellType.STRING);
-        StringBuilder sb = new StringBuilder();
-        sb.append(chValue);
-        this.stringValue = sb.toString();
-    }
 
     /**
      * Creates a string cell with the supplied name and value.

@@ -60,18 +60,18 @@ public class FixedWidthControlCellSchemaTest {
         Document doc = new Document();
 
         Line line = new Line("Name");
-        line.addCell(new StringCell("Jonas"));
-        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("First name","Jonas"));
+        line.addCell(new StringCell("Last name","Stenberg"));
         doc.addLine(line);
 
         line = new Line("Address");
-        line.addCell(new StringCell("Storgatan"));
-        line.addCell(new StringCell("123 45"));
+        line.addCell(new StringCell("Street","Storgatan"));
+        line.addCell(new StringCell("ZipCode","123 45"));
         doc.addLine(line);
 
         line = new Line("Name");
-        line.addCell(new StringCell("Fred"));
-        line.addCell(new StringCell("Bergsten"));
+        line.addCell(new StringCell("First name","Fred"));
+        line.addCell(new StringCell("Last name","Bergsten"));
         doc.addLine(line);
 
         StringWriter writer = new StringWriter();
@@ -98,8 +98,8 @@ public class FixedWidthControlCellSchemaTest {
         schema.addSchemaLine(schemaLine);
 
         Line line = new Line("Name");
-        line.addCell(new StringCell("Jonas"));
-        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("First name","Jonas"));
+        line.addCell(new StringCell("Last name","Stenberg"));
 
         StringWriter writer = new StringWriter();
         schema.writeLineLn(line, writer);
@@ -120,8 +120,8 @@ public class FixedWidthControlCellSchemaTest {
         schema.addSchemaLine(schemaLine);
 
         Line line = new Line("Name");
-        line.addCell(new StringCell("Jonas"));
-        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("First name","Jonas"));
+        line.addCell(new StringCell("Last name","Stenberg"));
 
         StringWriter writer = new StringWriter();
         schema.writeLineLn(line, writer);
@@ -145,8 +145,8 @@ public class FixedWidthControlCellSchemaTest {
         schema.addSchemaLine(schemaLine);
 
         Line line = new Line("Name");
-        line.addCell(new StringCell("Jonas"));
-        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("First name","Jonas"));
+        line.addCell(new StringCell("Last name","Stenberg"));
 
         StringWriter writer = new StringWriter();
         schema.writeLineLn(line, writer);
@@ -173,18 +173,18 @@ public class FixedWidthControlCellSchemaTest {
         Document doc = new Document();
 
         Line line = new Line("Name");
-        line.addCell(new StringCell("Jonas"));
-        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("First name","Jonas"));
+        line.addCell(new StringCell("Last name","Stenberg"));
         doc.addLine(line);
 
         line = new Line("Address");
-        line.addCell(new StringCell("Storgatan"));
-        line.addCell(new StringCell("123 45"));
+        line.addCell(new StringCell("Street","Storgatan"));
+        line.addCell(new StringCell("ZipCode","123 45"));
         doc.addLine(line);
 
         line = new Line("Name");
-        line.addCell(new StringCell("Fred"));
-        line.addCell(new StringCell("Bergsten"));
+        line.addCell(new StringCell("First name","Fred"));
+        line.addCell(new StringCell("Last name","Bergsten"));
         doc.addLine(line);
 
         StringWriter writer = new StringWriter();

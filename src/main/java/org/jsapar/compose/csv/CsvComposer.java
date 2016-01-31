@@ -30,7 +30,7 @@ public class CsvComposer implements SchemaComposer {
             //TODO: Cache line composer based on line schema.
             CsvLineComposer lineComposer = new CsvLineComposer(writer, lineSchema);
             if (lineSchema.isFirstLineAsSchema()) {
-                lineSchema.outputHeaderLine(writer);
+                lineComposer.composeHeaderLine();
                 if (itLines.hasNext())
                     writer.write(schema.getLineSeparator());
             }

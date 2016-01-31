@@ -70,7 +70,7 @@ public class SchemaCellTest {
     @Test
     public void testMakeCell_DefaultString() throws ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
-        schemaCell.setDefaultCell(new StringCell("TheDefault"));
+        schemaCell.setDefaultCell(new StringCell("test","TheDefault"));
 
         Cell cell = schemaCell.makeCell("");
         assertEquals("TheDefault", cell.getStringValue());
@@ -223,7 +223,7 @@ public class SchemaCellTest {
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
         schemaCell.setDefaultValue("123456,78901");
 
-        String value = schemaCell.format(new EmptyCell(CellType.FLOAT));
+        String value = schemaCell.format(new EmptyCell("test", CellType.FLOAT));
         assertEquals("123456,78901", value);
     }
     
@@ -238,7 +238,7 @@ public class SchemaCellTest {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
 
-        String value = schemaCell.format(new EmptyCell(CellType.INTEGER));
+        String value = schemaCell.format(new EmptyCell("test", CellType.INTEGER));
         assertEquals("", value);
     }    
 
@@ -252,7 +252,7 @@ public class SchemaCellTest {
     public void testFormat() throws ParseException, SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
 
-        String value = schemaCell.format(new StringCell("A"));
+        String value = schemaCell.format(new StringCell("test","A"));
         assertEquals("A", value);
     }    
 
@@ -267,7 +267,7 @@ public class SchemaCellTest {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING, "A|B", new Locale("sv","SE")));
 
-        String value = schemaCell.format(new StringCell("A"));
+        String value = schemaCell.format(new StringCell("test","A"));
         assertEquals("A", value);
     }
     
@@ -282,7 +282,7 @@ public class SchemaCellTest {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING, "A|B", new Locale("sv","SE")));
 
-        schemaCell.format(new StringCell("C"));
+        schemaCell.format(new StringCell("test","C"));
         fail("Should throw exception");
     }    
     
@@ -428,8 +428,8 @@ public class SchemaCellTest {
 
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
-        schemaCell.setMinValue(new IntegerCell(0));
-        schemaCell.setMaxValue(new IntegerCell(54321));
+        schemaCell.setMinValue(new IntegerCell("test",0));
+        schemaCell.setMaxValue(new IntegerCell("test",54321));
 
         Cell cell = schemaCell.makeCell("12345");
         assertEquals(IntegerCell.class, cell.getClass());
@@ -446,8 +446,8 @@ public class SchemaCellTest {
 
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
-        schemaCell.setMinValue(new IntegerCell(54321));
-        schemaCell.setMaxValue(new IntegerCell(54322));
+        schemaCell.setMinValue(new IntegerCell("test",54321));
+        schemaCell.setMaxValue(new IntegerCell("test",54322));
         schemaCell.makeCell("12345");
     }
 
@@ -460,8 +460,8 @@ public class SchemaCellTest {
 
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
-        schemaCell.setMinValue(new IntegerCell(0));
-        schemaCell.setMaxValue(new IntegerCell(100));
+        schemaCell.setMinValue(new IntegerCell("test",0));
+        schemaCell.setMaxValue(new IntegerCell("test",100));
         schemaCell.makeCell("12345");
     }
 

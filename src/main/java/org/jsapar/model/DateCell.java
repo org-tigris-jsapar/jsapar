@@ -27,16 +27,6 @@ public class DateCell extends Cell implements Comparable<DateCell> {
      */
     private Date dateValue;
 
-    public DateCell() {
-        super(CellType.DATE);
-
-    }
-
-    public DateCell(Date value) {
-        super(CellType.DATE);
-        this.dateValue = value;
-    }
-
     public DateCell(String sName, Date value) {
         super(sName, CellType.DATE);
         this.dateValue = value;

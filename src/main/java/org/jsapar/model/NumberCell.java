@@ -26,15 +26,6 @@ public abstract class NumberCell extends Cell {
      */
     private Number numberValue;
 
-    public NumberCell(CellType cellType) {
-        super(cellType);
-
-    }
-
-    public NumberCell(Number value, CellType cellType) {
-        super(cellType);
-        this.numberValue = value;
-    }
 
     public NumberCell(String sName, Number value, CellType cellType) {
         super(sName, cellType);

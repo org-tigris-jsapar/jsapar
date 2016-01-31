@@ -41,32 +41,6 @@ public class CsvSchema extends Schema {
 
 
     @Override
-    public void write(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {
-        for (CsvSchemaLine lineSchema : getCsvSchemaLines()) {
-            if (lineSchema.isFirstLineAsSchema()) {
-                lineSchema.outputHeaderLine(writer);
-                if (itLines.hasNext())
-                    writer.write(getLineSeparator());
-            }
-            for (int i = 0; i < lineSchema.getOccurs(); i++) {
-                if (!itLines.hasNext())
-                    return;
-
-                Line line = itLines.next();
-                ((CsvSchemaLine) lineSchema).output(line, writer);
-
-                if (itLines.hasNext())
-                    writer.write(getLineSeparator());
-                else
-                    return;
-            }
-        }
-    }
-
-
-
-
-    @Override
     public CsvSchema clone() {
         CsvSchema schema;
         schema = (CsvSchema) super.clone();
@@ -96,14 +70,6 @@ public class CsvSchema extends Schema {
     @Override
     public List<? extends SchemaLine> getSchemaLines() {
         return this.schemaLines;
-    }
-
-    @Override
-    public void writeAfter(Writer writer) throws IOException, JSaParException {
-    }
-
-    @Override
-    public void writeBefore(Writer writer) throws IOException, JSaParException {
     }
 
     /*
@@ -136,7 +102,8 @@ public class CsvSchema extends Schema {
         if (lineNumber > 1)
             writer.append(getLineSeparator());
         if (nLineWithinSchema == 1 && schemaLine.isFirstLineAsSchema()) {
-            schemaLine.outputHeaderLine(writer);
+            // TODO handle this while refactoring
+//            schemaLine.outputHeaderLine(writer);
             writer.append(getLineSeparator());
         }
         schemaLine.output(line, writer);

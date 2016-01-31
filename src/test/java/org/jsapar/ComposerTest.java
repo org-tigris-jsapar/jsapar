@@ -85,8 +85,8 @@ public class ComposerTest {
         schema.addSchemaLine(schemaLine);
 
         Line line = new Line("Name");
-        line.addCell(new StringCell("Jonas"));
-        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("First name","Jonas"));
+        line.addCell(new StringCell("Last name","Stenberg"));
 
         StringWriter writer = new StringWriter();
         Composer composer = new Composer(schema);
@@ -109,8 +109,8 @@ public class ComposerTest {
         schema.addSchemaLine(schemaLine);
 
         Line line = new Line("Name");
-        line.addCell(new StringCell("Jonas"));
-        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("First name","Jonas"));
+        line.addCell(new StringCell("Last name","Stenberg"));
 
         StringWriter writer = new StringWriter();
         Composer composer = new Composer(schema);

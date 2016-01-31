@@ -45,8 +45,8 @@ public class FixedWidthSchemaLineTest {
     @Test
     public void testOutput() throws IOException, JSaParException {
         Line line = new Line();
-        line.addCell(new StringCell("Jonas"));
-        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("First name","Jonas"));
+        line.addCell(new StringCell("Last name","Stenberg"));
         line.addCell(new StringCell("Street address", "Spiselvagen 19"));
 
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
@@ -70,8 +70,8 @@ public class FixedWidthSchemaLineTest {
     @Test
     public void testOutput_minLength() throws IOException, JSaParException {
         Line line = new Line();
-        line.addCell(new StringCell("Jonas"));
-        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("First name","Jonas"));
+        line.addCell(new StringCell("Last name","Stenberg"));
         line.addCell(new StringCell("Street address", "Hemvagen 19"));
 
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
@@ -96,8 +96,8 @@ public class FixedWidthSchemaLineTest {
     @Test
     public void testOutput_ignorewrite() throws IOException, JSaParException {
         Line line = new Line();
-        line.addCell(new StringCell("Jonas"));
-        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("First name","Jonas"));
+        line.addCell(new StringCell("Last name","Stenberg"));
         line.addCell(new StringCell("Street address", "Spiselvägen 19"));
 
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
@@ -126,7 +126,7 @@ public class FixedWidthSchemaLineTest {
         assertEquals(schemaLine.getLineType(), clone.getLineType());
 
         // Does not clone strings values yet. Might do that in the future.
-        assertTrue(schemaLine.getLineType() == clone.getLineType());
+        assertSame(schemaLine.getLineType(), clone.getLineType());
         assertEquals(schemaLine.getSchemaCells().get(0).getName(), clone.getSchemaCells().get(0).getName());
         assertFalse(schemaLine.getSchemaCells().get(0) == clone.getSchemaCells().get(0));
     }

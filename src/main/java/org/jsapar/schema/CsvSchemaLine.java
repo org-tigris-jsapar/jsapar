@@ -217,34 +217,6 @@ public class CsvSchemaLine extends SchemaLine {
         this.quoteChar = quoteChar;
     }
 
-    /**
-     * @return
-     * @throws JSaParException
-     */
-    Line buildHeaderLineFromSchema() throws JSaParException {
-        Line line = new Line();
-
-        for (CsvSchemaCell schemaCell : this.getSchemaCells()) {
-            line.addCell(new StringCell(schemaCell.getName(), schemaCell.getName()));
-        }
-
-        return line;
-    }
-
-    /**
-     * Writes header line if first line is schema.
-     * 
-     * @param writer
-     * @throws IOException
-     * @throws JSaParException
-     */
-    public void outputHeaderLine(Writer writer) throws IOException, JSaParException {
-        CsvSchemaLine unformattedSchemaLine = this.clone();
-        for (CsvSchemaCell schemaCell : unformattedSchemaLine.getSchemaCells()) {
-            schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING));
-        }
-        unformattedSchemaLine.output(this.buildHeaderLineFromSchema(), writer);
-    }
 
     /*
      * (non-Javadoc)

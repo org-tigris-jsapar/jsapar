@@ -53,34 +53,6 @@ public class FixedWidthParserTest {
         assertEquals("Stenberg", doc.getLine(1).getCell("Last name").getStringValue());
     }
 
-    @Test
-    public final void testOutput_Flat() throws IOException, JSaParException {
-        String sExpected = "JonasStenbergFridaBergsten";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
-        schema.setLineSeparator("");
-
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schema.addSchemaLine(schemaLine);
-
-        Line line1 = new Line();
-        line1.addCell(new StringCell("Jonas"));
-        line1.addCell(new StringCell("Stenberg"));
-
-        Line line2 = new Line();
-        line2.addCell(new StringCell("Frida"));
-        line2.addCell(new StringCell("Bergsten"));
-
-        Document doc = new Document();
-        doc.addLine(line1);
-        doc.addLine(line2);
-
-        java.io.Writer writer = new java.io.StringWriter();
-        schema.write(doc.getLineIterator(), writer);
-
-        assertEquals(sExpected, writer.toString());
-    }
 
     private class DocumentBuilder {
         private Document             document = new Document();

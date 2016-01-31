@@ -28,24 +28,24 @@ public class FixedWidthSchemaCell extends SchemaCell {
 
         LEFT{
             @Override
-            void fit(Writer writer, int length, String sValue) throws IOException {
+            public void fit(Writer writer, int length, String sValue) throws IOException {
                 writer.write(sValue, 0, length);
             }
 
             @Override
-            void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException {
+            public void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException {
                     writer.write(sValue);
                     FixedWidthSchemaCell.fill(writer, fillCharacter, nToFill);
             }
         },
         CENTER {
             @Override
-            void fit(Writer writer, int length, String sValue) throws IOException {
+            public void fit(Writer writer, int length, String sValue) throws IOException {
                 writer.write(sValue, (sValue.length()-length)/2, length);
             }
 
             @Override
-            void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException {
+            public void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException {
                 int nLeft = nToFill / 2;
                 FixedWidthSchemaCell.fill(writer, fillCharacter, nLeft);
                 writer.write(sValue);
@@ -54,12 +54,12 @@ public class FixedWidthSchemaCell extends SchemaCell {
         },
         RIGHT{
             @Override
-            void fit(Writer writer, int length, String sValue) throws IOException {
+            public void fit(Writer writer, int length, String sValue) throws IOException {
                 writer.write(sValue, sValue.length() - length, length);
             }
 
             @Override
-            void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException {
+            public void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException {
                 FixedWidthSchemaCell.fill(writer, fillCharacter, nToFill);
                 writer.write(sValue);
             }
@@ -74,7 +74,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
          * @param sValue
          * @throws IOException
          */
-        abstract void fit(Writer writer, int length, String sValue) throws IOException;
+        public abstract void fit(Writer writer, int length, String sValue) throws IOException;
         
         /**
          * Padds supplied value in the correct end with the supplied number of characters
@@ -84,7 +84,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
          * @param fillCharacter
          * @throws IOException
          */
-        abstract void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException;
+        public abstract void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException;
     };
 
     /**

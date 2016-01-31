@@ -62,19 +62,19 @@ public class CsvControlCellSchemaTest {
         Document doc = new Document();
 
         Line line = new Line("Name");
-        line.addCell(new StringCell("Jonas"));
-        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("First name","Jonas"));
+        line.addCell(new StringCell("Last name","Stenberg"));
         doc.addLine(line);
 
         line = new Line("Address");
-        line.addCell(new StringCell("Storgatan 4"));
-        line.addCell(new StringCell("12345"));
-        line.addCell(new StringCell("Bortastaden"));
+        line.addCell(new StringCell("Street","Storgatan 4"));
+        line.addCell(new StringCell("ZipCode","12345"));
+        line.addCell(new StringCell("City","Bortastaden"));
         doc.addLine(line);
 
         line = new Line("Name");
-        line.addCell(new StringCell("Nils"));
-        line.addCell(new StringCell("Nilsson"));
+        line.addCell(new StringCell("First name","Nils"));
+        line.addCell(new StringCell("Last name","Nilsson"));
         doc.addLine(line);
 
         StringWriter writer = new StringWriter();
@@ -107,8 +107,8 @@ public class CsvControlCellSchemaTest {
 
 
         Line line = new Line("Name");
-        line.addCell(new StringCell("Jonas"));
-        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("First name","Jonas"));
+        line.addCell(new StringCell("Last name","Stenberg"));
 
 
         StringWriter writer = new StringWriter();
@@ -144,19 +144,19 @@ public class CsvControlCellSchemaTest {
         Document doc = new Document();
 
         Line line = new Line("Name");
-        line.addCell(new StringCell("Jonas"));
-        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("First name","Jonas"));
+        line.addCell(new StringCell("Last name","Stenberg"));
         doc.addLine(line);
 
         line = new Line("Address");
-        line.addCell(new StringCell("Storgatan 4"));
-        line.addCell(new StringCell("12345"));
-        line.addCell(new StringCell("Bortastaden"));
+        line.addCell(new StringCell("Street","Storgatan 4"));
+        line.addCell(new StringCell("ZipCode","12345"));
+        line.addCell(new StringCell("City","Bortastaden"));
         doc.addLine(line);
 
         line = new Line("Name");
-        line.addCell(new StringCell("Nils"));
-        line.addCell(new StringCell("Nilsson"));
+        line.addCell(new StringCell("First name","Nils"));
+        line.addCell(new StringCell("Last name","Nilsson"));
         doc.addLine(line);
 
         StringWriter writer = new StringWriter();
@@ -189,19 +189,19 @@ public class CsvControlCellSchemaTest {
         Document doc = new Document();
 
         Line line = new Line("Name");
-        line.addCell(new StringCell("Jonas"));
-        line.addCell(new StringCell("Stenberg"));
+        line.addCell(new StringCell("First name","Jonas"));
+        line.addCell(new StringCell("Last name","Stenberg"));
         doc.addLine(line);
 
         line = new Line("Address");
-        line.addCell(new StringCell("Storgatan 4"));
-        line.addCell(new StringCell("12345"));
-        line.addCell(new StringCell("Bortastaden"));
+        line.addCell(new StringCell("Street","Storgatan 4"));
+        line.addCell(new StringCell("ZipCode","12345"));
+        line.addCell(new StringCell("City","Bortastaden"));
         doc.addLine(line);
 
         line = new Line("Name");
-        line.addCell(new StringCell("Nils"));
-        line.addCell(new StringCell("Nilsson"));
+        line.addCell(new StringCell("First name","Nils"));
+        line.addCell(new StringCell("Last name","Nilsson"));
         doc.addLine(line);
 
         StringWriter writer = new StringWriter();

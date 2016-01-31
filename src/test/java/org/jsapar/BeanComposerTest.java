@@ -206,16 +206,5 @@ public class BeanComposerTest {
         assertEquals(42, objects.get(0).getShoeSize());
     }    
     
-    @Test
-    @Ignore("Not yet implemented")
-    public void testCreateObject() {
-	fail("Not yet implemented");
-    }
-
-    @Test
-    @Ignore("Not yet implemented")
-    public void testAssign() {
-	fail("Not yet implemented");
-    }
 
 }

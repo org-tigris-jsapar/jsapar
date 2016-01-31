@@ -67,34 +67,6 @@ public class FixedWidthSchema extends Schema implements ParseSchema {
     }
 
 
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.schema.Schema#output(org.jsapar.model.Document, java.io.Writer)
-     */
-    @Override
-    public void write(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {
-
-        for (SchemaLine lineSchema : getFixedWidthSchemaLines()) {
-            for (int i = 0; i < lineSchema.getOccurs(); i++) {
-                if (!itLines.hasNext()) {
-                    return;
-                }
-                Line line = itLines.next();
-                writeLine(lineSchema, line, writer);
-
-                if (itLines.hasNext()) {
-                    if (getLineSeparator().length() > 0) {
-                        writer.write(getLineSeparator());
-                    }
-                } else {
-                    return;
-                }
-            }
-        }
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -130,13 +102,6 @@ public class FixedWidthSchema extends Schema implements ParseSchema {
         return this.schemaLines;
     }
 
-    @Override
-    public void writeAfter(Writer writer) throws IOException, JSaParException {
-    }
-
-    @Override
-    public void writeBefore(Writer writer) throws IOException, JSaParException {
-    }
 
     @Override
     public SchemaLine getSchemaLine(String lineType) {

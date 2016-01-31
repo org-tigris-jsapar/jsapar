@@ -19,32 +19,6 @@ public class FloatCell extends NumberCell implements Comparable<FloatCell> {
     private static final long serialVersionUID = 2102712515168714171L;
 
     /**
-     * Creates an empty cell without any name or value.
-     */
-    public FloatCell() {
-	super(CellType.FLOAT);
-    }
-
-    /**
-     * Converts the supplied float value and creates a double precision float
-     * value cell without any name.
-     * 
-     * @param value
-     */
-    public FloatCell(Float value) {
-	super(value, CellType.FLOAT);
-    }
-
-    /**
-     * Creates a double precision float value without any name.
-     * 
-     * @param value
-     */
-    public FloatCell(Double value) {
-	super(value, CellType.FLOAT);
-    }
-
-    /**
      * Creates a float number cell with supplied name. Converts the float value
      * into a double precision float value.
      * 

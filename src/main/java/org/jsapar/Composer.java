@@ -145,35 +145,7 @@ public class Composer {
         }
     }
 
-    /**
-     * Writes the header line if the first line is schema.
-     * 
-     * @param lineType
-     * @param writer
-     * @throws JSaParException
-     */
-    public void writeCsvHeaderLine(String lineType, Writer writer) throws JSaParException {
-        writeCsvHeaderLine((CsvSchemaLine)this.schema.getSchemaLine(lineType), writer);
-    }
-    
-    
-    /**
-     * Writes the header line if the first line is schema.
-     * 
-     * @param schemaLine
-     * @param writer
-     * @throws JSaParException
-     */
-    public void writeCsvHeaderLine(CsvSchemaLine schemaLine, Writer writer) throws JSaParException {
-        if (!schemaLine.isFirstLineAsSchema())
-            throw new JSaParException("The schema line is not of type where first line is schema.");
 
-        try {
-            schemaLine.outputHeaderLine(writer);
-        } catch (IOException e) {
-            throw new ComposeException("Failed to write to buffert.", e);
-        }
-    }
 
     /**
      * @return the schema
