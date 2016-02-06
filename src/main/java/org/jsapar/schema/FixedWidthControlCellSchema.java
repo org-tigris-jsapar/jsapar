@@ -78,26 +78,7 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
 
 
 
- 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.schema.FixedWidthSchema#output(org.jsapar.model.Document, java.io.Writer)
-     */
-    public void write(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {
 
-        while (itLines.hasNext()) {
-            Line line = itLines.next();
-            SchemaLine schemaLine = getSchemaLine(line.getLineType());
-            if (schemaLine == null)
-                throw new JSaParException("Could not find schema line of type " + line.getLineType());
-            writeLine(schemaLine, line, writer);
-
-            if (itLines.hasNext() && getLineSeparator().length() > 0) {
-                writer.write(getLineSeparator());
-            }
-        }
-    }
 
     /**
      * Writes the control cell to the buffer.
@@ -171,18 +152,6 @@ public class FixedWidthControlCellSchema extends FixedWidthSchema {
     }
 
     
-    /* (non-Javadoc)
-     * @see org.jsapar.schema.Schema#outputLine(org.jsapar.schema.SchemaLine, org.jsapar.model.Line, java.io.Writer)
-     */
-    @Override
-    protected void writeLine(SchemaLine schemaLine, Line line, Writer writer) throws IOException, JSaParException {
-        int offset=0;
-        if(writeControlCell(writer, schemaLine.getLineTypeControlValue())){
-            offset = controlCellLength;
-        }
-        ((FixedWidthSchemaLine)schemaLine).output(line, writer, offset);
-    }
-
     /**
      * @return the writeControlCell
      */

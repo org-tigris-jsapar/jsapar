@@ -3,12 +3,11 @@ package org.jsapar.schema;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import org.jsapar.JSaParException;
-import org.jsapar.Composer;
+import org.jsapar.TextComposer;
 import org.jsapar.model.Line;
 import org.jsapar.parse.ParseSchema;
 import org.jsapar.model.Document;
@@ -26,6 +25,8 @@ import org.jsapar.compose.ComposeException;
  * 
  */
 public abstract class Schema implements Cloneable, ParseSchema {
+
+    public abstract boolean isEmpty();
 
     /**
      *  Defines how to determine which line type to use. 
@@ -114,7 +115,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
      * @param lineNumber
      * @return The line-schema for supplied line number.
      */
-    private SchemaLine getSchemaLine(long lineNumber) {
+    public SchemaLine getSchemaLine(long lineNumber) {
         long nLineMax = 0;
         for (Object oSchemaLine : this.getSchemaLines()) {
             SchemaLine schemaLine = (SchemaLine) oSchemaLine;
@@ -134,79 +135,6 @@ public abstract class Schema implements Cloneable, ParseSchema {
      */
     public abstract SchemaLine getSchemaLine(String lineType);
 
-    /**
-     * This method should only be called by a Composer class. Don't use this directly in your code.
-     * Use a Composer instead.
-     * 
-     * @param line
-     * @param lineNumber
-     * @param writer
-     * @throws IOException
-     * @throws JSaParException
-     * @return false if no matching schema line was found. true otherwise.
-     */
-    public boolean writeLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
-        SchemaLine schemaLine = getSchemaLine(lineNumber);
-        if (schemaLine == null) {
-            return false;
-        }
-        if (lineNumber > 1)
-            writer.append(getLineSeparator());
-        writeLine(schemaLine, line, writer);
-        return true;
-    }
-
-    /**
-     * This method should only be called by a {@link Composer} class. Don't use this directly in your code.
-     * Use a {@link Composer} instead.
-     * 
-     * This method writes a line according to the schema line, with the same line type, which is
-     * found in this schema. 
-     * 
-     * Line is terminated with line separator; 
-     * 
-     * @param line
-     * @param writer
-     * @throws IOException
-     * @throws JSaParException
-     * @return false if no matching schema line was found. true otherwise.
-     */
-    public boolean writeLineLn(Line line, Writer writer) throws IOException, JSaParException {
-        if( writeLine(line, writer) ){
-            writer.append(getLineSeparator());
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * This method should only be called by a {@link Composer} class. Don't use this directly in your code.
-     * Use a {@link Composer} instead.
-     * 
-     * This method writes a line according to the schema line, with the same line type, which is
-     * found in this schema. 
-     * 
-     * No line separator is written;
-     * 
-     * @param line
-     * @param writer
-     * @throws IOException
-     * @throws JSaParException
-     * @return false if no matching schema line was found. true otherwise.
-     */
-    public boolean writeLine(Line line, Writer writer) throws IOException, JSaParException {
-        SchemaLine schemaLine = getSchemaLine(line.getLineType());
-        if (schemaLine == null) {
-            return false;
-        }
-        writeLine(schemaLine, line, writer);
-        return true;
-    }
-    
-    
-    protected void writeLine(SchemaLine schemaLine, Line line, Writer writer) throws IOException, JSaParException {
-        schemaLine.output(line, writer);
-    }
 
     /**
      * @return Number of schema lines of this schema.

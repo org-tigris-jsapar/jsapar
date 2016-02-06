@@ -12,9 +12,9 @@ import java.io.Writer;
 /**
  * Created by stejon0 on 2016-01-24.
  */
-public class SchemaComposerFactory {
+public class TextComposerFactory implements ComposerFactory {
 
-    public SchemaComposer makeComposer(Schema schema, Writer writer) throws JSaParException {
+    public Composer makeComposer(Schema schema, Writer writer) throws JSaParException {
         if(schema instanceof CsvSchema){
 //            if(schema instanceof CsvControlCellSchema){
 //                return new CsvControlCellComposer(writer, (CsvControlCellSchema)schema);

@@ -346,4 +346,12 @@ public abstract class SchemaLine implements Cloneable {
         this.writeNamedCellsOnly = writeNamedCellsOnly;
     }
 
+    @Override
+    public SchemaLine clone() {
+        try {
+            return (SchemaLine) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Can never happen.", e);
+        }
+    }
 }

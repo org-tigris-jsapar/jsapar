@@ -5,6 +5,11 @@ import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jsapar.compose.Composer;
+import org.jsapar.compose.ComposerFactory;
+import org.jsapar.compose.LineComposer;
+import org.jsapar.compose.TextComposerFactory;
+import org.jsapar.convert.LineFilter;
 import org.jsapar.convert.LineManipulator;
 import org.jsapar.convert.MaxErrorsExceededException;
 import org.jsapar.parse.*;
@@ -12,13 +17,22 @@ import org.jsapar.model.Line;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.SchemaParserFactory;
 import org.jsapar.schema.Schema;
+import org.jsapar.schema.SchemaLine;
 
 /**
  * Reads buffer using an input schema and writes to another buffer using an output schema. By adding
  * a LineManipulator you are able to make modifications of each line before it is written to the
  * output. The method manipulate() of all added LineManipulators are called for each line that are
  * parsed successfully.
- * 
+ * <p/>
+ * For each line, the line type of the parsed line is
+ * considered when choosing the line type of the output schema line. This means that lines with a
+ * type that does not exist in the output schema will be discarded in the output.
+ * <p/>
+ * It is also possible to add your own line filter which can cause lines to be discarded from the
+ * output depending of their contents. Add your own implementation of LineFilter in order to be able
+ * to discard lines.
+ *
  * @see FilterConverter
  * 
  * @author stejon0
@@ -27,10 +41,17 @@ import org.jsapar.schema.Schema;
 public class Converter {
 
     private List<LineManipulator> manipulators = new java.util.LinkedList<LineManipulator>();
-    private ParseSchema           inputSchema;
-    private Schema                outputSchema;
-    private int                   maxNumberOfErrors = Integer.MAX_VALUE;
-    private SchemaParserFactory   parserFactory     = new SchemaParserFactory();
+    private ParseSchema inputSchema;
+    private Schema      outputSchema;
+    private int                 maxNumberOfErrors = Integer.MAX_VALUE;
+    private SchemaParserFactory parserFactory     = new SchemaParserFactory();
+    private ComposerFactory     composerFactory   = new TextComposerFactory();
+    private LineFilter          lineFilter        = new LineFilter() {
+        @Override
+        public boolean shouldWrite(Line line) throws JSaParException {
+            return true;
+        }
+    };
 
     /**
      * Creates a Converter object with the specified schemas.
@@ -63,7 +84,7 @@ public class Converter {
     public java.util.List<CellParseError> convert(java.io.Reader reader, java.io.Writer writer) throws IOException,
             JSaParException {
 
-        DocumentWriter outputter = new DocumentWriter(writer);
+        DocumentWriter outputter = new DocumentWriter(writer, composerFactory.makeComposer(outputSchema, writer));
 
         return doConvert(reader, writer, outputter);
 
@@ -80,11 +101,9 @@ public class Converter {
     protected java.util.List<CellParseError> doConvert(java.io.Reader reader,
                                                        java.io.Writer writer,
                                                        DocumentWriter outputter) throws IOException, JSaParException {
-
-        // TODO while refactoring
-//        outputSchema.writeBefore(writer);
+        outputter.getComposer().beforeCompose();
         parserFactory.makeParser(inputSchema, reader).parse(outputter);
-//        outputSchema.writeAfter(writer);
+        outputter.getComposer().afterCompose();
         return outputter.getParseErrors();
     }
 
@@ -97,9 +116,11 @@ public class Converter {
     protected class DocumentWriter implements LineEventListener {
         private List<CellParseError> parseErrors = new LinkedList<CellParseError>();
         private java.io.Writer       writer;
+        private Composer composer;
 
-        public DocumentWriter(Writer writer) throws JSaParException {
+        public DocumentWriter(Writer writer, Composer composer) throws JSaParException {
             this.writer = writer;
+            this.composer = composer;
         }
 
         @Override
@@ -113,10 +134,17 @@ public class Converter {
         public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
             try {
                 Line line = event.getLine();
-                for (LineManipulator manipulator : manipulators) {
+                if (!lineFilter.shouldWrite(line)) {
+                    return;
+                }
+                for (LineManipulator manipulator : getManipulators()) {
                     manipulator.manipulate(line);
                 }
-                outputSchema.writeLine(line, event.getLineNumber(), this.writer);
+                SchemaLine schemaLine = outputSchema.getSchemaLine(line.getLineType());
+                if(schemaLine != null) {
+                    composer.makeLineComposer(schemaLine).compose(line);
+                    writer.write(outputSchema.getLineSeparator());
+                }
             } catch (IOException e) {
                 throw new JSaParException("Failed to write to writer", e);
             }
@@ -136,6 +164,9 @@ public class Converter {
             return writer;
         }
 
+        public Composer getComposer() {
+            return composer;
+        }
     }
 
     /**
@@ -203,4 +234,11 @@ public class Converter {
         this.parserFactory = parserFactory;
     }
 
+    public LineFilter getLineFilter() {
+        return lineFilter;
+    }
+
+    public void setLineFilter(LineFilter lineFilter) {
+        this.lineFilter = lineFilter;
+    }
 }

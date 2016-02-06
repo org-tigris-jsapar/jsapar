@@ -28,7 +28,7 @@ import org.jsapar.convert.MaxErrorsExceededException;
  * on the other hand are slightly easier to use and understand.<br>
  * <br>
  * 
- * @see Composer
+ * @see TextComposer
  * @see Converter
  * @see FilterConverter
  * @author stejon0

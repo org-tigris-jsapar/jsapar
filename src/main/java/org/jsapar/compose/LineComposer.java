@@ -9,7 +9,7 @@ import java.io.Writer;
 /**
  * Created by stejon0 on 2016-01-30.
  */
-public interface SchemaLineComposer {
+public interface LineComposer {
 
     /**
      * Composes an output from a line. Each cell is identified from the schema by the name of the cell.

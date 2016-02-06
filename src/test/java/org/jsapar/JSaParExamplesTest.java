@@ -227,14 +227,14 @@ public class JSaParExamplesTest {
         
         Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-        Composer composer = new Composer(xmlBuilder.build(schemaReader));
+        StringWriter writer = new StringWriter();
+        TextComposer composer = new TextComposer(xmlBuilder.build(schemaReader), writer);
 
         BeanParser beanParser =new BeanParser();
         Document doc = beanParser.parse(people);
         System.out.println("The document:" + doc);
         
-        StringWriter writer = new StringWriter();
-        composer.write(doc, writer);
+        composer.write(doc);
         
         String result=writer.toString();
         String[] resultLines = result.split("\r\n");

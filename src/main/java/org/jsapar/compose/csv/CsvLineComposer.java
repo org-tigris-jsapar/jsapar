@@ -1,7 +1,7 @@
 package org.jsapar.compose.csv;
 
 import org.jsapar.JSaParException;
-import org.jsapar.compose.SchemaLineComposer;
+import org.jsapar.compose.LineComposer;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
@@ -9,6 +9,7 @@ import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.SchemaCellFormat;
+import org.jsapar.schema.SchemaLine;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -17,21 +18,28 @@ import java.util.Iterator;
 /**
  * Created by stejon0 on 2016-01-30.
  */
-public class CsvLineComposer implements SchemaLineComposer {
+public class CsvLineComposer implements LineComposer {
 
     Writer        writer;
     CsvSchemaLine schemaLine;
+    private String lineSeparator;
     CsvCellComposer cellComposer;
+    boolean firstRow=true;
 
-    public CsvLineComposer(Writer writer, CsvSchemaLine schemaLine) {
+    public CsvLineComposer(Writer writer, CsvSchemaLine schemaLine, String lineSeparator) {
         this.writer = writer;
         this.schemaLine = schemaLine;
+        this.lineSeparator = lineSeparator;
         this.cellComposer = new CsvCellComposer(writer);
     }
 
-
     @Override
     public void compose(Line line) throws IOException, JSaParException {
+        if(firstRow && schemaLine.isFirstLineAsSchema()){
+            composeHeaderLine();
+            writer.write(lineSeparator);
+        }
+        firstRow = false;
         String sCellSeparator = schemaLine.getCellSeparator();
 
         Iterator<CsvSchemaCell> iter = schemaLine.getSchemaCells().iterator();
@@ -54,19 +62,20 @@ public class CsvLineComposer implements SchemaLineComposer {
      * @throws JSaParException
      */
     public void composeHeaderLine() throws IOException, JSaParException {
-        CsvSchemaLine unformattedSchemaLine = schemaLine.clone();
+        CsvSchemaLine unformattedSchemaLine = (CsvSchemaLine) schemaLine.clone();
+        unformattedSchemaLine.setFirstLineAsSchema(false);
         for (CsvSchemaCell schemaCell : unformattedSchemaLine.getSchemaCells()) {
             schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING));
         }
-        CsvLineComposer headerLineComposer = new CsvLineComposer(writer, unformattedSchemaLine);
-        unformattedSchemaLine.output(this.buildHeaderLineFromSchema(unformattedSchemaLine), writer);
+        CsvLineComposer headerLineComposer = new CsvLineComposer(writer, unformattedSchemaLine, lineSeparator);
+        headerLineComposer.compose(this.buildHeaderLineFromSchema(unformattedSchemaLine));
     }
 
     /**
      * @return
      * @throws JSaParException
      */
-    Line buildHeaderLineFromSchema(CsvSchemaLine headerSchemaLine) throws JSaParException {
+    private Line buildHeaderLineFromSchema(CsvSchemaLine headerSchemaLine) throws JSaParException {
         Line line = new Line();
 
         for (CsvSchemaCell schemaCell : headerSchemaLine.getSchemaCells()) {
@@ -75,6 +84,5 @@ public class CsvLineComposer implements SchemaLineComposer {
 
         return line;
     }
-
 
 }

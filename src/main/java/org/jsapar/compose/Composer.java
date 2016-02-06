@@ -1,23 +1,20 @@
 package org.jsapar.compose;
 
-import org.jsapar.Composer;
 import org.jsapar.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.schema.SchemaLine;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.Iterator;
 
 /**
  * Created by stejon0 on 2016-01-24.
  */
-public interface SchemaComposer {
-
+public interface Composer {
 
     /**
-     * This method should only be called by a Composer class. Don't use this directly in your code.
-     * Use a Composer instead.
+     * This method should only be called by a TextComposer class. Don't use this directly in your code.
+     * Use a TextComposer instead.
      *
      * @param iterator
      * @throws IOException
@@ -41,9 +38,11 @@ public interface SchemaComposer {
      */
     void afterCompose() throws IOException, JSaParException;
 
-    /** Create a schema line composer for this schema composer.
+    /**
+     * Create a schema line composer for this schema composer.
+     *
      * @param schemaLine
      * @return A schema line composer.
      */
-//    SchemaLineComposer makeLineComposer(SchemaLine schemaLine);
+    LineComposer makeLineComposer(SchemaLine schemaLine);
 }

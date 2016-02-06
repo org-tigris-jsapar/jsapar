@@ -38,7 +38,10 @@ public class CsvSchema extends Schema {
         this.schemaLines.add(schemaLine);
     }
 
-
+    @Override
+    public boolean isEmpty() {
+        return this.schemaLines.isEmpty();
+    }
 
     @Override
     public CsvSchema clone() {
@@ -72,43 +75,7 @@ public class CsvSchema extends Schema {
         return this.schemaLines;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.schema.Schema#outputLine(org.jsapar.model.Line, long, java.io.Writer)
-     */
-    @Override
-    public boolean writeLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
-        CsvSchemaLine schemaLine = null;
 
-        long nLineMax = 0; // The line number for the last line of this schema line.
-        long nLineWithinSchema = 1; // The line number within this schema.
-        for (CsvSchemaLine currentSchemaLine : this.getCsvSchemaLines()) {
-            nLineWithinSchema = lineNumber - nLineMax;
-            if (currentSchemaLine.isOccursInfinitely()) {
-                schemaLine = currentSchemaLine;
-                break;
-            }
-            nLineMax += (long) currentSchemaLine.getOccurs();
-            if (lineNumber <= nLineMax) {
-                schemaLine = currentSchemaLine;
-                break;
-            }
-        }
-
-        if (schemaLine == null)
-            return false;
-
-        if (lineNumber > 1)
-            writer.append(getLineSeparator());
-        if (nLineWithinSchema == 1 && schemaLine.isFirstLineAsSchema()) {
-            // TODO handle this while refactoring
-//            schemaLine.outputHeaderLine(writer);
-            writer.append(getLineSeparator());
-        }
-        schemaLine.output(line, writer);
-        return true;
-    }
 
     /*
      * (non-Javadoc)

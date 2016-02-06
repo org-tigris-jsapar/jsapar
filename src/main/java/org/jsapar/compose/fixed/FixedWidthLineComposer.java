@@ -1,12 +1,11 @@
 package org.jsapar.compose.fixed;
 
 import org.jsapar.JSaParException;
-import org.jsapar.compose.SchemaLineComposer;
+import org.jsapar.compose.LineComposer;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
-import org.jsapar.schema.SchemaLine;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -15,7 +14,7 @@ import java.util.Iterator;
 /**
  * Created by stejon0 on 2016-01-31.
  */
-public class FixedWidthLineComposer implements SchemaLineComposer{
+public class FixedWidthLineComposer implements LineComposer {
 
     private final Writer writer;
     private final FixedWidthSchemaLine lineSchema;

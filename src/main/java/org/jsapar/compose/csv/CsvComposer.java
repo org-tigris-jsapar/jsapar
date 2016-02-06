@@ -1,23 +1,27 @@
 package org.jsapar.compose.csv;
 
 import org.jsapar.JSaParException;
-import org.jsapar.compose.SchemaComposer;
+import org.jsapar.compose.Composer;
+import org.jsapar.compose.LineComposer;
+import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
-import org.jsapar.schema.CsvSchema;
-import org.jsapar.schema.CsvSchemaLine;
+import org.jsapar.model.StringCell;
+import org.jsapar.schema.*;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by stejon0 on 2016-01-24.
  */
-public class CsvComposer implements SchemaComposer {
+public class CsvComposer implements Composer {
 
     private       Writer writer;
     private final CsvSchema schema;
+    private Map<SchemaLine, CsvLineComposer> lineComposerCache = new HashMap<>();
 
     public CsvComposer(Writer writer, CsvSchema schema) {
         this.writer = writer;
@@ -27,13 +31,7 @@ public class CsvComposer implements SchemaComposer {
     @Override
     public void compose(Iterator<Line> itLines) throws IOException, JSaParException {
         for (CsvSchemaLine lineSchema : schema.getCsvSchemaLines()) {
-            //TODO: Cache line composer based on line schema.
-            CsvLineComposer lineComposer = new CsvLineComposer(writer, lineSchema);
-            if (lineSchema.isFirstLineAsSchema()) {
-                lineComposer.composeHeaderLine();
-                if (itLines.hasNext())
-                    writer.write(schema.getLineSeparator());
-            }
+            CsvLineComposer lineComposer = (CsvLineComposer) makeLineComposer(lineSchema);
             for (int i = 0; i < lineSchema.getOccurs(); i++) {
                 if (!itLines.hasNext())
                     return;
@@ -50,12 +48,24 @@ public class CsvComposer implements SchemaComposer {
     }
     @Override
     public void beforeCompose() throws IOException, JSaParException {
-
     }
 
     @Override
     public void afterCompose() throws IOException, JSaParException {
 
     }
+
+    @Override
+    public LineComposer makeLineComposer(SchemaLine schemaLine) {
+        assert schemaLine instanceof CsvSchemaLine;
+        CsvLineComposer lineComposer = lineComposerCache.get(schemaLine);
+        if(lineComposer == null) {
+            lineComposer = new CsvLineComposer(writer, (CsvSchemaLine) schemaLine, schema.getLineSeparator());
+            lineComposerCache.put(schemaLine, lineComposer);
+        }
+        return lineComposer;
+    }
+
+
 
 }

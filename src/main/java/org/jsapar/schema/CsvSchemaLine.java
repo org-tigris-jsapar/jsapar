@@ -147,12 +147,8 @@ public class CsvSchemaLine extends SchemaLine {
 
     protected CsvSchemaLine cloneWithoutCells() {
         CsvSchemaLine line;
-        try {
-            line = (CsvSchemaLine) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError(e);
-        }
-        line.schemaCells = new java.util.LinkedList<CsvSchemaCell>();
+        line = (CsvSchemaLine) super.clone();
+        line.schemaCells = new java.util.LinkedList<>();
 
         return line;
     }

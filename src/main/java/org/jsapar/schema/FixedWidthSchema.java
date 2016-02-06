@@ -66,12 +66,16 @@ public class FixedWidthSchema extends Schema implements ParseSchema {
         }
     }
 
+    @Override
+    public boolean isEmpty() {
+        return this.schemaLines.isEmpty();
+    }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.schema.Schema#clone()
-     */
+         * (non-Javadoc)
+         *
+         * @see org.jsapar.schema.Schema#clone()
+         */
     @Override
     public FixedWidthSchema clone(){
         FixedWidthSchema schema = (FixedWidthSchema) super.clone();

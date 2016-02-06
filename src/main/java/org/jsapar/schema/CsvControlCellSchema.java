@@ -123,33 +123,7 @@ public class CsvControlCellSchema extends CsvSchema {
         return sb.toString();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.schema.Schema#output(org.jsapar.model.Line, int, java.io.Writer)
-     */
-    @Override
-    public boolean writeLine(Line line, long lineNumber, Writer writer) throws IOException, JSaParException {
-        SchemaLine schemaLine = getSchemaLine(line.getLineType());
-        if (schemaLine == null)
-            return false;
-
-        if (lineNumber > 1)
-            writer.append(getLineSeparator());
-        writeLine(schemaLine, line, writer);
-        return true;
-    }
     
-    
-
-    /* (non-Javadoc)
-     * @see org.jsapar.schema.Schema#outputLine(org.jsapar.schema.SchemaLine, org.jsapar.model.Line, java.io.Writer)
-     */
-    @Override
-    protected void writeLine(SchemaLine schemaLine, Line line, Writer writer) throws IOException, JSaParException {
-        writeControlCell(writer, schemaLine.getLineTypeControlValue());
-        super.writeLine(schemaLine, line, writer);
-    }
 
     /**
      * @return the writeControlCell
