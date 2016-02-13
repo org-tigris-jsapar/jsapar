@@ -43,29 +43,6 @@ public class CsvControlCellSchema extends CsvSchema {
         this.controlCellSeparator = controlCellSeparator;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.schema.CsvSchema#output(org.jsapar.model.Document, java.io.Writer)
-     */
-    public void write(Iterator<Line> itLines, Writer writer) throws IOException, JSaParException {
-
-        while (itLines.hasNext()) {
-            Line line = itLines.next();
-            SchemaLine schemaLine = getSchemaLine(line.getLineType());
-            if (schemaLine == null)
-                throw new JSaParException("Could not find schema line of type " + line.getLineType());
-            writeControlCell(writer, schemaLine.getLineTypeControlValue());
-
-            schemaLine.output(line, writer);
-
-            if (itLines.hasNext())
-                writer.write(getLineSeparator());
-            else
-                return;
-        }
-    }
-
     /**
      * Writes the control cell to the buffer.
      * 

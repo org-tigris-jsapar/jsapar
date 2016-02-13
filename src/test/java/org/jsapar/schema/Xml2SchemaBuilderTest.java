@@ -9,6 +9,9 @@ import org.jsapar.model.CellType;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 /**
  * @author Jonas
  * 
@@ -72,8 +75,10 @@ public class Xml2SchemaBuilderTest {
         Schema schema = builder.build(reader);
         CsvSchema csvSchema = (CsvSchema) schema;
 
-        assertEquals("First name", csvSchema.getCsvSchemaLines().get(0).getSchemaCells().get(0).getName());
-        assertEquals("Last name", csvSchema.getCsvSchemaLines().get(0).getSchemaCells().get(1).getName());
+        Collection<CsvSchemaCell> schemaCells = csvSchema.getCsvSchemaLines().get(0).getSchemaCells();
+        Iterator<CsvSchemaCell> it = schemaCells.iterator();
+        assertEquals("First name", it.next().getName());
+        assertEquals("Last name", it.next().getName());
     }
 
     @Test
@@ -90,8 +95,10 @@ public class Xml2SchemaBuilderTest {
         Schema schema = builder.build(reader);
         CsvControlCellSchema csvSchema = (CsvControlCellSchema) schema;
 
-        assertEquals("First name", csvSchema.getCsvSchemaLines().get(0).getSchemaCells().get(0).getName());
-        assertEquals("Last name", csvSchema.getCsvSchemaLines().get(0).getSchemaCells().get(1).getName());
+        Collection<CsvSchemaCell> schemaCells = csvSchema.getCsvSchemaLines().get(0).getSchemaCells();
+        Iterator<CsvSchemaCell> it = schemaCells.iterator();
+        assertEquals("First name", it.next().getName());
+        assertEquals("Last name", it.next().getName());
         assertEquals(false, csvSchema.isWriteControlCell());
 
     }
@@ -112,21 +119,7 @@ public class Xml2SchemaBuilderTest {
 
     }
 
-    @Test
-    public final void testBuild_Csv_ignorereademptylines() throws SchemaException {
 
-        String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
-                + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/2.0' >"
-                + "<csvschema><line occurs='4' ignorereademptylines='false' >" + "</line></csvschema></schema>";
-
-        Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
-        java.io.Reader reader = new java.io.StringReader(sXmlSchema);
-        Schema schema = builder.build(reader);
-        CsvSchema csvSchema = (CsvSchema) schema;
-
-        assertEquals(false, csvSchema.getCsvSchemaLines().get(0).isIgnoreReadEmptyLines());
-
-    }
 
     @Test(expected = SchemaException.class)
     public final void testBuild_Csv_firstlineasschema_error() throws SchemaException {

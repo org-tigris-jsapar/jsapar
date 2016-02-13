@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.jsapar.JSaParException;
 import org.jsapar.parse.ParseSchema;
-import org.jsapar.Parser;
+import org.jsapar.TextParser;
 import org.jsapar.schema.XmlSchema;
 
 /**
@@ -223,7 +223,7 @@ public class Document implements Serializable {
      */
     public static Document importFromXml(Reader reader) throws JSaParException{
         ParseSchema schema = new XmlSchema();
-        Parser docBuilder = new Parser(schema);
+        TextParser docBuilder = new TextParser(schema);
         return docBuilder.build(reader);
     }
     

@@ -321,12 +321,6 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
         if (line.getLineTypeControlValue() != null && !line.getLineTypeControlValue().isEmpty())
             xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_LINETYPE_CONTROL_VALUE, line.getLineTypeControlValue());
-
-        xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_IGNORE_READ_EMPTY_LINES, String.valueOf(line
-                .isIgnoreReadEmptyLines()));
-
-        xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_WRITE_NAMED_CELLS_ONLY, String.valueOf(line
-                .isWriteNamedCellsOnly()));
     }
 
     /**

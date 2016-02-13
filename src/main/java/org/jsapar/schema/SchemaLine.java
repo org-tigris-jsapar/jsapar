@@ -16,8 +16,6 @@ public abstract class SchemaLine implements Cloneable {
     private int                 occurs               = OCCURS_INFINITE;
     private String              lineType             = NOT_SET;
     private String              lineTypeControlValue = NOT_SET;
-    private boolean             ignoreReadEmptyLines = true;
-    private boolean             writeNamedCellsOnly  = false;
 
     public SchemaLine() {
         this.occurs = OCCURS_INFINITE;
@@ -120,11 +118,10 @@ public abstract class SchemaLine implements Cloneable {
      *            The schema-cell to use.
      * @param nSchemaCellIndex
      *            The index at which the schema-cell is found.
-     * @param namedCellsOnly Only find named cells
      * @return The cell within the supplied line to use for output according to the supplied
      *         schemaCell.
      */
-    protected static Cell findCell(Line line, SchemaCell schemaCell, int nSchemaCellIndex, boolean namedCellsOnly) {
+    protected static Cell findCell(Line line, SchemaCell schemaCell, int nSchemaCellIndex) {
         // If we should not write the cell, we don't need the cell.
         if (schemaCell.isIgnoreWrite())
             return null;
@@ -134,19 +131,7 @@ public abstract class SchemaLine implements Cloneable {
             cellByIndex = line.getCell(nSchemaCellIndex);
         // Use optimistic matching.
         if (null != cellByIndex) {
-            if (null == schemaCell.getName()) {
-                // cell = line.getCell(i);
-                if (null == cellByIndex.getName()) {
-                    // If both cell and schema cell names are null then it is ok
-                    // to use cell by index.
-                    if(!namedCellsOnly)
-                        return cellByIndex;
-                } else {
-                    return null;
-                }
-            } else if (namedCellsOnly && null == cellByIndex.getName()) {
-                // Do nothing. We will find named cell later.
-            } else if (schemaCell.getName().equals(cellByIndex.getName())) {
+            if (schemaCell.getName().equals(cellByIndex.getName())) {
                 // We were lucky.
                 return cellByIndex;
             }
@@ -159,10 +144,6 @@ public abstract class SchemaLine implements Cloneable {
         } else {
             if (null == cellByIndex) {
                 return null;
-            } else if (!namedCellsOnly && cellByIndex.getName() == null) {
-                // If it was not found by name we fall back to the
-                // cell with correct index.
-                return cellByIndex;
             } else {
                 return null;
             }
@@ -225,65 +206,12 @@ public abstract class SchemaLine implements Cloneable {
         return sb.toString();
     }
 
-    /**
-     * Writes a line to the writer. Each cell is identified from the schema by the name of the cell.
-     * If the schema-cell has no name, the cell at the same position in the line is used under the
-     * condition that it also lacks name.
-     * 
-     * If the schema-cell has a name the cell with the same name is used. If no such cell is found
-     * and the cell at the same position lacks name, it is used instead.
-     * 
-     * If no corresponding cell is found for a schema-cell, the cell is left empty. Sub-class
-     * decides how to treat empty cells.
-     * 
-     * @param line
-     * @param writer
-     * @throws IOException
-     * @throws JSaParException
-     */
-    abstract public void output(Line line, Writer writer) throws IOException, JSaParException;
 
-
-    /**
-     * @return the ignoreReadEmptyLines
-     */
-    public boolean isIgnoreReadEmptyLines() {
-        return ignoreReadEmptyLines;
-    }
-
-    /**
-     * @param ignoreEmptyLines
-     */
-    public void setIgnoreReadEmptyLines(boolean ignoreEmptyLines) {
-        this.ignoreReadEmptyLines = ignoreEmptyLines;
-    }
-
-    /**
-     * Handles behavior of empty lines
-     * 
-     * @param lineNumber
-     * @param listener
-     * @return Returns true (always).
-     * @throws JSaParException
-     */
-    protected boolean handleEmptyLine(long lineNumber, LineEventListener listener) throws JSaParException {
-        if (!isIgnoreReadEmptyLines()) {
-            listener.lineParsedEvent(new LineParsedEvent(this, new Line(getLineType()), lineNumber));
-        }
-        return true;
-    }
-    
-    
     /**
      * @return Number of cells in a line
      */
     public abstract int getSchemaCellsCount();
 
-    /**
-     * @param index
-     * @return The schema cell with the specified index.
-     */
-    public abstract SchemaCell getSchemaCellAt(int index);
 
     /*
      * (non-Javadoc)
@@ -325,26 +253,7 @@ public abstract class SchemaLine implements Cloneable {
         return true;
     }
 
-    /**
-     * @param cell
-     * @return The index of the supplied cell within this line. -1 if the cell was not found.
-     */
-    public int getIndexOf(SchemaCell cell) {
-        for (int i = 0; i < getSchemaCellsCount(); i++) {
-            if (cell.equals(getSchemaCellAt(i))) {
-                return i;
-            }
-        }
-        return -1;
-    }
 
-    public boolean isWriteNamedCellsOnly() {
-        return writeNamedCellsOnly;
-    }
-
-    public void setWriteNamedCellsOnly(boolean writeNamedCellsOnly) {
-        this.writeNamedCellsOnly = writeNamedCellsOnly;
-    }
 
     @Override
     public SchemaLine clone() {

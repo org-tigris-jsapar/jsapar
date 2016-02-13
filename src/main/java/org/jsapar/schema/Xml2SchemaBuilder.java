@@ -467,21 +467,14 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         if (xmlLineTypeControlValue != null)
             line.setLineTypeControlValue(getStringValue(xmlLineTypeControlValue));
 
-        Node xmlIgnoreReadEmptyLines = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_IGNORE_READ_EMPTY_LINES);
-        if (xmlIgnoreReadEmptyLines != null)
-            line.setIgnoreReadEmptyLines(getBooleanValue(xmlIgnoreReadEmptyLines));
-        
-        Node xmlWriteNamedCellsOnly = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_WRITE_NAMED_CELLS_ONLY);
-        if (xmlWriteNamedCellsOnly != null)
-            line.setWriteNamedCellsOnly(getBooleanValue(xmlWriteNamedCellsOnly));
-        
     }
 
     /**
      * Assign common parts for base class.
      * 
-     * @param schema
+     * @param cell
      * @param xmlSchemaCell
+     * @param locale
      * @throws SchemaException
      */
     private void assignSchemaCellBase(SchemaCell cell, Element xmlSchemaCell, Locale locale) throws SchemaException {

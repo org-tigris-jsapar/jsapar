@@ -2,7 +2,7 @@ package org.jsapar.schema;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Iterator;
+import java.util.*;
 
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
@@ -22,8 +22,8 @@ import org.jsapar.parse.csv.SimpleCellSplitter;
  */
 public class CsvSchemaLine extends SchemaLine {
 
-    private java.util.List<CsvSchemaCell> schemaCells       = new java.util.ArrayList<>();
-    private boolean                       firstLineAsSchema = false;
+    private Map<String, CsvSchemaCell> schemaCells       = new LinkedHashMap<>();
+    private boolean                    firstLineAsSchema = false;
 
     private String                        cellSeparator     = ";";
 
@@ -64,8 +64,8 @@ public class CsvSchemaLine extends SchemaLine {
     /**
      * @return the cells
      */
-    public java.util.List<CsvSchemaCell> getSchemaCells() {
-        return schemaCells;
+    public Collection<CsvSchemaCell> getSchemaCells() {
+        return schemaCells.values();
     }
 
     /**
@@ -74,7 +74,7 @@ public class CsvSchemaLine extends SchemaLine {
      * @param cell
      */
     public void addSchemaCell(CsvSchemaCell cell) {
-        this.schemaCells.add(cell);
+        this.schemaCells.put(cell.getName(), cell);
     }
 
 
@@ -108,27 +108,6 @@ public class CsvSchemaLine extends SchemaLine {
         this.cellSeparator = cellSeparator;
     }
 
-    /*
-     * Writes the cells of the line to the writer. Inserts cell separator between cells. (non-Javadoc)
-     * 
-     * @see org.jsapar.schema.SchemaLine#output(org.jsapar.model.Line, java.io.Writer)
-     */
-    @Override
-    public void output(Line line, Writer writer) throws IOException {
-        String sCellSeparator = getCellSeparator();
-
-        Iterator<CsvSchemaCell> iter = getSchemaCells().iterator();
-        for (int i = 0; iter.hasNext(); i++) {
-            CsvSchemaCell schemaCell = iter.next();
-            Cell cell = findCell(line, schemaCell, i, this.isWriteNamedCellsOnly());
-            char quoteChar = getQuoteChar();
-
-            schemaCell.output(cell, writer, sCellSeparator, quoteChar);
-
-            if (iter.hasNext())
-                writer.write(sCellSeparator);
-        }
-    }
 
     /*
      * (non-Javadoc)
@@ -139,7 +118,7 @@ public class CsvSchemaLine extends SchemaLine {
     public CsvSchemaLine clone() {
         CsvSchemaLine line = cloneWithoutCells();
 
-        for (CsvSchemaCell cell : this.schemaCells) {
+        for (CsvSchemaCell cell : this.schemaCells.values()) {
             line.addSchemaCell(cell.clone());
         }
         return line;
@@ -148,7 +127,7 @@ public class CsvSchemaLine extends SchemaLine {
     protected CsvSchemaLine cloneWithoutCells() {
         CsvSchemaLine line;
         line = (CsvSchemaLine) super.clone();
-        line.schemaCells = new java.util.LinkedList<>();
+        line.schemaCells = new LinkedHashMap<>();
 
         return line;
     }
@@ -241,10 +220,6 @@ public class CsvSchemaLine extends SchemaLine {
         return this.schemaCells.size();
     }
 
-    @Override
-    public SchemaCell getSchemaCellAt(int index) {
-        return this.schemaCells.get(index);
-    }
 
     /*
      * (non-Javadoc)

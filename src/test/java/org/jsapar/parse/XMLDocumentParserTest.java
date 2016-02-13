@@ -2,7 +2,7 @@ package org.jsapar.parse;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jsapar.Parser;
+import org.jsapar.TextParser;
 import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;
 import org.jsapar.JSaParException;
@@ -29,7 +29,7 @@ public class XMLDocumentParserTest {
 
 	java.io.Reader reader=new java.io.StringReader(sXml);
 	ParseSchema schema = new XmlSchema();
-	Parser docBuilder = new Parser(schema);
+	TextParser docBuilder = new TextParser(schema);
 	java.util.List<CellParseError> parseErrors = new java.util.LinkedList<CellParseError>();
 	Document document = docBuilder.build(reader, parseErrors);
 

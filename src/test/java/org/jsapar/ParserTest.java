@@ -30,7 +30,7 @@ public class ParserTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
         schema.addSchemaLine(schemaLine);
 
-        Parser builder = new Parser(schema);
+        TextParser builder = new TextParser(schema);
         Reader reader = new StringReader(toParse);
         Document doc = builder.build(reader);
 
@@ -48,7 +48,7 @@ public class ParserTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Shoe size", 3, new SchemaCellFormat(CellType.INTEGER)));
         schema.addSchemaLine(schemaLine);
 
-        Parser builder = new Parser(schema);
+        TextParser builder = new TextParser(schema);
         Reader reader = new StringReader(toParse);
         builder.build(reader);
     }
@@ -62,7 +62,7 @@ public class ParserTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Shoe size", 3, new SchemaCellFormat(CellType.INTEGER)));
         schema.addSchemaLine(schemaLine);
 
-        Parser builder = new Parser(schema);
+        TextParser builder = new TextParser(schema);
         Reader reader = new StringReader(toParse);
         List<CellParseError> parseErrors = new ArrayList<CellParseError>();
         builder.build(reader, parseErrors);
@@ -80,7 +80,7 @@ public class ParserTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Shoe size", 3, new SchemaCellFormat(CellType.INTEGER)));
         schema.addSchemaLine(schemaLine);
 
-        Parser builder = new Parser(schema);
+        TextParser builder = new TextParser(schema);
         Reader reader = new StringReader(toParse);
         List<CellParseError> parseErrors = new ArrayList<CellParseError>();
         builder.build(reader, parseErrors, 0);
@@ -96,7 +96,7 @@ public class ParserTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
         schema.addSchemaLine(schemaLine);
 
-        Parser builder = new Parser(schema);
+        TextParser builder = new TextParser(schema);
         Reader reader = new StringReader(toParse);
         Document doc = builder.build(reader);
 
@@ -117,7 +117,7 @@ public class ParserTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
         schema.addSchemaLine(schemaLine);
 
-        Parser builder = new Parser(schema);
+        TextParser builder = new TextParser(schema);
         Reader reader = new StringReader(toParse);
         Document doc = builder.build(reader);
 
@@ -137,7 +137,7 @@ public class ParserTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
         schema.addSchemaLine(schemaLine);
 
-        Parser builder = new Parser(schema);
+        TextParser builder = new TextParser(schema);
         Reader reader = new StringReader(toParse);
         Document doc = builder.build(reader);
         assertEquals(2, doc.getNumberOfLines());
@@ -154,7 +154,7 @@ public class ParserTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
         schema.addSchemaLine(schemaLine);
 
-        Parser builder = new Parser(schema);
+        TextParser builder = new TextParser(schema);
         Reader reader = new StringReader(toParse);
         Document doc = builder.build(reader);
 

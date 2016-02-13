@@ -30,21 +30,20 @@ import org.jsapar.convert.MaxErrorsExceededException;
  * 
  * @see TextComposer
  * @see Converter
- * @see FilterConverter
  * @author stejon0
  * 
  */
-public class Parser implements LineEventListener {
+public class TextParser implements LineEventListener {
     private List<LineEventListener> parsingEventListeners = new LinkedList<LineEventListener>();
     private SchemaParserFactory     parserFactory         = new SchemaParserFactory();
     ParseSchema schema;
 
     /**
-     * Creates a Parser with a schema.
+     * Creates a TextParser with a schema.
      * 
      * @param schema
      */
-    public Parser(ParseSchema schema) {
+    public TextParser(ParseSchema schema) {
         this.schema = schema;
     }
 
@@ -100,30 +99,12 @@ public class Parser implements LineEventListener {
      * @return A complete Document representing the parsed input buffer.
      * @throws JSaParException
      */
-    public Document build(java.io.Reader reader, List<CellParseError> parseErrors, int maxNumberOfErrors)
+    public Document build(Reader reader, List<CellParseError> parseErrors, int maxNumberOfErrors)
             throws JSaParException {
         DocumentBuilder docBuilder = new DocumentBuilder(parseErrors, maxNumberOfErrors);
         return docBuilder.build(reader);
     }
 
-    /**
-     * Reads characters from the reader and parses them into a list of java objects denoted by the
-     * schema. See org.jsapar.BeanParser for more information about how to build java objects
-     * from an input source.
-     * 
-     * @param reader
-     * @param parseErrors
-     *            Supply an empty list of CellParseError and this method will populate the list if
-     *            errors are found while parsing.
-     * @return A collection of java objects. The class of each java object is determined by the
-     *         lineType of each line.
-     * @throws JSaParException
-     */
-    @SuppressWarnings("rawtypes")
-	public List buildBeans(Reader reader, List<CellParseError> parseErrors) throws JSaParException {
-        JavaBuilder javaBuilder = new JavaBuilder(parseErrors);
-        return javaBuilder.build(reader);
-    }
 
     /**
      * Reads characters from the reader and parses them into a Line. Once a Line is completed, a
@@ -137,9 +118,9 @@ public class Parser implements LineEventListener {
      * @param reader
      * @throws JSaParException
      */
-    public void parse(java.io.Reader reader) throws JSaParException {
+    public void parse(Reader reader) throws JSaParException {
         try {
-            parserFactory.makeParser(this.schema, reader).parse(Parser.this);
+            parserFactory.makeParser(this.schema, reader).parse(TextParser.this);
         } catch (IOException e) {
             throw new ParseException("Failed to read input", e);
         }
@@ -221,7 +202,7 @@ public class Parser implements LineEventListener {
             this.maxNumberOfErrors = maxNumberOfErrors;
         }
 
-        public Document build(java.io.Reader reader) throws JSaParException {
+        public Document build(Reader reader) throws JSaParException {
             addParsingEventListener(new LineEventListener() {
 
                 @Override
@@ -238,7 +219,7 @@ public class Parser implements LineEventListener {
             });
 
             try {
-                getParserFactory().makeParser(schema, reader).parse(Parser.this);
+                getParserFactory().makeParser(schema, reader).parse(TextParser.this);
             } catch (IOException e) {
                 throw new ParseException("Failed to read input", e);
             }
@@ -259,7 +240,7 @@ public class Parser implements LineEventListener {
         public AbortingDocumentBuilder() {
         }
 
-        public Document build(java.io.Reader reader) throws JSaParException {
+        public Document build(Reader reader) throws JSaParException {
             addParsingEventListener(new LineEventListener() {
 
                 @Override
@@ -274,7 +255,7 @@ public class Parser implements LineEventListener {
             });
 
             try {
-                getParserFactory().makeParser(schema, reader).parse(Parser.this);
+                getParserFactory().makeParser(schema, reader).parse(TextParser.this);
             } catch (IOException e) {
                 throw new ParseException("Failed to read input", e);
             }
@@ -282,63 +263,5 @@ public class Parser implements LineEventListener {
         }
     }
 
-    /**
-     * Private class that converts the events from the parser into a list of Java object. This
-     * builder adds errors to a list of CellParseErrors.
-     * 
-     * @author stejon0
-     * 
-     */
-    private class JavaBuilder {
-        @SuppressWarnings("rawtypes")
-		private List              objects   = new LinkedList();
-        private List<CellParseError> parseErrors;
-        private BeanComposer outputter = new BeanComposer();
-
-        public JavaBuilder(List<CellParseError> parseErrors) {
-            this.parseErrors = parseErrors;
-        }
-
-        public List<?> build(java.io.Reader reader) throws JSaParException {
-            addParsingEventListener(new LineEventListener() {
-
-                @Override
-                public void lineErrorEvent(LineErrorEvent event) {
-                    parseErrors.add(event.getCellParseError());
-                }
-
-                @SuppressWarnings("unchecked")
-				@Override
-                public void lineParsedEvent(LineParsedEvent event) {
-                    List<CellParseError> currentParseErrors = new LinkedList<CellParseError>();
-                    try {
-                        objects.add(outputter.createBean(event.getLine(), currentParseErrors));
-                    } catch (InstantiationException e) {
-                        currentParseErrors.add(new CellParseError(event.getLineNumber(), "", "", null,
-                                "Failed to instantiate object. Skipped creating object - " + e));
-                    } catch (IllegalAccessException e) {
-                        currentParseErrors.add(new CellParseError(event.getLineNumber(), "", "", null,
-                                "Failed to call set method. Skipped creating object - " + e));
-                    } catch (ClassNotFoundException e) {
-                        currentParseErrors.add(new CellParseError(event.getLineNumber(), "", "", null,
-                                "Class not found. Skipped creating object - " + e));
-                    } catch (Throwable e) {
-                        currentParseErrors.add(new CellParseError(event.getLineNumber(), "", "", null,
-                                "Skipped creating object - " + e.getMessage(), e));
-                    }
-                    for (CellParseError parseError : currentParseErrors) {
-                        parseErrors.add(new CellParseError(event.getLineNumber(), parseError));
-                    }
-                }
-            });
-
-            try {
-                getParserFactory().makeParser(schema, reader).parse(Parser.this);
-            } catch (IOException e) {
-                throw new ParseException("Failed to read input", e);
-            }
-            return this.objects;
-        }
-    }
 
 }

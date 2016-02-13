@@ -36,8 +36,6 @@ public interface SchemaXmlTypes {
     public static final String ATTRIB_SCHEMA_CELL_MAX = "max";
     public static final String ATTRIB_SCHEMA_CELL_MAX_LENGTH = "maxlength";
     public static final String ATTRIB_CSV_QUOTE_CHAR = "quotechar";
-    public static final String ATTRIB_SCHEMA_LINE_IGNORE_READ_EMPTY_LINES = "ignorereademptylines";
-    public static final String ATTRIB_SCHEMA_LINE_WRITE_NAMED_CELLS_ONLY = "writenamedcellsonly";
     public static final String ATTRIB_SCHEMA_WRITE_CONTROL_CELL = "writecontrolcell";
     public static final String ATTRIB_SCHEMA_CELL_DEFAULT_VALUE = "default";
     public static final String ATTRIB_SCHEMA_CELL_EMPTY_PATTERN = "emptypattern";

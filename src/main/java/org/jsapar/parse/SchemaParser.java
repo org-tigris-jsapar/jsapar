@@ -8,8 +8,8 @@ import org.jsapar.parse.LineEventListener;
 public interface SchemaParser {
 
     /**
-     * This method should only be called by a Parser class. Don't use this
-     * directly in your code. Use a Parser instead.
+     * This method should only be called by a TextParser class. Don't use this
+     * directly in your code. Use a TextParser instead.
      * 
      * @param listener
      * @throws JSaParException

@@ -22,7 +22,7 @@ public class SchemaLineTest {
         Line line = new Line();
         SchemaCell schemaCell = new SchemaCell("First") {};
         
-        Cell c = instance.doFindCell(line, schemaCell, 0, false);
+        Cell c = instance.doFindCell(line, schemaCell, 0);
         assertNull(c);
     }
 
@@ -35,10 +35,10 @@ public class SchemaLineTest {
         
         Cell first = new StringCell("First", "one");
         line.addCell(first);
-        Cell c = instance.doFindCell(line, schemaCell, 0, false);
+        Cell c = instance.doFindCell(line, schemaCell, 0);
         assertEquals(first, c);
 
-        c = instance.doFindCell(line, schemaCell, 3, false);
+        c = instance.doFindCell(line, schemaCell, 3);
         assertEquals(first, c);
     }
 
@@ -58,7 +58,7 @@ public class SchemaLineTest {
 
         schemaCell = new SchemaCell("two") {};
         
-        Cell c = instance.doFindCell(line, schemaCell, 1, false);
+        Cell c = instance.doFindCell(line, schemaCell, 1);
         assertEquals(second, c);
     }
 
@@ -78,7 +78,7 @@ public class SchemaLineTest {
 
         schemaCell = new SchemaCell("Third") {};
         
-        Cell c = instance.doFindCell(line, schemaCell, 0, false);
+        Cell c = instance.doFindCell(line, schemaCell, 0);
         assertEquals(first, c);
     }    
 
@@ -99,7 +99,7 @@ public class SchemaLineTest {
         
         SchemaCell schemaCell = new SchemaCell("Second") {};
         
-        Cell c = instance.doFindCell(line, schemaCell, 2, true);
+        Cell c = instance.doFindCell(line, schemaCell, 2);
         assertEquals(second, c);
     }    
     
@@ -118,7 +118,7 @@ public class SchemaLineTest {
 
         schemaCell = new SchemaCell("Third") {};
         
-        Cell c = instance.doFindCell(line, schemaCell, 1, true);
+        Cell c = instance.doFindCell(line, schemaCell, 1);
         assertNull(c);
     }    
     
@@ -132,11 +132,6 @@ public class SchemaLineTest {
             return null;
         }
 
-        @Override
-        public void output(Line line, Writer writer) throws IOException, JSaParException {
-            fail("Not yet implemented");
-            
-        }
 
         @Override
         public int getSchemaCellsCount() {
@@ -144,14 +139,9 @@ public class SchemaLineTest {
             return 0;
         }
 
-        @Override
-        public SchemaCell getSchemaCellAt(int index) {
-            fail("Not yet implemented");
-            return null;
-        }
         
-        public Cell doFindCell(Line line, SchemaCell schemaCell, int nSchemaCellIndex, boolean namedCellsOnly){
-            return findCell(line, schemaCell, nSchemaCellIndex, namedCellsOnly);
+        public Cell doFindCell(Line line, SchemaCell schemaCell, int nSchemaCellIndex){
+            return findCell(line, schemaCell, nSchemaCellIndex);
         }
         
     }

@@ -28,9 +28,6 @@ public abstract class SchemaLineParser {
      * @throws JSaParException
      */
     protected boolean handleEmptyLine(SchemaLine schemaLine, long lineNumber, LineEventListener listener) throws JSaParException {
-        if (!schemaLine.isIgnoreReadEmptyLines()) {
-            listener.lineParsedEvent(new LineParsedEvent(this, new Line(schemaLine.getLineType()), lineNumber));
-        }
         return true;
     }
     

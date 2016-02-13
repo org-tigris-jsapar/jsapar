@@ -28,14 +28,14 @@ Supported file formats:
 For very large files there can be a problem to build the complete org.jsapar.model.Document in the memory before further processing.
 It may simply take up to much memory. 
 In that case you may choose to get an event for each line that is parsed instead. 
-You do that by registering a sub-class of org.jsapar.ParsingEventListener to the org.jsapar.Parser.
+You do that by registering a sub-class of org.jsapar.ParsingEventListener to the org.jsapar.TextParser.
 That way you can process one line at a time, thus freeing memory as you go along.   
 <h2>Converter</h2>
 If you are only interesting in converting a file of one format into another, you can use the org.jsapar.Converter where you specify the input and the output schema for the conversion.
 The converter uses the event mechanism under the hood, thus it reads, converts and writes one line at a time. 
 This means it is very lean regarding memory usage. 
 <h2>Building java objects</h2>
-Use the method org.jsapar.Parser.buildJava() in order to build java objects for each line in a file (or input). 
+Use the method org.jsapar.TextParser.buildJava() in order to build java objects for each line in a file (or input).
 Note that in order to be able to use this feature, the schema have to be carefully written. 
 For instance, the line type (name) of the line within the schema have to contain the complete class name of the java class to build for each line. 
 <h2>Converting java objects into a file</h2>

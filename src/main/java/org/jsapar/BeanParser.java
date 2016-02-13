@@ -63,7 +63,7 @@ public class BeanParser {
     public Line parseBean(Object object) throws JSaParException {
 
         Line line = new Line(object.getClass().getName());
-        Set<Object> visited = new HashSet<Object>();
+        Set<Object> visited = new HashSet<>();
         this.parseBean(line, object, null, visited);
         return line;
     }

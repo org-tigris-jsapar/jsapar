@@ -74,38 +74,29 @@
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="ignorereademptylines" type="xsd:boolean">
-      <xsd:annotation>
-        <xsd:documentation>
-          Specifies if empty lines should be ignored while reading. true
-          = (default) Empty lines in the input buffer are ignored. false
-          = Empty lines generates empty Line objects. Any mandatory
-          cells are ignored within empty line. Default is true.
-        </xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute name="writenamedcellsonly" type="xsd:boolean">
-      <xsd:annotation>
-        <xsd:documentation>Default is false.
-If set to true, cells will only be written if they have a named and have the same name as a cell described in the output schema.
-If set to false, cells will be matched from the schema according to their position in the line if a named cell is not found with the same name.</xsd:documentation>
-      </xsd:annotation></xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="SchemaCell">
     <xsd:sequence>
-      <xsd:element minOccurs="0" maxOccurs="1" name="format" type="CellFormat" />
-      <xsd:element minOccurs="0" maxOccurs="1" name="range" type="CellValueRange">
-        <xsd:annotation>
-          <xsd:documentation>Specifies a valid range for the cell value.</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element minOccurs="0" maxOccurs="1" name="locale" type="Locale">
-        <xsd:annotation>
-          <xsd:documentation>
-            The locale of this cell. Overrides the locale setting for the whole schema.
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
+    	<xsd:element minOccurs="0" maxOccurs="1" name="format"
+    		type="CellFormat" />
+    	<xsd:element minOccurs="0" maxOccurs="1" name="range"
+    		type="CellValueRange">
+    		<xsd:annotation>
+    			<xsd:documentation>
+    				Specifies a valid range for the cell value.
+    			</xsd:documentation>
+    		</xsd:annotation>
+    	</xsd:element>
+    	<xsd:element minOccurs="0" maxOccurs="1" name="locale"
+    		type="Locale">
+    		<xsd:annotation>
+    			<xsd:documentation>
+    				The locale of this cell. Overrides the locale
+    				setting for the whole schema.
+    			</xsd:documentation>
+    		</xsd:annotation>
+    	</xsd:element>
+    	<xsd:element name="linecondition" type="CellControl" maxOccurs="1" minOccurs="0"></xsd:element>
     </xsd:sequence>
     <xsd:attribute name="name" type="xsd:string" use="required">
       <xsd:annotation>
@@ -429,5 +420,15 @@ If you want that an error should occur if length is too long, then you should sp
           </xsd:annotation></xsd:attribute>
       </xsd:extension>
     </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="CellControl">
+  	<xsd:choice>
+            <xsd:element name="match" type="CellRegex"></xsd:element>
+  	</xsd:choice>
+  </xsd:complexType>
+
+  <xsd:complexType name="CellRegex">
+  	<xsd:attribute name="pattern" type="xsd:string"></xsd:attribute>
   </xsd:complexType>
 </xsd:schema>
