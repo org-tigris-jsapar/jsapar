@@ -33,8 +33,6 @@ import org.jsapar.schema.SchemaLine;
  * output depending of their contents. Add your own implementation of LineFilter in order to be able
  * to discard lines.
  *
- * @see FilterConverter
- * 
  * @author stejon0
  * 
  */

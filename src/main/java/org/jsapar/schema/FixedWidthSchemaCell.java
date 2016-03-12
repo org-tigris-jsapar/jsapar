@@ -157,6 +157,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
      * @throws IOException
      * @throws ParseException
      */
+    @Deprecated
     public Cell makeCell(Reader reader,
                boolean trimFillCharacters,
                char fillCharacter,

@@ -9,11 +9,12 @@ import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineReader;
-import org.jsapar.parse.SchemaLineParser;
+import org.jsapar.parse.LineParser;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
+import org.jsapar.schema.SchemaLine;
 
-public class CsvLineParser extends SchemaLineParser {
+public class CsvLineParser implements LineParser {
 
     private static final String EMPTY_STRING = "";
     private LineReader lineReader;
@@ -31,7 +32,7 @@ public class CsvLineParser extends SchemaLineParser {
     }
 
     /* (non-Javadoc)
-     * @see org.jsapar.input.parse.SchemaLineParser#parse(long, java.lang.String, org.jsapar.input.LineEventListener)
+     * @see org.jsapar.input.parse.LineParser#parse(long, java.lang.String, org.jsapar.input.LineEventListener)
      */
     @Override
     public boolean parse(long nLineNumber, LineEventListener listener)
@@ -47,7 +48,7 @@ public class CsvLineParser extends SchemaLineParser {
         // Empty lines are not common. Only test for empty line if there are no more than one cell
         // after a split.
         if (asCells.length <= 1 && sLine.trim().isEmpty())
-            return handleEmptyLine(lineSchema, nLineNumber, listener);
+            return handleEmptyLine(nLineNumber, listener);
 
         java.util.Iterator<CsvSchemaCell> itSchemaCell = lineSchema.getSchemaCells().iterator();
         for (String sCell : asCells) {
@@ -70,7 +71,19 @@ public class CsvLineParser extends SchemaLineParser {
         listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
         return true;
     }
-    
+
+    /**
+     * Handles behavior of empty lines
+     *
+     * @param lineNumber
+     * @param listener
+     * @return Returns true (always).
+     * @throws JSaParException
+     */
+    protected boolean handleEmptyLine(long lineNumber, LineEventListener listener) throws JSaParException {
+        return true;
+    }
+
     /**
      * @param cellSeparator
      * @param quoteChar

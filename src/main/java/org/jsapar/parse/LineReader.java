@@ -14,11 +14,12 @@ public interface LineReader {
      * @throws IOException
      * @throws JSaParException
      */
-    public String readLine() throws IOException, JSaParException;
+    String readLine() throws IOException, JSaParException;
+
 
     /**
      * @return The line separator.
      */
-    public String getLineSeparator();
+    String getLineSeparator();
 
 }

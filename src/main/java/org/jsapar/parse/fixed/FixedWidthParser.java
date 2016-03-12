@@ -3,43 +3,38 @@
  */
 package org.jsapar.parse.fixed;
 
-import java.io.IOException;
-import java.io.Reader;
-
 import org.jsapar.JSaParException;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.LineReader;
-import org.jsapar.parse.ReaderLineReader;
-import org.jsapar.parse.SchemaParser;
+import org.jsapar.parse.*;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaLine;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 
 /**
  * @author stejon0
  *
  */
-public class FixedWidthParser implements SchemaParser {
-    
-    private Reader reader;
-    private FixedWidthSchema schema;
+public class FixedWidthParser implements Parser {
+    private BufferedReader      reader;
+    private FixedWidthSchema    schema;
+    private FWLineParserFactory lineParserFactory;
 
-    /**
-     * 
-     */
+
     public FixedWidthParser(Reader reader, FixedWidthSchema schema) {
-        this.reader = reader;
+        this.reader = new BufferedReader(reader);
         this.schema = schema;
+        lineParserFactory = new FWLineParserFactory(schema);
     }
 
-    /* (non-Javadoc)
-     * @see org.jsapar.input.parse.SchemaParser#parse(org.jsapar.input.LineEventListener)
-     */
     @Override
     public void parse(LineEventListener listener) throws JSaParException, IOException {
         if (schema.getLineSeparator().length() > 0) {
-            parseByOccursLinesSeparated(listener);
+            parseLinesSeparated(listener);
         } else {
-            parseByOccursFlatFile(listener);
+            parseFlatFile(listener);
         }
     }
 
@@ -47,60 +42,67 @@ public class FixedWidthParser implements SchemaParser {
         return new ReaderLineReader(schema.getLineSeparator(), reader);
     }
 
+    private void parseLinesSeparated(LineEventListener listener) throws IOException, JSaParException {
+        LineReader lineReader = makeLineReader();
+
+        long lineNumber = 0;
+        while(true){
+            lineNumber++;
+            String line = lineReader.readLine();
+            if(line == null)
+                return;
+            if(line.isEmpty()) // Just ignore empty lines
+                continue;
+
+            try(BufferedReader r = new BufferedReader(new StringReader(line))) {
+                FixedWidthLineParser lineParser = lineParserFactory.makeLineParser(r);
+                if (lineParser == null) {
+                    if(schema.isErrorIfUndefinedLineType())
+                        throw new ParseException("No schema line could be used to parse line number " + lineNumber);
+                    else
+                        continue;
+                }
+                boolean lineFound = lineParser.parse(r, lineNumber, listener);
+                if (!lineFound) // Should never occur.
+                    throw new ParseException("Unexpected error while parsing line number " + lineNumber);
+            }
+        }
+    }
     /**
-     * Builds a document from a reader using a schema where the line types are denoted by the occurs
-     * field in the schema and the lines are not separated by any line separator character.
-     * 
-     * @param reader
-     *            The reader to parse input from
+     * Sends line parce events to the supplied listener while parsing.
+     *
      * @param listener
      *            The listener which will receive events for each parsed line.
      * @throws org.jsapar.JSaParException
      * @throws java.io.IOException
      */
-    private void parseByOccursFlatFile(LineEventListener listener) throws IOException,
+    private void parseFlatFile(LineEventListener listener) throws IOException,
             JSaParException {
-        long nLineNumber = 0;
-        for (FixedWidthSchemaLine lineSchema : schema.getFixedWidthSchemaLines()) {
-            FixedWidthLineParser lineParser = new FixedWidthLineParser(reader, lineSchema);
-            for (int i = 0; i < lineSchema.getOccurs(); i++) {
-                nLineNumber++;
-                boolean isLineFound = lineParser.parse(nLineNumber, listener);
-                if (!isLineFound) {
-                    break; // End of stream.
-                }
+        long lineNumber = 0;
+        while(true){
+            lineNumber++;
+            FixedWidthLineParser lineParser = lineParserFactory.makeLineParser(reader);
+            if(lineParser == null) {
+                handleNoParser(reader, lineNumber);
+                return;
             }
+            boolean lineFound = lineParser.parse(reader, lineNumber, listener);
+            if (!lineFound)
+                return; // End of stream.
         }
     }
 
-    /**
-     * Builds a document from a reader using a schema where the line types are denoted by the occurs
-     * field in the schema and the lines are separated by line separator character.
-     * 
-     * @param reader
-     *            The reader to parse input from
-     * @param listener
-     *            The listener which will receive events for each parsed line.
-     * @throws IOException
-     * @throws JSaParException
-     */
-    private void parseByOccursLinesSeparated(LineEventListener listener)
-            throws IOException, JSaParException {
-        LineReader lineReader = makeLineReader();
 
-        long nLineNumber = 0; // First line is 1
-        for (FixedWidthSchemaLine lineSchema : schema.getFixedWidthSchemaLines()) {
-            FixedWidthSeparatedLineParser lineParser = new FixedWidthSeparatedLineParser(lineReader, lineSchema);
-            
-            for (int i = 0; i < lineSchema.getOccurs(); i++) {
-                nLineNumber++;
-
-                boolean isLineFound = lineParser.parse(nLineNumber, listener);
-                if (!isLineFound) {
-                    return; // End of stream.
-                }
-            }
+    private void handleNoParser(BufferedReader reader, long lineNumber) throws IOException, ParseException {
+        reader.mark(10);
+        try {
+            // Check if EOF
+            if (reader.read() != -1)
+                if(schema.isErrorIfUndefinedLineType())
+                    throw new ParseException("No schema line could be used to parse line number " + lineNumber);
+        }finally{
+            reader.reset();
         }
     }
-    
+
 }

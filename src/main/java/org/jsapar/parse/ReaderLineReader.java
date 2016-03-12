@@ -3,6 +3,7 @@
  */
 package org.jsapar.parse;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -18,7 +19,8 @@ import org.jsapar.JSaParException;
  */
 public class ReaderLineReader implements LineReader {
 
-    private String  lineSeparator;
+    private static final int MAX_LINE_LENGTH = 10 * 1024;
+    private String lineSeparator;
 
     private Reader  reader;
 
@@ -72,12 +74,13 @@ public class ReaderLineReader implements LineReader {
                 lineBuilder.append(chRead);
             } else
                 lineBuilder.append(chRead);
-            if (lineBuilder.length() > 1000000)
+            if (lineBuilder.length() > MAX_LINE_LENGTH)
                 throw new JSaParException(
-                        "Line size exceeds 1M characters. Probably wrong line-separator for the line type within the schema.");
+                        "Line size exceeds "+MAX_LINE_LENGTH+" characters. Probably wrong line-separator for the line type within the schema.");
         }
         return lineBuilder.toString();
     }
+
 
     /*
      * (non-Javadoc)

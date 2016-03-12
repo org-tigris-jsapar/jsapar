@@ -6,21 +6,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jsapar.JSaParException;
-import org.jsapar.parse.CellParseError;
-import org.jsapar.parse.ParseException;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.BufferedLineReader;
-import org.jsapar.parse.SchemaLineParser;
-import org.jsapar.parse.SchemaParser;
+import org.jsapar.parse.*;
+import org.jsapar.parse.LineParser;
 import org.jsapar.schema.CsvControlCellSchema;
 import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.SchemaLine;
 
-public class CsvControlCellParser implements SchemaParser{
+public class CsvControlCellParser implements Parser {
 
     private BufferedLineReader lineReader;
     private CsvControlCellSchema schema;
-    private Map<SchemaLine, SchemaLineParser> lineParserCache = new HashMap<>();
+    private Map<SchemaLine, LineParser> lineParserCache = new HashMap<>();
 
     public CsvControlCellParser(Reader reader, CsvControlCellSchema schema) {
         this.schema = schema;
@@ -60,7 +56,7 @@ public class CsvControlCellParser implements SchemaParser{
                     throw new ParseException(error);
                 }
 
-                SchemaLineParser lineParser = makeLineParser(lineSchema);
+                LineParser lineParser = makeLineParser(lineSchema);
                 boolean isLineParsed = lineParser.parse(nLineNumber, listener);
                 if (!isLineParsed)
                     break;
@@ -76,8 +72,8 @@ public class CsvControlCellParser implements SchemaParser{
      * @param lineSchema The line schema to create a parser for.
      * @return A line parser that can parse the supplied line schema. 
      */
-    private SchemaLineParser makeLineParser(CsvSchemaLine lineSchema){
-        SchemaLineParser lineParser = lineParserCache.get(lineSchema);
+    private LineParser makeLineParser(CsvSchemaLine lineSchema){
+        LineParser lineParser = lineParserCache.get(lineSchema);
         if(lineParser == null){
             lineParser = new CsvLineParser(lineReader, lineSchema);
             lineParserCache.put(lineSchema, lineParser);

@@ -6,9 +6,6 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Locale;
 
-import org.jsapar.JSaParException;
-import org.jsapar.TextComposer;
-import org.jsapar.model.Line;
 import org.jsapar.parse.ParseSchema;
 import org.jsapar.model.Document;
 import org.jsapar.compose.ComposeException;
@@ -139,7 +136,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
     /**
      * @return Number of schema lines of this schema.
      */
-    public abstract int getSchemaLinesCount();
+    public abstract int size();
 
     /**
      * @param index
@@ -154,7 +151,7 @@ public abstract class Schema implements Cloneable, ParseSchema {
      *         no such line is found.
      */
     public int getIndexOf(SchemaLine line) {
-        for (int i = 0; i < getSchemaLinesCount(); i++) {
+        for (int i = 0; i < size(); i++) {
             if (line.equals(getSchemaLineAt(i))) {
                 return i;
             }

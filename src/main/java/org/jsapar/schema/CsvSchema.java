@@ -92,7 +92,7 @@ public class CsvSchema extends Schema {
     }
 
     @Override
-    public int getSchemaLinesCount() {
+    public int size() {
         return this.schemaLines.size();
     }
 

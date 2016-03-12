@@ -12,9 +12,7 @@ import org.jsapar.JSaParException;
 import org.jsapar.parse.LineErrorEvent;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseException;
-import org.jsapar.schema.FixedWidthControlCellSchema;
-import org.jsapar.schema.FixedWidthSchemaCell;
-import org.jsapar.schema.FixedWidthSchemaLine;
+import org.jsapar.schema.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +29,7 @@ public class FixedWidthControlCellParserTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, LineEventListener)}
+     *
      * .
      * 
      * @throws IOException
@@ -40,37 +38,56 @@ public class FixedWidthControlCellParserTest {
     @Test
     public void testParse() throws JSaParException, IOException {
         String toParse = "NJonasStenbergAStorgatan 123 45NFred Bergsten";
-        org.jsapar.schema.FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema();
+        org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("");
-        schema.setControlCellLength(1);
 
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name", "N");
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schema.addSchemaLine(schemaLine);
-
-        schemaLine = new FixedWidthSchemaLine("Address", "A");
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street", 10));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
-        schema.addSchemaLine(schemaLine);
+        addSchemaLinesOneCharControl(schema);
 
         Reader reader = new StringReader(toParse);
         DocumentBuilder builder = new DocumentBuilder();
         Document doc = builder.parse(reader, schema);
 
-        assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
-        assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
-
-        assertEquals("Storgatan", doc.getLine(1).getCell(0).getStringValue());
-        assertEquals("123 45", doc.getLine(1).getCell("Zip code").getStringValue());
-
-        assertEquals("Fred", doc.getLine(2).getCell(0).getStringValue());
-        assertEquals("Bergsten", doc.getLine(2).getCell("Last name").getStringValue());
+        checkResult(doc);
     }
 
+    private void addSchemaLinesOneCharControl(FixedWidthSchema schema) {
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name", "N");
+        FixedWidthSchemaCell typeN = new FixedWidthSchemaCell("Type", 1);
+        typeN.setLineCondition(new MatchingCellValueCondition("N"));
+        schemaLine.addSchemaCell(typeN);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        schema.addSchemaLine(schemaLine);
+
+        schemaLine = new FixedWidthSchemaLine("Address", "A");
+        FixedWidthSchemaCell typeA = new FixedWidthSchemaCell("Type", 1);
+        typeA.setLineCondition(new MatchingCellValueCondition("A"));
+        schemaLine.addSchemaCell(typeA);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street", 10));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
+        schema.addSchemaLine(schemaLine);
+    }
+
+    private void addSchemaLinesTwoCharControl(FixedWidthSchema schema) {
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name", "N");
+        FixedWidthSchemaCell typeN = new FixedWidthSchemaCell("Type", 2);
+        typeN.setLineCondition(new MatchingCellValueCondition("N"));
+        schemaLine.addSchemaCell(typeN);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        schema.addSchemaLine(schemaLine);
+
+        schemaLine = new FixedWidthSchemaLine("Address", "AA");
+        FixedWidthSchemaCell typeA = new FixedWidthSchemaCell("Type", 2);
+        typeA.setLineCondition(new MatchingCellValueCondition("AA"));
+        schemaLine.addSchemaCell(typeA);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street", 10));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
+        schema.addSchemaLine(schemaLine);
+    }
     /**
      * Test method for
-     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, LineEventListener)}
+     *
      * .
      * 
      * @throws IOException
@@ -79,37 +96,32 @@ public class FixedWidthControlCellParserTest {
     @Test
     public void testParse_separatedLines() throws JSaParException, IOException {
         String toParse = "NJonasStenberg   \r\nAStorgatan 123 45          \r\nNFred Bergsten\r\n";
-        org.jsapar.schema.FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema();
+        org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("\r\n");
-        schema.setControlCellLength(1);
 
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name", "N");
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schema.addSchemaLine(schemaLine);
-
-        schemaLine = new FixedWidthSchemaLine("Address", "A");
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street", 10));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
-        schema.addSchemaLine(schemaLine);
+        addSchemaLinesOneCharControl(schema);
 
         Reader reader = new StringReader(toParse);
         DocumentBuilder builder = new DocumentBuilder();
         Document doc = builder.parse(reader, schema);
 
-        assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
+        checkResult(doc);
+    }
+
+    private void checkResult(Document doc) {
+        assertEquals("Jonas", doc.getLine(0).getCell("First name").getStringValue());
         assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
 
-        assertEquals("Storgatan", doc.getLine(1).getCell(0).getStringValue());
+        assertEquals("Storgatan", doc.getLine(1).getCell("Street").getStringValue());
         assertEquals("123 45", doc.getLine(1).getCell("Zip code").getStringValue());
 
-        assertEquals("Fred", doc.getLine(2).getCell(0).getStringValue());
+        assertEquals("Fred", doc.getLine(2).getCell("First name").getStringValue());
         assertEquals("Bergsten", doc.getLine(2).getCell("Last name").getStringValue());
     }
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, LineEventListener)}
+     *
      * .
      * 
      * @throws IOException
@@ -118,37 +130,21 @@ public class FixedWidthControlCellParserTest {
     @Test
     public void testParse_spaceInLineType() throws JSaParException, IOException {
         String toParse = "N JonasStenberg   \r\nAAStorgatan 123 45          \r\nN Fred Bergsten";
-        org.jsapar.schema.FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema();
+        org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("\r\n");
-        schema.setControlCellLength(2);
 
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name", "N");
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schema.addSchemaLine(schemaLine);
-
-        schemaLine = new FixedWidthSchemaLine("Address", "AA");
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street", 10));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
-        schema.addSchemaLine(schemaLine);
+        addSchemaLinesTwoCharControl(schema);
 
         Reader reader = new StringReader(toParse);
         DocumentBuilder builder = new DocumentBuilder();
         Document doc = builder.parse(reader, schema);
 
-        assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
-        assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
-
-        assertEquals("Storgatan", doc.getLine(1).getCell(0).getStringValue());
-        assertEquals("123 45", doc.getLine(1).getCell("Zip code").getStringValue());
-
-        assertEquals("Fred", doc.getLine(2).getCell(0).getStringValue());
-        assertEquals("Bergsten", doc.getLine(2).getCell("Last name").getStringValue());
+        checkResult(doc);
     }
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, LineEventListener)}
+     *
      * .
      * 
      * @throws IOException
@@ -156,15 +152,11 @@ public class FixedWidthControlCellParserTest {
      */
     @Test(expected = ParseException.class)
     public void testParse_errorOnUndefinedLineType() throws JSaParException, IOException {
-        String toParse = "N JonasStenberg   ";
-        org.jsapar.schema.FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema();
+        String toParse = "X JonasStenberg   ";
+        org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("\r\n");
-        schema.setControlCellLength(2);
 
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Address", "AA");
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street", 10));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
-        schema.addSchemaLine(schemaLine);
+        addSchemaLinesTwoCharControl(schema);
 
         Reader reader = new StringReader(toParse);
         DocumentBuilder builder = new DocumentBuilder();
@@ -173,7 +165,7 @@ public class FixedWidthControlCellParserTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.FixedWidthControlCellSchema#parse(java.io.Reader, LineEventListener)}
+     *
      * .
      * 
      * @throws IOException
@@ -181,26 +173,22 @@ public class FixedWidthControlCellParserTest {
      */
     @Test
     public void testParse_noErrorIfUndefinedLineType() throws JSaParException, IOException {
-        String toParse = "N JonasStenberg   \r\nAAStorgatan 123 45          \r\n\r\nN Fred Bergsten";
-        org.jsapar.schema.FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema();
+        String toParse = "N JonasStenberg   \r\nXXStorgatan 123 45          \r\n\r\nN Fred Bergsten";
+        org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("\r\n");
-        schema.setControlCellLength(2);
         schema.setErrorIfUndefinedLineType(false);
 
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name", "N");
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schema.addSchemaLine(schemaLine);
+        addSchemaLinesTwoCharControl(schema);
 
         Reader reader = new StringReader(toParse);
         DocumentBuilder builder = new DocumentBuilder();
         Document doc = builder.parse(reader, schema);
 
         assertEquals(2, doc.getNumberOfLines());
-        assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
+        assertEquals("Jonas", doc.getLine(0).getCell("First name").getStringValue());
         assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
 
-        assertEquals("Fred", doc.getLine(1).getCell(0).getStringValue());
+        assertEquals("Fred", doc.getLine(1).getCell("First name").getStringValue());
         assertEquals("Bergsten", doc.getLine(1).getCell("Last name").getStringValue());
     }
 
@@ -223,9 +211,9 @@ public class FixedWidthControlCellParserTest {
             };
         }
 
-        public Document parse(java.io.Reader reader, FixedWidthControlCellSchema schema) throws JSaParException,
+        public Document parse(java.io.Reader reader, FixedWidthSchema schema) throws JSaParException,
                 IOException {
-            FixedWidthControlCellParser parser = new FixedWidthControlCellParser(reader, schema);
+            FixedWidthParser parser = new FixedWidthParser(reader, schema);
             parser.parse(listener);
             return this.document;
         }

@@ -40,29 +40,51 @@ public class FixedWidthCellParser extends CellParser {
                LineEventListener listener,
                long nLineNumber) throws IOException, ParseException {
 
-        int nOffset = 0;
+        String sValue = parseToString(cellSchema, reader, 0, trimFillCharacters, fillCharacter);
+        if(sValue == null) {
+            checkIfMandatory(cellSchema, listener, nLineNumber);
+            return null;
+        }
+        return parse(cellSchema, sValue, listener, nLineNumber);
+    }
+
+    /**
+     * @param cellSchema
+     * @param reader
+     * @param trimFillCharacters
+     * @param fillCharacter
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
+    String parseToString(FixedWidthSchemaCell cellSchema,
+                         Reader reader,
+                         int offset,
+                         boolean trimFillCharacters,
+                         char fillCharacter) throws IOException {
+
         int nLength = cellSchema.getLength(); // The actual length
 
         char[] buffer = new char[nLength];
-        int nRead = reader.read(buffer, 0, nLength);
+        int nRead = reader.read(buffer, offset, nLength);
         if (nRead <= 0) {
-            checkIfMandatory(cellSchema, listener, nLineNumber);
             if (cellSchema.getLength() <= 0)
-                return parse(cellSchema, EMPTY_STRING);
+                return EMPTY_STRING;
             else{
                 return null;
             }
         }
         nLength = nRead;
+        int readOffset = 0;
         if (trimFillCharacters || cellSchema.getCellFormat().getCellType() != CellType.STRING) {
-            while (nOffset < nLength && buffer[nOffset] == fillCharacter) {
-                nOffset++;
+            while (readOffset < nLength && buffer[readOffset] == fillCharacter) {
+                readOffset++;
             }
-            while (nLength > nOffset && buffer[nLength - 1] == fillCharacter) {
+            while (nLength > readOffset && buffer[nLength - 1] == fillCharacter) {
                 nLength--;
             }
-            nLength -= nOffset;
+            nLength -= readOffset;
         }
-        return parse(cellSchema, new String(buffer, nOffset, nLength), listener, nLineNumber);
-    }    
+        return new String(buffer, readOffset, nLength);
+    }
 }

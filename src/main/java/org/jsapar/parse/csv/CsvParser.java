@@ -4,16 +4,13 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.jsapar.JSaParException;
-import org.jsapar.parse.ParseException;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.LineReader;
-import org.jsapar.parse.ReaderLineReader;
-import org.jsapar.parse.SchemaParser;
+import org.jsapar.parse.*;
+import org.jsapar.parse.Parser;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 
-public class CsvParser implements SchemaParser{
+public class CsvParser implements Parser {
     
     private static final String UTF8_BOM_STR = "\ufeff";
     private LineReader lineReader;

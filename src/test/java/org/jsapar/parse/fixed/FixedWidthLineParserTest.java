@@ -46,8 +46,8 @@ public class FixedWidthLineParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        FixedWidthLineParser parser = new FixedWidthLineParser(reader, schemaLine); 
-        boolean rc = parser.parse(1, new LineEventListener() {
+        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine);
+        boolean rc = parser.parse(reader, 1, new LineEventListener() {
 
             @Override
             public void lineErrorEvent(LineErrorEvent event) throws ParseException {
@@ -84,8 +84,8 @@ public class FixedWidthLineParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        FixedWidthLineParser parser = new FixedWidthLineParser(reader, schemaLine); 
-        boolean rc = parser.parse(1, new LineEventListener() {
+        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine);
+        boolean rc = parser.parse(reader, 1, new LineEventListener() {
 
             @Override
             public void lineErrorEvent(LineErrorEvent event) throws ParseException {
@@ -121,8 +121,8 @@ public class FixedWidthLineParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        FixedWidthLineParser parser = new FixedWidthLineParser(reader, schemaLine); 
-        boolean rc = parser.parse(1, new LineEventListener() {
+        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine);
+        boolean rc = parser.parse(reader, 1, new LineEventListener() {
 
             @Override
             public void lineErrorEvent(LineErrorEvent event) throws ParseException {
@@ -163,8 +163,8 @@ public class FixedWidthLineParserTest {
 
         Reader reader = new StringReader(toParse);
         @SuppressWarnings("unused")
-        FixedWidthLineParser parser = new FixedWidthLineParser(reader, schemaLine); 
-        boolean rc = parser.parse(1, new NullParsingEventListener());
+        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine);
+        boolean rc = parser.parse(reader, 1, new NullParsingEventListener());
     }
     
     

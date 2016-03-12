@@ -96,7 +96,7 @@
     			</xsd:documentation>
     		</xsd:annotation>
     	</xsd:element>
-    	<xsd:element name="linecondition" type="CellControl" maxOccurs="1" minOccurs="0"></xsd:element>
+    	<xsd:element name="linecondition" type="CellValueCondition" maxOccurs="1" minOccurs="0"></xsd:element>
     </xsd:sequence>
     <xsd:attribute name="name" type="xsd:string" use="required">
       <xsd:annotation>
@@ -422,7 +422,7 @@ If you want that an error should occur if length is too long, then you should sp
     </xsd:complexContent>
   </xsd:complexType>
 
-  <xsd:complexType name="CellControl">
+  <xsd:complexType name="CellValueCondition">
   	<xsd:choice>
             <xsd:element name="match" type="CellRegex"></xsd:element>
   	</xsd:choice>

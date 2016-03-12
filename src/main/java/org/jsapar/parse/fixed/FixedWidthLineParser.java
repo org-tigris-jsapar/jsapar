@@ -11,24 +11,21 @@ import org.jsapar.parse.LineErrorEvent;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseException;
 import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.SchemaLineParser;
+import org.jsapar.parse.LineParser;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 
-public class FixedWidthLineParser extends SchemaLineParser {
+public class FixedWidthLineParser  {
 
     private static final String  EMPTY_STRING = "";
-    private Reader               reader;
     private FixedWidthSchemaLine lineSchema;
 //    private FixedWidthCellParser cellParser   = new FixedWidthCellParser();
 
-    public FixedWidthLineParser(Reader reader, FixedWidthSchemaLine lineSchema) {
-        this.reader = reader;
+    public FixedWidthLineParser(FixedWidthSchemaLine lineSchema) {
         this.lineSchema = lineSchema;
     }
 
-    @Override
-    public boolean parse(long nLineNumber, LineEventListener listener) throws JSaParException,
+    public boolean parse(Reader reader, long nLineNumber, LineEventListener listener) throws JSaParException,
             IOException {
         Line line = new Line(lineSchema.getLineType(), lineSchema.getSchemaCells().size());
         boolean setDefaultsOnly = false;
@@ -38,7 +35,7 @@ public class FixedWidthLineParser extends SchemaLineParser {
         for (FixedWidthSchemaCell schemaCell : lineSchema.getSchemaCells()) {
             if (setDefaultsOnly) {
                 if (schemaCell.isDefaultValue())
-                    line.addCell(schemaCell.makeCell(EMPTY_STRING, listener, nLineNumber));
+                    line.addCell(schemaCell.getDefaultCell());
                 continue;
             } else if (schemaCell.isIgnoreRead()) {
                 if (schemaCell.isDefaultValue())

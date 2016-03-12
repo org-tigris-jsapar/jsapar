@@ -5,11 +5,11 @@ import java.io.StringReader;
 
 import org.jsapar.JSaParException;
 import org.jsapar.parse.LineEventListener;
+import org.jsapar.parse.LineParser;
 import org.jsapar.parse.LineReader;
-import org.jsapar.parse.SchemaLineParser;
 import org.jsapar.schema.FixedWidthSchemaLine;
 
-public class FixedWidthSeparatedLineParser extends SchemaLineParser {
+public class FixedWidthSeparatedLineParser implements LineParser {
     
     private LineReader lineReader;
     private FixedWidthSchemaLine lineSchema;
@@ -21,15 +21,15 @@ public class FixedWidthSeparatedLineParser extends SchemaLineParser {
 
 
     /* (non-Javadoc)
-     * @see org.jsapar.input.parse.SchemaLineParser#parse(long, org.jsapar.input.LineEventListener)
+     * @see org.jsapar.input.parse.LineParser#parse(long, org.jsapar.input.LineEventListener)
      */
     @Override
     public boolean parse(long nLineNumber, LineEventListener listener) throws IOException, JSaParException {
         String line = lineReader.readLine();
         if(line == null)
             return false;
-        FixedWidthLineParser lineParser = new FixedWidthLineParser(new StringReader(line), lineSchema);
-        return lineParser.parse(nLineNumber, listener);
+        FixedWidthLineParser lineParser = new FixedWidthLineParser(lineSchema);
+        return lineParser.parse(new StringReader(line), nLineNumber, listener);
     }
 
 

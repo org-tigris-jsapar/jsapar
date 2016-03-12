@@ -28,6 +28,7 @@ public abstract class SchemaCell implements Cloneable {
     private String                        defaultValue          = null;
     private Locale                        locale                = Locale.getDefault();
     private Pattern                       emptyPattern          = null;
+    private CellValueCondition            lineCondition         = null;
 
 
     public SchemaCell(String sName) {
@@ -472,5 +473,16 @@ public abstract class SchemaCell implements Cloneable {
         if(emptyPattern != null && !emptyPattern.isEmpty())
             this.emptyPattern = Pattern.compile(emptyPattern);
     }
-    
+
+    public CellValueCondition getLineCondition() {
+        return lineCondition;
+    }
+
+    public void setLineCondition(CellValueCondition lineCondition) {
+        this.lineCondition = lineCondition;
+    }
+
+    public boolean hasLineCondition(){
+        return this.lineCondition != null;
+    }
 }

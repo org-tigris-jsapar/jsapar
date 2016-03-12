@@ -24,7 +24,7 @@ import org.jsapar.model.DateCell;
 import org.jsapar.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.SchemaParser;
+import org.jsapar.parse.Parser;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.jsapar.schema.XmlSchema;
@@ -32,7 +32,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-public class XmlParser implements SchemaParser {
+public class XmlParser implements Parser {
     // private final static String SCHEMA_LANGUAGE =
     // "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
     
