@@ -139,10 +139,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
             if (null != xmlSchema)
                 return buildCsvControlCellSchema(xmlSchema);
 
-            xmlSchema = getChild(xmlRoot, ELEMENT_FIXED_WIDTH_CONTROL_CELL_SCHEMA);
-            if (null != xmlSchema)
-                return buildFixedWidthControlCellSchema(xmlSchema);
-
             throw new SchemaException("Failed to find specific schema XML element. Expected one of "
                     + ELEMENT_CSV_SCHEMA + " or " + ELEMENT_FIXED_WIDTH_SCHEMA);
         } catch (IOException e) {
@@ -186,44 +182,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         }
     }
 
-    /**
-     * @param xmlSchema
-     * @return
-     * @throws SchemaException
-     */
-    private Schema buildFixedWidthControlCellSchema(Element xmlSchema) throws SchemaException {
-        FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema();
-
-        assignFixedWidthSchema(schema, xmlSchema);
-
-        Node xmlWriteControlCell = xmlSchema.getAttributeNode(ATTRIB_SCHEMA_WRITE_CONTROL_CELL);
-        if (xmlWriteControlCell != null)
-            schema.setWriteControlCell(getBooleanValue(xmlWriteControlCell));
-
-        Element xmlControlCell = getChild(xmlSchema, ELEMENT_FW_SCHEMA_CONTROLCELL);
-        Node xmlControlCellLength = xmlControlCell.getAttributeNode(ATTRIB_FW_SCHEMA_CONTROLCELLL_LENGTH);
-        if (xmlControlCellLength != null)
-            schema.setControlCellLength(getIntValue(xmlControlCellLength));
-
-        Node xmlControlCellAllignment = xmlControlCell.getAttributeNode(ATTRIB_FW_SCHEMA_CELL_ALIGNMENT);
-        if (xmlControlCellAllignment != null) {
-            String sControlCellAllignment = getStringValue(xmlControlCellAllignment);
-            if (sControlCellAllignment.equals("left"))
-                schema.setControlCellAlignment(FixedWidthSchemaCell.Alignment.LEFT);
-            else if (sControlCellAllignment.equals("center"))
-                schema.setControlCellAlignment(FixedWidthSchemaCell.Alignment.CENTER);
-            else if (sControlCellAllignment.equals("right"))
-                schema.setControlCellAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
-            else {
-                throw new SchemaException("Invalid value for attribute: " + ATTRIB_FW_SCHEMA_CELL_ALIGNMENT
-                        + "=" + sControlCellAllignment);
-            }
-        }
-        schema.addFillerCellsToReachLineMinLength();
-        schema.setErrorIfUndefinedLineType(getBooleanAttribute(xmlSchema,
-                ATTRIB_FW_SCHEMA_ERROR_IF_UNDEFINED_LINE_TYPE, true));
-        return schema;
-    }
 
     private boolean getBooleanAttribute(Element xmlElement, String attributeName, boolean defaultValue) {
         String sValue = xmlElement.getAttribute(attributeName);
@@ -236,9 +194,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * Builds the lines of a file schema from an xml input.
      * 
      * @param xmlSchemaLine
+     * @param locale
      * @return
      * @throws SchemaException
-     * @throws DataConversionException
      */
     private FixedWidthSchemaLine buildFixedWidthSchemaLine(Element xmlSchemaLine, Locale locale) throws SchemaException {
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine();
@@ -272,7 +230,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @param xmlSchemaCell
      * @return
      * @throws SchemaException
-     * @throws DataConversionException
      */
     private FixedWidthSchemaCell buildFixedWidthSchemaCell(Element xmlSchemaCell, Locale locale) throws SchemaException {
 
@@ -302,7 +259,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * 
      * @param xmlSchema
      * @return
-     * @throws DataConversionException
      * @throws SchemaException
      */
     private Schema buildCsvSchema(Element xmlSchema) throws SchemaException {
@@ -316,7 +272,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * 
      * @param xmlSchema
      * @return
-     * @throws DataConversionException
      * @throws SchemaException
      */
     private void assignCsvSchema(CsvSchema schema, Element xmlSchema) throws SchemaException {
@@ -336,7 +291,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * 
      * @param xmlSchema
      * @return
-     * @throws DataConversionException
      * @throws SchemaException
      */
     private Schema buildCsvControlCellSchema(Element xmlSchema) throws SchemaException {
@@ -360,7 +314,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     /**
      * @param xmlSchemaLine
      * @return
-     * @throws DataConversionException
      * @throws SchemaException
      */
     private CsvSchemaLine buildCsvSchemaLine(Element xmlSchemaLine, Locale locale) throws SchemaException {
@@ -417,6 +370,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @throws SchemaException
      */
     private void assignSchemaBase(Schema schema, Element xmlSchema) throws SchemaException {
+        schema.setErrorIfUndefinedLineType(getBooleanAttribute(xmlSchema, ATTRIB_ERROR_IF_UNDEFINED_LINE_TYPE, true));
+
         String sSeparator = getAttributeValue(xmlSchema, ATTRIB_SCHEMA_LINESEPARATOR);
         if (sSeparator != null) {
             sSeparator = replaceEscapes2Java(sSeparator);
@@ -499,7 +454,11 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
             String sEmptyPattern = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_EMPTY_PATTERN);
             if (sEmptyPattern != null)
                 cell.setEmptyPattern(sEmptyPattern);
-            
+
+            Element xmlLineCondition = getChild(xmlSchemaCell, ELEMENT_LINE_CONDITION);
+            if (xmlLineCondition != null)
+                assignLineCondition(cell, xmlLineCondition);
+
             Element xmlFormat = getChild(xmlSchemaCell, ELEMENT_FORMAT);
             if (xmlFormat != null)
                 assignCellFormat(cell, xmlFormat, locale);
@@ -525,6 +484,16 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
             throw new SchemaException("Failed to parse value within xml schema. ", e);
         }
 
+    }
+
+    private void assignLineCondition(SchemaCell cell, Element xmlLineCondition) throws SchemaException {
+        Element xmlMatch = getChild(xmlLineCondition, ELEMENT_MATCH);
+        if(xmlMatch != null){
+            String pattern = getAttributeValue(xmlMatch, ATTRIB_PATTERN);
+            cell.setLineCondition(new MatchingCellValueCondition(pattern));
+            return;
+        }
+        throw new SchemaException("Expected line condition is missing");
     }
 
     /**

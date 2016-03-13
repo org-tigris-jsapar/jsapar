@@ -18,4 +18,8 @@ public class MatchingCellValueCondition implements CellValueCondition {
         Matcher m = pattern.matcher(value);
         return m.matches();
     }
+
+    public String getPattern() {
+        return pattern.pattern();
+    }
 }

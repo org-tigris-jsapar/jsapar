@@ -2,20 +2,22 @@
 <schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 ../src/main/resources/xml/schema/JSaParSchema.xsd ">
-  <fixedwidthcontrolcellschema lineseparator="&#13;&#10;">
-    <line linetype="Header" linetypecontrolvalue="H" trimfillcharacters="true">
+  <fixedwidthschema lineseparator="&#13;&#10;">
+    <line linetype="Header" trimfillcharacters="true">
+      <cell name="Type" length="1"><linecondition><match pattern="H"/></linecondition></cell>
       <cell name="FileName" length="15"/>
       <cell name="Created date" length="10"/>
     </line>
-    <line linetype="Person" linetypecontrolvalue="B|P" trimfillcharacters="true">
+    <line linetype="Person" trimfillcharacters="true">
+      <cell name="Type" length="1"><linecondition><match pattern="B|P"/></linecondition></cell>
       <cell name="First name" length="8"/>
       <cell name="Middle name" length="9" ignoreread="true"/>
       <cell name="Last name" length="8"/>
     </line>
-    <line linetype="Footer" linetypecontrolvalue="F" trimfillcharacters="true">
+    <line linetype="Footer" trimfillcharacters="true">
+      <cell name="Type" length="1"><linecondition><match pattern="F"/></linecondition></cell>
       <cell name="Rowcount" length="7"/>
       <cell name="Filler" length="18" ignoreread="true"/>
     </line>
-    <controlcell length="1"/>
-  </fixedwidthcontrolcellschema>
+  </fixedwidthschema>
 </schema>

@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jsapar.model.Line;
 import org.jsapar.parse.CellParseError;
 import org.jsapar.parse.ParseSchema;
 import org.jsapar.model.BooleanCell;
@@ -114,15 +115,27 @@ public class JSaParExamplesTest {
         Document document = parser.build(fileReader);
         fileReader.close();
 
-        assertEquals("04_Names.txt", document.getLine(0).getCell("FileName").getStringValue());
-        assertEquals("2007-07-07", document.getLine(0).getCell("Created date").getStringValue());
-        assertEquals("Header", document.getLine(0).getLineType());
-        assertEquals("Svensson", document.getLine(1).getCell(1).getStringValue());
-        assertEquals("Erik", document.getLine(1).getCell(0).getStringValue());
-        assertEquals("Svensson", document.getLine(1).getCell(1).getStringValue());
-        assertEquals("Fredrik", document.getLine(2).getCell(0).getStringValue());
-        assertEquals("Larsson", document.getLine(2).getCell(1).getStringValue());
-        assertEquals("2", document.getLine(3).getCell(0).getStringValue());
+        Line headerLine = document.getLine(0);
+        assertEquals("Header", headerLine.getLineType());
+        assertEquals("04_Names.txt", headerLine.getCell("FileName").getStringValue());
+        assertEquals("2007-07-07", headerLine.getCell("Created date").getStringValue());
+
+        Line lineB = document.getLine(1);
+        assertEquals("Person", lineB.getLineType());
+        assertEquals("B", lineB.getCell("Type").getStringValue());
+        assertEquals("Svensson", lineB.getCell("Last name").getStringValue());
+        assertEquals("Erik", lineB.getCell("First name").getStringValue());
+        assertEquals("Svensson", lineB.getCell("Last name").getStringValue());
+
+        Line lineP = document.getLine(2);
+        assertEquals("P", lineP.getCell("Type").getStringValue());
+        assertEquals("Fredrik", lineP.getCell("First name").getStringValue());
+        assertEquals("Larsson", lineP.getCell("Last name").getStringValue());
+
+        Line footerLine = document.getLine(3);
+        assertEquals("Footer", footerLine.getLineType());
+        assertEquals("2", footerLine.getCell("Rowcount").getStringValue());
+        assertEquals("F", footerLine.getCell("Type").getStringValue());
     }
 
     @Test

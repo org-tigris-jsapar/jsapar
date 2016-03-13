@@ -74,13 +74,16 @@ public class TextComposerTest {
 
     @Test
     public void testOutputLine_FixedWidthControllCell() throws IOException, JSaParException {
-        FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema(1);
+        FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("");
 
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name");
+        FixedWidthSchemaCell typeCellSchema = new FixedWidthSchemaCell("Type", 1);
+        typeCellSchema.setDefaultValue("N");
+        typeCellSchema.setLineCondition(new MatchingCellValueCondition("N"));
+        schemaLine.addSchemaCell(typeCellSchema);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schemaLine.setLineTypeControlValue("N");
         schema.addSchemaLine(schemaLine);
 
         Line line = new Line("Name");
@@ -97,13 +100,16 @@ public class TextComposerTest {
     
     @Test
     public void testWriteLine_FixedWidthControllCell_minLength() throws IOException, JSaParException {
-        FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema(1);
+        FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("");
 
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name");
+        FixedWidthSchemaCell typeCellSchema = new FixedWidthSchemaCell("Type", 1);
+        typeCellSchema.setDefaultValue("N");
+        typeCellSchema.setLineCondition(new MatchingCellValueCondition("N"));
+        schemaLine.addSchemaCell(typeCellSchema);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schemaLine.setLineTypeControlValue("N");
         schemaLine.setMinLength(20);
         schema.addSchemaLine(schemaLine);
 

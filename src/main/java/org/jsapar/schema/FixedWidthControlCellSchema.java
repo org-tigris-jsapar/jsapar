@@ -26,6 +26,7 @@ import org.jsapar.schema.FixedWidthSchemaCell.Alignment;
  * @author Jonas Stenberg
  * 
  */
+@Deprecated
 public class FixedWidthControlCellSchema extends FixedWidthSchema {
 
     private int controlCellLength;

@@ -31,7 +31,6 @@ public class FixedWidthSchema extends Schema implements ParseSchema {
      * A list of fixed with schema lines which builds up this schema.
      */
     private java.util.List<FixedWidthSchemaLine> schemaLines = new java.util.LinkedList<FixedWidthSchemaLine>();
-    private boolean errorIfUndefinedLineType = true;
 
     /**
      * @return the schemaLines
@@ -141,20 +140,4 @@ public class FixedWidthSchema extends Schema implements ParseSchema {
         }
     }
 
-    /**
-     * @return  true if there will be an error while parsing and the control cell does not match any defined line type.
-     * false if undefined line types are silently ignored.
-     */
-    public boolean isErrorIfUndefinedLineType() {
-        return errorIfUndefinedLineType;
-    }
-
-    /**
-     * Set to true if there should be an error while parsing and the control cell does not match any defined line type.
-     * Set to false if undefined line types should be silently ignored.
-     * @param errorIfUndefinedLineType
-     */
-    public void setErrorIfUndefinedLineType(boolean errorIfUndefinedLineType) {
-        this.errorIfUndefinedLineType = errorIfUndefinedLineType;
-    }
 }

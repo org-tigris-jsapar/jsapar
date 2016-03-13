@@ -23,7 +23,26 @@ import org.jsapar.compose.ComposeException;
  */
 public abstract class Schema implements Cloneable, ParseSchema {
 
+    private boolean errorIfUndefinedLineType = true;
+
     public abstract boolean isEmpty();
+
+    /**
+     * @return  true if there will be an error while parsing and the control cell does not match any defined line type.
+     * false if undefined line types are silently ignored.
+     */
+    public boolean isErrorIfUndefinedLineType() {
+        return errorIfUndefinedLineType;
+    }
+
+    /**
+     * Set to true if there should be an error while parsing and the control cell does not match any defined line type.
+     * Set to false if undefined line types should be silently ignored.
+     * @param errorIfUndefinedLineType
+     */
+    public void setErrorIfUndefinedLineType(boolean errorIfUndefinedLineType) {
+        this.errorIfUndefinedLineType = errorIfUndefinedLineType;
+    }
 
     /**
      *  Defines how to determine which line type to use. 

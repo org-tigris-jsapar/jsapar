@@ -15,6 +15,7 @@ public abstract class SchemaLine implements Cloneable {
 
     private int                 occurs               = OCCURS_INFINITE;
     private String              lineType             = NOT_SET;
+    @Deprecated
     private String              lineTypeControlValue = NOT_SET;
 
     public SchemaLine() {
@@ -59,6 +60,7 @@ public abstract class SchemaLine implements Cloneable {
      * @param lineTypeControlValue
      *            The tag that determines which type of line it is.
      */
+    @Deprecated
     public SchemaLine(String lineType, String lineTypeControlValue) {
         this(lineType);
         this.setLineTypeControlValue(lineTypeControlValue);
@@ -170,6 +172,7 @@ public abstract class SchemaLine implements Cloneable {
     /**
      * @return the lineTypeControlValue
      */
+    @Deprecated
     public String getLineTypeControlValue() {
         return lineTypeControlValue;
     }
@@ -178,6 +181,7 @@ public abstract class SchemaLine implements Cloneable {
      * @param lineTypeControlValue
      *            the lineTypeControlValue to set
      */
+    @Deprecated
     public void setLineTypeControlValue(String lineTypeControlValue) {
         this.lineTypeControlValue = lineTypeControlValue.trim();
         if (this.lineType == NOT_SET)
@@ -194,10 +198,6 @@ public abstract class SchemaLine implements Cloneable {
         StringBuilder sb = new StringBuilder();
         sb.append("SchemaLine lineType=");
         sb.append(this.lineType);
-        if (this.lineTypeControlValue != NOT_SET) {
-            sb.append(" lineTypeControlValue=");
-            sb.append(this.lineTypeControlValue);
-        }
         sb.append(" occurs=");
         if (isOccursInfinitely())
             sb.append("INFINITE");

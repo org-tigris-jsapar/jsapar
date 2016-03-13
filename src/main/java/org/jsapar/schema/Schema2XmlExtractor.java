@@ -35,9 +35,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
             xmlDocument.appendChild(xmlRoot);
 
             Element xmlSchema = null;
-            if (schema instanceof FixedWidthControlCellSchema) {
-                xmlSchema = extractFixedWidthControlCellSchema(xmlDocument, (FixedWidthControlCellSchema) schema);
-            } else if (schema instanceof FixedWidthSchema) {
+            if (schema instanceof FixedWidthSchema) {
                 xmlSchema = extractFixedWidthSchema(xmlDocument, (FixedWidthSchema) schema);
             } else if (schema instanceof CsvControlCellSchema) {
                 xmlSchema = extractCsvControlCellSchema(xmlDocument, (CsvControlCellSchema) schema);
@@ -121,30 +119,6 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
         }
     }
 
-    /**
-     * @param xmlDocument
-     * @param schema
-     * @return The schema element
-     * @throws SchemaException
-     */
-    private Element extractFixedWidthControlCellSchema(Document xmlDocument, FixedWidthControlCellSchema schema)
-            throws SchemaException {
-        Element xmlSchema = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_FIXED_WIDTH_CONTROL_CELL_SCHEMA);
-
-        xmlSchema.setAttribute(ATTRIB_SCHEMA_WRITE_CONTROL_CELL, DatatypeConverter.printBoolean(schema.isWriteControlCell()));
-        xmlSchema.setAttribute(ATTRIB_FW_SCHEMA_ERROR_IF_UNDEFINED_LINE_TYPE, DatatypeConverter.printBoolean(schema.isErrorIfUndefinedLineType()));
-
-        Element xmlControlCell = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_FW_SCHEMA_CONTROLCELL);
-        xmlSchema.appendChild(xmlControlCell);
-
-        xmlControlCell.setAttribute(ATTRIB_FW_SCHEMA_CONTROLCELLL_LENGTH, String.valueOf(schema.getControlCellLength()));
-        xmlControlCell.setAttribute(ATTRIB_FW_SCHEMA_CELL_ALIGNMENT, schema.getControlCellAlignment()
-                .toString().toLowerCase());
-
-        assignFixedWidthSchema(xmlDocument, xmlSchema, schema);
-
-        return xmlSchema;
-    }
 
     /**
      * Extracts the lines of a schema into an xml.
@@ -299,6 +273,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
         String lineSeparator = schema.getLineSeparator();
         lineSeparator = replaceJava2Escapes(lineSeparator);
         xmlSchema.setAttribute(ATTRIB_SCHEMA_LINESEPARATOR, lineSeparator);
+        xmlSchema.setAttribute(ATTRIB_ERROR_IF_UNDEFINED_LINE_TYPE, DatatypeConverter.printBoolean(schema.isErrorIfUndefinedLineType()));
 
         Element xmlLocale = extractLocale(xmlDocument, schema.getLocale());
         xmlSchema.appendChild(xmlLocale);
@@ -350,6 +325,27 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
         Element xmlRange = extractCellRange(xmlDocument, cell);
         if (xmlRange.hasChildNodes())
             xmlSchemaCell.appendChild(xmlRange);
+
+        if(cell.getLocale() != null){
+            xmlSchemaCell.appendChild(extractLocale(xmlDocument, cell.getLocale()));
+        }
+
+        if(cell.getLineCondition() != null){
+            Element xmlLineCondition = extractLineCondition(xmlDocument, cell.getLineCondition());
+            xmlSchemaCell.appendChild(xmlLineCondition);
+        }
+    }
+
+    private Element extractLineCondition(Document xmlDocument, CellValueCondition lineCondition)
+            throws SchemaException {
+        Element xmlLineCondition = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_LINE_CONDITION);
+        if (lineCondition instanceof MatchingCellValueCondition){
+            MatchingCellValueCondition match = (MatchingCellValueCondition) lineCondition;
+            Element xmlMatch = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_MATCH);
+            xmlMatch.setAttribute(ATTRIB_PATTERN, match.getPattern());
+            return xmlLineCondition;
+        }
+        throw new SchemaException("Unsupported line condition type: " + lineCondition.getClass() + ".");
     }
 
     /**

@@ -11,7 +11,7 @@
       </xsd:choice>
     </xsd:complexType>
   </xsd:element>
-  <xsd:complexType name="SchemaBase">
+  <xsd:complexType name="Schema">
     <xsd:sequence>
       <xsd:element minOccurs="0" maxOccurs="1" name="locale" type="Locale">
         <xsd:annotation>
@@ -24,6 +24,12 @@
         <xsd:documentation>A sequence of characters that separates each line. Default is the system default line separator characters. To specify control characters, use xml syntax e.g. &amp;#13; = \n and &amp;#10; = \r.</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
+	<xsd:attribute name="errorifundefinedlinetype" type="xsd:boolean" default="true">
+		<xsd:annotation>
+			<xsd:documentation>Set to true if there should be an error while parsing a line and the control cell does not match any defined line type.
+Set to false if undefined line types should be silently ignored.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="SchemaLine">
     <xsd:attribute name="occurs">
@@ -182,7 +188,7 @@ You can use a regexp pattern that will be matched to determine if a cell is empt
   </xsd:complexType>
   <xsd:complexType name="FixedWidthSchema">
     <xsd:complexContent mixed="false">
-      <xsd:extension base="SchemaBase">
+      <xsd:extension base="Schema">
         <xsd:sequence minOccurs="1" maxOccurs="unbounded">
           <xsd:element minOccurs="1" maxOccurs="unbounded" name="line" type="FixedWidthSchemaLine" />
         </xsd:sequence>
@@ -217,12 +223,6 @@ You can use a regexp pattern that will be matched to determine if a cell is empt
   					</xsd:documentation>
   				</xsd:annotation>
   			</xsd:attribute>
-  			<xsd:attribute name="errorifundefinedlinetype" type="xsd:boolean" default="true">
-  				<xsd:annotation>
-  					<xsd:documentation>Set to true if there should be an error while parsing a line and the control cell does not match any defined line type.
-Set to false if undefined line types should be silently ignored.
-Please note that for a schema where the lines are not separated by any line separator character, undefined lines always cause an error. There is no way for the parser to know the length of the line otherwise.</xsd:documentation>
-  				</xsd:annotation></xsd:attribute>
   		</xsd:extension>
   	</xsd:complexContent>
   </xsd:complexType>
@@ -291,7 +291,7 @@ center
   </xsd:complexType>
   <xsd:complexType name="CsvSchema">
     <xsd:complexContent mixed="false">
-      <xsd:extension base="SchemaBase">
+      <xsd:extension base="Schema">
         <xsd:sequence minOccurs="0" maxOccurs="unbounded">
           <xsd:element name="line" type="CsvSchemaLine" />
         </xsd:sequence>
