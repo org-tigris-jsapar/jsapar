@@ -62,30 +62,6 @@ public class Schema2XmlExtractorTest {
         // TODO Add more accurate tests.
     }
 
-    /**
-     * Test method for {@link org.jsapar.schema.Schema2XmlExtractor#extractXml(java.io.Writer, org.jsapar.schema.Schema)}.
-     * @throws SchemaException 
-     */
-    @Test
-    public void testExtractXml_FixedWidthControlCell() throws SchemaException {
-        StringWriter writer = new StringWriter();
-        FixedWidthControlCellSchema schema = new FixedWidthControlCellSchema();
-//        schema.setLineSeparator("");
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Names", "N");
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schema.addSchemaLine(schemaLine);
-        
-        Schema2XmlExtractor extractor = new Schema2XmlExtractor();
-        extractor.extractXml(writer, schema);
-        
-        String sXml = writer.toString();
-//        System.out.println(sXml);
-        
-        assertNotNull(sXml);
-        // TODO Add more accurate tests.
-        
-    }
 
     /**
      * Test method for {@link org.jsapar.schema.Schema2XmlExtractor#extractXml(java.io.Writer, org.jsapar.schema.Schema)}.
