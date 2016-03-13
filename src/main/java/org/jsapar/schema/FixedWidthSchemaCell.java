@@ -32,11 +32,6 @@ public class FixedWidthSchemaCell extends SchemaCell {
                 writer.write(sValue, 0, length);
             }
 
-            @Override
-            public void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException {
-                    writer.write(sValue);
-                    FixedWidthSchemaCell.fill(writer, fillCharacter, nToFill);
-            }
         },
         CENTER {
             @Override
@@ -44,13 +39,6 @@ public class FixedWidthSchemaCell extends SchemaCell {
                 writer.write(sValue, (sValue.length()-length)/2, length);
             }
 
-            @Override
-            public void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException {
-                int nLeft = nToFill / 2;
-                FixedWidthSchemaCell.fill(writer, fillCharacter, nLeft);
-                writer.write(sValue);
-                FixedWidthSchemaCell.fill(writer, fillCharacter, nToFill - nLeft);
-            }
         },
         RIGHT{
             @Override
@@ -58,15 +46,9 @@ public class FixedWidthSchemaCell extends SchemaCell {
                 writer.write(sValue, sValue.length() - length, length);
             }
 
-            @Override
-            public void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException {
-                FixedWidthSchemaCell.fill(writer, fillCharacter, nToFill);
-                writer.write(sValue);
-            }
-            
         };
-        
-        
+
+
         /**
          * Fits supplied value to supplied length, cutting in the correct end.
          * @param writer
@@ -76,16 +58,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
          */
         public abstract void fit(Writer writer, int length, String sValue) throws IOException;
         
-        /**
-         * Padds supplied value in the correct end with the supplied number of characters
-         * @param writer
-         * @param nToFill
-         * @param sValue
-         * @param fillCharacter
-         * @throws IOException
-         */
-        public abstract void padd(Writer writer, int nToFill, String sValue, char fillCharacter) throws IOException;
-    };
+    }
 
     /**
      * The length of the cell.
@@ -141,55 +114,6 @@ public class FixedWidthSchemaCell extends SchemaCell {
     }
 
 
-    /**
-     * Builds a Cell from a reader input.
-     * 
-     * @param reader
-     *            The input reader
-     * @param trimFillCharacters
-     *            If true, fill characters are ignored while reading string values. If the cell is
-     *            of any other type, the value is trimmed any way before parsing.
-     * @param fillCharacter
-     *            The fill character to ignore if trimFillCharacters is true.
-     * @param nLineNumber
-     * @param listener
-     * @return A Cell filled with the parsed cell value and with the name of this schema cell.
-     * @throws IOException
-     * @throws ParseException
-     */
-    @Deprecated
-    public Cell makeCell(Reader reader,
-               boolean trimFillCharacters,
-               char fillCharacter,
-               LineEventListener listener,
-               long nLineNumber) throws IOException, ParseException {
-
-        int nOffset = 0;
-        int nLength = this.length; // The actual length
-
-        char[] buffer = new char[nLength];
-        int nRead = reader.read(buffer, 0, nLength);
-        if (nRead <= 0) {
-            checkIfMandatory(listener, nLineNumber);
-            if (this.length <= 0)
-                return makeCell(EMPTY_STRING);
-            else{
-                return null;
-            }
-        }
-        nLength = nRead;
-        if (trimFillCharacters || getCellFormat().getCellType() != CellType.STRING) {
-            while (nOffset < nLength && buffer[nOffset] == fillCharacter) {
-                nOffset++;
-            }
-            while (nLength > nOffset && buffer[nLength - 1] == fillCharacter) {
-                nLength--;
-            }
-            nLength -= nOffset;
-        }
-        Cell cell = makeCell(new String(buffer, nOffset, nLength), listener, nLineNumber);
-        return cell;
-    }
 
     /**
      * @return the length
@@ -206,80 +130,6 @@ public class FixedWidthSchemaCell extends SchemaCell {
         this.length = length;
     }
 
-    /**
-     * @param writer
-     * @param ch
-     * @param nSize
-     * @throws IOException
-     */
-    public static void fill(Writer writer, char ch, int nSize) throws IOException {
-        for (int i = 0; i < nSize; i++) {
-            writer.write(ch);
-        }
-    }
-
-    /**
-     * Writes an empty cell. Uses the fill character to fill the space.
-     * 
-     * @param writer
-     * @param fillCharacter
-     * @throws IOException
-     * @throws JSaParException
-     */
-    public void outputEmptyCell(Writer writer, char fillCharacter) throws IOException, JSaParException {
-        FixedWidthSchemaCell.fill(writer, fillCharacter, getLength());
-    }
-
-    /**
-     * Writes a cell to the supplied writer using supplied fill character.
-     * 
-     * @param cell
-     *            The cell to write
-     * @param writer
-     *            The writer to write to.
-     * @param fillCharacter
-     *            The fill character to fill empty spaces.
-     * @throws IOException
-     * @throws ComposeException
-     */
-    void output(Cell cell, Writer writer, char fillCharacter) throws IOException, JSaParException {
-        String sValue = format(cell);
-        output(sValue, writer, fillCharacter, getLength(), getAlignment());
-    }
-
-    /**
-     * Writes a cell to the supplied writer using supplied fill character.
-     * 
-     * @param cell
-     *            The cell to write
-     * @param writer
-     *            The writer to write to.
-     * @param fillCharacter
-     *            The fill character to fill empty spaces.
-     * @param length
-     *            The number of characters to write.
-     * @param alignment
-     *            The alignment of the cell content if the content is smaller than the cell length.
-     * @param format
-     *            The format to use.
-     * @throws IOException
-     * @throws ComposeException
-     */
-    static void output(String sValue, Writer writer, char fillCharacter, int length, Alignment alignment)
-            throws IOException, ComposeException {
-        if (sValue.length() == length) {
-            writer.write(sValue);
-            return;
-        } else if (sValue.length() > length) {
-            // If the cell value is larger than the cell length, we have to cut the value.
-            alignment.fit(writer, length, sValue);
-            return;
-        } else {
-            // Otherwise use the alignment of the schema.
-            int nToFill = length - sValue.length();
-            alignment.padd(writer, nToFill, sValue, fillCharacter);
-        }
-    }
 
     /**
      * @return the alignment

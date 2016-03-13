@@ -63,9 +63,54 @@ class FixedWidthCellComposer {
         } else {
             // Otherwise use the alignment of the schema.
             int nToFill = length - sValue.length();
-            alignment.padd(writer, nToFill, sValue, fillCharacter);
+            pad(alignment, writer, nToFill, sValue, fillCharacter);
         }
     }
 
+    /**
+     * Padds supplied value in the correct end with the supplied number of characters
+     *
+     * @param alignment
+     * @param writer
+     * @param nToFill
+     * @param sValue
+     * @param fillCharacter
+     * @throws IOException
+     */
+    private void pad(FixedWidthSchemaCell.Alignment alignment,
+                     Writer writer,
+                     int nToFill,
+                     String sValue,
+                     char fillCharacter) throws IOException {
+        switch (alignment) {
+
+        case LEFT:
+            writer.write(sValue);
+            fill(writer, fillCharacter, nToFill);
+            break;
+        case CENTER:
+            int nLeft = nToFill / 2;
+            fill(writer, fillCharacter, nLeft);
+            writer.write(sValue);
+            fill(writer, fillCharacter, nToFill - nLeft);
+            break;
+        case RIGHT:
+            fill(writer, fillCharacter, nToFill);
+            writer.write(sValue);
+            break;
+        }
+    }
+
+    /**
+     * @param writer
+     * @param ch
+     * @param nSize
+     * @throws IOException
+     */
+    public static void fill(Writer writer, char ch, int nSize) throws IOException {
+        for (int i = 0; i < nSize; i++) {
+            writer.write(ch);
+        }
+    }
 
 }

@@ -19,7 +19,7 @@ public class FixedWidthLineParser  {
 
     private static final String  EMPTY_STRING = "";
     private FixedWidthSchemaLine lineSchema;
-//    private FixedWidthCellParser cellParser   = new FixedWidthCellParser();
+    private FixedWidthCellParser cellParser   = new FixedWidthCellParser();
 
     public FixedWidthLineParser(FixedWidthSchemaLine lineSchema) {
         this.lineSchema = lineSchema;
@@ -52,8 +52,9 @@ public class FixedWidthLineParser  {
                 }
             } else {
                 try {
-                    Cell cell = schemaCell.makeCell(reader, lineSchema.isTrimFillCharacters(),
-                            lineSchema.getFillCharacter(), listener, nLineNumber);
+                    Cell cell = cellParser
+                            .parse(schemaCell, reader, lineSchema.isTrimFillCharacters(), lineSchema.getFillCharacter(),
+                                    listener, nLineNumber);
                     if (cell == null) {
                         if (oneRead) {
                             setDefaultsOnly = true;

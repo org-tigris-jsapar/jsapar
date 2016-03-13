@@ -19,21 +19,19 @@ public class FixedWidthCellParser extends CellParser {
 
     /**
      * Builds a Cell from a reader input.
-     * 
-     * @param reader
-     *            The input reader
-     * @param trimFillCharacters
-     *            If true, fill characters are ignored while reading string values. If the cell is
-     *            of any other type, the value is trimmed any way before parsing.
-     * @param fillCharacter
-     *            The fill character to ignore if trimFillCharacters is true.
-     * @param nLineNumber
+     *
+     * @param cellSchema         The schema for the cell.
+     * @param reader             The input reader
+     * @param trimFillCharacters If true, fill characters are ignored while reading string values. If the cell is
+     *                           of any other type, the value is trimmed any way before parsing.
+     * @param fillCharacter      The fill character to ignore if trimFillCharacters is true.
      * @param listener
+     * @param nLineNumber
      * @return A Cell filled with the parsed cell value and with the name of this schema cell.
      * @throws IOException
      * @throws ParseException
      */
-    Cell parse(FixedWidthSchemaCell cellSchema,
+    public Cell parse(FixedWidthSchemaCell cellSchema,
                Reader reader,
                boolean trimFillCharacters,
                char fillCharacter,
