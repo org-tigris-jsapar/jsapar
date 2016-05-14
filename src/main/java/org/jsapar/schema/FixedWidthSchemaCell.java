@@ -1,18 +1,10 @@
 package org.jsapar.schema;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
 
-import org.jsapar.model.Cell;
-import org.jsapar.model.CellType;
-import org.jsapar.JSaParException;
-import org.jsapar.parse.ParseException;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.compose.ComposeException;
-
 /**
- * Describes how a cell is represented for a fixed with schema.
+ * Describes how a cell is represented for a fixed width schema.
  * 
  * @author stejon0
  */
@@ -51,9 +43,9 @@ public class FixedWidthSchemaCell extends SchemaCell {
 
         /**
          * Fits supplied value to supplied length, cutting in the correct end.
-         * @param writer
-         * @param length
-         * @param sValue
+         * @param writer The writer to write to
+         * @param length The maximum number of characters to write.
+         * @param sValue The value to write.
          * @throws IOException
          */
         public abstract void fit(Writer writer, int length, String sValue) throws IOException;
@@ -148,7 +140,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jsapar.schema.SchemaCell#clone()
      */
     public FixedWidthSchemaCell clone(){
@@ -162,13 +154,11 @@ public class FixedWidthSchemaCell extends SchemaCell {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(super.toString());
-        sb.append(" length=");
-        sb.append(this.length);
-        sb.append(" alignment=");
-        sb.append(this.alignment);
-        return sb.toString();
+        return super.toString() +
+                " length=" +
+                this.length +
+                " alignment=" +
+                this.alignment;
     }
 
 }

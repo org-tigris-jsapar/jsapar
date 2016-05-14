@@ -1,12 +1,6 @@
 package org.jsapar.schema;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Iterator;
 import java.util.List;
-
-import org.jsapar.JSaParException;
-import org.jsapar.model.Line;
 
 /**
  * Defines a schema for a fixed position buffer. Each cell is defined by a fixed number of
@@ -17,11 +11,7 @@ import org.jsapar.model.Line;
  */
 public class CsvSchema extends Schema {
 
-    /**
-     * Byte order marker. Some editors (usually in Windows) adds a byte order marker to xml files. 
-     */
-    private static final String UTF8_BOM_STR = "\ufeff";
-    private java.util.ArrayList<CsvSchemaLine> schemaLines = new java.util.ArrayList<CsvSchemaLine>(4);
+    private java.util.ArrayList<CsvSchemaLine> schemaLines = new java.util.ArrayList<>(4);
 
     /**
      * @return the schemaLines
@@ -48,7 +38,7 @@ public class CsvSchema extends Schema {
         CsvSchema schema;
         schema = (CsvSchema) super.clone();
 
-        schema.schemaLines = new java.util.ArrayList<CsvSchemaLine>();
+        schema.schemaLines = new java.util.ArrayList<>();
         for (CsvSchemaLine line : this.schemaLines) {
             schema.addSchemaLine(line.clone());
         }
@@ -62,12 +52,9 @@ public class CsvSchema extends Schema {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(super.toString());
-
-        sb.append(" schemaLines=");
-        sb.append(this.schemaLines);
-        return sb.toString();
+        return super.toString() +
+                " schemaLines=" +
+                this.schemaLines;
     }
 
     @Override

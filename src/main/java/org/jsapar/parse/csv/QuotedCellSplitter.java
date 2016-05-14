@@ -14,8 +14,9 @@ import org.jsapar.parse.LineReader;
  *
  */
 public class QuotedCellSplitter implements CellSplitter {
+    private static final String[] EMPTY_LINE = new String[0];
 
-    private LineReader   lineReader = null;
+    private BufferedLineReader2   lineReader = null;
     private String       cellSeparator;
     private char         quoteChar;
     private CellSplitter simpleCellSplitter;
@@ -26,9 +27,6 @@ public class QuotedCellSplitter implements CellSplitter {
      *            of many characters.
      * @param quoteChar
      *            The quote character to use for quoted cells.
-     * @param lineReader
-     *            The line reader to read next line from in case multi-line cells are supported. Set to null if
-     *            multi-line cells are not supported.
      */
     public QuotedCellSplitter(String cellSeparator, char quoteChar) {
         this(cellSeparator, quoteChar, null);
@@ -44,7 +42,7 @@ public class QuotedCellSplitter implements CellSplitter {
      *            The line reader to read next line from in case multi-line cells are supported. Set to null if
      *            multi-line cells are not supported.
      */
-    public QuotedCellSplitter(String cellSeparator, char quoteChar, LineReader lineReader) {
+    public QuotedCellSplitter(String cellSeparator, char quoteChar, BufferedLineReader2 lineReader) {
         this.cellSeparator = cellSeparator;
         this.quoteChar = quoteChar;
         this.lineReader = lineReader;
@@ -58,7 +56,10 @@ public class QuotedCellSplitter implements CellSplitter {
      */
     @Override
     public String[] split(String sLine) throws IOException, JSaParException {
-        java.util.List<String> cells = new java.util.ArrayList<String>(sLine.length() / 8);
+        if(sLine.isEmpty()) {
+            return EMPTY_LINE;
+        }
+        java.util.List<String> cells = new java.util.ArrayList<>(sLine.length() / 8);
         splitQuoted(cells, sLine);
         return cells.toArray(new String[cells.size()]);
     }
@@ -77,26 +78,31 @@ public class QuotedCellSplitter implements CellSplitter {
         if (sToSplit.length() <= 0)
             return;
 
-        int nFoundQuote = -1;
+        int nFoundQuoteIndex = -1;
         if (sToSplit.charAt(0) == quoteChar) {
+            if(sToSplit.length()==1) {
+                // Quote is the only character in the string.
+                cells.add(sToSplit);
+                return;
+            }
             // Quote is the first character in the string.
-            nFoundQuote = 0;
             nIndex++;
+            nFoundQuoteIndex = 0;
         } else {
             // Search for quote character at first position after a cell separator. Otherwise ignore quotes.
-            nFoundQuote = sToSplit.indexOf(cellSeparator + quoteChar);
+            nFoundQuoteIndex = sToSplit.indexOf(cellSeparator + quoteChar);
 
-            if (nFoundQuote < 0) {
+            if (nFoundQuoteIndex < 0) {
                 cells.addAll(Arrays.asList(simpleCellSplitter.split(sToSplit)));
                 return;
-            } else if (nFoundQuote > 0) {
-                String sUnquoted = sToSplit.substring(0, nFoundQuote);
+            } else if (nFoundQuoteIndex > 0) {
+                String sUnquoted = sToSplit.substring(0, nFoundQuoteIndex);
                 String[] asCells = simpleCellSplitter.split(sUnquoted);
                 cells.addAll(Arrays.asList(asCells));
             } else {
                 cells.add("");
             }
-            nIndex = nFoundQuote + cellSeparator.length() + 1;
+            nIndex = nFoundQuoteIndex + cellSeparator.length() + 1;
         }
 
         String quoteSeparator = quoteChar + cellSeparator;
@@ -116,7 +122,7 @@ public class QuotedCellSplitter implements CellSplitter {
                         throw new JSaParException(
                                 "End quote is missing in line and multi-line cells are not supported for this line.");
 
-                    String nextLine = lineReader.readLine();
+                    String nextLine = lineReader.peekLine();
                     if (nextLine == null) {
                         throw new JSaParException("End quote is missing for quoted cell. Reached end of file.");
                     }
@@ -156,7 +162,7 @@ public class QuotedCellSplitter implements CellSplitter {
      * @param lineReader
      *            Assigns line reader to be able to split multi line cells.
      */
-    public void setLineReader(LineReader lineReader) {
+    public void setLineReader(BufferedLineReader2 lineReader) {
         this.lineReader = lineReader;
     }
 

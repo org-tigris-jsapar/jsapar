@@ -53,17 +53,6 @@ public class FixedWidthSchema extends Schema implements ParseSchema {
      */
     public void addSchemaLine(FixedWidthSchemaLine schemaLine) {
         this.schemaLines.add(schemaLine);
-        if(schemaLine.getLineTypeControlValue() != null && !schemaLine.getLineTypeControlValue().isEmpty()) {
-            String[] controlValues = schemaLine.getLineTypeControlValue().split("\\|");
-            if(controlValues.length > 1){
-                schemaLine.setLineTypeControlValue(controlValues[0]);
-                for(int i=1;i<controlValues.length; i++){
-                    FixedWidthSchemaLine clone = schemaLine.clone();
-                    clone.setLineTypeControlValue(controlValues[i]);
-                    this.schemaLines.add(clone);
-                }
-            }
-        }
     }
 
     @Override

@@ -78,15 +78,6 @@ public class CsvSchemaLine extends SchemaLine {
     }
 
 
-    /**
-     * @param lineReader
-     * @return An array of all cells found on the line.
-     */
-    CellSplitter makeCellSplitter(LineReader lineReader) {
-        if (quoteChar == 0)
-            return new SimpleCellSplitter(cellSeparator);
-        return new QuotedCellSplitter(cellSeparator, quoteChar, lineReader);
-    }
 
 
     /**

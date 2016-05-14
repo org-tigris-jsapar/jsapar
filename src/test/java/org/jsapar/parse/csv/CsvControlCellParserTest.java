@@ -1,21 +1,23 @@
 package org.jsapar.parse.csv;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.model.Document;
 import org.jsapar.JSaParException;
+import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineErrorEvent;
+import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseException;
-import org.jsapar.schema.CsvControlCellSchema;
+import org.jsapar.schema.CsvSchema;
+import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
+import org.jsapar.schema.MatchingCellValueCondition;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
 
 public class CsvControlCellParserTest {
 
@@ -29,7 +31,7 @@ public class CsvControlCellParserTest {
 
     /**
      * Test method for
-     * {@link org.jsapar.schema.CsvControlCellSchema#parse(java.io.Reader, LineEventListener)}
+     * {@link org.jsapar.schema.CsvSchema#parse()}
      * .
      * 
      * @throws IOException
@@ -37,17 +39,27 @@ public class CsvControlCellParserTest {
      */
     @Test
     public void testParse() throws JSaParException, IOException {
-        CsvControlCellSchema schema = new CsvControlCellSchema();
-        schema.setControlCellSeparator(":->");
+        CsvSchema schema = new CsvSchema();
+        schema.setLineSeparator("\n");
         CsvSchemaLine schemaLine = new CsvSchemaLine("Address");
         schemaLine.setCellSeparator(":");
+        CsvSchemaCell schemaCell = new CsvSchemaCell("type");
+        schemaCell.setLineCondition(new MatchingCellValueCondition("Address"));
+        schemaLine.addSchemaCell(schemaCell);
+        schemaLine.addSchemaCell(new CsvSchemaCell("street"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("postcode"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("post.town"));
         schema.addSchemaLine(schemaLine);
 
         schemaLine = new CsvSchemaLine("Name");
+        CsvSchemaCell nameTypeSchemaCell = new CsvSchemaCell("type");
+        nameTypeSchemaCell.setLineCondition(new MatchingCellValueCondition("Name"));
+        schemaLine.addSchemaCell(nameTypeSchemaCell);
+        schemaLine.addSchemaCell(new CsvSchemaCell("first.name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("last.name"));
         schema.addSchemaLine(schemaLine);
 
-        String sToParse = "Name:->Jonas;Stenberg" + System.getProperty("line.separator")
-                + "Address:->Storgatan 4:12345:Storstan";
+        String sToParse = "Name;Jonas;Stenberg\nAddress:Storgatan 4:12345:Storstan";
         java.io.Reader reader = new java.io.StringReader(sToParse);
         DocumentBuilder builder = new DocumentBuilder();
         Document doc = builder.build(reader, schema);
@@ -84,8 +96,8 @@ public class CsvControlCellParserTest {
             };
         }
 
-        public Document build(java.io.Reader reader, CsvControlCellSchema schema) throws JSaParException, IOException {
-            CsvControlCellParser parser = new CsvControlCellParser(reader, schema);
+        public Document build(java.io.Reader reader, CsvSchema schema) throws JSaParException, IOException {
+            CsvParser parser = new CsvParser(reader, schema);
             parser.parse(listener);
             return this.document;
         }

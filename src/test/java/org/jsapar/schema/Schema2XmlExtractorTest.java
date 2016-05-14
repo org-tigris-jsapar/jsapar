@@ -87,36 +87,6 @@ public class Schema2XmlExtractorTest {
         // TODO Add more accurate tests.
     }
 
-    /**
-     * Test method for {@link org.jsapar.schema.Schema2XmlExtractor#extractXml(java.io.Writer, org.jsapar.schema.Schema)}.
-     * @throws SchemaException 
-     */
-    @Test
-    public void testExtractXml_CsvControlCell() throws SchemaException {
-        StringWriter writer = new StringWriter();
-        CsvControlCellSchema schema = new CsvControlCellSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine("Names", "N");
-        CsvSchemaCell firstNameCell = new CsvSchemaCell("First name");
-        firstNameCell.setDefaultCell(new StringCell("Default", "John"));
-        schemaLine.addSchemaCell(firstNameCell);
-        schemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
-        schema.addSchemaLine(schemaLine);
-        
-        Schema2XmlExtractor extractor = new Schema2XmlExtractor();
-        extractor.extractXml(writer, schema);
-        
-        String sXml = writer.toString();
-        System.out.println(sXml);
-        
-        assertNotNull(sXml);
 
-        Reader reader = new StringReader(sXml);
-        Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
-        Schema schema2 = builder.build(reader);
-        
-        assertEquals(schema.getLineSeparator(), schema2.getLineSeparator());
-        // TODO Add more accurate tests.
-        
-    }
     
 }

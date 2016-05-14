@@ -7,7 +7,6 @@
         <xsd:element name="csvschema" type="CsvSchema" />
         <xsd:element name="fixedwidthschema" type="FixedWidthSchema" />
         <xsd:element name="csvcontrolcellschema" type="CsvControlCellSchema" />
-        <xsd:element name="fixedwidthcontrolcellschema" type="FixedWidthControlCellSchema" />
       </xsd:choice>
     </xsd:complexType>
   </xsd:element>
@@ -195,37 +194,6 @@ You can use a regexp pattern that will be matched to determine if a cell is empt
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-  <xsd:complexType name="FixedWidthControlCellSchema">
-  	<xsd:complexContent mixed="false">
-  		<xsd:extension base="FixedWidthSchema">
-  			<xsd:sequence minOccurs="1" maxOccurs="unbounded">
-  				<xsd:element minOccurs="1" maxOccurs="1"
-  					name="controlcell" type="FixedWidthSchemaControlCell">
-  					<xsd:annotation>
-  						<xsd:documentation>
-  							The control cell occurs as the first cell
-  							at each line and denotes which type of
-  							line the rest of the line is. This element
-  							tells how the control cell is to be parsed
-  							or written.
-  						</xsd:documentation>
-  					</xsd:annotation>
-  				</xsd:element>
-  			</xsd:sequence>
-  			<xsd:attribute default="true" name="writecontrolcell"
-  				type="xsd:boolean">
-  				<xsd:annotation>
-  					<xsd:documentation>
-  						Specifies if the control cell should be
-  						written for output. If false, the control cell
-  						is discarded in the output field. Default is
-  						true.
-  					</xsd:documentation>
-  				</xsd:annotation>
-  			</xsd:attribute>
-  		</xsd:extension>
-  	</xsd:complexContent>
-  </xsd:complexType>
   <xsd:complexType name="FixedWidthSchemaLine">
     <xsd:complexContent mixed="false">
       <xsd:extension base="SchemaLine">
@@ -369,26 +337,6 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
       <xsd:simpleType>
         <xsd:restriction base="xsd:string">
           <xsd:pattern value="[A-Z]{2}" />
-        </xsd:restriction>
-      </xsd:simpleType>
-    </xsd:attribute>
-  </xsd:complexType>
-  <xsd:complexType name="FixedWidthSchemaControlCell">
-    <xsd:attribute name="length" type="xsd:int" use="required">
-      <xsd:annotation>
-        <xsd:documentation>The length of the control cell</xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
-    <xsd:attribute name="alignment" use="optional">
-      <xsd:annotation>
-        <xsd:documentation>Defines the cell alignment. Only used when writing, not when reading. The remaining space is filled with the fill-character of the parent document schema.
-                    	</xsd:documentation>
-      </xsd:annotation>
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="left" />
-          <xsd:enumeration value="right" />
-          <xsd:enumeration value="center" />
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:attribute>

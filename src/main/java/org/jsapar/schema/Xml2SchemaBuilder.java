@@ -135,10 +135,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
             if (null != xmlSchema)
                 return buildFixedWidthSchema(xmlSchema);
 
-            xmlSchema = getChild(xmlRoot, ELEMENT_CSV_CONTROL_CELL_SCHEMA);
-            if (null != xmlSchema)
-                return buildCsvControlCellSchema(xmlSchema);
-
             throw new SchemaException("Failed to find specific schema XML element. Expected one of "
                     + ELEMENT_CSV_SCHEMA + " or " + ELEMENT_FIXED_WIDTH_SCHEMA);
         } catch (IOException e) {
@@ -286,30 +282,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         }
     }
 
-    /**
-     * Builds a CSV file schema object.
-     * 
-     * @param xmlSchema
-     * @return
-     * @throws SchemaException
-     */
-    private Schema buildCsvControlCellSchema(Element xmlSchema) throws SchemaException {
-        CsvControlCellSchema schema = new CsvControlCellSchema();
-
-        assignCsvSchema(schema, xmlSchema);
-
-        String sSeparator = getAttributeValue(xmlSchema, ATTRIB_CSV_SCHEMA_CONTROL_CELL_SEPARATOR);
-        if (sSeparator != null){
-            sSeparator = replaceEscapes2Java(sSeparator);
-            schema.setControlCellSeparator(sSeparator);
-        }
-        
-        Node xmlWriteControlCell = xmlSchema.getAttributeNode(ATTRIB_SCHEMA_WRITE_CONTROL_CELL);
-        if (xmlWriteControlCell != null)
-            schema.setWriteControlCell(getBooleanValue(xmlWriteControlCell));
-
-        return schema;
-    }
 
     /**
      * @param xmlSchemaLine
@@ -417,10 +389,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         Node xmlLineType = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_LINETYPE);
         if (xmlLineType != null)
             line.setLineType(getStringValue(xmlLineType));
-
-        Node xmlLineTypeControlValue = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_LINETYPE_CONTROL_VALUE);
-        if (xmlLineTypeControlValue != null)
-            line.setLineTypeControlValue(getStringValue(xmlLineTypeControlValue));
 
     }
 

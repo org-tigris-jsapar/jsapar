@@ -4,6 +4,8 @@
 package org.jsapar.schema;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.jsapar.model.CellType;
 import org.junit.Assert;
@@ -86,20 +88,25 @@ public class Xml2SchemaBuilderTest {
 
         String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
                 + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/2.0' >"
-                + "<csvcontrolcellschema writecontrolcell='false'><line occurs='4'>"
-                + "<cell name='First name'/>" + "<cell name='Last name'/>"
-                + "</line></csvcontrolcellschema></schema>";
+                + "<csvschema><line occurs='4'>"
+                + "<cell name='type'><linecondition><match pattern='P'/></cell>"
+                + "<cell name='First name'/>"
+                + "<cell name='Last name'/>"
+                + "</line></csvschema></schema>";
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
         java.io.Reader reader = new java.io.StringReader(sXmlSchema);
         Schema schema = builder.build(reader);
-        CsvControlCellSchema csvSchema = (CsvControlCellSchema) schema;
+        CsvSchema csvSchema = (CsvSchema) schema;
 
         Collection<CsvSchemaCell> schemaCells = csvSchema.getCsvSchemaLines().get(0).getSchemaCells();
         Iterator<CsvSchemaCell> it = schemaCells.iterator();
+        CsvSchemaCell controlCell = it.next();
+        assertTrue(controlCell.getLineCondition().satisfies("P"));
+        assertFalse(controlCell.getLineCondition().satisfies("X"));
+        assertEquals("type", controlCell.getName());
         assertEquals("First name", it.next().getName());
         assertEquals("Last name", it.next().getName());
-        assertEquals(false, csvSchema.isWriteControlCell());
 
     }
 

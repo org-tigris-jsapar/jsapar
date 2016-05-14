@@ -7,6 +7,7 @@ import org.jsapar.JSaParException;
 
 public class SimpleCellSplitter implements CellSplitter {
 
+    private static final String[] EMPTY_LINE = new String[0];
     private String splitPattern;
 
     public SimpleCellSplitter(String cellSeparator) {
@@ -15,6 +16,8 @@ public class SimpleCellSplitter implements CellSplitter {
 
     @Override
     public String[] split(String sLine) throws IOException, JSaParException {
+        if(sLine.isEmpty())
+            return EMPTY_LINE;
         return sLine.split(splitPattern, -1);
     }
 

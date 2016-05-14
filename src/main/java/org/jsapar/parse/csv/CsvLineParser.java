@@ -14,47 +14,44 @@ import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.SchemaLine;
 
-public class CsvLineParser implements LineParser {
+public class CsvLineParser  {
 
     private static final String EMPTY_STRING = "";
-    private LineReader lineReader;
     private CsvSchemaLine lineSchema;
-    private CellSplitter cellSplitter;
-    
-    public CsvLineParser(LineReader lineReader, CsvSchemaLine lineSchema2) {
-        this.lineReader = lineReader;
+    private long usedCount = 0L;
+
+    public CsvLineParser(CsvSchemaLine lineSchema2) {
         this.lineSchema = lineSchema2;
-        cellSplitter = makeCellSplitter(lineSchema2.getCellSeparator(), lineSchema2.getQuoteChar(), lineReader);
     }
     
     public CsvSchemaLine getLineSchema() {
         return lineSchema;
     }
 
-    /* (non-Javadoc)
-     * @see org.jsapar.input.parse.LineParser#parse(long, java.lang.String, org.jsapar.input.LineEventListener)
-     */
-    @Override
-    public boolean parse(long nLineNumber, LineEventListener listener)
+    public boolean parse(CsvLineReader lineReader, LineEventListener listener)
             throws JSaParException, IOException {
-        String sLine = lineReader.readLine();
-        if(sLine == null)
-            return false;
 
+        String[] asCells = lineReader.readLine(lineSchema.getCellSeparator(), lineSchema.getQuoteChar());
+        if(null == asCells)
+            return false; // eof
+
+        if (lineReader.lastLineWasEmpty())
+            return handleEmptyLine(lineReader.currentLineNumber(), listener);
+
+        if(usedCount == 0 && lineSchema.isFirstLineAsSchema()) {
+            lineSchema = buildSchemaFromHeader(lineSchema, asCells);
+            usedCount ++;
+            return true;
+        }
+
+        usedCount ++;
         Line line = new Line(lineSchema.getLineType(), (lineSchema.getSchemaCells().size() > 0) ? lineSchema.getSchemaCells().size() : 10);
-
-        String[] asCells = cellSplitter.split(sLine);
-
-        // Empty lines are not common. Only test for empty line if there are no more than one cell
-        // after a split.
-        if (asCells.length <= 1 && sLine.trim().isEmpty())
-            return handleEmptyLine(nLineNumber, listener);
 
         java.util.Iterator<CsvSchemaCell> itSchemaCell = lineSchema.getSchemaCells().iterator();
         for (String sCell : asCells) {
             if (itSchemaCell.hasNext()) {
                 CsvSchemaCell schemaCell = itSchemaCell.next();
-                addCellToLineBySchema(line, schemaCell, sCell, listener, nLineNumber);
+                addCellToLineBySchema(line, schemaCell, sCell, listener, lineReader.currentLineNumber());
             } else {
                 addCellToLineWithoutSchema(line, sCell);
             }
@@ -65,11 +62,57 @@ public class CsvLineParser implements LineParser {
         // We have to fill all the default values and mandatory items for remaining cells within the schema.
         while (itSchemaCell.hasNext()) {
             CsvSchemaCell schemaCell = itSchemaCell.next();
-            addCellToLineBySchema(line, schemaCell, EMPTY_STRING, listener, nLineNumber);
+            addCellToLineBySchema(line, schemaCell, EMPTY_STRING, listener, lineReader.currentLineNumber());
         }
 
-        listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
+        listener.lineParsedEvent(new LineParsedEvent(this, line, lineReader.currentLineNumber()));
         return true;
+    }
+
+    /**
+     * Builds a CsvSchemaLine from a header line.
+     *
+     * @param masterLineSchema The base to use while creating csv schema. May add formatting, defaults etc.
+     * @param asCells An array of cells in the header line to use for building the schema.
+     * @return A CsvSchemaLine created from the header line.
+     * @throws CloneNotSupportedException
+     * @throws JSaParException
+     * @throws IOException
+     */
+    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, String[] asCells)
+            throws IOException, JSaParException {
+
+        CsvSchemaLine schemaLine = masterLineSchema.clone();
+        schemaLine.getSchemaCells().clear();
+
+        for (String sCell : asCells) {
+            CsvSchemaCell masterCell = masterLineSchema.getCsvSchemaCell(sCell);
+            if(masterCell != null)
+                schemaLine.addSchemaCell(masterCell);
+            else
+                schemaLine.addSchemaCell(new CsvSchemaCell(sCell));
+        }
+        addDefaultValuesFromMaster(schemaLine, masterLineSchema);
+        return schemaLine;
+    }
+
+    /**
+     * Add all cells that has a default value in the master schema last on the line with
+     * ignoreRead=true so that the default values are always set.
+     *
+     * @param schemaLine
+     * @param masterLineSchema
+     */
+    private void addDefaultValuesFromMaster(CsvSchemaLine schemaLine, CsvSchemaLine masterLineSchema) {
+        for(CsvSchemaCell cell : masterLineSchema.getSchemaCells()){
+            if(cell.getDefaultCell() != null){
+                if(schemaLine.getCsvSchemaCell(cell.getName())==null){
+                    CsvSchemaCell defaultCell = cell.clone();
+                    defaultCell.setIgnoreRead(true);
+                    schemaLine.addSchemaCell(defaultCell);
+                }
+            }
+        }
     }
 
     /**
@@ -93,7 +136,9 @@ public class CsvLineParser implements LineParser {
     public static CellSplitter makeCellSplitter(String cellSeparator, char quoteChar, LineReader lineReader) {
         if (quoteChar == 0)
             return new SimpleCellSplitter(cellSeparator);
-        return new QuotedCellSplitter(cellSeparator, quoteChar, lineReader);
+//        return new QuotedCellSplitter(cellSeparator, quoteChar, lineReader);
+        // TODO here
+        return null;
     }
 
 
@@ -144,5 +189,8 @@ public class CsvLineParser implements LineParser {
         cell = new StringCell("@@cell-" + (1+line.size()), sCell);
         line.addCell(cell);
     }
-    
+
+    public long getUsedCount() {
+        return usedCount;
+    }
 }

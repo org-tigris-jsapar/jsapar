@@ -92,6 +92,7 @@ public class ReaderLineReader implements LineReader {
         return lineSeparator;
     }
 
+
     /**
      * @return The internal reader that is used to read lines.
      */
@@ -99,4 +100,7 @@ public class ReaderLineReader implements LineReader {
         return reader;
     }
 
+    public boolean isEofReached() {
+        return eofReached;
+    }
 }

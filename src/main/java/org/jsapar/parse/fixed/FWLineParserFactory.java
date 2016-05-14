@@ -13,9 +13,8 @@ import java.util.List;
  * Created by stejon0 on 2016-03-12.
  */
 public class FWLineParserFactory {
-    FixedWidthSchema schema;
-    int                       count              =0;
-    List<FWLineParserMatcher> lineParserMatchers;
+    private FixedWidthSchema schema;
+    private List<FWLineParserMatcher> lineParserMatchers;
 
     public FWLineParserFactory(FixedWidthSchema schema) {
         this.schema = schema;
@@ -47,5 +46,9 @@ public class FWLineParserFactory {
             first = false;
         }
         return null;
+    }
+
+    public boolean isEmpty() {
+        return lineParserMatchers.isEmpty();
     }
 }

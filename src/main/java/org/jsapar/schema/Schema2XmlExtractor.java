@@ -37,8 +37,6 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
             Element xmlSchema = null;
             if (schema instanceof FixedWidthSchema) {
                 xmlSchema = extractFixedWidthSchema(xmlDocument, (FixedWidthSchema) schema);
-            } else if (schema instanceof CsvControlCellSchema) {
-                xmlSchema = extractCsvControlCellSchema(xmlDocument, (CsvControlCellSchema) schema);
             } else if (schema instanceof CsvSchema) {
                 xmlSchema = extractCsvSchema(xmlDocument, (CsvSchema) schema);
             } else
@@ -169,10 +167,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     /**
      * Builds a CSV file schema object.
      * 
-     * @param xmlSchema
+     * @param xmlDocument
+     * @param schema
      * @return
-     * @throws SchemaException
-     * @throws DataConversionException
      * @throws SchemaException
      */
     private Element extractCsvSchema(Document xmlDocument, CsvSchema schema) throws SchemaException {
@@ -186,10 +183,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     /**
      * Builds a CSV file schema object.
      * 
+     * @param xmlDocument
      * @param xmlSchema
-     * @return
-     * @throws SchemaException
-     * @throws DataConversionException
+     * @param schema
      * @throws SchemaException
      */
     private void assignCsvSchema(Document xmlDocument, Element xmlSchema, CsvSchema schema) throws SchemaException {
@@ -201,25 +197,6 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
         }
     }
 
-    /**
-     * Builds a CSV file schema object.
-     * 
-     * @param xmlSchema
-     * @return
-     * @throws DataConversionException
-     * @throws SchemaException
-     */
-    private Element extractCsvControlCellSchema(Document xmlDocument, CsvControlCellSchema schema)
-            throws SchemaException {
-        Element xmlSchema = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_CSV_CONTROL_CELL_SCHEMA);
-
-        xmlSchema.setAttribute(ATTRIB_CSV_SCHEMA_CONTROL_CELL_SEPARATOR, replaceJava2Escapes(schema.getControlCellSeparator()));
-        xmlSchema.setAttribute(ATTRIB_SCHEMA_WRITE_CONTROL_CELL, String.valueOf(schema.isWriteControlCell()));
-
-        assignCsvSchema(xmlDocument, xmlSchema, schema);
-
-        return xmlSchema;
-    }
 
     /**
      * @param xmlSchemaLine
@@ -294,8 +271,6 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
         if (line.getLineType() != null && !line.getLineType().isEmpty())
             xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_LINETYPE, line.getLineType());
 
-        if (line.getLineTypeControlValue() != null && !line.getLineTypeControlValue().isEmpty())
-            xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_LINETYPE_CONTROL_VALUE, line.getLineTypeControlValue());
     }
 
     /**

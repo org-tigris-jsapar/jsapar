@@ -75,7 +75,7 @@ public class FixedWidthParserTest {
 
         public Document parse(java.io.Reader reader, FixedWidthSchema schema) throws JSaParException, IOException {
 
-            FixedWidthParser parser = new FixedWidthParser(reader, schema);
+            FixedWidthParser parser = new FixedWidthParserFlat(reader, schema);
             parser.parse(listener);
             return this.document;
         }

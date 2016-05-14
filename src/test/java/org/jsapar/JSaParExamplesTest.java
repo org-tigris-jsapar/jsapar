@@ -171,12 +171,12 @@ public class JSaParExamplesTest {
         assertEquals("2007-07-07", document.getLine(0).getCell("Created date").getStringValue());
         assertEquals("Header", document.getLine(0).getLineType());
         assertEquals("Person", document.getLine(1).getLineType());
-        assertEquals("Svensson", document.getLine(1).getCell(1).getStringValue());
-        assertEquals("Erik", document.getLine(1).getCell(0).getStringValue());
-        assertEquals("Svensson", document.getLine(1).getCell(1).getStringValue());
-        assertEquals("Fredrik", document.getLine(2).getCell(0).getStringValue());
-        assertEquals("Larsson", document.getLine(2).getCell(1).getStringValue());
-        assertEquals("2", document.getLine(3).getCell(0).getStringValue());
+        assertEquals("Svensson", document.getLine(1).getCell("Last name").getStringValue());
+        assertEquals("Erik", document.getLine(1).getCell("First name").getStringValue());
+        assertEquals("Svensson", document.getLine(1).getCell("Last name").getStringValue());
+        assertEquals("Fredrik", document.getLine(2).getCell("First name").getStringValue());
+        assertEquals("Larsson", document.getLine(2).getCell("Last name").getStringValue());
+        assertEquals("2", document.getLine(3).getCell("Rowcount").getStringValue());
     }
 
     @Test

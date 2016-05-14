@@ -22,14 +22,12 @@ public class CSVSchemaLineTest  {
     public final void testCSVSchemaLine()  {
         CsvSchemaLine schemaLine = new CsvSchemaLine();
         assertEquals("", schemaLine.getLineType());
-        assertEquals("", schemaLine.getLineTypeControlValue());
     }
 
     @Test
     public final void testCSVSchemaLine_String()  {
         CsvSchemaLine schemaLine = new CsvSchemaLine("LineType");
         assertEquals("LineType", schemaLine.getLineType());
-        assertEquals("LineType", schemaLine.getLineTypeControlValue());
     }
     
     

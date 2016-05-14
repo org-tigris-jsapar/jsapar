@@ -6,12 +6,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.jsapar.parse.LineEventListener;
+import org.jsapar.parse.*;
 import org.jsapar.model.Document;
 import org.jsapar.JSaParException;
-import org.jsapar.parse.LineErrorEvent;
-import org.jsapar.parse.LineParsedEvent;
-import org.jsapar.parse.ParseException;
 import org.jsapar.schema.*;
 import org.junit.After;
 import org.junit.Before;
@@ -193,7 +190,7 @@ public class FixedWidthControlCellParserTest {
     }
 
     private class DocumentBuilder {
-        private Document             document = new Document();
+        private Document          document = new Document();
         private LineEventListener listener;
 
         public DocumentBuilder() {
@@ -213,7 +210,8 @@ public class FixedWidthControlCellParserTest {
 
         public Document parse(java.io.Reader reader, FixedWidthSchema schema) throws JSaParException,
                 IOException {
-            FixedWidthParser parser = new FixedWidthParser(reader, schema);
+            SchemaParserFactory factory = new SchemaParserFactory();
+            Parser parser = factory.makeParser(schema, reader);
             parser.parse(listener);
             return this.document;
         }
