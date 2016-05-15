@@ -15,7 +15,8 @@ import java.io.Reader;
 /**
  * LineReader implementation that reads lines from a Reader object.
  * <p/>
- * Reader object should be closed by caller. Once End of File has been reached, the instance will no longer be useful.
+ * Reader object should be closed by caller. Once End of File has been reached, the instance will no longer be useful
+ * (unless it is reset to a previous state by calling reset() ).
  *
  * @author stejon0
  */
@@ -36,18 +37,6 @@ public class BufferedLineReader2 implements LineReader {
     public BufferedLineReader2(String lineSeparator, Reader reader) {
         super();
         this.reader = new BufferedReader(reader);
-        this.lineReaderImpl = new ReaderLineReader(lineSeparator, this.reader);
-    }
-
-    /**
-     * Creates a new line reader based on an old one but with a new line separator.
-     * The new lineReader inherits the buffers from the old one but uses a new line separator.
-     *
-     * @param lineReader
-     * @param lineSeparator
-     */
-    public BufferedLineReader2(BufferedLineReader2 lineReader, String lineSeparator) {
-        this.reader = lineReader.reader;
         this.lineReaderImpl = new ReaderLineReader(lineSeparator, this.reader);
     }
 
@@ -80,6 +69,7 @@ public class BufferedLineReader2 implements LineReader {
     public void reset() throws IOException {
         reader.reset();
         lineNumber--;
+        lineReaderImpl.resetEof();
     }
 
     /*

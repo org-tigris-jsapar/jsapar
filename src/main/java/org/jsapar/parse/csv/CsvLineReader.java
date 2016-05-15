@@ -2,8 +2,8 @@ package org.jsapar.parse.csv;
 
 import org.jsapar.JSaParException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 
 /**
  * Reads a line from a BufferedLineReader2 and splits it into an array of Strings, one for each cell depending on cell
@@ -14,10 +14,15 @@ import java.io.IOException;
  */
 public class CsvLineReader {
 
-    private boolean reset = false;
+    private static final String[] EMPTY_LINE = new String[0];
+    private boolean reset               = false;
 
     BufferedLineReader2 lineReader;
     RawLine             currentLine;
+
+    public CsvLineReader(String lineSeparator, Reader reader) {
+        this.lineReader = new BufferedLineReader2(lineSeparator, reader);
+    }
 
     public CsvLineReader(BufferedLineReader2 lineReader) {
         this.lineReader = lineReader;
@@ -41,7 +46,7 @@ public class CsvLineReader {
      *
      * @param cellSeparator A sequence of characters that determines separation between cell elements in the input text.
      * @param quoteChar     The character that can be used to quote a cell if the cell contains cell separators or line
-     *                      separators that should be part of the cell value.
+     *                      separators that should be part of the cell value. The value 0 indicates that quotes are not used.
      * @return An array of String cell values fetched from the input reader. Handles the fact that a quoted cell can
      * contain line-breaks and cell separator that should be part of the cell value. Returns en empty array if line was
      * empty and null if end of input was reached.
@@ -86,6 +91,10 @@ public class CsvLineReader {
         return currentLine == null || currentLine.isEmpty();
     }
 
+    /**
+     * @return True if the last call to readLine resulted in end of input. A call to reset will reset also this flag to
+     * the state it had before last call to readLine()
+     */
     public boolean eofReached() {
         return !reset && lineReader.eofReached();
     }
@@ -121,7 +130,7 @@ public class CsvLineReader {
 
         public String[] makeLine(BufferedLineReader2 lineReader2) throws IOException, JSaParException {
             String sLine = lineReader2.readLine();
-            if(null == sLine)
+            if (null == sLine)
                 return null;
             line = cellSplitter.split(sLine);
             return line;

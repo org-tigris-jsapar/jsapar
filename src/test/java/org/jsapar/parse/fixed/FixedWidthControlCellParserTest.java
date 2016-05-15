@@ -151,6 +151,7 @@ public class FixedWidthControlCellParserTest {
     public void testParse_errorOnUndefinedLineType() throws JSaParException, IOException {
         String toParse = "X JonasStenberg   ";
         org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
+        schema.setErrorIfUndefinedLineType(true);
         schema.setLineSeparator("\r\n");
 
         addSchemaLinesTwoCharControl(schema);

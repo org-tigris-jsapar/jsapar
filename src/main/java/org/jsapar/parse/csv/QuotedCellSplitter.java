@@ -61,6 +61,9 @@ public class QuotedCellSplitter implements CellSplitter {
         }
         java.util.List<String> cells = new java.util.ArrayList<>(sLine.length() / 8);
         splitQuoted(cells, sLine);
+        if(cells.size() == 1 && cells.get(0).trim().isEmpty())
+            return EMPTY_LINE;
+
         return cells.toArray(new String[cells.size()]);
     }
 

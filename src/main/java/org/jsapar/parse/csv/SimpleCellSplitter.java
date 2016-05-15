@@ -18,7 +18,10 @@ public class SimpleCellSplitter implements CellSplitter {
     public String[] split(String sLine) throws IOException, JSaParException {
         if(sLine.isEmpty())
             return EMPTY_LINE;
-        return sLine.split(splitPattern, -1);
+        String[] aLine = sLine.split(splitPattern, -1);
+        if(aLine.length == 1 && aLine[0].trim().isEmpty())
+            return EMPTY_LINE;
+        return aLine;
     }
 
 }

@@ -89,7 +89,7 @@ public class Xml2SchemaBuilderTest {
         String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
                 + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/2.0' >"
                 + "<csvschema><line occurs='4'>"
-                + "<cell name='type'><linecondition><match pattern='P'/></cell>"
+                + "<cell name='type'><linecondition><match pattern='P'/></linecondition></cell>"
                 + "<cell name='First name'/>"
                 + "<cell name='Last name'/>"
                 + "</line></csvschema></schema>";

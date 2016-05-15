@@ -20,8 +20,7 @@ public class CsvParser implements Parser {
     private CsvLineParserFactory lineParserFactory;
 
     public CsvParser(Reader reader, CsvSchema schema) {
-        BufferedLineReader2 bufferedLineReader = new BufferedLineReader2(schema.getLineSeparator(), reader);
-        lineReader = new CsvLineReader(bufferedLineReader);
+        lineReader = new CsvLineReader(schema.getLineSeparator(), reader);
         this.schema = schema;
         this.lineParserFactory = new CsvLineParserFactory(schema);
     }
@@ -35,6 +34,8 @@ public class CsvParser implements Parser {
 
             CsvLineParser lineParser = lineParserFactory.makeLineParser(lineReader);
             if(lineParser == null) {
+                if(lineParserFactory.isEmpty())
+                    return; // No more parsers. We should not read any more. Leave rest of input as is.
                 if(lineReader.eofReached())
                     return;
                 handleNoParser(lineReader);

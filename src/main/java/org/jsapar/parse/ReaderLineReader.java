@@ -103,4 +103,9 @@ public class ReaderLineReader implements LineReader {
     public boolean isEofReached() {
         return eofReached;
     }
+
+    public void resetEof() {
+        this.eofReached = false;
+    }
+
 }

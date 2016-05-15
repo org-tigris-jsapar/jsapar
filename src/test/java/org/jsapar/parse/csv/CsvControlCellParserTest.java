@@ -67,14 +67,14 @@ public class CsvControlCellParserTest {
         assertEquals(2, doc.getNumberOfLines());
         Line line = doc.getLine(0);
         assertEquals("Name", line.getLineType());
-        assertEquals("Jonas", line.getCell(0).getStringValue());
-        assertEquals("Stenberg", line.getCell(1).getStringValue());
+        assertEquals("Jonas", line.getCell("first.name").getStringValue());
+        assertEquals("Stenberg", line.getCell("last.name").getStringValue());
 
         line = doc.getLine(1);
         assertEquals("Address", line.getLineType());
-        assertEquals("Storgatan 4", line.getCell(0).getStringValue());
-        assertEquals("12345", line.getCell(1).getStringValue());
-        assertEquals("Storstan", line.getCell(2).getStringValue());
+        assertEquals("Storgatan 4", line.getCell("street").getStringValue());
+        assertEquals("12345", line.getCell("postcode").getStringValue());
+        assertEquals("Storstan", line.getCell("post.town").getStringValue());
     }
 
     private class DocumentBuilder {

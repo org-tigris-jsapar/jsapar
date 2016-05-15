@@ -57,4 +57,7 @@ public class CsvLineParserFactory {
         return null;
     }
 
+    public boolean isEmpty() {
+        return lineParserMatchers.isEmpty();
+    }
 }
