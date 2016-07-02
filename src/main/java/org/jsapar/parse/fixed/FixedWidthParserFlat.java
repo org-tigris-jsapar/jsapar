@@ -10,7 +10,6 @@ import org.jsapar.schema.FixedWidthSchema;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 
 /**
  * @author stejon0
@@ -18,9 +17,12 @@ import java.io.StringReader;
  */
 public class FixedWidthParserFlat extends FixedWidthParser{
 
+    private BufferedReader reader;
+
 
     public FixedWidthParserFlat(Reader reader, FixedWidthSchema schema) {
-        super(reader, schema);
+        super(schema);
+        this.reader = new BufferedReader(reader);
     }
 
     /**
@@ -38,12 +40,15 @@ public class FixedWidthParserFlat extends FixedWidthParser{
             lineNumber++;
             if(getLineParserFactory().isEmpty())
                 return;
-            FixedWidthLineParser lineParser = getLineParserFactory().makeLineParser(getReader());
-            if(lineParser == null) {
-                handleNoParser(getReader(), lineNumber);
-                return;
+            FWLineParserFactory.LineParserResult result = getLineParserFactory().makeLineParser(reader);
+            if (result.result != LineParserMatcherResult.SUCCESS) {
+                handleNoParser(lineNumber, result.result);
+                if(result.result == LineParserMatcherResult.NOT_MATCHING)
+                    continue;
+                else
+                    return;
             }
-            boolean lineFound = lineParser.parse(getReader(), lineNumber, listener);
+            boolean lineFound = result.lineParser.parse(reader, lineNumber, listener);
             if (!lineFound)
                 return; // End of stream.
         }

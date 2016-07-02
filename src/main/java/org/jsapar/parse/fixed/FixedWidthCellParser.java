@@ -47,13 +47,13 @@ public class FixedWidthCellParser extends CellParser {
     }
 
     /**
-     * @param cellSchema
-     * @param reader
-     * @param trimFillCharacters
-     * @param fillCharacter
-     * @return
-     * @throws IOException
-     * @throws ParseException
+     * @param cellSchema The schema of the cell to read.
+     * @param reader The reader to read from.
+     * @param trimFillCharacters If true, surrounding fill characters are removed.
+     * @param fillCharacter The fill character to remove if trimFillCharacters is true.
+     * @return The string value of the cell read from the reader at the position pointed to by the offset. Null if end
+     * of input stream was reached.
+     * @throws IOException If there is a problem while reading the input reader.
      */
     String parseToString(FixedWidthSchemaCell cellSchema,
                          Reader reader,
@@ -66,10 +66,10 @@ public class FixedWidthCellParser extends CellParser {
         char[] buffer = new char[nLength];
         int nRead = reader.read(buffer, offset, nLength);
         if (nRead <= 0) {
-            if (cellSchema.getLength() <= 0)
-                return EMPTY_STRING;
+            if (nLength <= 0)
+                return EMPTY_STRING; // It should be empty.
             else{
-                return null;
+                return null; // EOF
             }
         }
         nLength = nRead;

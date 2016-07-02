@@ -24,15 +24,16 @@ public class FWLineParserFactory {
         }
     }
 
-    public FixedWidthLineParser makeLineParser(BufferedReader reader) throws IOException {
+    public LineParserResult makeLineParser(BufferedReader reader) throws IOException {
         if(lineParserMatchers.isEmpty())
             return null;
         Iterator<FWLineParserMatcher> iter = lineParserMatchers.iterator();
         boolean first = true;
+        boolean eof = true;
         while(iter.hasNext()){
             FWLineParserMatcher currentMatcher = iter.next();
-            FixedWidthLineParser lineParser = currentMatcher.makeLineParserIfMatching(reader);
-            if(lineParser != null) {
+            LineParserMatcherResult lineParserResult = currentMatcher.testLineParserIfMatching(reader);
+            if(lineParserResult == LineParserMatcherResult.SUCCESS) {
                 if(!currentMatcher.isOccursLeft())
                     // No longer needed
                     iter.remove();
@@ -41,14 +42,34 @@ public class FWLineParserFactory {
                     iter.remove();
                     lineParserMatchers.add(0, currentMatcher);
                 }
-                return lineParser;
+                return new LineParserResult(currentMatcher.getLineParser(), LineParserMatcherResult.SUCCESS);
+            }
+            if(lineParserResult != LineParserMatcherResult.EOF){
+                eof = false;
             }
             first = false;
         }
-        return null;
+        LineParserMatcherResult reason;
+        if(eof)
+            reason =  LineParserMatcherResult.EOF;
+        else if(lineParserMatchers.isEmpty())
+            reason = LineParserMatcherResult.NO_OCCURS;
+        else
+            reason = LineParserMatcherResult.NOT_MATCHING;
+        return new LineParserResult(null, reason);
     }
 
     public boolean isEmpty() {
         return lineParserMatchers.isEmpty();
+    }
+
+    public class LineParserResult{
+        public FixedWidthLineParser lineParser;
+        public LineParserMatcherResult result;
+
+        public LineParserResult(FixedWidthLineParser lineParser, LineParserMatcherResult result) {
+            this.lineParser = lineParser;
+            this.result = result;
+        }
     }
 }

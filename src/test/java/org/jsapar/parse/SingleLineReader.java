@@ -27,4 +27,9 @@ public class SingleLineReader implements LineReader {
         return "|";
     }
 
+    @Override
+    public boolean eofReached() {
+        return line == null;
+    }
+
 }

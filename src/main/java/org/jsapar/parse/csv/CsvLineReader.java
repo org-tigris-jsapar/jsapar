@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * Reads a line from a BufferedLineReader2 and splits it into an array of Strings, one for each cell depending on cell
+ * Reads a line from a BufferedLineReader and splits it into an array of Strings, one for each cell depending on cell
  * separator and quote character. If reset() is called the next call to readLine() will start reading the same line
  * again. Handles the fact that a quoted cell can contain line-breaks.
  * <p/>
@@ -17,14 +17,14 @@ public class CsvLineReader {
     private static final String[] EMPTY_LINE = new String[0];
     private boolean reset               = false;
 
-    BufferedLineReader2 lineReader;
-    RawLine             currentLine;
+    BufferedLineReader lineReader;
+    RawLine            currentLine;
 
     public CsvLineReader(String lineSeparator, Reader reader) {
-        this.lineReader = new BufferedLineReader2(lineSeparator, reader);
+        this.lineReader = new BufferedLineReader(lineSeparator, reader);
     }
 
-    public CsvLineReader(BufferedLineReader2 lineReader) {
+    public CsvLineReader(BufferedLineReader lineReader) {
         this.lineReader = lineReader;
     }
 
@@ -78,7 +78,7 @@ public class CsvLineReader {
         return currentLine.getLine();
     }
 
-    private CellSplitter makeCellSplitter(String cellSeparator, char quoteChar, BufferedLineReader2 lineReader2) {
+    private CellSplitter makeCellSplitter(String cellSeparator, char quoteChar, BufferedLineReader lineReader2) {
         return quoteChar == 0 ?
                 new SimpleCellSplitter(cellSeparator) :
                 new QuotedCellSplitter(cellSeparator, quoteChar, lineReader2);
@@ -128,7 +128,7 @@ public class CsvLineReader {
             return this.cellSeparator.equals(cellSeparator) && this.quoteChar == quoteChar;
         }
 
-        public String[] makeLine(BufferedLineReader2 lineReader2) throws IOException, JSaParException {
+        public String[] makeLine(BufferedLineReader lineReader2) throws IOException, JSaParException {
             String sLine = lineReader2.readLine();
             if (null == sLine)
                 return null;

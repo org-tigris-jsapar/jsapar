@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import org.jsapar.JSaParException;
-import org.jsapar.parse.LineReader;
 
 /**
  * @author stejon0
@@ -16,7 +15,7 @@ import org.jsapar.parse.LineReader;
 public class QuotedCellSplitter implements CellSplitter {
     private static final String[] EMPTY_LINE = new String[0];
 
-    private BufferedLineReader2   lineReader = null;
+    private BufferedLineReader lineReader = null;
     private String       cellSeparator;
     private char         quoteChar;
     private CellSplitter simpleCellSplitter;
@@ -42,7 +41,7 @@ public class QuotedCellSplitter implements CellSplitter {
      *            The line reader to read next line from in case multi-line cells are supported. Set to null if
      *            multi-line cells are not supported.
      */
-    public QuotedCellSplitter(String cellSeparator, char quoteChar, BufferedLineReader2 lineReader) {
+    public QuotedCellSplitter(String cellSeparator, char quoteChar, BufferedLineReader lineReader) {
         this.cellSeparator = cellSeparator;
         this.quoteChar = quoteChar;
         this.lineReader = lineReader;
@@ -165,7 +164,7 @@ public class QuotedCellSplitter implements CellSplitter {
      * @param lineReader
      *            Assigns line reader to be able to split multi line cells.
      */
-    public void setLineReader(BufferedLineReader2 lineReader) {
+    public void setLineReader(BufferedLineReader lineReader) {
         this.lineReader = lineReader;
     }
 

@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import org.jsapar.JSaParException;
-import org.jsapar.parse.LineReader;
-import org.jsapar.parse.ReaderLineReader;
-import org.jsapar.parse.csv.BufferedLineReader2;
+import org.jsapar.parse.csv.BufferedLineReader;
 import org.jsapar.parse.csv.CellSplitter;
 import org.jsapar.parse.csv.QuotedCellSplitter;
 import org.junit.After;
@@ -69,7 +67,7 @@ public class QuotedCellSplitterTest {
 
     @Test
     public void testSplit_multiLineCell() throws IOException, JSaParException {
-        BufferedLineReader2 lineReader = new BufferedLineReader2("|", new StringReader("Second;S;S|Third;T/;T|Fourth"));
+        BufferedLineReader lineReader = new BufferedLineReader("|", new StringReader("Second;S;S|Third;T/;T|Fourth"));
         CellSplitter s = new QuotedCellSplitter(";", '/', lineReader);
         String[] result = s.split("A;/BB;;C");
         assertArrayEquals(new String[]{"A", "BB;;C|Second;S;S|Third;T", "T"}, result);
@@ -77,7 +75,7 @@ public class QuotedCellSplitterTest {
 
     @Test
     public void testSplit_multiLineCellWithLineBreakFirst() throws IOException, JSaParException {
-        BufferedLineReader2 lineReader = new BufferedLineReader2("|", new StringReader("Second;S;S|Third;T/;T|Fourth"));
+        BufferedLineReader lineReader = new BufferedLineReader("|", new StringReader("Second;S;S|Third;T/;T|Fourth"));
         CellSplitter s = new QuotedCellSplitter(";", '/', lineReader);
         String[] result = s.split("A;B;/");
         assertArrayEquals(new String[]{"A", "B", "|Second;S;S|Third;T", "T"}, result);
@@ -85,7 +83,7 @@ public class QuotedCellSplitterTest {
 
     @Test(expected=JSaParException.class)
     public void testSplit_missingEndQuote() throws IOException, JSaParException {
-        BufferedLineReader2 lineReader = new BufferedLineReader2("|", new StringReader("No end quote"));
+        BufferedLineReader lineReader = new BufferedLineReader("|", new StringReader("No end quote"));
         CellSplitter s = new QuotedCellSplitter(";", '/', lineReader);
         String[] result = s.split("A;/BB;;C");
         assertArrayEquals(new String[]{"A", "BB;;C|Second;S;S|Third;T", "T"}, result);

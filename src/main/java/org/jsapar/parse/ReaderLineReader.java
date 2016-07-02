@@ -100,7 +100,8 @@ public class ReaderLineReader implements LineReader {
         return reader;
     }
 
-    public boolean isEofReached() {
+    @Override
+    public boolean eofReached() {
         return eofReached;
     }
 

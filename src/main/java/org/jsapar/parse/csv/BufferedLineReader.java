@@ -4,7 +4,6 @@
 package org.jsapar.parse.csv;
 
 import org.jsapar.JSaParException;
-import org.jsapar.parse.BufferedLineReader;
 import org.jsapar.parse.LineReader;
 import org.jsapar.parse.ReaderLineReader;
 
@@ -18,9 +17,11 @@ import java.io.Reader;
  * Reader object should be closed by caller. Once End of File has been reached, the instance will no longer be useful
  * (unless it is reset to a previous state by calling reset() ).
  *
+ * The class may read characters ahead from the provided reader before it is used in any result.
+ *
  * @author stejon0
  */
-public class BufferedLineReader2 implements LineReader {
+public class BufferedLineReader implements LineReader {
 
     private static final int MAX_LINE_LENGTH = 10 * 1024;
 
@@ -34,16 +35,19 @@ public class BufferedLineReader2 implements LineReader {
      * @param lineSeparator The line separator character to use while parsing lines.
      * @param reader        The reader to read from.
      */
-    public BufferedLineReader2(String lineSeparator, Reader reader) {
+    public BufferedLineReader(String lineSeparator, Reader reader) {
         super();
         this.reader = new BufferedReader(reader);
         this.lineReaderImpl = new ReaderLineReader(lineSeparator, this.reader);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.input.parse.LineReader#readLine()
+    /**
+     * Reads one line from the input and returns the result without line separator characters.
+     * This implementation marks the internal input reader before reading any further in order to be able to reset the
+     * action later.
+     * @return The line read from the internal input reader.
+     * @throws IOException
+     * @throws JSaParException
      */
     @Override
     public String readLine() throws IOException, JSaParException {
@@ -53,7 +57,11 @@ public class BufferedLineReader2 implements LineReader {
     }
 
     /**
-     * @return
+     * Reads another line from the input reader and returns the result without line separator characters.
+     * Does not create any mark in the input reader, thus the next call to reset() will not reset this action but
+     * instead the previous call to readLine()
+     *
+     * @return The line read from the internal input reader.
      * @throws IOException
      * @throws JSaParException
      */
@@ -101,6 +109,6 @@ public class BufferedLineReader2 implements LineReader {
      * @return True if End of input stream was reached, false otherwise.
      */
     public boolean eofReached() {
-        return lineReaderImpl.isEofReached();
+        return lineReaderImpl.eofReached();
     }
 }

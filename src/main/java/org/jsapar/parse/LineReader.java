@@ -22,4 +22,8 @@ public interface LineReader {
      */
     String getLineSeparator();
 
+    /**
+     * @return True if this reader has reached end of input stream. False otherwise.
+     */
+    boolean eofReached();
 }
