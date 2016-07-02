@@ -44,6 +44,9 @@ public class FWLineParserFactory {
                 }
                 return new LineParserResult(currentMatcher.getLineParser(), LineParserMatcherResult.SUCCESS);
             }
+            else if(lineParserResult == LineParserMatcherResult.NO_OCCURS)
+                iter.remove();
+
             if(lineParserResult != LineParserMatcherResult.EOF){
                 eof = false;
             }
