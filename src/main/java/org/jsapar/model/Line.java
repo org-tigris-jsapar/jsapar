@@ -108,13 +108,13 @@ public class Line implements Serializable {
      * 
      * @param cell
      *            The cell to add
-     * @throws JSaParException
+     * @throws IllegalArgumentException
      *             If a cell with the same name already exists.
      */
-    private void addCellByName(Cell cell) throws JSaParException {
+    private void addCellByName(Cell cell)  {
         Cell oldCell = cellsByName.get(cell.getName());
         if (oldCell != null)
-            throw new JSaParException("A cell with the name '" + cell.getName()
+            throw new IllegalArgumentException("A cell with the name '" + cell.getName()
                     + "' already exists. Failed to add cell.");
         this.cellsByName.put(cell.getName(), cell);
     }
@@ -125,11 +125,11 @@ public class Line implements Serializable {
      * 
      * @param cell
      *            The cell to add
-     * @throws JSaParException
+     * @throws IllegalArgumentException
      *             if cell with the same name already exist. Use method replaceCell() instead if you don't care if a
      *             cell with the same name already exist.
      */
-    public void addCell(Cell cell) throws JSaParException {
+    public void addCell(Cell cell)  {
         this.cellsByIndex.add(cell);
         if (cell.getName() != null)
             addCellByName(cell);

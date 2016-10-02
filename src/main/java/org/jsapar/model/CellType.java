@@ -11,6 +11,7 @@ import org.jsapar.format.BooleanFormat;
 import org.jsapar.format.RegExpFormat;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.utils.StringUtils;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author stejon0
@@ -24,7 +25,7 @@ public enum CellType {
         }
 
         @Override
-        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException, SchemaException {
+        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException {
             return new StringCell(sName, sValue);
         }
 
@@ -43,7 +44,7 @@ public enum CellType {
         }
 
         @Override
-        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException, SchemaException {
+        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException {
             return new DateCell(sName, sValue, locale);
         }
 
@@ -61,7 +62,7 @@ public enum CellType {
         }
 
         @Override
-        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException, SchemaException {
+        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException {
             return new IntegerCell(sName, sValue, locale);
         }
 
@@ -82,7 +83,7 @@ public enum CellType {
         }
 
         @Override
-        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException, SchemaException {
+        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException {
             return new BooleanCell(sName, sValue, locale);
         }
 
@@ -101,12 +102,12 @@ public enum CellType {
         }
 
         @Override
-        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException, SchemaException {
+        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException {
             return new FloatCell(sName, sValue, locale);
         }
 
         @Override
-        public Format makeFormat(String sPattern, Locale locale) throws SchemaException {
+        public Format makeFormat(String sPattern, Locale locale) {
             if (locale == null)
                 locale = Locale.getDefault();
             if (sPattern != null && sPattern.length() > 0)
@@ -133,12 +134,12 @@ public enum CellType {
         }
 
         @Override
-        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException, SchemaException {
+        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException {
             return new BigDecimalCell(sName, sValue, locale);
         }
 
         @Override
-        public Format makeFormat(String sPattern, Locale locale) throws SchemaException {
+        public Format makeFormat(String sPattern, Locale locale) {
             if (locale == null)
                 locale = Locale.getDefault();
             DecimalFormat decFormat = new java.text.DecimalFormat(sPattern, new DecimalFormatSymbols(locale));
@@ -153,35 +154,34 @@ public enum CellType {
         }
 
         @Override
-        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException, SchemaException {
+        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException {
             return new CharacterCell(sName, sValue);
         }
 
         @Override
-        public Format makeFormat(String sPattern, Locale locale) throws SchemaException {
+        public Format makeFormat(String sPattern, Locale locale) {
             return null;
         }
     },
     CUSTOM {
         @Override
-        public Cell makeCell(String sName, String sValue, Format format) throws SchemaException {
-            throw new SchemaException("Custom Cell type needs to override makeCell method.");
+        public Cell makeCell(String sName, String sValue, Format format)  {
+            throw new UnsupportedOperationException("Custom Cell type needs to override makeCell method.");
         }
 
         @Override
-        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException, SchemaException {
-            throw new SchemaException("Custom Cell type needs to override makeCell method.");
+        public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException  {
+            throw new UnsupportedOperationException("Custom Cell type needs to override makeCell method.");
         }
 
         @Override
-        public Format makeFormat(String sPattern, Locale locale) throws SchemaException {
-            throw new SchemaException("CUSTOM cell type formatter can not be created without specifying a formatter.");
+        public Format makeFormat(String sPattern, Locale locale) {
+            throw new UnsupportedOperationException("CUSTOM cell type formatter can not be created without specifying a formatter.");
         }
     };
-    public abstract Cell makeCell(String sName, String sValue, java.text.Format format) throws ParseException,
-            SchemaException;
+    public abstract Cell makeCell(String sName, String sValue, java.text.Format format) throws ParseException;
 
-    public abstract Cell makeCell(String sName, String sValue, Locale locale) throws ParseException, SchemaException;
+    public abstract Cell makeCell(String sName, String sValue, Locale locale) throws ParseException;
 
-    public abstract Format makeFormat(String sPattern, Locale locale) throws SchemaException;
+    public abstract Format makeFormat(String sPattern, Locale locale) ;
 }

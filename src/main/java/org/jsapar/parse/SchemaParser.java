@@ -5,16 +5,17 @@ import java.io.IOException;
 import org.jsapar.JSaParException;
 import org.jsapar.parse.LineEventListener;
 
-public interface Parser {
+public interface SchemaParser {
 
     /**
      * This method should only be called by a TextParser class. Don't use this
      * directly in your code. Use a TextParser instead.
      * 
      * @param listener
+     * @param errorListener
      * @throws JSaParException
      * @throws IOException
      */
-    void parse(LineEventListener listener) throws JSaParException, IOException;
+    void parse(LineEventListener listener, ErrorEventListener errorListener) throws JSaParException, IOException;
 
 }

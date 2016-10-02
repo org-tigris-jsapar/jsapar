@@ -6,12 +6,7 @@ import java.io.Reader;
 import org.jsapar.model.Cell;
 import org.jsapar.JSaParException;
 import org.jsapar.model.Line;
-import org.jsapar.parse.CellParseError;
-import org.jsapar.parse.LineErrorEvent;
-import org.jsapar.parse.LineParsedEvent;
-import org.jsapar.parse.ParseException;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.LineParser;
+import org.jsapar.parse.*;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 
@@ -25,8 +20,7 @@ public class FixedWidthLineParser  {
         this.lineSchema = lineSchema;
     }
 
-    public boolean parse(Reader reader, long nLineNumber, LineEventListener listener) throws JSaParException,
-            IOException {
+    public boolean parse(Reader reader, long nLineNumber, LineEventListener listener, ErrorEventListener errorListener) throws    IOException {
         Line line = new Line(lineSchema.getLineType(), lineSchema.getSchemaCells().size());
         boolean setDefaultsOnly = false;
         boolean oneRead = false;
@@ -51,26 +45,22 @@ public class FixedWidthLineParser  {
                     continue;
                 }
             } else {
-                try {
-                    Cell cell = cellParser
-                            .parse(schemaCell, reader, lineSchema.isTrimFillCharacters(), lineSchema.getFillCharacter(),
-                                    listener, nLineNumber);
-                    if (cell == null) {
-                        if (oneRead) {
-                            setDefaultsOnly = true;
-                            if (schemaCell.getDefaultCell() != null)
-                                line.addCell(schemaCell.makeCell(EMPTY_STRING));
-                        }
-                        continue;
+                LineDecoratorErrorEventListener lineErrorEventListener = new LineDecoratorErrorEventListener(
+                        errorListener, nLineNumber);
+                Cell cell = cellParser
+                        .parse(schemaCell, reader, lineSchema.isTrimFillCharacters(), lineSchema.getFillCharacter(),
+                                lineErrorEventListener);
+                if (cell == null) {
+                    if (oneRead) {
+                        setDefaultsOnly = true;
+                        if (schemaCell.getDefaultCell() != null)
+                            line.addCell(cellParser.parse(schemaCell, EMPTY_STRING, lineErrorEventListener));
                     }
-
-                    oneRead = true;
-                    line.addCell(cell);
-                } catch (ParseException e) {
-                    CellParseError cellParseError = e.getCellParseError();
-                    cellParseError = new CellParseError(nLineNumber, cellParseError);
-                    listener.lineErrorEvent(new LineErrorEvent(this, cellParseError));
+                    continue;
                 }
+
+                oneRead = true;
+                line.addCell(cell);
             }
         }
         if (line.size() <= 0 && !oneIgnored)

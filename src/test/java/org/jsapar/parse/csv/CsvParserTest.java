@@ -200,7 +200,7 @@ public class CsvParserTest {
 
                 @Override
                 public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                    throw new ParseException(event.getCellParseError());
+                    throw new ParseException(event.getParseError());
                 }
 
                 @Override
@@ -212,7 +212,7 @@ public class CsvParserTest {
 
         public Document build(java.io.Reader reader, CsvSchema schema) throws JSaParException, IOException {
             CsvParser parser = new CsvParser(reader, schema);
-            parser.parse(listener);
+            parser.parse(listener, );
             return this.document;
         }
     }

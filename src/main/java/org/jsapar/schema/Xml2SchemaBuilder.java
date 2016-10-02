@@ -338,12 +338,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * Assign common parts for base class.
      * 
      * @param schema
-     * @param xmlSchemaCell
+     * @param xmlSchema
      * @throws SchemaException
      */
     private void assignSchemaBase(Schema schema, Element xmlSchema) throws SchemaException {
-        schema.setErrorIfUndefinedLineType(getBooleanAttribute(xmlSchema, ATTRIB_ERROR_IF_UNDEFINED_LINE_TYPE, true));
-
         String sSeparator = getAttributeValue(xmlSchema, ATTRIB_SCHEMA_LINESEPARATOR);
         if (sSeparator != null) {
             sSeparator = replaceEscapes2Java(sSeparator);
@@ -375,7 +373,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @param line
      * @param xmlSchemaLine
      * @throws SchemaException
-     * @throws DataConversionException
      */
     private void assignSchemaLineBase(SchemaLine line, Element xmlSchemaLine) throws SchemaException {
         Node xmlOccurs = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_OCCURS);
@@ -447,8 +444,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
             }
 
         } catch (ParseException e) {
-            throw new SchemaException("Failed to parse value within xml schema. ", e);
-        } catch (org.jsapar.parse.ParseException e) {
             throw new SchemaException("Failed to parse value within xml schema. ", e);
         }
 

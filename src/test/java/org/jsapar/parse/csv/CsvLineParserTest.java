@@ -12,7 +12,6 @@ import org.jsapar.model.Line;
 import org.jsapar.parse.LineErrorEvent;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseException;
-import org.jsapar.parse.SingleLineReader;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 import org.junit.After;
@@ -49,7 +48,7 @@ public class CsvLineParserTest {
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
             }
-        });
+        }, errorListener);
         assertEquals(true, rc);
     }
 
@@ -74,7 +73,7 @@ public class CsvLineParserTest {
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
             }
-        });
+        }, errorListener);
 
         assertEquals(true, rc);
     }
@@ -101,7 +100,7 @@ public class CsvLineParserTest {
                 assertEquals("\"111 22\"", line.getCell(4).getStringValue());
                 assertEquals("Stockholm", line.getCell(5).getStringValue());
             }
-        });
+        }, errorListener);
 
         assertEquals(true, rc);
     }
@@ -125,7 +124,7 @@ public class CsvLineParserTest {
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("Hemvägen ;19", line.getCell(2).getStringValue());
             }
-        });
+        }, errorListener);
 
         assertEquals(true, rc);
     }
@@ -150,7 +149,7 @@ public class CsvLineParserTest {
                 assertEquals("", line.getCell(2).getStringValue());
                 assertEquals("Hemvägen ;19", line.getCell(3).getStringValue());
             }
-        });
+        }, errorListener);
 
         assertEquals(true, rc);
     }
@@ -175,7 +174,7 @@ public class CsvLineParserTest {
                 assertEquals("", line.getCell(2).getStringValue());
                 assertEquals("Hemvägen ;19", line.getCell(3).getStringValue());
             }
-        });
+        }, errorListener);
 
         assertEquals(true, rc);
     }
@@ -200,7 +199,7 @@ public class CsvLineParserTest {
                 assertEquals("Not quoted", line.getCell(2).getStringValue());
                 assertEquals("Hemvägen ;19", line.getCell(3).getStringValue());
             }
-        });
+        }, errorListener);
 
         assertEquals(true, rc);
     }
@@ -224,7 +223,7 @@ public class CsvLineParserTest {
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("Hemvägen ;19", line.getCell(2).getStringValue());
             }
-        });
+        }, errorListener);
 
         assertEquals(true, rc);
     }
@@ -249,7 +248,7 @@ public class CsvLineParserTest {
                 assertEquals("\"Hemvägen ", line.getCell(2).getStringValue());
                 assertEquals("19", line.getCell(3).getStringValue());
             }
-        });
+        }, errorListener);
 
         assertEquals(true, rc);
     }
@@ -273,7 +272,7 @@ public class CsvLineParserTest {
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("\"", line.getCell(2).getStringValue());
             }
-        });
+        }, errorListener);
 
         assertEquals(true, rc);
     }
@@ -300,7 +299,7 @@ public class CsvLineParserTest {
                 assertEquals("111 \"22\"", line.getCell(4).getStringValue());
                 assertEquals("Stoc\"kholm", line.getCell(5).getStringValue());
             }
-        });
+        }, errorListener);
 
         assertEquals(true, rc);
     }
@@ -326,7 +325,7 @@ public class CsvLineParserTest {
                 assertEquals("1\"9", line.getCell(3).getStringValue());
                 assertEquals("111 22", line.getCell(4).getStringValue());
             }
-        });
+        }, errorListener);
 
         assertEquals(true, rc);
     }
@@ -356,7 +355,7 @@ public class CsvLineParserTest {
                 assertEquals("First Name", line.getCell(0).getName());
                 assertEquals("Last Name", line.getCell(1).getName());
             }
-        });
+        }, errorListener);
         assertEquals(true, rc);
 
     }
@@ -387,7 +386,7 @@ public class CsvLineParserTest {
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenb", line.getCell(1).getStringValue());
             }
-        });
+        }, errorListener);
         assertEquals(true, rc);
 
     }
@@ -420,7 +419,7 @@ public class CsvLineParserTest {
                 assertEquals("First Name", line.getCell(0).getName());
                 assertEquals("Last Name", line.getCell(2).getName());
             }
-        });
+        }, errorListener);
         assertEquals(true, rc);
 
     }
@@ -441,7 +440,7 @@ public class CsvLineParserTest {
 
             @Override
             public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                assertEquals("Happy", event.getCellParseError().getCellName());
+                assertEquals("Happy", event.getParseError().getCellName());
                 foundError = true;
             }
 
@@ -456,7 +455,7 @@ public class CsvLineParserTest {
                 assertEquals("First Name", line.getCell(0).getName());
                 assertEquals("Last Name", line.getCell(2).getName());
             }
-        });
+        }, errorListener);
         assertEquals(true, rc);
         assertEquals(true, foundError);
     }
@@ -491,7 +490,7 @@ public class CsvLineParserTest {
                 assertEquals("First Name", line.getCell(0).getName());
                 assertEquals("Last Name", line.getCell(1).getName());
             }
-        });
+        }, errorListener);
         assertEquals(true, rc);
 
     }
@@ -511,14 +510,14 @@ public class CsvLineParserTest {
 
             @Override
             public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                throw new ParseException(event.getCellParseError());
+                throw new ParseException(event.getParseError());
             }
 
             @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 fail("Expects an error");
             }
-        });
+        }, errorListener);
         fail("Expects an error");
 
     }

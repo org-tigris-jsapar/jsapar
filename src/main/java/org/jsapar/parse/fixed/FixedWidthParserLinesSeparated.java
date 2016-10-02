@@ -4,10 +4,7 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.JSaParException;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.LineReader;
-import org.jsapar.parse.ParseException;
-import org.jsapar.parse.ReaderLineReader;
+import org.jsapar.parse.*;
 import org.jsapar.schema.FixedWidthSchema;
 
 import java.io.BufferedReader;
@@ -30,7 +27,7 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
     }
 
     @Override
-    public void parse(LineEventListener listener) throws JSaParException, IOException {
+    public void parse(LineEventListener listener, ErrorEventListener errorListener) throws JSaParException, IOException {
 
         long lineNumber = 0;
         while(true){
@@ -52,7 +49,7 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
                     else
                         return;
                 }
-                boolean lineFound = result.lineParser.parse(r, lineNumber, listener);
+                boolean lineFound = result.lineParser.parse(r, lineNumber, listener, errorListener );
                 if (!lineFound) // Should never occur.
                     throw new ParseException("Unexpected error while parsing line number " + lineNumber);
             }

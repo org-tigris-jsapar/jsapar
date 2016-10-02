@@ -6,15 +6,13 @@ package org.jsapar.parse.fixed;
 import org.jsapar.parse.*;
 import org.jsapar.schema.FixedWidthSchema;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
 
 /**
  * @author stejon0
  *
  */
-public abstract class FixedWidthParser implements Parser {
+public abstract class FixedWidthParser implements SchemaParser {
     private FixedWidthSchema    schema;
     private FWLineParserFactory lineParserFactory;
 
@@ -27,7 +25,7 @@ public abstract class FixedWidthParser implements Parser {
     protected void handleNoParser(long lineNumber, LineParserMatcherResult result) throws IOException, ParseException {
         // Check if EOF
         if (result == LineParserMatcherResult.NOT_MATCHING)
-            if (schema.isErrorIfUndefinedLineType())
+            if (schema.getIfUndefinedLineType())
                 throw new ParseException("No schema line could be used to parse line number " + lineNumber);
     }
 

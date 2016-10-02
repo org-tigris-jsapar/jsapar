@@ -243,7 +243,7 @@ public class JSaParExamplesTest {
         StringWriter writer = new StringWriter();
         TextComposer composer = new TextComposer(xmlBuilder.build(schemaReader), writer);
 
-        BeanParser beanParser =new BeanParser();
+        BeanParser beanParser =new BeanParser(iterator);
         Document doc = beanParser.parse(people);
         System.out.println("The document:" + doc);
         

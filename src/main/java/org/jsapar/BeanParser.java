@@ -7,11 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,30 +19,39 @@ import org.jsapar.model.FloatCell;
 import org.jsapar.model.IntegerCell;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
+import org.jsapar.parse.AbstractParser;
+import org.jsapar.parse.LineParsedEvent;
 
 /**
  * Uses a collection of java objects to build a org.jsapar.model.Document.
  * @author stejon0
  * 
  */
-public class BeanParser {
+public class BeanParser extends  AbstractParser implements Parser{
     
     protected static Logger logger = Logger.getLogger("org.jsapar");
 
     private int maxSubLevels = 100;
+    private Iterator<?> iterator;
+
+    public BeanParser(Iterator<?> iterator) {
+        this.iterator = iterator;
+    }
+
+    public BeanParser(Collection<?> objects) {
+        this.iterator = objects.iterator();
+    }
+
     /**
-     * @param objects
-     *            The collection of objects to use when building the document.
-     * @return A document containing a collection of lines which represents the list of objects
-     *         supplied.
      * @throws JSaParException
      */
-    public Document parse(Collection<?> objects) throws JSaParException {
-        Document doc = new Document();
-        for (Object object : objects) {
-            doc.addLine(parseBean(object));
+    @Override
+    public void parse() throws JSaParException {
+        long count = 0;
+        while(iterator.hasNext()){
+            count++;
+            lineParsedEvent( new LineParsedEvent(this, parseBean(iterator.next()), count) );
         }
-        return doc;
     }
 
     /**

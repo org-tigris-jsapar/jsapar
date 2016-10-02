@@ -82,9 +82,9 @@ public class Text2BeanConverter {
                 @Override
                 public void lineErrorEvent(LineErrorEvent event) throws ParseException {
                     if(parseErrors != null)
-                        parseErrors.add(event.getCellParseError());
+                        parseErrors.add(event.getParseError());
                     else
-                        throw new ParseException(event.getCellParseError());
+                        throw new ParseException(event.getParseError());
                 }
 
                 @SuppressWarnings("unchecked")

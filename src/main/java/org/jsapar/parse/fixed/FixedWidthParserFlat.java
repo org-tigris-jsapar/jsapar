@@ -30,11 +30,12 @@ public class FixedWidthParserFlat extends FixedWidthParser{
      *
      * @param listener
      *            The listener which will receive events for each parsed line.
+     * @param errorListener
      * @throws org.jsapar.JSaParException
      * @throws java.io.IOException
      */
     @Override
-    public void parse(LineEventListener listener) throws JSaParException, IOException {
+    public void parse(LineEventListener listener, ErrorEventListener errorListener) throws JSaParException, IOException {
         long lineNumber = 0;
         while(true){
             lineNumber++;
@@ -48,7 +49,7 @@ public class FixedWidthParserFlat extends FixedWidthParser{
                 else
                     return;
             }
-            boolean lineFound = result.lineParser.parse(reader, lineNumber, listener);
+            boolean lineFound = result.lineParser.parse(reader, lineNumber, listener, errorListener);
             if (!lineFound)
                 return; // End of stream.
         }

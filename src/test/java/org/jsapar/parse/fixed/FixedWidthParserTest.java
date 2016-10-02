@@ -9,8 +9,6 @@ import java.io.StringReader;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.model.Document;
 import org.jsapar.JSaParException;
-import org.jsapar.model.Line;
-import org.jsapar.model.StringCell;
 import org.jsapar.parse.LineErrorEvent;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseException;
@@ -63,7 +61,7 @@ public class FixedWidthParserTest {
 
                 @Override
                 public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                    throw new ParseException(event.getCellParseError());
+                    throw new ParseException(event.getParseError());
                 }
 
                 @Override
@@ -76,7 +74,7 @@ public class FixedWidthParserTest {
         public Document parse(java.io.Reader reader, FixedWidthSchema schema) throws JSaParException, IOException {
 
             FixedWidthParser parser = new FixedWidthParserFlat(reader, schema);
-            parser.parse(listener);
+            parser.parse(listener, );
             return this.document;
         }
     }

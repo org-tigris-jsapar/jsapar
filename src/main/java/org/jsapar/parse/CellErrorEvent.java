@@ -2,10 +2,11 @@ package org.jsapar.parse;
 
 import java.util.EventObject;
 
-public final class LineErrorEvent extends EventObject {
-    final LineParseError parseError;
+public final class CellErrorEvent extends EventObject {
 
-    public LineErrorEvent(Object source, LineParseError parseError) {
+    final CellParseError parseError;
+
+    public CellErrorEvent(Object source, CellParseError parseError) {
         super(source);
         this.parseError = parseError;
     }
@@ -13,7 +14,7 @@ public final class LineErrorEvent extends EventObject {
     /**
      * @return the parseError
      */
-    public LineParseError getParseError() {
+    public CellParseError getParseError() {
         return parseError;
     }
 

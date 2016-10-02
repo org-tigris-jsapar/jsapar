@@ -10,8 +10,6 @@ import java.io.IOException;
 
 import org.jsapar.JSaParException;
 import org.jsapar.parse.LineEventListener;
-import org.jsapar.model.Line;
-import org.jsapar.model.StringCell;
 import org.jsapar.parse.LineErrorEvent;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseException;
@@ -26,7 +24,7 @@ public class FixedWidthSchemaLineTest {
 
         @Override
         public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-            throw new ParseException(event.getCellParseError());
+            throw new ParseException(event.getParseError());
         }
 
         @Override

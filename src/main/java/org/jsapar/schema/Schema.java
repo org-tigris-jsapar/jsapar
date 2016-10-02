@@ -11,7 +11,7 @@ import org.jsapar.model.Document;
 import org.jsapar.compose.ComposeException;
 
 /**
- * Abstract base class for all type of jsapar schemas. A schema describes how the buffer should be
+ * Abstract base class for all type of jsapar schemata. A schema describes how the buffer should be
  * parsed or how the lines of a {@link Document} should be written. Usually the parse and output methods are
  * called from one of the in, out or io classes.
  * 
@@ -23,41 +23,8 @@ import org.jsapar.compose.ComposeException;
  */
 public abstract class Schema implements Cloneable, ParseSchema {
 
-    private boolean errorIfUndefinedLineType = true;
 
     public abstract boolean isEmpty();
-
-    /**
-     * @return  true if there will be an error while parsing and the control cell does not match any defined line type.
-     * false if undefined line types are silently ignored.
-     */
-    public boolean isErrorIfUndefinedLineType() {
-        return errorIfUndefinedLineType;
-    }
-
-    /**
-     * Set to true if there should be an error while parsing and the control cell does not match any defined line type.
-     * Set to false if undefined line types should be silently ignored.
-     * @param errorIfUndefinedLineType
-     */
-    public void setErrorIfUndefinedLineType(boolean errorIfUndefinedLineType) {
-        this.errorIfUndefinedLineType = errorIfUndefinedLineType;
-    }
-
-    /**
-     *  Defines how to determine which line type to use. 
-     */
-    public enum LineTypeByTypes {
-        /**
-         * The occurs field in {@link SchemaLine} determine how many lines that are expected of the type. 
-         */
-        OCCURS, 
-        /**
-         * There is a control cell on each line that determines the line type.
-         */
-        CONTROL_CELL
-    };
-
     private Locale locale = Locale.getDefault();
     private String lineSeparator = System.getProperty("line.separator");
 
@@ -116,15 +83,10 @@ public abstract class Schema implements Cloneable, ParseSchema {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" lineSeparator=");
-        String ls = this.lineSeparator;
-        // ls.replaceAll("\n", "\\\\n");
-        // ls.replaceAll("\r", "\\\\r");
-        sb.append(ls);
-        sb.append(" locale=");
-        sb.append(this.locale);
-        return sb.toString();
+        return " lineSeparator=" +
+                this.lineSeparator +
+                " locale=" +
+                this.locale;
     }
 
     /**

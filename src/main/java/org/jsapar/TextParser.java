@@ -24,7 +24,7 @@ import org.jsapar.convert.MaxErrorsExceededException;
  * </ol>
  * 
  * For large sources of data when it is essential not over-load the memory, the parse method will be
- * the preferred choice since you never have to load everything into the memory. The build methods
+ * the preferred choice since you do not have to load everything into the memory. The build methods
  * on the other hand are slightly easier to use and understand.<br>
  * <br>
  * 
@@ -34,9 +34,10 @@ import org.jsapar.convert.MaxErrorsExceededException;
  * 
  */
 public class TextParser implements LineEventListener {
-    private List<LineEventListener> parsingEventListeners = new LinkedList<LineEventListener>();
+    private List<LineEventListener> parsingEventListeners = new LinkedList<>();
     private SchemaParserFactory     parserFactory         = new SchemaParserFactory();
-    ParseSchema schema;
+    private ParseSchema schema;
+    private ParseConfig config;
 
     /**
      * Creates a TextParser with a schema.
@@ -120,7 +121,7 @@ public class TextParser implements LineEventListener {
      */
     public void parse(Reader reader) throws JSaParException {
         try {
-            parserFactory.makeParser(this.schema, reader).parse(TextParser.this);
+            parserFactory.makeSchemaParser(this.schema, reader).parse(TextParser.this, TextParser.this);
         } catch (IOException e) {
             throw new ParseException("Failed to read input", e);
         }
@@ -181,6 +182,14 @@ public class TextParser implements LineEventListener {
         this.parserFactory = parserFactory;
     }
 
+    public ParseConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(ParseConfig config) {
+        this.config = config;
+    }
+
     /**
      * Private class that converts the events from the parser into a Document object. This builder
      * adds errors to a list of CellParseErrors.
@@ -207,7 +216,7 @@ public class TextParser implements LineEventListener {
 
                 @Override
                 public void lineErrorEvent(LineErrorEvent event) throws MaxErrorsExceededException {
-                    parseErrors.add(event.getCellParseError());
+                    parseErrors.add(event.getParseError());
                     if (parseErrors.size() > maxNumberOfErrors)
                         throw new MaxErrorsExceededException(parseErrors);
                 }
@@ -219,7 +228,7 @@ public class TextParser implements LineEventListener {
             });
 
             try {
-                getParserFactory().makeParser(schema, reader).parse(TextParser.this);
+                getParserFactory().makeSchemaParser(schema, reader).parse(TextParser.this, );
             } catch (IOException e) {
                 throw new ParseException("Failed to read input", e);
             }
@@ -245,7 +254,7 @@ public class TextParser implements LineEventListener {
 
                 @Override
                 public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                    throw new ParseException(event.getCellParseError());
+                    throw new ParseException(event.getParseError());
                 }
 
                 @Override
@@ -255,7 +264,7 @@ public class TextParser implements LineEventListener {
             });
 
             try {
-                getParserFactory().makeParser(schema, reader).parse(TextParser.this);
+                getParserFactory().makeSchemaParser(schema, reader).parse(TextParser.this, );
             } catch (IOException e) {
                 throw new ParseException("Failed to read input", e);
             }

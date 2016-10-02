@@ -1,15 +1,12 @@
 package org.jsapar.schema;
 
-import java.util.Locale;
-import java.util.regex.Pattern;
-
-import org.jsapar.parse.LineEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.EmptyCell;
-import org.jsapar.parse.CellParseError;
-import org.jsapar.parse.LineErrorEvent;
 import org.jsapar.parse.ParseException;
+
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 public abstract class SchemaCell implements Cloneable {
 
@@ -99,45 +96,6 @@ public abstract class SchemaCell implements Cloneable {
         this.cellFormat = cellFormat;
     }
 
-    /**
-     * Creates a cell with a parsed value according to the schema specification for this cell. This
-     * method does not throw exception of mandatory cell does not exist. Instead it reports an error
-     * event and continues.
-     * 
-     * @param sValue
-     * @param listener
-     * @param nLineNumber
-     * @return A new cell of a type according to the schema specified. Returns null if there is no
-     *         value.
-     * @throws ParseException
-     */
-    public Cell makeCell(String sValue, LineEventListener listener, long nLineNumber) throws ParseException {
-        if (sValue.isEmpty()) {
-            checkIfMandatory(listener, nLineNumber);
-
-            if (defaultCell != null) {
-                return defaultCell.makeCopy(this.name);
-            } else {
-                return new EmptyCell(this.name, this.cellFormat.getCellType());
-            }
-        }
-        return makeCell(sValue);
-    }
-
-    /**
-     * Checks if cell is mandatory and in that case fires an error event.
-     * 
-     * @param listener
-     * @param nLineNumber
-     * @throws ParseException
-     */
-    public void checkIfMandatory(LineEventListener listener, long nLineNumber) throws ParseException {
-        if (isMandatory()) {
-            CellParseError e = new CellParseError(nLineNumber, this.name, EMPTY_STRING, getCellFormat(),
-                    "Mandatory cell requires a value.");
-            listener.lineErrorEvent(new LineErrorEvent(this, e));
-        }
-    }
 
     /**
      * Creates a cell with a parsed value according to the schema specification for this cell. Does
@@ -146,10 +104,10 @@ public abstract class SchemaCell implements Cloneable {
      * @param sValue
      * @return A new cell of a type according to the schema specified. Returns null if there is no
      *         value.
-     * @throws SchemaException
-     * @throws ParseException
+     * @throws SchemaException If there is an error in the schema
+     * @throws java.text.ParseException If the value cannot be parsed according to the format of this cell schema.
      */
-    public Cell makeCell(String sValue) throws ParseException {
+    public Cell makeCell(String sValue) throws java.text.ParseException{
 
         // If the cell is empty, check if default value exists.
         if (sValue.length() <= 0 || (emptyPattern != null && emptyPattern.matcher(sValue).matches())) {
@@ -160,20 +118,13 @@ public abstract class SchemaCell implements Cloneable {
             }
         }
 
-        try {
-            CellType cellType = this.cellFormat.getCellType();
-            Cell cell;
-            if (getCellFormat().getFormat() != null)
-                cell = SchemaCell.makeCell(cellType, this.name, sValue, this.getCellFormat().getFormat());
-            else
-                cell = SchemaCell.makeCell(cellType, this.name, sValue, getLocale());
-            validateRange(cell);
-            return cell;
-        } catch (SchemaException e) {
-            throw new ParseException(new CellParseError(this.name, sValue, getCellFormat(), e.getMessage()), e);
-        } catch (java.text.ParseException e) {
-            throw new ParseException(new CellParseError(this.name, sValue, getCellFormat(), e.getMessage()), e);
-        }
+        CellType cellType = this.cellFormat.getCellType();
+        Cell cell;
+        if (getCellFormat().getFormat() != null)
+            cell = SchemaCell.makeCell(cellType, this.name, sValue, this.getCellFormat().getFormat());
+        else
+            cell = SchemaCell.makeCell(cellType, this.name, sValue, getLocale());
+        return cell;
 
     }
 
@@ -190,7 +141,7 @@ public abstract class SchemaCell implements Cloneable {
      * @throws SchemaException
      */
     public static Cell makeCell(CellType cellType, String sName, String sValue, java.text.Format format)
-            throws java.text.ParseException, SchemaException {
+            throws java.text.ParseException {
         return cellType.makeCell(sName, sValue, format);
     }
 
@@ -310,19 +261,15 @@ public abstract class SchemaCell implements Cloneable {
     }
 
     /**
-     * Validates that the cell value is within the valid range. Throws a SchemaException if value is
+     * Validates that the default value is within the valid range. Throws a SchemaException if value is
      * not within borders.
      * 
-     * @param cell
-     * @throws SchemaException
-     * @throws ParseException
      * @throws SchemaException
      */
-    protected void validateRange(Cell cell) throws SchemaException {
-
-        if (this.minValue != null && cell.compareValueTo(this.minValue) < 0)
+    protected void validateDefaultValueRange() throws SchemaException {
+        if (this.minValue != null && defaultCell.compareValueTo(this.minValue) < 0)
             throw new SchemaException("The value is below minimum range limit.");
-        else if (this.maxValue != null && cell.compareValueTo(this.maxValue) > 0)
+        else if (this.maxValue != null && defaultCell.compareValueTo(this.maxValue) > 0)
             throw new SchemaException("The value is above maximum range limit.");
 
     }
@@ -375,10 +322,12 @@ public abstract class SchemaCell implements Cloneable {
      * @param sDefaultValue
      *            The default value formatted according to this schema. Will be used if input/output
      *            is missing for this cell.
-     * @throws ParseException
+     * @throws java.text.ParseException When the supplied value cannot be parsed according to this cell schema.
      */
-    public void setDefaultValue(String sDefaultValue) throws ParseException {
+    public void setDefaultValue(String sDefaultValue) throws java.text.ParseException {
         this.defaultCell = makeCell(sDefaultValue);
+        validateDefaultValueRange();
+
         this.defaultValue = sDefaultValue;
     }
 

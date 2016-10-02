@@ -5,6 +5,7 @@ import java.io.Reader;
 
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
+import org.jsapar.parse.ErrorEventListener;
 import org.jsapar.parse.ParseException;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.CellParser;
@@ -26,24 +27,22 @@ public class FixedWidthCellParser extends CellParser {
      *                           of any other type, the value is trimmed any way before parsing.
      * @param fillCharacter      The fill character to ignore if trimFillCharacters is true.
      * @param listener
-     * @param nLineNumber
      * @return A Cell filled with the parsed cell value and with the name of this schema cell.
      * @throws IOException
      * @throws ParseException
      */
     public Cell parse(FixedWidthSchemaCell cellSchema,
-               Reader reader,
-               boolean trimFillCharacters,
-               char fillCharacter,
-               LineEventListener listener,
-               long nLineNumber) throws IOException, ParseException {
+                      Reader reader,
+                      boolean trimFillCharacters,
+                      char fillCharacter,
+                      ErrorEventListener listener) throws IOException {
 
         String sValue = parseToString(cellSchema, reader, 0, trimFillCharacters, fillCharacter);
         if(sValue == null) {
-            checkIfMandatory(cellSchema, listener, nLineNumber);
+            checkIfMandatory(cellSchema, listener);
             return null;
         }
-        return parse(cellSchema, sValue, listener, nLineNumber);
+        return parse(cellSchema, sValue, listener);
     }
 
     /**

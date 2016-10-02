@@ -151,7 +151,7 @@ public class FixedWidthControlCellParserTest {
     public void testParse_errorOnUndefinedLineType() throws JSaParException, IOException {
         String toParse = "X JonasStenberg   ";
         org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
-        schema.setErrorIfUndefinedLineType(true);
+        schema.setIfUndefinedLineType(true);
         schema.setLineSeparator("\r\n");
 
         addSchemaLinesTwoCharControl(schema);
@@ -174,7 +174,7 @@ public class FixedWidthControlCellParserTest {
         String toParse = "N JonasStenberg   \r\nXXStorgatan 123 45          \r\n\r\nN Fred Bergsten";
         org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("\r\n");
-        schema.setErrorIfUndefinedLineType(false);
+        schema.setIfUndefinedLineType(false);
 
         addSchemaLinesTwoCharControl(schema);
 
@@ -199,7 +199,7 @@ public class FixedWidthControlCellParserTest {
 
                 @Override
                 public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                    throw new ParseException(event.getCellParseError());
+                    throw new ParseException(event.getParseError());
                 }
 
                 @Override
@@ -212,8 +212,8 @@ public class FixedWidthControlCellParserTest {
         public Document parse(java.io.Reader reader, FixedWidthSchema schema) throws JSaParException,
                 IOException {
             SchemaParserFactory factory = new SchemaParserFactory();
-            Parser parser = factory.makeParser(schema, reader);
-            parser.parse(listener);
+            SchemaParser parser = factory.makeSchemaParser(schema, reader);
+            parser.parse(listener, );
             return this.document;
         }
     }

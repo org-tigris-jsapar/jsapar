@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.jsapar.compose.Composer;
 import org.jsapar.compose.ComposerFactory;
-import org.jsapar.compose.LineComposer;
 import org.jsapar.compose.TextComposerFactory;
 import org.jsapar.convert.LineFilter;
 import org.jsapar.convert.LineManipulator;
@@ -100,7 +99,7 @@ public class Converter {
                                                        java.io.Writer writer,
                                                        DocumentWriter outputter) throws IOException, JSaParException {
         outputter.getComposer().beforeCompose();
-        parserFactory.makeParser(inputSchema, reader).parse(outputter);
+        parserFactory.makeSchemaParser(inputSchema, reader).parse(outputter, );
         outputter.getComposer().afterCompose();
         return outputter.getParseErrors();
     }
@@ -123,7 +122,7 @@ public class Converter {
 
         @Override
         public void lineErrorEvent(LineErrorEvent event) throws MaxErrorsExceededException {
-            parseErrors.add(event.getCellParseError());
+            parseErrors.add(event.getParseError());
             if (parseErrors.size() > maxNumberOfErrors)
                 throw new MaxErrorsExceededException(parseErrors);
         }

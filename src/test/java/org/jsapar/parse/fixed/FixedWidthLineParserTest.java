@@ -51,7 +51,7 @@ public class FixedWidthLineParserTest {
 
             @Override
             public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                throw new ParseException(event.getCellParseError());
+                throw new ParseException(event.getParseError());
             }
 
             @Override
@@ -66,7 +66,7 @@ public class FixedWidthLineParserTest {
                 assertEquals("Last name", line.getCell(1).getName());
                 assertEquals("Zip code", line.getCell(3).getName());
             }
-        });
+        }, );
 
         assertEquals(true, rc);
     }
@@ -89,7 +89,7 @@ public class FixedWidthLineParserTest {
 
             @Override
             public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                throw new ParseException(event.getCellParseError());
+                throw new ParseException(event.getParseError());
             }
 
             @Override
@@ -102,7 +102,7 @@ public class FixedWidthLineParserTest {
                 assertEquals("Last name", line.getCell(1).getName());
 
             }
-        });
+        }, );
 
         assertEquals(true, rc);
     }
@@ -126,7 +126,7 @@ public class FixedWidthLineParserTest {
 
             @Override
             public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                assertEquals("City", event.getCellParseError().getCellName());
+                assertEquals("City", event.getParseError().getCellName());
                 foundError=true;
             }
 
@@ -140,7 +140,7 @@ public class FixedWidthLineParserTest {
                 assertEquals("Last name", line.getCell(1).getName());
 
             }
-        });
+        }, );
 
         assertEquals(true, rc);
         assertEquals(true, foundError);
@@ -164,7 +164,7 @@ public class FixedWidthLineParserTest {
         Reader reader = new StringReader(toParse);
         @SuppressWarnings("unused")
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine);
-        boolean rc = parser.parse(reader, 1, new NullParsingEventListener());
+        boolean rc = parser.parse(reader, 1, new NullParsingEventListener(), );
     }
     
     
@@ -172,7 +172,7 @@ public class FixedWidthLineParserTest {
 
         @Override
         public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-            throw new ParseException(event.getCellParseError());
+            throw new ParseException(event.getParseError());
         }
 
         @Override
