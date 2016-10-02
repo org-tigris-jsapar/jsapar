@@ -21,8 +21,7 @@ public interface LineFilter {
      * 
      * @param line
      * @return true=write the line, false=discrard the line
-     * @throws JSaParException
      */
-    public boolean shouldWrite(Line line) throws JSaParException;
+    public boolean shouldWrite(Line line);
 
 }

@@ -32,7 +32,7 @@ class FixedWidthCellComposer {
      * @throws IOException
      * @throws ComposeException
      */
-    void compose(Cell cell, FixedWidthSchemaCell schemaCell, char fillCharacter) throws IOException, JSaParException {
+    void compose(Cell cell, FixedWidthSchemaCell schemaCell, char fillCharacter) throws IOException {
         String sValue = cellComposer.format(cell, schemaCell);
         compose(sValue, fillCharacter, schemaCell.getLength(), schemaCell.getAlignment());
     }
@@ -52,7 +52,7 @@ class FixedWidthCellComposer {
      * @throws ComposeException
      */
     private void compose(String sValue, char fillCharacter, int length, FixedWidthSchemaCell.Alignment alignment)
-            throws IOException, ComposeException {
+            throws IOException{
         if (sValue.length() == length) {
             writer.write(sValue);
             return;

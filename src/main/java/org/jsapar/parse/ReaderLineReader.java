@@ -46,7 +46,7 @@ public class ReaderLineReader implements LineReader {
      * @see org.jsapar.input.parse.LineReader#readLine()
      */
     @Override
-    public String readLine() throws IOException, JSaParException {
+    public String readLine() throws IOException {
         if (eofReached)
             return null;
         char chLineSeparatorNext = getLineSeparator().charAt(0);
@@ -75,7 +75,7 @@ public class ReaderLineReader implements LineReader {
             } else
                 lineBuilder.append(chRead);
             if (lineBuilder.length() > MAX_LINE_LENGTH)
-                throw new JSaParException(
+                throw new IOException(
                         "Line size exceeds "+MAX_LINE_LENGTH+" characters. Probably wrong line-separator for the line type within the schema.");
         }
         return lineBuilder.toString();

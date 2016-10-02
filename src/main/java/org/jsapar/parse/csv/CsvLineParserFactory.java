@@ -29,7 +29,7 @@ public class CsvLineParserFactory {
         }
     }
 
-    public CsvLineParser makeLineParser(CsvLineReader lineReader) throws IOException, JSaParException {
+    public CsvLineParser makeLineParser(CsvLineReader lineReader) throws IOException {
         if (lineParserMatchers.isEmpty())
             return null;
         Iterator<CsvLineParserMatcher> iter = lineParserMatchers.iterator();

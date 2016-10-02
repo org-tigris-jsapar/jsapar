@@ -1,6 +1,7 @@
 package org.jsapar.parse;
 
 import org.jsapar.Parser;
+import org.jsapar.error.ExceptionErrorEventListener;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 public abstract class AbstractParser implements Parser, LineEventListener, ErrorEventListener{
     private List<LineEventListener> parsingEventListeners = new LinkedList<>();
     private List<ErrorEventListener> errorEventListeners = new LinkedList<>();
+    private ErrorEventListener defaultErrorEventListener = new ExceptionErrorEventListener();
 
 
     @Override
@@ -38,6 +40,10 @@ public abstract class AbstractParser implements Parser, LineEventListener, Error
 
     @Override
     public void lineErrorEvent(LineErrorEvent event) {
+        if(errorEventListeners.isEmpty()){
+            defaultErrorEventListener.lineErrorEvent(event);
+            return;
+        }
         for (ErrorEventListener l : this.errorEventListeners) {
             l.lineErrorEvent(event);
         }
@@ -45,6 +51,10 @@ public abstract class AbstractParser implements Parser, LineEventListener, Error
 
     @Override
     public void cellErrorEvent(CellErrorEvent event) {
+        if(errorEventListeners.isEmpty()){
+            defaultErrorEventListener.cellErrorEvent(event);
+            return;
+        }
         for (ErrorEventListener l : this.errorEventListeners) {
             l.cellErrorEvent(event);
         }

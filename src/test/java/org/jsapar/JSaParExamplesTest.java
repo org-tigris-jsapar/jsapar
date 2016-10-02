@@ -247,7 +247,7 @@ public class JSaParExamplesTest {
         Document doc = beanParser.parse(people);
         System.out.println("The document:" + doc);
         
-        composer.write(doc);
+        composer.compose(doc);
         
         String result=writer.toString();
         String[] resultLines = result.split("\r\n");

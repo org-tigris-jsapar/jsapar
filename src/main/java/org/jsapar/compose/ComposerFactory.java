@@ -9,5 +9,5 @@ import java.io.Writer;
  * Created by stejon0 on 2016-02-06.
  */
 public interface ComposerFactory {
-    Composer makeComposer(Schema schema, Writer writer) throws JSaParException;
+    SchemaComposer makeComposer(Schema schema, Writer writer) throws JSaParException;
 }

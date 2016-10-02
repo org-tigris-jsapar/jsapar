@@ -1,7 +1,7 @@
 package org.jsapar.compose.fixed;
 
 import org.jsapar.JSaParException;
-import org.jsapar.compose.Composer;
+import org.jsapar.compose.SchemaComposer;
 import org.jsapar.compose.LineComposer;
 import org.jsapar.model.Line;
 import org.jsapar.schema.FixedWidthSchema;
@@ -16,7 +16,7 @@ import java.util.Iterator;
  * Composes fixed width output based on schema.
  * Created by stejon0 on 2016-01-31.
  */
-public class FixedWidthComposer implements Composer {
+public class FixedWidthComposer implements SchemaComposer {
     private final Writer writer;
     private final FixedWidthSchema schema;
 

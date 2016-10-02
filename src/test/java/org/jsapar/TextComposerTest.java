@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.jsapar.model.*;
@@ -51,7 +52,7 @@ public class TextComposerTest {
 
         Writer writer = new StringWriter();
         TextComposer composer = new TextComposer(schema, writer);
-        composer.write(document);
+        composer.compose(document);
 
         assertEquals(sExpected, writer.toString());
     }
@@ -67,13 +68,13 @@ public class TextComposerTest {
 
         Writer writer = new StringWriter();
         TextComposer composer = new TextComposer(schema, writer);
-        composer.write(document);
+        composer.compose(document);
 
         assertEquals(sExpected, writer.toString());
     }
 
     @Test
-    public void testOutputLine_FixedWidthControllCell() throws IOException, JSaParException {
+    public void testOutputLine_FixedWidthControllCell() throws IOException, JSaParException, ParseException {
         FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("");
 
@@ -99,7 +100,7 @@ public class TextComposerTest {
 
     
     @Test
-    public void testWriteLine_FixedWidthControllCell_minLength() throws IOException, JSaParException {
+    public void testWriteLine_FixedWidthControllCell_minLength() throws IOException, JSaParException, ParseException {
         FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("");
 
@@ -165,13 +166,13 @@ public class TextComposerTest {
         outputSchemaLine.setCellSeparator(";");
         schema.addSchemaLine(outputSchemaLine);
 
-        Line line1 = new Line();
+        Line line1 = new Line("Header");
         line1.addCell(new StringCell("Header", "TheHeader"));
         line1.addCell(new StringCell("Something", "This should not be written"));
 
         StringWriter writer = new StringWriter();
         TextComposer composer = new TextComposer(schema, writer);
-        assertTrue(composer.writeLine(line1, 1));
+        assertTrue(composer.writeLine(line1));
 
         String sExpected = "TheHeader";
 
@@ -179,13 +180,13 @@ public class TextComposerTest {
     }
 
     @Test
-    public final void testOutputLine_firstLineAsHeader() throws IOException, JSaParException {
+    public final void testOutputLine_firstLineAsHeader() throws IOException, JSaParException, ParseException {
         CsvSchema schema = new CsvSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.addSchemaCell(new CsvSchemaCell("HeaderHeader"));
         schema.addSchemaLine(schemaLine);
 
-        schemaLine = new CsvSchemaLine();
+        schemaLine = new CsvSchemaLine("Person");
         schemaLine.addSchemaCell(new CsvSchemaCell("First name"));
         schemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
 
@@ -198,13 +199,13 @@ public class TextComposerTest {
         schemaLine.setFirstLineAsSchema(true);
         schema.addSchemaLine(schemaLine);
 
-        Line line1 = new Line();
+        Line line1 = new Line("Person");
         line1.addCell(new StringCell("First name", "Jonas"));
         line1.addCell(new StringCell("Last name", "Stenberg"));
 
         StringWriter writer = new StringWriter();
         TextComposer composer = new TextComposer(schema, writer);
-        assertTrue(composer.writeLine(line1, 2));
+        assertTrue(composer.writeLine(line1));
 
         String sLineSep = System.getProperty("line.separator");
         String sExpected = "First name;Last name;Shoe size;Birth date" + sLineSep + "Jonas;Stenberg;41;";

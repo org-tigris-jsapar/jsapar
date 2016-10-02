@@ -10,7 +10,7 @@ import java.util.Iterator;
 /**
  * Created by stejon0 on 2016-01-24.
  */
-public interface Composer {
+public interface SchemaComposer {
 
     /**
      * This method should only be called by a TextComposer class. Don't use this directly in your code.
@@ -41,8 +41,8 @@ public interface Composer {
     /**
      * Create a schema line composer for this schema composer.
      *
-     * @param schemaLine
+     * @param line
      * @return A schema line composer.
      */
-    LineComposer makeLineComposer(SchemaLine schemaLine);
+    boolean composeLine(Line line) throws IOException;
 }

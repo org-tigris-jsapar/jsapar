@@ -53,7 +53,7 @@ public class CsvLineReader {
      * @throws IOException
      * @throws JSaParException
      */
-    public String[] readLine(String cellSeparator, char quoteChar) throws IOException, JSaParException {
+    public String[] readLine(String cellSeparator, char quoteChar) throws IOException {
         if (currentLine != null) {
             if (reset) {
                 if (!currentLine.sameType(cellSeparator, quoteChar)) {
@@ -128,7 +128,7 @@ public class CsvLineReader {
             return this.cellSeparator.equals(cellSeparator) && this.quoteChar == quoteChar;
         }
 
-        public String[] makeLine(BufferedLineReader lineReader2) throws IOException, JSaParException {
+        public String[] makeLine(BufferedLineReader lineReader2) throws IOException {
             String sLine = lineReader2.readLine();
             if (null == sLine)
                 return null;

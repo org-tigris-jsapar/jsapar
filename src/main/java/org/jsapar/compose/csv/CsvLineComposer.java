@@ -34,7 +34,7 @@ public class CsvLineComposer implements LineComposer {
     }
 
     @Override
-    public void compose(Line line) throws IOException, JSaParException {
+    public void compose(Line line) throws IOException {
         if(firstRow && schemaLine.isFirstLineAsSchema()){
             composeHeaderLine();
             writer.write(lineSeparator);
@@ -61,8 +61,8 @@ public class CsvLineComposer implements LineComposer {
      * @throws IOException
      * @throws JSaParException
      */
-    public void composeHeaderLine() throws IOException, JSaParException {
-        CsvSchemaLine unformattedSchemaLine = (CsvSchemaLine) schemaLine.clone();
+    public void composeHeaderLine() throws IOException {
+        CsvSchemaLine unformattedSchemaLine = schemaLine.clone();
         unformattedSchemaLine.setFirstLineAsSchema(false);
         for (CsvSchemaCell schemaCell : unformattedSchemaLine.getSchemaCells()) {
             schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING));
@@ -75,7 +75,7 @@ public class CsvLineComposer implements LineComposer {
      * @return
      * @throws JSaParException
      */
-    private Line buildHeaderLineFromSchema(CsvSchemaLine headerSchemaLine) throws JSaParException {
+    private Line buildHeaderLineFromSchema(CsvSchemaLine headerSchemaLine)  {
         Line line = new Line();
 
         for (CsvSchemaCell schemaCell : headerSchemaLine.getSchemaCells()) {

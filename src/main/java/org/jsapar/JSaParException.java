@@ -7,7 +7,7 @@ package org.jsapar;
  * @author Jonas
  *
  */
-public class JSaParException extends Exception {
+public class JSaParException extends RuntimeException {
 
 	/**
 	 * 

@@ -50,7 +50,7 @@ public class BufferedLineReader implements LineReader {
      * @throws JSaParException
      */
     @Override
-    public String readLine() throws IOException, JSaParException {
+    public String readLine() throws IOException {
         reader.mark(MAX_LINE_LENGTH);
         lineNumber++;
         return peekLine();
@@ -65,7 +65,7 @@ public class BufferedLineReader implements LineReader {
      * @throws IOException
      * @throws JSaParException
      */
-    public String peekLine() throws IOException, JSaParException {
+    public String peekLine() throws IOException {
         return lineReaderImpl.readLine();
     }
 

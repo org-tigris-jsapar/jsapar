@@ -8,27 +8,26 @@ import java.io.Writer;
 import java.util.Iterator;
 
 import org.jsapar.compose.ComposeException;
-import org.jsapar.compose.Composer;
+import org.jsapar.compose.SchemaComposer;
 import org.jsapar.compose.TextComposerFactory;
 import org.jsapar.compose.ComposerFactory;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
-import org.jsapar.schema.SchemaLine;
 
 /**
  * This class contains methods for transforming a Document or Line into a text output. E.g. if you want to write
  * the Document to a file you should first set the schema,  use a {@link java.io.FileWriter} and
- * call the {@link #write(Document)} method.
+ * call the {@link #compose(Document)} method.
  * 
  * @author Jonas Stenberg
  * 
  */
-public class TextComposer {
+public class TextComposer implements Composer{
     private final Writer          writer;
     private final Schema          schema;
     private final ComposerFactory composerFactory;
-    private Composer        currentComposer;
+    private       SchemaComposer  currentSchemaComposer;
 
     /**
      * Creates an TextComposer with a schema.
@@ -59,8 +58,9 @@ public class TextComposer {
      * @param document
      * @throws JSaParException
      */
-    public void write(Document document) throws JSaParException {
-        write(document.getLineIterator());
+    @Override
+    public void compose(Document document)  {
+        compose(document.getLineIterator());
     }
 
     /**
@@ -72,21 +72,21 @@ public class TextComposer {
      *            don't want to store them all in memory.
      * @throws JSaParException
      */
-    public void write(Iterator<Line> lineIterator) throws JSaParException {
+    public void compose(Iterator<Line> lineIterator) throws JSaParException {
         try {
-            Composer composer = makeComposer();
-            composer.beforeCompose();
-            composer.compose(lineIterator);
-            composer.afterCompose();
+            SchemaComposer schemaComposer = makeSchemaComposer();
+            schemaComposer.beforeCompose();
+            schemaComposer.compose(lineIterator);
+            schemaComposer.afterCompose();
         } catch (IOException e) {
             throw new ComposeException("Failed to write to buffert.", e);
         }
     }
 
-    private Composer makeComposer() throws JSaParException {
-        if (currentComposer == null)
-            currentComposer = composerFactory.makeComposer(schema, writer);
-        return currentComposer;
+    private SchemaComposer makeSchemaComposer() throws JSaParException {
+        if (currentSchemaComposer == null)
+            currentSchemaComposer = composerFactory.makeComposer(schema, writer);
+        return currentSchemaComposer;
     }
 
     /**
@@ -105,6 +105,11 @@ public class TextComposer {
         return true;
     }
 
+    @Override
+    public boolean composeLine(Line line) throws IOException {
+        return writeLineLn(line);
+    }
+
     /**
      * Writes the single line to a {@link java.io.Writer} according to the line type of the supplied
      * line. Note that the line separator is not written by this method.
@@ -114,46 +119,8 @@ public class TextComposer {
      * @throws IOException
      */
     public boolean writeLine(Line line) throws JSaParException, IOException {
-        Composer composer = makeComposer();
-        SchemaLine schemaLine = schema.getSchemaLine(line.getLineType());
-        if (schemaLine == null)
-            return false;
-        composer.makeLineComposer(schemaLine).compose(line);
-        return true;
-    }
-
-
-    /**
-     * Writes the single line to a {@link java.io.Writer} according to the member schema of this
-     * instance.
-     * 
-     * @param line
-     * @param lineNumber
-     *            The line number for this schema. 
-     * @throws JSaParException
-     */
-    public boolean writeLine(Line line, long lineNumber) throws JSaParException, IOException {
-        Composer composer = makeComposer();
-        SchemaLine schemaLine = schema.getSchemaLine(lineNumber);
-        if(schemaLine == null)
-            return false;
-        composer.makeLineComposer(schemaLine).compose(line);
-        return true;
-    }
-
-    /**
-     * Writes a single line
-     * @param line
-     * @param lineNumber
-     * @return
-     * @throws IOException
-     * @throws JSaParException
-     */
-    public boolean writeLineLn(Line line, long lineNumber) throws IOException, JSaParException {
-        if(!writeLine(line,lineNumber))
-            return false;
-        writer.write(schema.getLineSeparator());
-        return true;
+        SchemaComposer schemaComposer = makeSchemaComposer();
+        return schemaComposer.composeLine(line);
     }
 
 

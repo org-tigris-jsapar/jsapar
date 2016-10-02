@@ -26,7 +26,7 @@ public interface LineComposer {
      * @throws IOException
      * @throws JSaParException
      */
-    void compose(Line line) throws IOException, JSaParException;
+    void compose(Line line) throws IOException;
 
 
 

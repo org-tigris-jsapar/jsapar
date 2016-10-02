@@ -19,8 +19,7 @@ import org.jsapar.model.FloatCell;
 import org.jsapar.model.IntegerCell;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
-import org.jsapar.parse.AbstractParser;
-import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.*;
 
 /**
  * Uses a collection of java objects to build a org.jsapar.model.Document.
@@ -46,11 +45,11 @@ public class BeanParser extends  AbstractParser implements Parser{
      * @throws JSaParException
      */
     @Override
-    public void parse() throws JSaParException {
+    public void parse()  {
         long count = 0;
         while(iterator.hasNext()){
             count++;
-            lineParsedEvent( new LineParsedEvent(this, parseBean(iterator.next()), count) );
+            lineParsedEvent( new LineParsedEvent(this, parseBean(iterator.next(), this), count) );
         }
     }
 
@@ -65,17 +64,17 @@ public class BeanParser extends  AbstractParser implements Parser{
      * @return A Line object containing cells according to the getter method of the supplied object.
      * @throws JSaParException
      */
-    public Line parseBean(Object object) throws JSaParException {
+    public Line parseBean(Object object, ErrorEventListener errorListener)  {
 
         Line line = new Line(object.getClass().getName());
         Set<Object> visited = new HashSet<>();
-        this.parseBean(line, object, null, visited);
+        this.parseBean(line, object, null, visited, errorListener);
         return line;
     }
     
 
     @SuppressWarnings("unchecked")
-    private void parseBean(Line line, Object object, String prefix, Set<Object> visited) throws JSaParException {
+    private void parseBean(Line line, Object object, String prefix, Set<Object> visited, ErrorEventListener errorListener)  {
 
         // First we avoid loops.
         if(visited.contains(object) || visited.size()  >  maxSubLevels)
@@ -85,11 +84,12 @@ public class BeanParser extends  AbstractParser implements Parser{
         Object[] logInfo = new Object[] { object.getClass().getName(), null };
 
         for (Method f : methods) {
+            String sAttributeName="?";
             try {
                 String sMethodName = f.getName();
                 if (f.getParameterTypes().length == 0 && sMethodName.length() > 3
                         && sMethodName.substring(0, 3).equals("get")) {
-                    String sAttributeName = makeAttributeName(prefix, sMethodName);
+                    sAttributeName = makeAttributeName(prefix, sMethodName);
                     logInfo[1] = sAttributeName;
                     @SuppressWarnings("rawtypes")
                     Class returnType = f.getReturnType();
@@ -137,21 +137,15 @@ public class BeanParser extends  AbstractParser implements Parser{
                         Set<Object> visitedClone = new HashSet<Object>(visited);
                         visitedClone.add(object);
                         // Recursively add sub classes.
-                        this.parseBean(line, subObject, sAttributeName, visitedClone);
+                        this.parseBean(line, subObject, sAttributeName, visitedClone, errorListener);
                     }
                 }
             } catch (IllegalArgumentException e) {
-                logger.log(Level.INFO,
-                        "Skipped building cell for attribute {1} of class {0} - Illegal argument in getter method.",
-                        logInfo);
+                errorListener.cellErrorEvent(new CellErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - Illegal argument in getter method.")));
             } catch (IllegalAccessException e) {
-                logger.log(Level.INFO,
-                           "Skipped building cell for attribute {1} of class {0} - attibute getter does not have public access.",
-                           logInfo);
+                errorListener.cellErrorEvent(new CellErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - attribute getter does not have public access.")));
             } catch (InvocationTargetException e) {
-                logger.log(Level.INFO,
-                        "Skipped building cell for attribute {1} of class {0} - getter method fails to execute.",
-                        logInfo);
+                errorListener.cellErrorEvent(new CellErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - getter method fails to execute.")));
             }
         }
     }

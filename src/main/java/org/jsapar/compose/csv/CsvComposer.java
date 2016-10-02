@@ -1,11 +1,9 @@
 package org.jsapar.compose.csv;
 
 import org.jsapar.JSaParException;
-import org.jsapar.compose.Composer;
+import org.jsapar.compose.SchemaComposer;
 import org.jsapar.compose.LineComposer;
-import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
-import org.jsapar.model.StringCell;
 import org.jsapar.schema.*;
 
 import java.io.IOException;
@@ -17,7 +15,7 @@ import java.util.Map;
 /**
  * Created by stejon0 on 2016-01-24.
  */
-public class CsvComposer implements Composer {
+public class CsvComposer implements SchemaComposer {
 
     private       Writer writer;
     private final CsvSchema schema;
@@ -56,7 +54,16 @@ public class CsvComposer implements Composer {
     }
 
     @Override
-    public LineComposer makeLineComposer(SchemaLine schemaLine) {
+    public boolean composeLine(Line line) throws IOException {
+        SchemaLine schemaLine = schema.getSchemaLine(line.getLineType());
+        if (schemaLine == null)
+            return false;
+        makeLineComposer(schemaLine).compose(line);
+        return true;
+    }
+
+
+    private LineComposer makeLineComposer(SchemaLine schemaLine) {
         assert schemaLine instanceof CsvSchemaLine;
         CsvLineComposer lineComposer = lineComposerCache.get(schemaLine);
         if(lineComposer == null) {

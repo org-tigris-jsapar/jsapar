@@ -8,6 +8,13 @@ import org.jsapar.parse.LineParsedEvent;
 import java.io.IOException;
 
 /**
+ /**
+ * Parses an input and bulds a Document while parsing. If there is an error while
+ * parsing, an event is generated to the registered error event listener. If no error event listener is registered, a
+ * runtime exception will be thrown. <br/>
+ * Use this class only if you are sure that the whole file can be parsed into memory. If the
+ * file is too big, a OutOfMemory exception will be thrown. For large files use any of the Parser implementations
+ * directly instead. Dispose instances of this class when they have been used once.
  * Created by stejon0 on 2016-08-14.
  */
 public class DocumentBuilder {
@@ -15,10 +22,12 @@ public class DocumentBuilder {
     private Parser parser;
 
     public DocumentBuilder(Parser parser, ErrorEventListener errorEventListener) {
+        this.parser = parser;
         addErrorEventListener(errorEventListener);
     }
 
     public DocumentBuilder(Parser parser) {
+        this.parser = parser;
     }
 
     public void addErrorEventListener(ErrorEventListener errorEventListener){
@@ -35,6 +44,8 @@ public class DocumentBuilder {
         });
 
         parser.parse();
-        return this.document;
+        Document resultDocument = this.document;
+        this.document = new Document();
+        return resultDocument;
     }
 }

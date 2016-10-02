@@ -43,7 +43,7 @@ public class FixedWidthLineComposer implements LineComposer {
      * @throws JSaParException
      */
     @Override
-    public void compose(Line line) throws IOException, JSaParException {
+    public void compose(Line line) throws IOException {
        compose(line, 0);
     }
 
@@ -64,7 +64,7 @@ public class FixedWidthLineComposer implements LineComposer {
      * @throws IOException
      * @throws JSaParException
      */
-    public void compose(Line line, int offset) throws IOException, JSaParException {
+    public void compose(Line line, int offset) throws IOException {
         Iterator<FixedWidthSchemaCell> iter = lineSchema.getSchemaCells().iterator();
 
         // Iterate all schema cells.

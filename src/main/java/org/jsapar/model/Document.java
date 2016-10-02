@@ -1,16 +1,15 @@
 package org.jsapar.model;
 
+import org.jsapar.JSaParException;
+import org.jsapar.parse.ParseSchema;
+import org.jsapar.schema.XmlSchema;
+
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.jsapar.JSaParException;
-import org.jsapar.parse.ParseSchema;
-import org.jsapar.TextParser;
-import org.jsapar.schema.XmlSchema;
 
 /**
  * A document contains multiple lines where each line corresponds to a line of
@@ -212,27 +211,5 @@ public class Document implements Serializable {
         return lines.remove(index);
     }
 
-    /**
-     * Loads a Document from xml where the format is defined in XMLDocumentFormat.xsd. If you are dealing with a very
-     * large file or data source you should consider to use the XmlDocumentParser class as schema and use the event
-     * based model instead to get an event for each line.
-     * 
-     * @param reader
-     * @return A Document with lines and cells as defined in the input xml.
-     * @throws JSaParException If there is an error while reading the xml.
-     */
-    public static Document importFromXml(Reader reader) throws JSaParException{
-        ParseSchema schema = new XmlSchema();
-        TextParser docBuilder = new TextParser(schema);
-        return docBuilder.build(reader);
-    }
-    
-    /**
-     * TODO This feature remains to be implemented.
-     * @param writer
-     */
-    @SuppressWarnings("unused")
-    private void exportToXml(Writer writer){
-        //...
-    }
+
 }

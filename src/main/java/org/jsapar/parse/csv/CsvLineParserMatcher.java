@@ -35,7 +35,7 @@ public class CsvLineParserMatcher {
         }
     }
 
-    public CsvLineParser makeLineParserIfMatching(CsvLineReader lineReader) throws IOException, JSaParException {
+    public CsvLineParser makeLineParserIfMatching(CsvLineReader lineReader) throws IOException{
         if (occursLeft <= 0)
             return null;
 

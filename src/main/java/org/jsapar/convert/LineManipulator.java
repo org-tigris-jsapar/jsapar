@@ -22,10 +22,8 @@ public interface LineManipulator {
      * be reflected in the output.
      * 
      * @param line
-     * @throws JSaParException
-     *             - In case there is an error while manipulating the line. Throwing an exception will prevent the line
-     *             from being written to the output.
+     * @return If this method returns false, the line will be omitted.
      */
-    public void manipulate(Line line) throws JSaParException;
+    boolean manipulate(Line line);
 
 }

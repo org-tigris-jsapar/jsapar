@@ -16,7 +16,7 @@ public class SchemaParserFactory {
     public SchemaParserFactory() {
     }
 
-    public SchemaParser makeSchemaParser(ParseSchema schema, Reader reader) throws JSaParException {
+    public SchemaParser makeSchemaParser(ParseSchema schema, Reader reader)  {
         if (schema instanceof CsvSchema) {
             return new CsvParser(reader, (CsvSchema) schema);
         }
@@ -28,7 +28,7 @@ public class SchemaParserFactory {
                 return new FixedWidthParserLinesSeparated(reader, fixedWidthSchema);
         }
 
-        throw new JSaParException("Unknown schema type. Unable to create parser class for it.");
+        throw new IllegalArgumentException("Unknown schema type. Unable to create parser class for it.");
     }
 
 }
