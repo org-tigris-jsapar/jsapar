@@ -4,6 +4,8 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.JSaParException;
+import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.ErrorHandler;
 import org.jsapar.parse.*;
 import org.jsapar.schema.FixedWidthSchema;
 
@@ -20,8 +22,8 @@ public class FixedWidthParserFlat extends FixedWidthParser{
     private BufferedReader reader;
 
 
-    public FixedWidthParserFlat(Reader reader, FixedWidthSchema schema) {
-        super(schema);
+    public FixedWidthParserFlat(Reader reader, FixedWidthSchema schema, ParseConfig config) {
+        super(schema, config);
         this.reader = new BufferedReader(reader);
     }
 
@@ -43,7 +45,7 @@ public class FixedWidthParserFlat extends FixedWidthParser{
                 return;
             FWLineParserFactory.LineParserResult result = getLineParserFactory().makeLineParser(reader);
             if (result.result != LineParserMatcherResult.SUCCESS) {
-                handleNoParser(lineNumber, result.result);
+                handleNoParser(lineNumber, result.result, errorListener);
                 if(result.result == LineParserMatcherResult.NOT_MATCHING)
                     continue;
                 else

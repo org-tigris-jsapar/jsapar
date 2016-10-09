@@ -6,8 +6,7 @@ import org.jsapar.JSaParNumberFormatException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Date;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * A line is one row of the input buffer. Each line contains a list of cells. Cells can be retrieved
@@ -17,7 +16,7 @@ import java.util.Iterator;
  * @author Jonas Stenberg
  * 
  */
-public class Line implements Serializable {
+public class Line implements Serializable, Cloneable{
 
     /**
      * 
@@ -25,9 +24,9 @@ public class Line implements Serializable {
     private static final long serialVersionUID = 6026541900371948402L;
     public static final String EMPTY = "";
 
-    private java.util.ArrayList<Cell> cellsByIndex = null;
+    private ArrayList<Cell> cellsByIndex = null;
 
-    private java.util.Map<String, Cell> cellsByName = null;
+    private Map<String, Cell> cellsByName = null;
 
     /**
      * Line type.
@@ -35,11 +34,17 @@ public class Line implements Serializable {
     private String lineType = EMPTY;
 
     /**
+     * Assigned when parsing to the line number of the input source. Used primarily for logging and tracking. Has no
+     * significance when composing. First line has lineNumber=1. Equals 0 if not assigned.
+     */
+    private long lineNumber = 0L;
+
+    /**
      * Creates an empty line without any cells.
      */
     public Line() {
-        this.cellsByIndex = new java.util.ArrayList<Cell>();
-        this.cellsByName = new java.util.HashMap<String, Cell>();
+        this.cellsByIndex = new java.util.ArrayList<>();
+        this.cellsByName = new java.util.HashMap<>();
     }
 
     /**
@@ -999,4 +1004,33 @@ public class Line implements Serializable {
         return cell.getCellType().equals(type);
     }
 
+    public long getLineNumber() {
+        return lineNumber;
+    }
+
+    public void setLineNumber(long lineNumber) {
+        this.lineNumber = lineNumber;
+    }
+
+    @Override
+    public Line clone()  {
+        Line clone = null;
+        try {
+            clone = (Line) super.clone();
+        } catch (CloneNotSupportedException e) {
+            // This should never happen.
+            throw new AssertionError(e);
+        }
+
+        clone.cellsByIndex = new ArrayList<>(this.cellsByIndex.size());
+        clone.cellsByName = new HashMap<>(this.cellsByName.size());
+
+        for (Cell cell : this.cellsByIndex) {
+            Cell cellClone = cell.clone();
+            clone.cellsByIndex.add(cellClone);
+            clone.cellsByName.put(cellClone.getName(), cellClone);
+        }
+
+        return clone;
+    }
 }

@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
 
 import static org.junit.Assert.*;
@@ -50,7 +49,7 @@ public class DocumentBuilderTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
         schema.addSchemaLine(schemaLine);
 
-        TextParser2 parser = new TextParser2(schema, new StringReader(toParse));
+        TextParser parser = new TextParser(schema, new StringReader(toParse));
         DocumentBuilder builder = new DocumentBuilder(parser);
         Document doc = builder.build();
 
@@ -68,7 +67,7 @@ public class DocumentBuilderTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Shoe size", 3, new SchemaCellFormat(CellType.INTEGER)));
         schema.addSchemaLine(schemaLine);
 
-        TextParser2 parser = new TextParser2(schema, new StringReader(toParse));
+        TextParser parser = new TextParser(schema, new StringReader(toParse));
         DocumentBuilder builder = new DocumentBuilder(parser);
         Document doc = builder.build();
     }

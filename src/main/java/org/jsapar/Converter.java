@@ -2,7 +2,7 @@ package org.jsapar;
 
 import org.jsapar.convert.LineManipulator;
 import org.jsapar.model.Line;
-import org.jsapar.parse.ErrorEventListener;
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
 
@@ -24,18 +24,19 @@ import java.util.List;
  *
  * Created by stejon0 on 2016-10-02.
  */
-public class Converter2 {
+public class Converter {
     private Parser parser;
     private Composer composer;
     private List<LineManipulator> manipulators = new java.util.LinkedList<>();
 
-    public Converter2(Parser parser, Composer composer) {
+    public Converter(Parser parser, Composer composer) {
         this.parser = parser;
         this.composer = composer;
     }
 
     public void addErrorEventListener(ErrorEventListener errorListener){
         this.parser.addErrorEventListener(errorListener);
+        this.composer.addErrorEventListener(errorListener);
     }
 
     /**
@@ -80,5 +81,11 @@ public class Converter2 {
         }
     }
 
+    public Parser getParser() {
+        return parser;
+    }
 
+    public Composer getComposer() {
+        return composer;
+    }
 }

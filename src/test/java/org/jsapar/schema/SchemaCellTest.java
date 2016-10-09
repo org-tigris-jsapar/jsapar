@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 
 import java.util.Locale;
 
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.EmptyCell;
@@ -50,7 +51,7 @@ public class SchemaCellTest {
     }
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      */
@@ -63,7 +64,7 @@ public class SchemaCellTest {
     }
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      */
@@ -77,7 +78,7 @@ public class SchemaCellTest {
     }
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      */
@@ -90,7 +91,7 @@ public class SchemaCellTest {
     }
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      */
@@ -104,7 +105,7 @@ public class SchemaCellTest {
     }
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      * @throws SchemaException 
@@ -145,7 +146,7 @@ public class SchemaCellTest {
     }
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      */
@@ -159,7 +160,7 @@ public class SchemaCellTest {
     }
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      */
@@ -173,7 +174,7 @@ public class SchemaCellTest {
     }
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      */
@@ -186,7 +187,7 @@ public class SchemaCellTest {
     }
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      */
@@ -200,7 +201,7 @@ public class SchemaCellTest {
 
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      */
@@ -212,7 +213,7 @@ public class SchemaCellTest {
     }
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      * @throws SchemaException 
@@ -228,7 +229,7 @@ public class SchemaCellTest {
     }
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      * @throws SchemaException 
@@ -243,7 +244,7 @@ public class SchemaCellTest {
     }    
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      * @throws SchemaException 
@@ -257,7 +258,7 @@ public class SchemaCellTest {
     }    
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      * @throws SchemaException 
@@ -272,7 +273,7 @@ public class SchemaCellTest {
     }
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      * @throws SchemaException 
@@ -287,7 +288,7 @@ public class SchemaCellTest {
     }    
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      * @throws SchemaException
@@ -302,7 +303,7 @@ public class SchemaCellTest {
     }
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, org.jsapar.parse.ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
      * 
      * @throws ParseException
      * @throws SchemaException

@@ -1,7 +1,8 @@
 package org.jsapar.parse;
 
+import org.jsapar.error.ErrorEvent;
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
-import org.jsapar.model.CellType;
 import org.jsapar.model.EmptyCell;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
@@ -56,7 +57,7 @@ public class CellParser {
             validateRange(cellSchema, cell);
             return cell;
         } catch (java.text.ParseException e) {
-            listener.cellErrorEvent(new CellErrorEvent(this, new CellParseError(cellSchema.getName(), sValue, cellSchema.getCellFormat(), e.getMessage())));
+            listener.errorEvent(new ErrorEvent(this, new CellParseError(cellSchema.getName(), sValue, cellSchema.getCellFormat(), e.getMessage())));
             return null;
         }
 
@@ -91,7 +92,7 @@ public class CellParser {
         if (cellSchema.isMandatory()) {
             CellParseError e = new CellParseError(cellSchema.getName(), EMPTY_STRING, cellSchema.getCellFormat(),
                     "Mandatory cell requires a value.");
-            listener.cellErrorEvent(new CellErrorEvent(this, e));
+            listener.errorEvent(new ErrorEvent(this, e));
         }
     }    
 }

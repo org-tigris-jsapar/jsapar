@@ -3,8 +3,8 @@ package org.jsapar.parse.fixed;
 import java.io.IOException;
 import java.io.Reader;
 
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
-import org.jsapar.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.parse.*;
 import org.jsapar.schema.FixedWidthSchemaCell;

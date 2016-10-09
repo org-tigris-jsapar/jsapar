@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import org.jsapar.JSaParException;
+import org.jsapar.error.ErrorEvent;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.model.Line;
-import org.jsapar.parse.LineErrorEvent;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseException;
 import org.jsapar.schema.CsvSchemaCell;
@@ -39,7 +39,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(csvLineReader, new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
             }
 
             @Override
@@ -64,7 +64,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
             }
 
             @Override
@@ -86,7 +86,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
             }
 
             @Override
@@ -113,7 +113,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
             }
 
             @Override
@@ -137,7 +137,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
             }
 
             @Override
@@ -162,7 +162,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
             }
 
             @Override
@@ -187,7 +187,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
             }
 
             @Override
@@ -212,7 +212,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
             }
 
             @Override
@@ -236,7 +236,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
             }
 
             @Override
@@ -261,7 +261,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
             }
 
             @Override
@@ -285,7 +285,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
             }
 
             @Override
@@ -312,7 +312,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
             }
 
             @Override
@@ -341,7 +341,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
                 // TODO Auto-generated method stub
 
             }
@@ -375,7 +375,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
                 // TODO Auto-generated method stub
 
             }
@@ -405,7 +405,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
             }
 
             @Override
@@ -439,8 +439,8 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                assertEquals("Happy", event.getParseError().getCellName());
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
+                assertEquals("Happy", event.getError().getCellName());
                 foundError = true;
             }
 
@@ -474,7 +474,7 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
                 // TODO Auto-generated method stub
 
             }
@@ -509,8 +509,8 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                throw new ParseException(event.getParseError());
+            public void lineErrorEvent(ErrorEvent event) throws ParseException {
+                throw new ParseException(event.getError());
             }
 
             @Override

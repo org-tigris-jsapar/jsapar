@@ -1,8 +1,6 @@
 package org.jsapar.parse;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
+import org.jsapar.error.Error;
 import org.jsapar.schema.SchemaCellFormat;
 
 /**
@@ -11,10 +9,10 @@ import org.jsapar.schema.SchemaCellFormat;
  *
  * @author Jonas Stenberg
  */
-public final class CellParseError extends ParseError{
+public final class CellParseError extends Error {
 
     // long cellIndex=0;
-    private final long      lineNumber;
+    private long      lineNumber;
     private final String           cellName;
     private final String           cellValue;
     private final SchemaCellFormat cellFormat;
@@ -131,5 +129,9 @@ public final class CellParseError extends ParseError{
 
     public long getLineNumber() {
         return lineNumber;
+    }
+
+    public void setLineNumber(long lineNumber) {
+        this.lineNumber = lineNumber;
     }
 }

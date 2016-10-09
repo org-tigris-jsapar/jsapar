@@ -58,6 +58,14 @@ public class FixedWidthComposer implements SchemaComposer {
     }
 
     @Override
+    public boolean composeLine(Line line) throws IOException {
+        SchemaLine schemaLine = schema.getSchemaLine(line.getLineType());
+        if (schemaLine == null)
+            return false;
+        makeLineComposer(schemaLine).compose(line);
+        return true;
+    }
+
     public LineComposer makeLineComposer(SchemaLine schemaLine) {
         assert schemaLine instanceof FixedWidthSchemaLine;
         return new FixedWidthLineComposer(writer, (FixedWidthSchemaLine) schemaLine);

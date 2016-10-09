@@ -1,7 +1,7 @@
 package org.jsapar;
 
 import org.jsapar.model.Document;
-import org.jsapar.parse.ErrorEventListener;
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
 

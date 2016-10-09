@@ -3,7 +3,7 @@ package org.jsapar.parse.csv;
 import org.jsapar.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
-import org.jsapar.parse.LineErrorEvent;
+import org.jsapar.error.ErrorEvent;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseException;
@@ -85,8 +85,8 @@ public class CsvControlCellParserTest {
             listener = new LineEventListener() {
 
                 @Override
-                public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                    throw new ParseException(event.getParseError());
+                public void lineErrorEvent(ErrorEvent event) throws ParseException {
+                    throw new ParseException(event.getError());
                 }
 
                 @Override
@@ -97,7 +97,7 @@ public class CsvControlCellParserTest {
         }
 
         public Document build(java.io.Reader reader, CsvSchema schema) throws JSaParException, IOException {
-            CsvParser parser = new CsvParser(reader, schema);
+            CsvParser parser = new CsvParser(reader, schema, parseConfig);
             parser.parse(listener, );
             return this.document;
         }

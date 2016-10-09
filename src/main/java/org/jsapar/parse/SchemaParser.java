@@ -3,7 +3,7 @@ package org.jsapar.parse;
 import java.io.IOException;
 
 import org.jsapar.JSaParException;
-import org.jsapar.parse.LineEventListener;
+import org.jsapar.error.ErrorEventListener;
 
 public interface SchemaParser {
 

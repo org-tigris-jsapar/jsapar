@@ -8,13 +8,12 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.BigDecimalCell;
 import org.jsapar.model.BooleanCell;
 import org.jsapar.model.DateCell;
-import org.jsapar.model.Document;
 import org.jsapar.model.FloatCell;
 import org.jsapar.model.IntegerCell;
 import org.jsapar.model.Line;
@@ -141,11 +140,11 @@ public class BeanParser extends  AbstractParser implements Parser{
                     }
                 }
             } catch (IllegalArgumentException e) {
-                errorListener.cellErrorEvent(new CellErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - Illegal argument in getter method.")));
+                errorListener.errorEvent(new CellErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - Illegal argument in getter method.")));
             } catch (IllegalAccessException e) {
-                errorListener.cellErrorEvent(new CellErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - attribute getter does not have public access.")));
+                errorListener.errorEvent(new CellErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - attribute getter does not have public access.")));
             } catch (InvocationTargetException e) {
-                errorListener.cellErrorEvent(new CellErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - getter method fails to execute.")));
+                errorListener.errorEvent(new CellErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - getter method fails to execute.")));
             }
         }
     }

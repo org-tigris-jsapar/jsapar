@@ -1,4 +1,4 @@
-package org.jsapar.parse;
+package org.jsapar.error;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -6,16 +6,18 @@ import java.io.StringWriter;
 /**
  * Created by stejon0 on 2016-07-12.
  */
-public class ParseError {
+public class Error {
     private final String    errorDescription;
     private final Throwable exception;
 
-    public ParseError(String errorDescription, Throwable exception) {
-        this.errorDescription = errorDescription;
+    public Error(String errorDescription, Throwable exception) {
+        this.errorDescription = errorDescription.endsWith(exception.getMessage()) ?
+                errorDescription :
+                errorDescription + " - " + exception.getMessage();
         this.exception = exception;
     }
 
-    public ParseError(String errorDescription) {
+    public Error(String errorDescription) {
         this.errorDescription = errorDescription;
         this.exception = null;
     }

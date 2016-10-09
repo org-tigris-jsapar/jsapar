@@ -16,16 +16,16 @@ public class SchemaParserFactory {
     public SchemaParserFactory() {
     }
 
-    public SchemaParser makeSchemaParser(ParseSchema schema, Reader reader)  {
+    public SchemaParser makeSchemaParser(ParseSchema schema, Reader reader, ParseConfig parseConfig)  {
         if (schema instanceof CsvSchema) {
-            return new CsvParser(reader, (CsvSchema) schema);
+            return new CsvParser(reader, (CsvSchema) schema, parseConfig);
         }
         if (schema instanceof FixedWidthSchema) {
             FixedWidthSchema fixedWidthSchema = (FixedWidthSchema) schema;
             if (fixedWidthSchema.getLineSeparator().isEmpty())
-                return new FixedWidthParserFlat(reader, fixedWidthSchema);
+                return new FixedWidthParserFlat(reader, fixedWidthSchema, parseConfig);
             else
-                return new FixedWidthParserLinesSeparated(reader, fixedWidthSchema);
+                return new FixedWidthParserLinesSeparated(reader, fixedWidthSchema, parseConfig);
         }
 
         throw new IllegalArgumentException("Unknown schema type. Unable to create parser class for it.");

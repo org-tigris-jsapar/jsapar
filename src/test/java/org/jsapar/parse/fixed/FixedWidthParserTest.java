@@ -9,7 +9,7 @@ import java.io.StringReader;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.model.Document;
 import org.jsapar.JSaParException;
-import org.jsapar.parse.LineErrorEvent;
+import org.jsapar.error.ErrorEvent;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseException;
 import org.jsapar.schema.FixedWidthSchema;
@@ -60,8 +60,8 @@ public class FixedWidthParserTest {
             listener = new LineEventListener() {
 
                 @Override
-                public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                    throw new ParseException(event.getParseError());
+                public void lineErrorEvent(ErrorEvent event) throws ParseException {
+                    throw new ParseException(event.getError());
                 }
 
                 @Override

@@ -1,13 +1,12 @@
 package org.jsapar.parse;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import org.jsapar.error.Error;
 
 /**
  * Created by stejon0 on 2016-07-12.
  */
-public class LineParseError extends ParseError {
-    private final long      lineNumber;
+public class LineParseError extends Error {
+    private long      lineNumber;
 
     public LineParseError(long lineNumber, String errorDescription) {
         super(errorDescription);
@@ -50,5 +49,7 @@ public class LineParseError extends ParseError {
         return sb.toString();
     }
 
-
+    public void setLineNumber(long lineNumber) {
+        this.lineNumber = lineNumber;
+    }
 }

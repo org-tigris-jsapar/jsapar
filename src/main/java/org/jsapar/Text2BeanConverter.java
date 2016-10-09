@@ -1,5 +1,9 @@
 package org.jsapar;
 
+import org.jsapar.compose.bean.BeanComposedEventListener;
+import org.jsapar.compose.bean.BeanComposer;
+import org.jsapar.error.Error;
+import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.parse.*;
 import org.jsapar.schema.Schema;
@@ -11,53 +15,19 @@ import java.util.List;
 /**
  * Created by stejon0 on 2016-02-13.
  */
-public class Text2BeanConverter {
+public class Text2BeanConverter extends Converter{
 
-    private Schema inputSchema;
-
-    public Text2BeanConverter(Schema inputSchema) {
-        this.inputSchema = inputSchema;
+    public Text2BeanConverter(Schema inputSchema, Reader reader) {
+        super(new TextParser(inputSchema, reader), new BeanComposer());
     }
 
-    /**
-     * Reads characters from the reader and parses them into a list of java objects denoted by the
-     * schema. See org.jsapar.BeanParser for more information about how to build java objects
-     * from an input source.
-     *
-     * @param reader
-     * @param parseErrors
-     *            Supply an empty list of CellParseError and this method will populate the list if
-     *            errors are found while parsing.
-     * @return A collection of java objects. The class of each java object is determined by the
-     *         lineType of each line.
-     * @throws JSaParException
-     */
-    public List buildBeans(Reader reader, List<ParseError> parseErrors) throws JSaParException {
-        BeanComposer beanBuilder = new BeanComposer();
-        TextParser2 textParser = new TextParser2(inputSchema, reader);
-        textParser.addErrorEventListener(new RecordingErrorEventListener(parseErrors));
-        return beanBuilder.build(reader);
+    public Text2BeanConverter(Schema inputSchema, Reader reader, BeanComposer composer) {
+        super(new TextParser(inputSchema, reader), composer);
     }
 
-    /**
-     * Reads characters from the reader and parses them into a list of java objects denoted by the
-     * schema. See org.jsapar.BeanParser for more information about how to build java objects
-     * from an input source.
-     *
-     * This method throws an exception when the first error occurs.
-     *
-     * @param reader
-     *            Supply an empty list of CellParseError and this method will populate the list if
-     *            errors are found while parsing.
-     * @return A collection of java objects. The class of each java object is determined by the
-     *         lineType of each line.
-     * @throws JSaParException
-     */
-    public List buildBeans(Reader reader) throws JSaParException {
-        BeanBuilder beanBuilder = new BeanBuilder();
-        return beanBuilder.build(reader);
+    public void addComposedEventListener(BeanComposedEventListener eventListener) {
+        ((BeanComposer)getComposer()).addComposedEventListener(eventListener);
     }
-
 
 
 }

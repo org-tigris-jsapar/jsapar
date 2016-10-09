@@ -5,9 +5,8 @@ import java.io.Reader;
 
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
-import org.jsapar.parse.ErrorEventListener;
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.ParseException;
-import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.CellParser;
 import org.jsapar.schema.FixedWidthSchemaCell;
 

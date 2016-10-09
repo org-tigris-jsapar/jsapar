@@ -2,6 +2,7 @@ package org.jsapar.parse.csv;
 
 import java.io.IOException;
 
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.*;
 import org.jsapar.model.Cell;
 import org.jsapar.JSaParException;
@@ -9,10 +10,8 @@ import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineReader;
-import org.jsapar.parse.LineParser;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
-import org.jsapar.schema.SchemaLine;
 
 public class CsvLineParser  {
 
@@ -47,6 +46,7 @@ public class CsvLineParser  {
 
         usedCount ++;
         Line line = new Line(lineSchema.getLineType(), (lineSchema.getSchemaCells().size() > 0) ? lineSchema.getSchemaCells().size() : 10);
+        line.setLineNumber(lineReader.currentLineNumber());
         LineDecoratorErrorEventListener lineErrorEventListener = new LineDecoratorErrorEventListener(
                 errorListener, lineReader.currentLineNumber());
 

@@ -3,6 +3,8 @@
  */
 package org.jsapar.parse;
 
+import org.jsapar.error.Error;
+
 /**
  * @author Jonas
  * 
@@ -14,14 +16,14 @@ public class ParseException extends RuntimeException {
      */
     private static final long serialVersionUID = 7936794742075345440L;
 
-    private final ParseError parseError;
+    private final Error parseError;
 
 
     /**
      * @param parseError
      * @param sMessage
      */
-    public ParseException(ParseError parseError, String sMessage) {
+    public ParseException(Error parseError, String sMessage) {
         super(sMessage);
         this.parseError = parseError;
     }
@@ -31,7 +33,7 @@ public class ParseException extends RuntimeException {
      * @param parseError
      * @param ex
      */
-    public ParseException(ParseError parseError, Throwable ex) {
+    public ParseException(Error parseError, Throwable ex) {
         super(ex);
         this.parseError = parseError;
     }
@@ -41,7 +43,7 @@ public class ParseException extends RuntimeException {
      * @param sMessage
      * @param ex
      */
-    public ParseException(ParseError parseError, String sMessage, Throwable ex) {
+    public ParseException(Error parseError, String sMessage, Throwable ex) {
         super(sMessage, ex);
         this.parseError = parseError;
     }
@@ -49,7 +51,7 @@ public class ParseException extends RuntimeException {
     /**
      * @param parseError
      */
-    public ParseException(ParseError parseError) {
+    public ParseException(Error parseError) {
         this.parseError = parseError;
     }
 
@@ -60,7 +62,7 @@ public class ParseException extends RuntimeException {
      * 
      * @return the parseError
      */
-    public ParseError getParseError() {
+    public Error getParseError() {
         return parseError;
     }
 

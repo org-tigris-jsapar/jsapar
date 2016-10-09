@@ -1,5 +1,7 @@
 package org.jsapar;
 
+import org.jsapar.error.ErrorEvent;
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.*;
 
 import java.io.IOException;
@@ -16,6 +18,5 @@ public interface Parser {
     void parse() throws JSaParException, IOException;
 
     void lineParsedEvent(LineParsedEvent event);
-    void lineErrorEvent(LineErrorEvent event);
-    void cellErrorEvent(CellErrorEvent event);
+    void errorEvent(ErrorEvent event);
 }

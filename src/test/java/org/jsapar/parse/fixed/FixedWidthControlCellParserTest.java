@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
+import org.jsapar.error.ErrorEvent;
 import org.jsapar.parse.*;
 import org.jsapar.model.Document;
 import org.jsapar.JSaParException;
@@ -198,8 +199,8 @@ public class FixedWidthControlCellParserTest {
             listener = new LineEventListener() {
 
                 @Override
-                public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-                    throw new ParseException(event.getParseError());
+                public void lineErrorEvent(ErrorEvent event) throws ParseException {
+                    throw new ParseException(event.getError());
                 }
 
                 @Override
@@ -212,7 +213,7 @@ public class FixedWidthControlCellParserTest {
         public Document parse(java.io.Reader reader, FixedWidthSchema schema) throws JSaParException,
                 IOException {
             SchemaParserFactory factory = new SchemaParserFactory();
-            SchemaParser parser = factory.makeSchemaParser(schema, reader);
+            SchemaParser parser = factory.makeSchemaParser(schema, reader, parseConfig);
             parser.parse(listener, );
             return this.document;
         }

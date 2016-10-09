@@ -4,6 +4,8 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.JSaParException;
+import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.ErrorHandler;
 import org.jsapar.parse.*;
 import org.jsapar.schema.FixedWidthSchema;
 
@@ -21,8 +23,8 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
 
     LineReader lineReader;
 
-    public FixedWidthParserLinesSeparated(Reader reader, FixedWidthSchema schema) {
-        super(schema);
+    public FixedWidthParserLinesSeparated(Reader reader, FixedWidthSchema schema, ParseConfig config) {
+        super(schema, config);
         lineReader = new ReaderLineReader(schema.getLineSeparator(), reader);
     }
 
@@ -43,7 +45,7 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
                     return;
                 FWLineParserFactory.LineParserResult result = getLineParserFactory().makeLineParser(r);
                 if (result.result != LineParserMatcherResult.SUCCESS) {
-                    handleNoParser(lineNumber, result.result);
+                    handleNoParser(lineNumber, result.result, errorListener);
                     if(result.result == LineParserMatcherResult.NOT_MATCHING)
                         continue;
                     else
@@ -51,7 +53,7 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
                 }
                 boolean lineFound = result.lineParser.parse(r, lineNumber, listener, errorListener );
                 if (!lineFound) // Should never occur.
-                    throw new ParseException("Unexpected error while parsing line number " + lineNumber);
+                    throw new AssertionError("Unexpected error while parsing line number " + lineNumber);
             }
         }
     }

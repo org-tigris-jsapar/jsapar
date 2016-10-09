@@ -1,5 +1,6 @@
 package org.jsapar;
 
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 
@@ -28,5 +29,5 @@ public interface Composer {
      */
     boolean composeLine(Line line) throws IOException;
 
-
+    void addErrorEventListener(ErrorEventListener errorListener);
 }

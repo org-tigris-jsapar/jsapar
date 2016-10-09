@@ -18,6 +18,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.jsapar.Parser;
+import org.jsapar.error.ErrorEvent;
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.*;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
@@ -25,10 +27,8 @@ import org.jsapar.model.DateCell;
 import org.jsapar.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.SchemaParser;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.Xml2SchemaBuilder;
-import org.jsapar.schema.XmlSchema;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -85,7 +85,7 @@ public class XmlParser extends AbstractParser implements Parser {
         private String   currentCellName;
         private Cell     currentCell;
         private boolean cellStarted = false;
-        private LineEventListener listener;
+        private LineEventListener  listener;
         private ErrorEventListener errorEventListener;
         private long currentLineNumber = 1;
 
@@ -190,7 +190,7 @@ public class XmlParser extends AbstractParser implements Parser {
         public void error(SAXParseException e) throws SAXException {
             CellParseError error = new CellParseError(this.currentLineNumber, this.currentCellName, "", null,
                     e.getMessage());
-            this.errorEventListener.cellErrorEvent(new CellErrorEvent(this, error));
+            this.errorEventListener.errorEvent(new ErrorEvent(this, error));
         }
 
         /*
@@ -203,7 +203,7 @@ public class XmlParser extends AbstractParser implements Parser {
         public void fatalError(SAXParseException e) throws SAXException {
             CellParseError error = new CellParseError(this.currentLineNumber, this.currentCellName, "", null,
                     e.getMessage());
-            this.errorEventListener.cellErrorEvent(new CellErrorEvent(this, error));
+            this.errorEventListener.errorEvent(new ErrorEvent(this, error));
         }
 
         /*
@@ -217,7 +217,7 @@ public class XmlParser extends AbstractParser implements Parser {
         public void warning(SAXParseException e) throws SAXException {
             CellParseError error = new CellParseError(this.currentLineNumber, this.currentCellName, "", null,
                     e.getMessage());
-            this.errorEventListener.cellErrorEvent(new CellErrorEvent(this, error));
+            this.errorEventListener.errorEvent(new ErrorEvent(this, error));
         }
 
     }

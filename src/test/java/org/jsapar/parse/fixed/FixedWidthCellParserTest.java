@@ -2,7 +2,7 @@ package org.jsapar.parse.fixed;
 
 import org.jsapar.JSaParException;
 import org.jsapar.model.*;
-import org.jsapar.parse.LineErrorEvent;
+import org.jsapar.error.ErrorEvent;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseException;
@@ -30,8 +30,8 @@ public class FixedWidthCellParserTest {
     private class TestParsingEventListener implements LineEventListener {
 
         @Override
-        public void lineErrorEvent(LineErrorEvent event) throws ParseException {
-            throw new ParseException(event.getParseError());
+        public void lineErrorEvent(ErrorEvent event) throws ParseException {
+            throw new ParseException(event.getError());
         }
 
         @Override
