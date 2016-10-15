@@ -11,7 +11,6 @@ import org.jsapar.format.BooleanFormat;
 import org.jsapar.format.RegExpFormat;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.utils.StringUtils;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author stejon0

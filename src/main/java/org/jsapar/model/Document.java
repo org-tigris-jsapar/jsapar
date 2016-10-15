@@ -1,12 +1,6 @@
 package org.jsapar.model;
 
-import org.jsapar.JSaParException;
-import org.jsapar.parse.ParseSchema;
-import org.jsapar.schema.XmlSchema;
-
-import java.io.Reader;
 import java.io.Serializable;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

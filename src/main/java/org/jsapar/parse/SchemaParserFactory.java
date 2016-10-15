@@ -1,13 +1,10 @@
 package org.jsapar.parse;
 
-import org.jsapar.JSaParException;
 import org.jsapar.parse.csv.CsvParser;
 import org.jsapar.parse.fixed.FixedWidthParserFlat;
 import org.jsapar.parse.fixed.FixedWidthParserLinesSeparated;
-import org.jsapar.parse.xml.XmlParser;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.FixedWidthSchema;
-import org.jsapar.schema.XmlSchema;
 
 import java.io.Reader;
 
