@@ -52,6 +52,7 @@ public class Converter {
 
     public void convert() throws IOException{
         parser.addLineEventListener(new LineForwardListener());
+        parser.parse();
     }
 
 

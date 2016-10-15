@@ -37,6 +37,10 @@ public class BeanComposer implements Composer, BeanComposedEventListener, ErrorE
 
     @Override
     public void compose(Document document) throws IOException {
+        for (Line line : document.getLines()) {
+            composeLine(line);
+        }
+
     }
 
     @Override

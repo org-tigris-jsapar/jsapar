@@ -43,8 +43,8 @@ public class SchemaLineTest {
     }
 
 
-    @Ignore
     @Test
+    @Ignore
     public void testFindCell_byIndex() throws JSaParException {
         SchemaLineMock instance = new SchemaLineMock();
         Line line = new Line();
@@ -62,25 +62,6 @@ public class SchemaLineTest {
         assertEquals(second, c);
     }
 
-    @Ignore
-    @Test
-    public void testFindCell_notNamed() throws JSaParException {
-        SchemaLineMock instance = new SchemaLineMock();
-        Line line = new Line();
-        SchemaCell schemaCell = new SchemaCell("First") {};
-        
-        Cell first = new StringCell("test1","one");
-        line.addCell(first);
-
-        // Cell wiht no name
-        Cell second = new StringCell("test2","two");
-        line.addCell(second);
-
-        schemaCell = new SchemaCell("Third") {};
-        
-        Cell c = instance.doFindCell(line, schemaCell, 0);
-        assertEquals(first, c);
-    }    
 
     @Test
     public void testFindCell_notNamedExtra_namedOnly() throws JSaParException {

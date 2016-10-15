@@ -6,10 +6,7 @@ package org.jsapar;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.DateCell;
@@ -77,7 +74,8 @@ public class BeanParserTest {
         person.setStreetNumber(4711);
         person.setDoor('A');
 
-        BeanParser builder = new BeanParser((Collection) null);
+
+        BeanParser builder = new BeanParser(Arrays.asList(new TstPerson[]{person}));
         Line line = builder.parseBean(person, new ExceptionErrorEventListener());
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals(8, line.size());
@@ -94,7 +92,7 @@ public class BeanParserTest {
         TstPerson person = new TstPerson();
         person.setFirstName("Jonas");
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
-        BeanParser builder = new BeanParser((Collection) null);
+        BeanParser builder = new BeanParser(Arrays.asList(new TstPerson[]{person}));
         Line line = builder.parseBean(person, new ExceptionErrorEventListener());
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", line.getStringCellValue("address.street"));
@@ -110,7 +108,7 @@ public class BeanParserTest {
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
         person.getAddress().setSubAddress(new TstPostAddress("Road", "Town"));
         person.setWorkAddress(new TstPostAddress("Gatan", "Byn"));
-        BeanParser builder = new BeanParser((Collection) null);
+        BeanParser builder = new BeanParser(Arrays.asList(new TstPerson[]{person}));
         Line line = builder.parseBean(person, new ExceptionErrorEventListener());
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", line.getStringCellValue("address.street"));
@@ -127,7 +125,7 @@ public class BeanParserTest {
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
         person.getAddress().setSubAddress(new TstPostAddress("Road", "Town"));
         person.setWorkAddress(new TstPostAddress("Gatan", "Byn"));
-        BeanParser builder = new BeanParser((Collection) null);
+        BeanParser builder = new BeanParser(Arrays.asList(new TstPerson[]{person}));
         builder.setMaxSubLevels(1);
         Line line = builder.parseBean(person, new ExceptionErrorEventListener());
         assertEquals("org.jsapar.TstPerson", line.getLineType());

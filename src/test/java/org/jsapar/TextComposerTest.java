@@ -130,17 +130,18 @@ public class TextComposerTest {
     @Test
     public final void testWriteLine_csv() throws IOException, JSaParException {
         org.jsapar.schema.CsvSchema schema = new org.jsapar.schema.CsvSchema();
-        CsvSchemaLine outputSchemaLine = new CsvSchemaLine(1);
+        CsvSchemaLine outputSchemaLine = new CsvSchemaLine("Header");
+        outputSchemaLine.setOccurs(1);
         outputSchemaLine.addSchemaCell(new CsvSchemaCell("Header"));
         schema.addSchemaLine(outputSchemaLine);
 
-        outputSchemaLine = new CsvSchemaLine();
+        outputSchemaLine = new CsvSchemaLine("Person");
         outputSchemaLine.addSchemaCell(new CsvSchemaCell("First name"));
         outputSchemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
         outputSchemaLine.setCellSeparator(";");
         schema.addSchemaLine(outputSchemaLine);
 
-        Line line1 = new Line();
+        Line line1 = new Line("Person");
         line1.addCell(new StringCell("First name","Jonas"));
         line1.addCell(new StringCell("Last name","Stenberg"));
 
@@ -156,7 +157,8 @@ public class TextComposerTest {
     @Test
     public final void testWriteLine_csv_first() throws IOException, JSaParException {
         org.jsapar.schema.CsvSchema schema = new org.jsapar.schema.CsvSchema();
-        CsvSchemaLine outputSchemaLine = new CsvSchemaLine(1);
+        CsvSchemaLine outputSchemaLine = new CsvSchemaLine("Header");
+        outputSchemaLine.setOccurs(1);
         outputSchemaLine.addSchemaCell(new CsvSchemaCell("Header"));
         schema.addSchemaLine(outputSchemaLine);
 

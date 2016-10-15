@@ -75,7 +75,7 @@ public class LineTest {
         assertEquals("Svensson", line.getCell(1).getStringValue());
     }
 
-    @Test(expected = JSaParException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testAddCell_twice() throws JSaParException {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));

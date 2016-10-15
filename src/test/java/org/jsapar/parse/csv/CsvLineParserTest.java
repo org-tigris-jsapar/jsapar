@@ -8,7 +8,9 @@ import java.io.StringReader;
 
 import org.jsapar.JSaParException;
 import org.jsapar.error.ErrorEvent;
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ExceptionErrorEventListener;
+import org.jsapar.parse.CellParseError;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineParsedEvent;
@@ -386,7 +388,13 @@ public class CsvLineParserTest {
                 assertEquals("First Name", line.getCell(0).getName());
                 assertEquals("Last Name", line.getCell(2).getName());
             }
-        }, new ExceptionErrorEventListener());
+        }, new ErrorEventListener() {
+            @Override
+            public void errorEvent(ErrorEvent event) {
+                assertEquals("Happy", ((CellParseError)event.getError()).getCellName());
+                foundError = true;
+            }
+        });
         assertEquals(true, rc);
         assertEquals(true, foundError);
     }

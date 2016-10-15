@@ -1,32 +1,24 @@
 package org.jsapar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.jsapar.compose.bean.BeanComposer;
 import org.jsapar.compose.bean.RecordingBeanEventListener;
 import org.jsapar.error.RecordingErrorEventListener;
-import org.jsapar.parse.CellParseError;
 import org.jsapar.model.*;
+import org.jsapar.parse.ParseException;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.junit.Assert.*;
 
 public class BeanComposerTest {
 
     private java.util.Date birthTime;
 
     @Before
-    public void setUp() throws ParseException {
+    public void setUp() throws ParseException, java.text.ParseException {
 	java.text.DateFormat dateFormat=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	this.birthTime = dateFormat.parse("1971-03-25 23:04:24");
 
@@ -64,6 +56,7 @@ public class BeanComposerTest {
         BeanComposer composer = new BeanComposer();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
         composer.addComposedEventListener(beanEventListener);
+        composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertEquals(2, objects.size());
         TstPerson firstPerson = objects.get(0);
@@ -82,7 +75,7 @@ public class BeanComposerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_Long_to_int() throws JSaParException {
+    public final void testCreateJavaObjects_Long_to_int() throws JSaParException, IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new IntegerCell("shoeSize", 42L));
@@ -94,6 +87,7 @@ public class BeanComposerTest {
         BeanComposer composer = new BeanComposer();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
         composer.addComposedEventListener(beanEventListener);
+        composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertEquals(1, objects.size());
         assertEquals(42, (objects.get(0)).getShoeSize());
@@ -101,7 +95,7 @@ public class BeanComposerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_Int_to_long() throws JSaParException {
+    public final void testCreateJavaObjects_Int_to_long() throws JSaParException, IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new IntegerCell("luckyNumber", 1234));
@@ -112,13 +106,14 @@ public class BeanComposerTest {
         BeanComposer composer = new BeanComposer();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
         composer.addComposedEventListener(beanEventListener);
+        composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertEquals(1, objects.size());
         assertEquals(1234, (objects.get(0)).getLuckyNumber());
     }
 
     @Test(expected = ParseException.class)
-    public final void testCreateJavaObjects_wrongType() throws JSaParException {
+    public final void testCreateJavaObjects_wrongType() throws JSaParException, IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new IntegerCell("firstName", 1234));
@@ -129,6 +124,7 @@ public class BeanComposerTest {
         BeanComposer composer = new BeanComposer();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
         composer.addComposedEventListener(beanEventListener);
+        composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
     }
 
@@ -137,7 +133,7 @@ public class BeanComposerTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_subclass() throws JSaParException {
+    public final void testCreateJavaObjects_subclass() throws JSaParException, IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new StringCell("address.street", "Stigen"));
@@ -150,6 +146,7 @@ public class BeanComposerTest {
         BeanComposer composer = new BeanComposer();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
         composer.addComposedEventListener(beanEventListener);
+        composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertNotNull((objects.get(0)).getAddress());
         assertEquals("Stigen", (objects.get(0)).getAddress().getStreet());
@@ -162,7 +159,7 @@ public class BeanComposerTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_subclass_error() throws JSaParException {
+    public final void testCreateJavaObjects_subclass_error() throws JSaParException, IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new StringCell("address.doNotExist", "Stigen"));
@@ -177,6 +174,7 @@ public class BeanComposerTest {
         RecordingErrorEventListener errorEventListener = new RecordingErrorEventListener();
         composer.addComposedEventListener(beanEventListener);
         composer.addErrorEventListener(errorEventListener);
+        composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertEquals(1, errorEventListener.getErrors().size());
         assertEquals(1, objects.size());
@@ -191,7 +189,7 @@ public class BeanComposerTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_null_value() throws JSaParException {
+    public final void testCreateJavaObjects_null_value() throws JSaParException, IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new StringCell("firstName", "Jonas"));
@@ -203,6 +201,7 @@ public class BeanComposerTest {
         BeanComposer composer = new BeanComposer();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
         composer.addComposedEventListener(beanEventListener);
+        composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertEquals(1, objects.size());
         assertEquals("Jonas", objects.get(0).getFirstName());

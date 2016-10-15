@@ -43,7 +43,10 @@ public class FixedWidthControlCellParserTest {
         addSchemaLinesOneCharControl(schema);
 
         Reader reader = new StringReader(toParse);
-        Document doc = build(reader, schema);
+        FixedWidthParser parser = new FixedWidthParserFlat(reader, schema);
+        DocumentBuilderLineEventListener builder = new DocumentBuilderLineEventListener();
+        parser.parse(builder, new ExceptionErrorEventListener());
+        Document doc = builder.getDocument();
 
         checkResult(doc);
     }
