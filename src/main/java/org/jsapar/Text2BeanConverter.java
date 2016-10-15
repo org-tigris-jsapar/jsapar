@@ -2,15 +2,9 @@ package org.jsapar;
 
 import org.jsapar.compose.bean.BeanComposedEventListener;
 import org.jsapar.compose.bean.BeanComposer;
-import org.jsapar.error.Error;
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.error.RecordingErrorEventListener;
-import org.jsapar.parse.*;
 import org.jsapar.schema.Schema;
 
 import java.io.Reader;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by stejon0 on 2016-02-13.

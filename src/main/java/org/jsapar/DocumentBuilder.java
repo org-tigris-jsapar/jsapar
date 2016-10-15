@@ -2,6 +2,7 @@ package org.jsapar;
 
 import org.jsapar.model.Document;
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
 
@@ -18,7 +19,6 @@ import java.io.IOException;
  * Created by stejon0 on 2016-08-14.
  */
 public class DocumentBuilder {
-    private Document document = new Document();
     private Parser parser;
 
     public DocumentBuilder(Parser parser, ErrorEventListener errorEventListener) {
@@ -35,17 +35,10 @@ public class DocumentBuilder {
     }
 
     public Document build() throws IOException, JSaParException {
-        parser.addLineEventListener(new LineEventListener() {
-
-            @Override
-            public void lineParsedEvent(LineParsedEvent event) {
-                document.addLine(event.getLine());
-            }
-        });
-
-        parser.parse();
-        Document resultDocument = this.document;
-        this.document = new Document();
-        return resultDocument;
+        try(DocumentBuilderLineEventListener eventListener = new DocumentBuilderLineEventListener()) {
+            parser.addLineEventListener(eventListener);
+            parser.parse();
+            return eventListener.getDocument();
+        }
     }
 }

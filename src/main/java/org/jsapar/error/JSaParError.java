@@ -6,18 +6,18 @@ import java.io.StringWriter;
 /**
  * Created by stejon0 on 2016-07-12.
  */
-public class Error {
+public class JSaParError {
     private final String    errorDescription;
     private final Throwable exception;
 
-    public Error(String errorDescription, Throwable exception) {
+    public JSaParError(String errorDescription, Throwable exception) {
         this.errorDescription = errorDescription.endsWith(exception.getMessage()) ?
                 errorDescription :
                 errorDescription + " - " + exception.getMessage();
         this.exception = exception;
     }
 
-    public Error(String errorDescription) {
+    public JSaParError(String errorDescription) {
         this.errorDescription = errorDescription;
         this.exception = null;
     }

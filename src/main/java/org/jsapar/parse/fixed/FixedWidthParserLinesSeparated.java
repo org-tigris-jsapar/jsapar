@@ -23,6 +23,21 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
 
     LineReader lineReader;
 
+    /**
+     * Mainly for testing
+     * @param reader The reader to read from.
+     * @param schema The schema to use.
+     */
+    public FixedWidthParserLinesSeparated(Reader reader, FixedWidthSchema schema) {
+        this(reader, schema, new ParseConfig());
+    }
+
+    /**
+     * Creates a parser for fixed with cells where lines are separated.
+     * @param reader The reader to read from.
+     * @param schema The schema to use.
+     * @param config The parse configuration to use.
+     */
     public FixedWidthParserLinesSeparated(Reader reader, FixedWidthSchema schema, ParseConfig config) {
         super(schema, config);
         lineReader = new ReaderLineReader(schema.getLineSeparator(), reader);

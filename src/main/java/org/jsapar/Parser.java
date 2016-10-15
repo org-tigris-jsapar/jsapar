@@ -17,6 +17,4 @@ public interface Parser {
 
     void parse() throws JSaParException, IOException;
 
-    void lineParsedEvent(LineParsedEvent event);
-    void errorEvent(ErrorEvent event);
 }

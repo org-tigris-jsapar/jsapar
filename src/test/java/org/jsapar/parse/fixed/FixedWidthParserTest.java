@@ -6,12 +6,16 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
+import org.jsapar.error.ExceptionErrorEventListener;
+import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.model.Document;
 import org.jsapar.JSaParException;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseException;
+import org.jsapar.parse.csv.CsvParser;
+import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
@@ -41,8 +45,8 @@ public class FixedWidthParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        Document doc = builder.parse(reader, schema);
+
+        Document doc = build(reader, schema);
 
         assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
         assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
@@ -51,32 +55,12 @@ public class FixedWidthParserTest {
         assertEquals("Stenberg", doc.getLine(1).getCell("Last name").getStringValue());
     }
 
-
-    private class DocumentBuilder {
-        private Document             document = new Document();
-        private LineEventListener listener;
-
-        public DocumentBuilder() {
-            listener = new LineEventListener() {
-
-                @Override
-                public void lineErrorEvent(ErrorEvent event) throws ParseException {
-                    throw new ParseException(event.getError());
-                }
-
-                @Override
-                public void lineParsedEvent(LineParsedEvent event) {
-                    document.addLine(event.getLine());
-                }
-            };
-        }
-
-        public Document parse(java.io.Reader reader, FixedWidthSchema schema) throws JSaParException, IOException {
-
-            FixedWidthParser parser = new FixedWidthParserFlat(reader, schema);
-            parser.parse(listener, );
-            return this.document;
-        }
+    private Document build(Reader reader, FixedWidthSchema schema) throws IOException {
+        FixedWidthParser parser = new FixedWidthParserFlat(reader, schema);
+        DocumentBuilderLineEventListener builder = new DocumentBuilderLineEventListener();
+        parser.parse(builder, new ExceptionErrorEventListener());
+        return builder.getDocument();
     }
+
 
 }

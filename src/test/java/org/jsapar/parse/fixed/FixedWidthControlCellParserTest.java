@@ -7,6 +7,7 @@ import java.io.Reader;
 import java.io.StringReader;
 
 import org.jsapar.error.ErrorEvent;
+import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.parse.*;
 import org.jsapar.model.Document;
 import org.jsapar.JSaParException;
@@ -42,8 +43,7 @@ public class FixedWidthControlCellParserTest {
         addSchemaLinesOneCharControl(schema);
 
         Reader reader = new StringReader(toParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        Document doc = builder.parse(reader, schema);
+        Document doc = build(reader, schema);
 
         checkResult(doc);
     }
@@ -100,8 +100,7 @@ public class FixedWidthControlCellParserTest {
         addSchemaLinesOneCharControl(schema);
 
         Reader reader = new StringReader(toParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        Document doc = builder.parse(reader, schema);
+        Document doc = build(reader, schema);
 
         checkResult(doc);
     }
@@ -134,8 +133,7 @@ public class FixedWidthControlCellParserTest {
         addSchemaLinesTwoCharControl(schema);
 
         Reader reader = new StringReader(toParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        Document doc = builder.parse(reader, schema);
+        Document doc = build(reader, schema);
 
         checkResult(doc);
     }
@@ -152,14 +150,14 @@ public class FixedWidthControlCellParserTest {
     public void testParse_errorOnUndefinedLineType() throws JSaParException, IOException {
         String toParse = "X JonasStenberg   ";
         org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
-        schema.setIfUndefinedLineType(true);
         schema.setLineSeparator("\r\n");
 
         addSchemaLinesTwoCharControl(schema);
 
         Reader reader = new StringReader(toParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        builder.parse(reader, schema);
+        ParseConfig config = new ParseConfig();
+        config.setOnUndefinedLineType(ValidationAction.EXCEPTION);
+        Document doc = build(reader, schema, config);
     }
 
     /**
@@ -175,13 +173,13 @@ public class FixedWidthControlCellParserTest {
         String toParse = "N JonasStenberg   \r\nXXStorgatan 123 45          \r\n\r\nN Fred Bergsten";
         org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("\r\n");
-        schema.setIfUndefinedLineType(false);
 
         addSchemaLinesTwoCharControl(schema);
 
         Reader reader = new StringReader(toParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        Document doc = builder.parse(reader, schema);
+        ParseConfig config = new ParseConfig();
+        config.setOnUndefinedLineType(ValidationAction.IGNORE_LINE);
+        Document doc = build(reader, schema, config);
 
         assertEquals(2, doc.getNumberOfLines());
         assertEquals("Jonas", doc.getLine(0).getCell("First name").getStringValue());
@@ -191,32 +189,16 @@ public class FixedWidthControlCellParserTest {
         assertEquals("Bergsten", doc.getLine(1).getCell("Last name").getStringValue());
     }
 
-    private class DocumentBuilder {
-        private Document          document = new Document();
-        private LineEventListener listener;
-
-        public DocumentBuilder() {
-            listener = new LineEventListener() {
-
-                @Override
-                public void lineErrorEvent(ErrorEvent event) throws ParseException {
-                    throw new ParseException(event.getError());
-                }
-
-                @Override
-                public void lineParsedEvent(LineParsedEvent event) {
-                    document.addLine(event.getLine());
-                }
-            };
-        }
-
-        public Document parse(java.io.Reader reader, FixedWidthSchema schema) throws JSaParException,
-                IOException {
-            SchemaParserFactory factory = new SchemaParserFactory();
-            SchemaParser parser = factory.makeSchemaParser(schema, reader, parseConfig);
-            parser.parse(listener, );
-            return this.document;
-        }
+    private Document build(Reader reader, FixedWidthSchema schema) throws IOException {
+        return build(reader, schema, new ParseConfig());
     }
+
+    private Document build(Reader reader, FixedWidthSchema schema, ParseConfig config) throws IOException {
+        FixedWidthParser parser = new FixedWidthParserLinesSeparated(reader, schema, config);
+        DocumentBuilderLineEventListener builder = new DocumentBuilderLineEventListener();
+        parser.parse(builder, new ExceptionErrorEventListener());
+        return builder.getDocument();
+    }
+
 
 }

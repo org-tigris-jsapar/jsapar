@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.ParseException;
 
 import static org.junit.Assert.*;
 
@@ -114,7 +115,7 @@ public class FixedWidthCellComposerTest {
     }
 
     @Test
-    public final void testOutput_Default() throws IOException, JSaParException {
+    public final void testOutput_Default() throws IOException, JSaParException, ParseException {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Size", 11);
         schemaCell.setDefaultValue("10");
 

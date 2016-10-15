@@ -21,7 +21,21 @@ public class FixedWidthParserFlat extends FixedWidthParser{
 
     private BufferedReader reader;
 
+    /**
+     * Mainly for testing, using default parse config.
+     * @param reader The reader to use.
+     * @param schema The schema to use.
+     */
+    public FixedWidthParserFlat(Reader reader, FixedWidthSchema schema) {
+        this(reader, schema, new ParseConfig());
+    }
 
+    /**
+     * Creates a fixed width parser for flat files without line separators.
+     * @param reader The reader to use.
+     * @param schema The schema to use.
+     * @param config Configuration while parsing.
+     */
     public FixedWidthParserFlat(Reader reader, FixedWidthSchema schema, ParseConfig config) {
         super(schema, config);
         this.reader = new BufferedReader(reader);

@@ -1,11 +1,11 @@
 package org.jsapar.parse;
 
-import org.jsapar.error.Error;
+import org.jsapar.error.JSaParError;
 
 /**
  * Created by stejon0 on 2016-07-12.
  */
-public class LineParseError extends Error {
+public class LineParseError extends JSaParError {
     private long      lineNumber;
 
     public LineParseError(long lineNumber, String errorDescription) {

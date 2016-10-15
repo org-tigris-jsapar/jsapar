@@ -37,70 +37,8 @@ public class CsvControlCellParserTest {
      * @throws IOException
      * @throws JSaParException
      */
-    @Test
-    public void testParse() throws JSaParException, IOException {
-        CsvSchema schema = new CsvSchema();
-        schema.setLineSeparator("\n");
-        CsvSchemaLine schemaLine = new CsvSchemaLine("Address");
-        schemaLine.setCellSeparator(":");
-        CsvSchemaCell schemaCell = new CsvSchemaCell("type");
-        schemaCell.setLineCondition(new MatchingCellValueCondition("Address"));
-        schemaLine.addSchemaCell(schemaCell);
-        schemaLine.addSchemaCell(new CsvSchemaCell("street"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("postcode"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("post.town"));
-        schema.addSchemaLine(schemaLine);
 
-        schemaLine = new CsvSchemaLine("Name");
-        CsvSchemaCell nameTypeSchemaCell = new CsvSchemaCell("type");
-        nameTypeSchemaCell.setLineCondition(new MatchingCellValueCondition("Name"));
-        schemaLine.addSchemaCell(nameTypeSchemaCell);
-        schemaLine.addSchemaCell(new CsvSchemaCell("first.name"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("last.name"));
-        schema.addSchemaLine(schemaLine);
 
-        String sToParse = "Name;Jonas;Stenberg\nAddress:Storgatan 4:12345:Storstan";
-        java.io.Reader reader = new java.io.StringReader(sToParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        Document doc = builder.build(reader, schema);
 
-        assertEquals(2, doc.getNumberOfLines());
-        Line line = doc.getLine(0);
-        assertEquals("Name", line.getLineType());
-        assertEquals("Jonas", line.getCell("first.name").getStringValue());
-        assertEquals("Stenberg", line.getCell("last.name").getStringValue());
-
-        line = doc.getLine(1);
-        assertEquals("Address", line.getLineType());
-        assertEquals("Storgatan 4", line.getCell("street").getStringValue());
-        assertEquals("12345", line.getCell("postcode").getStringValue());
-        assertEquals("Storstan", line.getCell("post.town").getStringValue());
-    }
-
-    private class DocumentBuilder {
-        private Document document = new Document();
-        private LineEventListener listener;
-
-        public DocumentBuilder() {
-            listener = new LineEventListener() {
-
-                @Override
-                public void lineErrorEvent(ErrorEvent event) throws ParseException {
-                    throw new ParseException(event.getError());
-                }
-
-                @Override
-                public void lineParsedEvent(LineParsedEvent event) {
-                    document.addLine(event.getLine());
-                }
-            };
-        }
-
-        public Document build(java.io.Reader reader, CsvSchema schema) throws JSaParException, IOException {
-            CsvParser parser = new CsvParser(reader, schema, parseConfig);
-            parser.parse(listener, );
-            return this.document;
-        }
-    }
     
 }

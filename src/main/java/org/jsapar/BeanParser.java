@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.logging.Logger;
 
+import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.BigDecimalCell;
 import org.jsapar.model.BooleanCell;
@@ -140,11 +141,11 @@ public class BeanParser extends  AbstractParser implements Parser{
                     }
                 }
             } catch (IllegalArgumentException e) {
-                errorListener.errorEvent(new CellErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - Illegal argument in getter method.")));
+                errorListener.errorEvent(new ErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - Illegal argument in getter method.")));
             } catch (IllegalAccessException e) {
-                errorListener.errorEvent(new CellErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - attribute getter does not have public access.")));
+                errorListener.errorEvent(new ErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - attribute getter does not have public access.")));
             } catch (InvocationTargetException e) {
-                errorListener.errorEvent(new CellErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - getter method fails to execute.")));
+                errorListener.errorEvent(new ErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - getter method fails to execute.")));
             }
         }
     }

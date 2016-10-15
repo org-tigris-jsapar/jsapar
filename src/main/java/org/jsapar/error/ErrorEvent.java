@@ -1,13 +1,11 @@
 package org.jsapar.error;
 
-import org.jsapar.parse.LineParseError;
-
 import java.util.EventObject;
 
 public final class ErrorEvent extends EventObject {
-    final Error error;
+    final JSaParError error;
 
-    public ErrorEvent(Object source, Error error) {
+    public ErrorEvent(Object source, JSaParError error) {
         super(source);
         this.error = error;
     }
@@ -15,7 +13,7 @@ public final class ErrorEvent extends EventObject {
     /**
      * @return the error
      */
-    public Error getError() {
+    public JSaParError getError() {
         return error;
     }
 

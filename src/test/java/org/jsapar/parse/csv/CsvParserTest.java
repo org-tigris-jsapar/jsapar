@@ -3,8 +3,12 @@ package org.jsapar.parse.csv;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.io.Reader;
 
+import org.jsapar.DocumentBuilder;
 import org.jsapar.error.ErrorEvent;
+import org.jsapar.error.ExceptionErrorEventListener;
+import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.model.BooleanCell;
 import org.jsapar.model.CellType;
@@ -13,10 +17,7 @@ import org.jsapar.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseException;
-import org.jsapar.schema.CsvSchema;
-import org.jsapar.schema.CsvSchemaCell;
-import org.jsapar.schema.CsvSchemaLine;
-import org.jsapar.schema.SchemaCellFormat;
+import org.jsapar.schema.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,8 +39,7 @@ public class CsvParserTest {
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg;Hemgatan 19;111 22;Stockholm";
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        Document doc = builder.build(reader, schema);
+        Document doc = build(schema, reader);
 
         assertEquals(1, doc.getNumberOfLines());
 
@@ -58,8 +58,7 @@ public class CsvParserTest {
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg;Hemgatan 19;111 22;Stockholm" + System.getProperty("line.separator");
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        Document doc = builder.build(reader, schema);
+        Document doc = build(schema, reader);
 
         assertEquals(1, doc.getNumberOfLines());
 
@@ -78,8 +77,7 @@ public class CsvParserTest {
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator") + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        Document doc = builder.build(reader, schema);
+        Document doc = build(schema, reader);
 
         Line line = doc.getLine(0);
         assertEquals("Jonas", line.getCell(0).getStringValue());
@@ -98,8 +96,7 @@ public class CsvParserTest {
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator")
                 + System.getProperty("line.separator") + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        Document doc = builder.build(reader, schema);
+        Document doc = build(schema, reader);
 
         assertEquals(2, doc.getNumberOfLines());
 
@@ -120,8 +117,7 @@ public class CsvParserTest {
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator") + " \t \t  "
                 + System.getProperty("line.separator") + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        Document doc = builder.build(reader, schema);
+        Document doc = build(schema, reader);
 
         assertEquals(2, doc.getNumberOfLines());
 
@@ -136,7 +132,7 @@ public class CsvParserTest {
 
 
     @Test
-    public final void testParse_firstLineAsHeader() throws IOException, JSaParException {
+    public final void testParse_firstLineAsHeader() throws IOException, JSaParException, java.text.ParseException {
         CsvSchema schema = new CsvSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine();
         CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe Size", new SchemaCellFormat(CellType.INTEGER));
@@ -152,8 +148,7 @@ public class CsvParserTest {
         String sToParse = "First Name;Last Name;Shoe Size" + sLineSep + "Jonas;Stenberg;41" + sLineSep
                 + "Nils;Nilsson;";
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        Document doc = builder.build(reader, schema);
+        Document doc = build(schema, reader);
 
         Line line = doc.getLine(0);
         assertEquals("Jonas", line.getCell("First Name").getStringValue());
@@ -179,8 +174,7 @@ public class CsvParserTest {
         String sLineSep = System.getProperty("line.separator");
         String sToParse = "$First Name$;$Last Name$" + sLineSep + "Jonas;$Stenberg$" + sLineSep + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        DocumentBuilder builder = new DocumentBuilder();
-        Document doc = builder.build(reader, schema);
+        Document doc = build(schema, reader);
 
         Line line = doc.getLine(0);
         assertEquals("Jonas", line.getCell("First Name").getStringValue());
@@ -191,30 +185,50 @@ public class CsvParserTest {
         assertEquals("Nilsson", line.getCell("Last Name").getStringValue());
     }
 
-    private class DocumentBuilder {
-        private Document             document = new Document();
-        private LineEventListener listener;
+    @Test
+    public void testParseControlCell() throws JSaParException, IOException {
+        CsvSchema schema = new CsvSchema();
+        schema.setLineSeparator("\n");
+        CsvSchemaLine schemaLine = new CsvSchemaLine("Address");
+        schemaLine.setCellSeparator(":");
+        CsvSchemaCell schemaCell = new CsvSchemaCell("type");
+        schemaCell.setLineCondition(new MatchingCellValueCondition("Address"));
+        schemaLine.addSchemaCell(schemaCell);
+        schemaLine.addSchemaCell(new CsvSchemaCell("street"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("postcode"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("post.town"));
+        schema.addSchemaLine(schemaLine);
 
-        public DocumentBuilder() {
-            listener = new LineEventListener() {
+        schemaLine = new CsvSchemaLine("Name");
+        CsvSchemaCell nameTypeSchemaCell = new CsvSchemaCell("type");
+        nameTypeSchemaCell.setLineCondition(new MatchingCellValueCondition("Name"));
+        schemaLine.addSchemaCell(nameTypeSchemaCell);
+        schemaLine.addSchemaCell(new CsvSchemaCell("first.name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("last.name"));
+        schema.addSchemaLine(schemaLine);
 
-                @Override
-                public void lineErrorEvent(ErrorEvent event) throws ParseException {
-                    throw new ParseException(event.getError());
-                }
+        String sToParse = "Name;Jonas;Stenberg\nAddress:Storgatan 4:12345:Storstan";
+        java.io.Reader reader = new java.io.StringReader(sToParse);
+        Document doc = build(schema, reader);
 
-                @Override
-                public void lineParsedEvent(LineParsedEvent event) {
-                    document.addLine(event.getLine());
-                }
-            };
-        }
+        assertEquals(2, doc.getNumberOfLines());
+        Line line = doc.getLine(0);
+        assertEquals("Name", line.getLineType());
+        assertEquals("Jonas", line.getCell("first.name").getStringValue());
+        assertEquals("Stenberg", line.getCell("last.name").getStringValue());
 
-        public Document build(java.io.Reader reader, CsvSchema schema) throws JSaParException, IOException {
-            CsvParser parser = new CsvParser(reader, schema, parseConfig);
-            parser.parse(listener, );
-            return this.document;
-        }
+        line = doc.getLine(1);
+        assertEquals("Address", line.getLineType());
+        assertEquals("Storgatan 4", line.getCell("street").getStringValue());
+        assertEquals("12345", line.getCell("postcode").getStringValue());
+        assertEquals("Storstan", line.getCell("post.town").getStringValue());
+    }
+
+    private Document build(CsvSchema schema, Reader reader) throws IOException {
+        CsvParser parser = new CsvParser(reader, schema);
+        DocumentBuilderLineEventListener builder = new DocumentBuilderLineEventListener();
+        parser.parse(builder, new ExceptionErrorEventListener());
+        return builder.getDocument();
     }
 
 }

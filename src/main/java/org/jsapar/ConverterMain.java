@@ -3,19 +3,12 @@
  */
 package org.jsapar;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
-import java.io.Reader;
+import java.io.*;
+import java.util.List;
 import java.util.Properties;
 
-import org.jsapar.parse.CellParseError;
+import org.jsapar.error.JSaParError;
+import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.Xml2SchemaBuilder;
 
@@ -51,8 +44,10 @@ public class ConverterMain {
             java.io.Writer writer = (outFileEncoding == null) ? new java.io.FileWriter(outFileName)
                     : new OutputStreamWriter(new FileOutputStream(outFileName), outFileEncoding);
 
-            Converter converter = makeConverter(inputSchema, outputSchema);
-            java.util.List<CellParseError> parseErrors = converter.convert(inputFileReader, writer);
+            Converter converter = makeConverter(inputSchema, inputFileReader, outputSchema, writer);
+            RecordingErrorEventListener errorEventListener = new RecordingErrorEventListener();
+            converter.convert();
+            List<JSaParError> parseErrors = errorEventListener.getErrors();
 
             if (parseErrors.size() > 0)
                 System.out.println("===> Found errors while converting file " + inFileName + ": "
@@ -91,8 +86,8 @@ public class ConverterMain {
      * @param outputSchema
      * @return A new converter.
      */
-    protected Converter makeConverter(Schema inputSchema, Schema outputSchema) {
-        Converter converter = new Converter(inputSchema, outputSchema);
+    protected Converter makeConverter(Schema inputSchema, Reader reader, Schema outputSchema, Writer writer) {
+        Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
         return converter;
     }
 

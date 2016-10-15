@@ -19,6 +19,11 @@ public class CsvParser implements SchemaParser {
     private ParseConfig parseConfig;
     private ErrorHandler errorHandler = new ErrorHandler();
 
+    public CsvParser(Reader reader, CsvSchema schema) {
+        this(reader, schema, new ParseConfig());
+    }
+
+
     public CsvParser(Reader reader, CsvSchema schema, ParseConfig parseConfig) {
         this.parseConfig = parseConfig;
         lineReader = new CsvLineReader(schema.getLineSeparator(), reader);

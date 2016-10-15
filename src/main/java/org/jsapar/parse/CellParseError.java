@@ -1,6 +1,6 @@
 package org.jsapar.parse;
 
-import org.jsapar.error.Error;
+import org.jsapar.error.JSaParError;
 import org.jsapar.schema.SchemaCellFormat;
 
 /**
@@ -9,7 +9,7 @@ import org.jsapar.schema.SchemaCellFormat;
  *
  * @author Jonas Stenberg
  */
-public final class CellParseError extends Error {
+public final class CellParseError extends JSaParError {
 
     // long cellIndex=0;
     private long      lineNumber;
