@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.ParseException;
 
 import static org.junit.Assert.*;
 
@@ -19,7 +20,7 @@ import static org.junit.Assert.*;
 public class FixedWidthLineComposerTest {
 
     @Test
-    public void testOutput() throws IOException, JSaParException {
+    public void testOutput() throws IOException, JSaParException, ParseException {
         Line line = new Line();
         line.addCell(new StringCell("First name","Jonas"));
         line.addCell(new StringCell("Last name","Stenberg"));
@@ -45,7 +46,7 @@ public class FixedWidthLineComposerTest {
     }
 
     @Test
-    public void testOutput_minLength() throws IOException, JSaParException {
+    public void testOutput_minLength() throws IOException, JSaParException, ParseException {
         Line line = new Line();
         line.addCell(new StringCell("First name","Jonas"));
         line.addCell(new StringCell("Last name","Stenberg"));

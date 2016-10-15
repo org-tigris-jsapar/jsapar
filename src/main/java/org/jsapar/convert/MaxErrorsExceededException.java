@@ -5,6 +5,7 @@ package org.jsapar.convert;
 
 import java.util.List;
 
+import org.jsapar.error.JSaParError;
 import org.jsapar.parse.CellParseError;
 import org.jsapar.parse.ParseException;
 
@@ -18,26 +19,20 @@ public class MaxErrorsExceededException extends ParseException {
      * 
      */
     private static final long serialVersionUID = -8025034269584118995L;
-    private List<CellParseError> parseErrors;
+    private final List<JSaParError> errors;
 
 
-    public MaxErrorsExceededException(List<CellParseError> parseErrors) {
-        super(parseErrors.get(parseErrors.size()-1));
-        this.setParseErrors(parseErrors);
+    public MaxErrorsExceededException(JSaParError lastError, List<JSaParError> allErrors) {
+        super(lastError);
+        this.errors = allErrors;
     }
 
-    /**
-     * @param parseErrors the parseErrors to set
-     */
-    public void setParseErrors(List<CellParseError> parseErrors) {
-        this.parseErrors = parseErrors;
-    }
 
     /**
-     * @return the parseErrors
+     * @return the errors
      */
-    public List<CellParseError> getParseErrors() {
-        return parseErrors;
+    public List<JSaParError> getErrors() {
+        return errors;
     }
     
     @Override

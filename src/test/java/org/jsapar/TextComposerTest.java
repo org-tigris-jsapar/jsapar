@@ -146,7 +146,7 @@ public class TextComposerTest {
 
         StringWriter writer = new StringWriter();
         TextComposer composer = new TextComposer(schema, writer);
-        assertTrue(composer.writeLine(line1, 2));
+        assertTrue(composer.writeLine(line1));
 
         String sExpected = "Jonas;Stenberg";
 

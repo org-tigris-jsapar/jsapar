@@ -51,107 +51,107 @@ public class SchemaCellTest {
     }
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      */
     @Test
-    public void testMakeCell_String() throws ParseException {
+    public void testMakeCell_String() throws ParseException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
 
-        Cell cell = schemaCell.makeCell("the value", listener, nLineNumber);
+        Cell cell = schemaCell.makeCell("the value");
         assertEquals("the value", cell.getStringValue());
     }
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      */
     @Test
-    public void testMakeCell_DefaultString() throws ParseException {
+    public void testMakeCell_DefaultString() throws ParseException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultCell(new StringCell("test","TheDefault"));
 
-        Cell cell = schemaCell.makeCell("", listener, nLineNumber);
+        Cell cell = schemaCell.makeCell("");
         assertEquals("TheDefault", cell.getStringValue());
     }
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      */
     @Test
-    public void testMakeCell_missing_no_default() throws ParseException {
+    public void testMakeCell_missing_no_default() throws ParseException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
 
-        Cell cell = schemaCell.makeCell("", listener, nLineNumber);
+        Cell cell = schemaCell.makeCell("");
         assertEquals("", cell.getStringValue());
     }
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      */
     @Test
-    public void testMakeCell_DefaultValue() throws ParseException {
+    public void testMakeCell_DefaultValue() throws ParseException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultValue("TheDefault");
 
-        Cell cell = schemaCell.makeCell("", listener, nLineNumber);
+        Cell cell = schemaCell.makeCell("");
         assertEquals("TheDefault", cell.getStringValue());
     }
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      * @throws SchemaException 
      */
     @Test
-    public void testMakeCell_DefaultValue_float() throws ParseException, SchemaException {
+    public void testMakeCell_DefaultValue_float() throws ParseException, SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
         schemaCell.setDefaultValue("123456,78901");
 
-        Cell cell = schemaCell.makeCell("", listener, nLineNumber);
+        Cell cell = schemaCell.makeCell("");
         assertEquals(123456.78901, ((FloatCell)cell).getNumberValue().doubleValue(), 0.0001);
     }
     
     @Test
-    public void testMakeCell_empty_pattern() throws ParseException, SchemaException {
+    public void testMakeCell_empty_pattern() throws ParseException, SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
         schemaCell.setEmptyPattern("NULL");
 
-        Cell nonEmptyCell = schemaCell.makeCell("1,25", listener, nLineNumber);
+        Cell nonEmptyCell = schemaCell.makeCell("1,25");
         assertEquals(1.25, ((FloatCell)nonEmptyCell).getNumberValue().doubleValue(), 0.0001);
 
-        Cell emptyCell = schemaCell.makeCell("NULL", listener, nLineNumber);
+        Cell emptyCell = schemaCell.makeCell("NULL");
         assertTrue(emptyCell instanceof EmptyCell);
         
     }
     
     @Test
-    public void testMakeCell_empty_pattern_default() throws ParseException, SchemaException {
+    public void testMakeCell_empty_pattern_default() throws ParseException, SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
         schemaCell.setEmptyPattern("NULL");
         schemaCell.setDefaultValue("123456,78901");
 
-        Cell cell = schemaCell.makeCell("NULL", listener, nLineNumber);
+        Cell cell = schemaCell.makeCell("NULL");
         assertEquals(123456.78901, ((FloatCell)cell).getNumberValue().doubleValue(), 0.0001);
     }
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      */
     @Test
-    public void testFormat_emptyString_DefaultValue() throws ParseException {
+    public void testFormat_emptyString_DefaultValue() throws ParseException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultValue("TheDefault");
 
@@ -160,12 +160,12 @@ public class SchemaCellTest {
     }
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      */
     @Test
-    public void testFormat_empty_DefaultValue() throws ParseException {
+    public void testFormat_empty_DefaultValue() throws ParseException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultValue("TheDefault");
 
@@ -174,12 +174,12 @@ public class SchemaCellTest {
     }
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      */
     @Test
-    public void testFormat_null_DefaultValue() throws ParseException {
+    public void testFormat_null_DefaultValue() throws ParseException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultValue("TheDefault");
 
@@ -187,7 +187,7 @@ public class SchemaCellTest {
     }
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      */
@@ -201,7 +201,7 @@ public class SchemaCellTest {
 
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      */
@@ -213,13 +213,13 @@ public class SchemaCellTest {
     }
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      * @throws SchemaException 
      */
     @Test
-    public void testFormat_DefaultValue_float() throws ParseException, SchemaException {
+    public void testFormat_DefaultValue_float() throws ParseException, SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
         schemaCell.setDefaultValue("123456,78901");
@@ -229,7 +229,7 @@ public class SchemaCellTest {
     }
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      * @throws SchemaException 
@@ -244,7 +244,7 @@ public class SchemaCellTest {
     }    
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      * @throws SchemaException 
@@ -258,7 +258,7 @@ public class SchemaCellTest {
     }    
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      * @throws SchemaException 
@@ -273,7 +273,7 @@ public class SchemaCellTest {
     }
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      * @throws SchemaException 
@@ -288,46 +288,37 @@ public class SchemaCellTest {
     }    
     
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      * @throws SchemaException
      */
     @Test
-    public void testMakeCell_RegExp() throws ParseException, SchemaException {
+    public void testMakeCell_RegExp() throws ParseException, SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING, "[A-Z]{3}[0-9]{0,3}de"));
 
-        Cell cell = schemaCell.makeCell("ABC123de", listener, nLineNumber);
+        Cell cell = schemaCell.makeCell("ABC123de");
         assertEquals("ABC123de", cell.getStringValue());
     }
 
     /**
-     * Test method for {@link SchemaCell#makeCell(String, ErrorEventListener, long)}.
+     * Test method for {@link SchemaCell#makeCell(String)}.
      * 
      * @throws ParseException
      * @throws SchemaException
      */
     @Test(expected=ParseException.class)
-    public void testMakeCell_RegExp_fail() throws SchemaException, ParseException {
+    public void testMakeCell_RegExp_fail() throws SchemaException, ParseException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING, "[A-Z]{3}[0-9]{0,3}de"));
 
         @SuppressWarnings("unused")
         Cell cell;
-        cell = schemaCell.makeCell("AB1C123de", listener, nLineNumber);
+        cell = schemaCell.makeCell("AB1C123de");
         fail("Should throw ParseException for invalid RegExp validation.");
     }
 
-    /**
-     * Test method for
-     * {@link org.jsapar.schema.SchemaCell#makeCell(Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
-     * .
-     * 
-     * @throws java.text.ParseException
-     * @throws SchemaException
-     * @throws ParseException
-     */
     @Test
     public void testMakeCell_CellTypeStringStringFormat() throws ParseException, SchemaException,
             java.text.ParseException {
@@ -335,11 +326,7 @@ public class SchemaCellTest {
         assertEquals("the value", cell.getStringValue());
     }
 
-    /**
-     * Test method for
-     * {@link org.jsapar.schema.SchemaCell#makeCell(Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
-     * .
-     */
+
     @Test
     public void testMakeCell_UnfinishedInteger() throws SchemaException, ParseException {
         @SuppressWarnings("unused")
@@ -353,13 +340,7 @@ public class SchemaCellTest {
         fail("Method should throw exception.");
     }
 
-    /**
-     * Test method for
-     * {@link org.jsapar.schema.SchemaCell#makeCell(Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
-     * .
-     * 
-     * @throws java.text.ParseException
-     */
+
     @Test
     public void testMakeCell_Integer() throws SchemaException, ParseException, java.text.ParseException {
         Cell cell;
@@ -368,30 +349,18 @@ public class SchemaCellTest {
         assertEquals(12345, ((IntegerCell)cell).getNumberValue().intValue());
     }
 
-    /**
-     * Test method for
-     * {@link org.jsapar.schema.SchemaCell#makeCell(Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
-     * .
-     * 
-     * @throws java.text.ParseException
-     */
     @Test
     public void testMakeCell_Integer_DefaultValue() throws SchemaException, ParseException, java.text.ParseException {
         SchemaCell schemaCell = new TestSchemaCell("A number");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
         schemaCell.setDefaultValue("42");
         Cell cell;
-        cell = schemaCell.makeCell("", listener, nLineNumber);
+        cell = schemaCell.makeCell("");
         assertEquals(IntegerCell.class, cell.getClass());
         assertEquals(42, ((IntegerCell)cell).getNumberValue().intValue());
         assertEquals("A number", cell.getName());
     }
 
-    /**
-     * Test method for
-     * {@link org.jsapar.schema.SchemaCell#makeCell(Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
-     * .
-     */
     @Test
     public void testMakeCell_UnfinishedFloat() throws SchemaException, ParseException {
         @SuppressWarnings("unused")
@@ -406,13 +375,6 @@ public class SchemaCellTest {
         fail("Method should throw exception.");
     }
 
-    /**
-     * Test method for
-     * {@link org.jsapar.schema.SchemaCell#makeCell(Cell.CellType, java.lang.String, java.lang.String, java.text.Format)}
-     * .
-     * 
-     * @throws java.text.ParseException
-     */
     @Test
     public void testMakeCell_Float() throws SchemaException, ParseException, java.text.ParseException {
         Cell cell;
@@ -425,14 +387,14 @@ public class SchemaCellTest {
      * @throws ParseException
      */
     @Test
-    public void testMakeCell_Integer_RangeValid() throws ParseException {
+    public void testMakeCell_Integer_RangeValid() throws ParseException, java.text.ParseException {
 
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
         schemaCell.setMinValue(new IntegerCell("test",0));
         schemaCell.setMaxValue(new IntegerCell("test",54321));
 
-        Cell cell = schemaCell.makeCell("12345", listener, nLineNumber);
+        Cell cell = schemaCell.makeCell("12345");
         assertEquals(IntegerCell.class, cell.getClass());
         assertEquals(12345, ((IntegerCell)cell).getNumberValue().intValue());
 
@@ -443,13 +405,13 @@ public class SchemaCellTest {
      * @throws ParseException
      */
     @Test(expected = ParseException.class)
-    public void testMakeCell_Integer_MinRangeNotValid() throws ParseException {
+    public void testMakeCell_Integer_MinRangeNotValid() throws ParseException, java.text.ParseException {
 
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
         schemaCell.setMinValue(new IntegerCell("test",54321));
         schemaCell.setMaxValue(new IntegerCell("test",54322));
-        schemaCell.makeCell("12345", listener, nLineNumber);
+        schemaCell.makeCell("12345");
     }
 
     /**
@@ -457,13 +419,13 @@ public class SchemaCellTest {
      * @throws ParseException
      */
     @Test(expected = ParseException.class)
-    public void testMakeCell_Integer_MaxRangeNotValid() throws ParseException {
+    public void testMakeCell_Integer_MaxRangeNotValid() throws ParseException, java.text.ParseException {
 
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
         schemaCell.setMinValue(new IntegerCell("test",0));
         schemaCell.setMaxValue(new IntegerCell("test",100));
-        schemaCell.makeCell("12345", listener, nLineNumber);
+        schemaCell.makeCell("12345");
     }
 
     /**

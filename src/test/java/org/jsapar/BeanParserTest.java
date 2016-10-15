@@ -5,10 +5,13 @@ package org.jsapar;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.DateCell;
 import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;
@@ -39,13 +42,8 @@ public class BeanParserTest {
     public void tearDown() throws Exception {
     }
 
-    /**
-     * Test method for {@link BeanParser#parse(java.util.Collection)}.
-     * 
-     * @throws JSaParException
-     */
     @Test
-    public void testBuild() throws JSaParException {
+    public void testBuild() throws JSaParException, IOException {
         List<TstPerson> people = new ArrayList<TstPerson>(2);
         TstPerson person = new TstPerson();
         person.setFirstName("Jonas");
@@ -55,8 +53,9 @@ public class BeanParserTest {
         person.setFirstName("Test2");
         people.add(person);
 
-        BeanParser builder = new BeanParser(iterator);
-        Document doc = builder.parse(people);
+        BeanParser parser = new BeanParser(people);
+        DocumentBuilder builder = new DocumentBuilder(parser);
+        Document doc = builder.build();
 
         assertEquals(2, doc.getNumberOfLines());
         Line line = doc.getLine(0);
@@ -67,11 +66,6 @@ public class BeanParserTest {
 
     }
 
-    /**
-     * Test method for {@link BeanParser#parseBean(java.lang.Object)}.
-     * 
-     * @throws JSaParException
-     */
     @Test
     public void testBuildLine() throws JSaParException {
         TstPerson person = new TstPerson();
@@ -83,8 +77,8 @@ public class BeanParserTest {
         person.setStreetNumber(4711);
         person.setDoor('A');
 
-        BeanParser builder = new BeanParser(iterator);
-        Line line = builder.parseBean(person);
+        BeanParser builder = new BeanParser((Collection) null);
+        Line line = builder.parseBean(person, new ExceptionErrorEventListener());
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals(8, line.size());
         assertEquals("Jonas", line.getCell("firstName").getStringValue());
@@ -95,17 +89,13 @@ public class BeanParserTest {
         assertEquals("A", line.getStringCellValue("door"));
     }
 
-    /**
-     * Test method for {@link BeanParser#parseBean(java.lang.Object)}.
-     * @throws JSaParException
-     */
     @Test
     public void testBuildLine_subClass() throws JSaParException {
         TstPerson person = new TstPerson();
         person.setFirstName("Jonas");
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
-        BeanParser builder = new BeanParser(iterator);
-        Line line = builder.parseBean(person);
+        BeanParser builder = new BeanParser((Collection) null);
+        Line line = builder.parseBean(person, new ExceptionErrorEventListener());
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", line.getStringCellValue("address.street"));
         assertEquals("Staden", line.getStringCellValue("address.town"));
@@ -114,18 +104,14 @@ public class BeanParserTest {
         Assert.assertNull(line.getStringCellValue("address.owner.firstName"));
     }
 
-    /**
-     * Test method for {@link BeanParser#parseBean(java.lang.Object)}.
-     * @throws JSaParException
-     */
     @Test
     public void testBuildLine_subClass_multiplePaths() throws JSaParException {
         TstPerson person = new TstPerson();
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
         person.getAddress().setSubAddress(new TstPostAddress("Road", "Town"));
         person.setWorkAddress(new TstPostAddress("Gatan", "Byn"));
-        BeanParser builder = new BeanParser(iterator);
-        Line line = builder.parseBean(person);
+        BeanParser builder = new BeanParser((Collection) null);
+        Line line = builder.parseBean(person, new ExceptionErrorEventListener());
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", line.getStringCellValue("address.street"));
         assertEquals("Staden", line.getStringCellValue("address.town"));
@@ -135,19 +121,15 @@ public class BeanParserTest {
         assertEquals("Byn", line.getStringCellValue("workAddress.town"));
     }
 
-    /**
-     * Test method for {@link BeanParser#parseBean(java.lang.Object)}.
-     * @throws JSaParException
-     */
     @Test
     public void testBuildLine_subClass_maxOneLevel() throws JSaParException {
         TstPerson person = new TstPerson();
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
         person.getAddress().setSubAddress(new TstPostAddress("Road", "Town"));
         person.setWorkAddress(new TstPostAddress("Gatan", "Byn"));
-        BeanParser builder = new BeanParser(iterator);
+        BeanParser builder = new BeanParser((Collection) null);
         builder.setMaxSubLevels(1);
-        Line line = builder.parseBean(person);
+        Line line = builder.parseBean(person, new ExceptionErrorEventListener());
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", line.getStringCellValue("address.street"));
         assertEquals("Staden", line.getStringCellValue("address.town"));

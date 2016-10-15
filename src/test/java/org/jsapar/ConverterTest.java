@@ -11,6 +11,8 @@ import java.util.List;
 import org.jsapar.convert.LineFilter;
 import org.jsapar.convert.LineManipulator;
 import org.jsapar.convert.MaxErrorsExceededException;
+import org.jsapar.error.RecordingErrorEventListener;
+import org.jsapar.error.ThreasholdRecordingErrorEventListener;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
 import org.jsapar.parse.CellParseError;
@@ -48,14 +50,6 @@ public class ConverterTest {
     }
 
 
-    /**
-     * Test method for
-     * {@link Converter#convert(java.io.Reader, org.jsapar.parse.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
-     * .
-     * 
-     * @throws JSaParException
-     * @throws IOException
-     */
     @Test
     public void testConvert() throws IOException, JSaParException {
         String toParse = "Jonas Stenberg " + LN + "Frida Bergsten ";
@@ -77,8 +71,8 @@ public class ConverterTest {
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
-        Converter converter = new Converter(inputSchema, outputSchema);
-        converter.convert(reader, writer);
+        Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
+        converter.convert();
         reader.close();
         writer.close();
         String sResult = writer.getBuffer().toString();
@@ -88,14 +82,6 @@ public class ConverterTest {
 
     }
 
-    /**
-     * Test method for
-     * {@link Converter#convert(java.io.Reader, org.jsapar.parse.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
-     * .
-     * 
-     * @throws JSaParException
-     * @throws IOException
-     */
     @Test
     public void testConvert_error() throws IOException, JSaParException {
         String toParse = "Jonas 41       " + LN + "Frida ERROR    ";
@@ -116,28 +102,20 @@ public class ConverterTest {
         outputSchemaLine.setCellSeparator(";");
         outputSchema.addSchemaLine(outputSchemaLine);
 
-        StringWriter writer = new StringWriter();
-        StringReader reader = new StringReader(toParse);
-        Converter converter = new Converter(inputSchema, outputSchema);
-        List<CellParseError> errors = converter.convert(reader, writer);
-        reader.close();
-        writer.close();
-        String sResult = writer.getBuffer().toString();
-        String sExpected = "Jonas;41" + LN + "Frida;" + LN;
+        try (StringWriter writer = new StringWriter(); StringReader reader = new StringReader(toParse)) {
+            Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
+            RecordingErrorEventListener errorEventListener = new RecordingErrorEventListener();
+            converter.addErrorEventListener(errorEventListener);
+            converter.convert();
+            String sResult = writer.getBuffer().toString();
+            String sExpected = "Jonas;41" + LN + "Frida;" + LN;
 
-        Assert.assertEquals(1, errors.size());
-        Assert.assertEquals(sExpected, sResult);
+            Assert.assertEquals(1, errorEventListener.getErrors().size());
+            Assert.assertEquals(sExpected, sResult);
+        }
 
     }
 
-    /**
-     * Test method for
-     * {@link Converter#convert(java.io.Reader, org.jsapar.parse.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
-     * .
-     * 
-     * @throws JSaParException
-     * @throws IOException
-     */
     @Test(expected = MaxErrorsExceededException.class)
     public void testConvert_max_error() throws IOException, JSaParException {
         String toParse = "Jonas 41       " + LN + "Frida ERROR    ";
@@ -158,27 +136,15 @@ public class ConverterTest {
         outputSchemaLine.setCellSeparator(";");
         outputSchema.addSchemaLine(outputSchemaLine);
 
-        StringWriter writer = new StringWriter();
-        StringReader reader = new StringReader(toParse);
-        try {
-            Converter converter = new Converter(inputSchema, outputSchema);
-            converter.setMaxNumberOfErrors(0);
-            converter.convert(reader, writer);
-        } finally {
-            reader.close();
-            writer.close();
+        try (StringWriter writer = new StringWriter(); StringReader reader = new StringReader(toParse)) {
+            Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
+            RecordingErrorEventListener errorEventListener = new ThreasholdRecordingErrorEventListener(0);
+            converter.addErrorEventListener(errorEventListener);
+            converter.convert();
         }
 
     }
 
-    /**
-     * Test method for
-     * {@link Converter#convert(java.io.Reader, org.jsapar.parse.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
-     * .
-     * 
-     * @throws JSaParException
-     * @throws IOException
-     */
     @Test
     public void testConvert_oneLine() throws IOException, JSaParException {
         String toParse = "Jonas Stenberg ";
@@ -199,8 +165,8 @@ public class ConverterTest {
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
-        Converter converter = new Converter(inputSchema, outputSchema);
-        converter.convert(reader, writer);
+        Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
+        converter.convert();
         String sResult = writer.getBuffer().toString();
         String sExpected = "Jonas;Stenberg" + LN;
 
@@ -208,14 +174,6 @@ public class ConverterTest {
 
     }
 
-    /**
-     * Test method for
-     * {@link Converter#convert(java.io.Reader, org.jsapar.parse.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
-     * .
-     * 
-     * @throws JSaParException
-     * @throws IOException
-     */
     @Test
     public void testConvert_twoKindOfLines() throws IOException, JSaParException {
         String toParse = "This file contains names" + LN + "Jonas Stenberg "
@@ -246,8 +204,8 @@ public class ConverterTest {
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
-        Converter converter = new Converter(inputSchema, outputSchema);
-        converter.convert(reader, writer);
+        Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
+        converter.convert();
         String sResult = writer.getBuffer().toString();
         String sExpected = "This file contains names" + LN + "Jonas;Stenberg"
                 + LN + "Frida;Bergsten" + LN;
@@ -256,14 +214,6 @@ public class ConverterTest {
 
     }
 
-    /**
-     * Test method for
-     * {@link Converter#convert(java.io.Reader, org.jsapar.parse.ParseSchema, java.io.Writer, org.jsapar.schema.Schema)}
-     * .
-     * 
-     * @throws JSaParException
-     * @throws IOException
-     */
     @Test
     public void testConvert_Manipulated() throws IOException, JSaParException {
         String toParse = "Jonas Stenberg " + LN + "Frida Bergsten ";
@@ -285,14 +235,15 @@ public class ConverterTest {
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
-        Converter converter = new Converter(inputSchema, outputSchema);
+        Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
         converter.addLineManipulator(new LineManipulator() {
             @Override
-            public void manipulate(Line line) throws JSaParException {
+            public boolean manipulate(Line line) throws JSaParException {
                 line.addCell(new StringCell("Town", "Stockholm"));
+                return true;
             }
         });
-        converter.convert(reader, writer);
+        converter.convert();
         String sResult = writer.getBuffer().toString();
         String sExpected = "Jonas;Stenberg;Stockholm" + LN
                 + "Frida;Bergsten;Stockholm" + LN;
@@ -330,8 +281,8 @@ public class ConverterTest {
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
-        Converter converter = new Converter(inputSchema, outputSchema);
-        converter.convert(reader, writer);
+        Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
+        converter.convert();
         String sResult = writer.getBuffer().toString();
         String sExpected = "Jonas;Stenberg" + LN + "Frida;Bergsten"
                 + LN;
@@ -370,17 +321,17 @@ public class ConverterTest {
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
-        Converter converter = new Converter(inputSchema, outputSchema);
-        converter.setLineFilter(new LineFilter(){
+        Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
+        converter.addLineManipulator(new LineManipulator() {
             @Override
-            public boolean shouldWrite(Line line) throws JSaParException {
+            public boolean manipulate(Line line) throws JSaParException {
                 if(line.getLineType().equals("Names") && line.getCell("First name").getStringValue().equals("Tomas"))
                     return false;
                 else
                     return true;
-            }});
-
-        converter.convert(reader, writer);
+            }
+        });
+        converter.convert();
         String sResult = writer.getBuffer().toString();
         String sExpected = "Jonas;Stenberg" + LN + "Frida;Bergsten"
                 + LN;

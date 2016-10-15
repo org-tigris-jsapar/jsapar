@@ -5,10 +5,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jsapar.compose.bean.BeanComposer;
+import org.jsapar.compose.bean.RecordingBeanEventListener;
+import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.parse.CellParseError;
 import org.jsapar.model.*;
 import org.junit.After;
@@ -35,7 +39,7 @@ public class BeanComposerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects() throws JSaParException {
+    public final void testCreateJavaObjects() throws JSaParException, IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new StringCell("firstName", "Jonas"));
@@ -57,10 +61,10 @@ public class BeanComposerTest {
         document.addLine(line1);
         document.addLine(line2);
 
-        BeanComposer outputter = new BeanComposer();
-        List<CellParseError> parseErrors = new LinkedList<>();
-        java.util.List<TstPerson> objects = outputter.createBeans(document, parseErrors);
-        assertEquals("The errors: " + parseErrors, 0, parseErrors.size());
+        BeanComposer composer = new BeanComposer();
+        RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
+        composer.addComposedEventListener(beanEventListener);
+        java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertEquals(2, objects.size());
         TstPerson firstPerson = objects.get(0);
         assertEquals("Jonas", firstPerson.getFirstName());
@@ -87,11 +91,12 @@ public class BeanComposerTest {
         document.addLine(line1);
 
         BeanComposer outputter = new BeanComposer();
-        List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        java.util.List<TstPerson> objects = outputter.createBeans(document, parseErrors);
-        assertEquals("The errors: " + parseErrors, 0, parseErrors.size());
+        BeanComposer composer = new BeanComposer();
+        RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
+        composer.addComposedEventListener(beanEventListener);
+        java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertEquals(1, objects.size());
-        assertEquals(42, ((TstPerson) objects.get(0)).getShoeSize());
+        assertEquals(42, (objects.get(0)).getShoeSize());
     }
 
     @SuppressWarnings("unchecked")
@@ -104,16 +109,15 @@ public class BeanComposerTest {
 
         document.addLine(line1);
 
-        BeanComposer outputter = new BeanComposer();
-        List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        java.util.List<TstPerson> objects = outputter.createBeans(document, parseErrors);
-        assertEquals(0, parseErrors.size());
+        BeanComposer composer = new BeanComposer();
+        RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
+        composer.addComposedEventListener(beanEventListener);
+        java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertEquals(1, objects.size());
         assertEquals(1234, (objects.get(0)).getLuckyNumber());
     }
 
-    @SuppressWarnings("unchecked")
-    @Test
+    @Test(expected = ParseException.class)
     public final void testCreateJavaObjects_wrongType() throws JSaParException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
@@ -122,12 +126,10 @@ public class BeanComposerTest {
 
         document.addLine(line1);
 
-        BeanComposer outputter = new BeanComposer();
-        List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        java.util.List<TstPerson> objects = outputter.createBeans(document, parseErrors);
-        assertEquals(1, parseErrors.size());
-        Assert.assertNull(objects.get(0).getFirstName());
-        System.out.println("The (expected) error: " + parseErrors);
+        BeanComposer composer = new BeanComposer();
+        RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
+        composer.addComposedEventListener(beanEventListener);
+        java.util.List<TstPerson> objects = beanEventListener.getBeans();
     }
 
     /**
@@ -145,11 +147,10 @@ public class BeanComposerTest {
 
         document.addLine(line1);
 
-        BeanComposer outputter = new BeanComposer();
-        List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        java.util.List<TstPerson> objects = outputter.createBeans(document, parseErrors);
-        assertEquals("The errors: " + parseErrors, 0, parseErrors.size());
-        assertEquals(1, objects.size());
+        BeanComposer composer = new BeanComposer();
+        RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
+        composer.addComposedEventListener(beanEventListener);
+        java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertNotNull((objects.get(0)).getAddress());
         assertEquals("Stigen", (objects.get(0)).getAddress().getStreet());
         assertEquals("Staden", (objects.get(0)).getAddress().getTown());
@@ -171,15 +172,18 @@ public class BeanComposerTest {
 
         document.addLine(line1);
 
-        BeanComposer outputter = new BeanComposer();
-        List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        java.util.List<TstPerson> objects = outputter.createBeans(document, parseErrors);
-        assertEquals("The errors: " + parseErrors, 1, parseErrors.size());
+        BeanComposer composer = new BeanComposer();
+        RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
+        RecordingErrorEventListener errorEventListener = new RecordingErrorEventListener();
+        composer.addComposedEventListener(beanEventListener);
+        composer.addErrorEventListener(errorEventListener);
+        java.util.List<TstPerson> objects = beanEventListener.getBeans();
+        assertEquals(1, errorEventListener.getErrors().size());
         assertEquals(1, objects.size());
         assertNotNull((objects.get(0)).getAddress());
         assertEquals("Staden", (objects.get(0)).getAddress().getTown());
         assertEquals("By", (objects.get(0)).getAddress().getSubAddress().getTown());
-        System.out.println("The (expected) error: " + parseErrors);
+        System.out.println("The (expected) error: " + errorEventListener.getErrors());
     }
     
     /**
@@ -196,10 +200,10 @@ public class BeanComposerTest {
        
         document.addLine(line1);
 
-        BeanComposer outputter = new BeanComposer();
-        List<CellParseError> parseErrors = new LinkedList<CellParseError>();
-        java.util.List<TstPerson> objects = outputter.createBeans(document, parseErrors);
-        assertEquals("Un-expected errors: " + parseErrors, 0, parseErrors.size());
+        BeanComposer composer = new BeanComposer();
+        RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
+        composer.addComposedEventListener(beanEventListener);
+        java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertEquals(1, objects.size());
         assertEquals("Jonas", objects.get(0).getFirstName());
         assertNull(objects.get(0).getLastName());

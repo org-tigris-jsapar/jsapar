@@ -58,8 +58,8 @@ Example of converting a <b>CSV file</b> into a list of <b>Java objects</b> accor
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();<br/>
         Reader fileReader = new FileReader("samples/07_Names.csv");<br/>
         Parser parser = new Parser(xmlBuilder.build(schemaReader));<br/>
-        List<CellParseError> parseErrors = new LinkedList<CellParseError>()<br/>
-        List<TestPerson> people = parser.buildJava(fileReader, parseErrors);<br/>
+        List<CellParseError> errors = new LinkedList<CellParseError>()<br/>
+        List<TestPerson> people = parser.buildJava(fileReader, errors);<br/>
         fileReader.close();<br/>
 		<td />
 	</tr>

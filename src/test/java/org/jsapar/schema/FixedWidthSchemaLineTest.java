@@ -18,20 +18,6 @@ import org.junit.Test;
 
 public class FixedWidthSchemaLineTest {
     
-    
-
-    private class NullParsingEventListener implements LineEventListener {
-
-        @Override
-        public void lineErrorEvent(ErrorEvent event) throws ParseException {
-            throw new ParseException(event.getError());
-        }
-
-        @Override
-        public void lineParsedEvent(LineParsedEvent event) {
-        }
-    }
-
     protected boolean foundError = false;
     
     @Before

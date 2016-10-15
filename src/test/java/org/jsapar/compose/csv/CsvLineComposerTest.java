@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.ParseException;
 
 import static org.junit.Assert.*;
 
@@ -142,7 +143,7 @@ public class CsvLineComposerTest {
     }
 
     @Test
-    public void testOutput_default() throws IOException, JSaParException {
+    public void testOutput_default() throws IOException, JSaParException, ParseException {
 
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");

@@ -67,7 +67,6 @@ public class XmlParser extends AbstractParser implements Parser {
             JsaparSAXHandler handler = new JsaparSAXHandler(this, this);
             parser.parse(is, handler);
 
-            // TODO Auto-generated method stub
         } catch (ParserConfigurationException e) {
             throw new JSaParException("XML parsing error.", e);
         } catch (SAXException e) {

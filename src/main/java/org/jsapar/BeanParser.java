@@ -26,18 +26,18 @@ import org.jsapar.parse.*;
  * @author stejon0
  * 
  */
-public class BeanParser extends  AbstractParser implements Parser{
+public class BeanParser<T> extends  AbstractParser implements Parser{
     
     protected static Logger logger = Logger.getLogger("org.jsapar");
 
     private int maxSubLevels = 100;
-    private Iterator<?> iterator;
+    private Iterator<? extends T> iterator;
 
-    public BeanParser(Iterator<?> iterator) {
+    public BeanParser(Iterator<? extends T> iterator) {
         this.iterator = iterator;
     }
 
-    public BeanParser(Collection<?> objects) {
+    public BeanParser(Collection<? extends T> objects) {
         this.iterator = objects.iterator();
     }
 

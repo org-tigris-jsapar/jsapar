@@ -8,6 +8,7 @@ import java.io.StringReader;
 
 import org.jsapar.JSaParException;
 import org.jsapar.error.ErrorEvent;
+import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineParsedEvent;
@@ -39,16 +40,12 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(csvLineReader, new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
         assertEquals(true, rc);
     }
 
@@ -64,16 +61,12 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
 
         assertEquals(true, rc);
     }
@@ -86,10 +79,6 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals(6, line.size());
@@ -100,7 +89,7 @@ public class CsvLineParserTest {
                 assertEquals("\"111 22\"", line.getCell(4).getStringValue());
                 assertEquals("Stockholm", line.getCell(5).getStringValue());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
 
         assertEquals(true, rc);
     }
@@ -113,10 +102,6 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals(3, line.size());
@@ -124,7 +109,7 @@ public class CsvLineParserTest {
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("Hemvägen ;19", line.getCell(2).getStringValue());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
 
         assertEquals(true, rc);
     }
@@ -137,10 +122,6 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals(4, line.size());
@@ -149,7 +130,7 @@ public class CsvLineParserTest {
                 assertEquals("", line.getCell(2).getStringValue());
                 assertEquals("Hemvägen ;19", line.getCell(3).getStringValue());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
 
         assertEquals(true, rc);
     }
@@ -162,10 +143,6 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals(4, line.size());
@@ -174,7 +151,7 @@ public class CsvLineParserTest {
                 assertEquals("", line.getCell(2).getStringValue());
                 assertEquals("Hemvägen ;19", line.getCell(3).getStringValue());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
 
         assertEquals(true, rc);
     }
@@ -187,10 +164,6 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals(4, line.size());
@@ -199,7 +172,7 @@ public class CsvLineParserTest {
                 assertEquals("Not quoted", line.getCell(2).getStringValue());
                 assertEquals("Hemvägen ;19", line.getCell(3).getStringValue());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
 
         assertEquals(true, rc);
     }
@@ -212,10 +185,6 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals(3, line.size());
@@ -223,7 +192,7 @@ public class CsvLineParserTest {
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("Hemvägen ;19", line.getCell(2).getStringValue());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
 
         assertEquals(true, rc);
     }
@@ -236,10 +205,6 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals(6, line.size());
@@ -248,7 +213,7 @@ public class CsvLineParserTest {
                 assertEquals("\"Hemvägen ", line.getCell(2).getStringValue());
                 assertEquals("19", line.getCell(3).getStringValue());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
 
         assertEquals(true, rc);
     }
@@ -261,10 +226,6 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals(3, line.size());
@@ -272,7 +233,7 @@ public class CsvLineParserTest {
                 assertEquals("Stenberg", line.getCell(1).getStringValue());
                 assertEquals("\"", line.getCell(2).getStringValue());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
 
         assertEquals(true, rc);
     }
@@ -285,10 +246,6 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals(6, line.size());
@@ -299,7 +256,7 @@ public class CsvLineParserTest {
                 assertEquals("111 \"22\"", line.getCell(4).getStringValue());
                 assertEquals("Stoc\"kholm", line.getCell(5).getStringValue());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
 
         assertEquals(true, rc);
     }
@@ -312,10 +269,6 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals(6, line.size());
@@ -325,7 +278,7 @@ public class CsvLineParserTest {
                 assertEquals("1\"9", line.getCell(3).getStringValue());
                 assertEquals("111 22", line.getCell(4).getStringValue());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
 
         assertEquals(true, rc);
     }
@@ -341,12 +294,6 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals("Jonas", line.getCell(0).getStringValue());
@@ -355,7 +302,7 @@ public class CsvLineParserTest {
                 assertEquals("First Name", line.getCell(0).getName());
                 assertEquals("Last Name", line.getCell(1).getName());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
         assertEquals(true, rc);
 
     }
@@ -375,24 +322,18 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals("Jonas", line.getCell(0).getStringValue());
                 assertEquals("Stenb", line.getCell(1).getStringValue());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
         assertEquals(true, rc);
 
     }
 
     @Test
-    public void testParse_withDefault() throws JSaParException, IOException {
+    public void testParse_withDefault() throws JSaParException, IOException, java.text.ParseException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
         schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
@@ -405,10 +346,6 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals("Jonas", line.getCell(0).getStringValue());
@@ -419,13 +356,13 @@ public class CsvLineParserTest {
                 assertEquals("First Name", line.getCell(0).getName());
                 assertEquals("Last Name", line.getCell(2).getName());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
         assertEquals(true, rc);
 
     }
 
     @Test
-    public void testParse_default_and_mandatory() throws JSaParException, IOException {
+    public void testParse_default_and_mandatory() throws JSaParException, IOException, java.text.ParseException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
         schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
@@ -439,12 +376,6 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-                assertEquals("Happy", event.getError().getCellName());
-                foundError = true;
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals("Jonas", line.getCell(0).getStringValue());
@@ -455,13 +386,13 @@ public class CsvLineParserTest {
                 assertEquals("First Name", line.getCell(0).getName());
                 assertEquals("Last Name", line.getCell(2).getName());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
         assertEquals(true, rc);
         assertEquals(true, foundError);
     }
 
     @Test
-    public void testParse_withDefaultLast() throws JSaParException, IOException {
+    public void testParse_withDefaultLast() throws JSaParException, IOException, java.text.ParseException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
         schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
@@ -474,12 +405,6 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals("Jonas", line.getCell(0).getStringValue());
@@ -490,7 +415,7 @@ public class CsvLineParserTest {
                 assertEquals("First Name", line.getCell(0).getName());
                 assertEquals("Last Name", line.getCell(1).getName());
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
         assertEquals(true, rc);
 
     }
@@ -509,15 +434,10 @@ public class CsvLineParserTest {
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
 
             @Override
-            public void lineErrorEvent(ErrorEvent event) throws ParseException {
-                throw new ParseException(event.getError());
-            }
-
-            @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 fail("Expects an error");
             }
-        }, errorListener);
+        }, new ExceptionErrorEventListener());
         fail("Expects an error");
 
     }
