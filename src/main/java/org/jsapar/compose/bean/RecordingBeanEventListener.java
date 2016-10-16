@@ -10,7 +10,7 @@ import java.util.List;
  * created could not be converted into the class defined by T.
  * Created by stejon0 on 2016-10-15.
  */
-public class RecordingBeanEventListener<T> implements BeanComposedEventListener {
+public class RecordingBeanEventListener<T> implements BeanComposedEventListener<T> {
     private List<T> beans = new ArrayList<>();
 
     /**
@@ -20,8 +20,14 @@ public class RecordingBeanEventListener<T> implements BeanComposedEventListener 
         return beans;
     }
 
+    /**
+     * Called every time that a bean, on root level, is successfully composed. Child beans do not generate events.
+     * This implementation saves the composed bean into an internal list to be retrieved later by calling
+     * {@link #getBeans()}
+     * @param event The event that contains the composed bean.
+     */
     @Override
-    public void beanComposedEvent(BeanComposedEvent event) {
-        beans.add((T) event.getBean());
+    public void beanComposedEvent(BeanComposedEvent<T> event) {
+        beans.add(event.getBean());
     }
 }

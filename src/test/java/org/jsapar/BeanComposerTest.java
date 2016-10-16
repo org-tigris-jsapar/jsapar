@@ -1,6 +1,7 @@
 package org.jsapar;
 
 import org.jsapar.compose.bean.BeanComposer;
+import org.jsapar.compose.bean.BeanFactory;
 import org.jsapar.compose.bean.RecordingBeanEventListener;
 import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.model.*;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.*;
 
@@ -53,7 +55,7 @@ public class BeanComposerTest {
         document.addLine(line1);
         document.addLine(line2);
 
-        BeanComposer composer = new BeanComposer();
+        BeanComposer<TstPerson> composer = new BeanComposer<>();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
         composer.addComposedEventListener(beanEventListener);
         composer.compose(document);
@@ -139,21 +141,80 @@ public class BeanComposerTest {
         line1.addCell(new StringCell("address.street", "Stigen"));
         line1.addCell(new StringCell("address.town", "Staden"));
         line1.addCell(new StringCell("address.subAddress.town", "By"));
-        
+
 
         document.addLine(line1);
 
-        BeanComposer composer = new BeanComposer();
+        BeanComposer<TstPerson> composer = new BeanComposer<>();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
         composer.addComposedEventListener(beanEventListener);
         composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
-        assertNotNull((objects.get(0)).getAddress());
-        assertEquals("Stigen", (objects.get(0)).getAddress().getStreet());
-        assertEquals("Staden", (objects.get(0)).getAddress().getTown());
-        assertEquals("By", (objects.get(0)).getAddress().getSubAddress().getTown());
+        TstPerson parsedPerson = objects.get(0);
+        assertNotNull(parsedPerson.getAddress());
+        assertEquals("Stigen", parsedPerson.getAddress().getStreet());
+        assertEquals("Staden", parsedPerson.getAddress().getTown());
+        assertEquals("By", parsedPerson.getAddress().getSubAddress().getTown());
     }
 
+
+    /**
+     * @throws JSaParException
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public final void testCreateJavaObjects_subclass_BeanFactory() throws JSaParException, IOException {
+        Document document = new Document();
+        Line line1 = new Line("Test person");
+        line1.addCell(new StringCell("a.street", "Stigen"));
+        line1.addCell(new StringCell("a.town", "Staden"));
+        line1.addCell(new StringCell("a.aa.town", "By"));
+        document.addLine(line1);
+
+        BeanComposer<TstPerson> composer = new BeanComposer<>(new BeanFactory<TstPerson>() {
+            @Override
+            public TstPerson createBean(Line line)
+                    throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+                if(line.getLineType().equals("Test person"))
+                    return new TstPerson();
+                else
+                    return null;
+            }
+
+            @Override
+            public Object findOrCreateChildBean(Object parentBean, String childBeanName)
+                    throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException,
+                    IllegalArgumentException, InvocationTargetException {
+                if(childBeanName.equals("a") && parentBean instanceof TstPerson){
+                    TstPerson p = (TstPerson)parentBean;
+                    if(p.getAddress() != null)
+                        return p.getAddress();
+                    TstPostAddress child = new TstPostAddress();
+                    p.setAddress(child);
+                    return child;
+                }
+                else if(childBeanName.equals("aa") && parentBean instanceof TstPostAddress){
+                    TstPostAddress a = (TstPostAddress)parentBean;
+                    if(a.getSubAddress() != null)
+                        return a.getSubAddress();
+                    TstPostAddress child = new TstPostAddress();
+                    a.setSubAddress(child);
+                    return child;
+                }
+
+                return null;
+            }
+        });
+        RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
+        composer.addComposedEventListener(beanEventListener);
+        composer.compose(document);
+        java.util.List<TstPerson> objects = beanEventListener.getBeans();
+        TstPerson parsedPerson = objects.get(0);
+        assertNotNull(parsedPerson.getAddress());
+        assertEquals("Stigen", parsedPerson.getAddress().getStreet());
+        assertEquals("Staden", parsedPerson.getAddress().getTown());
+        assertEquals("By", parsedPerson.getAddress().getSubAddress().getTown());
+    }
     /**
      * @throws JSaParException
      */

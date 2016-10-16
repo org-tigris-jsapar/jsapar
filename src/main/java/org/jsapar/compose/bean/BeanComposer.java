@@ -5,6 +5,7 @@ import org.jsapar.compose.ComposeError;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ErrorEventSource;
+import org.jsapar.error.ErrorHandler;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
@@ -18,19 +19,32 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Composer class that composes java beans based on a document or by single lines. The result is that for each bean that
+ * was successfully composed, a {@link BeanComposedEvent} is generated to all registered {@link BeanComposedEventListener}.
+ * You can register a {@link BeanComposedEventListener} by calling {@link #addComposedEventListener(BeanComposedEventListener)}
  * Created by stejon0 on 2016-10-09.
  */
-public class BeanComposer implements Composer, BeanComposedEventListener, ErrorEventListener {
+public class BeanComposer<T> implements Composer, BeanComposedEventListener, ErrorEventListener {
     private static final String SET_PREFIX = "set";
 
     private List<BeanComposedEventListener> composedEventListeners = new ArrayList<>();
     private ErrorEventSource                errorEventSource       = new ErrorEventSource();
-    private BeanFactory                     beanFactory            = new BeanFactoryDefault();
+    private BeanFactory<T>                  beanFactory            = new BeanFactoryDefault<>();
     private Map<String, String>             setMethodNameCache     = new HashMap<>();
+    private BeanComposerConfig config = new BeanComposerConfig();
+    private ErrorHandler errorHandler = new ErrorHandler();
 
+    /**
+     * Creates a bean composer with {@link BeanFactoryDefault} as {@link BeanFactory}
+     */
     public BeanComposer() {
     }
 
+    /**
+     * Creates a bean composer with a customized {@link BeanFactory}. You can implement your own {@link BeanFactory} in
+     * order to control which bean class should be created for each line that is composed.
+     * @param beanFactory An implementation of the {@link BeanFactory} interface.
+     */
     public BeanComposer(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
@@ -45,20 +59,25 @@ public class BeanComposer implements Composer, BeanComposedEventListener, ErrorE
 
     @Override
     public boolean composeLine(Line line) throws IOException {
-        Object bean = null;
+        T bean = null;
         try {
             bean = beanFactory.createBean(line);
-            assign(line, bean);
+            if(bean == null){
+                errorHandler.lineValidationError(this, line.getLineNumber(), "BeanFactory failed to instantiate object. Skipped creating bean", config.getOnUndefinedLineType(), this);
+            }
+            else {
+                assign(line, bean);
+            }
         } catch (InstantiationException e) {
             generateErrorEvent(line, "Failed to instantiate object. Skipped creating bean", e);
         } catch (IllegalAccessException e) {
             generateErrorEvent(line, "Failed to call set method. Skipped creating bean", e);
         } catch (ClassNotFoundException e) {
             generateErrorEvent(line, "Class not found. Skipped creating bean", e);
-        } catch (Throwable e) {
-            generateErrorEvent(line, "Unexpected error. Skipped creating bean", e);
+        } catch (ClassCastException e) {
+            generateErrorEvent(line, "Class of the created bean is not inherited from the generic type specified when creating the BeanComposer", e);
         }
-        beanComposedEvent(new BeanComposedEvent(this, bean, line.getLineNumber()));
+        beanComposedEvent(new BeanComposedEvent<>(this, bean, line.getLineNumber()));
         return true;
     }
 
@@ -106,12 +125,12 @@ public class BeanComposer implements Composer, BeanComposedEventListener, ErrorE
     /**
      * Assigns the cells of a line as attributes to an object.
      *
-     * @param <T>            The type of the object to assign
+     * @param <B>            The type of the object to assign
      * @param line           The line to get parameters from.
      * @param objectToAssign The object to assign cell attributes to. The object will be modified.
      * @return The object that was assigned. The same object that was supplied as parameter.
      */
-    public <T> T assign(Line line, T objectToAssign) {
+    public <B> B assign(Line line, B objectToAssign) {
 
         java.util.Iterator<Cell> cellIter = line.getCellIterator();
         while (cellIter.hasNext()) {
@@ -140,6 +159,10 @@ public class BeanComposer implements Composer, BeanComposedEventListener, ErrorE
                 try {
                     // Continue looping to next object.
                     currentObject = beanFactory.findOrCreateChildBean(currentObject, nameLevels[i]);
+                    if(currentObject == null){
+                        generateErrorEvent(cell, "BeanFactory failed to find or create child bean to parent of class " + objectToAssign.getClass().getName() + ", cell value is omitted.");
+                        return;
+                    }
                 } catch (InstantiationException e) {
                     this.generateErrorEvent(cell,
                             "Skipped assigning cell - Failed to execute default constructor for class accessed by "
@@ -219,7 +242,7 @@ public class BeanComposer implements Composer, BeanComposedEventListener, ErrorE
     /**
      * Assigns the cells of a line as attributes to an object.
      *
-     * @param <T>            The type of the object to assign
+     * @param <B>            The type of the object to assign
      * @param cell           The cell to get the parameter from.
      * @param objectToAssign The object to assign cell attributes to. The object will be modified.
      * @return True if the parameter was assigned to the object, false otherwise.
@@ -227,7 +250,7 @@ public class BeanComposer implements Composer, BeanComposedEventListener, ErrorE
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
      */
-    private <T> boolean assignParameterBySignature(T objectToAssign, String sSetMethodName, Cell cell)
+    private <B> boolean assignParameterBySignature(B objectToAssign, String sSetMethodName, Cell cell)
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
         if (cell.getValue() == null)
@@ -246,7 +269,7 @@ public class BeanComposer implements Composer, BeanComposedEventListener, ErrorE
     /**
      * Assigns the cells of a line as attributes to an object.
      *
-     * @param <T>            The type of the object to assign
+     * @param <B>            The type of the object to assign
      * @param cell           The cell to get the parameter from.
      * @param objectToAssign The object to assign cell attributes to. The object will be modified.
      * @return True if the parameter was assigned to the object, false otherwise.
@@ -254,7 +277,7 @@ public class BeanComposer implements Composer, BeanComposedEventListener, ErrorE
      * @throws IllegalArgumentException
      * @throws InvocationTargetException
      */
-    private <T> boolean assignParameterByName(T objectToAssign, String sSetMethodName, Cell cell)
+    private <B> boolean assignParameterByName(B objectToAssign, String sSetMethodName, Cell cell)
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
         try {
@@ -306,4 +329,11 @@ public class BeanComposer implements Composer, BeanComposedEventListener, ErrorE
         return false;
     }
 
+    public BeanComposerConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(BeanComposerConfig config) {
+        this.config = config;
+    }
 }

@@ -11,9 +11,11 @@ public class JSaParError {
     private final Throwable exception;
 
     public JSaParError(String errorDescription, Throwable exception) {
-        this.errorDescription = errorDescription.endsWith(exception.getMessage()) ?
-                errorDescription :
-                errorDescription + " - " + exception.getMessage();
+        this.errorDescription =
+                errorDescription == null || (exception != null && exception.getMessage() != null && errorDescription
+                        .endsWith(exception.getMessage())) ?
+                        errorDescription :
+                        errorDescription + " - " + exception.getMessage();
         this.exception = exception;
     }
 

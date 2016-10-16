@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ExceptionErrorEventListener;
+import org.jsapar.error.ValidationAction;
 import org.jsapar.parse.*;
 import org.jsapar.model.Document;
 import org.jsapar.JSaParException;

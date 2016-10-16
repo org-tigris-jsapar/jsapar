@@ -1,4 +1,4 @@
-package org.jsapar.schema;
+package org.jsapar.error;
 
 /**
  * Created by stejon0 on 2016-07-03.

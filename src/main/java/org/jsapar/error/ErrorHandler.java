@@ -1,7 +1,6 @@
 package org.jsapar.error;
 
 import org.jsapar.parse.*;
-import org.jsapar.schema.ValidationAction;
 
 /**
  * Created by stejon0 on 2016-07-12.

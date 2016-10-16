@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.jsapar.model.Line;
 
-public interface BeanFactory {
+public interface BeanFactory<T> {
 
     /**
      * @param line
@@ -13,7 +13,7 @@ public interface BeanFactory {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    public Object createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException;
+    T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException;
 
     /**
      * @param parentBean
@@ -29,7 +29,7 @@ public interface BeanFactory {
      * @throws IllegalArgumentException
      * @throws InvocationTargetException
      */
-    public Object findOrCreateChildBean(Object parentBean, String childBeanName) throws InstantiationException,
+    Object findOrCreateChildBean(Object parentBean, String childBeanName) throws InstantiationException,
             IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException,
             InvocationTargetException;
 }

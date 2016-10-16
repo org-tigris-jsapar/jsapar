@@ -1,6 +1,6 @@
 package org.jsapar.parse;
 
-import org.jsapar.schema.ValidationAction;
+import org.jsapar.error.ValidationAction;
 
 /**
  * Configuration that controls behavior while parsing.

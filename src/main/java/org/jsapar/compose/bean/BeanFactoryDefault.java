@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 
 import org.jsapar.model.Line;
 
-public class BeanFactoryDefault implements BeanFactory {
+public class BeanFactoryDefault<T> implements BeanFactory<T> {
     private static final String GET_PREFIX = "get";
     private static final String SET_PREFIX = "set";
 
@@ -17,9 +17,9 @@ public class BeanFactoryDefault implements BeanFactory {
      * @see BeanFactory#createBean(Line)
      */
     @Override
-    public Object createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException {
         Class<?> c = Class.forName(line.getLineType());
-        return c.newInstance();
+        return (T) c.newInstance();
     }
 
     /**
