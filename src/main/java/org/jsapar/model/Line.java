@@ -1,7 +1,7 @@
 package org.jsapar.model;
 
-import org.jsapar.JSaParException;
-import org.jsapar.JSaParNumberFormatException;
+import org.jsapar.error.JSaParException;
+import org.jsapar.error.JSaParNumberFormatException;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

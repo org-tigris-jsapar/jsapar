@@ -11,7 +11,7 @@ import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.parse.CellParseError;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.model.CellType;
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.parse.LineParsedEvent;

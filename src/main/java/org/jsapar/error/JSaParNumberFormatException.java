@@ -1,4 +1,4 @@
-package org.jsapar;
+package org.jsapar.error;
 
 /**
  * Actually just wraps the normal NumberFormatException so that it can be constructed with a cause.

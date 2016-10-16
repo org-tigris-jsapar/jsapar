@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Date;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

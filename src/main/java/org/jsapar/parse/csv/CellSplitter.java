@@ -2,7 +2,7 @@ package org.jsapar.parse.csv;
 
 import java.io.IOException;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 
 public interface CellSplitter {
     

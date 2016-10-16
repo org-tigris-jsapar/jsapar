@@ -4,7 +4,7 @@ import org.jsapar.model.Cell;
 import org.jsapar.schema.SchemaCell;
 
 /**
- * Created by stejon0 on 2016-01-30.
+ * Utility class that helps composing a cell.
  */
 public class CellComposer {
 
@@ -35,7 +35,7 @@ public class CellComposer {
 
     /**
      * @return The default value if it is not null or empty string otherwise.
-     * @param schemaCell
+     * @param schemaCell The cell schema to use
      */
     private String getDefaultValueOrEmpty(SchemaCell schemaCell) {
         return schemaCell.getDefaultValue() == null ? EMPTY_STRING : schemaCell.getDefaultValue();

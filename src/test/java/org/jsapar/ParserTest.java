@@ -8,14 +8,11 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jsapar.error.JSaParError;
-import org.jsapar.error.RecordingErrorEventListener;
-import org.jsapar.error.ThreasholdRecordingErrorEventListener;
+import org.jsapar.error.*;
 import org.jsapar.parse.CellParseError;
 import org.jsapar.parse.ParseException;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Document;
-import org.jsapar.convert.MaxErrorsExceededException;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;

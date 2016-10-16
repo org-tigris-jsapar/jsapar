@@ -1,7 +1,7 @@
 /** 
  * Copyrigth: Jonas Stenberg
  */
-package org.jsapar;
+package org.jsapar.error;
 
 /**
  * @author Jonas

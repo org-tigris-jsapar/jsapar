@@ -1,7 +1,6 @@
 package org.jsapar.compose.fixed;
 
 import org.jsapar.compose.CellComposer;
-import org.jsapar.compose.ComposeException;
 import org.jsapar.model.Cell;
 import org.jsapar.schema.FixedWidthSchemaCell;
 
@@ -29,7 +28,6 @@ class FixedWidthCellComposer {
      * @param fillCharacter
      *            The fill character to fill empty spaces.
      * @throws IOException
-     * @throws ComposeException
      */
     void compose(Cell cell, FixedWidthSchemaCell schemaCell, char fillCharacter) throws IOException {
         String sValue = cellComposer.format(cell, schemaCell);
@@ -48,7 +46,6 @@ class FixedWidthCellComposer {
      * @param alignment
      *            The alignment of the cell content if the content is smaller than the cell length.
      * @throws IOException
-     * @throws ComposeException
      */
     private void compose(String sValue, char fillCharacter, int length, FixedWidthSchemaCell.Alignment alignment)
             throws IOException{

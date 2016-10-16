@@ -1,5 +1,6 @@
 package org.jsapar;
 
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Document;
 import org.jsapar.parse.ParseException;

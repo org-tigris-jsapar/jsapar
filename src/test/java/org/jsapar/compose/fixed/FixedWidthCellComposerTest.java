@@ -1,6 +1,6 @@
 package org.jsapar.compose.fixed;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.FixedWidthSchemaCell;

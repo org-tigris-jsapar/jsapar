@@ -1,9 +1,8 @@
 package org.jsapar.parse.fixed;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.*;
-import org.jsapar.error.ErrorEvent;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseException;

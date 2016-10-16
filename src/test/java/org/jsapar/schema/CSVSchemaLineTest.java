@@ -6,12 +6,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
-import org.jsapar.JSaParException;
-import org.jsapar.model.Line;
-import org.jsapar.model.StringCell;
 import org.junit.Test;
 
 public class CSVSchemaLineTest  {

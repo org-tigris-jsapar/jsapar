@@ -8,14 +8,8 @@ import java.io.StringReader;
 
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
-import org.jsapar.parse.LineEventListener;
 import org.jsapar.model.Document;
-import org.jsapar.JSaParException;
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.parse.LineParsedEvent;
-import org.jsapar.parse.ParseException;
-import org.jsapar.parse.csv.CsvParser;
-import org.jsapar.schema.CsvSchema;
+import org.jsapar.error.JSaParException;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;

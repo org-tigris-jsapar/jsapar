@@ -3,9 +3,8 @@
  */
 package org.jsapar.parse.fixed;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.ErrorHandler;
 import org.jsapar.parse.*;
 import org.jsapar.schema.FixedWidthSchema;
 

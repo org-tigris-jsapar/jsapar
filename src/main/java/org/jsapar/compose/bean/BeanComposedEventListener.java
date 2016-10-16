@@ -3,7 +3,7 @@
  */
 package org.jsapar.compose.bean;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 
 import java.util.EventListener;
 

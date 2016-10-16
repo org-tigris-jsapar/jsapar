@@ -1,8 +1,7 @@
 package org.jsapar.parse;
 
 import org.jsapar.DocumentBuilder;
-import org.jsapar.JSaParException;
-import org.jsapar.Parser;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;
 import org.jsapar.parse.xml.XmlParser;

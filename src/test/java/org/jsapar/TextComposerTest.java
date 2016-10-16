@@ -9,6 +9,7 @@ import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.*;
 import org.jsapar.schema.*;
 import org.junit.Before;
@@ -42,7 +43,7 @@ public class TextComposerTest {
     }
 
     @Test
-    public final void testWrite() throws JSaParException {
+    public final void testWrite() throws JSaParException, IOException {
         String sExpected = "JonasStenberg" + System.getProperty("line.separator") + "FridaBergsten";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
@@ -58,7 +59,7 @@ public class TextComposerTest {
     }
 
     @Test
-    public final void testWriteCsv() throws JSaParException {
+    public final void testWriteCsv() throws JSaParException, IOException {
         String sExpected = "Jonas;Stenberg" + System.getProperty("line.separator") + "Frida;Bergsten";
         org.jsapar.schema.CsvSchema schema = new org.jsapar.schema.CsvSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine(2);

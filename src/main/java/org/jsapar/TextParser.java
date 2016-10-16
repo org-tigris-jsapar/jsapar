@@ -1,5 +1,6 @@
 package org.jsapar;
 
+import org.jsapar.error.JSaParException;
 import org.jsapar.parse.*;
 
 import java.io.IOException;

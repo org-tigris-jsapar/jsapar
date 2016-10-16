@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.*;
 import org.jsapar.model.Cell;
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.parse.LineEventListener;

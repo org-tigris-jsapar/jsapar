@@ -1,19 +1,16 @@
 package org.jsapar.compose.csv;
 
-import org.jsapar.JSaParException;
-import org.jsapar.model.CellType;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
-import org.jsapar.schema.SchemaCellFormat;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 
 import static org.junit.Assert.*;
 

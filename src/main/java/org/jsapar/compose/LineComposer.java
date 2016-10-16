@@ -1,13 +1,12 @@
 package org.jsapar.compose;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 
 import java.io.IOException;
 
 /**
  * Composes output of a line
- * Created by stejon0 on 2016-01-30.
  */
 public interface LineComposer {
 

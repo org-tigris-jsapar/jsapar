@@ -10,7 +10,7 @@ import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.error.ValidationAction;
 import org.jsapar.parse.*;
 import org.jsapar.model.Document;
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.jsapar.schema.*;
 import org.junit.After;
 import org.junit.Before;

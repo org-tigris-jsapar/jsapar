@@ -1,11 +1,7 @@
 package org.jsapar.parse.csv;
 
-import org.jsapar.JSaParException;
-import org.jsapar.parse.fixed.FixedWidthCellParser;
-import org.jsapar.parse.fixed.FixedWidthLineParser;
 import org.jsapar.schema.*;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

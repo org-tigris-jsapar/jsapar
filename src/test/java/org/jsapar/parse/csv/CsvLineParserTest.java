@@ -6,7 +6,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.io.StringReader;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ExceptionErrorEventListener;

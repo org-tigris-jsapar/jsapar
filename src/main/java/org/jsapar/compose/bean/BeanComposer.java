@@ -1,6 +1,6 @@
 package org.jsapar.compose.bean;
 
-import org.jsapar.Composer;
+import org.jsapar.compose.Composer;
 import org.jsapar.compose.ComposeError;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;

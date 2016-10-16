@@ -1,8 +1,5 @@
 package org.jsapar.error;
 
-import org.jsapar.convert.MaxErrorsExceededException;
-import org.jsapar.parse.ParseException;
-
 import java.util.List;
 
 /**

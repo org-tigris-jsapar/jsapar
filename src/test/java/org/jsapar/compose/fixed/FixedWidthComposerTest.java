@@ -1,6 +1,6 @@
 package org.jsapar.compose.fixed;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;

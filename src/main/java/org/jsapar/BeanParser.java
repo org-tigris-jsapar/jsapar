@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.BigDecimalCell;
 import org.jsapar.model.BooleanCell;
 import org.jsapar.model.DateCell;

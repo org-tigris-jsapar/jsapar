@@ -3,9 +3,8 @@
  */
 package org.jsapar.parse.fixed;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.ErrorHandler;
 import org.jsapar.parse.*;
 import org.jsapar.schema.FixedWidthSchema;
 
@@ -47,7 +46,7 @@ public class FixedWidthParserFlat extends FixedWidthParser{
      * @param listener
      *            The listener which will receive events for each parsed line.
      * @param errorListener
-     * @throws org.jsapar.JSaParException
+     * @throws JSaParException
      * @throws java.io.IOException
      */
     @Override

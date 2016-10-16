@@ -6,16 +6,14 @@ package org.jsapar;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.List;
 
-import org.jsapar.convert.LineFilter;
 import org.jsapar.convert.LineManipulator;
-import org.jsapar.convert.MaxErrorsExceededException;
+import org.jsapar.error.JSaParException;
+import org.jsapar.error.MaxErrorsExceededException;
 import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.error.ThreasholdRecordingErrorEventListener;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
-import org.jsapar.parse.CellParseError;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;

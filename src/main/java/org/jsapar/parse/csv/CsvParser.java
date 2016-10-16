@@ -3,7 +3,7 @@ package org.jsapar.parse.csv;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ErrorHandler;
 import org.jsapar.parse.*;

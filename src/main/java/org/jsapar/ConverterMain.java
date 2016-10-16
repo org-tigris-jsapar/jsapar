@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.jsapar.error.JSaParError;
+import org.jsapar.error.JSaParException;
 import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.Xml2SchemaBuilder;

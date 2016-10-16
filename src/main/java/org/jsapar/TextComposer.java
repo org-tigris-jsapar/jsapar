@@ -3,19 +3,20 @@
  */
 package org.jsapar;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Iterator;
-
-import org.jsapar.compose.ComposeException;
+import org.jsapar.compose.Composer;
+import org.jsapar.compose.ComposerFactory;
 import org.jsapar.compose.SchemaComposer;
 import org.jsapar.compose.TextComposerFactory;
-import org.jsapar.compose.ComposerFactory;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ErrorEventSource;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Iterator;
 
 /**
  * This class contains methods for transforming a Document or Line into a text output. E.g. if you want to write
@@ -25,7 +26,7 @@ import org.jsapar.schema.Schema;
  * @author Jonas Stenberg
  * 
  */
-public class TextComposer implements Composer{
+public class TextComposer implements Composer {
     private final Writer          writer;
     private final Schema          schema;
     private final ComposerFactory composerFactory;
@@ -62,7 +63,7 @@ public class TextComposer implements Composer{
      * @throws JSaParException
      */
     @Override
-    public void compose(Document document)  {
+    public void compose(Document document) throws IOException {
         compose(document.getLineIterator());
     }
 
@@ -75,15 +76,11 @@ public class TextComposer implements Composer{
      *            don't want to store them all in memory.
      * @throws JSaParException
      */
-    public void compose(Iterator<Line> lineIterator) throws JSaParException {
-        try {
-            SchemaComposer schemaComposer = makeSchemaComposer();
-            schemaComposer.beforeCompose();
-            schemaComposer.compose(lineIterator);
-            schemaComposer.afterCompose();
-        } catch (IOException e) {
-            throw new ComposeException("Failed to write to buffert.", e);
-        }
+    public void compose(Iterator<Line> lineIterator) throws JSaParException, IOException {
+        SchemaComposer schemaComposer = makeSchemaComposer();
+        schemaComposer.beforeCompose();
+        schemaComposer.compose(lineIterator);
+        schemaComposer.afterCompose();
     }
 
     private SchemaComposer makeSchemaComposer() throws JSaParException {

@@ -1,13 +1,5 @@
 package org.jsapar.schema;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Iterator;
-
-import org.jsapar.model.Cell;
-import org.jsapar.JSaParException;
-import org.jsapar.model.Line;
-
 /**
  * This class represents the schema for a line of a fixed with file. Each cell within the line has a
  * specified size. There are no delimiter characters.

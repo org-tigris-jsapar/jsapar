@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.jsapar.convert;
+package org.jsapar.error;
 
 import java.util.List;
 

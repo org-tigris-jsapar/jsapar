@@ -2,8 +2,7 @@ package org.jsapar.parse;
 
 import java.io.IOException;
 
-import org.jsapar.JSaParException;
-import org.jsapar.parse.LineReader;
+import org.jsapar.error.JSaParException;
 
 public class SingleLineReader implements LineReader {
     private String line;

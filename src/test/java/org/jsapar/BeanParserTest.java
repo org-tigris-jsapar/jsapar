@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.*;
 
 import org.jsapar.error.ExceptionErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.DateCell;
 import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;

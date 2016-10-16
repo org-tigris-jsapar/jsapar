@@ -1,10 +1,10 @@
 package org.jsapar;
 
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.Parser;
 
 import java.io.IOException;
 

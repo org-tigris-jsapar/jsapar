@@ -3,7 +3,7 @@ package org.jsapar.parse.csv;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 
 public class SimpleCellSplitter implements CellSplitter {
 

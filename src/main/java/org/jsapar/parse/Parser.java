@@ -1,8 +1,7 @@
-package org.jsapar;
+package org.jsapar.parse;
 
-import org.jsapar.error.ErrorEvent;
+import org.jsapar.error.JSaParException;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.parse.*;
 
 import java.io.IOException;
 

@@ -16,13 +16,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.jsapar.compose.bean.RecordingBeanEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.parse.CellParseError;
-import org.jsapar.parse.DocumentBuilderLineEventListener;
-import org.jsapar.parse.ParseSchema;
 import org.jsapar.model.BooleanCell;
 import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;
+import org.jsapar.parse.Parser;
 import org.jsapar.parse.xml.XmlParser;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;

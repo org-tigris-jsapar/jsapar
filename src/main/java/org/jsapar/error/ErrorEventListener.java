@@ -3,8 +3,6 @@
  */
 package org.jsapar.error;
 
-import org.jsapar.convert.MaxErrorsExceededException;
-import org.jsapar.error.ErrorEvent;
 import org.jsapar.parse.ParseException;
 
 import java.util.EventListener;

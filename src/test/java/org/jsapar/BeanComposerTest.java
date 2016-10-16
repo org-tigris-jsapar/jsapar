@@ -4,6 +4,7 @@ import org.jsapar.compose.bean.BeanComposer;
 import org.jsapar.compose.bean.BeanComposerConfig;
 import org.jsapar.compose.bean.BeanFactory;
 import org.jsapar.compose.bean.RecordingBeanEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.model.*;
 import org.jsapar.parse.ParseException;

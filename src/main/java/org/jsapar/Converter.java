@@ -1,10 +1,13 @@
 package org.jsapar;
 
+import org.jsapar.compose.Composer;
 import org.jsapar.convert.LineManipulator;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.Parser;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +28,7 @@ import java.util.List;
  * Created by stejon0 on 2016-10-02.
  */
 public class Converter {
-    private Parser parser;
+    private Parser   parser;
     private Composer composer;
     private List<LineManipulator> manipulators = new java.util.LinkedList<>();
 

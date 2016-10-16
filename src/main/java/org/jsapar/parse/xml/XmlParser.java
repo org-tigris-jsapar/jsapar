@@ -17,14 +17,14 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.jsapar.Parser;
+import org.jsapar.parse.Parser;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.*;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.DateCell;
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.schema.SchemaCell;

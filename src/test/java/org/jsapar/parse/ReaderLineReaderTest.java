@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.jsapar.JSaParException;
-import org.jsapar.parse.ReaderLineReader;
+import org.jsapar.error.JSaParException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

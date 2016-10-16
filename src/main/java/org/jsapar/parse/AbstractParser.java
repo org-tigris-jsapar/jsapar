@@ -1,10 +1,8 @@
 package org.jsapar.parse;
 
-import org.jsapar.Parser;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ErrorEventSource;
-import org.jsapar.error.ExceptionErrorEventListener;
 
 import java.util.LinkedList;
 import java.util.List;

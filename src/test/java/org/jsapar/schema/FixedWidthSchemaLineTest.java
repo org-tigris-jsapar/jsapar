@@ -8,11 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import org.jsapar.JSaParException;
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.LineParsedEvent;
-import org.jsapar.parse.ParseException;
+import org.jsapar.error.JSaParException;
 import org.junit.Before;
 import org.junit.Test;
 

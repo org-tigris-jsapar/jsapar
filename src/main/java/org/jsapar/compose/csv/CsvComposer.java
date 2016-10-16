@@ -1,6 +1,6 @@
 package org.jsapar.compose.csv;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.jsapar.compose.SchemaComposer;
 import org.jsapar.compose.LineComposer;
 import org.jsapar.model.Line;

@@ -6,7 +6,7 @@ package org.jsapar.parse.csv;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 
 /**
  * @author stejon0

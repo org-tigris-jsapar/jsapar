@@ -3,11 +3,8 @@
  */
 package org.jsapar.parse;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-
-import org.jsapar.JSaParException;
 
 /**
  * LineReader implementation that reads lines from a Reader object.

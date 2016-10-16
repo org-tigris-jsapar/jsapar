@@ -1,13 +1,8 @@
 package org.jsapar.parse;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
-import org.jsapar.JSaParException;
-import org.jsapar.model.Line;
-import org.jsapar.parse.LineParsedEvent;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.schema.SchemaLine;
+import org.jsapar.error.JSaParException;
 
 public interface LineParser {
 

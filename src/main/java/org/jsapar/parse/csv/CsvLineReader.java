@@ -1,6 +1,6 @@
 package org.jsapar.parse.csv;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 
 import java.io.IOException;
 import java.io.Reader;

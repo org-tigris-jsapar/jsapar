@@ -2,7 +2,7 @@ package org.jsapar.parse;
 
 import java.io.IOException;
 
-import org.jsapar.JSaParException;
+import org.jsapar.error.JSaParException;
 import org.jsapar.error.ErrorEventListener;
 
 public interface SchemaParser {
