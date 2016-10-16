@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * Composes csv output based on schema.
  * Created by stejon0 on 2016-01-24.
  */
 public class CsvComposer implements SchemaComposer {
@@ -26,6 +27,12 @@ public class CsvComposer implements SchemaComposer {
         this.schema = schema;
     }
 
+    /**
+     * This implementation composes CSV output based on schema and supplied lines.
+     * @param itLines The lines to compose output for.
+     * @throws IOException
+     * @throws JSaParException
+     */
     @Override
     public void compose(Iterator<Line> itLines) throws IOException, JSaParException {
         for (CsvSchemaLine lineSchema : schema.getCsvSchemaLines()) {
@@ -44,10 +51,21 @@ public class CsvComposer implements SchemaComposer {
             }
         }
     }
+
+    /**
+     * This implementation does nothing
+     * @throws IOException
+     * @throws JSaParException
+     */
     @Override
     public void beforeCompose() throws IOException, JSaParException {
     }
 
+    /**
+     * This implementation does nothing
+     * @throws IOException
+     * @throws JSaParException
+     */
     @Override
     public void afterCompose() throws IOException, JSaParException {
 

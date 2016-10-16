@@ -346,28 +346,7 @@ public abstract class SchemaCell implements Cloneable {
         return defaultValue == null ? EMPTY_STRING : defaultValue;
     }
 
-    /**
-     * Formats a cell to a string according to the rules of this schema.
-     * 
-     * @param cell
-     *            The cell to format. If this parameter is null or an empty string, the default
-     *            value will be returned or if there is no default value, an empty string will be
-     *            returned.
-     * @return The formatted value for this cell.
-     */
-    public String format(Cell cell) {
-        if (this.ignoreWrite )
-            return EMPTY_STRING;
-        
-        if (cell == null) {
-            return getDefaultValueOrEmpty();
-        }
-        String value = cell.getStringValue(getCellFormat().getFormat());
-        if (value == null || value.isEmpty()) {
-            return getDefaultValueOrEmpty();
-        }
-        return value;
-    }
+
 
     @Override
     public boolean equals(Object o) {

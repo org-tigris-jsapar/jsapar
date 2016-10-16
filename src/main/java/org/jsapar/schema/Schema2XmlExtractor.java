@@ -13,10 +13,13 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.jsapar.compose.CellComposer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class Schema2XmlExtractor implements SchemaXmlTypes {
+
+    private static final CellComposer cellComposer = new CellComposer();
 
     public org.w3c.dom.Document extractXmlDocument(Schema schema) throws SchemaException {
         try {
@@ -34,7 +37,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
             Element xmlRoot = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_ROOT);
             xmlDocument.appendChild(xmlRoot);
 
-            Element xmlSchema = null;
+            Element xmlSchema;
             if (schema instanceof FixedWidthSchema) {
                 xmlSchema = extractFixedWidthSchema(xmlDocument, (FixedWidthSchema) schema);
             } else if (schema instanceof CsvSchema) {
@@ -288,7 +291,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
         xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_MANDATORY, String.valueOf(cell.isMandatory()));
         
         if(cell.getDefaultCell() != null)
-            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_DEFAULT_VALUE, cell.format(cell.getDefaultCell()));
+            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_DEFAULT_VALUE, cellComposer.format(cell.getDefaultCell(), cell));
 
         if(cell.getEmptyPattern() != null)
             xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_EMPTY_PATTERN, cell.getEmptyPattern().pattern());
@@ -331,9 +334,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     private Element extractCellRange(Document xmlDocument, SchemaCell cell) throws SchemaException {
         Element xmlRange = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_RANGE);
         if (cell.getMinValue() != null)
-            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MIN, cell.format( cell.getMinValue()));
+            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MIN, cellComposer.format(cell.getMinValue(), cell));
         if (cell.getMaxValue() != null)
-            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MAX, cell.format( cell.getMaxValue()));
+            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MAX,cellComposer.format( cell.getMaxValue(), cell));
         return xmlRange;
     }
 

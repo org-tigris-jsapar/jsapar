@@ -9,13 +9,13 @@ import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.SchemaCellFormat;
-import org.jsapar.schema.SchemaLine;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 
 /**
+ * Composes csv line output based on schema and provided line.
  * Created by stejon0 on 2016-01-30.
  */
 public class CsvLineComposer implements LineComposer {
@@ -33,6 +33,11 @@ public class CsvLineComposer implements LineComposer {
         this.cellComposer = new CsvCellComposer(writer);
     }
 
+    /**
+     * This implementation composes a csv output based on the line schema and provided line.
+     * @param line The line to compose output of.
+     * @throws IOException
+     */
     @Override
     public void compose(Line line) throws IOException {
         if(firstRow && schemaLine.isFirstLineAsSchema()){
@@ -43,7 +48,7 @@ public class CsvLineComposer implements LineComposer {
         String sCellSeparator = schemaLine.getCellSeparator();
 
         Iterator<CsvSchemaCell> iter = schemaLine.getSchemaCells().iterator();
-        for (int i = 0; iter.hasNext(); i++) {
+        while(iter.hasNext()) {
             CsvSchemaCell schemaCell = iter.next();
             Cell cell = line.getCell(schemaCell.getName());
             char quoteChar = schemaLine.getQuoteChar();
@@ -72,7 +77,7 @@ public class CsvLineComposer implements LineComposer {
     }
 
     /**
-     * @return
+     * @return The header line
      * @throws JSaParException
      */
     private Line buildHeaderLineFromSchema(CsvSchemaLine headerSchemaLine)  {

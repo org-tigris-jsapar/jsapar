@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
+ * Composes cell values based on the schema of the cell.
  * Created by stejon0 on 2016-01-30.
  */
 class CsvCellComposer {
@@ -21,10 +22,10 @@ class CsvCellComposer {
 
     /**
      * Writes the cell to the supplied writer, including quote character if necessary.
-     * @param cell
-     * @param schemaCell
-     * @param cellSeparator
-     * @param quoteChar
+     * @param cell The cell to compose output for.
+     * @param schemaCell The schema for the cell.
+     * @param cellSeparator The cell separator to use.
+     * @param quoteChar The quote character
      * @throws IOException
      */
     void compose(Cell cell, CsvSchemaCell schemaCell, String cellSeparator, char quoteChar) throws IOException {
@@ -38,26 +39,28 @@ class CsvCellComposer {
         }
         else {
             if (sValue.contains(cellSeparator) || sValue.charAt(0) ==quoteChar){
-                sValue = applyMaxLength(sValue, schemaCell.getMaxLength()-2);
+                sValue = take(sValue, schemaCell.getMaxLength()-2);
                 sValue = quoteChar + sValue + quoteChar;
             }
         }
         writer.write(sValue);
     }
 
-    public String format(Cell cell, CsvSchemaCell schemaCell) {
+    private String format(Cell cell, CsvSchemaCell schemaCell) {
         String value = cellComposer.format(cell, schemaCell);
-        return applyMaxLength(value, schemaCell.getMaxLength());
+        return take(value, schemaCell.getMaxLength());
     }
 
 
     /**
-     * Same as Groovy String method take(int)
-     * @param sValue
-     * @param maxLength
-     * @return The sValue, truncated if necessary to fit maxLength2
+     * Same as Groovy String method take(int). Returns a String consisting of the first maxLength chars, or else the whole String if it has less then maxLength
+     * elements.
+     * @param sValue The string to take from.
+     * @param maxLength The maximum number of characters to take.
+     * @return a String consisting of the first maxLength chars, or else the whole String if it has less then maxLength
+     * elements.
      */
-    private String applyMaxLength(String sValue, int maxLength) {
+    private String take(String sValue, int maxLength) {
         if(maxLength>0 && sValue.length()>maxLength)
             return sValue.substring(0, Math.max(maxLength, 0));
         else
