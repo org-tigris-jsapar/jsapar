@@ -1,6 +1,7 @@
 package org.jsapar;
 
 import org.jsapar.compose.bean.BeanComposer;
+import org.jsapar.compose.bean.BeanComposerConfig;
 import org.jsapar.compose.bean.BeanFactory;
 import org.jsapar.compose.bean.RecordingBeanEventListener;
 import org.jsapar.error.RecordingErrorEventListener;
@@ -85,14 +86,13 @@ public class BeanComposerTest {
 
         document.addLine(line1);
 
-        BeanComposer outputter = new BeanComposer();
-        BeanComposer composer = new BeanComposer();
-        RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
+        BeanComposer<Object> composer = new BeanComposer<>();
+        RecordingBeanEventListener<Object> beanEventListener = new RecordingBeanEventListener<>();
         composer.addComposedEventListener(beanEventListener);
         composer.compose(document);
-        java.util.List<TstPerson> objects = beanEventListener.getBeans();
+        java.util.List<Object> objects = beanEventListener.getBeans();
         assertEquals(1, objects.size());
-        assertEquals(42, (objects.get(0)).getShoeSize());
+        assertEquals(42, ((TstPerson)objects.get(0)).getShoeSize());
     }
 
     @SuppressWarnings("unchecked")
@@ -123,11 +123,11 @@ public class BeanComposerTest {
 
         document.addLine(line1);
 
-        BeanComposer composer = new BeanComposer();
+        BeanComposer<TstPerson> composer = new BeanComposer<>();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
         composer.addComposedEventListener(beanEventListener);
         composer.compose(document);
-        java.util.List<TstPerson> objects = beanEventListener.getBeans();
+        beanEventListener.getBeans();
     }
 
     /**
@@ -269,6 +269,38 @@ public class BeanComposerTest {
         assertNull(objects.get(0).getLastName());
         assertEquals(42, objects.get(0).getShoeSize());
     }    
-    
+
+    @Test
+    public void testGetSetBeanFactory(){
+        BeanFactory<Object> testBeanFactory = new BeanFactoryMock();
+        BeanComposer<Object> c = new BeanComposer<>();
+        assertNotSame(testBeanFactory, c.getBeanFactory());
+        c.setBeanFactory(testBeanFactory);
+        assertSame(testBeanFactory, c.getBeanFactory());
+    }
+
+    private class BeanFactoryMock implements BeanFactory<Object> {
+        @Override
+        public Object createBean(Line line)
+                throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException {
+            return null;
+        }
+
+        @Override
+        public Object findOrCreateChildBean(Object parentBean, String childBeanName)
+                throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException,
+                IllegalArgumentException, InvocationTargetException {
+            return null;
+        }
+    }
+
+    @Test
+    public void testGetSetConfig(){
+        BeanComposerConfig testConfig = new BeanComposerConfig();
+        BeanComposer c = new BeanComposer();
+        assertNotSame(testConfig, c.getConfig());
+        c.setConfig(testConfig);
+        assertSame(testConfig, c.getConfig());
+    }
 
 }

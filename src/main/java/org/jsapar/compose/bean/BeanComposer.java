@@ -24,15 +24,15 @@ import java.util.Map;
  * You can register a {@link BeanComposedEventListener} by calling {@link #addComposedEventListener(BeanComposedEventListener)}
  * Created by stejon0 on 2016-10-09.
  */
-public class BeanComposer<T> implements Composer, BeanComposedEventListener, ErrorEventListener {
+public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, ErrorEventListener {
     private static final String SET_PREFIX = "set";
 
-    private List<BeanComposedEventListener> composedEventListeners = new ArrayList<>();
-    private ErrorEventSource                errorEventSource       = new ErrorEventSource();
-    private BeanFactory<T>                  beanFactory            = new BeanFactoryDefault<>();
-    private Map<String, String>             setMethodNameCache     = new HashMap<>();
-    private BeanComposerConfig config = new BeanComposerConfig();
-    private ErrorHandler errorHandler = new ErrorHandler();
+    private List<BeanComposedEventListener<T>> composedEventListeners = new ArrayList<>();
+    private ErrorEventSource                   errorEventSource       = new ErrorEventSource();
+    private BeanFactory<T>                     beanFactory            = new BeanFactoryDefault<>();
+    private Map<String, String>                setMethodNameCache     = new HashMap<>();
+    private BeanComposerConfig                 config                 = new BeanComposerConfig();
+    private ErrorHandler                       errorHandler           = new ErrorHandler();
 
     /**
      * Creates a bean composer with {@link BeanFactoryDefault} as {@link BeanFactory}
@@ -43,9 +43,10 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener, Err
     /**
      * Creates a bean composer with a customized {@link BeanFactory}. You can implement your own {@link BeanFactory} in
      * order to control which bean class should be created for each line that is composed.
+     *
      * @param beanFactory An implementation of the {@link BeanFactory} interface.
      */
-    public BeanComposer(BeanFactory beanFactory) {
+    public BeanComposer(BeanFactory<T> beanFactory) {
         this.beanFactory = beanFactory;
     }
 
@@ -62,10 +63,11 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener, Err
         T bean = null;
         try {
             bean = beanFactory.createBean(line);
-            if(bean == null){
-                errorHandler.lineValidationError(this, line.getLineNumber(), "BeanFactory failed to instantiate object. Skipped creating bean", config.getOnUndefinedLineType(), this);
-            }
-            else {
+            if (bean == null) {
+                errorHandler.lineValidationError(this, line.getLineNumber(),
+                        "BeanFactory failed to instantiate object. Skipped creating bean",
+                        config.getOnUndefinedLineType(), this);
+            } else {
                 assign(line, bean);
             }
         } catch (InstantiationException e) {
@@ -75,7 +77,9 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener, Err
         } catch (ClassNotFoundException e) {
             generateErrorEvent(line, "Class not found. Skipped creating bean", e);
         } catch (ClassCastException e) {
-            generateErrorEvent(line, "Class of the created bean is not inherited from the generic type specified when creating the BeanComposer", e);
+            generateErrorEvent(line,
+                    "Class of the created bean is not inherited from the generic type specified when creating the BeanComposer",
+                    e);
         }
         beanComposedEvent(new BeanComposedEvent<>(this, bean, line.getLineNumber()));
         return true;
@@ -93,7 +97,7 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener, Err
         errorEvent(new ErrorEvent(this, new ComposeError(message + " while handling cell " + cell)));
     }
 
-    public void addComposedEventListener(BeanComposedEventListener eventListener) {
+    public void addComposedEventListener(BeanComposedEventListener<T> eventListener) {
         composedEventListeners.add(eventListener);
     }
 
@@ -102,17 +106,17 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener, Err
         errorEventSource.addEventListener(errorEventListener);
     }
 
-    public BeanFactory getBeanFactory() {
+    public BeanFactory<T> getBeanFactory() {
         return beanFactory;
     }
 
-    public void setBeanFactory(BeanFactory beanFactory) {
+    public void setBeanFactory(BeanFactory<T> beanFactory) {
         this.beanFactory = beanFactory;
     }
 
     @Override
-    public void beanComposedEvent(BeanComposedEvent event) {
-        for (BeanComposedEventListener composedEventlistener : composedEventListeners) {
+    public void beanComposedEvent(BeanComposedEvent<T> event) {
+        for (BeanComposedEventListener<T> composedEventlistener : composedEventListeners) {
             composedEventlistener.beanComposedEvent(event);
         }
     }
@@ -147,9 +151,9 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener, Err
     /**
      * Assign supplied cell value to supplied object.
      *
-     * @param cell
-     * @param sName
-     * @param objectToAssign
+     * @param cell           The cell to get the value from
+     * @param sName          The name of the field
+     * @param objectToAssign The object to assign to
      */
     private void assignCellToField(Cell cell, String sName, Object objectToAssign) {
         try {
@@ -159,8 +163,10 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener, Err
                 try {
                     // Continue looping to next object.
                     currentObject = beanFactory.findOrCreateChildBean(currentObject, nameLevels[i]);
-                    if(currentObject == null){
-                        generateErrorEvent(cell, "BeanFactory failed to find or create child bean to parent of class " + objectToAssign.getClass().getName() + ", cell value is omitted.");
+                    if (currentObject == null) {
+                        generateErrorEvent(cell,
+                                "BeanFactory failed to find or create child bean to parent of class " + objectToAssign
+                                        .getClass().getName() + ", cell value is omitted.");
                         return;
                     }
                 } catch (InstantiationException e) {
@@ -188,9 +194,11 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener, Err
     }
 
     /**
-     * @param cell
-     * @param sName
-     * @param objectToAssign
+     * Assigns an attribute value to supplied object.
+     *
+     * @param cell           The cell to get the value from
+     * @param sName          The name of the field
+     * @param objectToAssign The object to assign to
      */
     private void assignAttribute(Cell cell, String sName, Object objectToAssign) {
         if (cell.isEmpty())
@@ -217,7 +225,9 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener, Err
     }
 
     /**
-     * @param sAttributeName
+     * Creates a set method name based on attribute name.
+     *
+     * @param sAttributeName The name of the attribute
      * @return The set method that corresponds to this attribute.
      */
     private String createSetMethodName(String sAttributeName) {
@@ -231,8 +241,10 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener, Err
     }
 
     /**
-     * @param prefix
-     * @param sAttributeName
+     * Creates a bean access method for supplied attribute
+     *
+     * @param prefix         The bean access prefix
+     * @param sAttributeName The attribute
      * @return The setter or setter method that corresponds to this attribute.
      */
     private String createBeanMethodName(String prefix, String sAttributeName) {
@@ -277,6 +289,7 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener, Err
      * @throws IllegalArgumentException
      * @throws InvocationTargetException
      */
+    @SuppressWarnings("unchecked")
     private <B> boolean assignParameterByName(B objectToAssign, String sSetMethodName, Cell cell)
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
