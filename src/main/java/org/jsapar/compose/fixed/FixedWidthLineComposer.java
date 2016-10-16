@@ -12,6 +12,7 @@ import java.io.Writer;
 import java.util.Iterator;
 
 /**
+ * Composes line to a fixed width format based on line schema.
  * Created by stejon0 on 2016-01-31.
  */
 public class FixedWidthLineComposer implements LineComposer {
@@ -27,15 +28,10 @@ public class FixedWidthLineComposer implements LineComposer {
     }
 
     /**
-     * Writes a line to the writer. Each cell is identified from the schema by the name of the cell.
-     * If the schema-cell has no name, the cell at the same position in the line is used under the
-     * condition that it also lacks name.
+     * Composes an output from a line. Each cell is identified from the schema by the name of the cell.
      *
-     * If the schema-cell has a name the cell with the same name is used. If no such cell is found
-     * and the cell att the same position lacks name, it is used instead.
-     *
-     * If no corresponding cell is found for a schema-cell, the positions are filled with the schema
-     * fill character.
+     * If the schema-cell has a name the cell with the same name is used. If no such cell is found the positions are
+     * filled with fill character defined by the schema.
      *
      * @param line
      *            The line to write to the writer
@@ -48,13 +44,10 @@ public class FixedWidthLineComposer implements LineComposer {
     }
 
     /**
-     * Writes a line to the writer. Each cell is identified from the schema by the name of the cell. If the schema-cell
-     * has no name, the cell at the same position in the line is used under the condition that it also lacks name.
+     * Composes an output from a line. Each cell is identified from the schema by the name of the cell.
      *
-     * If the schema-cell has a name the cell with the same name is used. If no such cell is found and the cell att the
-     * same position lacks name, it is used instead.
-     *
-     * If no corresponding cell is found for a schema-cell, the positions are filled with the schema fill character.
+     * If the schema-cell has a name the cell with the same name is used. If no such cell is found the positions are
+     * filled with fill character defined by the schema.
      *
      * @param line
      *            The line to write to the writer
@@ -69,7 +62,7 @@ public class FixedWidthLineComposer implements LineComposer {
 
         // Iterate all schema cells.
         int totalLength = offset;
-        for (int i = 0; iter.hasNext(); i++) {
+        while(iter.hasNext()) {
             FixedWidthSchemaCell schemaCell = iter.next();
             totalLength += schemaCell.getLength();
             Cell cell = line.getCell(schemaCell.getName());

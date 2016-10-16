@@ -25,6 +25,12 @@ public class FixedWidthComposer implements SchemaComposer {
         this.schema = schema;
     }
 
+    /**
+     * This implementation composes fixed width output based on schema and supplied lines.
+     * @param iterator The lines to compose output for.
+     * @throws IOException
+     * @throws JSaParException
+     */
     @Override
     public void compose(Iterator<Line> iterator) throws IOException, JSaParException {
         for (FixedWidthSchemaLine lineSchema : schema.getFixedWidthSchemaLines()) {
@@ -47,11 +53,21 @@ public class FixedWidthComposer implements SchemaComposer {
         }
     }
 
+    /**
+     * This implementation does nothing
+     * @throws IOException
+     * @throws JSaParException
+     */
     @Override
     public void beforeCompose() throws IOException, JSaParException {
 
     }
 
+    /**
+     * This implementation does nothing
+     * @throws IOException
+     * @throws JSaParException
+     */
     @Override
     public void afterCompose() throws IOException, JSaParException {
 

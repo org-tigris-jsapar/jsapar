@@ -1,6 +1,5 @@
 package org.jsapar.compose.fixed;
 
-import org.jsapar.JSaParException;
 import org.jsapar.compose.CellComposer;
 import org.jsapar.compose.ComposeException;
 import org.jsapar.model.Cell;
@@ -10,7 +9,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Created by stejon0 on 2016-01-31.
+ * Composes fixed width output on cell level.
  */
 class FixedWidthCellComposer {
 
@@ -26,7 +25,7 @@ class FixedWidthCellComposer {
      *
      * @param cell
      *            The cell to write
-     * @param schemaCell
+     * @param schemaCell The schema of the cell
      * @param fillCharacter
      *            The fill character to fill empty spaces.
      * @throws IOException
@@ -55,11 +54,9 @@ class FixedWidthCellComposer {
             throws IOException{
         if (sValue.length() == length) {
             writer.write(sValue);
-            return;
         } else if (sValue.length() > length) {
             // If the cell value is larger than the cell length, we have to cut the value.
             alignment.fit(writer, length, sValue);
-            return;
         } else {
             // Otherwise use the alignment of the schema.
             int nToFill = length - sValue.length();
@@ -70,11 +67,11 @@ class FixedWidthCellComposer {
     /**
      * Padds supplied value in the correct end with the supplied number of characters
      *
-     * @param alignment
-     * @param writer
-     * @param nToFill
-     * @param sValue
-     * @param fillCharacter
+     * @param alignment How to allign the value of the cell.
+     * @param writer The writer to write to
+     * @param nToFill Number of characters to fill
+     * @param sValue The value to write
+     * @param fillCharacter The fill character to use.
      * @throws IOException
      */
     private void pad(FixedWidthSchemaCell.Alignment alignment,
@@ -102,9 +99,10 @@ class FixedWidthCellComposer {
     }
 
     /**
-     * @param writer
-     * @param ch
-     * @param nSize
+     * Writes specified fill character specified number of times.
+     * @param writer The writer to write to
+     * @param ch The character to write
+     * @param nSize Number of times to write the character
      * @throws IOException
      */
     public static void fill(Writer writer, char ch, int nSize) throws IOException {
