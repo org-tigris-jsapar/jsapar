@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
- * Created by stejon0 on 2016-07-12.
+ * Base class for all types of errors that can be added to an {@link ErrorEvent}
  */
 public class JSaParError {
     private final String    errorDescription;

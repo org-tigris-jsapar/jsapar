@@ -3,7 +3,7 @@ package org.jsapar.error;
 import org.jsapar.parse.*;
 
 /**
- * Created by stejon0 on 2016-07-12.
+ * Internal utility class for handling validation error.
  */
 public class ErrorHandler {
 
