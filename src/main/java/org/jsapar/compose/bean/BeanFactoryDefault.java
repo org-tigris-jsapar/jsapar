@@ -16,6 +16,7 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
      * This implementation creates the bean by using Class.forName method on the line type.
      * @see BeanFactory#createBean(Line)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException {
         Class<?> c = Class.forName(line.getLineType());
@@ -45,7 +46,8 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
     }
 
     /**
-     * @param sAttributeName
+     * Creates a set method name based on attribute name.
+     * @param sAttributeName The attribute name
      * @return The set method that corresponds to this attribute.
      */
     private String createSetMethodName(String sAttributeName) {
@@ -53,7 +55,8 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
     }
 
     /**
-     * @param sAttributeName
+     * Creates a get method based on attribute name.
+     * @param sAttributeName The attribute name
      * @return The get method that corresponds to this attribute.
      */
     private String createGetMethodName(String sAttributeName) {
@@ -61,8 +64,9 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
     }
 
     /**
-     * @param prefix
-     * @param sAttributeName
+     * Creates an access method based on attribute
+     * @param prefix The access method prefix.
+     * @param sAttributeName The attribute name.
      * @return The setter or setter method that corresponds to this attribute.
      */
     private String createBeanMethodName(String prefix, String sAttributeName) {

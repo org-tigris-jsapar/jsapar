@@ -7,8 +7,7 @@ import java.util.EventObject;
 
 /**
  * Event that is generated each time a bean is composed by a {@link BeanComposer}
- * The Generic type T should be set to a common base class of all the expected beans. Use Object as
- * base class if there is no common base class for all beans.
+ * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.
  * @author stejon0
  */
 public final class BeanComposedEvent<T> extends EventObject {

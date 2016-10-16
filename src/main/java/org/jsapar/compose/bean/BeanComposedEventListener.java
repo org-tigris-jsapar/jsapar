@@ -9,9 +9,7 @@ import java.util.EventListener;
 
 /**
  * Interface for receiving event call-backs while parsing.
- * The Generic type T should be set to a common base class of all the expected beans. Use Object as
- * base class if there is no common base class for all beans.
- *
+ * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.
  * @author stejon0
  * 
  */

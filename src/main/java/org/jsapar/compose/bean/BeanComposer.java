@@ -22,7 +22,7 @@ import java.util.Map;
  * Composer class that composes java beans based on a document or by single lines. The result is that for each bean that
  * was successfully composed, a {@link BeanComposedEvent} is generated to all registered {@link BeanComposedEventListener}.
  * You can register a {@link BeanComposedEventListener} by calling {@link #addComposedEventListener(BeanComposedEventListener)}
- * Created by stejon0 on 2016-10-09.
+ * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.
  */
 public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, ErrorEventListener {
     private static final String SET_PREFIX = "set";
