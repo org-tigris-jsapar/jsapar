@@ -83,7 +83,7 @@ public class ParserTest {
         Reader reader = new StringReader(toParse);
         TextParser parser = new TextParser(schema, reader);
         DocumentBuilder builder = new DocumentBuilder(parser);
-        builder.addErrorEventListener(new ThreasholdRecordingErrorEventListener(0));
+        builder.addErrorEventListener(new ThresholdRecordingErrorEventListener(0));
         Document doc = builder.build();
     }
     

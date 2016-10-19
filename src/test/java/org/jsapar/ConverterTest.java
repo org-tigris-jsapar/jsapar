@@ -11,7 +11,7 @@ import org.jsapar.convert.LineManipulator;
 import org.jsapar.error.JSaParException;
 import org.jsapar.error.MaxErrorsExceededException;
 import org.jsapar.error.RecordingErrorEventListener;
-import org.jsapar.error.ThreasholdRecordingErrorEventListener;
+import org.jsapar.error.ThresholdRecordingErrorEventListener;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
@@ -136,7 +136,7 @@ public class ConverterTest {
 
         try (StringWriter writer = new StringWriter(); StringReader reader = new StringReader(toParse)) {
             Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
-            RecordingErrorEventListener errorEventListener = new ThreasholdRecordingErrorEventListener(0);
+            RecordingErrorEventListener errorEventListener = new ThresholdRecordingErrorEventListener(0);
             converter.addErrorEventListener(errorEventListener);
             converter.convert();
         }

@@ -7,7 +7,7 @@ import java.util.List;
  * number has been reached will cause a {@link MaxErrorsExceededException} instead.
  * Created by stejon0 on 2016-10-15.
  */
-public class ThreasholdRecordingErrorEventListener extends RecordingErrorEventListener {
+public class ThresholdRecordingErrorEventListener extends RecordingErrorEventListener {
     private int maxNumberOfErrors;
 
     /**
@@ -16,7 +16,7 @@ public class ThreasholdRecordingErrorEventListener extends RecordingErrorEventLi
      *
      * @param maxNumberOfErrors The maximum number of errors allowed to be recorded
      */
-    public ThreasholdRecordingErrorEventListener(int maxNumberOfErrors) {
+    public ThresholdRecordingErrorEventListener(int maxNumberOfErrors) {
         this.maxNumberOfErrors = maxNumberOfErrors;
     }
 
@@ -26,7 +26,7 @@ public class ThreasholdRecordingErrorEventListener extends RecordingErrorEventLi
      * @param maxNumberOfErrors The maximum number of errors allowed to be recorded
      * @param errors            The list that errors will be added to.
      */
-    public ThreasholdRecordingErrorEventListener(int maxNumberOfErrors, List<JSaParError> errors) {
+    public ThresholdRecordingErrorEventListener(int maxNumberOfErrors, List<JSaParError> errors) {
         super(errors);
         this.maxNumberOfErrors = maxNumberOfErrors;
     }
