@@ -15,23 +15,23 @@ public class ComposeError extends JSaParError {
 
     /**
      * Creates a new ComposeError
-     * @param errorDescription Error message.
+     * @param message Error message.
      * @param line The line where the error occured.
      * @param exception An exception that was caught and is hereby forwarded as en error instead.
      */
-    public ComposeError(String errorDescription, Line line, Throwable exception) {
-        super(errorDescription, exception);
+    public ComposeError(String message, Line line, Throwable exception) {
+        super(message, exception);
         this.line = line.clone();
     }
 
 
     /**
      * Creates a new ComposeError
-     * @param errorDescription Error message.
+     * @param message Error message.
      * @param exception An exception that was caught and is hereby forwarded as en error instead.
      */
-    public ComposeError(String errorDescription, Throwable exception) {
-        super(errorDescription, exception);
+    public ComposeError(String message, Throwable exception) {
+        super(message, exception);
         this.line = null;
     }
 
@@ -44,6 +44,20 @@ public class ComposeError extends JSaParError {
         this.line = null;
     }
 
+    /**
+     * @return A simple message describing the error and it's location.
+     */
+    @Override
+    public String getMessage() {
+        if(line != null) {
+            StringBuilder sb = new StringBuilder(super.getMessage());
+            sb.append(" at line ");
+            sb.append(this.line);
+            return sb.toString();
+        }
+        else
+            return super.getMessage();
+    }
     /**
      * @return The line where the error occurred or null if no line reference could be given.
      */

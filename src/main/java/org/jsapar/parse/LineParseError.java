@@ -25,7 +25,7 @@ public class LineParseError extends JSaParError {
      * @param error The LineParseError to make a copy of
      */
     public LineParseError(long lineNumber, LineParseError error) {
-        super(error.getErrorDescription(), error.getException());
+        super(error.getMessage(), error.getCause());
         this.lineNumber = lineNumber;
     }
 
@@ -44,8 +44,8 @@ public class LineParseError extends JSaParError {
         StringBuilder sb = new StringBuilder();
         sb.append("Line=");
         sb.append(this.getLineNumber());
-        sb.append(" - Parse error: ");
-        sb.append(this.getErrorDescription());
+        sb.append(" - ");
+        sb.append(super.getMessage());
         return sb.toString();
     }
 

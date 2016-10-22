@@ -77,7 +77,7 @@ public final class CellParseError extends JSaParError {
      * @param error
      */
     public CellParseError(long lineNumber, CellParseError error) {
-        super(error.getErrorDescription(), error.getException());
+        super(error.getMessage(), error.getCause());
         this.lineNumber = lineNumber;
         this.cellName = error.cellName;
         this.cellValue = error.cellValue;
@@ -118,8 +118,8 @@ public final class CellParseError extends JSaParError {
         sb.append(", Value='");
         sb.append(this.cellValue);
         sb.append("'");
-        sb.append(" - Parse error: ");
-        sb.append(this.getErrorDescription());
+        sb.append(" - ");
+        sb.append(super.getMessage());
         if (cellFormat != null) {
             sb.append(" - Expected format: ");
             sb.append(this.cellFormat);

@@ -323,11 +323,15 @@ public class Line implements Serializable, Cloneable{
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if (this.lineType != null && this.lineType.length() > 0) {
-            sb.append("Line type=");
+            sb.append("Line type=[");
             sb.append(this.lineType);
-            sb.append(", ");
+            sb.append("]");
         }
-        sb.append("Cells: ");
+        if(this.getLineNumber() > 0){
+            sb.append(" Line number=");
+            sb.append(this.lineNumber);
+        }
+        sb.append(" Cells: ");
         sb.append(this.cellsByIndex);
         return sb.toString();
     }

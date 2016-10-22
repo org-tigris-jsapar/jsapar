@@ -8,6 +8,11 @@ import org.jsapar.parse.ParseException;
  */
 public class ExceptionErrorEventListener implements ErrorEventListener {
 
+    /**
+     * This implementation throws a {@link ParseException} for every call. This means that parsing/composing will be
+     * aborted upon the first error if this error event listener is registered.
+     * @param event The event that contains the error information.
+     */
     @Override
     public void errorEvent(ErrorEvent event) {
         throw new ParseException(event.getError());
