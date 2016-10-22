@@ -1,21 +1,19 @@
 /**
- * 
+ *
  */
 package org.jsapar.format;
 
-import static org.junit.Assert.*;
-
-import java.text.ParseException;
-import java.text.ParsePosition;
-
-import org.jsapar.format.BooleanFormat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.ParseException;
+import java.text.ParsePosition;
+
+import static org.junit.Assert.*;
+
 /**
  * @author stejon0
- *
  */
 public class BooleanFormatTest {
 
@@ -33,7 +31,14 @@ public class BooleanFormatTest {
     public void tearDown() throws Exception {
     }
 
-
+    @Test
+    public void testJavadocSample() {
+        BooleanFormat format = new BooleanFormat("Y", "N");
+        assert format.format(true).equals("Y");
+        assert format.format(false).equals("N");
+        assert format.parse("Y");
+        assert !format.parse("N");
+    }
 
     /**
      * Test method for {@link org.jsapar.format.BooleanFormat#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)}.
@@ -45,6 +50,13 @@ public class BooleanFormatTest {
         assertEquals("ja", f.format(Boolean.TRUE));
     }
 
+    @Test
+    public void testFormatDefault() {
+        BooleanFormat f = new BooleanFormat();
+        assertEquals("false", f.format(Boolean.FALSE));
+        assertEquals("true", f.format(Boolean.TRUE));
+    }
+
     /**
      * Test method for {@link org.jsapar.format.BooleanFormat#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)}.
      */
@@ -54,7 +66,7 @@ public class BooleanFormatTest {
         assertEquals("", f.format(Boolean.FALSE));
         assertEquals("ja", f.format(Boolean.TRUE));
     }
-    
+
     /**
      * Test method for {@link org.jsapar.format.BooleanFormat#format(boolean)}.
      */
@@ -67,7 +79,8 @@ public class BooleanFormatTest {
 
     /**
      * Test method for {@link org.jsapar.format.BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
-     * @throws ParseException 
+     *
+     * @throws ParseException
      */
     @Test
     public void testParseObjectString() throws ParseException {
@@ -80,21 +93,22 @@ public class BooleanFormatTest {
 
     /**
      * Test method for {@link org.jsapar.format.BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
-     * @throws ParseException 
+     *
+     * @throws ParseException
      */
     @Test
     public void testParseObjectStringParsePosition() throws ParseException {
         BooleanFormat f = new BooleanFormat("ja", "nej");
         assertEquals(Boolean.TRUE, f.parseObject("   ja", new ParsePosition(3)));
-        
+
         ParsePosition pos = new ParsePosition(3);
         assertEquals(Boolean.TRUE, f.parseObject("   JA  ", pos));
         assertEquals(5, pos.getIndex());
-        
+
         assertEquals(Boolean.FALSE, f.parseObject("   nej ", new ParsePosition(3)));
         assertEquals(Boolean.FALSE, f.parseObject("   NEJ", new ParsePosition(3)));
     }
-    
+
     /**
      * Test method for {@link org.jsapar.format.BooleanFormat#parse(java.lang.String)}.
      */

@@ -9,15 +9,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by stejon0 on 2016-04-17.
+ * Creates csv line parsers based on schema.
  */
 public class CsvLineParserFactory {
 
-    private CsvSchema                  schema;
     private List<CsvLineParserMatcher> lineParserMatchers;
 
     public CsvLineParserFactory(CsvSchema schema) {
-        this.schema = schema;
         lineParserMatchers = new LinkedList<>();
         for (CsvSchemaLine schemaLine : schema.getCsvSchemaLines()) {
             lineParserMatchers.add(new CsvLineParserMatcher(schemaLine));
