@@ -1,13 +1,9 @@
 package org.jsapar.error;
 
-import org.jsapar.parse.ParseException;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-/**
- * Created by stejon0 on 2016-10-16.
- */
 public class ErrorEventSourceTest {
 
 
@@ -26,10 +22,10 @@ public class ErrorEventSourceTest {
         assertEquals(0, instance.size());
     }
 
-    @Test(expected = ParseException.class)
+    @Test(expected = JSaParException.class)
     public void testErrorEvent_default() throws Exception {
         ErrorEventSource instance = new ErrorEventSource();
-        instance.errorEvent(new ErrorEvent(this, new JSaParError("test")));
+        instance.errorEvent(new ErrorEvent(this, new JSaParException("test")));
     }
 
     @Test
@@ -40,7 +36,7 @@ public class ErrorEventSourceTest {
             public void errorEvent(ErrorEvent event) {
             }
         });
-        instance.errorEvent(new ErrorEvent(this, new JSaParError("test")));
+        instance.errorEvent(new ErrorEvent(this, new JSaParException("test")));
     }
 
 }

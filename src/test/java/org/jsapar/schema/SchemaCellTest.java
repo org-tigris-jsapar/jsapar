@@ -3,22 +3,16 @@
  */
 package org.jsapar.schema;
 
-import static org.junit.Assert.*;
-
-import java.util.Locale;
-
-import org.jsapar.error.ErrorEventListener;
-import org.jsapar.model.Cell;
-import org.jsapar.model.CellType;
-import org.jsapar.model.EmptyCell;
-import org.jsapar.model.FloatCell;
-import org.jsapar.model.IntegerCell;
-import org.jsapar.model.StringCell;
-import org.jsapar.parse.ParseException;
+import org.jsapar.model.*;
+import org.jsapar.parse.CellParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.Locale;
+
+import static org.junit.Assert.*;
 
 /**
  * @author stejon0
@@ -54,10 +48,10 @@ public class SchemaCellTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      * 
-     * @throws ParseException
+     * 
      */
     @Test
-    public void testMakeCell_String() throws ParseException, java.text.ParseException {
+    public void testMakeCell_String() throws java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
 
         Cell cell = schemaCell.makeCell("the value");
@@ -67,10 +61,10 @@ public class SchemaCellTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      * 
-     * @throws ParseException
+     * 
      */
     @Test
-    public void testMakeCell_DefaultString() throws ParseException, java.text.ParseException {
+    public void testMakeCell_DefaultString() throws java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultCell(new StringCell("test","TheDefault"));
 
@@ -81,10 +75,10 @@ public class SchemaCellTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      * 
-     * @throws ParseException
+     * 
      */
     @Test
-    public void testMakeCell_missing_no_default() throws ParseException, java.text.ParseException {
+    public void testMakeCell_missing_no_default() throws java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
 
         Cell cell = schemaCell.makeCell("");
@@ -94,10 +88,10 @@ public class SchemaCellTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      * 
-     * @throws ParseException
+     * 
      */
     @Test
-    public void testMakeCell_DefaultValue() throws ParseException, java.text.ParseException {
+    public void testMakeCell_DefaultValue() throws java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultValue("TheDefault");
 
@@ -108,11 +102,11 @@ public class SchemaCellTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      * 
-     * @throws ParseException
+     * 
      * @throws SchemaException 
      */
     @Test
-    public void testMakeCell_DefaultValue_float() throws ParseException, SchemaException, java.text.ParseException {
+    public void testMakeCell_DefaultValue_float() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
         schemaCell.setDefaultValue("123456,78901");
@@ -122,7 +116,7 @@ public class SchemaCellTest {
     }
     
     @Test
-    public void testMakeCell_empty_pattern() throws ParseException, SchemaException, java.text.ParseException {
+    public void testMakeCell_empty_pattern() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
         schemaCell.setEmptyPattern("NULL");
@@ -136,7 +130,7 @@ public class SchemaCellTest {
     }
     
     @Test
-    public void testMakeCell_empty_pattern_default() throws ParseException, SchemaException, java.text.ParseException {
+    public void testMakeCell_empty_pattern_default() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
         schemaCell.setEmptyPattern("NULL");
@@ -150,11 +144,11 @@ public class SchemaCellTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      * 
-     * @throws ParseException
+     * 
      * @throws SchemaException
      */
     @Test
-    public void testMakeCell_RegExp() throws ParseException, SchemaException, java.text.ParseException {
+    public void testMakeCell_RegExp() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING, "[A-Z]{3}[0-9]{0,3}de"));
 
@@ -165,11 +159,11 @@ public class SchemaCellTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      * 
-     * @throws ParseException
+     * 
      * @throws SchemaException
      */
     @Test(expected=java.text.ParseException.class)
-    public void testMakeCell_RegExp_fail() throws SchemaException, ParseException, java.text.ParseException {
+    public void testMakeCell_RegExp_fail() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING, "[A-Z]{3}[0-9]{0,3}de"));
 
@@ -180,7 +174,7 @@ public class SchemaCellTest {
     }
 
     @Test
-    public void testMakeCell_CellTypeStringStringFormat() throws ParseException, SchemaException,
+    public void testMakeCell_CellTypeStringStringFormat() throws SchemaException,
             java.text.ParseException {
         Cell cell = SchemaCell.makeCell(CellType.STRING, "test", "the value", Locale.getDefault());
         assertEquals("the value", cell.getStringValue());
@@ -188,7 +182,7 @@ public class SchemaCellTest {
 
 
     @Test
-    public void testMakeCell_UnfinishedInteger() throws SchemaException, ParseException {
+    public void testMakeCell_UnfinishedInteger() throws SchemaException {
         @SuppressWarnings("unused")
         Cell cell;
         try {
@@ -202,7 +196,7 @@ public class SchemaCellTest {
 
 
     @Test
-    public void testMakeCell_Integer() throws SchemaException, ParseException, java.text.ParseException {
+    public void testMakeCell_Integer() throws SchemaException, java.text.ParseException {
         Cell cell;
         cell = SchemaCell.makeCell(CellType.INTEGER, "number", "12345", Locale.getDefault());
         assertEquals(IntegerCell.class, cell.getClass());
@@ -210,7 +204,7 @@ public class SchemaCellTest {
     }
 
     @Test
-    public void testMakeCell_Integer_DefaultValue() throws SchemaException, ParseException, java.text.ParseException {
+    public void testMakeCell_Integer_DefaultValue() throws SchemaException, java.text.ParseException {
         SchemaCell schemaCell = new TestSchemaCell("A number");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
         schemaCell.setDefaultValue("42");
@@ -222,7 +216,7 @@ public class SchemaCellTest {
     }
 
     @Test
-    public void testMakeCell_UnfinishedFloat() throws SchemaException, ParseException {
+    public void testMakeCell_UnfinishedFloat() throws SchemaException {
         @SuppressWarnings("unused")
         Cell cell;
         Locale locale = new Locale("UK_en");
@@ -236,7 +230,7 @@ public class SchemaCellTest {
     }
 
     @Test
-    public void testMakeCell_Float() throws SchemaException, ParseException, java.text.ParseException {
+    public void testMakeCell_Float() throws SchemaException, java.text.ParseException {
         Cell cell;
         Locale locale = new Locale("UK_en");
         cell = SchemaCell.makeCell(CellType.FLOAT, "number", "12.345", locale);
@@ -244,10 +238,10 @@ public class SchemaCellTest {
     }
 
     /**
-     * @throws ParseException
+     * 
      */
     @Test
-    public void testMakeCell_Integer_RangeValid() throws ParseException, java.text.ParseException {
+    public void testMakeCell_Integer_RangeValid() throws java.text.ParseException {
 
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
@@ -261,12 +255,12 @@ public class SchemaCellTest {
     }
 
     /**
-     * @throws ParseException 
-     * @throws ParseException
+     *  
+     * 
      */
     @Ignore
-    @Test(expected = ParseException.class)
-    public void testMakeCell_Integer_MinRangeNotValid() throws ParseException, java.text.ParseException {
+    @Test(expected = CellParseException.class)
+    public void testMakeCell_Integer_MinRangeNotValid() throws java.text.ParseException {
 
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
@@ -276,12 +270,12 @@ public class SchemaCellTest {
     }
 
     /**
-     * @throws ParseException
-     * @throws ParseException
+     * 
+     * 
      */
     @Ignore
-    @Test(expected = ParseException.class)
-    public void testMakeCell_Integer_MaxRangeNotValid() throws ParseException, java.text.ParseException {
+    @Test(expected = CellParseException.class)
+    public void testMakeCell_Integer_MaxRangeNotValid() throws java.text.ParseException {
 
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));

@@ -1,19 +1,13 @@
 package org.jsapar.parse.fixed;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-
+import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ExceptionErrorEventListener;
-import org.jsapar.parse.CellParseError;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.model.CellType;
 import org.jsapar.error.JSaParException;
+import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
-import org.jsapar.error.ErrorEvent;
+import org.jsapar.parse.CellParseException;
+import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
@@ -21,6 +15,12 @@ import org.jsapar.schema.SchemaCellFormat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+
+import static org.junit.Assert.assertEquals;
 
 public class FixedWidthLineParserTest {
     
@@ -105,7 +105,7 @@ public class FixedWidthLineParserTest {
         boolean rc = parser.parse(reader, 1, new TestVerifyListener(), new ErrorEventListener() {
             @Override
             public void errorEvent(ErrorEvent event) {
-                CellParseError e = (CellParseError) event.getError();
+                CellParseException e = (CellParseException) event.getError();
                 assertEquals("City", e.getCellName());
                 foundError=true;
             }
@@ -115,7 +115,7 @@ public class FixedWidthLineParserTest {
         assertEquals(true, foundError);
     }
 
-    @Test(expected = org.jsapar.parse.ParseException.class)
+    @Test(expected = CellParseException.class)
     public void testParse_parseError() throws IOException, JSaParException {
         String toParse = "JonasStenbergFortyone";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();

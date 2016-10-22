@@ -1,10 +1,18 @@
 package org.jsapar.parse.xml;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import org.jsapar.error.ErrorEvent;
+import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
+import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
+import org.jsapar.model.DateCell;
+import org.jsapar.model.Line;
+import org.jsapar.parse.*;
+import org.jsapar.schema.SchemaCell;
+import org.jsapar.schema.Xml2SchemaBuilder;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import javax.xml.XMLConstants;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -16,22 +24,11 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
-import org.jsapar.parse.Parser;
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.error.ErrorEventListener;
-import org.jsapar.parse.*;
-import org.jsapar.model.Cell;
-import org.jsapar.model.CellType;
-import org.jsapar.model.DateCell;
-import org.jsapar.error.JSaParException;
-import org.jsapar.model.Line;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.schema.SchemaCell;
-import org.jsapar.schema.Xml2SchemaBuilder;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class XmlParser extends AbstractParser implements Parser {
     // private final static String SCHEMA_LANGUAGE =
@@ -187,7 +184,7 @@ public class XmlParser extends AbstractParser implements Parser {
          */
         @Override
         public void error(SAXParseException e) throws SAXException {
-            CellParseError error = new CellParseError(this.currentLineNumber, this.currentCellName, "", null,
+            CellParseException error = new CellParseException(this.currentLineNumber, this.currentCellName, "", null,
                     e.getMessage());
             this.errorEventListener.errorEvent(new ErrorEvent(this, error));
         }
@@ -200,7 +197,7 @@ public class XmlParser extends AbstractParser implements Parser {
          */
         @Override
         public void fatalError(SAXParseException e) throws SAXException {
-            CellParseError error = new CellParseError(this.currentLineNumber, this.currentCellName, "", null,
+            CellParseException error = new CellParseException(this.currentLineNumber, this.currentCellName, "", null,
                     e.getMessage());
             this.errorEventListener.errorEvent(new ErrorEvent(this, error));
         }
@@ -214,7 +211,7 @@ public class XmlParser extends AbstractParser implements Parser {
          */
         @Override
         public void warning(SAXParseException e) throws SAXException {
-            CellParseError error = new CellParseError(this.currentLineNumber, this.currentCellName, "", null,
+            CellParseException error = new CellParseException(this.currentLineNumber, this.currentCellName, "", null,
                     e.getMessage());
             this.errorEventListener.errorEvent(new ErrorEvent(this, error));
         }

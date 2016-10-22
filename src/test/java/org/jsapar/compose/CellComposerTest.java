@@ -4,7 +4,6 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.EmptyCell;
 import org.jsapar.model.StringCell;
-import org.jsapar.parse.ParseException;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.schema.SchemaException;
@@ -36,10 +35,9 @@ public class CellComposerTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      *
-     * @throws ParseException
      */
     @Test
-    public void testFormat_emptyString_DefaultValue() throws ParseException, java.text.ParseException {
+    public void testFormat_emptyString_DefaultValue() throws java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultValue("TheDefault");
 
@@ -51,10 +49,10 @@ public class CellComposerTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      *
-     * @throws ParseException
+     * 
      */
     @Test
-    public void testFormat_empty_DefaultValue() throws ParseException, java.text.ParseException {
+    public void testFormat_empty_DefaultValue() throws java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultValue("TheDefault");
 
@@ -66,10 +64,10 @@ public class CellComposerTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      *
-     * @throws ParseException
+     * 
      */
     @Test
-    public void testFormat_null_DefaultValue() throws ParseException, java.text.ParseException {
+    public void testFormat_null_DefaultValue() throws java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultValue("TheDefault");
 
@@ -80,10 +78,10 @@ public class CellComposerTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      *
-     * @throws ParseException
+     * 
      */
     @Test
-    public void testFormat_empty_no_default() throws ParseException {
+    public void testFormat_empty_no_default()  {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
 
         Cell cell = new EmptyCell("Test", CellType.STRING);
@@ -95,10 +93,10 @@ public class CellComposerTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      *
-     * @throws ParseException
+     * 
      */
     @Test
-    public void testFormat_null_no_default() throws ParseException {
+    public void testFormat_null_no_default()  {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
 
         CellComposer composer = new CellComposer();
@@ -108,11 +106,11 @@ public class CellComposerTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      *
-     * @throws ParseException
+     * 
      * @throws SchemaException
      */
     @Test
-    public void testFormat_DefaultValue_float() throws ParseException, SchemaException, java.text.ParseException {
+    public void testFormat_DefaultValue_float() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
         schemaCell.setDefaultValue("123456,78901");
@@ -125,11 +123,11 @@ public class CellComposerTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      *
-     * @throws ParseException
+     * 
      * @throws SchemaException
      */
     @Test
-    public void testFormat_empty_integer() throws ParseException, SchemaException {
+    public void testFormat_empty_integer() throws SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
 
@@ -141,11 +139,11 @@ public class CellComposerTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      *
-     * @throws ParseException
+     * 
      * @throws SchemaException
      */
     @Test
-    public void testFormat() throws ParseException, SchemaException {
+    public void testFormat() throws SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
 
         CellComposer composer = new CellComposer();
@@ -156,7 +154,7 @@ public class CellComposerTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      *
-     * @throws ParseException
+     * 
      * @throws SchemaException
      */
     @Test
@@ -172,7 +170,7 @@ public class CellComposerTest {
     /**
      * Test method for {@link SchemaCell#makeCell(String)}.
      *
-     * @throws ParseException
+     * 
      * @throws SchemaException
      */
     @Test(expected=IllegalArgumentException.class)

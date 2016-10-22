@@ -19,10 +19,10 @@ public class LineDecoratorErrorEventListener implements ErrorEventListener {
 
     @Override
     public void errorEvent(ErrorEvent event) {
-        if(event.getError() instanceof CellParseError)
-            ((CellParseError) event.getError()).setLineNumber(lineNumber);
-        else if(event.getError() instanceof LineParseError)
-            ((LineParseError) event.getError()).setLineNumber(lineNumber);
+        if(event.getError() instanceof CellParseException)
+            ((CellParseException) event.getError()).setLineNumber(lineNumber);
+        else if(event.getError() instanceof LineParseException)
+            ((LineParseException) event.getError()).setLineNumber(lineNumber);
         errorListener.errorEvent(event);
     }
 

@@ -1,14 +1,13 @@
 package org.jsapar.parse.fixed;
 
-import java.io.IOException;
-import java.io.Reader;
-
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
-import org.jsapar.error.ErrorEventListener;
-import org.jsapar.parse.ParseException;
 import org.jsapar.parse.CellParser;
 import org.jsapar.schema.FixedWidthSchemaCell;
+
+import java.io.IOException;
+import java.io.Reader;
 
 public class FixedWidthCellParser extends CellParser {
 
@@ -25,23 +24,22 @@ public class FixedWidthCellParser extends CellParser {
      * @param trimFillCharacters If true, fill characters are ignored while reading string values. If the cell is
      *                           of any other type, the value is trimmed any way before parsing.
      * @param fillCharacter      The fill character to ignore if trimFillCharacters is true.
-     * @param listener
+     * @param errorEventListener The error event listener to deliver errors to while parsing.
      * @return A Cell filled with the parsed cell value and with the name of this schema cell.
      * @throws IOException
-     * @throws ParseException
      */
     public Cell parse(FixedWidthSchemaCell cellSchema,
                       Reader reader,
                       boolean trimFillCharacters,
                       char fillCharacter,
-                      ErrorEventListener listener) throws IOException {
+                      ErrorEventListener errorEventListener) throws IOException {
 
         String sValue = parseToString(cellSchema, reader, 0, trimFillCharacters, fillCharacter);
         if(sValue == null) {
-            checkIfMandatory(cellSchema, listener);
+            checkIfMandatory(cellSchema, errorEventListener);
             return null;
         }
-        return parse(cellSchema, sValue, listener);
+        return parse(cellSchema, sValue, errorEventListener);
     }
 
     /**

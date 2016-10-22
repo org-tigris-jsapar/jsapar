@@ -10,7 +10,7 @@ public class RecordingErrorEventListenerTest {
     public void testErrorEvent() throws Exception {
         RecordingErrorEventListener instance = new RecordingErrorEventListener();
         assertTrue(instance.getErrors().isEmpty());
-        JSaParError anError = new JSaParError("testing");
+        JSaParException anError = new JSaParException("testing");
         instance.errorEvent(new ErrorEvent(this, anError));
         assertEquals(1, instance.getErrors().size());
         assertSame(anError, instance.getErrors().get(0));

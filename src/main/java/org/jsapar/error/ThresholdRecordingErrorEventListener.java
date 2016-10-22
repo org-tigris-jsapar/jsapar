@@ -26,7 +26,7 @@ public class ThresholdRecordingErrorEventListener extends RecordingErrorEventLis
      * @param maxNumberOfErrors The maximum number of errors allowed to be recorded
      * @param errors            The list that errors will be added to.
      */
-    public ThresholdRecordingErrorEventListener(int maxNumberOfErrors, List<JSaParError> errors) {
+    public ThresholdRecordingErrorEventListener(int maxNumberOfErrors, List<JSaParException> errors) {
         super(errors);
         this.maxNumberOfErrors = maxNumberOfErrors;
     }

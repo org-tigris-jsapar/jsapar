@@ -1,20 +1,25 @@
 package org.jsapar.parse.fixed;
 
-import static org.junit.Assert.assertEquals;
+import org.jsapar.error.ExceptionErrorEventListener;
+import org.jsapar.error.JSaParException;
+import org.jsapar.error.ValidationAction;
+import org.jsapar.model.Document;
+import org.jsapar.parse.DocumentBuilderLineEventListener;
+import org.jsapar.parse.LineParseException;
+import org.jsapar.parse.ParseConfig;
+import org.jsapar.schema.FixedWidthSchema;
+import org.jsapar.schema.FixedWidthSchemaCell;
+import org.jsapar.schema.FixedWidthSchemaLine;
+import org.jsapar.schema.MatchingCellValueCondition;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.jsapar.error.ExceptionErrorEventListener;
-import org.jsapar.error.ValidationAction;
-import org.jsapar.parse.*;
-import org.jsapar.model.Document;
-import org.jsapar.error.JSaParException;
-import org.jsapar.schema.*;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class FixedWidthControlCellParserTest {
 
@@ -149,7 +154,7 @@ public class FixedWidthControlCellParserTest {
      * @throws IOException
      * @throws JSaParException
      */
-    @Test(expected = ParseException.class)
+    @Test(expected = LineParseException.class)
     public void testParse_errorOnUndefinedLineType() throws JSaParException, IOException {
         String toParse = "X JonasStenberg   ";
         org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();

@@ -1,11 +1,8 @@
 package org.jsapar.parse.fixed;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.error.ExceptionErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.*;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.LineParsedEvent;
-import org.jsapar.parse.ParseException;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.schema.SchemaException;
@@ -19,21 +16,12 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-/**
- * Created by stejon0 on 2016-03-13.
- */
+@SuppressWarnings("ThrowablePrintedToSystemOut")
 public class FixedWidthCellParserTest {
 
-
-    private class TestParsingEventListener implements LineEventListener {
-
-        @Override
-        public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
-        }
-
-    }
 
     @Test
     public final void testBuild() throws IOException, JSaParException {
@@ -66,20 +54,18 @@ public class FixedWidthCellParserTest {
         schemaCell.setMandatory(true);
 
         Reader reader = new StringReader(toParse);
-        @SuppressWarnings("unused")
-        Cell cell;
         try {
             FixedWidthCellParser cellParser = new FixedWidthCellParser();
-            cell = cellParser.parse(schemaCell,reader, true, ' ', new ExceptionErrorEventListener());
+            cellParser.parse(schemaCell,reader, true, ' ', new ExceptionErrorEventListener());
             fail("Should throw exception");
 
-        } catch (ParseException ex) {
+        } catch (JSaParException ex) {
             System.out.println(ex);
         }
     }
 
     @Test
-    public final void testBuildEmptyOptional() throws IOException, ParseException {
+    public final void testBuildEmptyOptional() throws IOException {
         String toParse = "           ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
 
@@ -91,7 +77,7 @@ public class FixedWidthCellParserTest {
     }
 
     @Test
-    public final void testBuildEmptyOptionalInteger() throws IOException, ParseException {
+    public final void testBuildEmptyOptionalInteger() throws IOException {
         String toParse = "           ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("ShoeSize", 11);
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
@@ -107,7 +93,7 @@ public class FixedWidthCellParserTest {
      * A cell should not be considerede empty if blanks are not removed by trimming.
      */
     @Test
-    public final void testBuildEmptyMandatoryNoTrim() throws IOException, Exception {
+    public final void testBuildEmptyMandatoryNoTrim() throws Exception {
         String toParse = "           ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
         schemaCell.setMandatory(true);
@@ -120,7 +106,7 @@ public class FixedWidthCellParserTest {
     }
 
     @Test
-    public final void testBuild_empty() throws IOException, JSaParException {
+    public final void testBuild_empty() throws IOException {
         String toParse = "           ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
 
@@ -133,7 +119,7 @@ public class FixedWidthCellParserTest {
     }
 
     @Test
-    public final void testBuild_date() throws IOException, JSaParException, SchemaException {
+    public final void testBuild_date() throws IOException {
         String toParse = "2007-04-10 16:15";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Date", 16);
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.DATE, "yyyy-MM-dd HH:mm"));
@@ -153,7 +139,7 @@ public class FixedWidthCellParserTest {
     }
 
     @Test
-    public final void testBuild_decimal_sv() throws IOException, JSaParException, SchemaException {
+    public final void testBuild_decimal_sv() throws IOException {
         String toParse = "-123 456,78  ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Decimal", 11);
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.DECIMAL, "#,###.#", new Locale("sv", "SE")));
@@ -254,7 +240,7 @@ public class FixedWidthCellParserTest {
     }
 
     @Test
-    public final void testBuildZeroLength() throws IOException, ParseException {
+    public final void testBuildZeroLength() throws IOException {
         String toParse = "Next";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("DontRead", 0);
 

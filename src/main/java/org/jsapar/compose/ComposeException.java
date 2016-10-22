@@ -1,12 +1,12 @@
 package org.jsapar.compose;
 
-import org.jsapar.error.JSaParError;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 
 /**
  * Error that can happen when composing.
  */
-public class ComposeError extends JSaParError {
+public class ComposeException extends JSaParException {
 
     /**
      * A clone of the line that caused the error.
@@ -14,32 +14,41 @@ public class ComposeError extends JSaParError {
     private final Line line;
 
     /**
-     * Creates a new ComposeError
+     * Creates a new ComposeException
      * @param message Error message.
      * @param line The line where the error occured.
      * @param exception An exception that was caught and is hereby forwarded as en error instead.
      */
-    public ComposeError(String message, Line line, Throwable exception) {
+    public ComposeException(String message, Line line, Throwable exception) {
         super(message, exception);
         this.line = line.clone();
     }
 
+    /**
+     * Creates a new ComposeException
+     * @param message Error message.
+     * @param line The line where the error occured.
+     */
+    public ComposeException(String message, Line line) {
+        super(message);
+        this.line = line.clone();
+    }
 
     /**
-     * Creates a new ComposeError
+     * Creates a new ComposeException
      * @param message Error message.
      * @param exception An exception that was caught and is hereby forwarded as en error instead.
      */
-    public ComposeError(String message, Throwable exception) {
+    public ComposeException(String message, Throwable exception) {
         super(message, exception);
         this.line = null;
     }
 
     /**
-     * Creates a new ComposeError
+     * Creates a new ComposeException
      * @param errorDescription Error message.
      */
-    public ComposeError(String errorDescription) {
+    public ComposeException(String errorDescription) {
         super(errorDescription);
         this.line = null;
     }
@@ -50,10 +59,8 @@ public class ComposeError extends JSaParError {
     @Override
     public String getMessage() {
         if(line != null) {
-            StringBuilder sb = new StringBuilder(super.getMessage());
-            sb.append(" at line ");
-            sb.append(this.line);
-            return sb.toString();
+            return super.getMessage() + " at line " +
+                    this.line;
         }
         else
             return super.getMessage();

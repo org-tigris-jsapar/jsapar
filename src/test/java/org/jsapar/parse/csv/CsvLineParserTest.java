@@ -1,25 +1,24 @@
 package org.jsapar.parse.csv;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.io.IOException;
-import java.io.StringReader;
-
-import org.jsapar.error.JSaParException;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ExceptionErrorEventListener;
-import org.jsapar.parse.CellParseError;
-import org.jsapar.parse.LineEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
+import org.jsapar.parse.CellParseException;
+import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
-import org.jsapar.parse.ParseException;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.StringReader;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class CsvLineParserTest {
 
@@ -391,7 +390,7 @@ public class CsvLineParserTest {
         }, new ErrorEventListener() {
             @Override
             public void errorEvent(ErrorEvent event) {
-                assertEquals("Happy", ((CellParseError)event.getError()).getCellName());
+                assertEquals("Happy", ((CellParseException)event.getError()).getCellName());
                 foundError = true;
             }
         });
@@ -428,7 +427,7 @@ public class CsvLineParserTest {
 
     }
 
-    @Test(expected = ParseException.class)
+    @Test(expected = CellParseException.class)
     public void testParse_withMandatoryLast() throws JSaParException, IOException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");

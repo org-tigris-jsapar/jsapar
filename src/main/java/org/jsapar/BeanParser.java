@@ -3,24 +3,20 @@
  */
 package org.jsapar;
 
+import org.jsapar.error.ErrorEvent;
+import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
+import org.jsapar.model.*;
+import org.jsapar.parse.AbstractParser;
+import org.jsapar.parse.CellParseException;
+import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.Parser;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
-import java.util.logging.Logger;
-
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.JSaParException;
-import org.jsapar.model.BigDecimalCell;
-import org.jsapar.model.BooleanCell;
-import org.jsapar.model.DateCell;
-import org.jsapar.model.FloatCell;
-import org.jsapar.model.IntegerCell;
-import org.jsapar.model.Line;
-import org.jsapar.model.StringCell;
-import org.jsapar.parse.*;
 
 /**
  * Uses a collection of java objects to build a org.jsapar.model.Document.
@@ -29,7 +25,6 @@ import org.jsapar.parse.*;
  */
 public class BeanParser<T> extends  AbstractParser implements Parser{
     
-    protected static Logger logger = Logger.getLogger("org.jsapar");
 
     private int maxSubLevels = 100;
     private Iterator<? extends T> iterator;
@@ -82,7 +77,6 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
             return;
         
         Method[] methods = object.getClass().getMethods();
-        Object[] logInfo = new Object[] { object.getClass().getName(), null };
 
         for (Method f : methods) {
             String sAttributeName="?";
@@ -91,11 +85,11 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
                 if (f.getParameterTypes().length == 0 && sMethodName.length() > 3
                         && sMethodName.substring(0, 3).equals("get")) {
                     sAttributeName = makeAttributeName(prefix, sMethodName);
-                    logInfo[1] = sAttributeName;
                     @SuppressWarnings("rawtypes")
                     Class returnType = f.getReturnType();
 
                     if (returnType.isAssignableFrom(Class.class)) {
+                        //noinspection UnnecessaryContinue
                         continue;
                     } else if (returnType.isAssignableFrom(String.class)) {
                         String value = (String) f.invoke(object);
@@ -135,26 +129,26 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
                         if(subObject == null)
                             continue;
                         // We only want to avoid loops not multiple paths to same object.
-                        Set<Object> visitedClone = new HashSet<Object>(visited);
+                        Set<Object> visitedClone = new HashSet<>(visited);
                         visitedClone.add(object);
                         // Recursively add sub classes.
                         this.parseBean(line, subObject, sAttributeName, visitedClone, errorListener);
                     }
                 }
             } catch (IllegalArgumentException e) {
-                errorListener.errorEvent(new ErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - Illegal argument in getter method.")));
+                errorListener.errorEvent(new ErrorEvent(this, new CellParseException(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - Illegal argument in getter method.")));
             } catch (IllegalAccessException e) {
-                errorListener.errorEvent(new ErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - attribute getter does not have public access.")));
+                errorListener.errorEvent(new ErrorEvent(this, new CellParseException(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - attribute getter does not have public access.")));
             } catch (InvocationTargetException e) {
-                errorListener.errorEvent(new ErrorEvent(this, new CellParseError(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - getter method fails to execute.")));
+                errorListener.errorEvent(new ErrorEvent(this, new CellParseException(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - getter method fails to execute.")));
             }
         }
     }
 
     /**
      * Creates the attribute name based on get method name.
-     * @param prefix
-     * @param sMethodName
+     * @param prefix A prefix that will be appended before the attribute name.
+     * @param sMethodName The method that is used to construct the attribute name.
      * @return The attribute name that is built from the getter name.
      */
     private String makeAttributeName(String prefix, String sMethodName) {
@@ -170,7 +164,7 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
 
     /**
      * Sets maximum number of sub-objects that are read while storing a line object.
-     * @param maxSubLevels
+     * @param maxSubLevels Maximum number of sub-objects that are read while storing a line object
      */
     public void setMaxSubLevels(int maxSubLevels) {
         this.maxSubLevels = maxSubLevels;

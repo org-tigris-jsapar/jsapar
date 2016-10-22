@@ -3,9 +3,9 @@ package org.jsapar.error;
 import java.util.EventObject;
 
 public final class ErrorEvent extends EventObject {
-    final JSaParError error;
+    final JSaParException error;
 
-    public ErrorEvent(Object source, JSaParError error) {
+    public ErrorEvent(Object source, JSaParException error) {
         super(source);
         this.error = error;
     }
@@ -13,7 +13,7 @@ public final class ErrorEvent extends EventObject {
     /**
      * @return the error
      */
-    public JSaParError getError() {
+    public JSaParException getError() {
         return error;
     }
 

@@ -1,33 +1,27 @@
 package org.jsapar;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.jsapar.compose.bean.RecordingBeanEventListener;
 import org.jsapar.error.JSaParException;
-import org.jsapar.model.Line;
-import org.jsapar.parse.CellParseError;
 import org.jsapar.model.BooleanCell;
 import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;
+import org.jsapar.model.Line;
+import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.Parser;
 import org.jsapar.parse.xml.XmlParser;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * These tests are not unit tests!!<br>
@@ -146,7 +140,7 @@ public class JSaParExamplesTest {
 
     @Test
     public final void testExampleXml05() throws SchemaException, IOException, JSaParException {
-        java.util.List<CellParseError> parseErrors = new java.util.LinkedList<CellParseError>();
+        java.util.List<CellParseException> parseErrors = new java.util.LinkedList<CellParseException>();
         Reader fileReader = new FileReader("samples/05_Names.xml");
         Parser parser = new XmlParser(fileReader);
         DocumentBuilder builder = new DocumentBuilder(parser);

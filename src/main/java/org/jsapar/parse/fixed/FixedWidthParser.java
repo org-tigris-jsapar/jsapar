@@ -4,8 +4,9 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.ErrorHandler;
-import org.jsapar.parse.*;
+import org.jsapar.parse.ErrorHandler;
+import org.jsapar.parse.ParseConfig;
+import org.jsapar.parse.SchemaParser;
 import org.jsapar.schema.FixedWidthSchema;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public abstract class FixedWidthParser implements SchemaParser {
         lineParserFactory = new FWLineParserFactory(schema);
     }
 
-    protected void handleNoParser(long lineNumber, LineParserMatcherResult result, ErrorEventListener errorEventListener) throws IOException, ParseException {
+    protected void handleNoParser(long lineNumber, LineParserMatcherResult result, ErrorEventListener errorEventListener) throws IOException {
 
         // Check if EOF
         if (result == LineParserMatcherResult.NOT_MATCHING)

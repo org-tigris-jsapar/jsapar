@@ -3,7 +3,7 @@ package org.jsapar;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Document;
-import org.jsapar.parse.ParseException;
+import org.jsapar.parse.CellParseException;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 import org.jsapar.schema.SchemaCellFormat;
@@ -14,11 +14,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringReader;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-/**
- * Created by stejon0 on 2016-10-02.
- */
 public class DocumentBuilderTest {
 
     @Before
@@ -59,7 +56,7 @@ public class DocumentBuilderTest {
         assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
     }
 
-    @Test(expected=ParseException.class)
+    @Test(expected= CellParseException.class)
     public void testBuild_error_throws() throws JSaParException, IOException {
         String toParse = "JonasAAA";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();

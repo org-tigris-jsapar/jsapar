@@ -1,11 +1,11 @@
 package org.jsapar.compose.bean;
 
+import org.jsapar.compose.ComposeException;
 import org.jsapar.compose.Composer;
-import org.jsapar.compose.ComposeError;
+import org.jsapar.compose.ErrorHandler;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ErrorEventSource;
-import org.jsapar.error.ErrorHandler;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
@@ -64,7 +64,7 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
         try {
             bean = beanFactory.createBean(line);
             if (bean == null) {
-                errorHandler.lineValidationError(this, line.getLineNumber(),
+                errorHandler.lineValidationError(this, line,
                         "BeanFactory failed to instantiate object. Skipped creating bean",
                         config.getOnUndefinedLineType(), this);
             } else {
@@ -86,15 +86,15 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
     }
 
     private void generateErrorEvent(Line line, String message, Throwable t) {
-        errorEvent(new ErrorEvent(this, new ComposeError(message, line, t)));
+        errorEvent(new ErrorEvent(this, new ComposeException(message, line, t)));
     }
 
     private void generateErrorEvent(Cell cell, String message, Throwable t) {
-        errorEvent(new ErrorEvent(this, new ComposeError(message + " while handling cell " + cell, t)));
+        errorEvent(new ErrorEvent(this, new ComposeException(message + " while handling cell " + cell, t)));
     }
 
     private void generateErrorEvent(Cell cell, String message) {
-        errorEvent(new ErrorEvent(this, new ComposeError(message + " while handling cell " + cell)));
+        errorEvent(new ErrorEvent(this, new ComposeException(message + " while handling cell " + cell)));
     }
 
     public void addComposedEventListener(BeanComposedEventListener<T> eventListener) {

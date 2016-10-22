@@ -8,13 +8,13 @@ import java.util.List;
  * Created by stejon0 on 2016-10-02.
  */
 public class RecordingErrorEventListener implements ErrorEventListener{
-    private List<JSaParError> errors;
+    private final List<JSaParException> errors;
 
     /**
      * Creates an error event listener that adds errors to the supplied list
      * @param errors The list that errors will be added to.
      */
-    public RecordingErrorEventListener(List<JSaParError> errors) {
+    public RecordingErrorEventListener(List<JSaParException> errors) {
         this.errors = errors;
     }
 
@@ -42,7 +42,7 @@ public class RecordingErrorEventListener implements ErrorEventListener{
     /**
      * @return A list of all recorded errors that has occurred.
      */
-    public List<JSaParError> getErrors() {
+    public List<JSaParException> getErrors() {
         return errors;
     }
 

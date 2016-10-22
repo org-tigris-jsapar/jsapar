@@ -1,5 +1,6 @@
 package org.jsapar;
 
+import org.jsapar.compose.ComposeException;
 import org.jsapar.compose.bean.BeanComposer;
 import org.jsapar.compose.bean.BeanComposerConfig;
 import org.jsapar.compose.bean.BeanFactory;
@@ -7,7 +8,6 @@ import org.jsapar.compose.bean.RecordingBeanEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.model.*;
-import org.jsapar.parse.ParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class BeanComposerTest {
     private java.util.Date birthTime;
 
     @Before
-    public void setUp() throws ParseException, java.text.ParseException {
+    public void setUp() throws java.text.ParseException {
 	java.text.DateFormat dateFormat=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	this.birthTime = dateFormat.parse("1971-03-25 23:04:24");
 
@@ -115,7 +115,7 @@ public class BeanComposerTest {
         assertEquals(1234, (objects.get(0)).getLuckyNumber());
     }
 
-    @Test(expected = ParseException.class)
+    @Test(expected = ComposeException.class)
     public final void testCreateJavaObjects_wrongType() throws JSaParException, IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");

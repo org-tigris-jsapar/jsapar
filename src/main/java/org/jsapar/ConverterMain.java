@@ -3,15 +3,14 @@
  */
 package org.jsapar;
 
-import java.io.*;
-import java.util.List;
-import java.util.Properties;
-
-import org.jsapar.error.JSaParError;
 import org.jsapar.error.JSaParException;
 import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.Xml2SchemaBuilder;
+
+import java.io.*;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author stejon0
@@ -48,7 +47,7 @@ public class ConverterMain {
             Converter converter = makeConverter(inputSchema, inputFileReader, outputSchema, writer);
             RecordingErrorEventListener errorEventListener = new RecordingErrorEventListener();
             converter.convert();
-            List<JSaParError> parseErrors = errorEventListener.getErrors();
+            List<JSaParException> parseErrors = errorEventListener.getErrors();
 
             if (parseErrors.size() > 0)
                 System.out.println("===> Found errors while converting file " + inFileName + ": "
@@ -65,7 +64,9 @@ public class ConverterMain {
     }
 
     /**
-     * @param e
+     * Prints usage information to supplied output stream.
+     * @param e An exception that occurred.
+     * @param out The stream to write to.
      */
     protected void printUsage(Exception e, PrintStream out) {
         out.println(e.getClass().getSimpleName() + ": " + e.getMessage());

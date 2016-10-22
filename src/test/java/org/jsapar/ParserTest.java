@@ -1,6 +1,18 @@
 package org.jsapar;
 
-import static org.junit.Assert.assertEquals;
+import org.jsapar.error.JSaParException;
+import org.jsapar.error.MaxErrorsExceededException;
+import org.jsapar.error.RecordingErrorEventListener;
+import org.jsapar.error.ThresholdRecordingErrorEventListener;
+import org.jsapar.model.CellType;
+import org.jsapar.model.Document;
+import org.jsapar.parse.CellParseException;
+import org.jsapar.schema.FixedWidthSchema;
+import org.jsapar.schema.FixedWidthSchemaCell;
+import org.jsapar.schema.FixedWidthSchemaLine;
+import org.jsapar.schema.SchemaCellFormat;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -8,17 +20,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jsapar.error.*;
-import org.jsapar.parse.CellParseError;
-import org.jsapar.parse.ParseException;
-import org.jsapar.model.CellType;
-import org.jsapar.model.Document;
-import org.jsapar.schema.FixedWidthSchema;
-import org.jsapar.schema.FixedWidthSchemaCell;
-import org.jsapar.schema.FixedWidthSchemaLine;
-import org.jsapar.schema.SchemaCellFormat;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 
 public class ParserTest {
@@ -39,7 +41,7 @@ public class ParserTest {
         assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
     }
 
-    @Test(expected=ParseException.class)
+    @Test(expected=CellParseException.class)
     public void testBuild_error_throws() throws JSaParException, IOException {
         String toParse = "JonasAAA";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
@@ -61,14 +63,14 @@ public class ParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        List<JSaParError> parseErrors = new ArrayList<>();
+        List<JSaParException> parseErrors = new ArrayList<>();
         TextParser parser = new TextParser(schema, reader);
         DocumentBuilder builder = new DocumentBuilder(parser);
         builder.addErrorEventListener(new RecordingErrorEventListener(parseErrors));
         Document doc = builder.build();
         Assert.assertEquals(1, parseErrors.size());
-        Assert.assertEquals("Shoe size", ((CellParseError)parseErrors.get(0)).getCellName());
-        Assert.assertEquals(1, ((CellParseError)parseErrors.get(0)).getLineNumber());
+        Assert.assertEquals("Shoe size", ((CellParseException)parseErrors.get(0)).getCellName());
+        Assert.assertEquals(1, ((CellParseException)parseErrors.get(0)).getLineNumber());
     }
 
     @Test(expected=MaxErrorsExceededException.class)

@@ -1,6 +1,8 @@
-package org.jsapar.error;
+package org.jsapar.parse;
 
-import org.jsapar.parse.*;
+import org.jsapar.error.ErrorEvent;
+import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.ValidationAction;
 
 /**
  * Internal utility class for handling validation error.
@@ -17,14 +19,13 @@ public class ErrorHandler {
                                        ErrorEventListener eventListener)  {
         switch (action) {
         case ERROR: {
-            LineParseError error = new LineParseError(lineNumber, message);
+            LineParseException error = new LineParseException(lineNumber, message);
             ErrorEvent event = new ErrorEvent(source, error);
             eventListener.errorEvent(event);
             break;
         }
         case EXCEPTION: {
-            LineParseError error = new LineParseError(lineNumber, message);
-            throw new ParseException(error, message);
+            throw new LineParseException(lineNumber, message);
         }
         case NONE:
             return true;
