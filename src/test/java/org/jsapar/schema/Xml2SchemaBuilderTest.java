@@ -11,6 +11,7 @@ import org.jsapar.model.CellType;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -26,7 +27,7 @@ public class Xml2SchemaBuilderTest {
      * @throws SchemaException
      */
     @Test
-    public final void testBuild_FixedWidth() throws SchemaException {
+    public final void testBuild_FixedWidth() throws SchemaException, IOException {
 
         String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
                 + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/2.0' >"
@@ -66,7 +67,7 @@ public class Xml2SchemaBuilderTest {
     }
 
     @Test
-    public final void testBuild_Csv() throws SchemaException {
+    public final void testBuild_Csv() throws SchemaException, IOException {
 
         String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
                 + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/2.0' >" + "<csvschema><line occurs='4'>"
@@ -84,7 +85,7 @@ public class Xml2SchemaBuilderTest {
     }
 
     @Test
-    public final void testBuild_CsvControlCell() throws SchemaException {
+    public final void testBuild_CsvControlCell() throws SchemaException, IOException {
 
         String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
                 + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/2.0' >"
@@ -111,7 +112,7 @@ public class Xml2SchemaBuilderTest {
     }
 
     @Test
-    public final void testBuild_Csv_firstlineasschema() throws SchemaException {
+    public final void testBuild_Csv_firstlineasschema() throws SchemaException, IOException {
 
         String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
                 + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/2.0' >"
@@ -129,7 +130,7 @@ public class Xml2SchemaBuilderTest {
 
 
     @Test(expected = SchemaException.class)
-    public final void testBuild_Csv_firstlineasschema_error() throws SchemaException {
+    public final void testBuild_Csv_firstlineasschema_error() throws SchemaException, IOException {
 
         // "yes" is not a valid boolean value.
         String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>\n"

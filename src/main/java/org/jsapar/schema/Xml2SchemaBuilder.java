@@ -80,7 +80,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @return The file parser schema.
      * @throws SchemaException
      */
-    public Schema build(java.io.Reader reader) throws SchemaException {
+    public Schema build(java.io.Reader reader) throws SchemaException, IOException {
         try {
             String schemaFileName = "/xml/schema/JSaParSchema.xsd";
             InputStream schemaStream = Xml2SchemaBuilder.class.getResourceAsStream(schemaFileName);
@@ -137,8 +137,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
             throw new SchemaException("Failed to find specific schema XML element. Expected one of "
                     + ELEMENT_CSV_SCHEMA + " or " + ELEMENT_FIXED_WIDTH_SCHEMA);
-        } catch (IOException e) {
-            throw new SchemaException("Failed to generate schema. Failed to read input.", e);
         } catch (ParserConfigurationException e) {
             throw new SchemaException("Failed to generate schema from XML file. XML parsing error.", e);
         } catch (SAXParseException e) {

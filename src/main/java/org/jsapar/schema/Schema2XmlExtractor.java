@@ -1,5 +1,6 @@
 package org.jsapar.schema;
 
+import java.io.Writer;
 import java.util.Locale;
 
 import javax.xml.bind.DatatypeConverter;
@@ -61,7 +62,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      *            The schema to extract.
      * @throws SchemaException
      */
-    public void extractXml(java.io.Writer writer, Schema schema) throws SchemaException {
+    public void extractXml(Writer writer, Schema schema) throws SchemaException {
         try {
 
             Document xmlDocument = extractXmlDocument(schema);
