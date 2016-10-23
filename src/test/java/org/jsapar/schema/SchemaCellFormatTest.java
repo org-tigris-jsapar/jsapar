@@ -3,16 +3,16 @@
  */
 package org.jsapar.schema;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Locale;
-
-import org.jsapar.model.CellType;
-import org.jsapar.format.BooleanFormat;
 import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
+import org.jsapar.text.BooleanFormat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Locale;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author stejon0

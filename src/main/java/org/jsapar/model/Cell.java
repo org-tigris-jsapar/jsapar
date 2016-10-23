@@ -29,7 +29,7 @@ public abstract class Cell implements Serializable, Cloneable {
     /**
      * The name of the cell. Can be null if there is no name.
      */
-    private String name;
+    private final String name;
 
     private final CellType          cellType;
 
@@ -169,14 +169,4 @@ public abstract class Cell implements Serializable, Cloneable {
         return false;
     }
 
-    /**
-     * Creates a copy of this cell but with a new name.
-     * @param name The new name of the copy.
-     * @return a copy of this cell but with a new name.
-     */
-    public Cell makeCopy(String name) {
-        Cell copy= this.clone();
-        copy.name = name;
-        return copy;
-    }
 }

@@ -8,7 +8,6 @@ import org.jsapar.model.CellType;
 import org.jsapar.model.DateCell;
 import org.jsapar.model.Line;
 import org.jsapar.parse.*;
-import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -152,7 +151,7 @@ public class XmlParser extends AbstractParser implements Parser {
                     if (this.currentCellType == CellType.DATE) {
                         this.makeDateCell(sValue);
                     } else {
-                        this.currentCell = SchemaCell
+                        this.currentCell = CellParser
                                 .makeCell(this.currentCellType, this.currentCellName, sValue, Locale.getDefault());
                     }
                     this.currentCellType = null;

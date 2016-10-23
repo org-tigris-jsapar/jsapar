@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.jsapar.format;
+package org.jsapar.text;
 
 import java.text.FieldPosition;
 import java.text.Format;

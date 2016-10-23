@@ -1,19 +1,18 @@
 package org.jsapar.model;
 
+import org.jsapar.schema.SchemaException;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
 
-import org.jsapar.schema.SchemaException;
-
 /**
- * Class containging the cell decimalValue as a string representation. Each line contains a list of
- * cells.
+ * {@link Cell} implementation carrying a decimal value of a cell. Decimal value can be assigned or retrieved either as
+ * {@link BigDecimal} or as {@link BigInteger}
  * 
- * @author Jonas
- * 
+ *
  */
 public class BigDecimalCell extends NumberCell  {
 
@@ -23,16 +22,21 @@ public class BigDecimalCell extends NumberCell  {
     private static final long serialVersionUID = -6337207320287960296L;
 
     /**
-     * The string representation of the decimalValue of this cell.
+     * Creates a new decimal cell.
+     * @param sName    The name of the cell.
+     * @param value The value of the cell.
      */
-
-
     public BigDecimalCell(String sName, BigDecimal value) {
         super(sName, value, CellType.DECIMAL);
     }
 
+    /**
+     * Creates a new decimal cell.
+     * @param sName    The name of the cell.
+     * @param value The value of the cell.
+     */
     public BigDecimalCell(String sName, BigInteger value) {
-        super(sName, value, CellType.DECIMAL);
+        super(sName, new BigDecimal(value), CellType.DECIMAL);
     }
 
     public BigDecimalCell(String name, String value, Format format) throws ParseException {
@@ -49,6 +53,13 @@ public class BigDecimalCell extends NumberCell  {
      */
     public void setBigDecimalValue(BigDecimal value) {
         super.setNumberValue(value);
+    }
+
+    /**
+     * @param value The {@link BigInteger} value to set
+     */
+    public void setBigIntegerValue(BigInteger value) {
+        super.setNumberValue(new BigDecimal(value));
     }
 
     /**

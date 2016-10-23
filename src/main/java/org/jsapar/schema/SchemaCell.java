@@ -2,8 +2,7 @@ package org.jsapar.schema;
 
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
-import org.jsapar.model.EmptyCell;
-import org.jsapar.parse.ParseException;
+import org.jsapar.parse.CellParser;
 
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -97,69 +96,7 @@ public abstract class SchemaCell implements Cloneable {
     }
 
 
-    /**
-     * Creates a cell with a parsed value according to the schema specification for this cell. Does
-     * not check if cell is mandatory!!
-     * 
-     * @param sValue
-     * @return A new cell of a type according to the schema specified. Returns null if there is no
-     *         value.
-     * @throws SchemaException If there is an error in the schema
-     * @throws java.text.ParseException If the value cannot be parsed according to the format of this cell schema.
-     */
-    public Cell makeCell(String sValue) throws java.text.ParseException{
 
-        // If the cell is empty, check if default value exists.
-        if (sValue.length() <= 0 || (emptyPattern != null && emptyPattern.matcher(sValue).matches())) {
-            if (defaultCell != null) {
-                return defaultCell.makeCopy(this.name);
-            } else {
-                return new EmptyCell(this.name, this.cellFormat.getCellType());
-            }
-        }
-
-        CellType cellType = this.cellFormat.getCellType();
-        Cell cell;
-        if (getCellFormat().getFormat() != null)
-            cell = SchemaCell.makeCell(cellType, this.name, sValue, this.getCellFormat().getFormat());
-        else
-            cell = SchemaCell.makeCell(cellType, this.name, sValue, getLocale());
-        return cell;
-
-    }
-
-    /**
-     * If you have created a custom type you need to override this method and handle the custom type.
-     * @param cellType
-     * @param sName
-     * @param sValue
-     * @param format
-     * @return A cell object that has been parsed from the supplied sValue parameter according to
-     *         the supplied format.
-     * @throws java.lang.Comparable, java.lang.Comparable, java.lang.Comparablexception
-     * @throws java.text.ParseException
-     * @throws SchemaException
-     */
-    public static Cell makeCell(CellType cellType, String sName, String sValue, java.text.Format format)
-            throws java.text.ParseException {
-        return cellType.makeCell(sName, sValue, format);
-    }
-
-    /**
-     * @param cellType
-     * @param sName
-     * @param sValue
-     * @param locale
-     * @return A cell object that has been parsed from the supplied sValue parameter according to
-     *         the default format for supplied type and locale.
-     * @throws java.lang.Comparable, java.lang.Comparable, java.lang.Comparablexception
-     * @throws java.text.ParseException
-     * @throws SchemaException
-     */
-    public static Cell makeCell(CellType cellType, String sName, String sValue, Locale locale)
-            throws java.text.ParseException, SchemaException {
-        return cellType.makeCell(sName, sValue, locale);
-    }
 
     /**
      * Indicates if the corresponding cell is mandatory, that is an error will be reported if it
@@ -263,7 +200,7 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * Validates that the default value is within the valid range. Throws a SchemaException if value is
      * not within borders.
-     * 
+     *
      * @throws SchemaException
      */
     protected void validateDefaultValueRange() throws SchemaException {
@@ -281,7 +218,7 @@ public abstract class SchemaCell implements Cloneable {
      */
     public void setMinValue(String value) throws SchemaException, java.text.ParseException {
         Locale locale = new Locale("US_en");
-        Cell cell = SchemaCell.makeCell(this.getCellFormat().getCellType(), "Min", value, locale);
+        Cell cell = CellParser.makeCell(this.getCellFormat().getCellType(), "Min", value, locale);
         this.minValue = cell;
     }
 
@@ -292,7 +229,7 @@ public abstract class SchemaCell implements Cloneable {
      */
     public void setMaxValue(String value) throws SchemaException, java.text.ParseException {
         Locale locale = new Locale("US_en");
-        Cell cell = SchemaCell.makeCell(this.getCellFormat().getCellType(), "Max", value, locale);
+        Cell cell = CellParser.makeCell(this.getCellFormat().getCellType(), "Max", value, locale);
         this.maxValue = cell;
     }
 
@@ -310,7 +247,7 @@ public abstract class SchemaCell implements Cloneable {
      *            missing. The name of the cell has no importance, it will not be used.
      */
     public void setDefaultCell(Cell defaultCell) {
-        this.defaultCell = defaultCell.makeCopy(this.name);
+        this.defaultCell = defaultCell;
         this.defaultValue = getDefaultCell().getStringValue(getCellFormat().getFormat());
     }
 
@@ -325,7 +262,8 @@ public abstract class SchemaCell implements Cloneable {
      * @throws java.text.ParseException When the supplied value cannot be parsed according to this cell schema.
      */
     public void setDefaultValue(String sDefaultValue) throws java.text.ParseException {
-        this.defaultCell = makeCell(sDefaultValue);
+        CellParser cellParser = new CellParser();
+        this.defaultCell = cellParser.makeCell(this, sDefaultValue);
         validateDefaultValueRange();
 
         this.defaultValue = sDefaultValue;

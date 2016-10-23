@@ -1,18 +1,15 @@
 package org.jsapar.model;
 
+import org.jsapar.schema.SchemaException;
+
 import java.text.Format;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.util.Locale;
 
-import org.jsapar.schema.SchemaException;
-
 /**
- * Class containging the cell numberValue as a string representation. Each line contains a list of
- * cells.
- * 
- * @author Jonas
+ * Abstract base class for all type of cells that can be represented as a {@link Number}.
  * 
  */
 public abstract class NumberCell extends Cell {
@@ -21,8 +18,9 @@ public abstract class NumberCell extends Cell {
      * 
      */
     private static final long serialVersionUID = -2103478512589522630L;
+
     /**
-     * The string representation of the numberValue of this cell.
+     * The {@link Number} value of this cell.
      */
     private Number numberValue;
 
@@ -91,7 +89,8 @@ public abstract class NumberCell extends Cell {
         this.numberValue = (Number) format.parseObject(value, pos);
 
         if (pos.getIndex() < value.length())
-            // It is not acceptable to parse only a part of the string.
+            // It is not acceptable to parse only a part of the string. That can happen for instance if there is a space
+            // in an integer value.
             throw new java.text.ParseException("Invalid characters found while parsing number.", pos.getIndex());
     }
 

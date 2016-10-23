@@ -2,8 +2,6 @@ package org.jsapar.error;
 
 /**
  * Actually just wraps the normal NumberFormatException so that it can be constructed with a cause.
- * @author stejon0
- *
  */
 public class JSaParNumberFormatException extends NumberFormatException {
 

@@ -5,10 +5,19 @@ package org.jsapar.error;
  */
 public class JSaParException extends RuntimeException{
 
+    /**
+     * Creates a JSaParException
+     * @param message A description of the error that occurred.
+     * @param cause A nesting exception that caused the error.
+     */
     public JSaParException(String message, Throwable cause) {
         super(makeSuperMessage(message, cause), cause);
     }
 
+    /**
+     * Creates a JSaParException
+     * @param cause A nesting exception that caused the error.
+     */
     public JSaParException(Throwable cause) {
         super(makeSuperMessage(null, cause));
     }
@@ -24,6 +33,10 @@ public class JSaParException extends RuntimeException{
         return message + " - " + cause.getMessage();
     }
 
+    /**
+     * Creates a JSaParException
+     * @param message A description of the error that occurred.
+     */
     public JSaParException(String message) {
         super(message);
     }

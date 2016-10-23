@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.jsapar.format;
+package org.jsapar.text;
 
 import org.junit.After;
 import org.junit.Before;
@@ -41,7 +41,7 @@ public class BooleanFormatTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.format.BooleanFormat#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)}.
+     * Test method for {@link org.jsapar.text.BooleanFormat#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)}.
      */
     @Test
     public void testFormatObjectStringBufferFieldPosition() {
@@ -58,7 +58,7 @@ public class BooleanFormatTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.format.BooleanFormat#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)}.
+     * Test method for {@link org.jsapar.text.BooleanFormat#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)}.
      */
     @Test
     public void testFormatObjectStringBufferFieldPosition_empty() {
@@ -68,7 +68,7 @@ public class BooleanFormatTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.format.BooleanFormat#format(boolean)}.
+     * Test method for {@link org.jsapar.text.BooleanFormat#format(boolean)}.
      */
     @Test
     public void testFormatBoolean() {
@@ -78,7 +78,7 @@ public class BooleanFormatTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.format.BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
+     * Test method for {@link org.jsapar.text.BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
      *
      * @throws ParseException
      */
@@ -92,7 +92,7 @@ public class BooleanFormatTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.format.BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
+     * Test method for {@link org.jsapar.text.BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
      *
      * @throws ParseException
      */
@@ -110,7 +110,7 @@ public class BooleanFormatTest {
     }
 
     /**
-     * Test method for {@link org.jsapar.format.BooleanFormat#parse(java.lang.String)}.
+     * Test method for {@link org.jsapar.text.BooleanFormat#parse(java.lang.String)}.
      */
     @Test
     public void testParse() {

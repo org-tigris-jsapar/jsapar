@@ -1,20 +1,5 @@
 package org.jsapar.schema;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.Charset;
-import java.text.ParseException;
-import java.util.Locale;
-
-import javax.xml.bind.DatatypeConverter;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.jsapar.model.CellType;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -23,6 +8,15 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import javax.xml.bind.DatatypeConverter;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.util.Locale;
 
 public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
@@ -412,7 +406,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
             Node xmlDefault = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_DEFAULT_VALUE);
             if (xmlDefault != null)
-                cell.setDefaultCell(cell.makeCell(getStringValue(xmlDefault)));
+                cell.setDefaultValue(getStringValue(xmlDefault));
 
             String sEmptyPattern = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_EMPTY_PATTERN);
             if (sEmptyPattern != null)

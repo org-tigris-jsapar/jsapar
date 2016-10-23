@@ -1,16 +1,11 @@
 package org.jsapar.model;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.Format;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
-
-import org.jsapar.format.BooleanFormat;
-import org.jsapar.format.RegExpFormat;
 import org.jsapar.schema.SchemaException;
-import org.jsapar.utils.StringUtils;
+import org.jsapar.text.BooleanFormat;
+import org.jsapar.text.RegExpFormat;
+
+import java.text.*;
+import java.util.Locale;
 
 /**
  * @author stejon0
@@ -18,10 +13,6 @@ import org.jsapar.utils.StringUtils;
  */
 public enum CellType {
     STRING {
-        @Override
-        public Cell makeCell(String sName, String sValue, Format format) throws ParseException {
-            return new StringCell(sName, sValue, format);
-        }
 
         @Override
         public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException {
@@ -38,11 +29,6 @@ public enum CellType {
     },
     DATE {
         @Override
-        public Cell makeCell(String sName, String sValue, Format format) throws ParseException {
-            return new DateCell(sName, sValue, format);
-        }
-
-        @Override
         public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException {
             return new DateCell(sName, sValue, locale);
         }
@@ -55,10 +41,6 @@ public enum CellType {
         }
     },
     INTEGER {
-        @Override
-        public Cell makeCell(String sName, String sValue, Format format) throws ParseException {
-            return new IntegerCell(sName, sValue, format);
-        }
 
         @Override
         public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException {
@@ -76,10 +58,6 @@ public enum CellType {
         }
     },
     BOOLEAN {
-        @Override
-        public Cell makeCell(String sName, String sValue, Format format) throws ParseException {
-            return new BooleanCell(sName, sValue, format);
-        }
 
         @Override
         public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException {
@@ -95,10 +73,6 @@ public enum CellType {
         }
     },
     FLOAT {
-        @Override
-        public Cell makeCell(String sName, String sValue, Format format) throws ParseException {
-            return new FloatCell(sName, sValue, format);
-        }
 
         @Override
         public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException {
@@ -116,21 +90,6 @@ public enum CellType {
         }
     },
     DECIMAL {
-        @Override
-        public Cell makeCell(String sName, String sValue, Format format) throws ParseException {
-            if (format != null && format instanceof DecimalFormat) {
-                // This is necessary because some locales (e.g. swedish)
-                // have non breakable space as grouping character. Naturally
-                // we want to remove all space characters including the
-                // non breakable.
-                DecimalFormat decFormat = (DecimalFormat) format;
-                char groupingSeparator = decFormat.getDecimalFormatSymbols().getGroupingSeparator();
-                if (Character.isSpaceChar(groupingSeparator)) {
-                    sValue = StringUtils.removeAllSpaces(sValue);
-                }
-            }
-            return new BigDecimalCell(sName, sValue, format);
-        }
 
         @Override
         public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException {
@@ -147,10 +106,6 @@ public enum CellType {
         }
     },
     CHARACTER {
-        @Override
-        public Cell makeCell(String sName, String sValue, Format format) throws ParseException {
-            return new CharacterCell(sName, sValue, format);
-        }
 
         @Override
         public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException {
@@ -163,10 +118,6 @@ public enum CellType {
         }
     },
     CUSTOM {
-        @Override
-        public Cell makeCell(String sName, String sValue, Format format)  {
-            throw new UnsupportedOperationException("Custom Cell type needs to override makeCell method.");
-        }
 
         @Override
         public Cell makeCell(String sName, String sValue, Locale locale) throws ParseException  {
@@ -178,7 +129,6 @@ public enum CellType {
             throw new UnsupportedOperationException("CUSTOM cell type formatter can not be created without specifying a formatter.");
         }
     };
-    public abstract Cell makeCell(String sName, String sValue, java.text.Format format) throws ParseException;
 
     public abstract Cell makeCell(String sName, String sValue, Locale locale) throws ParseException;
 

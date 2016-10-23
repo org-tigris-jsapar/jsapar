@@ -6,9 +6,7 @@ package org.jsapar.error;
 import java.util.EventListener;
 
 /**
- * Interface for receiving event call-backs while parsing.
- * 
- * @author stejon0
+ * Interface for receiving event call-backs while parsing or composing.
  * 
  */
 public interface ErrorEventListener extends EventListener {
