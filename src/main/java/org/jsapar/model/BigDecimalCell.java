@@ -4,6 +4,7 @@ import org.jsapar.schema.SchemaException;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
@@ -40,11 +41,13 @@ public class BigDecimalCell extends NumberCell  {
     }
 
     public BigDecimalCell(String name, String value, Format format) throws ParseException {
-        super(name, value, format, CellType.DECIMAL);
+        super(name, CellType.DECIMAL);
+        setValue(value, format);
     }
 
     public BigDecimalCell(String name, String value, Locale locale) throws ParseException {
-        super(name, value, locale, CellType.DECIMAL);
+        super(name, CellType.DECIMAL);
+        setValue(value, locale);
     }
 
     /**
@@ -85,8 +88,11 @@ public class BigDecimalCell extends NumberCell  {
     public void setValue(String value, Format format) throws ParseException {
         if (format == null)
             this.setNumberValue(new BigDecimal(value));
-        else
+        else {
+            if(format instanceof DecimalFormat)
+                ((DecimalFormat) format).setParseBigDecimal(true);
             super.setValue(value, format);
+        }
 
     }
 

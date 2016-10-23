@@ -1,16 +1,13 @@
 package org.jsapar.model;
 
+import org.jsapar.schema.SchemaException;
+
 import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
 
-import org.jsapar.schema.SchemaException;
-
 /**
- * Class containging the cell booleanValue as a string representation. Each line
- * contains a list of cells.
- * 
- * @author Jonas
+ * {@link Cell} implementation carrying a boolean value of a cell.
  * 
  */
 public class BooleanCell extends Cell  {

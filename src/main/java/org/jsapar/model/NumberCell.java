@@ -1,11 +1,9 @@
 package org.jsapar.model;
 
 import org.jsapar.schema.SchemaException;
+import org.jsapar.utils.StringUtils;
 
-import java.text.Format;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.ParsePosition;
+import java.text.*;
 import java.util.Locale;
 
 /**
@@ -24,6 +22,9 @@ public abstract class NumberCell extends Cell {
      */
     private Number numberValue;
 
+    public NumberCell(String sName, CellType cellType) {
+        super(sName, cellType);
+    }
 
     public NumberCell(String sName, Number value, CellType cellType) {
         super(sName, cellType);
@@ -86,6 +87,7 @@ public abstract class NumberCell extends Cell {
     @Override
     public void setValue(String value, Format format) throws ParseException {
         ParsePosition pos = new ParsePosition(0);
+        value = adjustValueForSpaces(value, format);
         this.numberValue = (Number) format.parseObject(value, pos);
 
         if (pos.getIndex() < value.length())
@@ -104,6 +106,21 @@ public abstract class NumberCell extends Cell {
         Format format = NumberFormat.getInstance(locale);
         setValue(value, format);
     }
+
+    private static String adjustValueForSpaces(String sValue, Format format) {
+        if (format != null && format instanceof DecimalFormat) {
+            // This is necessary because some locales (e.g. swedish)
+            // have non breakable space as thousands grouping character. Naturally
+            // we want to remove all space characters including the non breakable.
+            DecimalFormat decFormat = (DecimalFormat) format;
+            char groupingSeparator = decFormat.getDecimalFormatSymbols().getGroupingSeparator();
+            if (Character.isSpaceChar(groupingSeparator)) {
+                sValue = StringUtils.removeAllSpaces(sValue);
+            }
+        }
+        return sValue;
+    }
+
 
     /* (non-Javadoc)
      * @see org.jsapar.model.Cell#compareValueTo(org.jsapar.model.Cell)

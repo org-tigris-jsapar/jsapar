@@ -5,10 +5,7 @@ import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.*;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
-import org.jsapar.utils.StringUtils;
 
-import java.text.DecimalFormat;
-import java.text.Format;
 import java.util.Locale;
 
 public class CellParser {
@@ -119,15 +116,12 @@ public class CellParser {
         case DATE:
             return new DateCell(sName, sValue, format);
         case INTEGER:
-            sValue = adjustValueForSpaces(sValue, format, false);
             return new IntegerCell(sName, sValue, format);
         case BOOLEAN:
             return new BooleanCell(sName, sValue, format);
         case FLOAT:
-            sValue = adjustValueForSpaces(sValue, format, false);
             return new FloatCell(sName, sValue, format);
         case DECIMAL:
-            sValue = adjustValueForSpaces(sValue, format, true);
             return new BigDecimalCell(sName, sValue, format);
         case CHARACTER:
             return new CharacterCell(sName, sValue, format);
@@ -137,20 +131,6 @@ public class CellParser {
         throw new UnsupportedOperationException("Unknown Cell type.");
     }
 
-    private static String adjustValueForSpaces(String sValue, Format format, boolean parseBigDecimal) {
-        if (format != null && format instanceof DecimalFormat) {
-            // This is necessary because some locales (e.g. swedish)
-            // have non breakable space as thousands grouping character. Naturally
-            // we want to remove all space characters including the non breakable.
-            DecimalFormat decFormat = (DecimalFormat) format;
-            decFormat.setParseBigDecimal(parseBigDecimal);
-            char groupingSeparator = decFormat.getDecimalFormatSymbols().getGroupingSeparator();
-            if (Character.isSpaceChar(groupingSeparator)) {
-                sValue = StringUtils.removeAllSpaces(sValue);
-            }
-        }
-        return sValue;
-    }
 
     /**
      * Creates a new cell

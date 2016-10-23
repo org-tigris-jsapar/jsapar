@@ -3,7 +3,6 @@
  */
 package org.jsapar.schema;
 
-import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.text.BooleanFormat;
 import org.junit.After;
@@ -34,10 +33,6 @@ public class SchemaCellFormatTest {
     public void tearDown() throws Exception {
     }
 
-    /**
-     * Test method for {@link org.jsapar.schema.SchemaCellFormat#setFormat(Cell.CellType, java.lang.String, java.util.Locale)}.
-     * @throws SchemaException 
-     */
     @Test
     public void testSetFormat_intPattern() throws SchemaException {
         SchemaCellFormat format = new SchemaCellFormat();
@@ -45,10 +40,6 @@ public class SchemaCellFormatTest {
         assertEquals("0042", format.getFormat().format(42));
     }
 
-    /**
-     * Test method for {@link org.jsapar.schema.SchemaCellFormat#setFormat(Cell.CellType, java.lang.String, java.util.Locale)}.
-     * @throws SchemaException 
-     */
     @Test
     public void testSetFormat_int() throws SchemaException {
         SchemaCellFormat format = new SchemaCellFormat();
@@ -56,10 +47,6 @@ public class SchemaCellFormatTest {
         assertEquals("42", format.getFormat().format(42));
     }
 
-    /**
-     * Test method for {@link org.jsapar.schema.SchemaCellFormat#setFormat(Cell.CellType, java.lang.String, java.util.Locale)}.
-     * @throws SchemaException 
-     */
     @Test
     public void testSetFormat_floatPattern() throws SchemaException {
         SchemaCellFormat format = new SchemaCellFormat();
@@ -67,10 +54,6 @@ public class SchemaCellFormatTest {
         assertEquals("0042,300", format.getFormat().format(42.3));
     }
 
-    /**
-     * Test method for {@link org.jsapar.schema.SchemaCellFormat#setFormat(Cell.CellType, java.lang.String, java.util.Locale)}.
-     * @throws SchemaException 
-     */
     @Test
     public void testSetFormat_float() throws SchemaException {
         SchemaCellFormat format = new SchemaCellFormat();

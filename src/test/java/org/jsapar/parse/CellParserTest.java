@@ -7,6 +7,8 @@ import org.jsapar.schema.SchemaException;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.Locale;
 
 import static org.junit.Assert.*;
@@ -113,9 +115,7 @@ public class CellParserTest {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING, "[A-Z]{3}[0-9]{0,3}de"));
 
-        @SuppressWarnings("unused")
-        Cell cell;
-        cell = cellParser.makeCell(schemaCell,"AB1C123de");
+        cellParser.makeCell(schemaCell,"AB1C123de");
         fail("Should throw ParseException for invalid RegExp validation.");
     }
 
@@ -127,22 +127,15 @@ public class CellParserTest {
     }
 
 
-    @Test
-    public void testMakeCell_UnfinishedInteger() throws SchemaException {
-        @SuppressWarnings("unused")
-        Cell cell;
-        try {
-            cell = CellParser.makeCell(CellType.INTEGER, "number", "123A45", Locale.getDefault());
-        } catch (java.text.ParseException e) {
-            // e.printStackTrace();
-            return;
-        }
+    @Test(expected = ParseException.class)
+    public void testMakeCell_UnfinishedInteger() throws ParseException {
+        CellParser.makeCell(CellType.INTEGER, "number", "123A45", Locale.getDefault());
         fail("Method should throw exception.");
     }
 
 
     @Test
-    public void testMakeCell_Integer() throws SchemaException, java.text.ParseException {
+    public void testMakeCell_Integer() throws java.text.ParseException {
         Cell cell;
         cell = CellParser.makeCell(CellType.INTEGER, "number", "12345", Locale.getDefault());
         assertEquals(IntegerCell.class, cell.getClass());
@@ -150,7 +143,7 @@ public class CellParserTest {
     }
 
     @Test
-    public void testMakeCell_Integer_DefaultValue() throws SchemaException, java.text.ParseException {
+    public void testMakeCell_Integer_DefaultValue() throws java.text.ParseException {
         SchemaCell schemaCell = new TestSchemaCell("A number");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
         schemaCell.setDefaultValue("42");
@@ -161,26 +154,43 @@ public class CellParserTest {
         assertEquals("A number", cell.getName());
     }
 
-    @Test
-    public void testMakeCell_UnfinishedFloat() throws SchemaException {
-        @SuppressWarnings("unused")
-        Cell cell;
-        Locale locale = new Locale("UK_en");
-        try {
-            cell = cellParser.makeCell(CellType.FLOAT, "number", "12.3A45", locale);
-        } catch (java.text.ParseException e) {
-            // e.printStackTrace();
-            return;
-        }
+    @Test(expected = ParseException.class)
+    public void testMakeCell_UnfinishedFloat() throws ParseException {
+        Locale locale = Locale.UK;
+        cellParser.makeCell(CellType.FLOAT, "number", "12.3A45", locale);
         fail("Method should throw exception.");
     }
 
     @Test
     public void testMakeCell_Float() throws SchemaException, java.text.ParseException {
         Cell cell;
-        Locale locale = new Locale("UK_en");
+        Locale locale = Locale.UK;
         cell = cellParser.makeCell(CellType.FLOAT, "number", "12.345", locale);
         assertEquals(12.345, cell.getValue());
+    }
+
+    @Test
+    public void testMakeCell_Decimal_spaces() throws SchemaException, java.text.ParseException {
+        Cell cell;
+        Locale locale = new Locale("sv", "SE");
+        cell = CellParser.makeCell(CellType.DECIMAL, "number", "12 345,66", locale);
+        assertEquals(new BigDecimal("12345.66"), cell.getValue());
+    }
+
+    @Test
+    public void testMakeCell_Float_spaces() throws SchemaException, java.text.ParseException {
+        Cell cell;
+        Locale locale = new Locale("sv", "SE");
+        cell = CellParser.makeCell(CellType.FLOAT, "number", "12 345,66", locale);
+        assertEquals(12345.66D, cell.getValue());
+    }
+
+    @Test
+    public void testMakeCell_Int_spaces() throws SchemaException, java.text.ParseException {
+        Cell cell;
+        Locale locale = new Locale("sv", "SE");
+        cell = CellParser.makeCell(CellType.INTEGER, "number", "12 345", locale);
+        assertEquals(12345L, cell.getValue());
     }
 
     /**
@@ -229,6 +239,7 @@ public class CellParserTest {
         schemaCell.setMaxValue(new IntegerCell("test",100));
         cellParser.makeCell(schemaCell,"12345");
     }
+
 
 
 }
