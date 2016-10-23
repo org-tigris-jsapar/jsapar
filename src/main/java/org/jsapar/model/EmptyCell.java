@@ -3,11 +3,9 @@
  */
 package org.jsapar.model;
 
-import java.text.Format;
-import java.text.ParseException;
-import java.util.Locale;
-
 import org.jsapar.schema.SchemaException;
+
+import java.text.Format;
 
 
 /**
@@ -54,21 +52,12 @@ public class EmptyCell extends Cell implements Comparable<EmptyCell>{
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.jsapar.model.Cell#setValue(java.lang.String, java.text.Format)
-	 */
-	@Override
-	public void setValue(String value, Format format) throws ParseException {
-	}
 
     @Override
     public int compareTo(EmptyCell right){
     	return 0;
     }
 
-	@Override
-	public void setValue(String value, Locale locale) throws ParseException {
-	}
 
     @Override
     public int compareValueTo(Cell right) throws SchemaException {

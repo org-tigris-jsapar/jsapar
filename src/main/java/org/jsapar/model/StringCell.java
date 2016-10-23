@@ -1,12 +1,8 @@
 package org.jsapar.model;
 
-import java.text.Format;
-import java.text.ParseException;
-import java.util.Locale;
-
-import org.jsapar.model.Cell;
-import org.jsapar.model.CellType;
 import org.jsapar.schema.SchemaException;
+
+import java.text.Format;
 
 /**
  * Class containging the cell stringValue as a string representation. Each line
@@ -52,18 +48,7 @@ public class StringCell extends Cell {
         sb.append(chValue);
         this.stringValue = sb.toString();
     }
-    /**
-     * Creates a string cell with the supplied name and value. The format parameter is used to parse the supplied value.
-     * @param name
-     * @param value
-     * @param format
-     * @throws ParseException
-     */
-    public StringCell(String name, String value, Format format)
-	    throws ParseException {
-	super(name, CellType.STRING);
-	setValue(value, format);
-    }
+
 
     /**
      * @return the stringValue as an Object.
@@ -106,26 +91,6 @@ public class StringCell extends Cell {
             return this.stringValue;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.model.Cell#setValue(java.lang.String, java.text.Format)
-     */
-    @Override
-    public void setValue(String value, Format format) throws ParseException {
-	if (format != null)
-	    this.stringValue = (String) format.parseObject(value);
-	else
-	    this.stringValue = value;
-
-    }
-
-
-
-    @Override
-    public void setValue(String value, Locale locale) throws ParseException {
-	this.stringValue = value;
-    }
 
     @Override
     public int compareValueTo(Cell right) throws SchemaException {

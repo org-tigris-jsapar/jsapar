@@ -3,11 +3,6 @@
  */
 package org.jsapar.model;
 
-import java.text.Format;
-import java.text.ParseException;
-import java.util.Locale;
-
-
 /**
  * @author Jonas Stenberg
  *
@@ -51,20 +46,6 @@ public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
         super(name, value, CellType.INTEGER);
     }
 
-    /**
-     * @param name
-     * @param value
-     * @param format
-     * @throws ParseException
-     */
-    public IntegerCell(String name, String value, Format format)
-	    throws ParseException {
-	super(name, value, format, CellType.INTEGER);
-    }
-
-    public IntegerCell(String name, String value, Locale locale) throws ParseException {
-    	super(name, value, locale, CellType.INTEGER);
-	}
 
 
     /* (non-Javadoc)

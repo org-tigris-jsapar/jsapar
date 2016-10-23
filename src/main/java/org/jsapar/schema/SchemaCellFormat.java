@@ -1,9 +1,10 @@
 package org.jsapar.schema;
 
+import org.jsapar.model.CellType;
+import org.jsapar.parse.cell.CellFactory;
+
 import java.text.Format;
 import java.util.Locale;
-
-import org.jsapar.model.CellType;
 
 public class SchemaCellFormat implements Cloneable {
     private CellType cellType = CellType.STRING;
@@ -57,7 +58,7 @@ public class SchemaCellFormat implements Cloneable {
             this.format = null;
             return;
         }
-        this.format = cellType.makeFormat(sPattern, locale);
+        this.format = CellFactory.getInstance(cellType).makeFormat(locale, sPattern);
     }
 
     /**

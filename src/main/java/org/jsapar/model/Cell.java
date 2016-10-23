@@ -3,8 +3,6 @@ package org.jsapar.model;
 import org.jsapar.schema.SchemaException;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.util.Locale;
 
 /**
  * Abstract class which represents a parsable item on a line in the original document. A cell has a
@@ -72,39 +70,6 @@ public abstract class Cell implements Serializable, Cloneable {
         return String.valueOf(getValue());
     }
 
-    /**
-     * Sets the value of the cell by a string, parsed by the default format for the specified
-     * locale.
-     * 
-     * @param value
-     *            The string representation of the value.
-     * @param locale
-     *            The locale to use while parsing string value.
-     * @throws ParseException
-     */
-    public abstract void setValue(String value, Locale locale) throws ParseException;
-
-    /**
-     * Sets the value of the cell by a string, parsed by the format supplied.
-     * 
-     * @param value
-     *            The string representation of the value.
-     * @param format
-     *            The format to be used when parsing. If null, use system default.
-     * @throws ParseException
-     */
-    public abstract void setValue(String value, java.text.Format format) throws ParseException;
-
-    /**
-     * Sets the value of the cell by a string, parsed by the format supplied.
-     * 
-     * @param value
-     *            The string representation of the value.
-     * @throws ParseException
-     */
-    public void setValue(String value) throws ParseException {
-        setValue(value, Locale.getDefault());
-    }
 
     /**
      * @return The value of the cell as an object.

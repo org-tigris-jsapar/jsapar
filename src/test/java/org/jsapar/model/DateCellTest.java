@@ -3,20 +3,14 @@
  */
 package org.jsapar.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.jsapar.model.Cell;
-import org.jsapar.model.DateCell;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Jonas Stenberg
@@ -63,46 +57,5 @@ public class DateCellTest {
 	assertEquals(date, cell.getValue());
     }
 
-    /**
-     * Test method for
-     * {@link DateCell#DateCell(java.lang.String, java.lang.String, java.text.Format)}
-     * .
-     * 
-     * @throws ParseException
-     */
-    @Test
-    public final void testDateCellStringStringFormat() throws ParseException {
-	DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	DateCell cell = new DateCell("Name", "2007-10-01 14:13", format);
-	assertEquals("Name", cell.getName());
-	assertEquals(format.parse("2007-10-01 14:13"), cell.getValue());
-    }
-
-    /**
-     * Test method for
-     * {@link DateCell#getStringValue(java.text.Format)}.
-     * 
-     * @throws ParseException
-     */
-    @Test
-    public final void testGetStringValueFormat() throws ParseException {
-	DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	DateCell cell = new DateCell("Name", "2007-10-01 14:13", format);
-
-	assertEquals("2007-10-01 14:13", cell.getStringValue(format));
-    }
-
-    /**
-     * Test method for {@link Cell#getStringValue()}.
-     * 
-     * @throws ParseException
-     */
-    @Test
-    public final void testGetStringValue() throws ParseException {
-	DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	DateCell cell = new DateCell("Name", "2007-10-01 14:13", format);
-
-	assertEquals("Mon Oct 01 14:13:00 CEST 2007", cell.getStringValue());
-    }
 
 }

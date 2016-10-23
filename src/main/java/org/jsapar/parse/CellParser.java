@@ -2,10 +2,14 @@ package org.jsapar.parse;
 
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.model.*;
+import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
+import org.jsapar.model.EmptyCell;
+import org.jsapar.parse.cell.CellFactory;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
 
+import java.text.Format;
 import java.util.Locale;
 
 public class CellParser {
@@ -86,49 +90,13 @@ public class CellParser {
         }
 
         CellType cellType = schemaCell.getCellFormat().getCellType();
-        Cell cell;
-        if (schemaCell.getCellFormat().getFormat() != null)
-            cell = makeCell(cellType, name, sValue, schemaCell.getCellFormat().getFormat());
-        else
-            cell = makeCell(cellType, name, sValue, schemaCell.getLocale());
-        return cell;
+        CellFactory cellFactory = CellFactory.getInstance(cellType);
 
-    }
+        Format format = schemaCell.getCellFormat().getFormat();
+        if(format == null)
+                format  = cellFactory.makeFormat(schemaCell.getLocale());
+        return cellFactory.makeCell(name, sValue, format);
 
-
-    /**
-     * Creates a new cell
-     * @param cellType Type of the cell
-     * @param sName Name of the cell
-     * @param sValue Value of the cell
-     * @param format Text format to use
-     * @return A cell object that has been parsed from the supplied sValue parameter according to
-     *         the supplied format.
-     * @throws java.text.ParseException If there is a formatting error
-     */
-    public static Cell makeCell(CellType cellType, String sName, String sValue, java.text.Format format)
-            throws java.text.ParseException {
-
-        switch (cellType) {
-
-        case STRING:
-            return new StringCell(sName, sValue, format);
-        case DATE:
-            return new DateCell(sName, sValue, format);
-        case INTEGER:
-            return new IntegerCell(sName, sValue, format);
-        case BOOLEAN:
-            return new BooleanCell(sName, sValue, format);
-        case FLOAT:
-            return new FloatCell(sName, sValue, format);
-        case DECIMAL:
-            return new BigDecimalCell(sName, sValue, format);
-        case CHARACTER:
-            return new CharacterCell(sName, sValue, format);
-        case CUSTOM:
-            throw new UnsupportedOperationException("Custom Cell type not yet supported.");
-        }
-        throw new UnsupportedOperationException("Unknown Cell type.");
     }
 
 
@@ -145,7 +113,10 @@ public class CellParser {
      */
     public static Cell makeCell(CellType cellType, String sName, String sValue, Locale locale)
             throws java.text.ParseException, SchemaException {
-        return cellType.makeCell(sName, sValue, locale);
+        CellFactory cellFactory = CellFactory.getInstance(cellType);
+
+        Format format = cellFactory.makeFormat(locale);
+        return cellFactory.makeCell(sName, sValue, format);
     }
     /**
      * Validates that the cell value is within the valid range. Throws a SchemaException if value is

@@ -4,10 +4,6 @@ import org.jsapar.schema.SchemaException;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.DecimalFormat;
-import java.text.Format;
-import java.text.ParseException;
-import java.util.Locale;
 
 /**
  * {@link Cell} implementation carrying a decimal value of a cell. Decimal value can be assigned or retrieved either as
@@ -40,15 +36,6 @@ public class BigDecimalCell extends NumberCell  {
         super(sName, new BigDecimal(value), CellType.DECIMAL);
     }
 
-    public BigDecimalCell(String name, String value, Format format) throws ParseException {
-        super(name, CellType.DECIMAL);
-        setValue(value, format);
-    }
-
-    public BigDecimalCell(String name, String value, Locale locale) throws ParseException {
-        super(name, CellType.DECIMAL);
-        setValue(value, locale);
-    }
 
     /**
      * @param value
@@ -79,22 +66,6 @@ public class BigDecimalCell extends NumberCell  {
         return getBigDecimalValue().toBigInteger();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.model.Cell#setValue(java.lang.String, java.text.Format)
-     */
-    @Override
-    public void setValue(String value, Format format) throws ParseException {
-        if (format == null)
-            this.setNumberValue(new BigDecimal(value));
-        else {
-            if(format instanceof DecimalFormat)
-                ((DecimalFormat) format).setParseBigDecimal(true);
-            super.setValue(value, format);
-        }
-
-    }
 
     /* (non-Javadoc)
      * @see org.jsapar.model.NumberCell#compareValueTo(org.jsapar.model.Cell)

@@ -3,8 +3,6 @@ package org.jsapar.model;
 import org.jsapar.schema.SchemaException;
 
 import java.text.Format;
-import java.text.ParseException;
-import java.util.Locale;
 
 /**
  * {@link Cell} implementation carrying a boolean value of a cell.
@@ -25,17 +23,6 @@ public class BooleanCell extends Cell  {
 	public BooleanCell(String sName, Boolean value) {
 		super(sName, CellType.BOOLEAN);
 		this.booleanValue = value;
-	}
-
-	public BooleanCell(String name, String value, Format format)
-			throws ParseException {
-		super(name, CellType.BOOLEAN);
-		setValue(value, format);
-	}
-
-	public BooleanCell(String name, String value, Locale locale) throws ParseException {
-		super(name, CellType.BOOLEAN);
-		setValue(value, locale);
 	}
 
 	/**
@@ -76,37 +63,6 @@ public class BooleanCell extends Cell  {
 			return this.booleanValue.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jsapar.model.Cell#setValue(java.lang.String, java.text.Format)
-	 * 
-	 * Inspired by JDom.
-	 */
-	@Override
-	public void setValue(String value, Format format) throws ParseException {
-		this.booleanValue = (Boolean) format.parseObject(value);
-	}
-
-
-	@Override
-	public void setValue(String value, Locale locale) throws ParseException {
-		String valueTrim = value.trim();
-		if ((valueTrim.equalsIgnoreCase("true"))
-				|| (valueTrim.equalsIgnoreCase("on"))
-				|| (valueTrim.equalsIgnoreCase("1"))
-				|| (valueTrim.equalsIgnoreCase("yes"))) {
-			this.booleanValue = new Boolean(true);
-		} else if ((valueTrim.equalsIgnoreCase("false"))
-				|| (valueTrim.equalsIgnoreCase("off"))
-				|| (valueTrim.equalsIgnoreCase("0"))
-				|| (valueTrim.equalsIgnoreCase("no"))) {
-			this.booleanValue = new Boolean(false);
-		} else {
-			throw new ParseException("Failed to parse boolean value from: "
-					+ value, 0);
-		}
-	}
 
     /* (non-Javadoc)
      * @see org.jsapar.model.Cell#compareValueTo(org.jsapar.model.Cell)

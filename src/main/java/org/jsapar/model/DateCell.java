@@ -1,12 +1,9 @@
 package org.jsapar.model;
 
-import java.text.DateFormat;
-import java.text.Format;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.Locale;
-
 import org.jsapar.schema.SchemaException;
+
+import java.text.Format;
+import java.util.Date;
 
 /**
  * Class containging the cell dateValue as a string representation. Each line contains a list of
@@ -30,16 +27,6 @@ public class DateCell extends Cell implements Comparable<DateCell> {
     public DateCell(String sName, Date value) {
         super(sName, CellType.DATE);
         this.dateValue = value;
-    }
-
-    public DateCell(String name, String value, Format format) throws ParseException {
-        super(name, CellType.DATE);
-        setValue(value, format);
-    }
-
-    public DateCell(String name, String value, Locale locale) throws ParseException {
-        super(name, CellType.DATE);
-        setValue(value, locale);
     }
 
     /**
@@ -83,16 +70,6 @@ public class DateCell extends Cell implements Comparable<DateCell> {
     /*
      * (non-Javadoc)
      * 
-     * @see org.jsapar.model.Cell#setValue(java.lang.String, java.text.Format)
-     */
-    @Override
-    public void setValue(String value, Format format) throws ParseException {
-        this.dateValue = (Date) format.parseObject(value);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.jsapar.model.Cell#getXmlValue()
      */
     @Override
@@ -106,10 +83,6 @@ public class DateCell extends Cell implements Comparable<DateCell> {
         return this.getDateValue().compareTo(right.getDateValue());
     }
 
-    @Override
-    public void setValue(String value, Locale locale) throws ParseException {
-        this.dateValue = DateFormat.getDateInstance(DateFormat.SHORT, locale).parse(value);
-    }
 
     /* (non-Javadoc)
      * @see java.lang.Object#clone()
