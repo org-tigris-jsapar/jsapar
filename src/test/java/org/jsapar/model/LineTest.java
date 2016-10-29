@@ -1,14 +1,14 @@
 package org.jsapar.model;
 
-import static org.junit.Assert.*;
-
-import java.util.Date;
-
 import org.jsapar.error.JSaParException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Date;
+
+import static org.junit.Assert.*;
 
 public class LineTest {
 
@@ -72,10 +72,10 @@ public class LineTest {
         line.addCell(new StringCell("FirstName", "Nils"));
         line.addCell(new StringCell("LastName", "Svensson"));
         assertEquals("Nils", line.getCell("FirstName").getStringValue());
-        assertEquals("Svensson", line.getCell(1).getStringValue());
+        assertEquals("Svensson", line.getCell("LastName").getStringValue());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void testAddCell_twice() throws JSaParException {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
@@ -83,58 +83,19 @@ public class LineTest {
         fail("Should throw exception for duplicate cell names.");
     }
 
-    @Test
-    public void testAddCellCellInt() throws JSaParException {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        line.addCell(new StringCell("LastName", "Svensson"), 0);
-        assertEquals("Nils", line.getCell(1).getStringValue());
-        assertEquals("Svensson", line.getCell(0).getStringValue());
-        assertEquals("Nils", line.getCell("FirstName").getStringValue());
-        assertEquals("Svensson", line.getCell("LastName").getStringValue());
-    }
 
-    @Test(expected = JSaParException.class)
-    public void testAddCellCellInt_twice() throws JSaParException {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"), 0);
-        line.addCell(new StringCell("FirstName", "Svensson"), 0);
-        fail("Should throw exception for duplicate cell names.");
-    }
-
-    
     @Test
     public void testReplaceCell() throws JSaParException {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         line.addCell(new StringCell("LastName", "Svensson"));
 
-        line.replaceCell(new StringCell("FirstName", "Sven"), 0);
-        assertEquals("Sven", line.getCell(0).getStringValue());
-        assertEquals("Svensson", line.getCell(1).getStringValue());
+        line.replaceCell(new StringCell("FirstName", "Sven"));
+        assertEquals(2, line.size());
         assertEquals("Sven", line.getCell("FirstName").getStringValue());
         assertEquals("Svensson", line.getCell("LastName").getStringValue());
     }
 
-    @Test
-    public void testReplaceCell_twoRemoved() throws JSaParException {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        line.addCell(new StringCell("LastName", "Svensson"));
-
-        line.replaceCell(new StringCell("LastName", "Sven"), 0);
-        assertEquals(1, line.size());
-        assertEquals("Sven", line.getCell(0).getStringValue());
-        assertEquals("Sven", line.getCell("LastName").getStringValue());
-    }
-
-    @Test
-    public void testGetCellInt() throws JSaParException {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        line.addCell(new StringCell("LastName", "Svensson"));
-        assertEquals("Nils", line.getCell(0).getStringValue());
-    }
 
     @Test
     public void testGetCellString() throws JSaParException {
@@ -145,7 +106,7 @@ public class LineTest {
     }
 
     enum Testing{
-        FIRST, SECOND, THIRD
+        FIRST, SECOND
     }
     
     @Test
@@ -205,24 +166,9 @@ public class LineTest {
 
         line.removeCell("FirstName");
         assertEquals(1, line.size());
-        assertEquals("Svensson", line.getCell(0).getStringValue());
         assertEquals("Svensson", line.getCell("LastName").getStringValue());
     }
 
-    /**
-     * @throws JSaParException
-     */
-    @Test
-    public void testRemoveCell_ByIndex() throws JSaParException {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        line.addCell(new StringCell("LastName", "Svensson"));
-
-        line.removeCell(0);
-        assertEquals(1, line.size());
-        assertEquals("Svensson", line.getCell(0).getStringValue());
-        assertEquals("Svensson", line.getCell("LastName").getStringValue());
-    }
 
     @Test
     public void testGetIntCellValue() throws JSaParException{
@@ -278,10 +224,8 @@ public class LineTest {
     @Test
     public void testSetCellValue_boolean() throws JSaParException{
         Line line = new Line("TestLine");
-        boolean t = true;
-        boolean f = false;
-        line.setBooleanCellValue("aTrueValue", t);
-        line.setBooleanCellValue("aFalseValue", f);
+        line.setBooleanCellValue("aTrueValue", true);
+        line.setBooleanCellValue("aFalseValue", false);
         assertTrue(line.getBooleanCellValue("aTrueValue"));
         assertTrue(line.getBooleanCellValue("aTrueValue", false));
         assertFalse(line.getBooleanCellValue("anotherValue", false));

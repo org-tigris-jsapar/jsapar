@@ -34,7 +34,7 @@ public class XMLDocumentParserTest {
 
         // System.out.println("Errors: " + parseErrors.toString());
 
-        assertEquals(1, document.getNumberOfLines());
+        assertEquals(1, document.size());
         assertEquals("Hans", document.getLine(0).getCell("FirstName").getStringValue());
         assertEquals("Hugge", document.getLine(0).getCell("LastName").getStringValue());
         assertEquals(48, ((IntegerCell) document.getLine(0).getCell("ShoeSize")).getNumberValue().intValue());

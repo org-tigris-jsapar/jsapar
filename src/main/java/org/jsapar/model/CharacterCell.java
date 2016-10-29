@@ -13,10 +13,6 @@ public class CharacterCell extends Cell {
 
     private Character characterValue;
 
-    public CharacterCell(String sName) {
-        super(sName, CellType.CHARACTER);
-    }
-
     public CharacterCell(String sName, Character value) {
         super(sName, CellType.CHARACTER);
         this.characterValue = value;

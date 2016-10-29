@@ -1,21 +1,21 @@
 package org.jsapar.parse.csv;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.io.Reader;
-
 import org.jsapar.error.ExceptionErrorEventListener;
-import org.jsapar.parse.DocumentBuilderLineEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.BooleanCell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Document;
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
+import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.schema.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.Reader;
+
+import static org.junit.Assert.assertEquals;
 
 public class CsvParserTest {
 
@@ -30,99 +30,99 @@ public class CsvParserTest {
     @Test
     public final void testParse_oneLine() throws IOException, JSaParException {
         CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg;Hemgatan 19;111 22;Stockholm";
         java.io.Reader reader = new java.io.StringReader(sToParse);
         Document doc = build(schema, reader);
 
-        assertEquals(1, doc.getNumberOfLines());
+        assertEquals(1, doc.size());
 
         Line line = doc.getLine(0);
-        assertEquals("Jonas", line.getCell(0).getStringValue());
-        assertEquals("Stenberg", line.getCell(1).getStringValue());
-        assertEquals("Hemgatan 19", line.getCell(2).getStringValue());
-        assertEquals("111 22", line.getCell(3).getStringValue());
-        assertEquals("Stockholm", line.getCell(4).getStringValue());
+        assertEquals("Jonas", line.getCell("0").getStringValue());
+        assertEquals("Stenberg", line.getCell("1").getStringValue());
+        assertEquals("Hemgatan 19", line.getCell("2").getStringValue());
+        assertEquals("111 22", line.getCell("3").getStringValue());
+        assertEquals("Stockholm", line.getCell("4").getStringValue());
     }
 
     @Test
     public final void testParse_endingNewLine() throws IOException, JSaParException {
         CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg;Hemgatan 19;111 22;Stockholm" + System.getProperty("line.separator");
         java.io.Reader reader = new java.io.StringReader(sToParse);
         Document doc = build(schema, reader);
 
-        assertEquals(1, doc.getNumberOfLines());
+        assertEquals(1, doc.size());
 
         Line line = doc.getLine(0);
-        assertEquals("Jonas", line.getCell(0).getStringValue());
-        assertEquals("Stenberg", line.getCell(1).getStringValue());
-        assertEquals("Hemgatan 19", line.getCell(2).getStringValue());
-        assertEquals("111 22", line.getCell(3).getStringValue());
-        assertEquals("Stockholm", line.getCell(4).getStringValue());
+        assertEquals("Jonas", line.getCell("0").getStringValue());
+        assertEquals("Stenberg", line.getCell("1").getStringValue());
+        assertEquals("Hemgatan 19", line.getCell("2").getStringValue());
+        assertEquals("111 22", line.getCell("3").getStringValue());
+        assertEquals("Stockholm", line.getCell("4").getStringValue());
     }
 
     @Test
     public final void testParse_twoLines() throws IOException, JSaParException {
         CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine();
+        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator") + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
         Document doc = build(schema, reader);
 
         Line line = doc.getLine(0);
-        assertEquals("Jonas", line.getCell(0).getStringValue());
-        assertEquals("Stenberg", line.getCell(1).getStringValue());
+        assertEquals("Jonas", line.getCell("0").getStringValue());
+        assertEquals("Stenberg", line.getCell("1").getStringValue());
 
         line = doc.getLine(1);
-        assertEquals("Nils", line.getCell(0).getStringValue());
-        assertEquals("Nilsson", line.getCell(1).getStringValue());
+        assertEquals("Nils", line.getCell("0").getStringValue());
+        assertEquals("Nilsson", line.getCell("1").getStringValue());
     }
 
     @Test
     public final void testParse_emptyLine_ignore() throws IOException, JSaParException {
         CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine();
+        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator")
                 + System.getProperty("line.separator") + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
         Document doc = build(schema, reader);
 
-        assertEquals(2, doc.getNumberOfLines());
+        assertEquals(2, doc.size());
 
         Line line = doc.getLine(0);
-        assertEquals("Jonas", line.getCell(0).getStringValue());
-        assertEquals("Stenberg", line.getCell(1).getStringValue());
+        assertEquals("Jonas", line.getCell("0").getStringValue());
+        assertEquals("Stenberg", line.getCell("1").getStringValue());
 
         line = doc.getLine(1);
-        assertEquals("Nils", line.getCell(0).getStringValue());
-        assertEquals("Nilsson", line.getCell(1).getStringValue());
+        assertEquals("Nils", line.getCell("0").getStringValue());
+        assertEquals("Nilsson", line.getCell("1").getStringValue());
     }
 
     @Test
     public final void testParse_emptyLine_ignore_space() throws IOException, JSaParException {
         CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine();
+        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator") + " \t \t  "
                 + System.getProperty("line.separator") + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
         Document doc = build(schema, reader);
 
-        assertEquals(2, doc.getNumberOfLines());
+        assertEquals(2, doc.size());
 
         Line line = doc.getLine(0);
-        assertEquals("Jonas", line.getCell(0).getStringValue());
-        assertEquals("Stenberg", line.getCell(1).getStringValue());
+        assertEquals("Jonas", line.getCell("0").getStringValue());
+        assertEquals("Stenberg", line.getCell("1").getStringValue());
 
         line = doc.getLine(1);
-        assertEquals("Nils", line.getCell(0).getStringValue());
-        assertEquals("Nilsson", line.getCell(1).getStringValue());
+        assertEquals("Nils", line.getCell("0").getStringValue());
+        assertEquals("Nilsson", line.getCell("1").getStringValue());
     }
 
 
@@ -206,7 +206,7 @@ public class CsvParserTest {
         java.io.Reader reader = new java.io.StringReader(sToParse);
         Document doc = build(schema, reader);
 
-        assertEquals(2, doc.getNumberOfLines());
+        assertEquals(2, doc.size());
         Line line = doc.getLine(0);
         assertEquals("Name", line.getLineType());
         assertEquals("Jonas", line.getCell("first.name").getStringValue());

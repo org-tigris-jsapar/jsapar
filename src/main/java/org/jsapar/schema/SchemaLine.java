@@ -109,38 +109,15 @@ public abstract class SchemaLine implements Cloneable {
      *            The line to find a cell within.
      * @param schemaCell
      *            The schema-cell to use.
-     * @param nSchemaCellIndex
-     *            The index at which the schema-cell is found.
      * @return The cell within the supplied line to use for output according to the supplied
      *         schemaCell.
      */
-    protected static Cell findCell(Line line, SchemaCell schemaCell, int nSchemaCellIndex) {
+    protected static Cell findCell(Line line, SchemaCell schemaCell) {
         // If we should not write the cell, we don't need the cell.
         if (schemaCell.isIgnoreWrite())
             return null;
 
-        Cell cellByIndex = null;
-        if (nSchemaCellIndex < line.size())
-            cellByIndex = line.getCell(nSchemaCellIndex);
-        // Use optimistic matching.
-        if (null != cellByIndex) {
-            if (schemaCell.getName().equals(cellByIndex.getName())) {
-                // We were lucky.
-                return cellByIndex;
-            }
-        }
-
-        // The optimistic match failed. We take the penalty.
-        Cell cellByName = line.getCell(schemaCell.getName());
-        if (null != cellByName) {
-            return cellByName;
-        } else {
-            if (null == cellByIndex) {
-                return null;
-            } else {
-                return null;
-            }
-        }
+        return  line.getCell(schemaCell.getName());
     }
 
     /**

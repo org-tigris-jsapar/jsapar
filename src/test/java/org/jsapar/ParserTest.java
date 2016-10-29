@@ -36,8 +36,8 @@ public class ParserTest {
 
         Document doc = build(toParse, schema);
 
-        assertEquals(1, doc.getNumberOfLines());
-        assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
+        assertEquals(1, doc.size());
+        assertEquals("Jonas", doc.getLine(0).getCell("First name").getStringValue());
         assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
     }
 
@@ -101,11 +101,11 @@ public class ParserTest {
 
         Document doc = build(toParse, schema);
 
-        assertEquals(2, doc.getNumberOfLines());
-        assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
+        assertEquals(2, doc.size());
+        assertEquals("Jonas", doc.getLine(0).getCell("First name").getStringValue());
         assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
 
-        assertEquals("Frida", doc.getLine(1).getCell(0).getStringValue());
+        assertEquals("Frida", doc.getLine(1).getCell("First name").getStringValue());
         assertEquals("Stenberg", doc.getLine(1).getCell("Last name").getStringValue());
     }
 
@@ -125,9 +125,9 @@ public class ParserTest {
         schema.addSchemaLine(schemaLine);
 
         Document doc = build(toParse, schema);
-        assertEquals(2, doc.getNumberOfLines());
-        assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
-        assertEquals("Frida", doc.getLine(1).getCell(0).getStringValue());
+        assertEquals(2, doc.size());
+        assertEquals("Jonas", doc.getLine(0).getCell("First name").getStringValue());
+        assertEquals("Frida", doc.getLine(1).getCell("First name").getStringValue());
     }
 
     @Test
@@ -141,8 +141,8 @@ public class ParserTest {
 
         Document doc = build(toParse, schema);
 
-        assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
-        assertEquals("Frida", doc.getLine(1).getCell(0).getStringValue());
+        assertEquals("Jonas", doc.getLine(0).getCell("First name").getStringValue());
+        assertEquals("Frida", doc.getLine(1).getCell("First name").getStringValue());
     }
     
 }

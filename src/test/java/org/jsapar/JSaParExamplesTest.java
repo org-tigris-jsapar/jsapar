@@ -44,13 +44,13 @@ public class JSaParExamplesTest {
         Document document = builder.build();
         fileReader.close();
 
-        assertEquals("Erik", document.getLine(0).getCell(0).getStringValue());
-        assertEquals("Svensson", document.getLine(0).getCell(1).getStringValue());
-        assertEquals("true", document.getLine(0).getCell(2).getStringValue());
-        assertEquals("Fredrik", document.getLine(1).getCell(0).getStringValue());
-        assertEquals("Larsson", document.getLine(1).getCell(1).getStringValue());
-        assertEquals("false", document.getLine(1).getCell(2).getStringValue());
-        assertEquals(Boolean.FALSE, ((BooleanCell)document.getLine(1).getCell(2)).getBooleanValue());
+        assertEquals("Erik", document.getLine(0).getCell("First name").getStringValue());
+        assertEquals("Svensson", document.getLine(0).getCell("Last name").getStringValue());
+        assertEquals("true", document.getLine(0).getCell("Have dog").getStringValue());
+        assertEquals("Fredrik", document.getLine(1).getCell("First name").getStringValue());
+        assertEquals("Larsson", document.getLine(1).getCell("Last name").getStringValue());
+        assertEquals("false", document.getLine(1).getCell("Have dog").getStringValue());
+        assertEquals(Boolean.FALSE, ((BooleanCell)document.getLine(1).getCell("Have dog")).getBooleanValue());
 
         assertEquals("Alfred", document.getLine(2).getCell("First name").getStringValue());
         assertEquals("Nilsson", document.getLine(2).getCell("Last name").getStringValue());
@@ -70,10 +70,10 @@ public class JSaParExamplesTest {
         Document document = builder.build();
         fileReader.close();
 
-        assertEquals("Erik    ", document.getLine(0).getCell(0).getStringValue());
-        assertEquals("Svensson ", document.getLine(0).getCell(1).getStringValue());
-        assertEquals("Fredrik ", document.getLine(1).getCell(0).getStringValue());
-        assertEquals("Larsson  ", document.getLine(1).getCell(1).getStringValue());
+        assertEquals("Erik    ", document.getLine(0).getCell("First name").getStringValue());
+        assertEquals("Svensson ", document.getLine(0).getCell("Last name").getStringValue());
+        assertEquals("Fredrik ", document.getLine(1).getCell("First name").getStringValue());
+        assertEquals("Larsson  ", document.getLine(1).getCell("Last name").getStringValue());
     }
 
     /**
@@ -91,12 +91,12 @@ public class JSaParExamplesTest {
         Document document = builder.build();
         fileReader.close();
 
-        assertEquals(3, document.getNumberOfLines());
-        assertEquals("Erik", document.getLine(0).getCell(0).getStringValue());
-        assertEquals("Svensson", document.getLine(0).getCell(1).getStringValue());
+        assertEquals(3, document.size());
+        assertEquals("Erik", document.getLine(0).getCell("First name").getStringValue());
+        assertEquals("Svensson", document.getLine(0).getCell("Last name").getStringValue());
         assertEquals("37", document.getLine(0).getCell("Age").getStringValue());
-        assertEquals("Fredrik", document.getLine(1).getCell(0).getStringValue());
-        assertEquals("Larsson", document.getLine(1).getCell(1).getStringValue());
+        assertEquals("Fredrik", document.getLine(1).getCell("First name").getStringValue());
+        assertEquals("Larsson", document.getLine(1).getCell("Last name").getStringValue());
         assertEquals("17", document.getLine(1).getCell("Age").getStringValue());
     }
 
@@ -149,7 +149,7 @@ public class JSaParExamplesTest {
 
         // System.out.println("Errors: " + parseErrors.toString());
 
-        assertEquals(2, document.getNumberOfLines());
+        assertEquals(2, document.size());
         assertEquals("Hans", document.getLine(0).getCell("FirstName").getStringValue());
         assertEquals("Hugge", document.getLine(0).getCell("LastName").getStringValue());
         assertEquals(48, ((IntegerCell) document.getLine(0).getCell("ShoeSize")).getNumberValue().intValue());

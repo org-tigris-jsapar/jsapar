@@ -5,7 +5,7 @@ import org.jsapar.schema.SchemaException;
 import java.text.Format;
 
 /**
- * Class containging the cell stringValue as a string representation. Each line
+ * Class containing the cell as a string representation. Each line
  * contains a list of cells.
  * 
  * @author Jonas
@@ -13,9 +13,6 @@ import java.text.Format;
  */
 public class StringCell extends Cell {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -2776042954053921679L;
 
     /**
@@ -27,26 +24,24 @@ public class StringCell extends Cell {
     /**
      * Creates a string cell with the supplied name and value.
      * 
-     * @param sName
-     * @param sValue
+     * @param name The name of the cell
+     * @param value The value
      */
-    public StringCell(String sName, String sValue) {
-	super(sName, CellType.STRING);
-	this.stringValue = sValue;
+    public StringCell(String name, String value) {
+	super(name, CellType.STRING);
+	this.stringValue = value;
     }
 
 
     /**
      * Creates a string cell with the supplied name and value.
-     * 
-     * @param sName
-     * @param chValue
+     *
+     * @param name The name of the cell
+     * @param value The value
      */
-    public StringCell(String sName, char chValue) {
-        super(sName, CellType.STRING);
-        StringBuilder sb = new StringBuilder();
-        sb.append(chValue);
-        this.stringValue = sb.toString();
+    public StringCell(String name, char value) {
+        super(name, CellType.STRING);
+        this.stringValue = String.valueOf(value);
     }
 
 

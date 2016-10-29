@@ -189,7 +189,7 @@ public class FixedWidthControlCellParserTest {
         config.setOnUndefinedLineType(ValidationAction.IGNORE_LINE);
         Document doc = build(reader, schema, config);
 
-        assertEquals(2, doc.getNumberOfLines());
+        assertEquals(2, doc.size());
         assertEquals("Jonas", doc.getLine(0).getCell("First name").getStringValue());
         assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
 

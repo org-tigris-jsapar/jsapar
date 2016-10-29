@@ -7,8 +7,6 @@ package org.jsapar.model;
  * Float cell contains a double precision float number. Single precision float
  * values are converted into double precision values.
  * 
- * @author Jonas Stenberg
- * 
  */
 public class FloatCell extends NumberCell implements Comparable<FloatCell> {
 
@@ -18,8 +16,8 @@ public class FloatCell extends NumberCell implements Comparable<FloatCell> {
      * Creates a float number cell with supplied name. Converts the float value
      * into a double precision float value.
      * 
-     * @param name
-     * @param value
+     * @param name The name of the cell
+     * @param value The value
      */
     public FloatCell(String name, Float value) {
 	super(name, value, CellType.FLOAT);
@@ -28,8 +26,8 @@ public class FloatCell extends NumberCell implements Comparable<FloatCell> {
     /**
      * Creates a float number cell with supplied name.
      * 
-     * @param name
-     * @param value
+     * @param name The name of the cell
+     * @param value The value
      */
     public FloatCell(String name, Double value) {
 	super(name, value, CellType.FLOAT);

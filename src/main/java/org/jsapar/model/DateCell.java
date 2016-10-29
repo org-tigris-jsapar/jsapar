@@ -6,14 +6,10 @@ import java.text.Format;
 import java.util.Date;
 
 /**
- * Class containging the cell dateValue as a string representation. Each line contains a list of
- * cells.
- * 
- * @author Jonas
+ * {@link Cell} implementation carrying a date value of a cell.
  * 
  */
 public class DateCell extends Cell implements Comparable<DateCell> {
-    private final static java.text.DateFormat xmlDateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
     /**
      * 
@@ -65,17 +61,6 @@ public class DateCell extends Cell implements Comparable<DateCell> {
             return format.format(this.dateValue);
         else
             return this.dateValue.toString();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.model.Cell#getXmlValue()
-     */
-    @Override
-    public String getXmlValue() {
-        String sTime = xmlDateFormat.format(this.dateValue);
-        return sTime.substring(0, sTime.length() - 2) + ":" + sTime.substring(sTime.length() - 2, sTime.length());
     }
 
     @Override

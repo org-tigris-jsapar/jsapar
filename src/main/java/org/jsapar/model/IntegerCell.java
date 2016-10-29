@@ -4,43 +4,40 @@
 package org.jsapar.model;
 
 /**
- * @author Jonas Stenberg
+ * Integer cell that contains integer values of any length; Byte, Short, Integer and Long.
  *
  */
 public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -6131249480571994885L;
 
     /**
-     * @param name
-     * @param value
+     * @param name The name of the cell
+     * @param value The value
      */
     public IntegerCell(String name, Integer value) {
 	super(name, value, CellType.INTEGER);
     }
 
     /**
-     * @param name
-     * @param value
+     * @param name The name of the cell
+     * @param value The value
      */
     public IntegerCell(String name, Long value) {
 	super(name, value, CellType.INTEGER);
     }
 
     /**
-     * @param name
-     * @param value
+     * @param name The name of the cell
+     * @param value The value
      */
     public IntegerCell(String name, Short value) {
         super(name, value, CellType.INTEGER);
     }
 
     /**
-     * @param name
-     * @param value
+     * @param name The name of the cell
+     * @param value The value
      */
     public IntegerCell(String name, Byte value) {
         super(name, value, CellType.INTEGER);

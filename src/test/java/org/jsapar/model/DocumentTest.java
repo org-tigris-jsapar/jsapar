@@ -1,15 +1,13 @@
 package org.jsapar.model;
 
-import static org.junit.Assert.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.List;
 
-import org.jsapar.model.Document;
-import org.jsapar.model.Line;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class DocumentTest {
 
@@ -95,14 +93,6 @@ public class DocumentTest {
         assertFalse(iter.hasNext());
     }
 
-    @Test
-    public void testGetNumberOfLines() {
-        Document d = new Document();
-        assertEquals(0, d.getNumberOfLines());
-        Line line = new Line();
-        d.addLine(line);
-        assertEquals(1, d.getNumberOfLines());
-    }
 
     @Test
     public void testIsEmpty() {

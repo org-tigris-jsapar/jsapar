@@ -51,8 +51,8 @@ public class DocumentBuilderTest {
         DocumentBuilder builder = new DocumentBuilder(parser);
         Document doc = builder.build();
 
-        assertEquals(1, doc.getNumberOfLines());
-        assertEquals("Jonas", doc.getLine(0).getCell(0).getStringValue());
+        assertEquals(1, doc.size());
+        assertEquals("Jonas", doc.getLine(0).getCell("First name").getStringValue());
         assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
     }
 

@@ -24,9 +24,7 @@ public class Line implements Serializable, Cloneable{
     private static final long serialVersionUID = 6026541900371948402L;
     public static final String EMPTY = "";
 
-    private ArrayList<Cell> cellsByIndex = null;
-
-    private Map<String, Cell> cellsByName = null;
+    private Map<String, Cell> cells = new LinkedHashMap<>();
 
     /**
      * Line type.
@@ -43,21 +41,18 @@ public class Line implements Serializable, Cloneable{
      * Creates an empty line without any cells.
      */
     public Line() {
-        this.cellsByIndex = new java.util.ArrayList<>();
-        this.cellsByName = new java.util.HashMap<>();
+        cells = new LinkedHashMap<>();
     }
 
     /**
      * Creates an empty line without any cells but with an initial capacity.
      * 
-     * @param nInitialCapacity
+     * @param initialCapacity
      *            The initial capacity. Used only to reserve space. If capacity is exceeded, the
      *            capacity grows automatically.
      */
-    public Line(int nInitialCapacity) {
-        this.cellsByIndex = new java.util.ArrayList<Cell>(nInitialCapacity);
-        this.cellsByName = new java.util.HashMap<String, Cell>(nInitialCapacity);
-
+    public Line(int initialCapacity) {
+        cells = new LinkedHashMap<>(initialCapacity);
     }
 
     /**
@@ -76,12 +71,12 @@ public class Line implements Serializable, Cloneable{
      * 
      * @param sLineType
      *            The type of the line.
-     * @param nInitialCapacity
+     * @param initialCapacity
      *            The initial capacity. Used only to reserve space. If capacity is exceeded, the
      *            capacity grows automatically.
      */
-    public Line(String sLineType, int nInitialCapacity) {
-        this(nInitialCapacity);
+    public Line(String sLineType, int initialCapacity) {
+        this(initialCapacity);
         lineType = sLineType;
     }
 
@@ -94,9 +89,8 @@ public class Line implements Serializable, Cloneable{
      *         Line.
      * @see #getCellIterator()
      */
-    @SuppressWarnings("unchecked")
-    public java.util.List<Cell> getCells() {
-        return (java.util.List<Cell>) cellsByIndex.clone();
+    public List<Cell> getCells() {
+        return new ArrayList<>(cells.values()) ;
     }
 
     /**
@@ -105,37 +99,36 @@ public class Line implements Serializable, Cloneable{
      * @return An iterator that will iterate all the cells of this line.
      */
     public Iterator<Cell> getCellIterator() {
-        return cellsByIndex.iterator();
+        return cells.values().iterator();
     }
 
     /**
-     * Adds a cell to the cellsByName list.
+     * Adds a cell to the cells list.
      * 
      * @param cell
      *            The cell to add
-     * @throws IllegalArgumentException
+     * @throws IllegalStateException
      *             If a cell with the same name already exists.
      */
     private void addCellByName(Cell cell)  {
-        Cell oldCell = cellsByName.get(cell.getName());
+        Cell oldCell = cells.get(cell.getName());
         if (oldCell != null)
-            throw new IllegalArgumentException("A cell with the name '" + cell.getName()
+            throw new IllegalStateException("A cell with the name '" + cell.getName()
                     + "' already exists. Failed to add cell.");
-        this.cellsByName.put(cell.getName(), cell);
+        this.cells.put(cell.getName(), cell);
     }
 
     /**
      * Adds a cell to the end of the line. Requires that there is not already a cell with the same name within this
      * line. Use method replaceCell() instead if you don't care if a cell with the same name already exist.
-     * 
+     *
      * @param cell
      *            The cell to add
-     * @throws IllegalArgumentException
+     * @throws IllegalStateException
      *             if cell with the same name already exist. Use method replaceCell() instead if you don't care if a
      *             cell with the same name already exist.
      */
     public void addCell(Cell cell)  {
-        this.cellsByIndex.add(cell);
         if (cell.getName() != null)
             addCellByName(cell);
     }
@@ -148,133 +141,21 @@ public class Line implements Serializable, Cloneable{
      * @return The removed cell
      */
     public Cell removeCell(String sName) {
-        Cell foundCell = this.cellsByName.remove(sName);
-        if (foundCell != null) {
-            Iterator<Cell> i = this.cellsByIndex.iterator();
-            while (i.hasNext()) {
-                if (sName.equals(i.next().getName())) {
-                    i.remove();
-                    break;
-                }
-            }
-        }
-        return foundCell;
-
+        return this.cells.remove(sName);
     }
 
-    /**
-     * Removes cell with specified index. Cells to the right of the removed cell will be moved one
-     * step to the left.
-     * 
-     * @param index
-     *            The index of the cell to remove.
-     * @return The removed cell or null if the index was out of bounds.
-     */
-    public Cell removeCell(int index) {
-        Cell removed = null;
-        if (this.cellsByIndex.size() > index && this.cellsByIndex.get(index) != null) {
-            removed = this.cellsByIndex.remove(index);
-            if (removed.getName() != null)
-                this.cellsByName.remove(removed.getName());
-        }
-        return removed;
-    }
 
     /**
-     * Adds a cell to the line end of the line, replacing any existing cell with the same name. If the value of the
-     * supplied cell is null, any existing cell is removed but no new cell will be added.
+     * Adds a cell to the line end of the line, replacing any existing cell with the same name.
      * 
      * @param cell
      *            The cell to add
      * @return The replaced cell or null if there were no cell within the line with the same name.
      */
     public Cell replaceCell(Cell cell) {
-        if(cell.getValue() == null)
-            return removeCell(cell.getName());
-        
-        Cell foundCell = null;
-        if (cell.getName() != null) {
-            foundCell = this.cellsByName.put(cell.getName(), cell);
-            if (foundCell != null) {
-                Iterator<Cell> i = this.cellsByIndex.iterator();
-                while (i.hasNext()) {
-                    if (cell.getName().equals(i.next().getName()))
-                        i.remove();
-                }
-            }
-        }
-        this.cellsByIndex.add(cell);
-        return foundCell;
+        return this.cells.put(cell.getName(), cell);
     }
 
-    /**
-     * Adds a cell at specified index of a line. First cell has index 0. Existing cells to the right
-     * of the new cell will have incremented indexes.
-     * 
-     * @param cell
-     *            The cell to add
-     * @param index
-     *            The index the cell will have in the line.
-     * @throws JSaParException 
-     */
-    public void addCell(Cell cell, int index) throws JSaParException {
-        if (cell.getName() != null) {
-            Cell oldCell = this.cellsByName.put(cell.getName(), cell);
-            if (oldCell != null)
-                throw new JSaParException("A cell with the name '" + cell.getName()
-                        + "' already exists. Failed to add cell.");
-
-        }
-        this.cellsByIndex.add(index, cell);
-    }
-
-    /**
-     * Replaces a cell at specified index of a line. First cell has index 0.<br>
-     * Note that if the line contains another cell with the name same name as the supplied cell,
-     * both that cell and the cell at the specified index will be removed. This can lead to 
-     * unexpected behavior since this also affects the index of all cells with higher index than the 
-     * removed cell.
-     * 
-     * @param cell
-     *            The cell to add
-     * @param index
-     *            The index the cell will have in the line.
-     * @return The replaced cell (at the index) or null if there were no cell within the line at
-     *         that index.
-     */
-    public Cell replaceCell(Cell cell, int index) {
-        Cell removed = null;
-        if (this.cellsByIndex.size() > index) {
-            removed = this.cellsByIndex.set(index, cell);
-            if (removed.getName() != null) {
-                this.cellsByName.remove(removed.getName());
-            }
-        }
-        if (cell.getName() != null) {
-            Cell second = this.cellsByName.put(cell.getName(), cell);
-            if (second != null && second != removed) {
-                Iterator<Cell> i = this.cellsByIndex.iterator();
-                while (i.hasNext()) {
-                    Cell current = i.next();
-                    if (cell.getName().equals(current.getName()) && cell != current) {
-                        i.remove();
-                        break;
-                    }
-                }
-            }
-        }
-        return removed;
-    }
-
-    /**
-     * Gets a cell at specified index. First cell has index 0.
-     * 
-     * @param index
-     * @return The cell
-     */
-    public Cell getCell(int index) {
-        return this.cellsByIndex.get(index);
-    }
 
     /**
      * Gets a cell with specified name. Name is specified by the schema.
@@ -283,7 +164,7 @@ public class Line implements Serializable, Cloneable{
      * @return The cell or null if there is no cell with specified name.
      */
     public Cell getCell(String name) {
-        return this.cellsByName.get(name);
+        return this.cells.get(name);
     }
 
     /**
@@ -292,7 +173,7 @@ public class Line implements Serializable, Cloneable{
      * @return the number of cells that this line contains.
      */
     public int size() {
-        return this.cellsByIndex.size();
+        return this.cells.size();
     }
 
     /**
@@ -332,7 +213,7 @@ public class Line implements Serializable, Cloneable{
             sb.append(this.lineNumber);
         }
         sb.append(" Cells: ");
-        sb.append(this.cellsByIndex);
+        sb.append(this.cells.values());
         return sb.toString();
     }
 
@@ -1018,7 +899,7 @@ public class Line implements Serializable, Cloneable{
 
     @Override
     public Line clone()  {
-        Line clone = null;
+        Line clone;
         try {
             clone = (Line) super.clone();
         } catch (CloneNotSupportedException e) {
@@ -1026,13 +907,11 @@ public class Line implements Serializable, Cloneable{
             throw new AssertionError(e);
         }
 
-        clone.cellsByIndex = new ArrayList<>(this.cellsByIndex.size());
-        clone.cellsByName = new HashMap<>(this.cellsByName.size());
+        clone.cells = new LinkedHashMap<>(this.cells.size());
 
-        for (Cell cell : this.cellsByIndex) {
+        for (Cell cell : this.cells.values()) {
             Cell cellClone = cell.clone();
-            clone.cellsByIndex.add(cellClone);
-            clone.cellsByName.put(cellClone.getName(), cellClone);
+            clone.cells.put(cellClone.getName(), cellClone);
         }
 
         return clone;

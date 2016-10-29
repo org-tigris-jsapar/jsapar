@@ -58,7 +58,7 @@ public class BeanParserTest {
         DocumentBuilder builder = new DocumentBuilder(parser);
         Document doc = builder.build();
 
-        assertEquals(2, doc.getNumberOfLines());
+        assertEquals(2, doc.size());
         Line line = doc.getLine(0);
         assertEquals("Jonas", line.getCell("firstName").getStringValue());
 

@@ -1,15 +1,13 @@
 package org.jsapar.schema;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
-import org.jsapar.model.Cell;
 import org.jsapar.error.JSaParException;
+import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class SchemaLineTest {
 
@@ -19,7 +17,7 @@ public class SchemaLineTest {
         Line line = new Line();
         SchemaCell schemaCell = new SchemaCell("First") {};
         
-        Cell c = instance.doFindCell(line, schemaCell, 0);
+        Cell c = instance.doFindCell(line, schemaCell);
         assertNull(c);
     }
 
@@ -32,10 +30,10 @@ public class SchemaLineTest {
         
         Cell first = new StringCell("First", "one");
         line.addCell(first);
-        Cell c = instance.doFindCell(line, schemaCell, 0);
+        Cell c = instance.doFindCell(line, schemaCell);
         assertEquals(first, c);
 
-        c = instance.doFindCell(line, schemaCell, 3);
+        c = instance.doFindCell(line, schemaCell);
         assertEquals(first, c);
     }
 
@@ -55,7 +53,7 @@ public class SchemaLineTest {
 
         schemaCell = new SchemaCell("two") {};
         
-        Cell c = instance.doFindCell(line, schemaCell, 1);
+        Cell c = instance.doFindCell(line, schemaCell);
         assertEquals(second, c);
     }
 
@@ -77,7 +75,7 @@ public class SchemaLineTest {
         
         SchemaCell schemaCell = new SchemaCell("Second") {};
         
-        Cell c = instance.doFindCell(line, schemaCell, 2);
+        Cell c = instance.doFindCell(line, schemaCell);
         assertEquals(second, c);
     }    
     
@@ -96,7 +94,7 @@ public class SchemaLineTest {
 
         schemaCell = new SchemaCell("Third") {};
         
-        Cell c = instance.doFindCell(line, schemaCell, 1);
+        Cell c = instance.doFindCell(line, schemaCell);
         assertNull(c);
     }    
     
@@ -118,8 +116,8 @@ public class SchemaLineTest {
         }
 
         
-        public Cell doFindCell(Line line, SchemaCell schemaCell, int nSchemaCellIndex){
-            return findCell(line, schemaCell, nSchemaCellIndex);
+        public Cell doFindCell(Line line, SchemaCell schemaCell){
+            return findCell(line, schemaCell);
         }
         
     }

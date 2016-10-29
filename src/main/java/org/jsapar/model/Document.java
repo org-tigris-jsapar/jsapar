@@ -4,10 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A document contains multiple lines where each line corresponds to a line of
- * the input buffer. Lines can be retreived by index O(1), where first line has
+ * the input buffer. Lines can be retrieved by index O(1), where first line has
  * index 0. Note that the class is not synchronized internally. If multiple
  * threads access the same instance, external synchronization is required.
  * 
@@ -33,7 +34,7 @@ public class Document implements Serializable {
      * Creates a document with an initial capacity to contain nInitialCapacity
      * lines.
      * 
-     * @param nInitialCapacity
+     * @param nInitialCapacity Initial capacity.
      */
     public Document(int nInitialCapacity) {
         this.lines = new ArrayList<>(nInitialCapacity);
@@ -43,9 +44,9 @@ public class Document implements Serializable {
      * For better performance while iterating multiple lines, it is better to
      * call the {@link #getLineIterator()} method.
      * 
-     * @return A clone of the internal collection that contains all the lines of
+     * @return A shallow clone of the internal collection that contains all the lines of
      *         this documents. Altering the returned collection will not alter
-     *         the original collection of the Document.
+     *         the original collection of the Document but altering one of the lines will alter the original line.
      * @see #getLineIterator()
      */
     @SuppressWarnings("unchecked")
@@ -55,7 +56,7 @@ public class Document implements Serializable {
 
     /**
      * Returns the line at the specified index. First line has index 0.
-     * @param index
+     * @param index The index of the line to retrieve.
      * @return The line at the specified index. 
      * @throws IndexOutOfBoundsException
      *             - if the index is out of range (index < 0 || index >= size())
@@ -93,13 +94,6 @@ public class Document implements Serializable {
         return this.lines.iterator();
     }
 
-    /**
-     * Gets the number of lines contained by this document.
-     * @return The number of lines.
-     */
-    public int getNumberOfLines() {
-        return this.lines.size();
-    }
 
     @Override
     public String toString() {
@@ -152,23 +146,19 @@ public class Document implements Serializable {
     }
     
     /**
-     * @param lineType
+     * Finds all lines of a specified type.
+     * @param lineType The type of the lines to find.
      * @return A list of all lines with a line type that equals supplied line type or an empty list if no such line
      *         exist within this document.
      */
     public List<Line> findLinesOfType(String lineType) {
-        List<Line> result = new ArrayList<>();
         assert lineType != null;
 
-        for (Line line : lines) {
-            if (lineType.equals(line.getLineType()))
-                result.add(line);
-        }
-        return result;
+        return lines.stream().filter(line -> lineType.equals(line.getLineType())).collect(Collectors.toList());
     }
 
     /**
-     * @return The number of lines within this document. The same as getNumberOfLines()
+     * @return The number of lines within this document.
      */
     public int size() {
         return lines.size();
@@ -178,7 +168,7 @@ public class Document implements Serializable {
      * Removes supplied line from this document. Only if the supplied line instance is part of the document it will be
      * removed since equality will be tested upon same instance and not by using equals() method.
      * 
-     * @param line
+     * @param line The line to remove
      * @return true if line was found and removed from document. False otherwise.
      */
     public boolean removeLine(Line line) {
@@ -196,7 +186,7 @@ public class Document implements Serializable {
     /**
      * Removes line at supplied index.
      * 
-     * @param index
+     * @param index The index of the line to remove.
      * @return The line that was removed.
      * @throws IndexOutOfBoundsException
      *             - if the index is out of range (index < 0 || index >= size())

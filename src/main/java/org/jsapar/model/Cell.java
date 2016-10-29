@@ -14,14 +14,6 @@ import java.io.Serializable;
  */
 public abstract class Cell implements Serializable, Cloneable {
 
-    /**
-     * Denotes the type of the cell.
-     * 
-     */
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = -3609313087173019221L;
 
     /**
@@ -29,6 +21,10 @@ public abstract class Cell implements Serializable, Cloneable {
      */
     private final String name;
 
+    /**
+     * Denotes the type of the cell.
+     *
+     */
     private final CellType          cellType;
 
     /**
@@ -95,17 +91,7 @@ public abstract class Cell implements Serializable, Cloneable {
         return cellType;
     }
 
-    /**
-     * Gets the value formatted according to its xml base type.
-     * 
-     * @return a string containing the value in xml format.
-     */
-    public String getXmlValue() {
-        return getStringValue();
-    }
 
-
-    
     /* (non-Javadoc)
      * @see java.lang.Object#clone()
      */

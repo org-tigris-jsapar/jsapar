@@ -20,12 +20,13 @@ public abstract class NumberCell extends Cell {
      */
     private Number numberValue;
 
-    public NumberCell(String sName, CellType cellType) {
-        super(sName, cellType);
-    }
-
-    public NumberCell(String sName, Number value, CellType cellType) {
-        super(sName, cellType);
+    /**
+     * @param name The name of the cell
+     * @param value The value
+     * @param cellType The type of the cell, from the sub-class.
+     */
+    public NumberCell(String name, Number value, CellType cellType) {
+        super(name, cellType);
         this.numberValue = value;
     }
 

@@ -3,7 +3,7 @@ package org.jsapar.model;
 import org.jsapar.parse.cell.*;
 
 /**
- * @author stejon0
+ * Enum used to be able to denote the type of a cell.
  *
  */
 public enum CellType {
