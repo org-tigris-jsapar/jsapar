@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 import static org.junit.Assert.*;
@@ -33,6 +35,8 @@ public class LineUtilsTest {
         LineUtils.setStringCellValue(line, "LastName", "Svensson");
         assertEquals("Nils", LineUtils.getStringCellValue(line,"FirstName"));
         assertEquals("Svensson", LineUtils.getStringCellValue(line,"LastName"));
+        assertEquals("Svensson", LineUtils.getStringCellValue(line,"LastName", "Karlsson"));
+        assertEquals("Karlsson", LineUtils.getStringCellValue(line,"Nothing", "Karlsson"));
     }
     
 
@@ -41,8 +45,10 @@ public class LineUtilsTest {
     }
 
     @Test
-    public void testSetEnumCellValue() throws Exception {
-
+    public void testGetSetEnumCellValue() throws Exception {
+        Line line = new Line("TestLine");
+        LineUtils.setEnumCellValue(line, "Type", Testing.FIRST);
+        assertEquals(Testing.FIRST, LineUtils.getEnumCellValue(line, "Type", Testing.SECOND));
     }
     
     @Test
@@ -63,44 +69,7 @@ public class LineUtilsTest {
     }
     
     @Test
-    public void testSetIntCellValue() throws Exception {
-
-    }
-
-    @Test
-    public void testSetLongCellValue() throws Exception {
-
-    }
-
-    @Test
-    public void testSetDoubleCellValue() throws Exception {
-
-    }
-
-
-    @Test
-    public void testSetDecimalCellValue() throws Exception {
-
-    }
-
-    @Test
-    public void testSetBigIntegerCellValue() throws Exception {
-
-    }
-
-    @Test
-    public void testGetStringCellValue() throws Exception {
-
-    }
-
-    @Test
-    public void testGetStringCellValue1() throws Exception {
-
-    }
-
-
-    @Test
-    public void testGetIntCellValue() throws JSaParException{
+    public void testGetSetIntCellValue() throws JSaParException{
         Line line = new Line("TestLine");
         line.addCell(new IntegerCell("shoeSize", 42));
         line.addCell(new FloatCell("pi", 3.141));
@@ -132,54 +101,56 @@ public class LineUtilsTest {
         LineUtils.getIntCellValue(line,"aStringValue");
         Assert.fail("Should throw exception");
     }
-    
 
     @Test
-    public void testGetLongCellValue() throws Exception {
-
+    public void testGetSetLongCellValue() throws Exception {
+        Line line = new Line("TestLine");
+        LineUtils.setLongCellValue(line, "Value", 314159265358979L);
+        assertEquals(314159265358979L, LineUtils.getLongCellValue(line,"Value"));
+        assertEquals(314159265358979L, LineUtils.getLongCellValue(line,"Value"), 17L);
+        assertEquals(17L, LineUtils.getLongCellValue(line,"DoesNotExist", 17L));
     }
 
     @Test
-    public void testGetLongCellValue1() throws Exception {
+    public void testGetSetDoubleCellValue() throws Exception {
+        Line line = new Line("TestLine");
+        LineUtils.setDoubleCellValue(line, "Value", 3.14159265358979D);
+        assertEquals(3.14159265358979D, LineUtils.getDoubleCellValue(line,"Value"), 0.0000000001);
+        assertEquals(3.14159265358979D, LineUtils.getDoubleCellValue(line,"Value", 2.71D), 0.0000000001);
+        assertEquals(2.718D, LineUtils.getDoubleCellValue(line,"DoesNotExist", 2.718D), 0.0000000001);
+    }
 
+
+    @Test
+    public void testGetSetDecimalCellValue() throws Exception {
+        Line line = new Line("TestLine");
+        LineUtils.setDoubleCellValue(line, "pi", 3.14159265358979D);
+        LineUtils.setDecimalCellValue(line, "e", new BigDecimal("2.718"));
+        assertEquals(new BigDecimal(3.14159265358979D), LineUtils.getDecimalCellValue(line,"pi"));
+        assertEquals(new BigDecimal("2.718"), LineUtils.getDecimalCellValue(line,"e"));
+        assertEquals(new BigDecimal(3.14159265358979D), LineUtils.getDecimalCellValue(line,"pi", new BigDecimal(2.71D)));
+        assertEquals(new BigDecimal("23.14"), LineUtils.getDecimalCellValue(line,"gelfond", new BigDecimal("23.14")));
     }
 
     @Test
-    public void testGetCharCellValue() throws Exception {
-
+    public void testSetBigIntegerCellValue() throws Exception {
+        Line line = new Line("TestLine");
+        LineUtils.setIntCellValue(line, "random", 4711);
+        LineUtils.setBigIntegerCellValue(line, "douglas", BigInteger.valueOf(42L));
+        assertEquals(new BigInteger("4711"), LineUtils.getBigIntegerCellValue(line,"random"));
+        assertEquals(new BigInteger("42"), LineUtils.getBigIntegerCellValue(line,"douglas"));
+        assertEquals(new BigInteger("42"), LineUtils.getBigIntegerCellValue(line,"douglas", BigInteger.valueOf(42L)));
+        assertEquals(new BigInteger("23"), LineUtils.getBigIntegerCellValue(line,"pi", new BigInteger("23")));
     }
 
     @Test
-    public void testGetCharCellValue1() throws Exception {
-
-    }
-
-    @Test
-    public void testGetBooleanCellValue() throws Exception {
-
-    }
-
-    @Test
-    public void testGetBooleanCellValue1() throws Exception {
-
-    }
-
-    @Test
-    public void testGetDateCellValue() throws Exception {
-
-    }
-
-    @Test
-    public void testGetDateCellValue1() throws Exception {
-
-    }
-
-    @Test
-    public void testSetDateCellValue() {
+    public void testGetSetDateCellValue() {
         Line line = new Line("TestLine");
         Date date = new Date();
         LineUtils.setDateCellValue(line,"aDateValue", date);
         assertEquals(date, LineUtils.getDateCellValue(line,"aDateValue"));
+        assertSame(date, LineUtils.getDateCellValue(line,"aDateValue", new Date()));
+        assertNotSame(date, LineUtils.getDateCellValue(line,"doesNotExist", new Date()));
         LineUtils.setDateCellValue(line,"aDateValue", null);
         assertFalse(line.isCell("aDateValue"));
     }
