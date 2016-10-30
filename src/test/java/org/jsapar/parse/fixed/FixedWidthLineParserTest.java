@@ -4,6 +4,7 @@ import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
+import org.jsapar.model.LineUtils;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
@@ -141,7 +142,7 @@ public class FixedWidthLineParserTest {
             Line line = event.getLine();
             assertEquals("Jonas", line.getCell("First name").getStringValue());
             assertEquals("Stenberg", line.getCell("Last name").getStringValue());
-            assertEquals("Falun", line.getStringCellValue("City"));
+            assertEquals("Falun", LineUtils.getStringCellValue(line,"City"));
 
             assertEquals("Last name", line.getCell("Last name").getName());
 

@@ -2,11 +2,8 @@ package org.jsapar.model;
 
 import org.jsapar.error.JSaParException;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Date;
 
 import static org.junit.Assert.*;
 
@@ -105,34 +102,6 @@ public class LineTest {
         assertEquals("Nils", line.getCell("FirstName").getStringValue());
     }
 
-    enum Testing{
-        FIRST, SECOND
-    }
-    
-    @Test
-    public void testGetCellValue_Enum() throws JSaParException {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("Type", "FIRST"));
-        assertEquals(Testing.FIRST, line.getEnumCellValue("Type", Testing.SECOND));
-        assertEquals(Testing.SECOND, line.getEnumCellValue("Type does not exist", Testing.SECOND));
-        assertNull( line.getEnumCellValue("Type does not exist", (Testing)null));
-    }
-
-    @Test
-    public void testGetEnumCellValue() throws JSaParException {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("Type", "FIRST"));
-        assertEquals(Testing.FIRST, line.getEnumCellValue("Type", Testing.class));
-    }
-    
-    @Test
-    public void testGetSetStringCellValue() throws JSaParException {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        line.setStringCellValue("LastName", "Svensson");
-        assertEquals("Nils", line.getStringCellValue("FirstName"));
-        assertEquals("Svensson", line.getStringCellValue("LastName"));
-    }
 
     @Test
     public void testGetNumberOfCells() throws JSaParException {
@@ -169,77 +138,21 @@ public class LineTest {
         assertEquals("Svensson", line.getCell("LastName").getStringValue());
     }
 
-
     @Test
-    public void testGetIntCellValue() throws JSaParException{
+    public void testIsCellSet() throws Exception {
         Line line = new Line("TestLine");
-        line.addCell(new IntegerCell("shoeSize", 42));
-        line.addCell(new FloatCell("pi", 3.141));
-        line.setStringCellValue("aStringValue", "17");
-        line.setIntCellValue("anIntValue", 4711);
-        
-        assertEquals(42, line.getIntCellValue("shoeSize"));
-        assertEquals(17, line.getIntCellValue("aStringValue"));
-        assertEquals(3, line.getIntCellValue("pi"));
-        assertEquals(4711, line.getIntCellValue("anIntValue"));
-        
-    }
-    
-    @Test(expected=JSaParException.class)
-    public void testGetIntCellValue_dont_exist() throws JSaParException{
-        Line line = new Line("TestLine");
-        
-        line.getIntCellValue("shoeSize");
-        Assert.fail("Should throw exception");
-    }
-
-    @Test(expected=NumberFormatException.class)
-    public void testGetIntCellValue_not_parsable() throws JSaParException{
-        Line line = new Line("TestLine");
-        line.setStringCellValue("aStringValue", "ABC");
-        
-        line.getIntCellValue("aStringValue");
-        Assert.fail("Should throw exception");
-    }
-    
-    @Test
-    public void testSetCellValueString_null(){
-        Line line = new Line("TestLine");
-        line.setStringCellValue("aStringValue", "ABC");
-        assertEquals("ABC", line.getStringCellValue("aStringValue"));
-        line.setStringCellValue("aStringValue", (String)null);
-        assertFalse(line.isCell("aStringValue"));
-    }
-    
-    @Test
-    public void testSetCellValueString_date() throws JSaParException{
-        Line line = new Line("TestLine");
-        Date date = new Date();
-        line.setDateCellValue("aDateValue", date);
-        assertEquals(date, line.getDateCellValue("aDateValue"));
-        line.setDateCellValue("aDateValue", (Date)null);
-        assertFalse(line.isCell("aDateValue"));
+        line.addCell(new StringCell("FirstName", "Nils"));
+        assertTrue(line.isCellSet("FirstName"));
+        assertFalse(line.isCellSet("LastName"));
     }
 
     @Test
-    public void testSetCellValue_boolean() throws JSaParException{
+    public void testIsCellSetType() throws Exception {
         Line line = new Line("TestLine");
-        line.setBooleanCellValue("aTrueValue", true);
-        line.setBooleanCellValue("aFalseValue", false);
-        assertTrue(line.getBooleanCellValue("aTrueValue"));
-        assertTrue(line.getBooleanCellValue("aTrueValue", false));
-        assertFalse(line.getBooleanCellValue("anotherValue", false));
-        assertFalse(line.getBooleanCellValue("aFalseValue"));
+        line.addCell(new StringCell("FirstName", "Nils"));
+        assertTrue(line.isCellSet("FirstName", CellType.STRING));
+        assertFalse(line.isCellSet("FirstName", CellType.INTEGER));
+        assertFalse(line.isCellSet("LastName", CellType.STRING));
     }
 
-    @Test
-    public void testSetCellValue_char() throws JSaParException{
-        Line line = new Line("TestLine");
-        char ch = 'A';
-        line.setCharCellValue("aCharValue", ch);
-        assertEquals('A', line.getCharCellValue("aCharValue"));
-        assertEquals('A', line.getCharCellValue("aCharValue", 'B'));
-        assertEquals('B', line.getCharCellValue("another", 'B'));
-    }
-    
 }

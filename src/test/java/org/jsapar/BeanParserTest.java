@@ -5,10 +5,7 @@ package org.jsapar;
 
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.error.JSaParException;
-import org.jsapar.model.DateCell;
-import org.jsapar.model.Document;
-import org.jsapar.model.IntegerCell;
-import org.jsapar.model.Line;
+import org.jsapar.model.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -88,7 +85,7 @@ public class BeanParserTest {
         assertEquals(4711, ((IntegerCell) line.getCell("streetNumber")).getNumberValue().intValue());
         assertEquals(birthTime, ((DateCell) line.getCell("birthTime")).getDateValue());
         assertEquals(123456787901234567L, ((IntegerCell) line.getCell("luckyNumber")).getNumberValue().longValue());
-        assertEquals("A", line.getStringCellValue("door"));
+        assertEquals("A", LineUtils.getStringCellValue(line,"door"));
     }
 
     @Test
@@ -99,11 +96,11 @@ public class BeanParserTest {
         BeanParser<TstPerson> builder = new BeanParser<>(Arrays.asList(new TstPerson[]{person}));
         Line line = builder.parseBean(person, new ExceptionErrorEventListener());
         assertEquals("org.jsapar.TstPerson", line.getLineType());
-        assertEquals("Stigen", line.getStringCellValue("address.street"));
-        assertEquals("Staden", line.getStringCellValue("address.town"));
+        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
+        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
         
         // Make sure that loops are avoided.
-        Assert.assertNull(line.getStringCellValue("address.owner.firstName"));
+        Assert.assertNull(LineUtils.getStringCellValue(line,"address.owner.firstName"));
     }
 
     @Test
@@ -115,12 +112,12 @@ public class BeanParserTest {
         BeanParser<TstPerson> builder = new BeanParser<>(Arrays.asList(new TstPerson[]{person}));
         Line line = builder.parseBean(person, new ExceptionErrorEventListener());
         assertEquals("org.jsapar.TstPerson", line.getLineType());
-        assertEquals("Stigen", line.getStringCellValue("address.street"));
-        assertEquals("Staden", line.getStringCellValue("address.town"));
-        assertEquals("Road", line.getStringCellValue("address.subAddress.street"));
-        assertEquals("Town", line.getStringCellValue("address.subAddress.town"));
-        assertEquals("Gatan", line.getStringCellValue("workAddress.street"));
-        assertEquals("Byn", line.getStringCellValue("workAddress.town"));
+        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
+        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
+        assertEquals("Road", LineUtils.getStringCellValue(line,"address.subAddress.street"));
+        assertEquals("Town", LineUtils.getStringCellValue(line,"address.subAddress.town"));
+        assertEquals("Gatan", LineUtils.getStringCellValue(line,"workAddress.street"));
+        assertEquals("Byn", LineUtils.getStringCellValue(line,"workAddress.town"));
     }
 
     @Test
@@ -134,12 +131,12 @@ public class BeanParserTest {
         assertEquals(1, builder.getMaxSubLevels());
         Line line = builder.parseBean(person, new ExceptionErrorEventListener());
         assertEquals("org.jsapar.TstPerson", line.getLineType());
-        assertEquals("Stigen", line.getStringCellValue("address.street"));
-        assertEquals("Staden", line.getStringCellValue("address.town"));
-        Assert.assertNull(line.getStringCellValue("address.subAddress.street"));
-        Assert.assertNull(line.getStringCellValue("address.subAddress.town"));
-        assertEquals("Gatan", line.getStringCellValue("workAddress.street"));
-        assertEquals("Byn", line.getStringCellValue("workAddress.town"));
+        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
+        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
+        Assert.assertNull(LineUtils.getStringCellValue(line,"address.subAddress.street"));
+        Assert.assertNull(LineUtils.getStringCellValue(line,"address.subAddress.town"));
+        assertEquals("Gatan", LineUtils.getStringCellValue(line,"workAddress.street"));
+        assertEquals("Byn", LineUtils.getStringCellValue(line,"workAddress.town"));
     }
     
 }

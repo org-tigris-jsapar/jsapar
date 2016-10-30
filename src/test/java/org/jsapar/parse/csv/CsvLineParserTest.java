@@ -5,6 +5,7 @@ import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
+import org.jsapar.model.LineUtils;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
@@ -356,9 +357,9 @@ public class CsvLineParserTest {
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Jonas", line.getStringCellValue("0"));
+                assertEquals("Jonas", LineUtils.getStringCellValue(line,"0"));
                 assertEquals("Stenberg", line.getCell("2").getStringValue());
-                assertEquals("yes", line.getStringCellValue("Happy"));
+                assertEquals("yes", LineUtils.getStringCellValue(line,"Happy"));
             }
         }, new ExceptionErrorEventListener());
         assertEquals(true, rc);
@@ -382,9 +383,9 @@ public class CsvLineParserTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
-                assertEquals("Jonas", line.getStringCellValue("First Name"));
+                assertEquals("Jonas", LineUtils.getStringCellValue(line,"First Name"));
                 assertEquals("Stenberg", line.getCell("Last Name").getStringValue());
-                assertEquals("yes", line.getStringCellValue("Happy"));
+                assertEquals("yes", LineUtils.getStringCellValue(line,"Happy"));
             }
         }, new ErrorEventListener() {
             @Override
@@ -413,9 +414,9 @@ public class CsvLineParserTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
-                assertEquals("Jonas", line.getStringCellValue("First Name"));
+                assertEquals("Jonas", LineUtils.getStringCellValue(line,"First Name"));
                 assertEquals("Stenberg", line.getCell("Last Name").getStringValue());
-                assertEquals("yes", line.getStringCellValue("Happy"));
+                assertEquals("yes", LineUtils.getStringCellValue(line,"Happy"));
             }
         }, new ExceptionErrorEventListener());
         assertEquals(true, rc);

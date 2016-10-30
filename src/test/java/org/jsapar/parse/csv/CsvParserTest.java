@@ -2,10 +2,7 @@ package org.jsapar.parse.csv;
 
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.error.JSaParException;
-import org.jsapar.model.BooleanCell;
-import org.jsapar.model.CellType;
-import org.jsapar.model.Document;
-import org.jsapar.model.Line;
+import org.jsapar.model.*;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.schema.*;
 import org.junit.After;
@@ -148,13 +145,13 @@ public class CsvParserTest {
         Line line = doc.getLine(0);
         assertEquals("Jonas", line.getCell("First Name").getStringValue());
         assertEquals("Stenberg", line.getCell("Last Name").getStringValue());
-        assertEquals(41, line.getIntCellValue("Shoe Size"));
+        assertEquals(41, LineUtils.getIntCellValue(line,"Shoe Size"));
         assertEquals(Boolean.FALSE, ((BooleanCell) line.getCell("HasDog")).getBooleanValue());
 
         line = doc.getLine(1);
         assertEquals("Nils", line.getCell("First Name").getStringValue());
         assertEquals("Nilsson", line.getCell("Last Name").getStringValue());
-        assertEquals(43, line.getIntCellValue("Shoe Size"));
+        assertEquals(43, LineUtils.getIntCellValue(line,"Shoe Size"));
         assertEquals(Boolean.FALSE, ((BooleanCell) line.getCell("HasDog")).getBooleanValue());
     }
 
