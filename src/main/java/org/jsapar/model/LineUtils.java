@@ -11,11 +11,46 @@ import java.util.Date;
  */
 public class LineUtils {
 
+    /**
+     * Checks if there is a cell with the specified name and if it is not empty.
+     *
+     * @param cellName The name of the cell to check.
+     * @return true if the cell with the specified name exists and that it contains a value.
+     */
+    @SuppressWarnings("SimplifiableIfStatement")
+    public static boolean isCellSet(Line line, String cellName) {
+        Cell cell = line.getCell(cellName);
+        if (cell == null)
+            return false;
+
+        return !cell.isEmpty();
+    }
+
+    /**
+     * Checks if there is a cell with the specified name and type and that is not empty.
+     *
+     * @param cellName The name of the cell to check.
+     * @param type     The type to check.
+     * @return true if the cell with the specified name contains a value of the specified type.
+     */
+    @SuppressWarnings("SimplifiableIfStatement")
+    public static boolean isCellSet(Line line, String cellName, CellType type) {
+        Cell cell = line.getCell(cellName);
+        if (cell == null)
+            return false;
+
+        if (cell.isEmpty())
+            return false;
+
+        return cell.getCellType().equals(type);
+    }
+
+
     private static <T> void setCellValue(Line line, String cellName, T value, CellCreator<T> cellCreator) {
         if (value == null)
             line.removeCell(cellName);
         else
-            line.replaceCell(cellCreator.createCell(cellName, value));
+            line.putCell(cellCreator.createCell(cellName, value));
     }
 
     private interface CellCreator<T> {
@@ -55,7 +90,7 @@ public class LineUtils {
      * @param value    The integer value to set.
      */
     public static void setIntCellValue(Line line, String cellName, int value) {
-        line.replaceCell(new IntegerCell(cellName, value));
+        line.putCell(new IntegerCell(cellName, value));
     }
 
     /**
@@ -67,7 +102,7 @@ public class LineUtils {
      * @param value    The long integer value to set.
      */
     public static void setLongCellValue(Line line, String cellName, long value) {
-        line.replaceCell(new IntegerCell(cellName, value));
+        line.putCell(new IntegerCell(cellName, value));
     }
 
     /**
@@ -79,7 +114,7 @@ public class LineUtils {
      * @param value    The double value to set.
      */
     public static void setDoubleCellValue(Line line, String cellName, double value) {
-        line.replaceCell(new FloatCell(cellName, value));
+        line.putCell(new FloatCell(cellName, value));
     }
 
     /**
@@ -91,7 +126,7 @@ public class LineUtils {
      * @param value    The boolean value to set.
      */
     public static void setBooleanCellValue(Line line, String cellName, boolean value) {
-        line.replaceCell(new BooleanCell(cellName, value));
+        line.putCell(new BooleanCell(cellName, value));
     }
 
     /**
@@ -102,7 +137,7 @@ public class LineUtils {
      * @param value    The character value to set.
      */
     public static void setCharCellValue(Line line, String cellName, char value) {
-        line.replaceCell(new CharacterCell(cellName, value));
+        line.putCell(new CharacterCell(cellName, value));
     }
 
     /**

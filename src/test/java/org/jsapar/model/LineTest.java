@@ -59,7 +59,7 @@ public class LineTest {
     public void testGetCellIterator() throws JSaParException {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
-        java.util.Iterator<Cell> i = line.getCellIterator();
+        java.util.Iterator<Cell> i = line.cellIterator();
         assertNotNull(i);
     }
 
@@ -87,7 +87,7 @@ public class LineTest {
         line.addCell(new StringCell("FirstName", "Nils"));
         line.addCell(new StringCell("LastName", "Svensson"));
 
-        line.replaceCell(new StringCell("FirstName", "Sven"));
+        line.putCell(new StringCell("FirstName", "Sven"));
         assertEquals(2, line.size());
         assertEquals("Sven", line.getCell("FirstName").getStringValue());
         assertEquals("Svensson", line.getCell("LastName").getStringValue());
@@ -138,21 +138,5 @@ public class LineTest {
         assertEquals("Svensson", line.getCell("LastName").getStringValue());
     }
 
-    @Test
-    public void testIsCellSet() throws Exception {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        assertTrue(line.isCellSet("FirstName"));
-        assertFalse(line.isCellSet("LastName"));
-    }
-
-    @Test
-    public void testIsCellSetType() throws Exception {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        assertTrue(line.isCellSet("FirstName", CellType.STRING));
-        assertFalse(line.isCellSet("FirstName", CellType.INTEGER));
-        assertFalse(line.isCellSet("LastName", CellType.STRING));
-    }
 
 }

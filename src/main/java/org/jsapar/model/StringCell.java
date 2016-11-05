@@ -5,11 +5,8 @@ import org.jsapar.schema.SchemaException;
 import java.text.Format;
 
 /**
- * Class containing the cell as a string representation. Each line
- * contains a list of cells.
- * 
- * @author Jonas
- * 
+ * {@link Cell} implementation carrying a string value of a cell.
+ *
  */
 public class StringCell extends Cell {
 

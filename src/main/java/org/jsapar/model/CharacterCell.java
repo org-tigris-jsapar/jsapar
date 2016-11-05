@@ -4,6 +4,10 @@ import org.jsapar.schema.SchemaException;
 
 import java.text.Format;
 
+/**
+ * {@link Cell} implementation carrying a character value of a cell.
+ *
+ */
 public class CharacterCell extends Cell {
 
     /**

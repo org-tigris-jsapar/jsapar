@@ -177,40 +177,20 @@ public class LineUtilsTest {
     }
 
 
-
-
     @Test
-    public void testGetEnumCellValue1() throws Exception {
-
+    public void testIsCellSet() throws Exception {
+        Line line = new Line("TestLine");
+        line.addCell(new StringCell("FirstName", "Nils"));
+        assertTrue(LineUtils.isCellSet(line, "FirstName"));
+        assertFalse(LineUtils.isCellSet(line, "LastName"));
     }
 
     @Test
-    public void testGetDoubleCellValue() throws Exception {
-
-    }
-
-    @Test
-    public void testGetDoubleCellValue1() throws Exception {
-
-    }
-
-    @Test
-    public void testGetDecimalCellValue() throws Exception {
-
-    }
-
-    @Test
-    public void testGetDecimalCellValue1() throws Exception {
-
-    }
-
-    @Test
-    public void testGetBigIntegerCellValue() throws Exception {
-
-    }
-
-    @Test
-    public void testGetBigIntegerCellValue1() throws Exception {
-
+    public void testIsCellSetType() throws Exception {
+        Line line = new Line("TestLine");
+        line.addCell(new StringCell("FirstName", "Nils"));
+        assertTrue(LineUtils.isCellSet(line, "FirstName", CellType.STRING));
+        assertFalse(LineUtils.isCellSet(line, "FirstName", CellType.INTEGER));
+        assertFalse(LineUtils.isCellSet(line, "LastName", CellType.STRING));
     }
 }

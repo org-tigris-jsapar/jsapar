@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
  * index 0. Note that the class is not synchronized internally. If multiple
  * threads access the same instance, external synchronization is required.
  * 
- * @author Jonas Stenberg
- * 
  */
 public class Document implements Serializable {
 
