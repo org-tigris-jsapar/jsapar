@@ -3,9 +3,12 @@
  */
 package org.jsapar.parse.fixed;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.parse.*;
+import org.jsapar.error.JSaParException;
+import org.jsapar.parse.LineEventListener;
+import org.jsapar.parse.LineReader;
+import org.jsapar.parse.ParseConfig;
+import org.jsapar.parse.TextLineReader;
 import org.jsapar.schema.FixedWidthSchema;
 
 import java.io.BufferedReader;
@@ -15,21 +18,11 @@ import java.io.StringReader;
 
 /**
  * Parses fixed with text where lines are separated by a line separator character sequence.
- * @author stejon0
  *
  */
 public class FixedWidthParserLinesSeparated extends FixedWidthParser {
 
     LineReader lineReader;
-
-    /**
-     * Mainly for testing
-     * @param reader The reader to read from.
-     * @param schema The schema to use.
-     */
-    public FixedWidthParserLinesSeparated(Reader reader, FixedWidthSchema schema) {
-        this(reader, schema, new ParseConfig());
-    }
 
     /**
      * Creates a parser for fixed with cells where lines are separated.
@@ -39,7 +32,7 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
      */
     public FixedWidthParserLinesSeparated(Reader reader, FixedWidthSchema schema, ParseConfig config) {
         super(schema, config);
-        lineReader = new ReaderLineReader(schema.getLineSeparator(), reader);
+        lineReader = new TextLineReader(schema.getLineSeparator(), reader);
     }
 
     @Override

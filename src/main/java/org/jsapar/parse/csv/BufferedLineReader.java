@@ -5,7 +5,7 @@ package org.jsapar.parse.csv;
 
 import org.jsapar.error.JSaParException;
 import org.jsapar.parse.LineReader;
-import org.jsapar.parse.ReaderLineReader;
+import org.jsapar.parse.TextLineReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,21 +13,20 @@ import java.io.Reader;
 
 /**
  * LineReader implementation that reads lines from a Reader object.
- * <p/>
+ * <p>
  * Reader object should be closed by caller. Once End of File has been reached, the instance will no longer be useful
  * (unless it is reset to a previous state by calling reset() ).
- *
+ * <p>
  * The class may read characters ahead from the provided reader before it is used in any result.
  *
- * @author stejon0
  */
 public class BufferedLineReader implements LineReader {
 
     private static final int MAX_LINE_LENGTH = 10 * 1024;
 
-    private long lineNumber=0;
-    private BufferedReader   reader;
-    private ReaderLineReader lineReaderImpl;
+    private long lineNumber = 0;
+    private BufferedReader reader;
+    private TextLineReader lineReaderImpl;
 
     /**
      * Creates a lineReader instance reading from a reader.
@@ -38,13 +37,14 @@ public class BufferedLineReader implements LineReader {
     public BufferedLineReader(String lineSeparator, Reader reader) {
         super();
         this.reader = new BufferedReader(reader);
-        this.lineReaderImpl = new ReaderLineReader(lineSeparator, this.reader);
+        this.lineReaderImpl = new TextLineReader(lineSeparator, this.reader);
     }
 
     /**
      * Reads one line from the input and returns the result without line separator characters.
      * This implementation marks the internal input reader before reading any further in order to be able to reset the
      * action later.
+     *
      * @return The line read from the internal input reader.
      * @throws IOException
      * @throws JSaParException

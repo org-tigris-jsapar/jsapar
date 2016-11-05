@@ -1,5 +1,6 @@
 package org.jsapar.parse.csv;
 
+import org.jsapar.parse.ParseConfig;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaLine;
 
@@ -15,10 +16,10 @@ public class CsvLineParserFactory {
 
     private List<CsvLineParserMatcher> lineParserMatchers;
 
-    public CsvLineParserFactory(CsvSchema schema) {
+    public CsvLineParserFactory(CsvSchema schema, ParseConfig config) {
         lineParserMatchers = new LinkedList<>();
         for (CsvSchemaLine schemaLine : schema.getCsvSchemaLines()) {
-            lineParserMatchers.add(new CsvLineParserMatcher(schemaLine));
+            lineParserMatchers.add(new CsvLineParserMatcher(schemaLine, config));
         }
     }
 

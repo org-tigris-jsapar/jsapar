@@ -1,14 +1,9 @@
 package org.jsapar.parse.csv;
 
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.ExceptionErrorEventListener;
-import org.jsapar.error.JSaParException;
+import org.jsapar.error.*;
 import org.jsapar.model.Line;
 import org.jsapar.model.LineUtils;
-import org.jsapar.parse.CellParseException;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.*;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 import org.junit.After;
@@ -52,9 +47,9 @@ public class CsvLineParserTest {
         assertEquals(true, rc);
     }
 
-    public static  CsvSchemaLine makeCsvSchemaLine() {
+    public static CsvSchemaLine makeCsvSchemaLine() {
         CsvSchemaLine schemaLine = new CsvSchemaLine();
-        for(int i=0; i<7; i++){
+        for (int i = 0; i < 7; i++) {
             schemaLine.addSchemaCell(new CsvSchemaCell(String.valueOf(i)));
         }
         return schemaLine;
@@ -357,9 +352,9 @@ public class CsvLineParserTest {
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
                 assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Jonas", LineUtils.getStringCellValue(line,"0"));
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
                 assertEquals("Stenberg", line.getCell("2").getStringValue());
-                assertEquals("yes", LineUtils.getStringCellValue(line,"Happy"));
+                assertEquals("yes", LineUtils.getStringCellValue(line, "Happy"));
             }
         }, new ExceptionErrorEventListener());
         assertEquals(true, rc);
@@ -383,14 +378,14 @@ public class CsvLineParserTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
-                assertEquals("Jonas", LineUtils.getStringCellValue(line,"First Name"));
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "First Name"));
                 assertEquals("Stenberg", line.getCell("Last Name").getStringValue());
-                assertEquals("yes", LineUtils.getStringCellValue(line,"Happy"));
+                assertEquals("yes", LineUtils.getStringCellValue(line, "Happy"));
             }
         }, new ErrorEventListener() {
             @Override
             public void errorEvent(ErrorEvent event) {
-                assertEquals("Happy", ((CellParseException)event.getError()).getCellName());
+                assertEquals("Happy", ((CellParseException) event.getError()).getCellName());
                 foundError = true;
             }
         });
@@ -414,12 +409,46 @@ public class CsvLineParserTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) throws JSaParException {
                 Line line = event.getLine();
-                assertEquals("Jonas", LineUtils.getStringCellValue(line,"First Name"));
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "First Name"));
                 assertEquals("Stenberg", line.getCell("Last Name").getStringValue());
-                assertEquals("yes", LineUtils.getStringCellValue(line,"Happy"));
+                assertEquals("yes", LineUtils.getStringCellValue(line, "Happy"));
             }
         }, new ExceptionErrorEventListener());
         assertEquals(true, rc);
+
+    }
+
+    @Test(expected = LineParseException.class)
+    public void testParse_exceptionOnInsufficient() throws JSaParException, IOException, java.text.ParseException {
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setCellSeparator(";-)");
+        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("Happy"));
+
+        String sLine = "Jonas;-)Stenberg";
+        ParseConfig config = new ParseConfig();
+        config.setOnLineInsufficient(ValidationAction.EXCEPTION);
+        new CsvLineParser(schemaLine, config)
+                .parse(makeCsvLineReaderForString(sLine), event -> fail("Should throw exception"),
+                        event -> fail("Should throw exception"));
+        fail("Should throw exception");
+    }
+
+    @Test(expected = LineParseException.class)
+    public void testParse_exceptionOnOverflow() throws JSaParException, IOException, java.text.ParseException {
+        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
+        schemaLine.setCellSeparator(";-)");
+        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
+        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+
+        String sLine = "Jonas;-)Stenberg;-)Some other";
+        ParseConfig config = new ParseConfig();
+        config.setOnLineOverflow(ValidationAction.EXCEPTION);
+        new CsvLineParser(schemaLine, config)
+                .parse(makeCsvLineReaderForString(sLine), event -> fail("Should throw exception"),
+                        event -> fail("Should throw exception"));
+        fail("Should throw exception");
 
     }
 

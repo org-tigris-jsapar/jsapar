@@ -29,7 +29,7 @@ public class CsvParser implements SchemaParser {
         this.parseConfig = parseConfig;
         lineReader = new CsvLineReader(schema.getLineSeparator(), reader);
         this.schema = schema;
-        this.lineParserFactory = new CsvLineParserFactory(schema);
+        this.lineParserFactory = new CsvLineParserFactory(schema, parseConfig);
     }
     
 

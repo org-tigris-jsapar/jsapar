@@ -1,6 +1,9 @@
 package org.jsapar.parse.csv;
 
-import org.jsapar.schema.*;
+import org.jsapar.parse.ParseConfig;
+import org.jsapar.schema.CellValueCondition;
+import org.jsapar.schema.CsvSchemaCell;
+import org.jsapar.schema.CsvSchemaLine;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,10 +19,10 @@ public class CsvLineParserMatcher {
     private int occursLeft;
     private int maxControlPos;
 
-    public CsvLineParserMatcher(CsvSchemaLine schemaLine) {
+    public CsvLineParserMatcher(CsvSchemaLine schemaLine, ParseConfig config) {
         this.schemaLine = schemaLine;
         occursLeft = schemaLine.getOccurs();
-        lineParser = new CsvLineParser(schemaLine);
+        lineParser = new CsvLineParser(schemaLine, config);
         int pos = 0;
         for (CsvSchemaCell schemaCell : schemaLine.getSchemaCells()) {
             CellValueCondition lineCondition = schemaCell.getLineCondition();

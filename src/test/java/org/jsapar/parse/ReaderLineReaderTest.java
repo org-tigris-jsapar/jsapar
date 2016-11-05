@@ -1,15 +1,15 @@
 package org.jsapar.parse;
 
-import static org.junit.Assert.*;
+import org.jsapar.error.JSaParException;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.jsapar.error.JSaParException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class ReaderLineReaderTest {
 
@@ -25,7 +25,7 @@ public class ReaderLineReaderTest {
     public void testReaderLineReader() {
         String lineSeparator = "|";
         Reader reader = new StringReader("FirstLine|SecondLine");
-        ReaderLineReader r = new ReaderLineReader(lineSeparator, reader);
+        TextLineReader r = new TextLineReader(lineSeparator, reader);
         assertSame(lineSeparator, r.getLineSeparator());
         assertSame(reader, r.getReader());
     }
@@ -34,7 +34,7 @@ public class ReaderLineReaderTest {
     public void testReadLine() throws IOException, JSaParException {
         String lineSeparator = "|";
         Reader reader = new StringReader("FirstLine|SecondLine");
-        ReaderLineReader r = new ReaderLineReader(lineSeparator, reader);
+        TextLineReader r = new TextLineReader(lineSeparator, reader);
         assertEquals("FirstLine", r.readLine());
         assertEquals("SecondLine", r.readLine());
         assertNull(r.readLine());
@@ -44,7 +44,7 @@ public class ReaderLineReaderTest {
     public void testReadLine_emptyLine() throws IOException, JSaParException {
         String lineSeparator = "|";
         Reader reader = new StringReader("FirstLine||ThirdLine");
-        ReaderLineReader r = new ReaderLineReader(lineSeparator, reader);
+        TextLineReader r = new TextLineReader(lineSeparator, reader);
         assertEquals("FirstLine", r.readLine());
         assertEquals("", r.readLine());
         assertEquals("ThirdLine", r.readLine());
@@ -55,7 +55,7 @@ public class ReaderLineReaderTest {
     public void testReadLine_emptyLineLast() throws IOException, JSaParException {
         String lineSeparator = "|";
         Reader reader = new StringReader("FirstLine|SecondLine|");
-        ReaderLineReader r = new ReaderLineReader(lineSeparator, reader);
+        TextLineReader r = new TextLineReader(lineSeparator, reader);
         assertEquals("FirstLine", r.readLine());
         assertEquals("SecondLine", r.readLine());
         assertEquals("", r.readLine());

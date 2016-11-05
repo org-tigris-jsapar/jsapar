@@ -7,14 +7,12 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * LineReader implementation that reads lines from a Reader object.
+ * LineReader implementation that reads lines from a text {@link Reader} object.
  * 
- * Reader object should be closed by caller. Once End of File has been reached, the instance will no longer be useful.
+ * {@link Reader} object should be closed by caller. Once End of File has been reached, the instance will no longer be useful.
  * 
- * @author stejon0
- *
  */
-public class ReaderLineReader implements LineReader {
+public class TextLineReader implements LineReader {
 
     private static final int MAX_LINE_LENGTH = 10 * 1024;
     private String lineSeparator;
@@ -31,7 +29,7 @@ public class ReaderLineReader implements LineReader {
      * @param reader
      *            The reader to read from.
      */
-    public ReaderLineReader(String lineSeparator, Reader reader) {
+    public TextLineReader(String lineSeparator, Reader reader) {
         super();
         this.lineSeparator = lineSeparator;
         this.reader = reader;

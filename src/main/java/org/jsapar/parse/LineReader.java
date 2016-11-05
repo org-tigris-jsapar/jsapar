@@ -2,8 +2,9 @@ package org.jsapar.parse;
 
 import java.io.IOException;
 
-import org.jsapar.error.JSaParException;
-
+/**
+ * Reads input line by line.
+ */
 public interface LineReader {
 
     /**
@@ -12,9 +13,8 @@ public interface LineReader {
      * @return The next available line from the input without trailing line separator or null if end of input buffer was
      *         reached.
      * @throws IOException
-     * @throws JSaParException
      */
-    String readLine() throws IOException, JSaParException;
+    String readLine() throws IOException;
 
 
     /**

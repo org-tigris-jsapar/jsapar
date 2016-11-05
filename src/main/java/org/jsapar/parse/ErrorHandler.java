@@ -22,7 +22,7 @@ public class ErrorHandler {
             LineParseException error = new LineParseException(lineNumber, message);
             ErrorEvent event = new ErrorEvent(source, error);
             eventListener.errorEvent(event);
-            break;
+            return true;
         }
         case EXCEPTION: {
             throw new LineParseException(lineNumber, message);
