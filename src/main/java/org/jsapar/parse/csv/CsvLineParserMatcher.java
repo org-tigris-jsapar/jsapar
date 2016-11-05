@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by stejon0 on 2016-03-12.
+ * Checks if line matches the current criteria defined within this line schema.
  */
 public class CsvLineParserMatcher {
     private final CsvSchemaLine schemaLine;
@@ -19,6 +19,11 @@ public class CsvLineParserMatcher {
     private int occursLeft;
     private int maxControlPos;
 
+    /**
+     * Creates a line parser matcher
+     * @param schemaLine The line schema to use for this matcher.
+     * @param config Behavior.
+     */
     public CsvLineParserMatcher(CsvSchemaLine schemaLine, ParseConfig config) {
         this.schemaLine = schemaLine;
         occursLeft = schemaLine.getOccurs();
@@ -34,6 +39,12 @@ public class CsvLineParserMatcher {
         }
     }
 
+    /**
+     * Creates a line parser object if next line to be parsed matches the criteria of this line chema.
+     * @param lineReader A line reader to read the line from.
+     * @return A {@link CsvLineParser} ready to parse the line or null if next line cannot be parsed by using this schema.
+     * @throws IOException
+     */
     public CsvLineParser makeLineParserIfMatching(CsvLineReader lineReader) throws IOException{
         if (occursLeft <= 0)
             return null;
@@ -47,7 +58,6 @@ public class CsvLineParserMatcher {
                 if (cells.length <= maxControlPos)
                     return null;
 
-                int read = 0;
                 for (CsvControlCell controlCell : controlCells) {
 
                     String value = cells[controlCell.pos];
@@ -66,6 +76,9 @@ public class CsvLineParserMatcher {
         return lineParser;
     }
 
+    /**
+     * Private internal class used to point to a control cell within a schema line.
+     */
     private class CsvControlCell {
         final int           pos;
         final CsvSchemaCell schemaCell;
@@ -76,7 +89,11 @@ public class CsvLineParserMatcher {
         }
     }
 
+    /**
+     * @return True if this line schema can be used regarding number of occurrences. False if number of occurrences are
+     * exceeded.
+     */
     public boolean isOccursLeft() {
-        return schemaLine.isOccursInfinitely() ? true : occursLeft > 0;
+        return schemaLine.isOccursInfinitely() || occursLeft > 0;
     }
 }

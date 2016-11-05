@@ -3,9 +3,12 @@
  */
 package org.jsapar.parse.fixed;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.parse.*;
+import org.jsapar.error.JSaParException;
+import org.jsapar.model.Line;
+import org.jsapar.parse.LineEventListener;
+import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.ParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
 
 import java.io.BufferedReader;
@@ -64,8 +67,10 @@ public class FixedWidthParserFlat extends FixedWidthParser{
                 else
                     return;
             }
-            boolean lineFound = result.lineParser.parse(reader, lineNumber, listener, errorListener);
-            if (!lineFound)
+            Line line = result.lineParser.parse(reader, lineNumber, errorListener);
+            if (line != null)
+                listener.lineParsedEvent(new LineParsedEvent(this, line, lineNumber));
+            else
                 return; // End of stream.
         }
     }

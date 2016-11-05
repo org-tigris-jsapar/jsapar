@@ -3,13 +3,14 @@
  */
 package org.jsapar.parse.csv;
 
-import java.io.IOException;
-import java.util.Arrays;
-
 import org.jsapar.error.JSaParException;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
 /**
- * @author stejon0
+ * Responsible for splitting quoted cells into a raw array of Strings.
  *
  */
 public class QuotedCellSplitter implements CellSplitter {
@@ -70,17 +71,15 @@ public class QuotedCellSplitter implements CellSplitter {
      * Recursively find all quoted cells. A quoted cell is where the quote character is the first and last character in
      * the cell. Any other quote characters within the cells are ignored.
      * 
-     * @param cells
-     * @param sToSplit
-     * @throws JSaParException
+     * @param cells Resulting list of split cells built by this method.
+     * @param sToSplit String to split.
      * @throws IOException
      */
-    private void splitQuoted(java.util.List<String> cells, String sToSplit) throws IOException, JSaParException {
+    private void splitQuoted(List<String> cells, String sToSplit) throws IOException {
         int nIndex = 0;
         if (sToSplit.length() <= 0)
             return;
 
-        int nFoundQuoteIndex = -1;
         if (sToSplit.charAt(0) == quoteChar) {
             if(sToSplit.length()==1) {
                 // Quote is the only character in the string.
@@ -89,10 +88,9 @@ public class QuotedCellSplitter implements CellSplitter {
             }
             // Quote is the first character in the string.
             nIndex++;
-            nFoundQuoteIndex = 0;
         } else {
             // Search for quote character at first position after a cell separator. Otherwise ignore quotes.
-            nFoundQuoteIndex = sToSplit.indexOf(cellSeparator + quoteChar);
+            int nFoundQuoteIndex = sToSplit.indexOf(cellSeparator + quoteChar);
 
             if (nFoundQuoteIndex < 0) {
                 cells.addAll(Arrays.asList(simpleCellSplitter.split(sToSplit)));
@@ -158,14 +156,6 @@ public class QuotedCellSplitter implements CellSplitter {
         // Next cell is not quoted
         // Now handle the rest of the string with a recursive call.
         splitQuoted(cells, sToSplit);
-    }
-
-    /**
-     * @param lineReader
-     *            Assigns line reader to be able to split multi line cells.
-     */
-    public void setLineReader(BufferedLineReader lineReader) {
-        this.lineReader = lineReader;
     }
 
 }

@@ -25,7 +25,7 @@ public abstract class FixedWidthParser implements SchemaParser {
     public FixedWidthParser(FixedWidthSchema schema, ParseConfig config) {
         this.schema = schema;
         this.config = config;
-        lineParserFactory = new FWLineParserFactory(schema);
+        lineParserFactory = new FWLineParserFactory(schema, config);
     }
 
     protected void handleNoParser(long lineNumber, LineParserMatcherResult result, ErrorEventListener errorEventListener) throws IOException {
@@ -49,5 +49,9 @@ public abstract class FixedWidthParser implements SchemaParser {
 
     public void setConfig(ParseConfig config) {
         this.config = config;
+    }
+
+    protected ErrorHandler getErrorHandler() {
+        return errorHandler;
     }
 }

@@ -1,30 +1,41 @@
 package org.jsapar.parse.fixed;
 
-import java.io.IOException;
-import java.io.Reader;
-
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
-import org.jsapar.parse.*;
+import org.jsapar.parse.ErrorHandler;
+import org.jsapar.parse.LineDecoratorErrorEventListener;
+import org.jsapar.parse.ParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 
-public class FixedWidthLineParser  {
+import java.io.IOException;
+import java.io.Reader;
 
-    private static final String  EMPTY_STRING = "";
+/**
+ * Parses fixed width text source on line level.
+ */
+public class FixedWidthLineParser {
+
+    private static final String EMPTY_STRING = "";
     private FixedWidthSchemaLine lineSchema;
     private FixedWidthCellParser cellParser   = new FixedWidthCellParser();
+    private ErrorHandler         errorHandler = new ErrorHandler();
+    private ParseConfig config;
 
-    public FixedWidthLineParser(FixedWidthSchemaLine lineSchema) {
+    public FixedWidthLineParser(FixedWidthSchemaLine lineSchema, ParseConfig config) {
         this.lineSchema = lineSchema;
+        this.config = config;
     }
 
-    public boolean parse(Reader reader, long nLineNumber, LineEventListener listener, ErrorEventListener errorListener) throws    IOException {
+    @SuppressWarnings("UnnecessaryContinue")
+    public Line parse(Reader reader, long lineNumber, ErrorEventListener errorListener) throws IOException {
         Line line = new Line(lineSchema.getLineType(), lineSchema.getSchemaCells().size());
+        line.setLineNumber(lineNumber);
         boolean setDefaultsOnly = false;
         boolean oneRead = false;
         boolean oneIgnored = false;
+        boolean handleInsufficient = true;
 
         for (FixedWidthSchemaCell schemaCell : lineSchema.getSchemaCells()) {
             if (setDefaultsOnly) {
@@ -46,7 +57,7 @@ public class FixedWidthLineParser  {
                 }
             } else {
                 LineDecoratorErrorEventListener lineErrorEventListener = new LineDecoratorErrorEventListener(
-                        errorListener, nLineNumber);
+                        errorListener, lineNumber);
                 Cell cell = cellParser
                         .parse(schemaCell, reader, lineSchema.isTrimFillCharacters(), lineSchema.getFillCharacter(),
                                 lineErrorEventListener);
@@ -55,6 +66,14 @@ public class FixedWidthLineParser  {
                         setDefaultsOnly = true;
                         if (schemaCell.getDefaultCell() != null)
                             line.addCell(cellParser.parse(schemaCell, EMPTY_STRING, lineErrorEventListener));
+                        if (handleInsufficient) {
+                            if (!errorHandler
+                                    .lineValidationError(this, lineNumber, "Insufficient number of characters for line",
+                                            config.getOnLineInsufficient(), errorListener)) {
+                                return null;
+                            }
+                            handleInsufficient = false;
+                        }
                     }
                     continue;
                 }
@@ -64,11 +83,9 @@ public class FixedWidthLineParser  {
             }
         }
         if (line.size() <= 0 && !oneIgnored)
-            return false;
+            return null;
 
-        listener.lineParsedEvent(new LineParsedEvent(this, line, nLineNumber));
-
-        return true;
+        return line;
     }
 
 }

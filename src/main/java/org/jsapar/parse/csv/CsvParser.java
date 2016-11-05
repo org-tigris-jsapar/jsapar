@@ -13,7 +13,6 @@ import java.io.Reader;
 
 public class CsvParser implements SchemaParser {
     
-    private static final String UTF8_BOM_STR = "\ufeff";
     private CsvLineReader lineReader;
     private CsvSchema schema;
     private CsvLineParserFactory lineParserFactory;

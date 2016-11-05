@@ -14,7 +14,6 @@ import java.io.Reader;
  */
 public class CsvLineReader {
 
-    private static final String[] EMPTY_LINE = new String[0];
     private boolean reset               = false;
 
     BufferedLineReader lineReader;
@@ -24,9 +23,6 @@ public class CsvLineReader {
         this.lineReader = new BufferedLineReader(lineSeparator, reader);
     }
 
-    public CsvLineReader(BufferedLineReader lineReader) {
-        this.lineReader = lineReader;
-    }
 
     /**
      * Resets the reader instance so that the next call to readLine() will start from the same position as previous
@@ -106,6 +102,9 @@ public class CsvLineReader {
         return lineReader.getLineNumber();
     }
 
+    /**
+     * Internal private class that represents a raw line where cells have been split into string values.
+     */
     private class RawLine {
         private String[]     line;
         private String       cellSeparator;

@@ -1,10 +1,13 @@
 package org.jsapar.parse.csv;
 
+import org.jsapar.error.JSaParException;
+
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import org.jsapar.error.JSaParException;
-
+/**
+ * Simple cell splitter that can be used when we don't have to consider quotes.
+ */
 public class SimpleCellSplitter implements CellSplitter {
 
     private static final String[] EMPTY_LINE = new String[0];

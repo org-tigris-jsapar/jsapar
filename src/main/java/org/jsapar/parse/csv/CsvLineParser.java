@@ -11,6 +11,9 @@ import org.jsapar.schema.CsvSchemaLine;
 
 import java.io.IOException;
 
+/**
+ * Responsible for parsing csv lines
+ */
 public class CsvLineParser {
 
     private static final String EMPTY_STRING = "";

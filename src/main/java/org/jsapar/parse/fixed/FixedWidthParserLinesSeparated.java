@@ -5,10 +5,8 @@ package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.JSaParException;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.LineReader;
-import org.jsapar.parse.ParseConfig;
-import org.jsapar.parse.TextLineReader;
+import org.jsapar.model.Line;
+import org.jsapar.parse.*;
 import org.jsapar.schema.FixedWidthSchema;
 
 import java.io.BufferedReader;
@@ -41,13 +39,13 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
         long lineNumber = 0;
         while(true){
             lineNumber++;
-            String line = lineReader.readLine();
-            if(line == null)
+            String sLine = lineReader.readLine();
+            if(sLine == null)
                 return;
-            if(line.isEmpty()) // Just ignore empty lines
+            if(sLine.isEmpty()) // Just ignore empty lines
                 continue;
 
-            try(BufferedReader r = new BufferedReader(new StringReader(line))) {
+            try(BufferedReader r = new BufferedReader(new StringReader(sLine))) {
                 if(getLineParserFactory().isEmpty())
                     return;
                 FWLineParserFactory.LineParserResult result = getLineParserFactory().makeLineParser(r);
@@ -58,9 +56,16 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
                     else
                         return;
                 }
-                boolean lineFound = result.lineParser.parse(r, lineNumber, listener, errorListener );
-                if (!lineFound) // Should never occur.
+                Line line = result.lineParser.parse(r, lineNumber, errorListener );
+                if (line == null) // Should never occur.
                     throw new AssertionError("Unexpected error while parsing line number " + lineNumber);
+                String remaining = r.readLine();
+                if(remaining != null && ! remaining.isEmpty()) {
+                    if(!getErrorHandler().lineValidationError(this, lineNumber, "Trailing characters found on line",
+                            getConfig().getOnLineOverflow(), errorListener))
+                        continue; // Ignore the line.
+                }
+                listener.lineParsedEvent(new LineParsedEvent(this, line, lineNumber));
             }
         }
     }

@@ -1,5 +1,6 @@
 package org.jsapar.parse.fixed;
 
+import org.jsapar.parse.ParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaLine;
 
@@ -16,11 +17,11 @@ public class FWLineParserFactory {
     private FixedWidthSchema schema;
     private List<FWLineParserMatcher> lineParserMatchers;
 
-    public FWLineParserFactory(FixedWidthSchema schema) {
+    public FWLineParserFactory(FixedWidthSchema schema, ParseConfig config) {
         this.schema = schema;
         lineParserMatchers = new LinkedList<>();
         for (FixedWidthSchemaLine schemaLine : schema.getFixedWidthSchemaLines()) {
-            lineParserMatchers.add(new FWLineParserMatcher(schemaLine));
+            lineParserMatchers.add(new FWLineParserMatcher(schemaLine, config));
         }
     }
 

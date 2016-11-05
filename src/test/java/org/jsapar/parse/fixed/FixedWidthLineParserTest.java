@@ -6,8 +6,7 @@ import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.CellParseException;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.ParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 import org.jsapar.schema.SchemaCellFormat;
@@ -20,6 +19,7 @@ import java.io.Reader;
 import java.io.StringReader;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class FixedWidthLineParserTest {
     
@@ -47,20 +47,13 @@ public class FixedWidthLineParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine);
-        boolean rc = parser.parse(reader, 1, event -> {
-            Line line = event.getLine();
-            assertEquals("Jonas", line.getCell("First name").getStringValue());
-            assertEquals("Stenberg", line.getCell("Last name").getStringValue());
-            assertEquals("Spiselvagen 19", line.getCell("Street address").getStringValue());
-            assertEquals("141 59", line.getCell("Zip code").getStringValue());
-            assertEquals("Huddinge", line.getCell("City").getStringValue());
-
-            assertEquals("Last name", line.getCell("Last name").getName());
-            assertEquals("Zip code", line.getCell("Zip code").getName());
-        }, new ExceptionErrorEventListener() );
-
-        assertEquals(true, rc);
+        ParseConfig config = new ParseConfig();
+        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
+        Line line = parser.parse(reader, 1, new ExceptionErrorEventListener() );
+        assertNotNull(line);
+        assertEquals("Jonas", line.getCell("First name").getStringValue());
+        assertEquals("Stenberg", line.getCell("Last name").getStringValue());
+        assertEquals("Huddinge", LineUtils.getStringCellValue(line,"City"));
     }
 
     @Test
@@ -76,10 +69,13 @@ public class FixedWidthLineParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine);
-        boolean rc = parser.parse(reader, 1, new TestVerifyListener(), new ExceptionErrorEventListener());
-
-        assertEquals(true, rc);
+        ParseConfig config = new ParseConfig();
+        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
+        Line line = parser.parse(reader, 1, new ExceptionErrorEventListener() );
+        assertNotNull(line);
+        assertEquals("Jonas", line.getCell("First name").getStringValue());
+        assertEquals("Stenberg", line.getCell("Last name").getStringValue());
+        assertEquals("Falun", LineUtils.getStringCellValue(line,"City"));
     }
 
     @Test
@@ -96,14 +92,15 @@ public class FixedWidthLineParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine);
-        boolean rc = parser.parse(reader, 1, new TestVerifyListener(), event -> {
+        ParseConfig config = new ParseConfig();
+        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
+        Line line = parser.parse(reader, 1, event -> {
             CellParseException e = (CellParseException) event.getError();
             assertEquals("City", e.getCellName());
             foundError=true;
         });
 
-        assertEquals(true, rc);
+        assertNotNull(line);
         assertEquals(true, foundError);
     }
 
@@ -122,30 +119,11 @@ public class FixedWidthLineParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        @SuppressWarnings("unused")
-        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine);
-        parser.parse(reader, 1, new NullParsingEventListener(), new ExceptionErrorEventListener());
+        ParseConfig config = new ParseConfig();
+        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
+        Line line = parser.parse(reader, 1, new ExceptionErrorEventListener() );
+        assertNotNull(line);
     }
     
     
-    private class NullParsingEventListener implements LineEventListener {
-
-        @Override
-        public void lineParsedEvent(LineParsedEvent event) {
-        }
-    }
-
-    private class TestVerifyListener implements LineEventListener {
-
-        @Override
-        public void lineParsedEvent(LineParsedEvent event) {
-            Line line = event.getLine();
-            assertEquals("Jonas", line.getCell("First name").getStringValue());
-            assertEquals("Stenberg", line.getCell("Last name").getStringValue());
-            assertEquals("Falun", LineUtils.getStringCellValue(line,"City"));
-
-            assertEquals("Last name", line.getCell("Last name").getName());
-
-        }
-    }
 }
