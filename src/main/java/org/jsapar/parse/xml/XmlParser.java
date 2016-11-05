@@ -29,6 +29,9 @@ import java.io.Reader;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+/**
+ * Parses xml text that conform to the schema http://jsapar.tigris.org/XMLDocumentFormat/1.0
+ */
 public class XmlParser extends AbstractParser implements Parser {
     // private final static String SCHEMA_LANGUAGE =
     // "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
@@ -60,21 +63,19 @@ public class XmlParser extends AbstractParser implements Parser {
             // factory.set
             SAXParser parser = parserFactory.newSAXParser();
             org.xml.sax.InputSource is = new org.xml.sax.InputSource(reader);
-            JsaparSAXHandler handler = new JsaparSAXHandler(this, this);
+            JSaParSAXHandler handler = new JSaParSAXHandler(this, this);
             parser.parse(is, handler);
 
-        } catch (ParserConfigurationException e) {
-            throw new JSaParException("XML parsing error.", e);
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | SAXException e) {
             throw new JSaParException("XML parsing error.", e);
         }
     }
 
     private CellType makeCellType(String sXmlCellType) {
-        return (CellType) Enum.valueOf(CellType.class, sXmlCellType.toUpperCase());
+        return Enum.valueOf(CellType.class, sXmlCellType.toUpperCase());
     }
 
-    private class JsaparSAXHandler extends org.xml.sax.helpers.DefaultHandler {
+    private class JSaParSAXHandler extends org.xml.sax.helpers.DefaultHandler {
         private Line     currentLine;
         private CellType currentCellType;
         private String   currentCellName;
@@ -84,7 +85,7 @@ public class XmlParser extends AbstractParser implements Parser {
         private ErrorEventListener errorEventListener;
         private long currentLineNumber = 1;
 
-        public JsaparSAXHandler(LineEventListener listener, ErrorEventListener errorEventListener) {
+        public JSaParSAXHandler(LineEventListener listener, ErrorEventListener errorEventListener) {
             this.listener = listener;
             this.errorEventListener = errorEventListener;
         }
@@ -121,7 +122,8 @@ public class XmlParser extends AbstractParser implements Parser {
         @Override
         public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
 
-            if (localName.equals("cell")) {
+            switch (localName) {
+            case "cell":
                 cellStarted = true;
                 for (int i = 0; i < attributes.getLength(); i++) {
                     if (attributes.getLocalName(i).equals("name"))
@@ -131,10 +133,13 @@ public class XmlParser extends AbstractParser implements Parser {
                 }
                 if (this.currentCellType == null)
                     this.currentCellType = CellType.STRING;
-            } else if (localName.equals("line")) {
+                break;
+            case "line":
                 this.currentLine = new Line();
                 this.currentLineNumber++;
-            } else if (localName.equals("document")) {
+                break;
+            case "document":
+                break;
             }
         }
 
@@ -165,7 +170,7 @@ public class XmlParser extends AbstractParser implements Parser {
         /**
          * Creates a date cell from a date string value.
          *
-         * @param value
+         * @param value The text value to make a date cell from.
          * @throws DatatypeConfigurationException
          */
         private void makeDateCell(String value) throws DatatypeConfigurationException {

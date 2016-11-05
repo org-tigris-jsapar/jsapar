@@ -2,10 +2,12 @@ package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.error.JSaParException;
+import org.jsapar.error.ValidationAction;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.CellParseException;
+import org.jsapar.parse.LineParseException;
 import org.jsapar.parse.ParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
@@ -18,8 +20,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class FixedWidthLineParserTest {
     
@@ -76,6 +77,24 @@ public class FixedWidthLineParserTest {
         assertEquals("Jonas", line.getCell("First name").getStringValue());
         assertEquals("Stenberg", line.getCell("Last name").getStringValue());
         assertEquals("Falun", LineUtils.getStringCellValue(line,"City"));
+    }
+
+    @Test(expected = LineParseException.class)
+    public void testParse_insufficient() throws IOException, JSaParException, java.text.ParseException {
+        String toParse = "JonasStenberg";
+        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("City", 8));
+        schema.addSchemaLine(schemaLine);
+
+        Reader reader = new StringReader(toParse);
+        ParseConfig config = new ParseConfig();
+        config.setOnLineInsufficient(ValidationAction.EXCEPTION);
+        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
+        parser.parse(reader, 1, new ExceptionErrorEventListener() );
+        fail("Exception is expected");
     }
 
     @Test

@@ -12,8 +12,7 @@ import org.jsapar.schema.FixedWidthSchema;
 import java.io.IOException;
 
 /**
- * @author stejon0
- *
+ * Abstract base class for fixed width text parser based on schema.
  */
 public abstract class FixedWidthParser implements SchemaParser {
     private FixedWidthSchema    schema;

@@ -16,8 +16,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * @author stejon0
- *
+ * Parses fixed width text input with no line separator characters based on provided schema.
  */
 public class FixedWidthParserFlat extends FixedWidthParser{
 
@@ -44,16 +43,17 @@ public class FixedWidthParserFlat extends FixedWidthParser{
     }
 
     /**
-     * Sends line parce events to the supplied listener while parsing.
+     * Sends line parce events to the supplied lineEventListener while parsing.
      *
-     * @param listener
-     *            The listener which will receive events for each parsed line.
+     * @param lineEventListener
+     *            The {@link LineEventListener} which will receive events for each parsed line.
      * @param errorListener
+     * The {@link ErrorEventListener} that will receive events for each error.
      * @throws JSaParException
      * @throws java.io.IOException
      */
     @Override
-    public void parse(LineEventListener listener, ErrorEventListener errorListener) throws JSaParException, IOException {
+    public void parse(LineEventListener lineEventListener, ErrorEventListener errorListener) throws JSaParException, IOException {
         long lineNumber = 0;
         while(true){
             lineNumber++;
@@ -69,7 +69,7 @@ public class FixedWidthParserFlat extends FixedWidthParser{
             }
             Line line = result.lineParser.parse(reader, lineNumber, errorListener);
             if (line != null)
-                listener.lineParsedEvent(new LineParsedEvent(this, line, lineNumber));
+                lineEventListener.lineParsedEvent(new LineParsedEvent(this, line, lineNumber));
             else
                 return; // End of stream.
         }

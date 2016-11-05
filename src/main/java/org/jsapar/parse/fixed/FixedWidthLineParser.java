@@ -66,6 +66,7 @@ public class FixedWidthLineParser {
                         setDefaultsOnly = true;
                         if (schemaCell.getDefaultCell() != null)
                             line.addCell(cellParser.parse(schemaCell, EMPTY_STRING, lineErrorEventListener));
+                        //noinspection ConstantConditions
                         if (handleInsufficient) {
                             if (!errorHandler
                                     .lineValidationError(this, lineNumber, "Insufficient number of characters for line",

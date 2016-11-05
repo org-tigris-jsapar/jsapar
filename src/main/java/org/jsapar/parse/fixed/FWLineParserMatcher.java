@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by stejon0 on 2016-03-12.
+ * Tests if next line to parse can be used for the schemaLine of this instance.
  */
 public class FWLineParserMatcher {
     private final FixedWidthSchemaLine schemaLine;
@@ -78,7 +78,7 @@ public class FWLineParserMatcher {
     }
 
     public boolean isOccursLeft() {
-        return schemaLine.isOccursInfinitely() ? true : occursLeft > 0;
+        return schemaLine.isOccursInfinitely() || occursLeft > 0;
     }
 
 }

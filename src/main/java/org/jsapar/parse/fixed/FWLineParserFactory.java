@@ -2,29 +2,30 @@ package org.jsapar.parse.fixed;
 
 import org.jsapar.parse.ParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
-import org.jsapar.schema.FixedWidthSchemaLine;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Created by stejon0 on 2016-03-12.
+ * Creates fixed width line parsers based on schema.
  */
 public class FWLineParserFactory {
-    private FixedWidthSchema schema;
     private List<FWLineParserMatcher> lineParserMatchers;
 
     public FWLineParserFactory(FixedWidthSchema schema, ParseConfig config) {
-        this.schema = schema;
-        lineParserMatchers = new LinkedList<>();
-        for (FixedWidthSchemaLine schemaLine : schema.getFixedWidthSchemaLines()) {
-            lineParserMatchers.add(new FWLineParserMatcher(schemaLine, config));
-        }
+        lineParserMatchers = schema.getFixedWidthSchemaLines().stream()
+                .map(schemaLine -> new FWLineParserMatcher(schemaLine, config)).collect(Collectors.toList());
     }
 
+    /**
+     * @param reader A buffered reader to read input from
+     * @return A {@link LineParserResult} that contains both the lineParser that can be used and a result code indicating
+     * the status of the input.
+     * @throws IOException
+     */
     public LineParserResult makeLineParser(BufferedReader reader) throws IOException {
         if(lineParserMatchers.isEmpty())
             return null;
@@ -67,6 +68,9 @@ public class FWLineParserFactory {
         return lineParserMatchers.isEmpty();
     }
 
+    /**
+     * Internal class used to be able to return both a match result and a line parser as return value.
+     */
     public class LineParserResult{
         public FixedWidthLineParser lineParser;
         public LineParserMatcherResult result;

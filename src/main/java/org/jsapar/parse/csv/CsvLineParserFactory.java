@@ -23,6 +23,11 @@ public class CsvLineParserFactory {
         }
     }
 
+    /**
+     * @param lineReader A {@link CsvLineReader} that can read csv lines.
+     * @return A line parser that can be used to parse the next line.
+     * @throws IOException
+     */
     public CsvLineParser makeLineParser(CsvLineReader lineReader) throws IOException {
         if (lineParserMatchers.isEmpty())
             return null;

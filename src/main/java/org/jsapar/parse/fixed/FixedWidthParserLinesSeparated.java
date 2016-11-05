@@ -16,7 +16,6 @@ import java.io.StringReader;
 
 /**
  * Parses fixed with text where lines are separated by a line separator character sequence.
- *
  */
 public class FixedWidthParserLinesSeparated extends FixedWidthParser {
 
