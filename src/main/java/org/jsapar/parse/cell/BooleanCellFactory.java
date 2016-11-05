@@ -10,9 +10,10 @@ import java.text.ParseException;
 import java.util.Locale;
 
 /**
- * Created by stejon0 on 2016-10-23.
+ * Parses boolean values into {@link Cell} objects
  */
 public class BooleanCellFactory implements CellFactory {
+
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
         if (format != null)

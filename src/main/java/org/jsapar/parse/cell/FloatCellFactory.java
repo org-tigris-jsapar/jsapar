@@ -7,7 +7,7 @@ import java.text.Format;
 import java.text.ParseException;
 
 /**
- * Created by stejon0 on 2016-10-23.
+ * Parses float values into {@link Cell} objects
  */
 public class FloatCellFactory extends NumberCellFactory {
     @Override

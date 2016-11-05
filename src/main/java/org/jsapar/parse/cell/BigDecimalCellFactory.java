@@ -11,20 +11,31 @@ import java.text.ParseException;
 import java.util.Locale;
 
 /**
- * Created by stejon0 on 2016-10-23.
+ * Parses decimal values into {@link Cell} objects
  */
 public class BigDecimalCellFactory extends NumberCellFactory implements CellFactory {
 
+    /**
+     * @param name   The name to give the newly created cell.
+     * @param value  The value to parse.
+     * @param format The format object to use while parsing.
+     * @return A cell of type {@link BigDecimalCell}
+     * @throws ParseException
+     */
     @Override
-    public Cell makeCell(String name, String sValue, Format format) throws ParseException {
+    public Cell makeCell(String name, String value, Format format) throws ParseException {
         if (format == null)
-            return new BigDecimalCell(name, new BigDecimal(sValue));
+            return new BigDecimalCell(name, new BigDecimal(value));
 
         if (format instanceof DecimalFormat)
             ((DecimalFormat) format).setParseBigDecimal(true);
-        return new BigDecimalCell(name, (BigDecimal) parseObject(format, sValue));
+        return new BigDecimalCell(name, (BigDecimal) parseObject(format, value));
     }
 
+    /**
+     * @param locale The locale to use for the format object.
+     * @return A {@link java.text.NumberFormat} instance to use while parsing decimal values.
+     */
     @Override
     public Format makeFormat(Locale locale) {
         Format format = super.makeFormat(locale);
@@ -33,6 +44,11 @@ public class BigDecimalCellFactory extends NumberCellFactory implements CellFact
         return format;
     }
 
+    /**
+     * @param locale  The locale to use for the format object.
+     * @param pattern A pattern to use for the format object. If null or empty, default format will be returned.
+     * @return A {@link java.text.NumberFormat} instance to use while parsing decimal values.
+     */
     @Override
     public Format makeFormat(Locale locale, String pattern) {
         if (locale == null)

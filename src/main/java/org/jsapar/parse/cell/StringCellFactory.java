@@ -9,7 +9,7 @@ import java.text.ParseException;
 import java.util.Locale;
 
 /**
- * Created by stejon0 on 2016-10-23.
+ * Parses string values into {@link Cell} objects
  */
 public class StringCellFactory implements CellFactory{
     @Override

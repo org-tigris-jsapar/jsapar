@@ -9,7 +9,7 @@ import java.text.ParsePosition;
 import java.util.Locale;
 
 /**
- * Created by stejon0 on 2016-10-23.
+ * Parses character values into {@link Cell} objects
  */
 public class CharacterCellFactory implements CellFactory {
 

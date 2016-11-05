@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Created by stejon0 on 2016-10-23.
+ * Parses date values into {@link Cell} objects
  */
 public class DateCellFactory implements CellFactory {
 
