@@ -1,10 +1,5 @@
 package org.jsapar.parse;
 
-import static org.junit.Assert.assertArrayEquals;
-
-import java.io.IOException;
-import java.io.StringReader;
-
 import org.jsapar.error.JSaParException;
 import org.jsapar.parse.csv.BufferedLineReader;
 import org.jsapar.parse.csv.CellSplitter;
@@ -12,6 +7,11 @@ import org.jsapar.parse.csv.QuotedCellSplitter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.StringReader;
+
+import static org.junit.Assert.assertArrayEquals;
 
 public class QuotedCellSplitterTest {
 

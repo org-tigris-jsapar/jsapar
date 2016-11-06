@@ -1,6 +1,8 @@
 package org.jsapar.schema;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Describes the schema how to parse or write a comma separated line.

@@ -11,7 +11,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.ParseException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by stejon0 on 2016-03-13.
@@ -48,7 +48,7 @@ public class FixedWidthCellComposerTest {
     /**
      * Overflow is an odd number
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     @Test
     public final void testOutput_Center_overflow_odd() throws IOException, JSaParException {

@@ -74,7 +74,7 @@ public class BooleanCell extends Cell  {
             return getBooleanValue().compareTo(bRight);
         }
         else{
-            throw new SchemaException("Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType());
+            throw new IllegalArgumentException("Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType());
         }
     }
 }

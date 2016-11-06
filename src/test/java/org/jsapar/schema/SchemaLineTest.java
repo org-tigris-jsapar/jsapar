@@ -1,6 +1,5 @@
 package org.jsapar.schema;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
@@ -12,7 +11,7 @@ import static org.junit.Assert.*;
 public class SchemaLineTest {
 
     @Test
-    public void testFindCell_empty() throws JSaParException {
+    public void testFindCell_empty() {
         SchemaLineMock instance = new SchemaLineMock();
         Line line = new Line();
         SchemaCell schemaCell = new SchemaCell("First") {};
@@ -23,7 +22,7 @@ public class SchemaLineTest {
 
     
     @Test
-    public void testFindCell_match() throws JSaParException {
+    public void testFindCell_match() {
         SchemaLineMock instance = new SchemaLineMock();
         Line line = new Line();
         SchemaCell schemaCell = new SchemaCell("First") {};
@@ -40,7 +39,7 @@ public class SchemaLineTest {
 
     @Test
     @Ignore
-    public void testFindCell_byIndex() throws JSaParException {
+    public void testFindCell_byIndex() {
         SchemaLineMock instance = new SchemaLineMock();
         Line line = new Line();
         SchemaCell schemaCell = new SchemaCell("First") {};
@@ -59,7 +58,7 @@ public class SchemaLineTest {
 
 
     @Test
-    public void testFindCell_notNamedExtra_namedOnly() throws JSaParException {
+    public void testFindCell_notNamedExtra_namedOnly() {
         SchemaLineMock instance = new SchemaLineMock();
         Line line = new Line();
         
@@ -80,7 +79,7 @@ public class SchemaLineTest {
     }    
     
     @Test
-    public void testFindCell_notFound() throws JSaParException {
+    public void testFindCell_notFound() {
         SchemaLineMock instance = new SchemaLineMock();
         Line line = new Line();
         SchemaCell schemaCell = new SchemaCell("First") {};

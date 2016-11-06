@@ -17,7 +17,7 @@ public interface SchemaComposer {
      *
      * @param iterator A line iterator to get lines from.
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     void compose(Iterator<Line> iterator) throws IOException, JSaParException;
 
@@ -25,7 +25,7 @@ public interface SchemaComposer {
      * Called before compose() in order to set up or write file header.
      *
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     void beforeCompose() throws IOException, JSaParException;
 
@@ -33,7 +33,7 @@ public interface SchemaComposer {
      * Called after compose() in order to clean up or write file footer.
      *
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     void afterCompose() throws IOException, JSaParException;
 

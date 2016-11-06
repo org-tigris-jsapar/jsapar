@@ -1,7 +1,6 @@
 package org.jsapar.parse.csv;
 
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
@@ -109,7 +108,7 @@ public class CsvLineParser {
      * @param masterLineSchema The base to use while creating csv schema. May add formatting, defaults etc.
      * @param asCells          An array of cells in the header line to use for building the schema.
      * @return A CsvSchemaLine created from the header line.
-     * @throws JSaParException
+     *
      * @throws IOException
      */
     private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, String[] asCells) throws IOException {
@@ -150,10 +149,10 @@ public class CsvLineParser {
      * @param lineNumber The current line number
      * @param listener   The error event listener
      * @return Returns true (always).
-     * @throws JSaParException
+     *
      */
     @SuppressWarnings("UnusedParameters")
-    protected boolean handleEmptyLine(long lineNumber, ErrorEventListener listener) throws JSaParException {
+    protected boolean handleEmptyLine(long lineNumber, ErrorEventListener listener) {
         return true;
     }
 
@@ -164,12 +163,12 @@ public class CsvLineParser {
      * @param schemaCell         The cell schema
      * @param sCell              The string value of the cell
      * @param errorEventListener The error event listener to report errors to.
-     * @throws JSaParException
+     *
      */
     private void addCellToLineBySchema(Line line,
                                        CsvSchemaCell schemaCell,
                                        String sCell,
-                                       ErrorEventListener errorEventListener) throws JSaParException {
+                                       ErrorEventListener errorEventListener) {
 
         if (schemaCell.isIgnoreRead()) {
             if (schemaCell.isDefaultValue())
@@ -189,10 +188,10 @@ public class CsvLineParser {
      * @param line          The line to add cell to
      * @param sCell         The string value of the cell.
      * @param errorListener Error listener to send error event to if so is configured.
-     * @throws JSaParException
+     *
      */
     private boolean addCellToLineWithoutSchema(Line line, String sCell, ErrorEventListener errorListener)
-            throws JSaParException {
+            {
 
         if (!validationHandler.lineValidation(this, line.getLineNumber(),
                 "Found additional cell on the line that is not described in the line schema.",

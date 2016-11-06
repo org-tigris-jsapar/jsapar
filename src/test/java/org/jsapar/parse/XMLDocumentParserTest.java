@@ -1,7 +1,6 @@
 package org.jsapar.parse;
 
 import org.jsapar.DocumentBuilder;
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;
 import org.jsapar.parse.xml.XmlParser;
@@ -19,7 +18,7 @@ public class XMLDocumentParserTest {
     }
 
     @Test
-    public final void testBuild() throws JSaParException, IOException {
+    public final void testBuild() throws IOException {
         String sXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<document  xmlns=\"http://jsapar.tigris.org/XMLDocumentFormat/1.0\" >" + "<line linetype=\"Person\">"
                 + "<cell name=\"FirstName\" type=\"string\">Hans</cell>"

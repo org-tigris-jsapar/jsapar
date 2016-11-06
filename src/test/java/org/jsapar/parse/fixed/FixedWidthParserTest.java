@@ -1,7 +1,6 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ExceptionErrorEventListener;
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.schema.FixedWidthSchema;
@@ -28,7 +27,7 @@ public class FixedWidthParserTest {
     }
 
     @Test
-    public final void testParse_Flat() throws JSaParException, IOException {
+    public final void testParse_Flat() throws IOException {
         String toParse = "JonasStenbergFridaStenberg";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);

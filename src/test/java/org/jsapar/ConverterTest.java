@@ -3,10 +3,6 @@
  */
 package org.jsapar;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-
 import org.jsapar.convert.LineManipulator;
 import org.jsapar.error.JSaParException;
 import org.jsapar.error.MaxErrorsExceededException;
@@ -15,15 +11,15 @@ import org.jsapar.error.ThresholdRecordingErrorEventListener;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
-import org.jsapar.schema.CsvSchemaCell;
-import org.jsapar.schema.CsvSchemaLine;
-import org.jsapar.schema.FixedWidthSchemaCell;
-import org.jsapar.schema.FixedWidthSchemaLine;
-import org.jsapar.schema.SchemaCellFormat;
+import org.jsapar.schema.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 
 /**
  * @author stejon0
@@ -236,7 +232,7 @@ public class ConverterTest {
         Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
         converter.addLineManipulator(new LineManipulator() {
             @Override
-            public boolean manipulate(Line line) throws JSaParException {
+            public boolean manipulate(Line line) {
                 line.addCell(new StringCell("Town", "Stockholm"));
                 return true;
             }
@@ -322,7 +318,7 @@ public class ConverterTest {
         Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
         converter.addLineManipulator(new LineManipulator() {
             @Override
-            public boolean manipulate(Line line) throws JSaParException {
+            public boolean manipulate(Line line) {
                 if(line.getLineType().equals("Names") && line.getCell("First name").getStringValue().equals("Tomas"))
                     return false;
                 else

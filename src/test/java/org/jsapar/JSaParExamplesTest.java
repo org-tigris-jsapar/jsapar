@@ -79,7 +79,7 @@ public class JSaParExamplesTest {
     /**
      * @throws SchemaException
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     @Test
     public final void testExampleFlatFile03() throws SchemaException, IOException, JSaParException {
@@ -103,7 +103,7 @@ public class JSaParExamplesTest {
     /**
      * @throws SchemaException
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     @Test
     public final void testExampleFixedWidth04() throws SchemaException, IOException, JSaParException {

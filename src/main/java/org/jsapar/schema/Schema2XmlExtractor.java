@@ -1,9 +1,9 @@
 package org.jsapar.schema;
 
-import java.io.Writer;
-import java.util.Locale;
+import org.jsapar.compose.CellComposer;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -13,10 +13,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.jsapar.compose.CellComposer;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import java.io.Writer;
+import java.util.Locale;
 
 public class Schema2XmlExtractor implements SchemaXmlTypes {
 

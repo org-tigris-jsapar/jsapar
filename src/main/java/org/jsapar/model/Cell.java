@@ -1,7 +1,5 @@
 package org.jsapar.model;
 
-import org.jsapar.schema.SchemaException;
-
 import java.io.Serializable;
 
 /**
@@ -109,9 +107,9 @@ public abstract class Cell implements Serializable, Cloneable {
      * 
      * @param right The cell to compare to.
      * @return a negative integer, zero, or a positive integer as this cell's value is less than, equal to, or greater than the specified cell's value. 
-     * @throws SchemaException
+     * @throws IllegalArgumentException if the value of provided cell cannot be compared to the value of this cell.
      */
-    public abstract int compareValueTo(Cell right) throws SchemaException;
+    public abstract int compareValueTo(Cell right) ;
     
     /**
      * @return true if the cell is not set to any value, false otherwise.

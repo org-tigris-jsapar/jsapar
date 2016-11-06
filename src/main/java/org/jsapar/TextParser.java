@@ -1,6 +1,5 @@
 package org.jsapar;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.parse.*;
 import org.jsapar.schema.Schema;
 
@@ -42,13 +41,12 @@ public class TextParser extends AbstractParser implements Parser {
      * parsing a line, a CellErrorEvent or ErrorEvent is generated to all registered error event listeners <br>
      * Before calling this method you have to call {@link #addLineEventListener(LineEventListener)} to be able to handle the
      * result<br>
-     * If there is an error reading the input or an error at the structure of the input, a
-     * JSaParException will be thrown.
-     * @throws JSaParException
+     * If there is an error reading the input an
+     * {@link IOException} will be thrown.
      * @throws IOException
      */
     @Override
-    public void parse() throws JSaParException, IOException {
+    public void parse() throws IOException {
         parserFactory.makeSchemaParser(this.schema, reader, parseConfig).parse(this, this);
     }
 

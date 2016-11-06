@@ -3,8 +3,6 @@
  */
 package org.jsapar.compose.bean;
 
-import org.jsapar.error.JSaParException;
-
 import java.util.EventListener;
 
 /**
@@ -20,7 +18,7 @@ public interface BeanComposedEventListener<T> extends EventListener {
      * 
      * @param event
      *            The event that contains the composed bean.
-     * @throws JSaParException
+     *
      */
     void beanComposedEvent(BeanComposedEvent<T> event) ;
 

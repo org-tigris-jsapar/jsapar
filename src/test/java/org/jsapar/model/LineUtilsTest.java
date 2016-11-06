@@ -1,6 +1,5 @@
 package org.jsapar.model;
 
-import org.jsapar.error.JSaParException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,14 +61,14 @@ public class LineUtilsTest {
 
 
     @Test
-    public void testGetEnumCellValue() throws JSaParException {
+    public void testGetEnumCellValue() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("Type", "FIRST"));
         assertEquals(Testing.FIRST, LineUtils.getEnumCellValue(line,"Type", Testing.class));
     }
     
     @Test
-    public void testGetSetIntCellValue() throws JSaParException{
+    public void testGetSetIntCellValue() {
         Line line = new Line("TestLine");
         line.addCell(new IntegerCell("shoeSize", 42));
         line.addCell(new FloatCell("pi", 3.141));
@@ -94,7 +93,7 @@ public class LineUtilsTest {
     }
 
     @Test(expected=NumberFormatException.class)
-    public void testGetIntCellValue_not_parsable() throws JSaParException{
+    public void testGetIntCellValue_not_parsable() {
         Line line = new Line("TestLine");
         LineUtils.setStringCellValue(line,"aStringValue", "ABC");
 
@@ -156,7 +155,7 @@ public class LineUtilsTest {
     }
 
     @Test
-    public void testSetBooleanCellValue() throws JSaParException{
+    public void testSetBooleanCellValue() {
         Line line = new Line("TestLine");
         LineUtils.setBooleanCellValue(line,"aTrueValue", true);
         LineUtils.setBooleanCellValue(line,"aFalseValue", false);

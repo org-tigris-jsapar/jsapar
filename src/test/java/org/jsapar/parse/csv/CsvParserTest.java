@@ -178,7 +178,7 @@ public class CsvParserTest {
     }
 
     @Test
-    public void testParseControlCell() throws JSaParException, IOException {
+    public void testParseControlCell() throws IOException {
         CsvSchema schema = new CsvSchema();
         schema.setLineSeparator("\n");
         CsvSchemaLine schemaLine = new CsvSchemaLine("Address");

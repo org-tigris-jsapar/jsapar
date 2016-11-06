@@ -12,7 +12,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.ParseException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by stejon0 on 2016-02-13.

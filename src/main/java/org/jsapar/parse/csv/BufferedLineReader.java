@@ -3,7 +3,6 @@
  */
 package org.jsapar.parse.csv;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.parse.LineReader;
 import org.jsapar.parse.TextLineReader;
 
@@ -47,7 +46,7 @@ public class BufferedLineReader implements LineReader {
      *
      * @return The line read from the internal input reader.
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     @Override
     public String readLine() throws IOException {
@@ -63,7 +62,7 @@ public class BufferedLineReader implements LineReader {
      *
      * @return The line read from the internal input reader.
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     public String peekLine() throws IOException {
         return lineReaderImpl.readLine();

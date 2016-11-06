@@ -5,7 +5,6 @@ import org.jsapar.compose.bean.BeanComposer;
 import org.jsapar.compose.bean.BeanComposerConfig;
 import org.jsapar.compose.bean.BeanFactory;
 import org.jsapar.compose.bean.RecordingBeanEventListener;
-import org.jsapar.error.JSaParException;
 import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.model.*;
 import org.junit.After;
@@ -35,7 +34,7 @@ public class BeanComposerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects() throws JSaParException, IOException {
+    public final void testCreateJavaObjects() throws IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new StringCell("firstName", "Jonas"));
@@ -79,7 +78,7 @@ public class BeanComposerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_Long_to_int() throws JSaParException, IOException {
+    public final void testCreateJavaObjects_Long_to_int() throws IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new IntegerCell("shoeSize", 42L));
@@ -98,7 +97,7 @@ public class BeanComposerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_Int_to_long() throws JSaParException, IOException {
+    public final void testCreateJavaObjects_Int_to_long() throws  IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new IntegerCell("luckyNumber", 1234));
@@ -116,7 +115,7 @@ public class BeanComposerTest {
     }
 
     @Test(expected = ComposeException.class)
-    public final void testCreateJavaObjects_wrongType() throws JSaParException, IOException {
+    public final void testCreateJavaObjects_wrongType() throws IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new IntegerCell("firstName", 1234));
@@ -132,11 +131,11 @@ public class BeanComposerTest {
     }
 
     /**
-     * @throws JSaParException
+     *
      */
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_subclass() throws JSaParException, IOException {
+    public final void testCreateJavaObjects_subclass() throws IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new StringCell("address.street", "Stigen"));
@@ -160,11 +159,11 @@ public class BeanComposerTest {
 
 
     /**
-     * @throws JSaParException
+     *
      */
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_subclass_BeanFactory() throws JSaParException, IOException {
+    public final void testCreateJavaObjects_subclass_BeanFactory() throws IOException {
         Document document = new Document();
         Line line1 = new Line("Test person");
         line1.addCell(new StringCell("a.street", "Stigen"));
@@ -217,11 +216,11 @@ public class BeanComposerTest {
         assertEquals("By", parsedPerson.getAddress().getSubAddress().getTown());
     }
     /**
-     * @throws JSaParException
+     *
      */
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_subclass_error() throws JSaParException, IOException {
+    public final void testCreateJavaObjects_subclass_error() throws IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new StringCell("address.doNotExist", "Stigen"));
@@ -247,11 +246,11 @@ public class BeanComposerTest {
     }
     
     /**
-     * @throws JSaParException
+     *
      */
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_null_value() throws JSaParException, IOException {
+    public final void testCreateJavaObjects_null_value() throws IOException {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new StringCell("firstName", "Jonas"));

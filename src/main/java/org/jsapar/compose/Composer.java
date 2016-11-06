@@ -7,8 +7,11 @@ import org.jsapar.model.Line;
 import java.io.IOException;
 
 /**
- * Common interface for composer classes. A composer is able to take a {@link Document} and turn it into an output of
+ * Common interface for composer classes. A composer is able to take a {@link Document} or a sequence of {@link Line} and turn them into an output of
  * some kind. The output type depends on the implementation of this interface.
+ *
+ * @see org.jsapar.TextComposer
+ * @see org.jsapar.compose.bean.BeanComposer
  */
 public interface Composer {
 

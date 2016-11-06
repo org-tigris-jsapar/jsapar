@@ -1,12 +1,9 @@
 package org.jsapar.parse.csv;
 
-import org.jsapar.error.JSaParException;
 import org.junit.After;
 import org.junit.Before;
 
 import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
 
 public class CsvControlCellParserTest {
 
@@ -24,7 +21,7 @@ public class CsvControlCellParserTest {
      * .
      * 
      * @throws IOException
-     * @throws JSaParException
+     *
      */
 
 

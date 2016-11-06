@@ -1,6 +1,5 @@
 package org.jsapar.model;
 
-import org.jsapar.error.JSaParException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +45,7 @@ public class LineTest {
     }
 
     @Test
-    public void testGetCells() throws JSaParException {
+    public void testGetCells() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         line.addCell(new StringCell("LastName", "Svensson"));
@@ -56,7 +55,7 @@ public class LineTest {
     }
 
     @Test
-    public void testGetCellIterator() throws JSaParException {
+    public void testGetCellIterator() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         java.util.Iterator<Cell> i = line.cellIterator();
@@ -64,7 +63,7 @@ public class LineTest {
     }
 
     @Test
-    public void testAddCellCell() throws JSaParException {
+    public void testAddCellCell() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         line.addCell(new StringCell("LastName", "Svensson"));
@@ -73,7 +72,7 @@ public class LineTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testAddCell_twice() throws JSaParException {
+    public void testAddCell_twice() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         line.addCell(new StringCell("FirstName", "Svensson"));
@@ -82,7 +81,7 @@ public class LineTest {
 
 
     @Test
-    public void testReplaceCell() throws JSaParException {
+    public void testReplaceCell() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         line.addCell(new StringCell("LastName", "Svensson"));
@@ -95,7 +94,7 @@ public class LineTest {
 
 
     @Test
-    public void testGetCellString() throws JSaParException {
+    public void testGetCellString() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         line.addCell(new StringCell("LastName", "Svensson"));
@@ -104,7 +103,7 @@ public class LineTest {
 
 
     @Test
-    public void testGetNumberOfCells() throws JSaParException {
+    public void testGetNumberOfCells() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         line.addCell(new StringCell("LastName", "Svensson"));
@@ -125,10 +124,10 @@ public class LineTest {
     }
 
     /**
-     * @throws JSaParException
+     *
      */
     @Test
-    public void testRemoveCell() throws JSaParException {
+    public void testRemoveCell() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         line.addCell(new StringCell("LastName", "Svensson"));

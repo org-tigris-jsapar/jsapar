@@ -116,7 +116,7 @@ public class ConverterMain {
     /**
      * @param properties
      * @param key
-     * @throws JSaParException
+     *
      */
     protected void checkMandatory(Properties properties, String key)  {
         if (null == properties.getProperty(key))

@@ -1,8 +1,8 @@
 package org.jsapar.parse;
 
-import java.io.IOException;
-
 import org.jsapar.error.JSaParException;
+
+import java.io.IOException;
 
 public class SingleLineReader implements LineReader {
     private String line;

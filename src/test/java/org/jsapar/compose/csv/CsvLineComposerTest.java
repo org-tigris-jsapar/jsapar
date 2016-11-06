@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.text.ParseException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by stejon0 on 2016-01-30.

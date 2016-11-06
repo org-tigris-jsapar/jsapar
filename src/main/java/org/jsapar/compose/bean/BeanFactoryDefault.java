@@ -1,9 +1,9 @@
 package org.jsapar.compose.bean;
 
+import org.jsapar.model.Line;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import org.jsapar.model.Line;
 
 public class BeanFactoryDefault<T> implements BeanFactory<T> {
     private static final String GET_PREFIX = "get";

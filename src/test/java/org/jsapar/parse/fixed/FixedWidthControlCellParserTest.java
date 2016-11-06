@@ -1,7 +1,6 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ExceptionErrorEventListener;
-import org.jsapar.error.JSaParException;
 import org.jsapar.error.ValidationAction;
 import org.jsapar.model.Document;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
@@ -37,10 +36,10 @@ public class FixedWidthControlCellParserTest {
      * .
      * 
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     @Test
-    public void testParse() throws JSaParException, IOException {
+    public void testParse() throws IOException {
         String toParse = "NJonasStenbergAStorgatan 123 45NFred Bergsten";
         org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("");
@@ -97,10 +96,10 @@ public class FixedWidthControlCellParserTest {
      * .
      * 
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     @Test
-    public void testParse_separatedLines() throws JSaParException, IOException {
+    public void testParse_separatedLines() throws IOException {
         String toParse = "NJonasStenberg   \r\nAStorgatan 123 45          \r\nNFred Bergsten\r\n";
         org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("\r\n");
@@ -130,10 +129,10 @@ public class FixedWidthControlCellParserTest {
      * .
      * 
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     @Test
-    public void testParse_spaceInLineType() throws JSaParException, IOException {
+    public void testParse_spaceInLineType() throws IOException {
         String toParse = "N JonasStenberg   \r\nAAStorgatan 123 45          \r\nN Fred Bergsten";
         org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("\r\n");
@@ -152,10 +151,10 @@ public class FixedWidthControlCellParserTest {
      * .
      * 
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     @Test(expected = LineParseException.class)
-    public void testParse_errorOnUndefinedLineType() throws JSaParException, IOException {
+    public void testParse_errorOnUndefinedLineType() throws IOException {
         String toParse = "X JonasStenberg   ";
         org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("\r\n");
@@ -174,10 +173,10 @@ public class FixedWidthControlCellParserTest {
      * .
      * 
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     @Test
-    public void testParse_noErrorIfUndefinedLineType() throws JSaParException, IOException {
+    public void testParse_noErrorIfUndefinedLineType() throws IOException {
         String toParse = "N JonasStenberg   \r\nXXStorgatan 123 45          \r\n\r\nN Fred Bergsten";
         org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("\r\n");

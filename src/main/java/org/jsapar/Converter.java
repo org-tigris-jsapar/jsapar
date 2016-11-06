@@ -3,7 +3,6 @@ package org.jsapar;
 import org.jsapar.compose.Composer;
 import org.jsapar.convert.LineManipulator;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
@@ -61,7 +60,7 @@ public class Converter {
      */
     protected class LineForwardListener implements LineEventListener {
 
-        public LineForwardListener() throws JSaParException {
+        public LineForwardListener() {
         }
 
         @Override

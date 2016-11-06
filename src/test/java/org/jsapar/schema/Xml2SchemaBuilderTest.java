@@ -3,10 +3,6 @@
  */
 package org.jsapar.schema;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.jsapar.model.CellType;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,6 +10,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Jonas

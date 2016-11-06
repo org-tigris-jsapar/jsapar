@@ -89,7 +89,7 @@ public class DateCell extends Cell implements Comparable<DateCell> {
             return getDateValue().compareTo(dateRight);
         }
         else{
-            throw new SchemaException("Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType());
+            throw new IllegalArgumentException("Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType());
         }
     }
 

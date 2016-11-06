@@ -1,6 +1,5 @@
 package org.jsapar;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Document;
 import org.jsapar.parse.CellParseException;
@@ -39,7 +38,7 @@ public class DocumentBuilderTest {
     }
 
     @Test
-    public void testBuild_fixed_oneLine() throws JSaParException, IOException {
+    public void testBuild_fixed_oneLine() throws IOException {
         String toParse = "JonasStenberg";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
@@ -57,7 +56,7 @@ public class DocumentBuilderTest {
     }
 
     @Test(expected= CellParseException.class)
-    public void testBuild_error_throws() throws JSaParException, IOException {
+    public void testBuild_error_throws() throws IOException {
         String toParse = "JonasAAA";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);

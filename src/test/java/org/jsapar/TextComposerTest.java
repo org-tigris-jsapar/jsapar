@@ -1,7 +1,10 @@
 package org.jsapar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.jsapar.error.JSaParException;
+import org.jsapar.model.*;
+import org.jsapar.schema.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -9,11 +12,8 @@ import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import org.jsapar.error.JSaParException;
-import org.jsapar.model.*;
-import org.jsapar.schema.*;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TextComposerTest {
     private Document       document;
@@ -43,7 +43,7 @@ public class TextComposerTest {
     }
 
     @Test
-    public final void testWrite() throws JSaParException, IOException {
+    public final void testWrite() throws IOException {
         String sExpected = "JonasStenberg" + System.getProperty("line.separator") + "FridaBergsten";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
@@ -59,7 +59,7 @@ public class TextComposerTest {
     }
 
     @Test
-    public final void testWriteCsv() throws JSaParException, IOException {
+    public final void testWriteCsv() throws IOException {
         String sExpected = "Jonas;Stenberg" + System.getProperty("line.separator") + "Frida;Bergsten";
         org.jsapar.schema.CsvSchema schema = new org.jsapar.schema.CsvSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine(2);

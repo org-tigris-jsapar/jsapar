@@ -1,15 +1,15 @@
 package org.jsapar.parse;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-
 import org.jsapar.error.JSaParException;
 import org.jsapar.parse.csv.CellSplitter;
 import org.jsapar.parse.csv.SimpleCellSplitter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertArrayEquals;
 
 public class SimpleCellSplitterTest {
 

@@ -4,7 +4,6 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
@@ -49,11 +48,11 @@ public class FixedWidthParserFlat extends FixedWidthParser{
      *            The {@link LineEventListener} which will receive events for each parsed line.
      * @param errorListener
      * The {@link ErrorEventListener} that will receive events for each error.
-     * @throws JSaParException
+     *
      * @throws java.io.IOException
      */
     @Override
-    public void parse(LineEventListener lineEventListener, ErrorEventListener errorListener) throws JSaParException, IOException {
+    public void parse(LineEventListener lineEventListener, ErrorEventListener errorListener) throws IOException {
         long lineNumber = 0;
         while(true){
             lineNumber++;

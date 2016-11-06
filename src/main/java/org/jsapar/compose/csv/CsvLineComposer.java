@@ -1,6 +1,5 @@
 package org.jsapar.compose.csv;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.compose.LineComposer;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
@@ -64,7 +63,7 @@ public class CsvLineComposer implements LineComposer {
      * Writes header line if first line is schema.
      *
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     public void composeHeaderLine() throws IOException {
         CsvSchemaLine unformattedSchemaLine = schemaLine.clone();
@@ -78,7 +77,7 @@ public class CsvLineComposer implements LineComposer {
 
     /**
      * @return The header line
-     * @throws JSaParException
+     *
      */
     private Line buildHeaderLineFromSchema(CsvSchemaLine headerSchemaLine)  {
         Line line = new Line();

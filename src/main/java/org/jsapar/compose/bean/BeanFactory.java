@@ -1,9 +1,9 @@
 package org.jsapar.compose.bean;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.jsapar.error.ValidationAction;
 import org.jsapar.model.Line;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Interface for a bean factory that creates bean instances based on line content. Create your own implementation of this

@@ -1,6 +1,5 @@
 package org.jsapar.compose;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 
 import java.io.IOException;
@@ -18,7 +17,7 @@ public interface LineComposer {
      *
      * @param line    The line to compose output of.
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     void compose(Line line) throws IOException;
 

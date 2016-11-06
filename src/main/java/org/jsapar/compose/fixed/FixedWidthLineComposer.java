@@ -1,6 +1,5 @@
 package org.jsapar.compose.fixed;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.compose.LineComposer;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
@@ -36,7 +35,7 @@ public class FixedWidthLineComposer implements LineComposer {
      * @param line
      *            The line to write to the writer
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     @Override
     public void compose(Line line) throws IOException {
@@ -55,7 +54,7 @@ public class FixedWidthLineComposer implements LineComposer {
      *            The number of characters that has already been written on this line.
      *
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     public void compose(Line line, int offset) throws IOException {
         Iterator<FixedWidthSchemaCell> iter = lineSchema.getSchemaCells().iterator();

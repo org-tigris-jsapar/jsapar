@@ -9,7 +9,6 @@ import org.jsapar.compose.SchemaComposer;
 import org.jsapar.compose.TextComposerFactory;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ErrorEventSource;
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
@@ -60,7 +59,7 @@ public class TextComposer implements Composer {
      * this method.
      * 
      * @param document
-     * @throws JSaParException
+     *
      */
     @Override
     public void compose(Document document) throws IOException {
@@ -74,16 +73,16 @@ public class TextComposer implements Composer {
      * @param lineIterator
      *            An iterator that iterates over a collection of lines. Can be used to build lines on-the-fly if you
      *            don't want to store them all in memory.
-     * @throws JSaParException
+     *
      */
-    public void compose(Iterator<Line> lineIterator) throws JSaParException, IOException {
+    public void compose(Iterator<Line> lineIterator) throws IOException {
         SchemaComposer schemaComposer = makeSchemaComposer();
         schemaComposer.beforeCompose();
         schemaComposer.compose(lineIterator);
         schemaComposer.afterCompose();
     }
 
-    private SchemaComposer makeSchemaComposer() throws JSaParException {
+    private SchemaComposer makeSchemaComposer() {
         if (currentSchemaComposer == null)
             currentSchemaComposer = composerFactory.makeComposer(schema, writer);
         return currentSchemaComposer;
@@ -94,11 +93,11 @@ public class TextComposer implements Composer {
      * The line is terminated by the line separator.
      * 
      * @param line
-     * @throws JSaParException
+     *
      * @throws IOException
      * @return True if the line was written, false if there was no matching line type in the schema.
      */
-    public boolean writeLineLn(Line line) throws JSaParException, IOException {
+    public boolean writeLineLn(Line line) throws IOException {
         if(!writeLine(line))
             return false;
         writer.write(schema.getLineSeparator());
@@ -120,10 +119,10 @@ public class TextComposer implements Composer {
      * line. Note that the line separator is not written by this method.
      * 
      * @param line
-     * @throws JSaParException
+     *
      * @throws IOException
      */
-    public boolean writeLine(Line line) throws JSaParException, IOException {
+    public boolean writeLine(Line line) throws IOException {
         SchemaComposer schemaComposer = makeSchemaComposer();
         return schemaComposer.composeLine(line);
     }

@@ -5,7 +5,6 @@ package org.jsapar;
 
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.*;
 import org.jsapar.parse.AbstractParser;
 import org.jsapar.parse.CellParseException;
@@ -39,7 +38,7 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
     }
 
     /**
-     * @throws JSaParException
+     *
      */
     @Override
     public void parse() throws IOException {
@@ -60,7 +59,7 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
      *            The object.
      * @param lineNumber
      * @return A Line object containing cells according to the getter method of the supplied object.
-     * @throws JSaParException
+     *
      */
     public Line parseBean(Object object, ErrorEventListener errorListener, long lineNumber)  {
 

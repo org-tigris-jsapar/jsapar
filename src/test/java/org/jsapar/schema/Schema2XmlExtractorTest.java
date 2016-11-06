@@ -3,17 +3,13 @@
  */
 package org.jsapar.schema;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-
-import org.jsapar.model.StringCell;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.StringWriter;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author stejon0

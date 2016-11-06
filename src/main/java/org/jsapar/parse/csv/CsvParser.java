@@ -1,7 +1,6 @@
 package org.jsapar.parse.csv;
 
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.JSaParException;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.ParseConfig;
 import org.jsapar.parse.SchemaParser;
@@ -33,7 +32,7 @@ public class CsvParser implements SchemaParser {
     
 
     @Override
-    public void parse(LineEventListener listener, ErrorEventListener errorListener) throws JSaParException, IOException {
+    public void parse(LineEventListener listener, ErrorEventListener errorListener) throws IOException {
         if(schema.isEmpty())
             return;
         while(true){

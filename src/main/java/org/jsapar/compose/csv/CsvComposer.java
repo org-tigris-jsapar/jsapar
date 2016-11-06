@@ -1,10 +1,12 @@
 package org.jsapar.compose.csv;
 
-import org.jsapar.error.JSaParException;
-import org.jsapar.compose.SchemaComposer;
 import org.jsapar.compose.LineComposer;
+import org.jsapar.compose.SchemaComposer;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
-import org.jsapar.schema.*;
+import org.jsapar.schema.CsvSchema;
+import org.jsapar.schema.CsvSchemaLine;
+import org.jsapar.schema.SchemaLine;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -31,7 +33,7 @@ public class CsvComposer implements SchemaComposer {
      * This implementation composes CSV output based on schema and supplied lines.
      * @param itLines The lines to compose output for.
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     @Override
     public void compose(Iterator<Line> itLines) throws IOException, JSaParException {
@@ -55,7 +57,7 @@ public class CsvComposer implements SchemaComposer {
     /**
      * This implementation does nothing
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     @Override
     public void beforeCompose() throws IOException, JSaParException {
@@ -64,7 +66,7 @@ public class CsvComposer implements SchemaComposer {
     /**
      * This implementation does nothing
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     @Override
     public void afterCompose() throws IOException, JSaParException {

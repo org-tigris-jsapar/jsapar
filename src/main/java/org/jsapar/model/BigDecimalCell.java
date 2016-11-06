@@ -1,7 +1,5 @@
 package org.jsapar.model;
 
-import org.jsapar.schema.SchemaException;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -71,7 +69,7 @@ public class BigDecimalCell extends NumberCell  {
      * @see org.jsapar.model.NumberCell#compareValueTo(org.jsapar.model.Cell)
      */
     @Override
-    public int compareValueTo(Cell right) throws SchemaException {
+    public int compareValueTo(Cell right) {
         if(right instanceof BigDecimalCell){
             BigDecimal bdRight = (((BigDecimalCell)right).getBigDecimalValue());
             return getBigDecimalValue().compareTo(bdRight);
@@ -81,7 +79,7 @@ public class BigDecimalCell extends NumberCell  {
             return getBigDecimalValue().compareTo(bdRight);
         }
         else{
-            throw new SchemaException("Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType());
+            throw new IllegalArgumentException("Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType());
         }
     }
 }

@@ -29,7 +29,7 @@ public class CharacterCell extends Cell {
             Character chRight = ((CharacterCell) right).getCharacterValue();
             return characterValue.compareTo(chRight);
         } else {
-            throw new SchemaException("Value of cell of type " + getCellType()
+            throw new IllegalArgumentException("Value of cell of type " + getCellType()
                     + " can not be compared to value of cell of type " + right.getCellType());
         }
     }

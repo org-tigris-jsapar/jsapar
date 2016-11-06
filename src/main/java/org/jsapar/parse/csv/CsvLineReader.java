@@ -1,7 +1,5 @@
 package org.jsapar.parse.csv;
 
-import org.jsapar.error.JSaParException;
-
 import java.io.IOException;
 import java.io.Reader;
 
@@ -47,7 +45,7 @@ public class CsvLineReader {
      * contain line-breaks and cell separator that should be part of the cell value. Returns en empty array if line was
      * empty and null if end of input was reached.
      * @throws IOException
-     * @throws JSaParException
+     *
      */
     public String[] readLine(String cellSeparator, char quoteChar) throws IOException {
         if (currentLine != null) {

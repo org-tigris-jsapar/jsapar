@@ -5,8 +5,13 @@ import org.jsapar.error.ErrorEventListener;
 import java.io.IOException;
 
 /**
- * Common interface for all parsers. An instance of a parser is only useful once. You create an instance, initializes it
+ * Common interface for all parsers. The interface does not state anything about the origin of the parsed items.
+ *
+ * An instance of a parser is only useful once. You create an instance, initializes it
  * with the event listeners needed, then call {@link #parse()}.
+ *
+ * @see org.jsapar.TextParser
+ * @see org.jsapar.BeanParser
  */
 public interface Parser {
 
@@ -26,7 +31,7 @@ public interface Parser {
 
     /**
      * Start the parsing. Should only be called once for each parser. Consecutive calls may have unexpected behavior.
-     * @throws IOException
+     * @throws IOException In case there is an error reading the input.
      */
     void parse() throws IOException;
 

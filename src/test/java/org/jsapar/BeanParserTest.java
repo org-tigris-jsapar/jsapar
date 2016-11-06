@@ -4,7 +4,6 @@
 package org.jsapar;
 
 import org.jsapar.error.ExceptionErrorEventListener;
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.*;
 import org.junit.After;
 import org.junit.Assert;
@@ -41,7 +40,7 @@ public class BeanParserTest {
     }
 
     @Test
-    public void testBuild() throws JSaParException, IOException {
+    public void testBuild() throws IOException {
         List<TstPerson> people = new ArrayList<>(2);
         TstPerson person = new TstPerson();
         person.setFirstName("Jonas");
@@ -65,7 +64,7 @@ public class BeanParserTest {
     }
 
     @Test
-    public void testBuildLine() throws JSaParException {
+    public void testBuildLine() {
         TstPerson person = new TstPerson();
         person.setBirthTime(birthTime);
         person.setFirstName("Jonas");
@@ -89,7 +88,7 @@ public class BeanParserTest {
     }
 
     @Test
-    public void testBuildLine_subClass() throws JSaParException {
+    public void testBuildLine_subClass() {
         TstPerson person = new TstPerson();
         person.setFirstName("Jonas");
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
@@ -104,7 +103,7 @@ public class BeanParserTest {
     }
 
     @Test
-    public void testBuildLine_subClass_multiplePaths() throws JSaParException {
+    public void testBuildLine_subClass_multiplePaths() {
         TstPerson person = new TstPerson();
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
         person.getAddress().setSubAddress(new TstPostAddress("Road", "Town"));
@@ -121,7 +120,7 @@ public class BeanParserTest {
     }
 
     @Test
-    public void testBuildLine_subClass_maxOneLevel() throws JSaParException {
+    public void testBuildLine_subClass_maxOneLevel() {
         TstPerson person = new TstPerson();
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
         person.getAddress().setSubAddress(new TstPostAddress("Road", "Town"));

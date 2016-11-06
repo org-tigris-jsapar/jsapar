@@ -1,7 +1,6 @@
 package org.jsapar.parse;
 
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.JSaParException;
 
 import java.io.IOException;
 
@@ -16,9 +15,9 @@ public interface SchemaParser {
      * 
      * @param listener
      * @param errorListener
-     * @throws JSaParException
+     *
      * @throws IOException
      */
-    void parse(LineEventListener listener, ErrorEventListener errorListener) throws JSaParException, IOException;
+    void parse(LineEventListener listener, ErrorEventListener errorListener) throws IOException;
 
 }

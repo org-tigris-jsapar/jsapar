@@ -1,6 +1,5 @@
 package org.jsapar.compose;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.schema.Schema;
 
 import java.io.Writer;
@@ -14,7 +13,7 @@ public interface ComposerFactory {
      * @param schema The schema to use while composing
      * @param writer The writer to write output to.
      * @return a {@link SchemaComposer} instance that is suitable to compose using provided schema
-     * @throws JSaParException
+     *
      */
-    SchemaComposer makeComposer(Schema schema, Writer writer) throws JSaParException;
+    SchemaComposer makeComposer(Schema schema, Writer writer) ;
 }

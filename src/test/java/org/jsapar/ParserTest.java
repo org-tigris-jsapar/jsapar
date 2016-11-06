@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 public class ParserTest {
 
     @Test
-    public void testBuild_fixed_oneLine() throws JSaParException, IOException {
+    public void testBuild_fixed_oneLine() throws IOException {
         String toParse = "JonasStenberg";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
@@ -42,7 +42,7 @@ public class ParserTest {
     }
 
     @Test(expected=CellParseException.class)
-    public void testBuild_error_throws() throws JSaParException, IOException {
+    public void testBuild_error_throws() throws IOException {
         String toParse = "JonasAAA";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
@@ -54,7 +54,7 @@ public class ParserTest {
     }
 
     @Test
-    public void testBuild_error_list() throws JSaParException, IOException {
+    public void testBuild_error_list() throws IOException {
         String toParse = "JonasAAA";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
@@ -74,7 +74,7 @@ public class ParserTest {
     }
 
     @Test(expected=MaxErrorsExceededException.class)
-    public void testBuild_error_list_max() throws JSaParException, IOException {
+    public void testBuild_error_list_max() throws IOException {
         String toParse = "JonasAAA";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
@@ -91,7 +91,7 @@ public class ParserTest {
     
     
     @Test
-    public void testBuild_fixed_twoLines() throws JSaParException, IOException {
+    public void testBuild_fixed_twoLines() throws IOException {
         String toParse = "JonasStenberg" + System.getProperty("line.separator") + "FridaStenberg";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
@@ -117,7 +117,7 @@ public class ParserTest {
     }
 
     @Test
-    public void testBuild_fixed_twoLines_toLong() throws JSaParException, IOException {
+    public void testBuild_fixed_twoLines_toLong() throws IOException {
         String toParse = "Jonas " + System.getProperty("line.separator") + "Frida";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
@@ -131,7 +131,7 @@ public class ParserTest {
     }
 
     @Test
-    public void testBuild_fixed_twoLines_infiniteOccurs() throws JSaParException, IOException {
+    public void testBuild_fixed_twoLines_infiniteOccurs() throws IOException {
         String toParse = "Jonas" + System.getProperty("line.separator") + "Frida";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine();
