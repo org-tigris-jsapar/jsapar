@@ -118,9 +118,9 @@ public class ConverterMain {
      * @param key
      * @throws JSaParException
      */
-    protected void checkMandatory(Properties properties, String key) throws JSaParException {
+    protected void checkMandatory(Properties properties, String key)  {
         if (null == properties.getProperty(key))
-            throw new JSaParException("Mandatory argument -" + key + " is missing.");
+            throw new IllegalArgumentException("Mandatory argument -" + key + " is missing.");
     }
 
     /**
@@ -128,16 +128,15 @@ public class ConverterMain {
      * @return A Properties instance filled with all the configuration.
      * @throws FileNotFoundException
      * @throws IOException
-     * @throws JSaParException
      */
-    protected Properties readConfig(String[] args) throws FileNotFoundException, IOException, JSaParException {
+    protected Properties readConfig(String[] args) throws IOException {
         Properties properties = new Properties();
         if (args.length == 1) {
             properties.load(new FileReader(args[0]));
         } else if (args.length > 1) {
             readArgs(properties, args);
         } else {
-            throw new JSaParException("Too few arguments");
+            throw new IllegalArgumentException("Too few arguments");
         }
 
         // Check mandatory arguments

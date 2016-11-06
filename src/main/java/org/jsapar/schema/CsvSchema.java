@@ -3,14 +3,15 @@ package org.jsapar.schema;
 import java.util.List;
 
 /**
- * Defines a schema for a fixed position buffer. Each cell is defined by a fixed number of
- * characters. Each line is separated by the line separator defined in the base class {@link Schema}
- * 
- * @author Jonas
- * 
+ * Defines a schema for a delimited input text. Each cell is delimited by a delimiter character sequence.
+ * Lines are separated by the line separator defined by {@link #lineSeparator}.
+ *
  */
-public class CsvSchema extends Schema {
+public class CsvSchema extends Schema implements Cloneable{
 
+    /**
+     * The schema lines
+     */
     private java.util.ArrayList<CsvSchemaLine> schemaLines = new java.util.ArrayList<>(4);
 
     /**
@@ -21,8 +22,7 @@ public class CsvSchema extends Schema {
     }
 
     /**
-     * @param schemaLine
-     *            the schemaLines to set
+     * @param schemaLine the schemaLines to set
      */
     public void addSchemaLine(CsvSchemaLine schemaLine) {
         this.schemaLines.add(schemaLine);
@@ -61,8 +61,6 @@ public class CsvSchema extends Schema {
     public List<? extends SchemaLine> getSchemaLines() {
         return this.schemaLines;
     }
-
-
 
     /*
      * (non-Javadoc)

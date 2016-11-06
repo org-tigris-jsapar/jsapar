@@ -12,6 +12,7 @@ import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.Parser;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -41,7 +42,7 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
      * @throws JSaParException
      */
     @Override
-    public void parse()  {
+    public void parse() throws IOException {
         long count = 0;
         while(iterator.hasNext()){
             count++;

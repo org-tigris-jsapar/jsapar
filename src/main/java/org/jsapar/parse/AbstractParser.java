@@ -4,6 +4,7 @@ import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ErrorEventSource;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public abstract class AbstractParser implements Parser, LineEventListener, Error
     }
 
     @Override
-    public void lineParsedEvent(LineParsedEvent event) {
+    public void lineParsedEvent(LineParsedEvent event) throws IOException {
         for (LineEventListener l : this.parsingEventListeners) {
             l.lineParsedEvent(event);
         }

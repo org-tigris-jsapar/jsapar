@@ -1,6 +1,5 @@
 package org.jsapar.compose;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.compose.csv.CsvComposer;
 import org.jsapar.compose.fixed.FixedWidthComposer;
 import org.jsapar.schema.CsvSchema;
@@ -20,9 +19,9 @@ public class TextComposerFactory implements ComposerFactory {
      * @param schema The schema to use while composing
      * @param writer The writer to write output to.
      * @return A newly created {@link SchemaComposer}
-     * @throws JSaParException In case the schema is not of any type that is handled by this class.
+     * @throws IllegalArgumentException In case the schema is not of any type that is handled by this class.
      */
-    public SchemaComposer makeComposer(Schema schema, Writer writer) throws JSaParException {
+    public SchemaComposer makeComposer(Schema schema, Writer writer)  {
         if(schema instanceof CsvSchema){
             return new CsvComposer(writer, (CsvSchema)schema);
         }
@@ -30,7 +29,7 @@ public class TextComposerFactory implements ComposerFactory {
             return new FixedWidthComposer(writer, (FixedWidthSchema)schema);
         }
 
-        throw new JSaParException("Unknown schema type. Unable to create parser class for it.");
+        throw new IllegalArgumentException("Unknown schema type. Unable to create parser class for it.");
     }
 
 }

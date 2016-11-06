@@ -3,6 +3,7 @@
  */
 package org.jsapar.parse;
 
+import java.io.IOException;
 import java.util.EventListener;
 
 /**
@@ -16,7 +17,7 @@ public interface LineEventListener extends EventListener {
      * @param event
      *            The event that contains the parsed line.
      */
-    void lineParsedEvent(LineParsedEvent event) ;
+    void lineParsedEvent(LineParsedEvent event) throws IOException;
 
 
 }

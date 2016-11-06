@@ -23,6 +23,7 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -43,13 +44,13 @@ public class XmlParser extends AbstractParser implements Parser {
     }
 
     @Override
-    public void parse() throws IOException, JSaParException {
+    public void parse() throws IOException{
 
         String schemaFileName = "/xml/schema/XMLDocumentFormat.xsd";
         InputStream schemaStream = Xml2SchemaBuilder.class.getResourceAsStream(schemaFileName);
 
         if (schemaStream == null)
-            throw new JSaParException("Could not find schema file: " + schemaFileName);
+            throw new FileNotFoundException("Could not find schema resource: " + schemaFileName);
 
         try {
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -107,7 +108,7 @@ public class XmlParser extends AbstractParser implements Parser {
                     this.listener.lineParsedEvent(new LineParsedEvent(this, this.currentLine));
                     this.currentLine = null;
                 }
-            } catch (JSaParException e) {
+            } catch (IOException | JSaParException e) {
                 throw new SAXException("Error while handling parsed line.", e);
             }
         }

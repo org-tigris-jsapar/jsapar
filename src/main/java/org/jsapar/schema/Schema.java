@@ -28,6 +28,8 @@ public abstract class Schema implements Cloneable {
 
 
     /**
+     * Line separator string. Default value is the system default (Retrieved by
+     * {@code System.getProperty("line.separator")}).
      * @return the lineSeparator
      */
     public String getLineSeparator() {
@@ -36,7 +38,7 @@ public abstract class Schema implements Cloneable {
 
     /**
      * Sets the line separator string. Default value is the system default (Retrieved by
-     * System.getProperty("line.separator")).
+     * {@code System.getProperty("line.separator")}).
      * 
      * @param lineSeparator
      *            the lineSeparator to set.
@@ -46,6 +48,8 @@ public abstract class Schema implements Cloneable {
     }
 
     /**
+     * The locale of the schema is used to determine the formatting of for example numbers, decimal separators etc. It
+     * does not affect the error messages. Default is the system default.
      * @return the locale
      */
     public Locale getLocale() {
@@ -53,6 +57,8 @@ public abstract class Schema implements Cloneable {
     }
 
     /**
+     * The locale of the schema is used to determine the formatting of for example numbers, decimal separators etc. It
+     * does not affect the error messages. Default is the system default.
      * @param locale
      *            the locale to set
      */
@@ -88,10 +94,10 @@ public abstract class Schema implements Cloneable {
     }
 
     /**
-     * @param lineNumber
-     * @return The line-schema for supplied line number.
+     * @param lineNumber The line number to get {@link SchemaLine} for.
+     * @return The {@link SchemaLine} for supplied line number.
      */
-    public SchemaLine getSchemaLine(long lineNumber) {
+    public SchemaLine getSchemaLineForLineNumber(long lineNumber) {
         long nLineMax = 0;
         for (Object oSchemaLine : this.getSchemaLines()) {
             SchemaLine schemaLine = (SchemaLine) oSchemaLine;
@@ -105,8 +111,8 @@ public abstract class Schema implements Cloneable {
     }
 
     /**
-     * @param lineType
-     * @return The schema line with the supplied line type name. Null if no such schema line was
+     * @param lineType The line type to get {@link SchemaLine} for.
+     * @return The {@link SchemaLine} with the supplied line type name. Null if no such schema line was
      *         found.
      */
     public abstract SchemaLine getSchemaLine(String lineType);
@@ -122,22 +128,6 @@ public abstract class Schema implements Cloneable {
      * @return The schema line with the specified index.
      */
     public abstract SchemaLine getSchemaLineAt(int index);
-
-    /**
-     * @param line
-     *            The line to find index for.
-     * @return The index (starting from 0) of which the supplied line have within the schema. -1 if
-     *         no such line is found.
-     */
-    public int getIndexOf(SchemaLine line) {
-        for (int i = 0; i < size(); i++) {
-            if (line.equals(getSchemaLineAt(i))) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
 
     /**
      * Loads a schema instance from an xml that is read from the supplied reader. The xml needs to comply to the

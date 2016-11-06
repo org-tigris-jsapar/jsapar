@@ -6,17 +6,14 @@ import java.util.List;
  * Defines a schema for a fixed position buffer. Each cell is defined by a fixed number of
  * characters. Each line is separated by the line separator defined in the base class {@link Schema}
  * .
- * 
+ * <p>
  * If the end of line is reached before all cells are parsed the remaining cells will not be set.
- * 
+ * <p>
  * If there are remaining characters when the end of line is reached, those characters will be
  * omitted.
- * 
+ * <p>
  * If the line separator is an empty string, the lines will be separated by the sum of the length of
  * the cells within the schema.
- * 
- * @author Jonas Stenberg
- * 
  */
 public class FixedWidthSchema extends Schema {
 
@@ -33,16 +30,14 @@ public class FixedWidthSchema extends Schema {
     }
 
     /**
-     * @param schemaLines
-     *            the schemaLines to set
+     * @param schemaLines the schemaLines to set
      */
     public void setSchemaLines(java.util.List<FixedWidthSchemaLine> schemaLines) {
         this.schemaLines = schemaLines;
     }
 
     /**
-     * @param schemaLine
-     *            the schemaLines to set
+     * @param schemaLine the schemaLines to set
      */
     public void addSchemaLine(FixedWidthSchemaLine schemaLine) {
         this.schemaLines.add(schemaLine);
@@ -59,7 +54,7 @@ public class FixedWidthSchema extends Schema {
          * @see org.jsapar.schema.Schema#clone()
          */
     @Override
-    public FixedWidthSchema clone(){
+    public FixedWidthSchema clone() {
         FixedWidthSchema schema = (FixedWidthSchema) super.clone();
 
         schema.schemaLines = new java.util.LinkedList<FixedWidthSchemaLine>();
@@ -88,7 +83,6 @@ public class FixedWidthSchema extends Schema {
         return this.schemaLines;
     }
 
-
     @Override
     public SchemaLine getSchemaLine(String lineType) {
         for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
@@ -116,7 +110,7 @@ public class FixedWidthSchema extends Schema {
      * cells after calling this method will add those cells after the filler cell which will probably lead to unexpected
      * behavior.
      */
-    public void addFillerCellsToReachLineMinLength(){
+    public void addFillerCellsToReachLineMinLength() {
         for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
             lineSchema.addFillerCellToReachMinLength(0);
         }
