@@ -3,15 +3,10 @@
  */
 package org.jsapar.parse;
 
-import org.jsapar.error.JSaParException;
-
 import java.util.EventListener;
 
 /**
  * Interface for receiving event call-backs while parsing.
- * 
- * @author stejon0
- * 
  */
 public interface LineEventListener extends EventListener {
 
@@ -20,7 +15,6 @@ public interface LineEventListener extends EventListener {
      * 
      * @param event
      *            The event that contains the parsed line.
-     * @throws JSaParException
      */
     void lineParsedEvent(LineParsedEvent event) ;
 

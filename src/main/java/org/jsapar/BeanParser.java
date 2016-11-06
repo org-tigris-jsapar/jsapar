@@ -45,7 +45,7 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
         long count = 0;
         while(iterator.hasNext()){
             count++;
-            lineParsedEvent( new LineParsedEvent(this, parseBean(iterator.next(), this), count) );
+            lineParsedEvent( new LineParsedEvent(this, parseBean(iterator.next(), this, count)) );
         }
     }
 
@@ -57,12 +57,14 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
      * 
      * @param object
      *            The object.
+     * @param lineNumber
      * @return A Line object containing cells according to the getter method of the supplied object.
      * @throws JSaParException
      */
-    public Line parseBean(Object object, ErrorEventListener errorListener)  {
+    public Line parseBean(Object object, ErrorEventListener errorListener, long lineNumber)  {
 
         Line line = new Line(object.getClass().getName());
+        line.setLineNumber(lineNumber);
         Set<Object> visited = new HashSet<>();
         this.parseBean(line, object, null, visited, errorListener);
         return line;

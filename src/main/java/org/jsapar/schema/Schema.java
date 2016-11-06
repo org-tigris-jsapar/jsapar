@@ -1,7 +1,6 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.Document;
-import org.jsapar.parse.ParseSchema;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -20,7 +19,7 @@ import java.util.Locale;
  * @author Jonas
  * 
  */
-public abstract class Schema implements Cloneable, ParseSchema {
+public abstract class Schema implements Cloneable {
 
 
     public abstract boolean isEmpty();

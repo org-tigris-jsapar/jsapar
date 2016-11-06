@@ -8,7 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by stejon0 on 2016-08-14.
+ * Abstract implementation of {@link Parser} interface. Provides possibility to have multiple line event listeners and
+ * error event listeners. Override this class to implement a specific parser.
  */
 public abstract class AbstractParser implements Parser, LineEventListener, ErrorEventListener {
     private List<LineEventListener> parsingEventListeners     = new LinkedList<>();

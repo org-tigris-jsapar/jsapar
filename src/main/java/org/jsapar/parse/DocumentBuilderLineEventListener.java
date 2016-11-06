@@ -7,7 +7,6 @@ import org.jsapar.model.Document;
  * Use this class only if you are sure that the whole file can be parsed into memory. If the
  * file is too big, a OutOfMemory exception will be thrown. For large files use any of the Parser implementations
  * directly instead. Dispose instances of this class when they have been used once.
- * Created by stejon0 on 2016-10-15.
  */
 public class DocumentBuilderLineEventListener implements LineEventListener, AutoCloseable {
     private Document document = new Document();

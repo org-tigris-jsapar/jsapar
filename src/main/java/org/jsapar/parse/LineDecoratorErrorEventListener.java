@@ -4,7 +4,7 @@ import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 
 /**
- * Decorates line errors with current line information.
+ * Internal class. Decorates line errors with current line information.
  * Created by stejon0 on 2016-10-02.
  */
 public class LineDecoratorErrorEventListener implements ErrorEventListener {

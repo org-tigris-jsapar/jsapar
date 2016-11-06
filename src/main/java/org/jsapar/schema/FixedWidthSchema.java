@@ -2,8 +2,6 @@ package org.jsapar.schema;
 
 import java.util.List;
 
-import org.jsapar.parse.ParseSchema;
-
 /**
  * Defines a schema for a fixed position buffer. Each cell is defined by a fixed number of
  * characters. Each line is separated by the line separator defined in the base class {@link Schema}
@@ -20,7 +18,7 @@ import org.jsapar.parse.ParseSchema;
  * @author Jonas Stenberg
  * 
  */
-public class FixedWidthSchema extends Schema implements ParseSchema {
+public class FixedWidthSchema extends Schema {
 
     /**
      * A list of fixed with schema lines which builds up this schema.

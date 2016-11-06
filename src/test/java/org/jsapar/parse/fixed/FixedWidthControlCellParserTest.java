@@ -186,7 +186,7 @@ public class FixedWidthControlCellParserTest {
 
         Reader reader = new StringReader(toParse);
         ParseConfig config = new ParseConfig();
-        config.setOnUndefinedLineType(ValidationAction.IGNORE_LINE);
+        config.setOnUndefinedLineType(ValidationAction.OMIT_LINE);
         Document doc = build(reader, schema, config);
 
         assertEquals(2, doc.size());

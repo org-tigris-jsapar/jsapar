@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * LineReader implementation that reads lines from a text {@link Reader} object.
+ * Internal class for reading lines from a text.
+ * {@link LineReader} implementation that reads lines from a text {@link Reader} object.
  * 
  * {@link Reader} object should be closed by caller. Once End of File has been reached, the instance will no longer be useful.
  * 

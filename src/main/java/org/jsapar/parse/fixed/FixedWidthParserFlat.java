@@ -69,7 +69,7 @@ public class FixedWidthParserFlat extends FixedWidthParser{
             }
             Line line = result.lineParser.parse(reader, lineNumber, errorListener);
             if (line != null)
-                lineEventListener.lineParsedEvent(new LineParsedEvent(this, line, lineNumber));
+                lineEventListener.lineParsedEvent(new LineParsedEvent(this, line));
             else
                 return; // End of stream.
         }

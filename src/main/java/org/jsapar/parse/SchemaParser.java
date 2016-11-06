@@ -1,10 +1,13 @@
 package org.jsapar.parse;
 
+import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
+
 import java.io.IOException;
 
-import org.jsapar.error.JSaParException;
-import org.jsapar.error.ErrorEventListener;
-
+/**
+ * Internal interface for text parser that can parse text based on a schema.
+ */
 public interface SchemaParser {
 
     /**

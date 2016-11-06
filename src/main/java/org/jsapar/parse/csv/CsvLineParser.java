@@ -19,9 +19,9 @@ public class CsvLineParser {
     private static final String EMPTY_STRING = "";
     private CsvSchemaLine lineSchema;
     private ParseConfig   config;
-    private long         usedCount    = 0L;
-    private CellParser   cellParser   = new CellParser();
-    private ErrorHandler errorHandler = new ErrorHandler();
+    private long              usedCount         = 0L;
+    private CellParser        cellParser        = new CellParser();
+    private ValidationHandler validationHandler = new ValidationHandler();
 
     /**
      * Creates a csv line parser with the given line schema.
@@ -90,7 +90,7 @@ public class CsvLineParser {
 
         // We have to fill all the default values and mandatory items for remaining cells within the schema.
         while (itSchemaCell.hasNext()) {
-            if (!errorHandler.lineValidationError(this, line.getLineNumber(),
+            if (!validationHandler.lineValidation(this, line.getLineNumber(),
                     "Insufficient number of cells could be read from the line", config.getOnLineInsufficient(),
                     errorListener)) {
                 return true;
@@ -99,7 +99,7 @@ public class CsvLineParser {
             addCellToLineBySchema(line, schemaCell, EMPTY_STRING, lineErrorEventListener);
         }
 
-        listener.lineParsedEvent(new LineParsedEvent(this, line, lineReader.currentLineNumber()));
+        listener.lineParsedEvent(new LineParsedEvent(this, line));
         return true;
     }
 
@@ -194,7 +194,7 @@ public class CsvLineParser {
     private boolean addCellToLineWithoutSchema(Line line, String sCell, ErrorEventListener errorListener)
             throws JSaParException {
 
-        if (!errorHandler.lineValidationError(this, line.getLineNumber(),
+        if (!validationHandler.lineValidation(this, line.getLineNumber(),
                 "Found additional cell on the line that is not described in the line schema.",
                 config.getOnLineOverflow(), errorListener)) {
             return false;

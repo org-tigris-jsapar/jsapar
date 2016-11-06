@@ -3,9 +3,9 @@ package org.jsapar.parse.fixed;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
-import org.jsapar.parse.ErrorHandler;
 import org.jsapar.parse.LineDecoratorErrorEventListener;
 import org.jsapar.parse.ParseConfig;
+import org.jsapar.parse.ValidationHandler;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 
@@ -19,8 +19,8 @@ public class FixedWidthLineParser {
 
     private static final String EMPTY_STRING = "";
     private FixedWidthSchemaLine lineSchema;
-    private FixedWidthCellParser cellParser   = new FixedWidthCellParser();
-    private ErrorHandler         errorHandler = new ErrorHandler();
+    private FixedWidthCellParser cellParser        = new FixedWidthCellParser();
+    private ValidationHandler    validationHandler = new ValidationHandler();
     private ParseConfig config;
 
     public FixedWidthLineParser(FixedWidthSchemaLine lineSchema, ParseConfig config) {
@@ -68,8 +68,8 @@ public class FixedWidthLineParser {
                             line.addCell(cellParser.parse(schemaCell, EMPTY_STRING, lineErrorEventListener));
                         //noinspection ConstantConditions
                         if (handleInsufficient) {
-                            if (!errorHandler
-                                    .lineValidationError(this, lineNumber, "Insufficient number of characters for line",
+                            if (!validationHandler
+                                    .lineValidation(this, lineNumber, "Insufficient number of characters for line",
                                             config.getOnLineInsufficient(), errorListener)) {
                                 return null;
                             }

@@ -77,7 +77,7 @@ public class BeanParserTest {
 
 
         BeanParser<TstPerson> builder = new BeanParser<>(Arrays.asList(new TstPerson[]{person}));
-        Line line = builder.parseBean(person, new ExceptionErrorEventListener());
+        Line line = builder.parseBean(person, new ExceptionErrorEventListener(), 1);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals(8, line.size());
         assertEquals("Jonas", line.getCell("firstName").getStringValue());
@@ -94,7 +94,7 @@ public class BeanParserTest {
         person.setFirstName("Jonas");
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
         BeanParser<TstPerson> builder = new BeanParser<>(Arrays.asList(new TstPerson[]{person}));
-        Line line = builder.parseBean(person, new ExceptionErrorEventListener());
+        Line line = builder.parseBean(person, new ExceptionErrorEventListener(), 1);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
         assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
@@ -110,7 +110,7 @@ public class BeanParserTest {
         person.getAddress().setSubAddress(new TstPostAddress("Road", "Town"));
         person.setWorkAddress(new TstPostAddress("Gatan", "Byn"));
         BeanParser<TstPerson> builder = new BeanParser<>(Arrays.asList(new TstPerson[]{person}));
-        Line line = builder.parseBean(person, new ExceptionErrorEventListener());
+        Line line = builder.parseBean(person, new ExceptionErrorEventListener(), 1);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
         assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
@@ -129,7 +129,7 @@ public class BeanParserTest {
         BeanParser<TstPerson> builder = new BeanParser<>(Arrays.asList(new TstPerson[]{person}));
         builder.setMaxSubLevels(1);
         assertEquals(1, builder.getMaxSubLevels());
-        Line line = builder.parseBean(person, new ExceptionErrorEventListener());
+        Line line = builder.parseBean(person, new ExceptionErrorEventListener(), 1);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
         assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));

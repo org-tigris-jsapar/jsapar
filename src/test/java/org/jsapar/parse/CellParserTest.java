@@ -189,8 +189,8 @@ public class CellParserTest {
     public void testMakeCell_Int_spaces() throws SchemaException, java.text.ParseException {
         Cell cell;
         Locale locale = new Locale("sv", "SE");
-        cell = CellParser.makeCell(CellType.INTEGER, "number", "12 345", locale);
-        assertEquals(12345L, cell.getValue());
+        assertEquals(12345L, CellParser.makeCell(CellType.INTEGER, "number", "12 345", locale).getValue());
+        assertEquals(12345L, CellParser.makeCell(CellType.INTEGER, "number", "12\u00A0345", locale).getValue());
     }
 
     /**

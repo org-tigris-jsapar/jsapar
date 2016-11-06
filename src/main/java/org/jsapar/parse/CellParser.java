@@ -12,6 +12,9 @@ import org.jsapar.schema.SchemaException;
 import java.text.Format;
 import java.util.Locale;
 
+/**
+ * Internal class for parsing text on cell level.
+ */
 public class CellParser {
 
     private static final String EMPTY_STRING = "";

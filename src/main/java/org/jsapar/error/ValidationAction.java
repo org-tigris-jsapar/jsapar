@@ -19,7 +19,7 @@ public enum ValidationAction {
     /**
      * Silently ignore the current line
      */
-    IGNORE_LINE,
+    OMIT_LINE,
 
     /**
      * Do nothing, which in most cases is the same as silently ignoring the current line.

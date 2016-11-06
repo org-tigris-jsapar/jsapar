@@ -2,6 +2,7 @@ package org.jsapar;
 
 import org.jsapar.error.JSaParException;
 import org.jsapar.parse.*;
+import org.jsapar.schema.Schema;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -22,16 +23,15 @@ import java.io.Reader;
  * @see TextComposer
  * @see Converter
 *
- * Created by stejon0 on 2016-08-14.
  */
 public class TextParser extends AbstractParser implements Parser {
 
-    private final ParseSchema schema;
-    private Reader reader;
+    private final Schema schema;
+    private       Reader reader;
     private SchemaParserFactory parserFactory = new SchemaParserFactory();
     private ParseConfig parseConfig = new ParseConfig();
 
-    public TextParser(ParseSchema schema, Reader reader) {
+    public TextParser(Schema schema, Reader reader) {
         this.schema = schema;
         this.reader = reader;
     }
@@ -52,11 +52,4 @@ public class TextParser extends AbstractParser implements Parser {
         parserFactory.makeSchemaParser(this.schema, reader, parseConfig).parse(this, this);
     }
 
-    public ParseConfig getParseConfig() {
-        return parseConfig;
-    }
-
-    public void setParseConfig(ParseConfig parseConfig) {
-        this.parseConfig = parseConfig;
-    }
 }

@@ -2,7 +2,7 @@ package org.jsapar.compose.bean;
 
 import org.jsapar.compose.ComposeException;
 import org.jsapar.compose.Composer;
-import org.jsapar.compose.ErrorHandler;
+import org.jsapar.compose.ValidationHandler;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ErrorEventSource;
@@ -32,7 +32,7 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
     private BeanFactory<T>                     beanFactory            = new BeanFactoryDefault<>();
     private Map<String, String>                setMethodNameCache     = new HashMap<>();
     private BeanComposerConfig                 config                 = new BeanComposerConfig();
-    private ErrorHandler                       errorHandler           = new ErrorHandler();
+    private ValidationHandler                  validationHandler      = new ValidationHandler();
 
     /**
      * Creates a bean composer with {@link BeanFactoryDefault} as {@link BeanFactory}
@@ -64,7 +64,7 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
         try {
             bean = beanFactory.createBean(line);
             if (bean == null) {
-                errorHandler.lineValidationError(this, line,
+                validationHandler.lineValidationError(this, line,
                         "BeanFactory failed to instantiate object. Skipped creating bean",
                         config.getOnUndefinedLineType(), this);
             } else {

@@ -5,15 +5,26 @@ import org.jsapar.parse.fixed.FixedWidthParserFlat;
 import org.jsapar.parse.fixed.FixedWidthParserLinesSeparated;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.FixedWidthSchema;
+import org.jsapar.schema.Schema;
 
 import java.io.Reader;
 
+/**
+ * Internal class for creating a {@link SchemaParser} based on a {@link Schema}.
+ */
 public class SchemaParserFactory {
 
     public SchemaParserFactory() {
     }
 
-    public SchemaParser makeSchemaParser(ParseSchema schema, Reader reader, ParseConfig parseConfig)  {
+    /**
+     * Creates a {@link SchemaParser} based on a {@link Schema}
+     * @param schema The schema to create a parser for.
+     * @param reader The reader that the parser should read from.
+     * @param parseConfig Configuration that the parser should use.
+     * @return A {@link SchemaParser} based on a {@link Schema}
+     */
+    public SchemaParser makeSchemaParser(Schema schema, Reader reader, ParseConfig parseConfig)  {
         if (schema instanceof CsvSchema) {
             return new CsvParser(reader, (CsvSchema) schema, parseConfig);
         }

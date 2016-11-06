@@ -3,7 +3,7 @@ package org.jsapar.parse;
 import java.io.IOException;
 
 /**
- * Reads input line by line.
+ * Reads line separated input text line by line.
  */
 public interface LineReader {
 

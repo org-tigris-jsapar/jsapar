@@ -60,11 +60,11 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
                     throw new AssertionError("Unexpected error while parsing line number " + lineNumber);
                 String remaining = r.readLine();
                 if(remaining != null && ! remaining.isEmpty()) {
-                    if(!getErrorHandler().lineValidationError(this, lineNumber, "Trailing characters found on line",
+                    if(!getValidationHandler().lineValidation(this, lineNumber, "Trailing characters found on line",
                             getConfig().getOnLineOverflow(), errorListener))
                         continue; // Ignore the line.
                 }
-                listener.lineParsedEvent(new LineParsedEvent(this, line, lineNumber));
+                listener.lineParsedEvent(new LineParsedEvent(this, line));
             }
         }
     }

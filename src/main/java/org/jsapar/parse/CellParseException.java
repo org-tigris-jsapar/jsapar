@@ -7,11 +7,9 @@ import org.jsapar.schema.SchemaCellFormat;
  * This class is used as a way for the parser to report back parsing errors. The
  * class contains error information about a cell that failed to parse.
  *
- * @author Jonas Stenberg
  */
 public final class CellParseException extends JSaParException {
 
-    // long cellIndex=0;
     private long      lineNumber;
     private final String           cellName;
     private final String           cellValue;

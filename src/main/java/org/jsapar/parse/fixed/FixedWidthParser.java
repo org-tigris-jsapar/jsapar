@@ -4,9 +4,9 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.parse.ErrorHandler;
 import org.jsapar.parse.ParseConfig;
 import org.jsapar.parse.SchemaParser;
+import org.jsapar.parse.ValidationHandler;
 import org.jsapar.schema.FixedWidthSchema;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public abstract class FixedWidthParser implements SchemaParser {
     private FixedWidthSchema    schema;
     private FWLineParserFactory lineParserFactory;
     private ParseConfig config;
-    private ErrorHandler errorHandler = new ErrorHandler();
+    private ValidationHandler validationHandler = new ValidationHandler();
 
 
     public FixedWidthParser(FixedWidthSchema schema, ParseConfig config) {
@@ -31,7 +31,8 @@ public abstract class FixedWidthParser implements SchemaParser {
 
         // Check if EOF
         if (result == LineParserMatcherResult.NOT_MATCHING)
-            this.errorHandler.lineValidationError(this, lineNumber, "No schema line could be used to parse line number " + lineNumber,config.getOnUndefinedLineType(), errorEventListener);
+            this.validationHandler
+                    .lineValidation(this, lineNumber, "No schema line could be used to parse line number " + lineNumber,config.getOnUndefinedLineType(), errorEventListener);
     }
 
     protected FixedWidthSchema getSchema() {
@@ -50,7 +51,7 @@ public abstract class FixedWidthParser implements SchemaParser {
         this.config = config;
     }
 
-    protected ErrorHandler getErrorHandler() {
-        return errorHandler;
+    protected ValidationHandler getValidationHandler() {
+        return validationHandler;
     }
 }

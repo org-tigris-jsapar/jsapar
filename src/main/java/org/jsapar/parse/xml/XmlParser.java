@@ -104,7 +104,7 @@ public class XmlParser extends AbstractParser implements Parser {
                     this.currentCell = null;
                     this.cellStarted = false;
                 } else if (localName.equals("line")) {
-                    this.listener.lineParsedEvent(new LineParsedEvent(this, this.currentLine, this.currentLineNumber));
+                    this.listener.lineParsedEvent(new LineParsedEvent(this, this.currentLine));
                     this.currentLine = null;
                 }
             } catch (JSaParException e) {
@@ -136,6 +136,7 @@ public class XmlParser extends AbstractParser implements Parser {
                 break;
             case "line":
                 this.currentLine = new Line();
+                this.currentLine.setLineNumber(currentLineNumber);
                 this.currentLineNumber++;
                 break;
             case "document":
