@@ -25,7 +25,7 @@ import java.io.StringWriter;
  * @author stejon0
  * 
  */
-public class ConverterTest {
+public class Text2TextConverterTest {
 
     public static final String LN = System.getProperty("line.separator");
 
