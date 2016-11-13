@@ -103,7 +103,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
             } catch (InterruptedException e) {
                 // Gracefully and silently terminate.
             } catch (Throwable e) {
-                synchronized (this) {
+                synchronized (ConcurrentLineEventListener.this) {
                     exception = e;
                     shouldStop = true;
                 }
