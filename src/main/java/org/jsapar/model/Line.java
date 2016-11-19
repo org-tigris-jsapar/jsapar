@@ -1,5 +1,7 @@
 package org.jsapar.model;
 
+import org.jsapar.parse.CellParseException;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -26,6 +28,7 @@ public class Line implements Serializable, Cloneable {
     public static final  String EMPTY            = "";
 
     private Map<String, Cell> cells = new LinkedHashMap<>();
+    private Map<String, CellParseException> cellErrors = new LinkedHashMap<>();
 
     /**
      * Line type.
@@ -232,6 +235,32 @@ public class Line implements Serializable, Cloneable {
         }
 
         return clone;
+    }
+
+    /**
+     * @param error The cell error to add.
+     */
+    public void addCellError(CellParseException error) {
+        this.cellErrors.put(error.getCellName(), error);
+    }
+
+    /**
+     * @return True if the line has errors on any of the cells.
+     */
+    public boolean hasCellErrors(){
+        return !this.cellErrors.isEmpty();
+    }
+
+    /**
+     * @param cellName The name of the cell to get error for.
+     * @return If there is an error for the given cell name, that error is returned.The error with the given cell name.
+     */
+    public CellParseException getCellError(String cellName){
+        return cellErrors.get(cellName);
+    }
+
+    public Iterator<CellParseException> cellErrorIterator(){
+        return cellErrors.values().iterator();
     }
 
 }

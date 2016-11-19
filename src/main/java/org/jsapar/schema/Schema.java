@@ -19,7 +19,7 @@ import java.util.Locale;
  * @author Jonas
  * 
  */
-public abstract class Schema implements Cloneable {
+public abstract class Schema implements Cloneable{
 
 
     public abstract boolean isEmpty();

@@ -71,8 +71,7 @@ public class CsvLineParser {
         Line line = new Line(lineSchema.getLineType(),
                 (lineSchema.getSchemaCells().size() > 0) ? lineSchema.getSchemaCells().size() : 10);
         line.setLineNumber(lineReader.currentLineNumber());
-        LineDecoratorErrorEventListener lineErrorEventListener = new LineDecoratorErrorEventListener(errorListener,
-                lineReader.currentLineNumber());
+        LineDecoratorErrorEventListener lineErrorEventListener = new LineDecoratorErrorEventListener(errorListener, line);
 
         java.util.Iterator<CsvSchemaCell> itSchemaCell = lineSchema.getSchemaCells().iterator();
         for (String sCell : asCells) {

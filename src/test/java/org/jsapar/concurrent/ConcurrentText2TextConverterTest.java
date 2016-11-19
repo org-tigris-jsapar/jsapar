@@ -1,11 +1,10 @@
 package org.jsapar.concurrent;
 
 import org.jsapar.Converter;
+import org.jsapar.TextComposer;
+import org.jsapar.TextParser;
 import org.jsapar.error.JSaParException;
-import org.jsapar.schema.CsvSchemaCell;
-import org.jsapar.schema.CsvSchemaLine;
-import org.jsapar.schema.FixedWidthSchemaCell;
-import org.jsapar.schema.FixedWidthSchemaLine;
+import org.jsapar.schema.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,15 +12,23 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import static org.junit.Assert.assertSame;
+
 /**
- * Created by stejon0 on 2016-11-12.
  */
 public class ConcurrentText2TextConverterTest {
+    @Test
+    public void testConcurrentText2TextConverter() throws IOException, JSaParException {
+        TextParser p = new TextParser(new CsvSchema(), new StringReader(""));
+        TextComposer c = new TextComposer(new FixedWidthSchema(), new StringWriter());
+        Converter instance = new ConcurrentText2TextConverter(p, c);
+        assertSame(p, instance.getParser());
+        assertSame(c, instance.getComposer());
+    }
 
     @Test
     public void testConvert() throws IOException, JSaParException {
         String toParse = "Jonas Stenberg \nFrida Bergsten ";
-        ;
         org.jsapar.schema.FixedWidthSchema inputSchema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine("Person");
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 6));

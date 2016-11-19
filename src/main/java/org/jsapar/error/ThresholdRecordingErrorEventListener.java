@@ -43,8 +43,10 @@ public class ThresholdRecordingErrorEventListener extends RecordingErrorEventLis
      */
     @Override
     public void errorEvent(ErrorEvent event) {
-        super.errorEvent(event);
-        if (getErrors().size() > maxNumberOfErrors)
-            throw new MaxErrorsExceededException(event.getError(), getErrors());
+        synchronized(this) {
+            super.errorEvent(event);
+            if (getErrors().size() > maxNumberOfErrors)
+                throw new MaxErrorsExceededException(event.getError(), getErrors());
+        }
     }
 }

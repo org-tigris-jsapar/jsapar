@@ -138,13 +138,25 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
                     }
                 }
             } catch (IllegalArgumentException e) {
-                errorListener.errorEvent(new ErrorEvent(this, new CellParseException(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - Illegal argument in getter method.")));
+                handleCellError(errorListener, sAttributeName, object, line, "Illegal argument in getter method.");
             } catch (IllegalAccessException e) {
-                errorListener.errorEvent(new ErrorEvent(this, new CellParseException(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - attribute getter does not have public access.")));
+                handleCellError(errorListener, sAttributeName, object, line, "Attribute getter does not have public access.");
             } catch (InvocationTargetException e) {
-                errorListener.errorEvent(new ErrorEvent(this, new CellParseException(sAttributeName, "", null, "Skipped building cell for attribute "+sAttributeName+" of class "+ object.getClass().getName()+" - getter method fails to execute.")));
+                handleCellError(errorListener, sAttributeName, object, line, "Getter method fails to execute.");
             }
         }
+    }
+
+    private void handleCellError(ErrorEventListener errorListener,
+                                 String sAttributeName,
+                                 Object object,
+                                 Line line,
+                                 String message) {
+        CellParseException error = new CellParseException(sAttributeName, "", null,
+                "Unable to build cell for attribute " + sAttributeName + " of class " + object.getClass().getName()
+                        + " - " + message);
+        line.addCellError(error);
+        errorListener.errorEvent(new ErrorEvent(this, error));
     }
 
     /**

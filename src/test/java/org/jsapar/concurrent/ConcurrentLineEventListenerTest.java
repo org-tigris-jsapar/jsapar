@@ -52,7 +52,7 @@ public class ConcurrentLineEventListenerTest {
             instance.lineParsedEvent(new LineParsedEvent(this, new Line()));
             instance.addLineEventListener(event -> {
                 try {
-                    Thread.sleep(100L);
+                    Thread.sleep(10L);
                     count += 1;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -79,7 +79,7 @@ public class ConcurrentLineEventListenerTest {
         instance.start();
 
         instance.lineParsedEvent(new LineParsedEvent(this, new Line()));
-        Thread.sleep(100L);
+        Thread.sleep(10L);
         instance.lineParsedEvent(new LineParsedEvent(this, new Line()));
         instance.close();
         assertEquals(0, instance.size());

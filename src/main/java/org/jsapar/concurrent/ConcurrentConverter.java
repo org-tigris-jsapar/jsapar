@@ -22,10 +22,13 @@ import java.io.IOException;
  * If your want lines to be discarded from the output depending of their contents, add a LineManipulator that returns
  * false for the lines that should not be composed.
  *
- * TODO Error handling does not work as expected!! The error events are executed in different threads which can cause troubles.
  */
 public class ConcurrentConverter extends Converter {
 
+    /** Creates a converter
+     * @param parser The parser to use while parsing
+     * @param composer The composer to use while composing.
+     */
     public ConcurrentConverter(Parser parser, Composer composer) {
         super(parser, composer);
     }

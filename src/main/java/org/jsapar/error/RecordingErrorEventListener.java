@@ -34,7 +34,7 @@ public class RecordingErrorEventListener implements ErrorEventListener{
      */
     @Override
     public void errorEvent(ErrorEvent event) {
-        synchronized(errors) {
+        synchronized(this) {
             errors.add(event.getError());
         }
     }

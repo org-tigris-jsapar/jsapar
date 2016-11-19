@@ -1,6 +1,5 @@
 package org.jsapar.parse;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.schema.SchemaCellFormat;
 
 /**
@@ -8,9 +7,8 @@ import org.jsapar.schema.SchemaCellFormat;
  * class contains error information about a cell that failed to parse.
  *
  */
-public final class CellParseException extends JSaParException {
+public final class CellParseException extends LineParseException {
 
-    private long      lineNumber;
     private final String           cellName;
     private final String           cellValue;
     private final SchemaCellFormat cellFormat;
@@ -28,8 +26,7 @@ public final class CellParseException extends JSaParException {
                               String cellValue,
                               SchemaCellFormat cellFormat,
                               String errorDescription) {
-        super(errorDescription);
-        this.lineNumber = lineNumber;
+        super(lineNumber, errorDescription);
         this.cellName = cellName;
         this.cellValue = cellValue;
         this.cellFormat = cellFormat;
@@ -43,34 +40,13 @@ public final class CellParseException extends JSaParException {
      * @param errorDescription Description of the error.
      */
     public CellParseException(String cellName, String cellValue, SchemaCellFormat cellFormat, String errorDescription) {
-        super(errorDescription);
+        super(0, errorDescription);
         this.cellName = cellName;
         this.cellValue = cellValue;
         this.cellFormat = cellFormat;
-        lineNumber = 0;
     }
 
-    /**
-     * Creates a new cell parsing exception
-     * @param lineNumber The line number where the error occurred.
-     * @param cellName The cell name where the error occurred.
-     * @param cellValue The cell value that caused the error.
-     * @param cellFormat Expected cell format. Can be null.
-     * @param errorDescription Description of the error.
-     * @param cause           An exception that caused this error.
-     */
-    public CellParseException(long lineNumber,
-                              String cellName,
-                              String cellValue,
-                              SchemaCellFormat cellFormat,
-                              String errorDescription,
-                              Throwable cause) {
-        super(errorDescription, cause);
-        this.lineNumber = lineNumber;
-        this.cellName = cellName;
-        this.cellValue = cellValue;
-        this.cellFormat = cellFormat;
-    }
+
 
 
     /**
@@ -99,8 +75,10 @@ public final class CellParseException extends JSaParException {
      */
     public String getMessage() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Line=");
-        sb.append(this.getLineNumber());
+        if(this.getLineNumber()>0) {
+            sb.append("Line=");
+            sb.append(this.getLineNumber());
+        }
         sb.append(" Cell='");
         sb.append(this.cellName);
         sb.append("'");
@@ -116,11 +94,4 @@ public final class CellParseException extends JSaParException {
         return sb.toString();
     }
 
-    public long getLineNumber() {
-        return lineNumber;
-    }
-
-    public void setLineNumber(long lineNumber) {
-        this.lineNumber = lineNumber;
-    }
-}
+ }

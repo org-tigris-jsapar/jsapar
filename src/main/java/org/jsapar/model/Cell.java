@@ -7,8 +7,6 @@ import java.io.Serializable;
  * name and a value. A cell can be only exist as one of the sub-classes of this class. The type of
  * the value denotes which sub-class to use.
  * 
- * @author Jonas
- * 
  */
 public abstract class Cell implements Serializable, Cloneable {
 

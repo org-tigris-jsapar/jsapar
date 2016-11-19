@@ -57,7 +57,7 @@ public class FixedWidthLineParser {
                 }
             } else {
                 LineDecoratorErrorEventListener lineErrorEventListener = new LineDecoratorErrorEventListener(
-                        errorListener, lineNumber);
+                        errorListener, line);
                 Cell cell = cellParser
                         .parse(schemaCell, reader, lineSchema.isTrimFillCharacters(), lineSchema.getFillCharacter(),
                                 lineErrorEventListener);

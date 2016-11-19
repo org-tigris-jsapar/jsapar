@@ -43,17 +43,6 @@ public class FixedWidthSchemaLine extends SchemaLine {
         super(lineType);
     }
 
-    /**
-     * Creates a schema line with the supplied line type and control value.
-     * 
-     * @param lineType
-     *            The name of the type of the line.
-     * @param lineTypeControlValue
-     *            The tag that determines which type of line it is.
-     */
-    public FixedWidthSchemaLine(String lineType, String lineTypeControlValue) {
-        super(lineType, lineTypeControlValue);
-    }
 
     /**
      * @return the cells

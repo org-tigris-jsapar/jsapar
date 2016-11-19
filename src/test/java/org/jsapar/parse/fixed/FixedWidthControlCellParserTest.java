@@ -56,7 +56,7 @@ public class FixedWidthControlCellParserTest {
     }
 
     private void addSchemaLinesOneCharControl(FixedWidthSchema schema) {
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name", "N");
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name");
         FixedWidthSchemaCell typeN = new FixedWidthSchemaCell("Type", 1);
         typeN.setLineCondition(new MatchingCellValueCondition("N"));
         schemaLine.addSchemaCell(typeN);
@@ -64,7 +64,7 @@ public class FixedWidthControlCellParserTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
         schema.addSchemaLine(schemaLine);
 
-        schemaLine = new FixedWidthSchemaLine("Address", "A");
+        schemaLine = new FixedWidthSchemaLine("Address");
         FixedWidthSchemaCell typeA = new FixedWidthSchemaCell("Type", 1);
         typeA.setLineCondition(new MatchingCellValueCondition("A"));
         schemaLine.addSchemaCell(typeA);
@@ -74,7 +74,7 @@ public class FixedWidthControlCellParserTest {
     }
 
     private void addSchemaLinesTwoCharControl(FixedWidthSchema schema) {
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name", "N");
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name");
         FixedWidthSchemaCell typeN = new FixedWidthSchemaCell("Type", 2);
         typeN.setLineCondition(new MatchingCellValueCondition("N"));
         schemaLine.addSchemaCell(typeN);
@@ -82,7 +82,7 @@ public class FixedWidthControlCellParserTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
         schema.addSchemaLine(schemaLine);
 
-        schemaLine = new FixedWidthSchemaLine("Address", "AA");
+        schemaLine = new FixedWidthSchemaLine("Address");
         FixedWidthSchemaCell typeA = new FixedWidthSchemaCell("Type", 2);
         typeA.setLineCondition(new MatchingCellValueCondition("AA"));
         schemaLine.addSchemaCell(typeA);

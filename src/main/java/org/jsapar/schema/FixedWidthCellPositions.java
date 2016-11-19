@@ -7,8 +7,7 @@ package org.jsapar.schema;
  * Contains positions within a line for a fixed with cell. The "first" position of the first cell is
  * 1. The "last" position of the first cell is the same as the length of the cell.
  * 
- * @author stejon0
- * 
+ *
  */
 public class FixedWidthCellPositions {
     private int first=0;
