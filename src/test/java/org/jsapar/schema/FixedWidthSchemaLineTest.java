@@ -97,11 +97,11 @@ public class FixedWidthSchemaLineTest {
         schemaLine.setMinLength(10);
         FixedWidthSchemaCell cell1 = new FixedWidthSchemaCell("First name", 5);
         schemaLine.addSchemaCell(cell1);
-        assertEquals(5, schemaLine.getTotalCellLenght());
+        assertEquals(5, schemaLine.getTotalCellLength());
         assertEquals(1, schemaLine.getSchemaCellsCount());
         
-        schemaLine.addFillerCellToReachMinLength(2);
-        assertEquals(8, schemaLine.getTotalCellLenght());
+        schemaLine.addFillerCellToReachMinLength();
+        assertEquals(10, schemaLine.getTotalCellLength());
         assertEquals(2, schemaLine.getSchemaCellsCount());
     }
 }

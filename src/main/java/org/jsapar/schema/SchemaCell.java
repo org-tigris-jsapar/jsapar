@@ -2,6 +2,7 @@ package org.jsapar.schema;
 
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
+import org.jsapar.model.EmptyCell;
 import org.jsapar.parse.CellParser;
 
 import java.util.Locale;
@@ -16,11 +17,16 @@ public abstract class SchemaCell implements Cloneable {
     private final String                  name;
     private SchemaCellFormat              cellFormat            = CELL_FORMAT_PROTOTYPE;
     private boolean                       ignoreRead            = false;
-    private boolean                       ignoreWrite = false;
+    private boolean                       ignoreWrite           = false;
     private boolean                       mandatory             = false;
     private Cell                          minValue              = null;
     private Cell                          maxValue              = null;
     private Cell                          defaultCell           = null;
+
+    /**
+     * If parsing an empty value this cell can be used, avoiding a lot of object creation.
+     */
+    private Cell                          emptyCell             = null;
     private String                        defaultValue          = null;
     private Locale                        locale                = Locale.getDefault();
     private Pattern                       emptyPattern          = null;
@@ -36,6 +42,7 @@ public abstract class SchemaCell implements Cloneable {
             throw new IllegalArgumentException("SchemaCell.name cannot be null or empty.");
         this.cellFormat = cellFormat;
         this.name = sName;
+        this.emptyCell = new EmptyCell(sName, cellFormat.getCellType());
     }
 
     /**
@@ -237,7 +244,7 @@ public abstract class SchemaCell implements Cloneable {
      * @return The default cell. The value of the default cell will be used if input/output is
      *         missing.
      */
-    public Cell getDefaultCell() {
+    public Cell makeDefaultCell() {
         return defaultCell;
     }
 
@@ -248,7 +255,7 @@ public abstract class SchemaCell implements Cloneable {
      */
     public void setDefaultCell(Cell defaultCell) {
         this.defaultCell = defaultCell;
-        this.defaultValue = getDefaultCell().getStringValue(getCellFormat().getFormat());
+        this.defaultValue = defaultCell.getStringValue(getCellFormat().getFormat());
     }
 
     /**
@@ -350,5 +357,12 @@ public abstract class SchemaCell implements Cloneable {
 
     public boolean hasLineCondition(){
         return this.lineCondition != null;
+    }
+
+    /**
+     * @return An empty cell for this schema cell.
+     */
+    public Cell makeEmptyCell(){
+        return this.emptyCell;
     }
 }

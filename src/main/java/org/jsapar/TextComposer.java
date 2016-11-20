@@ -63,7 +63,7 @@ public class TextComposer implements Composer {
      */
     @Override
     public void compose(Document document) throws IOException {
-        compose(document.getLineIterator());
+        compose(document.iterator());
     }
 
     /**

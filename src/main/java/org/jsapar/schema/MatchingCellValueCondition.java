@@ -4,11 +4,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by stejon0 on 2016-03-12.
+ * A {@link CellValueCondition} that matches based on a regex expression. The whole expression needs to match.
+ * @see Pattern
  */
 public class MatchingCellValueCondition implements CellValueCondition {
     private final Pattern pattern;
 
+    /**
+     * Creates a condition based on regular expression.
+     * @param regex A string regular expression to match against.
+     * @see Pattern
+     */
     public MatchingCellValueCondition(String regex) {
         this.pattern = Pattern.compile(regex);
     }
@@ -19,6 +25,9 @@ public class MatchingCellValueCondition implements CellValueCondition {
         return m.matches();
     }
 
+    /**
+     * @return The string regular expression to match against
+     */
     public String getPattern() {
         return pattern.pattern();
     }

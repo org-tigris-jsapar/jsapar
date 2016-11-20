@@ -14,7 +14,7 @@ import java.io.Reader;
  * <ol>
  * <li>First, create an instance of TextParser.</li>
  * <li>Add event listeners for parse events and error events</li>
- * <li>Call the parse() method. You will receive a callback event for each line that is parsed.</li>
+ * <li>Call the {@link #parse(Reader)} method. You will receive a callback event for each line that is parsed.</li>
  * </ol>
  * <br/>
  *
@@ -40,10 +40,8 @@ public class TextParser extends AbstractParser implements Parser {
      * LineParsedEvent is generated to all registered event listeners. If there is an error while
      * parsing a line, a CellErrorEvent or ErrorEvent is generated to all registered error event listeners <br>
      * Before calling this method you have to call {@link #addLineEventListener(LineEventListener)} to be able to handle the
-     * result<br>
-     * If there is an error reading the input an
-     * {@link IOException} will be thrown.
-     * @throws IOException
+     * result
+     * @throws IOException If there is an error reading the input
      */
     @Override
     public void parse() throws IOException {

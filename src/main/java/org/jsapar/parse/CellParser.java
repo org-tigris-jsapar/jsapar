@@ -4,7 +4,6 @@ import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
-import org.jsapar.model.EmptyCell;
 import org.jsapar.parse.cell.CellFactory;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
@@ -37,10 +36,10 @@ public class CellParser {
         if (sValue.isEmpty()) {
             checkIfMandatory(cellSchema, errorEventListener);
 
-            if (cellSchema.getDefaultCell() != null) {
-                return cellSchema.getDefaultCell().clone();
+            if (cellSchema.isDefaultValue()) {
+                return cellSchema.makeDefaultCell();
             } else {
-                return new EmptyCell(cellSchema.getName(), cellSchema.getCellFormat().getCellType());
+                return cellSchema.makeEmptyCell();
             }
         }
         return doParse(cellSchema, sValue, errorEventListener);
@@ -86,9 +85,9 @@ public class CellParser {
         // If the cell is empty, check if default value exists.
         if (sValue.length() <= 0 || (schemaCell.getEmptyPattern() != null && schemaCell.getEmptyPattern().matcher(sValue).matches())) {
             if (schemaCell.isDefaultValue()) {
-                return schemaCell.getDefaultCell().clone();
+                return schemaCell.makeDefaultCell();
             } else {
-                return new EmptyCell(name, schemaCell.getCellFormat().getCellType());
+                return schemaCell.makeEmptyCell();
             }
         }
 

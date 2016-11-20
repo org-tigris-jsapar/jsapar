@@ -9,7 +9,7 @@ package org.jsapar.schema;
  */
 public class FixedWidthSchemaLine extends SchemaLine {
 
-    private java.util.List<FixedWidthSchemaCell> schemaCells = new java.util.ArrayList<FixedWidthSchemaCell>();
+    private java.util.List<FixedWidthSchemaCell> schemaCells = new java.util.ArrayList<>();
     private boolean trimFillCharacters = true;
     private char fillCharacter = ' ';
     private int minLength = -1;
@@ -54,7 +54,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
     /**
      * Adds a schema cell to this row.
      * 
-     * @param schemaCell
+     * @param schemaCell The schema cell to add
      */
     public void addSchemaCell(FixedWidthSchemaCell schemaCell) {
         if(schemaCell == null)
@@ -75,7 +75,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
         FixedWidthSchemaLine line;
         line = (FixedWidthSchemaLine) super.clone();
 
-        line.schemaCells = new java.util.LinkedList<FixedWidthSchemaCell>();
+        line.schemaCells = new java.util.LinkedList<>();
         for (FixedWidthSchemaCell cell : this.schemaCells) {
             line.addSchemaCell(cell.clone());
         }
@@ -184,13 +184,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
      */
     @Override
     public boolean equals(Object obj) {
-        if (!super.equals(obj)) {
-            return false;
-        }
-        if (!(obj instanceof FixedWidthSchemaLine)) {
-            return false;
-        }
-        return true;
+        return super.equals(obj) && obj instanceof FixedWidthSchemaLine;
     }
 
     /**
@@ -219,13 +213,12 @@ public class FixedWidthSchemaLine extends SchemaLine {
      * cell will be the difference between all minLength of the line and the cells added so far. Adding more schema
      * cells after calling this method will add those cells after the filler cell which will probably lead to unexpected
      * behavior.
-     * @param offset The number of bytes written before the line schema writes all the cells.
      */
-    public void addFillerCellToReachMinLength( int offset) {
+    public void addFillerCellToReachMinLength() {
         if (getMinLength() <= 0)
             return;
 
-        int diff = getMinLength() - getTotalCellLenght() - offset;
+        int diff = getMinLength() - getTotalCellLength();
         if (diff > 0) {
             addSchemaCell(new FixedWidthSchemaCell("_fillToMinLength_", diff));
         }
@@ -235,7 +228,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
     /**
      * @return The sum of the length of all cells.
      */
-    public int getTotalCellLenght(){
+    public int getTotalCellLength(){
         int sum = 0;
         for (FixedWidthSchemaCell schemaCell : schemaCells) {
             sum += schemaCell.getLength();

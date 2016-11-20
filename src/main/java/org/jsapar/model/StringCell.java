@@ -15,7 +15,7 @@ public class StringCell extends Cell {
     /**
      * The string representation of the stringValue of this cell.
      */
-    private String stringValue;
+    private final String stringValue;
 
 
     /**
@@ -50,13 +50,7 @@ public class StringCell extends Cell {
 	return this.stringValue;
     }
 
-    /**
-     * @param value
-     *            the stringValue to set
-     */
-    public void setStringValue(String value) {
-	this.stringValue = value;
-    }
+
 
     /*
      * (non-Javadoc)

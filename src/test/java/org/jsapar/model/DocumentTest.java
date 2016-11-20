@@ -85,7 +85,7 @@ public class DocumentTest {
         d.addLine(l2);
         Line l3 = new Line("some other type");
         d.addLine(l3);
-        Iterator<Line> iter = d.getLineIterator();
+        Iterator<Line> iter = d.iterator();
         assertTrue(iter.hasNext());
         assertSame(l1, iter.next());
         assertSame(l2, iter.next());

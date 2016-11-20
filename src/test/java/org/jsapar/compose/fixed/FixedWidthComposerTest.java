@@ -42,7 +42,7 @@ public class FixedWidthComposerTest {
 
         java.io.Writer writer = new java.io.StringWriter();
         FixedWidthComposer composer = new FixedWidthComposer(writer, schema);
-        composer.compose(doc.getLineIterator());
+        composer.compose(doc.iterator());
 
         assertEquals(sExpected, writer.toString());
     }

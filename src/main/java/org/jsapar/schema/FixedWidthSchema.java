@@ -20,21 +20,15 @@ public class FixedWidthSchema extends Schema {
     /**
      * A list of fixed with schema lines which builds up this schema.
      */
-    private java.util.List<FixedWidthSchemaLine> schemaLines = new java.util.LinkedList<FixedWidthSchemaLine>();
+    private java.util.List<FixedWidthSchemaLine> schemaLines = new java.util.LinkedList<>();
 
     /**
-     * @return the schemaLines
+     * @return the list of line schemas.
      */
     public java.util.List<FixedWidthSchemaLine> getFixedWidthSchemaLines() {
         return schemaLines;
     }
 
-    /**
-     * @param schemaLines the schemaLines to set
-     */
-    public void setSchemaLines(java.util.List<FixedWidthSchemaLine> schemaLines) {
-        this.schemaLines = schemaLines;
-    }
 
     /**
      * @param schemaLine the schemaLines to set
@@ -57,7 +51,7 @@ public class FixedWidthSchema extends Schema {
     public FixedWidthSchema clone() {
         FixedWidthSchema schema = (FixedWidthSchema) super.clone();
 
-        schema.schemaLines = new java.util.LinkedList<FixedWidthSchemaLine>();
+        schema.schemaLines = new java.util.LinkedList<>();
         for (FixedWidthSchemaLine line : this.schemaLines) {
             schema.addSchemaLine(line.clone());
         }
@@ -71,11 +65,7 @@ public class FixedWidthSchema extends Schema {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(super.toString());
-        sb.append(" schemaLines=");
-        sb.append(this.schemaLines);
-        return sb.toString();
+        return super.toString() + " schemaLines=" + this.schemaLines;
     }
 
     @Override
@@ -98,11 +88,6 @@ public class FixedWidthSchema extends Schema {
         return this.schemaLines.size();
     }
 
-    @Override
-    public SchemaLine getSchemaLineAt(int index) {
-        return this.schemaLines.get(index);
-    }
-
     /**
      * Adds a schema cell at the end of each line to make sure that the total length generated/parsed will always be at
      * least the minLength of the line. The name of the added cell will be _fillToMinLength_. The length of the added
@@ -111,9 +96,7 @@ public class FixedWidthSchema extends Schema {
      * behavior.
      */
     public void addFillerCellsToReachLineMinLength() {
-        for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
-            lineSchema.addFillerCellToReachMinLength(0);
-        }
+        getFixedWidthSchemaLines().forEach(FixedWidthSchemaLine::addFillerCellToReachMinLength);
     }
 
 }

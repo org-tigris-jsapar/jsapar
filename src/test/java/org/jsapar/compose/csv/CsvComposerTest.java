@@ -43,7 +43,7 @@ public class CsvComposerTest {
 
         StringWriter writer = new StringWriter();
         CsvComposer composer = new CsvComposer(writer, schema);
-        composer.compose(doc.getLineIterator());
+        composer.compose(doc.iterator());
 
         String sLineSep = System.getProperty("line.separator");
         String sExpected = "FirstName;LastName" + sLineSep + "Jonas;Stenberg" + sLineSep + "Nils;Nilsson";

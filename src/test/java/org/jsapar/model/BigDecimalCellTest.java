@@ -16,9 +16,6 @@ public class BigDecimalCellTest {
         assertEquals("test", cell.getName());
         assertEquals(BigDecimal.ZERO, cell.getBigDecimalValue());
         assertEquals(BigInteger.ZERO, cell.getBigIntegerValue());
-        cell.setBigDecimalValue(BigDecimal.ONE);
-        assertEquals(BigDecimal.ONE, cell.getBigDecimalValue());
-        assertEquals(BigInteger.ONE, cell.getBigIntegerValue());
 
     }
 
@@ -29,9 +26,6 @@ public class BigDecimalCellTest {
         assertEquals("test", cell.getName());
         assertEquals(BigDecimal.ZERO, cell.getBigDecimalValue());
         assertEquals(BigInteger.ZERO, cell.getBigIntegerValue());
-        cell.setBigIntegerValue(BigInteger.ONE);
-        assertEquals(BigDecimal.ONE, cell.getBigDecimalValue());
-        assertEquals(BigInteger.ONE, cell.getBigIntegerValue());
 
     }
 

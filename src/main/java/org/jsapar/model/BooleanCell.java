@@ -17,7 +17,7 @@ public class BooleanCell extends Cell  {
 	/**
 	 * The string representation of the booleanValue of this cell.
 	 */
-	private Boolean booleanValue;
+	private final Boolean booleanValue;
 
 
 	public BooleanCell(String sName, Boolean value) {
@@ -31,14 +31,6 @@ public class BooleanCell extends Cell  {
 	@Override
 	public Object getValue() {
 		return this.booleanValue;
-	}
-
-	/**
-	 * @param value
-	 *            the decimal value to set
-	 */
-	public void setBooleanValue(Boolean value) {
-		this.booleanValue = value;
 	}
 
 	/**

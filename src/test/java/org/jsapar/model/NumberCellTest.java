@@ -44,16 +44,6 @@ public class NumberCellTest {
 
 
     /**
-     * Test method for {@link NumberCell#setNumberValue(java.lang.Number)}.
-     */
-    @Test
-    public void testSetNumberValue() {
-        IntegerCell cell = new IntegerCell("test", 17);
-        cell.setNumberValue(new Integer(42));
-        Assert.assertEquals(new Integer(42), cell.getNumberValue());
-    }
-
-    /**
      * Test method for {@link NumberCell#getNumberValue()}.
      */
     @Test

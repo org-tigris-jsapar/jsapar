@@ -1,5 +1,7 @@
 package org.jsapar.model;
 
+import org.jsapar.parse.CellParseException;
+import org.jsapar.schema.SchemaCellFormat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,9 +48,7 @@ public class LineTest {
 
     @Test
     public void testGetCells() {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        line.addCell(new StringCell("LastName", "Svensson"));
+        Line line = makeTestLine();
         java.util.List<Cell> cells = line.getCells();
         assertEquals(2, cells.size());
         assertEquals("Svensson", cells.get(1).getStringValue());
@@ -58,15 +58,13 @@ public class LineTest {
     public void testGetCellIterator() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
-        java.util.Iterator<Cell> i = line.cellIterator();
+        java.util.Iterator<Cell> i = line.iterator();
         assertNotNull(i);
     }
 
     @Test
     public void testAddCellCell() {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        line.addCell(new StringCell("LastName", "Svensson"));
+        Line line = makeTestLine();
         assertEquals("Nils", line.getCell("FirstName").getStringValue());
         assertEquals("Svensson", line.getCell("LastName").getStringValue());
     }
@@ -82,9 +80,7 @@ public class LineTest {
 
     @Test
     public void testReplaceCell() {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        line.addCell(new StringCell("LastName", "Svensson"));
+        Line line = makeTestLine();
 
         line.putCell(new StringCell("FirstName", "Sven"));
         assertEquals(2, line.size());
@@ -95,18 +91,14 @@ public class LineTest {
 
     @Test
     public void testGetCellString() {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        line.addCell(new StringCell("LastName", "Svensson"));
+        Line line = makeTestLine();
         assertEquals("Nils", line.getCell("FirstName").getStringValue());
     }
 
 
     @Test
     public void testGetNumberOfCells() {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        line.addCell(new StringCell("LastName", "Svensson"));
+        Line line = makeTestLine();
         assertEquals(2, line.size());
     }
 
@@ -128,13 +120,32 @@ public class LineTest {
      */
     @Test
     public void testRemoveCell() {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        line.addCell(new StringCell("LastName", "Svensson"));
+        Line line = makeTestLine();
 
         line.removeCell("FirstName");
         assertEquals(1, line.size());
         assertEquals("Svensson", line.getCell("LastName").getStringValue());
+    }
+
+    private Line makeTestLine() {
+        Line line = new Line("TestLine");
+        line.addCell(new StringCell("FirstName", "Nils"));
+        line.addCell(new StringCell("LastName", "Svensson"));
+        return line;
+    }
+
+    @Test
+    public void testAddCellError() throws Exception {
+        Line line = makeTestLine();
+        assertFalse(line.hasCellErrors());
+        assertEquals(0, line.getCellErrors().size());
+        CellParseException theError = new CellParseException(17, "FirstName", "some value",
+                new SchemaCellFormat(CellType.STRING), "Testing error");
+        line.addCellError(theError);
+        assertTrue(line.hasCellErrors());
+        assertEquals(1, line.getCellErrors().size());
+        assertSame(theError, line.getCellError("FirstName"));
+        assertNull(line.getCellError("LastName"));
     }
 
 

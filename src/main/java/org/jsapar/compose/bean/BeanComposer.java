@@ -136,7 +136,7 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
      */
     public <B> B assign(Line line, B objectToAssign) {
 
-        java.util.Iterator<Cell> cellIter = line.cellIterator();
+        java.util.Iterator<Cell> cellIter = line.iterator();
         while (cellIter.hasNext()) {
             Cell cell = cellIter.next();
             String sName = cell.getName();

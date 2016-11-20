@@ -35,22 +35,7 @@ public class BigDecimalCell extends NumberCell  {
     }
 
 
-    /**
-     * @param value
-     *            the BigDecimal value to set
-     */
-    public void setBigDecimalValue(BigDecimal value) {
-        super.setNumberValue(value);
-    }
-
-    /**
-     * @param value The {@link BigInteger} value to set
-     */
-    public void setBigIntegerValue(BigInteger value) {
-        super.setNumberValue(new BigDecimal(value));
-    }
-
-    /**
+     /**
      * @return The value of this cell as a BigDecimal.
      */
     public BigDecimal getBigDecimalValue() {

@@ -81,9 +81,5 @@ public class CsvSchema extends Schema implements Cloneable{
         return this.schemaLines.size();
     }
 
-    @Override
-    public SchemaLine getSchemaLineAt(int index) {
-        return this.schemaLines.get(index);
-    }
 
 }

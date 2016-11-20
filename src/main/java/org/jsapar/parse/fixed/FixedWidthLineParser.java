@@ -40,11 +40,11 @@ public class FixedWidthLineParser {
         for (FixedWidthSchemaCell schemaCell : lineSchema.getSchemaCells()) {
             if (setDefaultsOnly) {
                 if (schemaCell.isDefaultValue())
-                    line.addCell(schemaCell.getDefaultCell());
+                    line.addCell(schemaCell.makeDefaultCell());
                 continue;
             } else if (schemaCell.isIgnoreRead()) {
                 if (schemaCell.isDefaultValue())
-                    line.addCell(schemaCell.getDefaultCell());
+                    line.addCell(schemaCell.makeDefaultCell());
 
                 long nSkipped = reader.skip(schemaCell.getLength());
                 if (nSkipped > 0 || schemaCell.getLength() == 0)
@@ -64,7 +64,7 @@ public class FixedWidthLineParser {
                 if (cell == null) {
                     if (oneRead) {
                         setDefaultsOnly = true;
-                        if (schemaCell.getDefaultCell() != null)
+                        if (schemaCell.isDefaultValue())
                             line.addCell(cellParser.parse(schemaCell, EMPTY_STRING, lineErrorEventListener));
                         //noinspection ConstantConditions
                         if (handleInsufficient) {

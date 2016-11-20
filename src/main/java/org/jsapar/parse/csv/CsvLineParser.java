@@ -134,7 +134,7 @@ public class CsvLineParser {
      * @param masterLineSchema The master schema line to get default values from.
      */
     private void addMissingDefaultValuesFromMaster(CsvSchemaLine schemaLine, CsvSchemaLine masterLineSchema) {
-        masterLineSchema.getSchemaCells().stream().filter(schemaCell -> schemaCell.getDefaultCell() != null
+        masterLineSchema.getSchemaCells().stream().filter(schemaCell -> schemaCell.isDefaultValue()
                 && schemaLine.getCsvSchemaCell(schemaCell.getName()) == null).forEach(schemaCell -> {
             CsvSchemaCell defaultCell = schemaCell.clone();
             defaultCell.setIgnoreRead(true);
@@ -171,7 +171,7 @@ public class CsvLineParser {
 
         if (schemaCell.isIgnoreRead()) {
             if (schemaCell.isDefaultValue())
-                line.addCell(schemaCell.getDefaultCell());
+                line.addCell(schemaCell.makeDefaultCell());
             return;
         }
         if (schemaCell.isMaxLength() && sCell.length() > schemaCell.getMaxLength())

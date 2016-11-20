@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * threads access the same instance, external synchronization is required.
  * 
  */
-public class Document implements Serializable {
+public class Document implements Serializable, Iterable<Line> {
 
     /**
      * 
@@ -40,12 +40,12 @@ public class Document implements Serializable {
 
     /**
      * For better performance while iterating multiple lines, it is better to
-     * call the {@link #getLineIterator()} method.
+     * call the {@link #iterator()} method.
      * 
      * @return A shallow clone of the internal collection that contains all the lines of
      *         this documents. Altering the returned collection will not alter
      *         the original collection of the Document but altering one of the lines will alter the original line.
-     * @see #getLineIterator()
+     * @see #iterator()
      */
     @SuppressWarnings("unchecked")
     public List<Line> getLines() {
@@ -88,7 +88,7 @@ public class Document implements Serializable {
      * Returns an iterator that will iterate all the lines of this document.
      * @return An iterator that will iterate all the lines of this document.
      */
-    public Iterator<Line> getLineIterator() {
+    public Iterator<Line> iterator() {
         return this.lines.iterator();
     }
 

@@ -21,8 +21,6 @@ public class CharacterCellTest {
     public void testGetSetCharacterValue() throws Exception {
         CharacterCell cell = new CharacterCell("test", 'a');
         assertEquals(new Character('a'), cell.getCharacterValue());
-        cell.setCharacterValue('b');
-        assertEquals(new Character('b'), cell.getCharacterValue());
     }
 
     @Test

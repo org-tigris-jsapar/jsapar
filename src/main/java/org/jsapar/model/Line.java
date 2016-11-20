@@ -19,7 +19,7 @@ import java.util.*;
  * @see Cell
  * @see Document
  */
-public class Line implements Serializable, Cloneable {
+public class Line implements Serializable, Cloneable, Iterable<Cell> {
 
     /**
      *
@@ -83,12 +83,12 @@ public class Line implements Serializable, Cloneable {
     /**
      * Returns a clone of the internal collection that contains all the cells.
      * For better performance while iterating multiple lines, it is better to call the
-     * {@link #cellIterator()} method.
+     * {@link #iterator()} method.
      *
      * @return A shallow clone of the internal collection that contains all the cells of this line.
      * Altering the returned collection will not alter the original collection of the this
      * Line but altering one of its cells will alter the cell within this line.
-     * @see #cellIterator()
+     * @see #iterator()
      */
     public List<Cell> getCells() {
         return new ArrayList<>(cells.values());
@@ -99,7 +99,8 @@ public class Line implements Serializable, Cloneable {
      *
      * @return An iterator that will iterate all the cells of this line.
      */
-    public Iterator<Cell> cellIterator() {
+    @Override
+    public Iterator<Cell> iterator() {
         return cells.values().iterator();
     }
 
@@ -259,8 +260,12 @@ public class Line implements Serializable, Cloneable {
         return cellErrors.get(cellName);
     }
 
-    public Iterator<CellParseException> cellErrorIterator(){
-        return cellErrors.values().iterator();
+    /**
+     * All cell errors of this line.
+     * @return All cell errors of this line.
+     */
+    public Collection<CellParseException> getCellErrors(){
+        return cellErrors.values();
     }
 
 }

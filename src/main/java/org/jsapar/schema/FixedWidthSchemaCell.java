@@ -5,19 +5,18 @@ import java.io.Writer;
 
 /**
  * Describes how a cell is represented for a fixed width schema.
- * 
- * @author stejon0
  */
 public class FixedWidthSchemaCell extends SchemaCell {
 
     /**
      * Describes how a cell is aligned within its allocated space.
      * 
-     * @author stejon0
-     * 
      */
     public enum Alignment {
 
+        /**
+         * Content of the cell is left aligned and filled/truncated to the right to reach correct size.
+         */
         LEFT{
             @Override
             public void fit(Writer writer, int length, String sValue) throws IOException {
@@ -25,6 +24,9 @@ public class FixedWidthSchemaCell extends SchemaCell {
             }
 
         },
+        /**
+         * Content of the cell is center aligned and filled/truncated to both left and right to reach correct size.
+         */
         CENTER {
             @Override
             public void fit(Writer writer, int length, String sValue) throws IOException {
@@ -32,6 +34,9 @@ public class FixedWidthSchemaCell extends SchemaCell {
             }
 
         },
+        /**
+         * Content of the cell is right aligned and filled/truncated to the left to reach correct size.
+         */
         RIGHT{
             @Override
             public void fit(Writer writer, int length, String sValue) throws IOException {
@@ -124,6 +129,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
 
 
     /**
+     * The alignment of the cell content within the allocated space. Default is Alignment.LEFT.
      * @return the alignment
      */
     public Alignment getAlignment() {
@@ -131,6 +137,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
     }
 
     /**
+     * The alignment of the cell content within the allocated space. Default is Alignment.LEFT.
      * @param alignment
      *            the alignment to set
      */

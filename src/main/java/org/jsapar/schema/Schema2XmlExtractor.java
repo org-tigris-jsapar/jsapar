@@ -52,7 +52,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     }
 
     /**
-     * Generates a schema from a xml file.
+     * Writes supplied schema as xml to supplied writer.
      * 
      * @param writer
      *            The writer to write to.
@@ -70,27 +70,15 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
             t.setOutputProperty(OutputKeys.METHOD, "xml");
             t.transform(new DOMSource(xmlDocument), new StreamResult(writer));
             
-            // I can't get this to work with schema.
-//            OutputFormat outputFormat = new OutputFormat("XML", "UTF-8", true);
-//            outputFormat.setIndent(2);
-//            outputFormat.setIndenting(true);
-//            outputFormat.setStandalone(false);
-////            outputFormat.setDoctype(JSAPAR_XML_SCHEMA, "JSaParSchema.xsd");
-//            XMLSerializer serializer = new XMLSerializer(writer, outputFormat);
-//            // As a DOM Serializer
-//            serializer.asDOMSerializer();
-//            serializer.serialize(xmlDocument.getDocumentElement());
-//
-//        } catch (IOException e) {
-//            throw new SchemaException("Failed to generate schema. Failed to write to output.", e);
         } catch (TransformerException e) {
             throw new SchemaException("Failed to generate schema.", e);
         }
     }
 
     /**
-     * @param xmlDocument
-     * @param schema
+     * Extract xml DOM from fixed width schema
+     * @param xmlDocument The xml DOM document to extract to
+     * @param schema The schema to extract
      * @return The schema element
      * @throws SchemaException
      */
@@ -103,9 +91,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     }
 
     /**
-     * @param xmlDocument
-     * @param xmlSchema
-     * @param schema
+     * @param xmlDocument The root xml DOM document.
+     * @param xmlSchema The xml element to assign to.
+     * @param schema The schema to extract.
      * @throws SchemaException
      */
     private void assignFixedWidthSchema(Document xmlDocument, Element xmlSchema, FixedWidthSchema schema)
@@ -122,9 +110,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
     /**
      * Extracts the lines of a schema into an xml.
-     * 
-     * @param xmlDocument
-     * @param schemaLine
+     *
+     * @param xmlDocument The root DOM document
+     * @param schemaLine The schema line to extract
      * @return The line schema element
      * @throws SchemaException
      */
@@ -149,8 +137,8 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
     /**
      * Builds the cell part of a file schema from an xml input
-     * @param xmlDocument
-     * @param schemaCell
+     * @param xmlDocument The root xml document
+     * @param schemaCell The schema cell to extract.
      * @return The cell schema element
      * @throws SchemaException
      */
@@ -168,10 +156,10 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
     /**
      * Builds a CSV file schema object.
-     * 
-     * @param xmlDocument
-     * @param schema
-     * @return
+     *
+     * @param xmlDocument The root xml document
+     * @param schema The schema to extract
+     * @return The resulting xml element.
      * @throws SchemaException
      */
     private Element extractCsvSchema(Document xmlDocument, CsvSchema schema) throws SchemaException {
@@ -184,10 +172,10 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
     /**
      * Builds a CSV file schema object.
-     * 
-     * @param xmlDocument
-     * @param xmlSchema
-     * @param schema
+     *
+     * @param xmlDocument The root xml document
+     * @param xmlSchema The xml schema element to assign to
+     * @param schema The schema to extract
      * @throws SchemaException
      */
     private void assignCsvSchema(Document xmlDocument, Element xmlSchema, CsvSchema schema) throws SchemaException {
@@ -201,9 +189,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
 
     /**
-     * @param xmlSchemaLine
-     * @return
-     * @throws DataConversionException
+     * @param xmlDocument The root xml document
+     * @param schemaLine The schema line to extract
+     * @return The schema line xml element
      * @throws SchemaException
      */
     private Element extractCsvSchemaLine(Document xmlDocument, CsvSchemaLine schemaLine) throws SchemaException {
@@ -214,7 +202,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
         xmlSchemaLine.setAttribute(ATTRIB_CSV_SCHEMA_CELL_SEPARATOR, replaceJava2Escapes(schemaLine.getCellSeparator()));
         xmlSchemaLine.setAttribute(ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA, String.valueOf(schemaLine.isFirstLineAsSchema()));
-        
+
         if(schemaLine.isQuoteCharUsed())
             xmlSchemaLine.setAttribute(ATTRIB_CSV_QUOTE_CHAR, String.valueOf(schemaLine.getQuoteChar()));
 
@@ -227,8 +215,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     }
 
     /**
-     * @param xmlSchemaCell
-     * @return
+     * @param xmlDocument The root xml document
+     * @param schemaCell The schema cell to extract
+     * @return The schema cell xml element
      * @throws SchemaException
      */
     private Element extractCsvSchemaCell(Document xmlDocument, CsvSchemaCell schemaCell) throws SchemaException {
@@ -243,9 +232,10 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
     /**
      * Assign common parts for base class.
-     * 
-     * @param schema
-     * @param xmlSchemaCell
+     *
+     * @param xmlDocument The root xml document
+     * @param xmlSchema The schema xml element to assign to
+     * @param schema The schema to extract
      * @throws SchemaException
      */
     private void assignSchemaBase(Document xmlDocument, Element xmlSchema, Schema schema) throws SchemaException {
@@ -259,55 +249,54 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
     /**
      * Assign common pars for base class.
-     * 
-     * @param line
-     * @param xmlSchemaLine
+     *
+     * @param xmlSchemaLine    The schema line xml element to assign to
+     * @param schemaLine The schema line to extract
      * @throws SchemaException
-     * @throws DataConversionException
      */
-    private void assignSchemaLineBase(Element xmlSchemaLine, SchemaLine line) throws SchemaException {
-        String sOccurs = line.isOccursInfinitely() ? "*" : String.valueOf(line.getOccurs());
+    private void assignSchemaLineBase(Element xmlSchemaLine, SchemaLine schemaLine) throws SchemaException {
+        String sOccurs = schemaLine.isOccursInfinitely() ? "*" : String.valueOf(schemaLine.getOccurs());
         xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_OCCURS, sOccurs);
 
-        if (line.getLineType() != null && !line.getLineType().isEmpty())
-            xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_LINETYPE, line.getLineType());
+        if (schemaLine.getLineType() != null && !schemaLine.getLineType().isEmpty())
+            xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_LINETYPE, schemaLine.getLineType());
 
     }
 
     /**
-     * @param xmlDocument
-     * @param xmlSchemaCell
-     * @param cell
+     * @param xmlDocument The root xml document
+     * @param xmlSchemaCell The schema cell xml element to assign to
+     * @param schemaCell The schema cell to extract
      * @throws SchemaException
      */
-    private void assignSchemaCellBase(Document xmlDocument, Element xmlSchemaCell, SchemaCell cell)
+    private void assignSchemaCellBase(Document xmlDocument, Element xmlSchemaCell, SchemaCell schemaCell)
             throws SchemaException {
-        xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_NAME, cell.getName());
-        if(cell.isIgnoreRead())
-            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_IGNOREREAD, String.valueOf(cell.isIgnoreRead()));
-        if(cell.isIgnoreWrite())
-            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_IGNOREWRITE, String.valueOf(cell.isIgnoreWrite()));
-        xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_MANDATORY, String.valueOf(cell.isMandatory()));
-        
-        if(cell.getDefaultCell() != null)
-            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_DEFAULT_VALUE, cellComposer.format(cell.getDefaultCell(), cell));
+        xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_NAME, schemaCell.getName());
+        if(schemaCell.isIgnoreRead())
+            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_IGNOREREAD, String.valueOf(schemaCell.isIgnoreRead()));
+        if(schemaCell.isIgnoreWrite())
+            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_IGNOREWRITE, String.valueOf(schemaCell.isIgnoreWrite()));
+        xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_MANDATORY, String.valueOf(schemaCell.isMandatory()));
 
-        if(cell.getEmptyPattern() != null)
-            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_EMPTY_PATTERN, cell.getEmptyPattern().pattern());
-        
-        Element xmlFormat = extractCellFormat(xmlDocument, cell.getCellFormat());
+        if(schemaCell.isDefaultValue())
+            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_DEFAULT_VALUE, cellComposer.format(schemaCell.makeDefaultCell(), schemaCell));
+
+        if(schemaCell.getEmptyPattern() != null)
+            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_EMPTY_PATTERN, schemaCell.getEmptyPattern().pattern());
+
+        Element xmlFormat = extractCellFormat(xmlDocument, schemaCell.getCellFormat());
         xmlSchemaCell.appendChild(xmlFormat);
 
-        Element xmlRange = extractCellRange(xmlDocument, cell);
+        Element xmlRange = extractCellRange(xmlDocument, schemaCell);
         if (xmlRange.hasChildNodes())
             xmlSchemaCell.appendChild(xmlRange);
 
-        if(cell.getLocale() != null){
-            xmlSchemaCell.appendChild(extractLocale(xmlDocument, cell.getLocale()));
+        if(schemaCell.getLocale() != null){
+            xmlSchemaCell.appendChild(extractLocale(xmlDocument, schemaCell.getLocale()));
         }
 
-        if(cell.getLineCondition() != null){
-            Element xmlLineCondition = extractLineCondition(xmlDocument, cell.getLineCondition());
+        if(schemaCell.getLineCondition() != null){
+            Element xmlLineCondition = extractLineCondition(xmlDocument, schemaCell.getLineCondition());
             xmlSchemaCell.appendChild(xmlLineCondition);
         }
     }
@@ -325,19 +314,20 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     }
 
     /**
-     * @param xmlDocument
-     * @param cell
-     * @return
+     * @param xmlDocument The root xml document
+     * @param schemaCell The schema cell to extract
+     * @return The schema cell xml element
      * @throws SchemaException
      */
-    private Element extractCellRange(Document xmlDocument, SchemaCell cell) throws SchemaException {
+    private Element extractCellRange(Document xmlDocument, SchemaCell schemaCell) throws SchemaException {
         Element xmlRange = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_RANGE);
-        if (cell.getMinValue() != null)
-            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MIN, cellComposer.format(cell.getMinValue(), cell));
-        if (cell.getMaxValue() != null)
-            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MAX,cellComposer.format( cell.getMaxValue(), cell));
+        if (schemaCell.getMinValue() != null)
+            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MIN, cellComposer.format(schemaCell.getMinValue(), schemaCell));
+        if (schemaCell.getMaxValue() != null)
+            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MAX,cellComposer.format( schemaCell.getMaxValue(), schemaCell));
         return xmlRange;
     }
+
 
     private Element extractLocale(Document xmlDocument, Locale locale) throws SchemaException {
         Element xmlLocale = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_LOCALE);
@@ -347,9 +337,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     }
 
     /**
-     * @param xmlDocument
-     * @param format
-     * @return
+     * @param xmlDocument The root xml document
+     * @param format The format to extract
+     * @return The format xml element
      * @throws SchemaException
      */
     private Element extractCellFormat(Document xmlDocument, SchemaCellFormat format) throws SchemaException {
@@ -361,8 +351,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     }
 
     /**
-     * @param sToReplace
-     * @return
+     * Replaces all occurrences of some common control characters into escaped string values.
+     * @param sToReplace The string containing control characters
+     * @return A string containing only escaped character values.
      */
     private String replaceJava2Escapes(String sToReplace) {
         sToReplace = sToReplace.replace("\r", "\\r");

@@ -13,8 +13,6 @@ public class StringCellTest {
     public void testGetSetStringValue() throws Exception {
         StringCell cell = new StringCell("name", "value");
         assertEquals("value", cell.getStringValue());
-        cell.setStringValue("a new");
-        assertEquals("a new", cell.getStringValue());
     }
 
     @Test

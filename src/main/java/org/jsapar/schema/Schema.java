@@ -16,8 +16,6 @@ import java.util.Locale;
  * @see Xml2SchemaBuilder
  * @see Schema2XmlExtractor
  * 
- * @author Jonas
- * 
  */
 public abstract class Schema implements Cloneable{
 
@@ -78,7 +76,7 @@ public abstract class Schema implements Cloneable{
     /**
      * @return list of all schema lines.
      */
-    protected abstract List<? extends SchemaLine> getSchemaLines();
+    public abstract List<? extends SchemaLine> getSchemaLines();
 
     /*
      * (non-Javadoc)
@@ -93,22 +91,6 @@ public abstract class Schema implements Cloneable{
                 this.locale;
     }
 
-    /**
-     * @param lineNumber The line number to get {@link SchemaLine} for.
-     * @return The {@link SchemaLine} for supplied line number.
-     */
-    public SchemaLine getSchemaLineForLineNumber(long lineNumber) {
-        long nLineMax = 0;
-        for (Object oSchemaLine : this.getSchemaLines()) {
-            SchemaLine schemaLine = (SchemaLine) oSchemaLine;
-            if (schemaLine.isOccursInfinitely())
-                return schemaLine;
-            nLineMax += (long) schemaLine.getOccurs();
-            if (lineNumber <= nLineMax)
-                return schemaLine;
-        }
-        return null;
-    }
 
     /**
      * @param lineType The line type to get {@link SchemaLine} for.
@@ -123,11 +105,6 @@ public abstract class Schema implements Cloneable{
      */
     public abstract int size();
 
-    /**
-     * @param index
-     * @return The schema line with the specified index.
-     */
-    public abstract SchemaLine getSchemaLineAt(int index);
 
     /**
      * Loads a schema instance from an xml that is read from the supplied reader. The xml needs to comply to the

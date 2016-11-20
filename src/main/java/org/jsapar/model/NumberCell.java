@@ -16,7 +16,7 @@ public abstract class NumberCell extends Cell {
     /**
      * The {@link Number} value of this cell.
      */
-    private Number numberValue;
+    private final Number numberValue;
 
     /**
      * @param name The name of the cell
@@ -37,13 +37,6 @@ public abstract class NumberCell extends Cell {
         return this.numberValue;
     }
 
-    /**
-     * @param value
-     *            the decimal value to set
-     */
-    public void setNumberValue(Number value) {
-        this.numberValue = value;
-    }
 
     /**
      * @return The string numberValue of this cell.

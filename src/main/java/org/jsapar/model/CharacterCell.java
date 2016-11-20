@@ -15,7 +15,7 @@ public class CharacterCell extends Cell {
      */
     private static final long serialVersionUID = 8442587766024601673L;
 
-    private Character characterValue;
+    private final Character characterValue;
 
     public CharacterCell(String sName, Character value) {
         super(sName, CellType.CHARACTER);
@@ -57,13 +57,5 @@ public class CharacterCell extends Cell {
     }
 
 
-
-    /**
-     * @param characterValue
-     *            the characterValue to set
-     */
-    public void setCharacterValue(Character characterValue) {
-        this.characterValue = characterValue;
-    }
 
 }

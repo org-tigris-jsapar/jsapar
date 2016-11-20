@@ -10,16 +10,12 @@ public class BooleanCellTest {
     public void testGetSetBooleanValue() throws Exception {
         BooleanCell cell = new BooleanCell("test", false);
         assertFalse(cell.getBooleanValue());
-        cell.setBooleanValue(true);
-        assertTrue(cell.getBooleanValue());
     }
 
     @Test
     public void testGetStringValue() throws Exception {
         BooleanCell cell = new BooleanCell("test", false);
         assertEquals("false", cell.getStringValue());
-        cell.setBooleanValue(true);
-        assertEquals("true", cell.getStringValue());
     }
 
     @Test

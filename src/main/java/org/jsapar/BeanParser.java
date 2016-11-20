@@ -19,9 +19,14 @@ import java.math.BigInteger;
 import java.util.*;
 
 /**
- * Uses a collection of java objects to build a org.jsapar.model.Document.
- * @author stejon0
- * 
+ * Uses a collection of java bean objects to build {@link LineParsedEvent}. The {@link Line#lineType} of each line will be
+ * the name of the class denoted by {@link Class#getName()}. Each bean property that have a getter method will result in
+ * a cell with the bean property name The {@link Cell#name} of each cell will be the name of the bean property, e.g. if
+ * the bean has a method declared as {@code public int getNumber()}, it will result in a cell with the name "number" of
+ * type {@link CellType}.INTEGER.
+ *
+ * If you use these rules you can write a {@link org.jsapar.schema.Schema} that converts a bean to a different type of output.
+ * @see Bean2TextConverter
  */
 public class BeanParser<T> extends  AbstractParser implements Parser{
     
@@ -38,7 +43,8 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
     }
 
     /**
-     *
+     * Starts parsing of an iterated series of beans. The result will be line parsed events where each
+     * line hav
      */
     @Override
     public void parse() throws IOException {
@@ -57,7 +63,7 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
      * 
      * @param object
      *            The object.
-     * @param lineNumber
+     * @param lineNumber The number of the line being parsed. Numbering starts from 1.
      * @return A Line object containing cells according to the getter method of the supplied object.
      *
      */
