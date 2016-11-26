@@ -181,7 +181,7 @@ public class JSaParExamplesTest {
     }
 
     @Test
-    public final void testConvert01_02() throws IOException, JSaParException {
+    public final void testConvert01_02() throws IOException, JSaParException, SchemaException {
         Reader inSchemaReader = new FileReader("samples/01_CsvSchema.xml");
         Reader outSchemaReader = new FileReader("samples/02_FixedWidthSchema.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();

@@ -5,6 +5,7 @@ import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
+import org.jsapar.schema.SchemaException;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -143,7 +144,7 @@ public class CsvLineComposerTest {
     }
 
     @Test
-    public void testOutput_default() throws IOException, JSaParException, ParseException {
+    public void testOutput_default() throws IOException, JSaParException, ParseException, SchemaException {
 
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");

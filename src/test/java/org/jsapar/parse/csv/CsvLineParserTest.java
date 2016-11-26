@@ -6,6 +6,7 @@ import org.jsapar.model.LineUtils;
 import org.jsapar.parse.*;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
+import org.jsapar.schema.SchemaException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -336,7 +337,7 @@ public class CsvLineParserTest {
     }
 
     @Test
-    public void testParse_withDefault() throws IOException, java.text.ParseException {
+    public void testParse_withDefault() throws IOException, java.text.ParseException, SchemaException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
         schemaLine.addSchemaCell(new CsvSchemaCell("0"));
@@ -362,7 +363,7 @@ public class CsvLineParserTest {
     }
 
     @Test
-    public void testParse_default_and_mandatory() throws IOException, java.text.ParseException {
+    public void testParse_default_and_mandatory() throws IOException, java.text.ParseException, SchemaException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
         schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
@@ -394,7 +395,7 @@ public class CsvLineParserTest {
     }
 
     @Test
-    public void testParse_withDefaultLast() throws IOException, java.text.ParseException {
+    public void testParse_withDefaultLast() throws IOException, java.text.ParseException, SchemaException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
         schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));

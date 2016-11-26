@@ -1,7 +1,5 @@
 package org.jsapar.model;
 
-import org.jsapar.schema.SchemaException;
-
 import java.text.Format;
 import java.util.Date;
 
@@ -83,7 +81,7 @@ public class DateCell extends Cell implements Comparable<DateCell> {
      * @see org.jsapar.model.Cell#compareValueTo(org.jsapar.model.Cell)
      */
     @Override
-    public int compareValueTo(Cell right) throws SchemaException {
+    public int compareValueTo(Cell right) {
         if(right instanceof DateCell){
             Date dateRight = ((DateCell)right).getDateValue();
             return getDateValue().compareTo(dateRight);

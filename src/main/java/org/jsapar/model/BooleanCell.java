@@ -1,7 +1,5 @@
 package org.jsapar.model;
 
-import org.jsapar.schema.SchemaException;
-
 import java.text.Format;
 
 /**
@@ -60,7 +58,7 @@ public class BooleanCell extends Cell  {
      * @see org.jsapar.model.Cell#compareValueTo(org.jsapar.model.Cell)
      */
     @Override
-    public int compareValueTo(Cell right) throws SchemaException {
+    public int compareValueTo(Cell right) {
         if(right instanceof BooleanCell){
             Boolean bRight = ((BooleanCell)right).getBooleanValue();
             return getBooleanValue().compareTo(bRight);

@@ -21,11 +21,11 @@ import java.util.Locale;
 public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
     /**
-     * Utility function to retreive first matching child element.
+     * Utility function to retrieve first matching child element.
      * 
-     * @param parentElement
-     * @param sChildName
-     * @return
+     * @param parentElement The parent element
+     * @param sChildName The name of the child element to get.
+     * @return The child element or null if none found.
      */
     private Element getChild(Element parentElement, String sChildName) {
         org.w3c.dom.NodeList nodes = parentElement.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, sChildName);

@@ -12,6 +12,7 @@ import org.jsapar.parse.ParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 import org.jsapar.schema.SchemaCellFormat;
+import org.jsapar.schema.SchemaException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,7 +59,7 @@ public class FixedWidthLineParserTest {
     }
 
     @Test
-    public void testParse_defaultLast() throws IOException, JSaParException, java.text.ParseException {
+    public void testParse_defaultLast() throws IOException, JSaParException, java.text.ParseException, SchemaException {
         String toParse = "JonasStenberg";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
@@ -98,7 +99,8 @@ public class FixedWidthLineParserTest {
     }
 
     @Test
-    public void testParse_default_and_mandatory() throws IOException, JSaParException, java.text.ParseException {
+    public void testParse_default_and_mandatory()
+            throws IOException, JSaParException, java.text.ParseException, SchemaException {
         String toParse = "JonasStenberg";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);

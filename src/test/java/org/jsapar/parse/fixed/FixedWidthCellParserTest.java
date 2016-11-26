@@ -119,7 +119,7 @@ public class FixedWidthCellParserTest {
     }
 
     @Test
-    public final void testBuild_date() throws IOException {
+    public final void testBuild_date() throws IOException, SchemaException {
         String toParse = "2007-04-10 16:15";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Date", 16);
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.DATE, "yyyy-MM-dd HH:mm"));
@@ -139,7 +139,7 @@ public class FixedWidthCellParserTest {
     }
 
     @Test
-    public final void testBuild_decimal_sv() throws IOException {
+    public final void testBuild_decimal_sv() throws IOException, SchemaException {
         String toParse = "-123 456,78  ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Decimal", 11);
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.DECIMAL, "#,###.#", new Locale("sv", "SE")));

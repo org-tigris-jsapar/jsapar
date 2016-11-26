@@ -3,8 +3,6 @@
  */
 package org.jsapar.model;
 
-import org.jsapar.schema.SchemaException;
-
 import java.text.Format;
 
 /**
@@ -56,7 +54,7 @@ public class EmptyCell extends Cell implements Comparable<EmptyCell> {
     }
 
     @Override
-    public int compareValueTo(Cell right) throws SchemaException {
+    public int compareValueTo(Cell right) {
         // Everything is equal to empty cell :-S.
         return 0;
     }

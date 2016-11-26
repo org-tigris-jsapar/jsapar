@@ -1,7 +1,5 @@
 package org.jsapar.model;
 
-import org.jsapar.schema.SchemaException;
-
 import java.text.Format;
 
 /**
@@ -24,7 +22,7 @@ public class CharacterCell extends Cell {
 
 
     @Override
-    public int compareValueTo(Cell right) throws SchemaException {
+    public int compareValueTo(Cell right) {
         if (right instanceof CharacterCell) {
             Character chRight = ((CharacterCell) right).getCharacterValue();
             return characterValue.compareTo(chRight);

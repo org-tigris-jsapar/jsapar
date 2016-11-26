@@ -1,7 +1,5 @@
 package org.jsapar.model;
 
-import org.jsapar.schema.SchemaException;
-
 import java.text.Format;
 
 /**
@@ -79,7 +77,7 @@ public class StringCell extends Cell {
 
 
     @Override
-    public int compareValueTo(Cell right) throws SchemaException {
+    public int compareValueTo(Cell right) {
         return getStringValue().compareTo(right.getStringValue());
     }
 }

@@ -75,7 +75,8 @@ public class TextComposerTest {
     }
 
     @Test
-    public void testOutputLine_FixedWidthControllCell() throws IOException, JSaParException, ParseException {
+    public void testOutputLine_FixedWidthControllCell()
+            throws IOException, JSaParException, ParseException, SchemaException {
         FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("");
 
@@ -101,7 +102,8 @@ public class TextComposerTest {
 
     
     @Test
-    public void testWriteLine_FixedWidthControllCell_minLength() throws IOException, JSaParException, ParseException {
+    public void testWriteLine_FixedWidthControllCell_minLength()
+            throws IOException, JSaParException, ParseException, SchemaException {
         FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("");
 
@@ -183,7 +185,8 @@ public class TextComposerTest {
     }
 
     @Test
-    public final void testOutputLine_firstLineAsHeader() throws IOException, JSaParException, ParseException {
+    public final void testOutputLine_firstLineAsHeader()
+            throws IOException, JSaParException, ParseException, SchemaException {
         CsvSchema schema = new CsvSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.addSchemaCell(new CsvSchemaCell("HeaderHeader"));

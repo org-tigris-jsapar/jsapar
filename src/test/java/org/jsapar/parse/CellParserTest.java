@@ -58,7 +58,7 @@ public class CellParserTest {
     }
 
     @Test
-    public void testMakeCell_DefaultValue() throws java.text.ParseException {
+    public void testMakeCell_DefaultValue() throws java.text.ParseException, SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultValue("TheDefault");
 
@@ -129,7 +129,7 @@ public class CellParserTest {
 
 
     @Test(expected = ParseException.class)
-    public void testMakeCell_UnfinishedInteger() throws ParseException {
+    public void testMakeCell_UnfinishedInteger() throws ParseException, SchemaException {
         CellParser.makeCell(CellType.INTEGER, "number", "123A45", Locale.getDefault());
         fail("Method should throw exception.");
     }
@@ -144,7 +144,7 @@ public class CellParserTest {
     }
 
     @Test
-    public void testMakeCell_Integer_DefaultValue() throws java.text.ParseException {
+    public void testMakeCell_Integer_DefaultValue() throws java.text.ParseException, SchemaException {
         SchemaCell schemaCell = new TestSchemaCell("A number");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
         schemaCell.setDefaultValue("42");

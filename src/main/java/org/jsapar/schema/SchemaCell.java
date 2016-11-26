@@ -7,6 +7,12 @@ import org.jsapar.parse.CellParser;
 
 import java.util.Locale;
 
+/**
+ * Denotes the structure of one cell/column. Describes how to parse input text into a {@link Cell } or to compose a {@link Cell } to a text
+ * output.
+ * @see SchemaLine
+ * @see Schema
+ */
 public abstract class SchemaCell implements Cloneable {
 
     private final static SchemaCellFormat CELL_FORMAT_PROTOTYPE = new SchemaCellFormat(CellType.STRING);
@@ -264,7 +270,7 @@ public abstract class SchemaCell implements Cloneable {
      *            is missing for this cell.
      * @throws java.text.ParseException When the supplied value cannot be parsed according to this cell schema.
      */
-    public void setDefaultValue(String sDefaultValue) throws java.text.ParseException {
+    public void setDefaultValue(String sDefaultValue) throws java.text.ParseException, SchemaException {
         CellParser cellParser = new CellParser();
         this.defaultCell = cellParser.makeCell(this, sDefaultValue);
         validateDefaultValueRange();

@@ -10,15 +10,18 @@ public abstract class SchemaLine implements Cloneable {
     private int                 occurs               = OCCURS_INFINITE;
     private String              lineType             = NOT_SET;
 
+    /**
+     * Creates a SchemaLine that occurs infinite number of times.
+     */
     public SchemaLine() {
         this.occurs = OCCURS_INFINITE;
     }
 
     /**
-     * Creates a SchemaLine which occurs supplied number of times.
+     * Creates a SchemaLine that occurs supplied number of times.
      * 
      * @param nOccurs
-     *            The number of times that a line of this type occurs in the corresponding buffer.
+     *            The number of times that a line of this type occurs in the input or output text.
      */
     public SchemaLine(int nOccurs) {
         this.occurs = nOccurs;

@@ -4,6 +4,7 @@ import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.FixedWidthSchemaCell;
+import org.jsapar.schema.SchemaException;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -115,7 +116,7 @@ public class FixedWidthCellComposerTest {
     }
 
     @Test
-    public final void testOutput_Default() throws IOException, JSaParException, ParseException {
+    public final void testOutput_Default() throws IOException, JSaParException, ParseException, SchemaException {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Size", 11);
         schemaCell.setDefaultValue("10");
 

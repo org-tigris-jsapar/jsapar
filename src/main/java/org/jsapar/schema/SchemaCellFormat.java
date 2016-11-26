@@ -6,27 +6,35 @@ import org.jsapar.parse.cell.CellFactory;
 import java.text.Format;
 import java.util.Locale;
 
+/**
+ * Describes the format of a cell, including the data type.
+ */
 public class SchemaCellFormat implements Cloneable {
-    private CellType cellType = CellType.STRING;
-    private java.text.Format format = null;
-    private String pattern = "";
+    private final CellType cellType;
+    private final java.text.Format format;
+    private final String pattern;
 
-    public SchemaCellFormat() {
 
-    }
-
+    /**
+     * Creates a new cell format object of supplied type.
+     * @param cellType The type of the cell.
+     */
     public SchemaCellFormat(CellType cellType) {
         this.cellType = cellType;
+        this.format = null;
+        this.pattern = "";
     }
 
     public SchemaCellFormat(CellType cellType, Format format) {
         this.cellType = cellType;
         this.format = format;
+        this.pattern = "";
     }
 
     /**
-     * @param cellType
-     * @param sPattern
+     * Creates a new cell format object of supplied type and pattern.
+     * @param cellType The type of the cell.
+     * @param sPattern The pattern of the cell.
      * @throws SchemaException
      */
     public SchemaCellFormat(CellType cellType, String sPattern) throws SchemaException {
@@ -34,24 +42,13 @@ public class SchemaCellFormat implements Cloneable {
     }
 
     /**
-     * @param cellType
-     * @param sPattern
-     * @param locale
+     * Creates a new cell format object of supplied type, pattern and locale.
+     * @param cellType The type of the cell.
+     * @param sPattern The pattern of the cell.
+     * @param locale   The locale determines for instance how decimal separator should be formatted etc.
      * @throws SchemaException
      */
     public SchemaCellFormat(CellType cellType, String sPattern, Locale locale) throws SchemaException {
-        setFormat(cellType, sPattern, locale);
-    }
-
-    /**
-     * Sets the format according to cell type, pattern and locale.
-     * 
-     * @param cellType
-     * @param sPattern
-     * @param locale
-     * @throws SchemaException
-     */
-    public void setFormat(CellType cellType, String sPattern, Locale locale) throws SchemaException {
         this.cellType = cellType;
         this.pattern = sPattern;
         if (sPattern == null) {
@@ -61,19 +58,12 @@ public class SchemaCellFormat implements Cloneable {
         this.format = CellFactory.getInstance(cellType).makeFormat(locale, sPattern);
     }
 
+
     /**
      * @return the cellType
      */
     public CellType getCellType() {
         return cellType;
-    }
-
-    /**
-     * @param cellType
-     *            the cellType to set
-     */
-    public void setCellType(CellType cellType) {
-        this.cellType = cellType;
     }
 
     /**

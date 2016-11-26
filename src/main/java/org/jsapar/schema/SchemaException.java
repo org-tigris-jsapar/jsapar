@@ -4,42 +4,26 @@
 package org.jsapar.schema;
 
 /**
- * @author Jonas
- *
+ * Exception used for when there are errors within a schema or while building a schema.
  */
-public class SchemaException extends RuntimeException {
+public class SchemaException extends Exception {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 636516160510599949L;
 
-    /**
-     *
-     */
     public SchemaException() {
+        super();
     }
 
-    /**
-     * @param arg0
-     */
-    public SchemaException(String arg0) {
-        super(arg0);
+    public SchemaException(String s) {
+        super(s);
     }
 
-    /**
-     * @param arg0
-     */
-    public SchemaException(Throwable arg0) {
-        super(arg0);
+    public SchemaException(String s, Throwable throwable) {
+        super(s, throwable);
     }
 
-    /**
-     * @param arg0
-     * @param arg1
-     */
-    public SchemaException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
+    public SchemaException(Throwable throwable) {
+        super(throwable);
     }
 
 }

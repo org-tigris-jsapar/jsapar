@@ -35,29 +35,25 @@ public class SchemaCellFormatTest {
 
     @Test
     public void testSetFormat_intPattern() throws SchemaException {
-        SchemaCellFormat format = new SchemaCellFormat();
-        format.setFormat(CellType.INTEGER, "0000", Locale.FRANCE);
+        SchemaCellFormat format = new SchemaCellFormat(CellType.INTEGER, "0000", Locale.FRANCE);
         assertEquals("0042", format.getFormat().format(42));
     }
 
     @Test
     public void testSetFormat_int() throws SchemaException {
-        SchemaCellFormat format = new SchemaCellFormat();
-        format.setFormat(CellType.INTEGER, "", Locale.FRANCE);
+        SchemaCellFormat format = new SchemaCellFormat(CellType.INTEGER, "", Locale.FRANCE);
         assertEquals("42", format.getFormat().format(42));
     }
 
     @Test
     public void testSetFormat_floatPattern() throws SchemaException {
-        SchemaCellFormat format = new SchemaCellFormat();
-        format.setFormat(CellType.FLOAT, "0000.000", Locale.FRANCE);
+        SchemaCellFormat format = new SchemaCellFormat(CellType.FLOAT, "0000.000", Locale.FRANCE);
         assertEquals("0042,300", format.getFormat().format(42.3));
     }
 
     @Test
     public void testSetFormat_float() throws SchemaException {
-        SchemaCellFormat format = new SchemaCellFormat();
-        format.setFormat(CellType.FLOAT, "", Locale.FRANCE);
+        SchemaCellFormat format = new SchemaCellFormat(CellType.FLOAT, "", Locale.FRANCE);
         assertEquals("42,3", format.getFormat().format(42.3));
     }
     /**
@@ -85,8 +81,7 @@ public class SchemaCellFormatTest {
      */
     @Test
     public void testGetPattern() throws SchemaException {
-        SchemaCellFormat format = new SchemaCellFormat();
-        format.setFormat(CellType.INTEGER, "0000", Locale.FRANCE);
+        SchemaCellFormat format = new SchemaCellFormat(CellType.INTEGER, "0000", Locale.FRANCE);
         assertEquals("0000", format.getPattern());
     }
 

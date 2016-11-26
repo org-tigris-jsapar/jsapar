@@ -114,7 +114,7 @@ public class CellParser {
      * @throws SchemaException
      */
     public static Cell makeCell(CellType cellType, String sName, String sValue, Locale locale)
-            throws java.text.ParseException, SchemaException {
+            throws java.text.ParseException {
         CellFactory cellFactory = CellFactory.getInstance(cellType);
 
         Format format = cellFactory.makeFormat(locale);

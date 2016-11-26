@@ -124,7 +124,8 @@ public class CsvParserTest {
 
 
     @Test
-    public final void testParse_firstLineAsHeader() throws IOException, JSaParException, java.text.ParseException {
+    public final void testParse_firstLineAsHeader()
+            throws IOException, JSaParException, java.text.ParseException, SchemaException {
         CsvSchema schema = new CsvSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine();
         CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe Size", new SchemaCellFormat(CellType.INTEGER));
