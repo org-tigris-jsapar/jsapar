@@ -1,7 +1,6 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.parse.ParseConfig;
-import org.jsapar.schema.CellValueCondition;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 
@@ -27,8 +26,7 @@ public class FWLineParserMatcher {
         occursLeft = schemaLine.getOccurs();
         int beginPos=0;
         for (FixedWidthSchemaCell schemaCell : schemaLine.getSchemaCells()) {
-            CellValueCondition lineCondition = schemaCell.getLineCondition();
-            if(lineCondition != null){
+            if(schemaCell.hasLineCondition()){
                 controlCells.add(new FWControlCell(beginPos, schemaCell));
             }
             beginPos += schemaCell.getLength();

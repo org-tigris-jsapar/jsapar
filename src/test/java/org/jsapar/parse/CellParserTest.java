@@ -1,6 +1,7 @@
 package org.jsapar.parse;
 
 import org.jsapar.model.*;
+import org.jsapar.schema.MatchingCellValueCondition;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.schema.SchemaException;
@@ -79,7 +80,7 @@ public class CellParserTest {
     public void testMakeCell_empty_pattern() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
-        schemaCell.setEmptyPattern("NULL");
+        schemaCell.setEmptyCondition(new MatchingCellValueCondition("NULL"));
 
         Cell nonEmptyCell = cellParser.makeCell(schemaCell,"1,25");
         assertEquals(1.25, ((FloatCell)nonEmptyCell).getNumberValue().doubleValue(), 0.0001);

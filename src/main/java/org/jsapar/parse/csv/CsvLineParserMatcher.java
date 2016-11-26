@@ -1,7 +1,6 @@
 package org.jsapar.parse.csv;
 
 import org.jsapar.parse.ParseConfig;
-import org.jsapar.schema.CellValueCondition;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 
@@ -30,8 +29,7 @@ public class CsvLineParserMatcher {
         lineParser = new CsvLineParser(schemaLine, config);
         int pos = 0;
         for (CsvSchemaCell schemaCell : schemaLine.getSchemaCells()) {
-            CellValueCondition lineCondition = schemaCell.getLineCondition();
-            if (lineCondition != null) {
+            if (schemaCell.hasLineCondition()) {
                 controlCells.add(new CsvControlCell(pos, schemaCell));
             }
             maxControlPos = pos;

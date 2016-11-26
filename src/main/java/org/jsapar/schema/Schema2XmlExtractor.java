@@ -281,9 +281,6 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
         if(schemaCell.isDefaultValue())
             xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_DEFAULT_VALUE, cellComposer.format(schemaCell.makeDefaultCell(), schemaCell));
 
-        if(schemaCell.getEmptyPattern() != null)
-            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_EMPTY_PATTERN, schemaCell.getEmptyPattern().pattern());
-
         Element xmlFormat = extractCellFormat(xmlDocument, schemaCell.getCellFormat());
         xmlSchemaCell.appendChild(xmlFormat);
 
@@ -295,15 +292,20 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
             xmlSchemaCell.appendChild(extractLocale(xmlDocument, schemaCell.getLocale()));
         }
 
-        if(schemaCell.getLineCondition() != null){
-            Element xmlLineCondition = extractLineCondition(xmlDocument, schemaCell.getLineCondition());
+        if(schemaCell.hasLineCondition()){
+            Element xmlLineCondition = extractCellValueCondition(xmlDocument, schemaCell.getLineCondition(), ELEMENT_LINE_CONDITION);
+            xmlSchemaCell.appendChild(xmlLineCondition);
+        }
+
+        if(schemaCell.hasEmptyCondition()){
+            Element xmlLineCondition = extractCellValueCondition(xmlDocument, schemaCell.getLineCondition(), ELEMENT_EMPTY_CONDITION);
             xmlSchemaCell.appendChild(xmlLineCondition);
         }
     }
 
-    private Element extractLineCondition(Document xmlDocument, CellValueCondition lineCondition)
+    private Element extractCellValueCondition(Document xmlDocument, CellValueCondition lineCondition, String elementName)
             throws SchemaException {
-        Element xmlLineCondition = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_LINE_CONDITION);
+        Element xmlLineCondition = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, elementName);
         if (lineCondition instanceof MatchingCellValueCondition){
             MatchingCellValueCondition match = (MatchingCellValueCondition) lineCondition;
             Element xmlMatch = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_MATCH);

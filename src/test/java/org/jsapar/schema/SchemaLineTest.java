@@ -42,15 +42,14 @@ public class SchemaLineTest {
     public void testFindCell_byIndex() {
         SchemaLineMock instance = new SchemaLineMock();
         Line line = new Line();
-        SchemaCell schemaCell = new SchemaCell("First") {};
-        
+
         Cell first = new StringCell("First", "one");
         line.addCell(first);
 
         Cell second = new StringCell("test", "two");
         line.addCell(second);
 
-        schemaCell = new SchemaCell("two") {};
+        SchemaCell schemaCell = new SchemaCell("two") {};
         
         Cell c = instance.doFindCell(line, schemaCell);
         assertEquals(second, c);
@@ -82,8 +81,7 @@ public class SchemaLineTest {
     public void testFindCell_notFound() {
         SchemaLineMock instance = new SchemaLineMock();
         Line line = new Line();
-        SchemaCell schemaCell = new SchemaCell("First") {};
-        
+
         Cell first = new StringCell("First", "one");
         line.addCell(first);
 
@@ -91,7 +89,7 @@ public class SchemaLineTest {
         Cell second = new StringCell("test2","two");
         line.addCell(second);
 
-        schemaCell = new SchemaCell("Third") {};
+        SchemaCell schemaCell = new SchemaCell("Third") {};
         
         Cell c = instance.doFindCell(line, schemaCell);
         assertNull(c);

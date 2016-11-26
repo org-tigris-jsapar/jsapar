@@ -32,7 +32,7 @@ public class Xml2SchemaBuilderTest {
                 + "<fixedwidthschema lineseparator='\\r\\n'>" 
                 + "<line occurs='*' linetype='Person' minlength='240'>"
                 + "<cell name='First name' length='5'/>" + "<cell name='Last name' length='8'/>"
-                + "<cell name='Shoe size' emptypattern='NULL' length='8' alignment='right'><format type='integer' pattern='00000000'/></cell>"
+                + "<cell name='Shoe size' length='8' alignment='right'><format type='integer' pattern='00000000'/><emptycondition><match pattern='NULL'/></emptycondition></cell>"
                 + "</line></fixedwidthschema></schema>";
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
@@ -52,7 +52,7 @@ public class Xml2SchemaBuilderTest {
         assertEquals(5, firstNameSchema.getLength());
         assertEquals(8, lastNameSchema.getLength());
         FixedWidthSchemaCell shoeSizeSchema = firstLineSchema.getSchemaCells().get(2);
-        assertEquals("NULL", shoeSizeSchema.getEmptyPattern().pattern());
+        assertTrue(shoeSizeSchema.getEmptyCondition().satisfies("NULL"));
 
         assertEquals(CellType.INTEGER, shoeSizeSchema
                 .getCellFormat().getCellType());

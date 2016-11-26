@@ -9,7 +9,7 @@ import org.jsapar.parse.Parser;
 import java.io.IOException;
 
 /**
- * Parses an input and bulds a Document while parsing. If there is an error while
+ * Parses an input and builds a Document while parsing. If there is an error while
  * parsing, an event is generated to the registered error event listener. If no error event listener is registered, a
  * runtime exception will be thrown. <br/>
  * Use this class only if you are sure that the whole file can be parsed into memory. If the

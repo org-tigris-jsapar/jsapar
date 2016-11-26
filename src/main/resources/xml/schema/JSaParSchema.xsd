@@ -110,7 +110,10 @@ Default is to take no action although if one of the unassigned cells is mandator
     			</xsd:documentation>
     		</xsd:annotation>
     	</xsd:element>
-    	<xsd:element name="linecondition" type="CellValueCondition" maxOccurs="1" minOccurs="0"></xsd:element>
+    	<xsd:element name="linecondition" type="CellValueCondition"
+    		maxOccurs="1" minOccurs="0">
+    	</xsd:element>
+    	<xsd:element name="emptycondition" type="CellValueCondition" maxOccurs="1" minOccurs="0"></xsd:element>
     </xsd:sequence>
     <xsd:attribute name="name" type="xsd:string" use="required">
       <xsd:annotation>
@@ -153,12 +156,6 @@ Default is to take no action although if one of the unassigned cells is mandator
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="emptypattern" type="xsd:string">
-      <xsd:annotation>
-        <xsd:documentation>The empty pattern can be used to ignore cells that contains a text even though they should be regared as empty. For instance, the cell may contain the text NULL to indicate that there is no value even though this is a date or a numeric field.
-You can use a regexp pattern that will be matched to determine if a cell is empty. E.g. set the value "NULL" if you want to ignore all cells with the value NULL. If this attribute is not set, only cells without any text will be regared as empty.
-</xsd:documentation>
-      </xsd:annotation></xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="CellFormat">
     <xsd:attribute name="type" use="required">

@@ -408,13 +408,13 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
             if (xmlDefault != null)
                 cell.setDefaultValue(getStringValue(xmlDefault));
 
-            String sEmptyPattern = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_EMPTY_PATTERN);
-            if (sEmptyPattern != null)
-                cell.setEmptyPattern(sEmptyPattern);
-
             Element xmlLineCondition = getChild(xmlSchemaCell, ELEMENT_LINE_CONDITION);
             if (xmlLineCondition != null)
-                assignLineCondition(cell, xmlLineCondition);
+                cell.setLineCondition(extractCellValueCondition(xmlLineCondition));
+
+            Element xmlEmptyCondition = getChild(xmlSchemaCell, ELEMENT_EMPTY_CONDITION);
+            if (xmlEmptyCondition != null)
+                cell.setEmptyCondition(extractCellValueCondition(xmlEmptyCondition));
 
             Element xmlFormat = getChild(xmlSchemaCell, ELEMENT_FORMAT);
             if (xmlFormat != null)
@@ -441,12 +441,11 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
     }
 
-    private void assignLineCondition(SchemaCell cell, Element xmlLineCondition) throws SchemaException {
-        Element xmlMatch = getChild(xmlLineCondition, ELEMENT_MATCH);
+    private MatchingCellValueCondition extractCellValueCondition(Element xmlCellValueCondition) throws SchemaException {
+        Element xmlMatch = getChild(xmlCellValueCondition, ELEMENT_MATCH);
         if(xmlMatch != null){
             String pattern = getAttributeValue(xmlMatch, ATTRIB_PATTERN);
-            cell.setLineCondition(new MatchingCellValueCondition(pattern));
-            return;
+            return new MatchingCellValueCondition(pattern);
         }
         throw new SchemaException("Expected line condition is missing");
     }

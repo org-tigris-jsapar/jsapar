@@ -83,7 +83,7 @@ public class CellParser {
 
         String name = schemaCell.getName();
         // If the cell is empty, check if default value exists.
-        if (sValue.length() <= 0 || (schemaCell.getEmptyPattern() != null && schemaCell.getEmptyPattern().matcher(sValue).matches())) {
+        if (sValue.length() <= 0 || (schemaCell.hasEmptyCondition() && schemaCell.getEmptyCondition().satisfies(sValue))) {
             if (schemaCell.isDefaultValue()) {
                 return schemaCell.makeDefaultCell();
             } else {

@@ -6,11 +6,8 @@ import org.jsapar.model.EmptyCell;
 import org.jsapar.parse.CellParser;
 
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 public abstract class SchemaCell implements Cloneable {
-
-    protected static final String         EMPTY_STRING          = "";
 
     private final static SchemaCellFormat CELL_FORMAT_PROTOTYPE = new SchemaCellFormat(CellType.STRING);
 
@@ -26,11 +23,11 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * If parsing an empty value this cell can be used, avoiding a lot of object creation.
      */
-    private Cell                          emptyCell             = null;
-    private String                        defaultValue          = null;
-    private Locale                        locale                = Locale.getDefault();
-    private Pattern                       emptyPattern          = null;
-    private CellValueCondition            lineCondition         = null;
+    private Cell               emptyCell      = null;
+    private String             defaultValue   = null;
+    private Locale             locale         = Locale.getDefault();
+    private CellValueCondition emptyCondition = null;
+    private CellValueCondition lineCondition  = null;
 
 
     public SchemaCell(String sName) {
@@ -80,6 +77,7 @@ public abstract class SchemaCell implements Cloneable {
     }
     
     /**
+     * The name of the cell
      * @return the name
      */
     public String getName() {
@@ -219,25 +217,23 @@ public abstract class SchemaCell implements Cloneable {
     }
 
     /**
-     * @param value
+     * @param value The string representation of the min value as it would be presented in the text input.
      * @throws SchemaException
      * @throws java.text.ParseException
      */
     public void setMinValue(String value) throws SchemaException, java.text.ParseException {
         Locale locale = new Locale("US_en");
-        Cell cell = CellParser.makeCell(this.getCellFormat().getCellType(), "Min", value, locale);
-        this.minValue = cell;
+        this.minValue = CellParser.makeCell(this.getCellFormat().getCellType(), "Min", value, locale);
     }
 
     /**
-     * @param value
+     * @param value The string representation of the max value as it would be presented in the text input.
      * @throws SchemaException
      * @throws java.text.ParseException
      */
     public void setMaxValue(String value) throws SchemaException, java.text.ParseException {
         Locale locale = new Locale("US_en");
-        Cell cell = CellParser.makeCell(this.getCellFormat().getCellType(), "Max", value, locale);
-        this.maxValue = cell;
+        this.maxValue = CellParser.makeCell(this.getCellFormat().getCellType(), "Max", value, locale);
     }
 
     /**
@@ -284,14 +280,6 @@ public abstract class SchemaCell implements Cloneable {
         return defaultValue;
     }
 
-    /**
-     * @return The default value if it is not null or empty string otherwise.
-     */
-    private String getDefaultValueOrEmpty() {
-        return defaultValue == null ? EMPTY_STRING : defaultValue;
-    }
-
-
 
     @Override
     public boolean equals(Object o) {
@@ -319,42 +307,50 @@ public abstract class SchemaCell implements Cloneable {
     }
 
     /**
-     * @return the emptyPattern
+     * @return True if this cell schema has an empty condition.
      */
-    public Pattern getEmptyPattern() {
-        return emptyPattern;
+    public boolean hasEmptyCondition(){
+        return this.emptyCondition != null;
+    }
+    /**
+     * @return the emptyCondition
+     */
+    public CellValueCondition getEmptyCondition() {
+        return emptyCondition;
     }
 
     /**
-     * The empty pattern can be used to ignore cells that contains a text that should be regared as empty. For instance
-     * the cell might contain the text NULL to indicate that there is no value even though this is a date or a numeric field.
+     * A condition that if satisfied for a specific text input, indicates that the cell is actually empty. For instance
+     * the cell might contain the text NULL to indicate that there is no value even though this is a date or a numeric
+     * field. In that case a {@link MatchingCellValueCondition} can be used to match the pattern "NULL".
      * 
-     * @param emptyPattern the regexp pattern that will be matched against to determine if this cell is empty
+     * @param emptyCondition the cell value condition that needs to be satisfied if this cell is to be considered empty
      */
-    public void setEmptyPattern(Pattern emptyPattern) {
-        this.emptyPattern = emptyPattern;
+    public void setEmptyCondition(CellValueCondition emptyCondition) {
+        this.emptyCondition = emptyCondition;
+    }
+
+    public void setEmptyPattern(String pattern) {
+        this.emptyCondition = new MatchingCellValueCondition(pattern);
     }
 
     /**
-     * The empty pattern can be used to ignore cells that contains a text that should be regared as empty. For instance
-     * the cell might contain the text NULL to indicate that there is no value even though this is a date or a numeric field.
-     * 
-     * @param emptyPattern
-     *            the regexp pattern string that will be matched against to determine if this cell is empty
+     * @return A condition that needs to be satisfied if the parser is going to use this line type.
      */
-    public void setEmptyPattern(String emptyPattern) {
-        if(emptyPattern != null && !emptyPattern.isEmpty())
-            this.emptyPattern = Pattern.compile(emptyPattern);
-    }
-
     public CellValueCondition getLineCondition() {
         return lineCondition;
     }
 
+    /**
+     * @param lineCondition A condition that needs to be satisfied if the parser is going to use this line type.
+     */
     public void setLineCondition(CellValueCondition lineCondition) {
         this.lineCondition = lineCondition;
     }
 
+    /**
+     * @return True if this cell schema has a line condition, false otherwise.
+     */
     public boolean hasLineCondition(){
         return this.lineCondition != null;
     }
@@ -365,4 +361,5 @@ public abstract class SchemaCell implements Cloneable {
     public Cell makeEmptyCell(){
         return this.emptyCell;
     }
+
 }
