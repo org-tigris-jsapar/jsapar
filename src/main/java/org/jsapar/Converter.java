@@ -35,8 +35,8 @@ public class Converter {
     }
 
     public void addErrorEventListener(ErrorEventListener errorListener) {
-        this.parser.addErrorEventListener(errorListener);
-        this.composer.addErrorEventListener(errorListener);
+        this.parser.setErrorEventListener(errorListener);
+        this.composer.setErrorEventListener(errorListener);
     }
 
     /**
@@ -50,7 +50,7 @@ public class Converter {
     }
 
     public void convert() throws IOException {
-        parser.addLineEventListener(new LineForwardListener());
+        parser.setLineEventListener(new LineForwardListener());
         parser.parse();
     }
 

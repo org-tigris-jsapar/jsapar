@@ -234,7 +234,7 @@ public class BeanComposerTest {
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
         RecordingErrorEventListener errorEventListener = new RecordingErrorEventListener();
         composer.addComposedEventListener(beanEventListener);
-        composer.addErrorEventListener(errorEventListener);
+        composer.setErrorEventListener(errorEventListener);
         composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertEquals(1, errorEventListener.getErrors().size());

@@ -39,7 +39,7 @@ public class TextParser extends AbstractParser implements Parser {
      * Reads characters from the input and parses them into a Line. Once a Line is completed, a
      * LineParsedEvent is generated to all registered event listeners. If there is an error while
      * parsing a line, a CellErrorEvent or ErrorEvent is generated to all registered error event listeners <br>
-     * Before calling this method you have to call {@link #addLineEventListener(LineEventListener)} to be able to handle the
+     * Before calling this method you have to call {@link #setLineEventListener(LineEventListener)} to be able to handle the
      * result
      * @throws IOException If there is an error reading the input
      */

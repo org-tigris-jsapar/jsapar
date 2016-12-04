@@ -68,16 +68,6 @@ public class DateCell extends Cell implements Comparable<DateCell> {
 
 
     /* (non-Javadoc)
-     * @see java.lang.Object#clone()
-     */
-    @Override
-    public DateCell clone() {
-        DateCell clone = (DateCell)super.clone();
-        clone.dateValue = (Date)this.dateValue.clone();
-        return clone;
-    }
-
-    /* (non-Javadoc)
      * @see org.jsapar.model.Cell#compareValueTo(org.jsapar.model.Cell)
      */
     @Override

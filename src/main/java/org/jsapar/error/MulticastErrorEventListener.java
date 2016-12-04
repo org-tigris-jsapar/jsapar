@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Internal utility class that creates an error event source that can be used in parsers and composers.
+ * Distributes all error events to multiple {@link ErrorEventListener} instances. All registered listeners
+ * are called one by one from the same thread.
  * If no {@link ErrorEventListener} is registered, this implementation will throw an exception upon the first error.
  */
-public class ErrorEventSource  implements ErrorEventListener{
+public class MulticastErrorEventListener implements ErrorEventListener{
 
     private List<ErrorEventListener> eventListeners = new ArrayList<>();
     private ErrorEventListener defaultEventListener = new ExceptionErrorEventListener();

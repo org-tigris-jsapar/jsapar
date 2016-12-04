@@ -5,7 +5,7 @@ import org.jsapar.compose.Composer;
 import org.jsapar.compose.ValidationHandler;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.ErrorEventSource;
+import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
@@ -28,7 +28,7 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
     private static final String SET_PREFIX = "set";
 
     private List<BeanComposedEventListener<T>> composedEventListeners = new ArrayList<>();
-    private ErrorEventSource                   errorEventSource       = new ErrorEventSource();
+    private ErrorEventListener                 errorEventListener     = new ExceptionErrorEventListener();
     private BeanFactory<T>                     beanFactory            = new BeanFactoryDefault<>();
     private Map<String, String>                setMethodNameCache     = new HashMap<>();
     private BeanComposerConfig                 config                 = new BeanComposerConfig();
@@ -102,8 +102,8 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
     }
 
     @Override
-    public void addErrorEventListener(ErrorEventListener errorEventListener) {
-        errorEventSource.addEventListener(errorEventListener);
+    public void setErrorEventListener(ErrorEventListener errorEventListener) {
+        this.errorEventListener = errorEventListener;
     }
 
     public BeanFactory<T> getBeanFactory() {
@@ -123,7 +123,7 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
 
     @Override
     public void errorEvent(ErrorEvent event) {
-        errorEventSource.errorEvent(event);
+        errorEventListener.errorEvent(event);
     }
 
     /**
@@ -136,9 +136,7 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
      */
     public <B> B assign(Line line, B objectToAssign) {
 
-        java.util.Iterator<Cell> cellIter = line.iterator();
-        while (cellIter.hasNext()) {
-            Cell cell = cellIter.next();
+        for (Cell cell : line) {
             String sName = cell.getName();
             if (sName == null || sName.isEmpty())
                 continue;

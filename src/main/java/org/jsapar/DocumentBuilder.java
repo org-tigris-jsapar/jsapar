@@ -29,12 +29,12 @@ public class DocumentBuilder {
     }
 
     public void addErrorEventListener(ErrorEventListener errorEventListener) {
-        parser.addErrorEventListener(errorEventListener);
+        parser.setErrorEventListener(errorEventListener);
     }
 
     public Document build() throws IOException, JSaParException {
         try (DocumentBuilderLineEventListener eventListener = new DocumentBuilderLineEventListener()) {
-            parser.addLineEventListener(eventListener);
+            parser.setLineEventListener(eventListener);
             parser.parse();
             return eventListener.getDocument();
         }

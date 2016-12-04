@@ -8,7 +8,7 @@ import java.io.Serializable;
  * the value denotes which sub-class to use.
  * 
  */
-public abstract class Cell implements Serializable, Cloneable {
+public abstract class Cell implements Serializable {
 
     private static final long serialVersionUID = -3609313087173019221L;
 
@@ -87,18 +87,6 @@ public abstract class Cell implements Serializable, Cloneable {
         return cellType;
     }
 
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#clone()
-     */
-    @Override
-    public Cell clone() {
-        try {
-            return (Cell) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError(e);
-        }
-    }
 
     /**
      * Compares value of this cell with the value of the supplied cell. 

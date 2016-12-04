@@ -35,7 +35,7 @@ public class ConcurrentConverter extends Converter {
 
     public void convert() throws IOException {
         try (ConcurrentLineEventListener concurrentLineEventListener = new ConcurrentLineEventListener()) {
-            getParser().addLineEventListener(concurrentLineEventListener);
+            getParser().setLineEventListener(concurrentLineEventListener);
             concurrentLineEventListener.addLineEventListener(new LineForwardListener());
             concurrentLineEventListener.start();
             getParser().parse();

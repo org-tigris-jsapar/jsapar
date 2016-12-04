@@ -1,6 +1,7 @@
 package org.jsapar.compose;
 
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.MulticastErrorEventListener;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 
@@ -32,9 +33,9 @@ public interface Composer {
     boolean composeLine(Line line) throws IOException;
 
     /**
-     * Adds an error event listener to this composer. You may add more than one error event listeners and each of the
-     * registered error event listeners will all receive each error event that was fired.
+     * Sets an error event listener to this composer. If you want to add more than one error event listeners, use the {@link MulticastErrorEventListener}
+     *
      * @param errorListener The error event listener to add.
      */
-    void addErrorEventListener(ErrorEventListener errorListener);
+    void setErrorEventListener(ErrorEventListener errorListener);
 }

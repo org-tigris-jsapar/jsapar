@@ -1,6 +1,7 @@
 package org.jsapar.parse;
 
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.MulticastErrorEventListener;
 
 import java.io.IOException;
 
@@ -16,18 +17,17 @@ import java.io.IOException;
 public interface Parser {
 
     /**
-     * Adds a line event listener to this parser. Each line event listener added to this parser will receive an event for
-     * each line that has been parsed.
+     * Sets a line event listener to this parser. If you want more than one line event listener registered, use a {@link MulticastLineEventListener}.
      * @param eventListener The line event listener.
      */
-    void addLineEventListener(LineEventListener eventListener);
+    void setLineEventListener(LineEventListener eventListener);
 
     /**
-     * Adds an error event listener to this parser. Each error event listener added to this parser will receive an event for
-     * each error that occurs.
+     * Sets an error event listener to this parser. Default behavior otherwise is to throw an exception upon the first
+     * error. If you want more than one listener to get each error event, use a {@link MulticastErrorEventListener}.
      * @param errorEventListener The error event listener.
      */
-    void addErrorEventListener(ErrorEventListener errorEventListener);
+    void setErrorEventListener(ErrorEventListener errorEventListener);
 
     /**
      * Start the parsing. Should only be called once for each parser. Consecutive calls may have unexpected behavior.

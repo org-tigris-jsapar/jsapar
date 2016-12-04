@@ -4,12 +4,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ErrorEventSourceTest {
+public class SplitErrorEventListenerTest {
 
 
     @Test
     public void testRemoveEventListener() throws Exception {
-        ErrorEventSource instance = new ErrorEventSource();
+        MulticastErrorEventListener instance = new MulticastErrorEventListener();
         ErrorEventListener eventListener = new ErrorEventListener() {
             @Override
             public void errorEvent(ErrorEvent event) {
@@ -24,13 +24,13 @@ public class ErrorEventSourceTest {
 
     @Test(expected = JSaParException.class)
     public void testErrorEvent_default() throws Exception {
-        ErrorEventSource instance = new ErrorEventSource();
+        MulticastErrorEventListener instance = new MulticastErrorEventListener();
         instance.errorEvent(new ErrorEvent(this, new JSaParException("test")));
     }
 
     @Test
     public void testErrorEvent_one() throws Exception {
-        ErrorEventSource instance = new ErrorEventSource();
+        MulticastErrorEventListener instance = new MulticastErrorEventListener();
         instance.addEventListener(new ErrorEventListener() {
             @Override
             public void errorEvent(ErrorEvent event) {

@@ -1,6 +1,9 @@
 package org.jsapar.schema;
 
-public interface SchemaXmlTypes {
+/**
+ * Packet private constants to be used while reading and writing xml.
+ */
+interface SchemaXmlTypes {
     String ELEMENT_ROOT = "schema";
     String ELEMENT_CSV_SCHEMA = "csvschema";
     String ELEMENT_FIXED_WIDTH_SCHEMA = "fixedwidthschema";

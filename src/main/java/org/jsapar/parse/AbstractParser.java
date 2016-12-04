@@ -2,44 +2,38 @@ package org.jsapar.parse;
 
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.ErrorEventSource;
+import org.jsapar.error.ExceptionErrorEventListener;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Abstract implementation of {@link Parser} interface. Provides possibility to have multiple line event listeners and
  * error event listeners. Override this class to implement a specific parser.
  */
 public abstract class AbstractParser implements Parser, LineEventListener, ErrorEventListener {
-    private List<LineEventListener> parsingEventListeners     = new LinkedList<>();
-    private ErrorEventSource        errorEventSource          = new ErrorEventSource();
+    private LineEventListener  lineEventListener  = null;
+    private ErrorEventListener errorEventListener = new ExceptionErrorEventListener();
 
 
     @Override
-    public void addLineEventListener(LineEventListener eventListener) {
-        if (eventListener == null)
-            return;
-        this.parsingEventListeners.add(eventListener);
+    public void setLineEventListener(LineEventListener eventListener) {
+        this.lineEventListener = eventListener;
     }
 
     @Override
-    public void addErrorEventListener(ErrorEventListener errorEventListener) {
-        errorEventSource.addEventListener(errorEventListener);
+    public void setErrorEventListener(ErrorEventListener errorEventListener) {
+        this.errorEventListener = errorEventListener;
     }
 
     @Override
     public void lineParsedEvent(LineParsedEvent event) throws IOException {
-        for (LineEventListener l : this.parsingEventListeners) {
-            l.lineParsedEvent(event);
-        }
-
+        if(lineEventListener != null)
+            lineEventListener.lineParsedEvent(event);
     }
 
     @Override
     public void errorEvent(ErrorEvent event) {
-        errorEventSource.errorEvent(event);
+        errorEventListener.errorEvent(event);
     }
 
 }

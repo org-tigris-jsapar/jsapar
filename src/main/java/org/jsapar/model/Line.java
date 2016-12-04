@@ -229,11 +229,8 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
         }
 
         clone.cells = new LinkedHashMap<>(this.cells.size());
-
-        for (Cell cell : this.cells.values()) {
-            Cell cellClone = cell.clone();
-            clone.cells.put(cellClone.getName(), cellClone);
-        }
+        // No need to make a deep copy since cells are all final.
+        clone.cells.putAll(this.cells);
 
         return clone;
     }

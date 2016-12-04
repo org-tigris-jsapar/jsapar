@@ -8,7 +8,7 @@ import org.jsapar.compose.ComposerFactory;
 import org.jsapar.compose.SchemaComposer;
 import org.jsapar.compose.TextComposerFactory;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.ErrorEventSource;
+import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
@@ -30,7 +30,7 @@ public class TextComposer implements Composer {
     private final Schema          schema;
     private final ComposerFactory composerFactory;
     private       SchemaComposer  currentSchemaComposer;
-    private ErrorEventSource errorEventSource = new ErrorEventSource();
+    private ErrorEventListener errorEventListener = new ExceptionErrorEventListener();
 
     /**
      * Creates an TextComposer with a schema.
@@ -110,8 +110,8 @@ public class TextComposer implements Composer {
     }
 
     @Override
-    public void addErrorEventListener(ErrorEventListener errorListener) {
-        errorEventSource.addEventListener(errorListener);
+    public void setErrorEventListener(ErrorEventListener errorListener) {
+        errorEventListener = errorListener;
     }
 
     /**

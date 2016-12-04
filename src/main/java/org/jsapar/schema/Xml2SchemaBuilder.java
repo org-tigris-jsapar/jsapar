@@ -41,8 +41,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     /**
      * Utility function to convert a boolean xml node into a boolean.
      * 
-     * @param node
-     * @return
+     * @param node The node to get boolean value from.
+     * @return A boolean value.
      * @throws SchemaException
      */
     private boolean getBooleanValue(Node node) throws SchemaException {
@@ -63,7 +63,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     }
 
     private int getIntValue(Node node) {
-        return Integer.parseInt(node.getNodeValue().trim());
+        return DatatypeConverter.parseInt(node.getNodeValue().trim());
     }
 
     /**
@@ -141,9 +141,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     }
 
     /**
-     * @param xmlSchema
-     * @return
-     * @throws SchemaException
+     * @param xmlSchema The xml element to parse schema from
+     * @return A parsed schema.
+     * @throws SchemaException If there are errors in the schema configuration.
      */
     private Schema buildFixedWidthSchema(Element xmlSchema) throws SchemaException {
         FixedWidthSchema schema = new FixedWidthSchema();
@@ -154,9 +154,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     }
 
     /**
-     * @param xmlSchema
-     * @return
-     * @throws SchemaException
+     * Assigns additional fixed width schema
+     * @param xmlSchema The schema xml element.
+     * @throws SchemaException If there are errors in the schema configuration.
      */
     private void assignFixedWidthSchema(FixedWidthSchema schema, Element xmlSchema) throws SchemaException {
 
@@ -171,20 +171,13 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     }
 
 
-    private boolean getBooleanAttribute(Element xmlElement, String attributeName, boolean defaultValue) {
-        String sValue = xmlElement.getAttribute(attributeName);
-        if(sValue.isEmpty())
-            return defaultValue;
-        return DatatypeConverter.parseBoolean(sValue);
-    }
-
     /**
      * Builds the lines of a file schema from an xml input.
      * 
-     * @param xmlSchemaLine
-     * @param locale
-     * @return
-     * @throws SchemaException
+     * @param xmlSchemaLine The xml schema line element
+     * @param locale The default locale of the schema.
+     * @return A newly created fixed with line schema.
+     * @throws SchemaException If there are errors in the schema.
      */
     private FixedWidthSchemaLine buildFixedWidthSchemaLine(Element xmlSchemaLine, Locale locale) throws SchemaException {
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine();
@@ -215,8 +208,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     /**
      * Builds the cell part of a file schema from an xml input
      * 
-     * @param xmlSchemaCell
-     * @return
+     * @param xmlSchemaCell The cell schema xml element
+     * @return A newly created fixed width cell schema.
      * @throws SchemaException
      */
     private FixedWidthSchemaCell buildFixedWidthSchemaCell(Element xmlSchemaCell, Locale locale) throws SchemaException {
@@ -245,8 +238,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     /**
      * Builds a CSV file schema object.
      * 
-     * @param xmlSchema
-     * @return
+     * @param xmlSchema A schema xml element.
+     * @return A newly created CSV schema.
      * @throws SchemaException
      */
     private Schema buildCsvSchema(Element xmlSchema) throws SchemaException {
@@ -256,10 +249,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     }
 
     /**
-     * Builds a CSV file schema object.
+     * Assigns values to a CSV schema object.
      * 
-     * @param xmlSchema
-     * @return
+     * @param schema    The schema to assign values to
+     * @param xmlSchema A schema xml element
      * @throws SchemaException
      */
     private void assignCsvSchema(CsvSchema schema, Element xmlSchema) throws SchemaException {
@@ -276,8 +269,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
 
     /**
-     * @param xmlSchemaLine
-     * @return
+     * Creates a CSV line schema
+     * @param xmlSchemaLine    The line schema xml element
+     * @param locale The schema default locale.
+     * @return A newly created csv schema line.
      * @throws SchemaException
      */
     private CsvSchemaLine buildCsvSchemaLine(Element xmlSchemaLine, Locale locale) throws SchemaException {
@@ -309,8 +304,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     }
 
     /**
-     * @param xmlSchemaCell
-     * @return
+     * Creates a CSV cell schema
+     * @param xmlSchemaCell A cell schema xml element.
+     * @return A newly created CSV cell schema.
      * @throws SchemaException
      */
     private CsvSchemaCell buildCsvSchemaCell(Element xmlSchemaCell, Locale locale) throws SchemaException {

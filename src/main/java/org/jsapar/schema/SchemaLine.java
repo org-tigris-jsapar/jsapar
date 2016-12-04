@@ -1,8 +1,5 @@
 package org.jsapar.schema;
 
-import org.jsapar.model.Cell;
-import org.jsapar.model.Line;
-
 public abstract class SchemaLine implements Cloneable {
     private static final int    OCCURS_INFINITE      = Integer.MAX_VALUE;
     private static final String NOT_SET              = "";
@@ -39,8 +36,8 @@ public abstract class SchemaLine implements Cloneable {
     
     /**
      * Creates a SchemaLine with the supplied line type and occurs supplied number of times.
-     * @param lineType
-     * @param nOccurs
+     * @param lineType The line type of this schema line.
+     * @param nOccurs The number of times it should occur.
      */
     public SchemaLine(String lineType, int nOccurs){
     	this.setLineType(lineType);
@@ -87,29 +84,6 @@ public abstract class SchemaLine implements Cloneable {
      */
     public abstract SchemaCell getSchemaCell(String cellName);
 
-    /**
-     * Finds the cell to use for output. Each cell is identified from the schema by the name of the
-     * cell. If the schema-cell has no name, the cell at the same position in the line is used under
-     * the condition that it also lacks name.
-     * 
-     * If the schema-cell has a name the cell with the same name is used. If no such cell is found
-     * and the cell at the same position lacks name, it is used instead.
-     * 
-     * 
-     * @param line
-     *            The line to find a cell within.
-     * @param schemaCell
-     *            The schema-cell to use.
-     * @return The cell within the supplied line to use for output according to the supplied
-     *         schemaCell.
-     */
-    protected static Cell findCell(Line line, SchemaCell schemaCell) {
-        // If we should not write the cell, we don't need the cell.
-        if (schemaCell.isIgnoreWrite())
-            return null;
-
-        return  line.getCell(schemaCell.getName());
-    }
 
     /**
      * @return the lineType
