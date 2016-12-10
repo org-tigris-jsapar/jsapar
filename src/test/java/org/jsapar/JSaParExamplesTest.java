@@ -228,7 +228,7 @@ public class JSaParExamplesTest {
     }
     
     @Test
-    public final void testExampleJavaToCsv07() throws SchemaException, IOException, JSaParException, ParseException {
+    public final void testExampleJavaToCsv07() throws SchemaException, IOException, ParseException {
 
         List<TstPerson> people = new LinkedList<TstPerson>();
         TstPerson testPerson1 = new TstPerson("Nils", "Holgersson", (short)4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9, 'A');

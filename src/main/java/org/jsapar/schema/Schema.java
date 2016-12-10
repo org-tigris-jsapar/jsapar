@@ -21,7 +21,7 @@ public abstract class Schema implements Cloneable{
 
 
     public abstract boolean isEmpty();
-    private Locale locale = Locale.getDefault();
+    private Locale locale = SchemaCellFormat.defaultLocale;
     private String lineSeparator = System.getProperty("line.separator");
 
 
@@ -47,7 +47,7 @@ public abstract class Schema implements Cloneable{
 
     /**
      * The locale of the schema is used to determine the formatting of for example numbers, decimal separators etc. It
-     * does not affect the error messages. Default is the system default.
+     * does not affect the error messages. Default is en_US.
      * @return the locale
      */
     public Locale getLocale() {
@@ -56,7 +56,7 @@ public abstract class Schema implements Cloneable{
 
     /**
      * The locale of the schema is used to determine the formatting of for example numbers, decimal separators etc. It
-     * does not affect the error messages. Default is the system default.
+     * does not affect the error messages. Default is en_US.
      * @param locale
      *            the locale to set
      */

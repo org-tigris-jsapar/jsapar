@@ -16,11 +16,45 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.Writer;
 import java.util.Locale;
 
+/**
+ * Extracts xml representation for a {@link Schema} and writes it to a writer.
+ */
+@SuppressWarnings("WeakerAccess")
 public class Schema2XmlExtractor implements SchemaXmlTypes {
 
     private static final CellComposer cellComposer = new CellComposer();
 
-    public org.w3c.dom.Document extractXmlDocument(Schema schema) throws SchemaException {
+    /**
+     * Writes supplied schema as xml to supplied writer.
+     * 
+     * @param writer
+     *            The writer to write to.
+     * @param schema
+     *            The schema to extract.
+     * @throws SchemaException If there is an error in the schema
+     */
+    public void extractXml(Writer writer, Schema schema) throws SchemaException {
+        try {
+
+            Document xmlDocument = extractXmlDocument(schema);
+
+            Transformer t  = TransformerFactory.newInstance().newTransformer();
+            t.setOutputProperty(OutputKeys.INDENT, "yes");
+            t.setOutputProperty(OutputKeys.METHOD, "xml");
+            t.transform(new DOMSource(xmlDocument), new StreamResult(writer));
+            
+        } catch (TransformerException e) {
+            throw new SchemaException("Failed to generate schema.", e);
+        }
+    }
+
+    /**
+     * Extract xml document from schema.
+     * @param schema The schema to extract
+     * @return The xml document
+     * @throws SchemaException If there is an error in the schema
+     */
+    private org.w3c.dom.Document extractXmlDocument(Schema schema) throws SchemaException {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setIgnoringElementContentWhitespace(true);
@@ -52,35 +86,11 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     }
 
     /**
-     * Writes supplied schema as xml to supplied writer.
-     * 
-     * @param writer
-     *            The writer to write to.
-     * @param schema
-     *            The schema to extract.
-     * @throws SchemaException
-     */
-    public void extractXml(Writer writer, Schema schema) throws SchemaException {
-        try {
-
-            Document xmlDocument = extractXmlDocument(schema);
-
-            Transformer t  = TransformerFactory.newInstance().newTransformer();
-            t.setOutputProperty(OutputKeys.INDENT, "yes");
-            t.setOutputProperty(OutputKeys.METHOD, "xml");
-            t.transform(new DOMSource(xmlDocument), new StreamResult(writer));
-            
-        } catch (TransformerException e) {
-            throw new SchemaException("Failed to generate schema.", e);
-        }
-    }
-
-    /**
      * Extract xml DOM from fixed width schema
      * @param xmlDocument The xml DOM document to extract to
      * @param schema The schema to extract
      * @return The schema element
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema
      */
     private Element extractFixedWidthSchema(Document xmlDocument, FixedWidthSchema schema) throws SchemaException {
         Element xmlSchema = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_FIXED_WIDTH_SCHEMA);
@@ -94,7 +104,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @param xmlDocument The root xml DOM document.
      * @param xmlSchema The xml element to assign to.
      * @param schema The schema to extract.
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema
      */
     private void assignFixedWidthSchema(Document xmlDocument, Element xmlSchema, FixedWidthSchema schema)
             throws SchemaException {
@@ -114,7 +124,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @param xmlDocument The root DOM document
      * @param schemaLine The schema line to extract
      * @return The line schema element
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema
      */
     private Element extractFixedWidthSchemaLine(Document xmlDocument, FixedWidthSchemaLine schemaLine)
             throws SchemaException {
@@ -140,7 +150,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @param xmlDocument The root xml document
      * @param schemaCell The schema cell to extract.
      * @return The cell schema element
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema
      */
     private Element extractFixedWidthSchemaCell(Document xmlDocument, FixedWidthSchemaCell schemaCell)
             throws SchemaException {
@@ -160,7 +170,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @param xmlDocument The root xml document
      * @param schema The schema to extract
      * @return The resulting xml element.
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema
      */
     private Element extractCsvSchema(Document xmlDocument, CsvSchema schema) throws SchemaException {
         Element xmlSchema = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_CSV_SCHEMA);
@@ -176,7 +186,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @param xmlDocument The root xml document
      * @param xmlSchema The xml schema element to assign to
      * @param schema The schema to extract
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema
      */
     private void assignCsvSchema(Document xmlDocument, Element xmlSchema, CsvSchema schema) throws SchemaException {
         assignSchemaBase(xmlDocument, xmlSchema, schema);
@@ -192,7 +202,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @param xmlDocument The root xml document
      * @param schemaLine The schema line to extract
      * @return The schema line xml element
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema
      */
     private Element extractCsvSchemaLine(Document xmlDocument, CsvSchemaLine schemaLine) throws SchemaException {
 
@@ -218,7 +228,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @param xmlDocument The root xml document
      * @param schemaCell The schema cell to extract
      * @return The schema cell xml element
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema
      */
     private Element extractCsvSchemaCell(Document xmlDocument, CsvSchemaCell schemaCell) throws SchemaException {
 
@@ -236,7 +246,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @param xmlDocument The root xml document
      * @param xmlSchema The schema xml element to assign to
      * @param schema The schema to extract
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema
      */
     private void assignSchemaBase(Document xmlDocument, Element xmlSchema, Schema schema) throws SchemaException {
         String lineSeparator = schema.getLineSeparator();
@@ -252,7 +262,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      *
      * @param xmlSchemaLine    The schema line xml element to assign to
      * @param schemaLine The schema line to extract
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema
      */
     private void assignSchemaLineBase(Element xmlSchemaLine, SchemaLine schemaLine) throws SchemaException {
         String sOccurs = schemaLine.isOccursInfinitely() ? "*" : String.valueOf(schemaLine.getOccurs());
@@ -267,7 +277,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @param xmlDocument The root xml document
      * @param xmlSchemaCell The schema cell xml element to assign to
      * @param schemaCell The schema cell to extract
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema
      */
     private void assignSchemaCellBase(Document xmlDocument, Element xmlSchemaCell, SchemaCell schemaCell)
             throws SchemaException {
@@ -319,7 +329,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @param xmlDocument The root xml document
      * @param schemaCell The schema cell to extract
      * @return The schema cell xml element
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema
      */
     private Element extractCellRange(Document xmlDocument, SchemaCell schemaCell) throws SchemaException {
         Element xmlRange = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_RANGE);
@@ -342,7 +352,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @param xmlDocument The root xml document
      * @param format The format to extract
      * @return The format xml element
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema
      */
     private Element extractCellFormat(Document xmlDocument, SchemaCellFormat format) throws SchemaException {
         Element xmlFormat = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_FORMAT);

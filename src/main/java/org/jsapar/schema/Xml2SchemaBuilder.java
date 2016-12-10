@@ -18,6 +18,9 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Locale;
 
+/**
+ * Builds a {@link Schema} instance from xml that conforms to the JSaPar xsd.
+ */
 public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
     /**
@@ -387,6 +390,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      */
     private void assignSchemaCellBase(SchemaCell cell, Element xmlSchemaCell, Locale locale) throws SchemaException {
         try {
+            Element xmlLocale = getChild(xmlSchemaCell, ELEMENT_LOCALE);
+            if (xmlLocale != null)
+                locale = buildLocale(xmlLocale);
+            cell.setLocale(locale);
 
             Node xmlIgnoreRead = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_IGNOREREAD);
             if (xmlIgnoreRead != null)
@@ -414,12 +421,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
             Element xmlFormat = getChild(xmlSchemaCell, ELEMENT_FORMAT);
             if (xmlFormat != null)
-                assignCellFormat(cell, xmlFormat, locale);
-
-            Element xmlLocale = getChild(xmlSchemaCell, ELEMENT_LOCALE);
-            if (xmlLocale != null)
-                locale = buildLocale(xmlLocale);
-            cell.setLocale(locale);
+                assignCellFormat(cell, xmlFormat);
 
             Element xmlRange = getChild(xmlSchemaCell, ELEMENT_RANGE);
             if (xmlRange != null) {
@@ -451,14 +453,13 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * 
      * @param cell
      * @param xmlFormat
-     * @param locale
      * @throws SchemaException
      */
-    private void assignCellFormat(SchemaCell cell, Element xmlFormat, Locale locale) throws SchemaException {
+    private void assignCellFormat(SchemaCell cell, Element xmlFormat) throws SchemaException {
         String sType = getAttributeValue(xmlFormat, "type");
         String sPattern = getAttributeValue(xmlFormat, "pattern");
 
-        cell.setCellFormat(new SchemaCellFormat(getCellType(sType), sPattern, locale));
+        cell.setCellFormat(makeCellType(sType), sPattern);
     }
 
     /**
@@ -469,7 +470,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @return The CellType value
      * @throws SchemaException
      */
-    private CellType getCellType(String sType) throws SchemaException {
+    private CellType makeCellType(String sType) throws SchemaException {
         if (sType.equals("string"))
             return CellType.STRING;
 

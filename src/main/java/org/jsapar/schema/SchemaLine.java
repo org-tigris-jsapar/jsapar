@@ -1,5 +1,8 @@
 package org.jsapar.schema;
 
+/**
+ * Abstract base class that describes the schema for a line.
+ */
 public abstract class SchemaLine implements Cloneable {
     private static final int    OCCURS_INFINITE      = Integer.MAX_VALUE;
     private static final String NOT_SET              = "";

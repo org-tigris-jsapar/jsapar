@@ -16,8 +16,7 @@
     		<xsd:annotation>
     			<xsd:documentation>
     				The locale specifies how numbers and dates should be
-    				parsed. The default is to use the system default
-    				locale, i.e. the locale of the operating system.
+    				parsed. The default is to use the en_US	locale.
     			</xsd:documentation>
     		</xsd:annotation>
     	</xsd:element>

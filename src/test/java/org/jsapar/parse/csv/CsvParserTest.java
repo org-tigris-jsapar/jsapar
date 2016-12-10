@@ -128,10 +128,10 @@ public class CsvParserTest {
             throws IOException, JSaParException, java.text.ParseException, SchemaException {
         CsvSchema schema = new CsvSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine();
-        CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe Size", new SchemaCellFormat(CellType.INTEGER));
+        CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe Size", CellType.INTEGER);
         shoeSizeCell.setDefaultValue("43");
         schemaLine.addSchemaCell(shoeSizeCell);
-        CsvSchemaCell hasDogCell = new CsvSchemaCell("HasDog", new SchemaCellFormat(CellType.BOOLEAN));
+        CsvSchemaCell hasDogCell = new CsvSchemaCell("HasDog",CellType.BOOLEAN);
         hasDogCell.setDefaultValue("false");
         schemaLine.addSchemaCell(hasDogCell);
         schemaLine.setFirstLineAsSchema(true);

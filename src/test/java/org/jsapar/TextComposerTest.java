@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -196,11 +196,11 @@ public class TextComposerTest {
         schemaLine.addSchemaCell(new CsvSchemaCell("First name"));
         schemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
 
-        CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe size", new SchemaCellFormat(CellType.INTEGER));
+        CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe size",CellType.INTEGER);
         shoeSizeCell.setDefaultValue("41");
         schemaLine.addSchemaCell(shoeSizeCell);
 
-        schemaLine.addSchemaCell(new CsvSchemaCell("Birth date", new SchemaCellFormat(CellType.DATE, new SimpleDateFormat("yyyy-MM-dd"))));
+        schemaLine.addSchemaCell(new CsvSchemaCell("Birth date", CellType.DATE, "yyyy-MM-dd", Locale.US));
 
         schemaLine.setFirstLineAsSchema(true);
         schema.addSchemaLine(schemaLine);

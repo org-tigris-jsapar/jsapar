@@ -4,7 +4,6 @@ import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.*;
 import org.jsapar.schema.FixedWidthSchemaCell;
-import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.schema.SchemaException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -80,7 +79,7 @@ public class FixedWidthCellParserTest {
     public final void testBuildEmptyOptionalInteger() throws IOException {
         String toParse = "           ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("ShoeSize", 11);
-        schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
+        schemaCell.setCellFormat(CellType.INTEGER);
 
         Reader reader = new StringReader(toParse);
         Cell cell;
@@ -122,7 +121,7 @@ public class FixedWidthCellParserTest {
     public final void testBuild_date() throws IOException, SchemaException {
         String toParse = "2007-04-10 16:15";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Date", 16);
-        schemaCell.setCellFormat(new SchemaCellFormat(CellType.DATE, "yyyy-MM-dd HH:mm"));
+        schemaCell.setCellFormat(CellType.DATE, "yyyy-MM-dd HH:mm");
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser();
@@ -142,7 +141,7 @@ public class FixedWidthCellParserTest {
     public final void testBuild_decimal_sv() throws IOException, SchemaException {
         String toParse = "-123 456,78  ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Decimal", 11);
-        schemaCell.setCellFormat(new SchemaCellFormat(CellType.DECIMAL, "#,###.#", new Locale("sv", "SE")));
+        schemaCell.setCellFormat(CellType.DECIMAL, "#,###.#", new Locale("sv", "SE"));
         // schemaCell.setCellFormat(new SchemaCellFormat(CellType.DECIMAL));
 
         Reader reader = new StringReader(toParse);
@@ -157,7 +156,7 @@ public class FixedWidthCellParserTest {
     public final void testBuild_decimal_sv_dont_trim() throws IOException, JSaParException, SchemaException {
         String toParse = "-123 456,78  ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Decimal", 11);
-        schemaCell.setCellFormat(new SchemaCellFormat(CellType.DECIMAL, "#,###.#", new Locale("sv", "SE")));
+        schemaCell.setCellFormat(CellType.DECIMAL, "#,###.#", new Locale("sv", "SE"));
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser();
@@ -171,7 +170,7 @@ public class FixedWidthCellParserTest {
     public final void testBuild_decimal_uk() throws IOException, JSaParException, SchemaException {
         String toParse = "-123,456.78  ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Decimal", 11);
-        schemaCell.setCellFormat(new SchemaCellFormat(CellType.DECIMAL, "#,###.#", Locale.UK));
+        schemaCell.setCellFormat(CellType.DECIMAL, "#,###.#", Locale.UK);
         // schemaCell.setCellFormat(new SchemaCellFormat(CellType.DECIMAL));
 
         Reader reader = new StringReader(toParse);
@@ -186,7 +185,7 @@ public class FixedWidthCellParserTest {
     public final void testBuild_int() throws IOException, JSaParException, SchemaException {
         String toParse = "123456";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Integer", 6);
-        schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
+        schemaCell.setCellFormat(CellType.INTEGER);
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser();
@@ -200,7 +199,7 @@ public class FixedWidthCellParserTest {
     public final void testBuild_float() throws IOException, JSaParException, SchemaException {
         String toParse = "1123,234";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Float", 6);
-        schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT));
+        schemaCell.setCellFormat(CellType.FLOAT);
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser();
@@ -215,7 +214,7 @@ public class FixedWidthCellParserTest {
         String toParse = "1,234E6 ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Float", 8);
         schemaCell.setLocale(new Locale("sv", "SE"));
-        schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.###E0", schemaCell.getLocale()));
+        schemaCell.setCellFormat(CellType.FLOAT, "#.###E0", schemaCell.getLocale());
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser();
@@ -229,7 +228,7 @@ public class FixedWidthCellParserTest {
     public final void testBuild_boolean() throws IOException, JSaParException, SchemaException {
         String toParse = "true ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("True", 5);
-        schemaCell.setCellFormat(new SchemaCellFormat(CellType.BOOLEAN));
+        schemaCell.setCellFormat(CellType.BOOLEAN);
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser();

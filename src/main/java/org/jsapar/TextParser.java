@@ -14,7 +14,7 @@ import java.io.Reader;
  * <ol>
  * <li>First, create an instance of TextParser.</li>
  * <li>Add event listeners for parse events and error events</li>
- * <li>Call the {@link #parse(Reader)} method. You will receive a callback event for each line that is parsed.</li>
+ * <li>Call the {@link #parse()} method. You will receive a callback event for each line that is parsed.</li>
  * </ol>
  * <br/>
  *

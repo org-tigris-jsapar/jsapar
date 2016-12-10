@@ -1,5 +1,9 @@
 package org.jsapar.schema;
 
+import org.jsapar.model.CellType;
+
+import java.util.Locale;
+
 /**
  * Describes the schema for a specific csv cell.
  */
@@ -11,15 +15,30 @@ public class CsvSchemaCell extends SchemaCell {
      * long, use the format regexp pattern instead.
      */
     private int maxLength=-1;
-    
+
+    /**
+     * Creates a CSV string cell with specified name. The format can be added after creation by using the {@link #setCellFormat(CellType, String)} method.
+     * @param sName The name of the cell.
+     */
     public CsvSchemaCell(String sName) {
         super(sName);
     }
 
-    public CsvSchemaCell(String sName, SchemaCellFormat cellFormat) {
-        super(sName, cellFormat);
+    /**
+     * Creates a CSV schema cell with the specified name and format parameters.
+     * @param sName The name of the cell.
+     * @param type The type of the cell.
+     * @param pattern The pattern to use while formatting and parsing. The pattern has different meaning depending on the type of the cell.
+     * @param locale The locale to use while formatting and parsing dates and numbers that are locale specific. If null, US locale is used.
+     */
+    public CsvSchemaCell(String sName, CellType type, String pattern, Locale locale) {
+        super(sName, type, pattern, locale);
     }
-    
+
+    public CsvSchemaCell(String name, CellType type) {
+        super(name, type);
+    }
+
     @Override
     public CsvSchemaCell clone() {
         return (CsvSchemaCell) super.clone();

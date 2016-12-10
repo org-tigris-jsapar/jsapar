@@ -5,7 +5,6 @@ import org.jsapar.model.CellType;
 import org.jsapar.model.EmptyCell;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.SchemaCell;
-import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.schema.SchemaException;
 import org.junit.Test;
 
@@ -29,6 +28,9 @@ public class CellComposerTest {
             super(name);
         }
 
+        public TestSchemaCell(String name, CellType type, String pattern, Locale locale) {
+            super(name, type, pattern, locale);
+        }
     }
 
     
@@ -119,7 +121,8 @@ public class CellComposerTest {
     @Test
     public void testFormat_DefaultValue_float() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
-        schemaCell.setCellFormat(new SchemaCellFormat(CellType.FLOAT, "#.00", new Locale("sv","SE")));
+        schemaCell.setLocale( new Locale("sv","SE"));
+        schemaCell.setCellFormat(CellType.FLOAT, "#.00");
         schemaCell.setDefaultValue("123456,78901");
 
         CellComposer composer = new CellComposer();
@@ -136,7 +139,7 @@ public class CellComposerTest {
     @Test
     public void testFormat_empty_integer() throws SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
-        schemaCell.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
+        schemaCell.setCellFormat(CellType.INTEGER);
 
         CellComposer composer = new CellComposer();
         String value = composer.format(new EmptyCell("test", CellType.INTEGER), schemaCell);
@@ -166,8 +169,7 @@ public class CellComposerTest {
      */
     @Test
     public void testFormat_Regexp() throws SchemaException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
-        schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING, "A|B", new Locale("sv","SE")));
+        TestSchemaCell schemaCell = new TestSchemaCell("test", CellType.STRING, "A|B", new Locale("sv","SE"));
 
         CellComposer composer = new CellComposer();
         String value = composer.format(new StringCell("test","A"), schemaCell);
@@ -182,8 +184,7 @@ public class CellComposerTest {
      */
     @Test(expected=IllegalArgumentException.class)
     public void testFormat_Regexp_fail() throws SchemaException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
-        schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING, "A|B", new Locale("sv","SE")));
+        TestSchemaCell schemaCell = new TestSchemaCell("test", CellType.STRING, "A|B", new Locale("sv","SE"));
 
         CellComposer composer = new CellComposer();
         composer.format(new StringCell("test","C"), schemaCell);

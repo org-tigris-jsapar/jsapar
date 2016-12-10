@@ -3,9 +3,14 @@
  */
 package org.jsapar.schema;
 
+import org.jsapar.model.BigDecimalCell;
+import org.jsapar.model.CellType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.math.BigDecimal;
+import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -63,6 +68,15 @@ public class SchemaCellTest {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         String s = schemaCell.toString();
         assertNotNull(s);
+    }
+
+    @Test
+    public void setMinValue() throws Exception {
+        TestSchemaCell schemaCell = new TestSchemaCell("test");
+        schemaCell.setLocale(new Locale("sv", "SE"));
+        schemaCell.setCellFormat(CellType.DECIMAL, "#,###.0");
+        schemaCell.setMinValue("123,34");
+        assertEquals(new BigDecimal("123.34"), ((BigDecimalCell)schemaCell.getMinValue()).getBigDecimalValue());
     }
 
     /**

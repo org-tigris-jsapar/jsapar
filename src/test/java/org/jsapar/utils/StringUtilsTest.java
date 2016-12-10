@@ -21,20 +21,6 @@ public class StringUtilsTest {
 	}
 
 	@Test
-	public final void testRemoveAll_sb() {
-		String sOriginal = ".This.text.has.lots.of.dots.";
-		String sResult = StringUtils.removeAll(new StringBuilder(sOriginal), '.').toString();
-		assertEquals("Thistexthaslotsofdots", sResult);
-	}
-
-	@Test
-	public final void testRemoveAll_sb_nothing() {
-		String sOriginal = "This text has no dots";
-		String sResult = StringUtils.removeAll(new StringBuilder(sOriginal), '.').toString();
-		assertEquals("This text has no dots", sResult);
-	}
-
-	@Test
 	public final void testRemoveAllWhitespace() {
 		String sOriginal = "This text has\nwhitespaces";
 		String sResult = StringUtils.removeAllWhitespaces(sOriginal);

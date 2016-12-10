@@ -95,7 +95,7 @@ public class FixedWidthSchema extends Schema {
      * cells after calling this method will add those cells after the filler cell which will probably lead to unexpected
      * behavior.
      */
-    public void addFillerCellsToReachLineMinLength() {
+    void addFillerCellsToReachLineMinLength() {
         getFixedWidthSchemaLines().forEach(FixedWidthSchemaLine::addFillerCellToReachMinLength);
     }
 

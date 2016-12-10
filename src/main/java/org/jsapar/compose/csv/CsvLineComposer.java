@@ -7,7 +7,6 @@ import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
-import org.jsapar.schema.SchemaCellFormat;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -69,7 +68,7 @@ public class CsvLineComposer implements LineComposer {
         CsvSchemaLine unformattedSchemaLine = schemaLine.clone();
         unformattedSchemaLine.setFirstLineAsSchema(false);
         for (CsvSchemaCell schemaCell : unformattedSchemaLine.getSchemaCells()) {
-            schemaCell.setCellFormat(new SchemaCellFormat(CellType.STRING));
+            schemaCell.setCellFormat(CellType.STRING);
         }
         CsvLineComposer headerLineComposer = new CsvLineComposer(writer, unformattedSchemaLine, lineSeparator);
         headerLineComposer.compose(this.buildHeaderLineFromSchema(unformattedSchemaLine));

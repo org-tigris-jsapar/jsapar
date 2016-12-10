@@ -129,6 +129,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
      * @param fillCharacter
      *            the fillCharacter to set
      */
+    @SuppressWarnings("WeakerAccess")
     public void setFillCharacter(char fillCharacter) {
         this.fillCharacter = fillCharacter;
     }
@@ -140,6 +141,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
      *            The name of the cell to find positions for.
      * @return The cell positions for the cell with the supplied name, null if no such cell exists.
      */
+    @SuppressWarnings("WeakerAccess")
     public FixedWidthCellPositions getCellPositions(String cellName) {
         FixedWidthCellPositions pos = new FixedWidthCellPositions();
         for (FixedWidthSchemaCell cell : schemaCells) {
@@ -158,6 +160,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
      * @return The cell's first position for the cell with the supplied name, -1 if no such cell
      *         exists.
      */
+    @SuppressWarnings("WeakerAccess")
     public int getCellFirstPosition(String cellName) {
         FixedWidthCellPositions pos = getCellPositions(cellName);
         return pos != null ? pos.getFirst() : -1;
@@ -214,7 +217,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
      * cells after calling this method will add those cells after the filler cell which will probably lead to unexpected
      * behavior.
      */
-    public void addFillerCellToReachMinLength() {
+    void addFillerCellToReachMinLength() {
         if (getMinLength() <= 0)
             return;
 
@@ -228,7 +231,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
     /**
      * @return The sum of the length of all cells.
      */
-    public int getTotalCellLength(){
+    int getTotalCellLength(){
         int sum = 0;
         for (FixedWidthSchemaCell schemaCell : schemaCells) {
             sum += schemaCell.getLength();

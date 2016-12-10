@@ -1,6 +1,7 @@
 package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
+import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.utils.StringUtils;
 
 import java.text.*;
@@ -45,7 +46,7 @@ public abstract class NumberCellFactory implements CellFactory{
     @Override
     public Format makeFormat(Locale locale, String pattern) {
         if (locale == null)
-            locale = Locale.getDefault();
+            locale = SchemaCellFormat.defaultLocale;
         if (pattern != null && !pattern.isEmpty())
             return new DecimalFormat(pattern, new DecimalFormatSymbols(locale));
         else

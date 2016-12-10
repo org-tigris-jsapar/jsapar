@@ -2,6 +2,7 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.BigDecimalCell;
 import org.jsapar.model.Cell;
+import org.jsapar.schema.SchemaCellFormat;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -20,7 +21,7 @@ public class BigDecimalCellFactory extends NumberCellFactory implements CellFact
      * @param value  The value to parse.
      * @param format The format object to use while parsing.
      * @return A cell of type {@link BigDecimalCell}
-     * @throws ParseException
+     * @throws ParseException If there is an error parsing
      */
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
@@ -52,7 +53,7 @@ public class BigDecimalCellFactory extends NumberCellFactory implements CellFact
     @Override
     public Format makeFormat(Locale locale, String pattern) {
         if (locale == null)
-            locale = Locale.getDefault();
+            locale = SchemaCellFormat.defaultLocale;
         if (pattern == null || pattern.isEmpty())
             return makeFormat(locale);
         DecimalFormat decFormat = new java.text.DecimalFormat(pattern, new DecimalFormatSymbols(locale));

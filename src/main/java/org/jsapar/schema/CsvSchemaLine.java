@@ -5,9 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Describes the schema how to parse or write a comma separated line.
+ * Describes the schema for a delimiter separated line.
  *
- * @author stejon0
  */
 public class CsvSchemaLine extends SchemaLine {
 
@@ -87,10 +86,11 @@ public class CsvSchemaLine extends SchemaLine {
      * 
      * @see java.lang.Object#clone()
      */
-    @SuppressWarnings("CloneDoesntCallSuperClone")
     @Override
     public CsvSchemaLine clone() {
-        CsvSchemaLine line = cloneWithoutCells();
+        CsvSchemaLine line;
+        line = (CsvSchemaLine) super.clone();
+        line.schemaCells = new LinkedHashMap<>();
 
         for (CsvSchemaCell cell : this.schemaCells.values()) {
             line.addSchemaCell(cell.clone());
@@ -98,13 +98,6 @@ public class CsvSchemaLine extends SchemaLine {
         return line;
     }
 
-    protected CsvSchemaLine cloneWithoutCells() {
-        CsvSchemaLine line;
-        line = (CsvSchemaLine) super.clone();
-        line.schemaCells = new LinkedHashMap<>();
-
-        return line;
-    }
 
     /*
      * (non-Javadoc)
@@ -166,6 +159,7 @@ public class CsvSchemaLine extends SchemaLine {
     /**
      * @return true if quote character is used, false otherwise.
      */
+    @SuppressWarnings("WeakerAccess")
     public boolean isQuoteCharUsed() {
         return this.quoteChar != 0;
     }

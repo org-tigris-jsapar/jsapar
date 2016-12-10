@@ -8,6 +8,7 @@ import org.jsapar.model.CellType;
 import org.jsapar.model.DateCell;
 import org.jsapar.model.Line;
 import org.jsapar.parse.*;
+import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -28,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 
 /**
  * Parses xml text that conform to the schema http://jsapar.tigris.org/XMLDocumentFormat/1.0
@@ -159,7 +159,7 @@ public class XmlParser extends AbstractParser implements Parser {
                         this.makeDateCell(sValue);
                     } else {
                         this.currentCell = CellParser
-                                .makeCell(this.currentCellType, this.currentCellName, sValue, Locale.getDefault());
+                                .makeCell(this.currentCellType, this.currentCellName, sValue, SchemaCellFormat.defaultLocale);
                     }
                     this.currentCellType = null;
                     this.currentCellName = null;

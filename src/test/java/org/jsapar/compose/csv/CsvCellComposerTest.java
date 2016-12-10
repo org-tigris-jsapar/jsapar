@@ -2,7 +2,6 @@ package org.jsapar.compose.csv;
 
 import org.jsapar.model.*;
 import org.jsapar.schema.CsvSchemaCell;
-import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.schema.SchemaException;
 import org.junit.Test;
 
@@ -92,8 +91,7 @@ public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_BigDecimal() throws IOException, SchemaException {
-        CsvSchemaCell schemaElement = new CsvSchemaCell("Money");
-        schemaElement.setCellFormat(new SchemaCellFormat(CellType.DECIMAL, "#,###.##", new Locale("sv", "SE")));
+        CsvSchemaCell schemaElement = new CsvSchemaCell("Money", CellType.DECIMAL, "#,###.##", new Locale("sv", "SE"));
 
         Writer writer = new StringWriter();
         Cell cell = new BigDecimalCell("test", new BigDecimal("123456.59"));
@@ -107,7 +105,7 @@ public class CsvCellComposerTest {
     @Test
     public final void testOutput_Boolean() throws IOException, SchemaException {
         CsvSchemaCell schemaElement = new CsvSchemaCell("Loves");
-        schemaElement.setCellFormat(new SchemaCellFormat(CellType.BOOLEAN));
+        schemaElement.setCellFormat(CellType.BOOLEAN);
 
         Writer writer = new StringWriter();
         Cell cell = new BooleanCell("Loves", true);

@@ -10,6 +10,8 @@ import java.util.Locale;
  * Describes the format of a cell, including the data type.
  */
 public class SchemaCellFormat implements Cloneable {
+    public final static Locale defaultLocale= Locale.US;
+
     private final CellType cellType;
     private final java.text.Format format;
     private final String pattern;
@@ -22,23 +24,27 @@ public class SchemaCellFormat implements Cloneable {
     public SchemaCellFormat(CellType cellType) {
         this.cellType = cellType;
         this.format = null;
-        this.pattern = "";
+        this.pattern = null;
     }
 
+    /**
+     * Creates a schema cell format object with an already created format.
+     * @param cellType The type of the cell
+     * @param format The format class to use.
+     */
     public SchemaCellFormat(CellType cellType, Format format) {
         this.cellType = cellType;
         this.format = format;
-        this.pattern = "";
+        this.pattern = null;
     }
 
     /**
      * Creates a new cell format object of supplied type and pattern.
      * @param cellType The type of the cell.
      * @param sPattern The pattern of the cell.
-     * @throws SchemaException
      */
-    public SchemaCellFormat(CellType cellType, String sPattern) throws SchemaException {
-        this(cellType, sPattern, null);
+    public SchemaCellFormat(CellType cellType, String sPattern) {
+        this(cellType, sPattern, defaultLocale);
     }
 
     /**
@@ -46,9 +52,8 @@ public class SchemaCellFormat implements Cloneable {
      * @param cellType The type of the cell.
      * @param sPattern The pattern of the cell.
      * @param locale   The locale determines for instance how decimal separator should be formatted etc.
-     * @throws SchemaException
      */
-    public SchemaCellFormat(CellType cellType, String sPattern, Locale locale) throws SchemaException {
+    public SchemaCellFormat(CellType cellType, String sPattern, Locale locale)  {
         this.cellType = cellType;
         this.pattern = sPattern;
         if (sPattern == null) {

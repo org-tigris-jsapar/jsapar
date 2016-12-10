@@ -11,7 +11,6 @@ import org.jsapar.parse.LineParseException;
 import org.jsapar.parse.ParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
-import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.schema.SchemaException;
 import org.junit.After;
 import org.junit.Before;
@@ -134,7 +133,7 @@ public class FixedWidthLineParserTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
 
         FixedWidthSchemaCell shoeSizeSchema = new FixedWidthSchemaCell("Shoe size", 8);
-        shoeSizeSchema.setCellFormat(new SchemaCellFormat(CellType.INTEGER));
+        shoeSizeSchema.setCellFormat(CellType.INTEGER);
         schemaLine.addSchemaCell(shoeSizeSchema);
 
         schema.addSchemaLine(schemaLine);

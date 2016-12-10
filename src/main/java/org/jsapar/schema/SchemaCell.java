@@ -31,16 +31,40 @@ public abstract class SchemaCell implements Cloneable {
      */
     private Cell               emptyCell      = null;
     private String             defaultValue   = null;
-    private Locale             locale         = Locale.getDefault();
+    private Locale             locale         = Locale.US;
     private CellValueCondition emptyCondition = null;
     private CellValueCondition lineCondition  = null;
 
-
+    /**
+     * Creates a string cell with specified name. The format can be added after creation by using the {@link #setCellFormat(CellType, String)} method.
+     * @param sName The name of the cell.
+     */
     public SchemaCell(String sName) {
         this(sName, CELL_FORMAT_PROTOTYPE);
     }
 
-    public SchemaCell(String sName, SchemaCellFormat cellFormat) {
+    /**
+     * Creates a schema cell with the specified name and format parameters.
+     * @param sName The name of the cell.
+     * @param type The type of the cell.
+     */
+    public SchemaCell(String sName, CellType type) {
+        this(sName, new SchemaCellFormat(type));
+    }
+
+    /**
+     * Creates a schema cell with the specified name and format parameters.
+     * @param sName The name of the cell.
+     * @param type The type of the cell.
+     * @param pattern The pattern to use while formatting and parsing. The pattern has different meaning depending on the type of the cell.
+     * @param locale The locale to use while formatting and parsing dates and numbers that are locale specific. If null, US locale is used.
+     */
+    public SchemaCell(String sName, CellType type, String pattern, Locale locale) {
+        this(sName, new SchemaCellFormat(type, pattern, locale));
+        this.locale=(locale != null) ? locale : Locale.US;
+    }
+
+    protected SchemaCell(String sName, SchemaCellFormat cellFormat) {
         if(sName == null || sName.isEmpty())
             throw new IllegalArgumentException("SchemaCell.name cannot be null or empty.");
         this.cellFormat = cellFormat;
@@ -98,11 +122,42 @@ public abstract class SchemaCell implements Cloneable {
         return cellFormat;
     }
 
+
+    /**
+     * Sets format of this schema cell using a type that needs no format pattern
+     * @param cellType The type of the cell
+     */
+    public void setCellFormat(CellType cellType)  {
+        this.setCellFormat(new SchemaCellFormat(cellType));
+    }
+
+    /**
+     * Sets format of this schema cell using the locale of the cell.
+     * @param cellType The type of the cell
+     * @param sPattern The pattern
+     */
+    public void setCellFormat(CellType cellType, String sPattern)  {
+        this.setCellFormat(new SchemaCellFormat(cellType, sPattern, locale));
+    }
+
+    /**
+     * Sets format of this schema cell.
+     * @param cellType The type of the cell
+     * @param sPattern The pattern
+     * @param locale The locale to use for the cell.
+     */
+    public void setCellFormat(CellType cellType, String sPattern, Locale locale)  {
+        this.locale = locale;
+        this.setCellFormat(new SchemaCellFormat(cellType, sPattern, locale));
+    }
+
     /**
      * @param cellFormat
      *            the cellFormat to set
      */
-    public void setCellFormat(SchemaCellFormat cellFormat) {
+    private void setCellFormat(SchemaCellFormat cellFormat) {
+        if(cellFormat == null)
+            throw new IllegalArgumentException("cellFormat argument cannot be null");
         this.cellFormat = cellFormat;
     }
 
@@ -205,16 +260,17 @@ public abstract class SchemaCell implements Cloneable {
      *            the locale to set
      */
     public void setLocale(Locale locale) {
-        this.locale = locale;
+        // Re-create the format since it may change depending on that locale changed.
+        this.setCellFormat(cellFormat.getCellType(), cellFormat.getPattern(), locale);
     }
 
     /**
      * Validates that the default value is within the valid range. Throws a SchemaException if value is
      * not within borders.
      *
-     * @throws SchemaException
+     * @throws SchemaException If validation fails.
      */
-    protected void validateDefaultValueRange() throws SchemaException {
+    private void validateDefaultValueRange() throws SchemaException {
         if (this.minValue != null && defaultCell.compareValueTo(this.minValue) < 0)
             throw new SchemaException("The value is below minimum range limit.");
         else if (this.maxValue != null && defaultCell.compareValueTo(this.maxValue) > 0)
@@ -224,22 +280,20 @@ public abstract class SchemaCell implements Cloneable {
 
     /**
      * @param value The string representation of the min value as it would be presented in the text input.
-     * @throws SchemaException
-     * @throws java.text.ParseException
+     * @throws java.text.ParseException If the string value could not be parsed according to this schema cell
      */
-    public void setMinValue(String value) throws SchemaException, java.text.ParseException {
-        Locale locale = new Locale("US_en");
-        this.minValue = CellParser.makeCell(this.getCellFormat().getCellType(), "Min", value, locale);
+    @SuppressWarnings("WeakerAccess")
+    public void setMinValue(String value) throws java.text.ParseException {
+        this.minValue = CellParser.makeCell(this.getCellFormat().getCellType(), this.name, value, this.locale);
     }
 
     /**
      * @param value The string representation of the max value as it would be presented in the text input.
-     * @throws SchemaException
-     * @throws java.text.ParseException
+     * @throws java.text.ParseException If the string value could not be parsed according to this schema cell
      */
-    public void setMaxValue(String value) throws SchemaException, java.text.ParseException {
-        Locale locale = new Locale("US_en");
-        this.maxValue = CellParser.makeCell(this.getCellFormat().getCellType(), "Max", value, locale);
+    @SuppressWarnings("WeakerAccess")
+    public void setMaxValue(String value) throws java.text.ParseException {
+        this.maxValue = CellParser.makeCell(this.getCellFormat().getCellType(), this.name, value, this.locale);
     }
 
     /**
@@ -336,6 +390,13 @@ public abstract class SchemaCell implements Cloneable {
         this.emptyCondition = emptyCondition;
     }
 
+    /**
+     * A regular expression that if matching for a specific text input, indicates that the cell is actually empty. For instance
+     * the cell might contain the text NULL to indicate that there is no value even though this is a date or a numeric
+     * field. In that case the pattern "NULL" can be used.
+     * @param pattern The regex pattern to match against
+     */
+    @SuppressWarnings("SameParameterValue")
     public void setEmptyPattern(String pattern) {
         this.emptyCondition = new MatchingCellValueCondition(pattern);
     }
