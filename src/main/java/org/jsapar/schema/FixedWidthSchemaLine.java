@@ -9,10 +9,10 @@ package org.jsapar.schema;
  */
 public class FixedWidthSchemaLine extends SchemaLine {
 
-    private java.util.List<FixedWidthSchemaCell> schemaCells = new java.util.ArrayList<>();
-    private boolean trimFillCharacters = true;
-    private char fillCharacter = ' ';
-    private int minLength = -1;
+    private java.util.List<FixedWidthSchemaCell> schemaCells        = new java.util.ArrayList<>();
+    private boolean                              trimFillCharacters = true;
+    private char                                 padCharacter       = ' ';
+    private int                                  minLength          = -1;
 
     /**
      * Creates an empty schema line.
@@ -93,11 +93,11 @@ public class FixedWidthSchemaLine extends SchemaLine {
         sb.append(super.toString());
         sb.append(" trimFillCharacters=");
         sb.append(this.trimFillCharacters);
-        if (this.trimFillCharacters) {
-            sb.append(" fillCharacter='");
-            sb.append(this.fillCharacter);
-            sb.append("'");
-        }
+
+        sb.append(" padCharacter='");
+        sb.append(this.padCharacter);
+        sb.append("'");
+
         sb.append(" schemaCells=");
         sb.append(this.schemaCells);
         return sb.toString();
@@ -119,19 +119,19 @@ public class FixedWidthSchemaLine extends SchemaLine {
     }
 
     /**
-     * @return the fillCharacter
+     * @return the padCharacter
      */
-    public char getFillCharacter() {
-        return fillCharacter;
+    public char getPadCharacter() {
+        return padCharacter;
     }
 
     /**
-     * @param fillCharacter
-     *            the fillCharacter to set
+     * @param padCharacter
+     *            the padCharacter to set
      */
     @SuppressWarnings("WeakerAccess")
-    public void setFillCharacter(char fillCharacter) {
-        this.fillCharacter = fillCharacter;
+    public void setPadCharacter(char padCharacter) {
+        this.padCharacter = padCharacter;
     }
 
     /**

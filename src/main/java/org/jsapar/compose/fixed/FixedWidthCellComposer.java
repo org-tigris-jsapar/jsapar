@@ -25,13 +25,11 @@ class FixedWidthCellComposer {
      * @param cell
      *            The cell to write
      * @param schemaCell The schema of the cell
-     * @param fillCharacter
-     *            The fill character to fill empty spaces.
      * @throws IOException
      */
-    void compose(Cell cell, FixedWidthSchemaCell schemaCell, char fillCharacter) throws IOException {
+    void compose(Cell cell, FixedWidthSchemaCell schemaCell) throws IOException {
         String sValue = cellComposer.format(cell, schemaCell);
-        compose(sValue, fillCharacter, schemaCell.getLength(), schemaCell.getAlignment());
+        compose(sValue, schemaCell.getPadCharacter(), schemaCell.getLength(), schemaCell.getAlignment());
     }
 
     /**

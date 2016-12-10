@@ -16,7 +16,7 @@
     </line>
     <line linetype="Footer" trimfillcharacters="true">
       <cell name="Type" length="1"><linecondition><match pattern="F"/></linecondition></cell>
-      <cell name="Rowcount" length="7"/>
+      <cell name="Rowcount" length="7" alignment="right"/>
       <cell name="Filler" length="18" ignoreread="true"/>
     </line>
   </fixedwidthschema>

@@ -28,7 +28,7 @@ public class FixedWidthCellComposerTest {
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","Jonas");
         FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(cell, schemaCell, ' ');
+        composer.compose(cell, schemaCell);
 
         assertEquals("   Jonas   ", writer.toString());
     }
@@ -41,7 +41,7 @@ public class FixedWidthCellComposerTest {
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","000Jonas000");
         FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(cell, schemaCell, ' ');
+        composer.compose(cell, schemaCell);
 
         assertEquals("0Jonas0", writer.toString());
     }
@@ -59,7 +59,7 @@ public class FixedWidthCellComposerTest {
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","000Jonas000");
         FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(cell, schemaCell, ' ');
+        composer.compose(cell, schemaCell);
 
         assertEquals("0Jonas", writer.toString());
     }
@@ -72,7 +72,7 @@ public class FixedWidthCellComposerTest {
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","Jonas");
         FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(cell, schemaCell, ' ');
+        composer.compose(cell, schemaCell);
 
         assertEquals("Jonas      ", writer.toString());
     }
@@ -84,7 +84,7 @@ public class FixedWidthCellComposerTest {
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","Jonas");
         FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(cell, schemaCell, ' ');
+        composer.compose(cell, schemaCell);
 
         assertEquals("Jonas", writer.toString());
     }
@@ -92,12 +92,13 @@ public class FixedWidthCellComposerTest {
     @Test
     public final void testOutput_Rigth() throws IOException, JSaParException {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
+        schemaCell.setPadCharacter('*');
         schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","Jonas");
         FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(cell, schemaCell, '*');
+        composer.compose(cell, schemaCell);
 
         assertEquals("******Jonas", writer.toString());
     }
@@ -105,12 +106,13 @@ public class FixedWidthCellComposerTest {
     @Test
     public final void testOutput_Rigth_overflow() throws IOException, JSaParException {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 6);
+        schemaCell.setPadCharacter('*');
         schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","0000Jonas");
         FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(cell, schemaCell, '*');
+        composer.compose(cell, schemaCell);
 
         assertEquals("0Jonas", writer.toString());
     }
@@ -122,7 +124,7 @@ public class FixedWidthCellComposerTest {
 
         Writer writer = new StringWriter();
         FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(null, schemaCell, ' ');
+        composer.compose(null, schemaCell);
 
         assertEquals("10         ", writer.toString());
     }

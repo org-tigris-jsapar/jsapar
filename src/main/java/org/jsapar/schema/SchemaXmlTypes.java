@@ -4,22 +4,22 @@ package org.jsapar.schema;
  * Packet private constants to be used while reading and writing xml.
  */
 interface SchemaXmlTypes {
-    String ELEMENT_ROOT = "schema";
-    String ELEMENT_CSV_SCHEMA = "csvschema";
-    String ELEMENT_FIXED_WIDTH_SCHEMA = "fixedwidthschema";
-    String ELEMENT_LOCALE = "locale";
-    String ELEMENT_FORMAT = "format";
-    String ELEMENT_LINE_CONDITION = "linecondition";
-    String ELEMENT_EMPTY_CONDITION = "emptycondition";
-    String ELEMENT_MATCH = "match";
-    String ATTRIB_FW_SCHEMA_FILL_CHARACTER = "fillcharacter";
-    String ATTRIB_FW_SCHEMA_MIN_LENGTH= "minlength";
-    String ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS = "trimfillcharacters";
-    String ATTRIB_SCHEMA_CELL_NAME = "name";
-    String ATTRIB_FW_SCHEMA_CELL_LENGTH = "length";
-    String ATTRIB_SCHEMA_LINE_LINETYPE = "linetype";
-    String ATTRIB_SCHEMA_LINE_OCCURS = "occurs";
-    String ATTRIB_CSV_SCHEMA_CELL_SEPARATOR = "cellseparator";
+    String ELEMENT_ROOT                             = "schema";
+    String ELEMENT_CSV_SCHEMA                       = "csvschema";
+    String ELEMENT_FIXED_WIDTH_SCHEMA               = "fixedwidthschema";
+    String ELEMENT_LOCALE                           = "locale";
+    String ELEMENT_FORMAT                           = "format";
+    String ELEMENT_LINE_CONDITION                   = "linecondition";
+    String ELEMENT_EMPTY_CONDITION                  = "emptycondition";
+    String ELEMENT_MATCH                            = "match";
+    String ATTRIB_FW_SCHEMA_PAD_CHARACTER           = "padcharacter";
+    String ATTRIB_FW_SCHEMA_MIN_LENGTH              = "minlength";
+    String ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS    = "trimfillcharacters";
+    String ATTRIB_SCHEMA_CELL_NAME                  = "name";
+    String ATTRIB_FW_SCHEMA_CELL_LENGTH             = "length";
+    String ATTRIB_SCHEMA_LINE_LINETYPE              = "linetype";
+    String ATTRIB_SCHEMA_LINE_OCCURS                = "occurs";
+    String ATTRIB_CSV_SCHEMA_CELL_SEPARATOR         = "cellseparator";
     String ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA = "firstlineasschema";
     String ATTRIB_LOCALE_LANGUAGE                   = "language";
     String ATTRIB_LOCALE_COUNTRY                    = "country";

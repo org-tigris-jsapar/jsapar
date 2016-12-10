@@ -1,5 +1,7 @@
 package org.jsapar.schema;
 
+import org.jsapar.model.CellType;
+
 import java.io.IOException;
 import java.io.Writer;
 
@@ -7,6 +9,7 @@ import java.io.Writer;
  * Describes how a cell is represented for a fixed width schema.
  */
 public class FixedWidthSchemaCell extends SchemaCell {
+
 
     /**
      * Describes how a cell is aligned within its allocated space.
@@ -67,6 +70,8 @@ public class FixedWidthSchemaCell extends SchemaCell {
      */
     private Alignment alignment = Alignment.LEFT;
 
+    private char padCharacter = ' ';
+
     /**
      * Creates a fixed with schema cell with specified name, length and alignment.
      * 
@@ -76,10 +81,13 @@ public class FixedWidthSchemaCell extends SchemaCell {
      *            The length of the cell
      * @param alignment
      *            The alignment of the cell content within the allocated space
+     * @param padCharacter
+     *            The pad character to use to fill the cell.
      */
-    public FixedWidthSchemaCell(String sName, int nLength, Alignment alignment) {
+    public FixedWidthSchemaCell(String sName, int nLength, Alignment alignment, Character padCharacter) {
         this(sName, nLength);
         this.alignment = alignment;
+        this.padCharacter = padCharacter;
     }
 
     /**
@@ -145,6 +153,17 @@ public class FixedWidthSchemaCell extends SchemaCell {
         this.alignment = alignment;
     }
 
+    /**
+     * Sets alignment for default value according to current cell type. For type INTEGER and DECIMAL, alignment is
+     * RIGHT, for all other types, alignment is LEFT.
+     */
+    public void setDefaultAlignmentForType() {
+        if(getCellFormat().getCellType() == CellType.INTEGER || getCellFormat().getCellType() == CellType.DECIMAL)
+            this.alignment = Alignment.RIGHT;
+        else
+            this.alignment = Alignment.LEFT;
+    }
+
     /*
      * (non-Javadoc)
      *
@@ -167,5 +186,14 @@ public class FixedWidthSchemaCell extends SchemaCell {
                 " alignment=" +
                 this.alignment;
     }
+
+    public char getPadCharacter() {
+        return padCharacter;
+    }
+
+    public void setPadCharacter(char padCharacter) {
+        this.padCharacter = padCharacter;
+    }
+
 
 }

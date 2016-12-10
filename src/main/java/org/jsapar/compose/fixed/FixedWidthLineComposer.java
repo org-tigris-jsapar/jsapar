@@ -39,36 +39,18 @@ public class FixedWidthLineComposer implements LineComposer {
      */
     @Override
     public void compose(Line line) throws IOException {
-       compose(line, 0);
-    }
-
-    /**
-     * Composes an output from a line. Each cell is identified from the schema by the name of the cell.
-     *
-     * If the schema-cell has a name the cell with the same name is used. If no such cell is found the positions are
-     * filled with fill character defined by the schema.
-     *
-     * @param line
-     *            The line to write to the writer
-     * @param offset
-     *            The number of characters that has already been written on this line.
-     *
-     * @throws IOException
-     *
-     */
-    public void compose(Line line, int offset) throws IOException {
-        Iterator<FixedWidthSchemaCell> iter = lineSchema.getSchemaCells().iterator();
+       Iterator<FixedWidthSchemaCell> iter = lineSchema.getSchemaCells().iterator();
 
         // Iterate all schema cells.
-        int totalLength = offset;
+        int totalLength = 0;
         while(iter.hasNext()) {
             FixedWidthSchemaCell schemaCell = iter.next();
             totalLength += schemaCell.getLength();
             Cell cell = line.getCell(schemaCell.getName());
-            cellComposer.compose(cell, schemaCell, lineSchema.getFillCharacter());
+            cellComposer.compose(cell, schemaCell);
         }
         if(lineSchema.getMinLength() > totalLength){
-            FixedWidthCellComposer.fill(writer, lineSchema.getFillCharacter(), lineSchema.getMinLength() -totalLength);
+            FixedWidthCellComposer.fill(writer, lineSchema.getPadCharacter(), lineSchema.getMinLength() -totalLength);
         }
     }
 }

@@ -132,7 +132,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
         assignSchemaLineBase(xmlSchemaLine, schemaLine);
 
-        xmlSchemaLine.setAttribute(ATTRIB_FW_SCHEMA_FILL_CHARACTER, String.valueOf(schemaLine.getFillCharacter()));
+        xmlSchemaLine.setAttribute(ATTRIB_FW_SCHEMA_PAD_CHARACTER, String.valueOf(schemaLine.getPadCharacter()));
         xmlSchemaLine.setAttribute(ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS, String.valueOf(schemaLine
                 .isTrimFillCharacters()));
         if(schemaLine.getMinLength()>0)

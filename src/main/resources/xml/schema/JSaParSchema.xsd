@@ -20,35 +20,6 @@
     			</xsd:documentation>
     		</xsd:annotation>
     	</xsd:element>
-    	<xsd:element name="validations" maxOccurs="1" minOccurs="0">
-                <xsd:annotation>
-                	<xsd:documentation>Defines a number of validations that can be performed while parsing. For each validation type you can specify how it should be handled while parsing. 
-                	ERROR means an error event is generated. When this happends it depends how you handle the error events. 
-                	EXCEPTION means an exception is thrown, and the parsing is immediately aborted. 
-                	IGNORE_LINE means that the line is silently ignored from input.</xsd:documentation>
-                </xsd:annotation>
-                <xsd:complexType>
-    			<xsd:all>
-    				<xsd:element name="undefinedlinetype" type="SchemaValidationType">
-    					<xsd:annotation>
-    						<xsd:documentation>None of the defined lines within this schema satisfies all the line conditions to the given line. Default is to silently ignore this line.</xsd:documentation>
-    					</xsd:annotation></xsd:element>
-    				<xsd:element name="lineoverflow" type="SchemaValidationType">
-    					<xsd:annotation>
-    						<xsd:documentation>The line overflows. 
-For CSV, it meants too many cells in the actual line compared to the schema. 
-For FixedWidth, it means too many characters in the line compared to the sum of all cells of the line in the schema.
-Default is to take no action.</xsd:documentation>
-    					</xsd:annotation></xsd:element>
-    				<xsd:element name="lineinsufficient" type="SchemaValidationType">
-    					<xsd:annotation>
-    						<xsd:documentation>The line information is insufficient. 
-For CSV, it meants too few cells in the actual line compared to the schema. 
-For FixedWidth, it means too few characters in the line compared to the sum of all cells of the line in the schema.
-Default is to take no action although if one of the unassigned cells is mandatory, you may get an error from that check anyway.</xsd:documentation>
-    					</xsd:annotation></xsd:element>
-    			</xsd:all>
-    		</xsd:complexType></xsd:element>
     </xsd:sequence>
     <xsd:attribute name="lineseparator" type="xsd:string" use="optional">
       <xsd:annotation>
@@ -213,11 +184,9 @@ Default is to take no action although if one of the unassigned cells is mandator
             </xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="fillcharacter" use="optional">
+        <xsd:attribute name="padcharacter" use="optional">
           <xsd:annotation>
-            <xsd:documentation>
-              Specifies the character space character that is used to fill the cells. Default is space character ' '
-              (ASCII 20)
+          	<xsd:documentation>Specifices the pad character to use to pad lines that are not reaching the minimum length. Also used as default pad character for cells of this line. Default is space character (ASCII 20). 
             </xsd:documentation>
           </xsd:annotation>
           <xsd:simpleType>
@@ -236,31 +205,43 @@ If the sum of the length of the cells is less than this minlength then the line 
     </xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="FixedWidthSchemaCell">
-    <xsd:complexContent mixed="false">
-      <xsd:extension base="SchemaCell">
-        <xsd:attribute name="length" type="xsd:int" use="required">
-          <xsd:annotation>
-            <xsd:documentation>The length of the cell, i.e. the number of characters it occupies.</xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="alignment" use="optional">
-          <xsd:annotation>
-            <xsd:documentation>Defines the cell alignment. The remaining space is filled with the fill-character of the parent document schema. Have to be one of the following:
-left
-right
-center
-           	</xsd:documentation>
-          </xsd:annotation>
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:string">
-              <xsd:enumeration value="left" />
-              <xsd:enumeration value="right" />
-              <xsd:enumeration value="center" />
-            </xsd:restriction>
-          </xsd:simpleType>
-        </xsd:attribute>
-      </xsd:extension>
-    </xsd:complexContent>
+  	<xsd:complexContent mixed="false">
+  		<xsd:extension base="SchemaCell">
+  			<xsd:attribute name="length" type="xsd:int"
+  				use="required">
+  				<xsd:annotation>
+  					<xsd:documentation>
+  						The length of the cell, i.e. the number of
+  						characters it occupies.
+  					</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:attribute>
+  			<xsd:attribute name="alignment" use="optional">
+  				<xsd:annotation>
+  					<xsd:documentation>
+  						Defines the cell alignment. The remaining
+  						space is filled with the fill-character of the
+  						parent document schema. Have to be one of the
+  						following: left right center
+  					</xsd:documentation>
+  				</xsd:annotation>
+  				<xsd:simpleType>
+  					<xsd:restriction base="xsd:string">
+  						<xsd:enumeration value="left" />
+  						<xsd:enumeration value="right" />
+  						<xsd:enumeration value="center" />
+  					</xsd:restriction>
+  				</xsd:simpleType>
+  			</xsd:attribute>
+  			<xsd:attribute name="padcharacter">
+  				<xsd:simpleType>
+  					<xsd:restriction base="xsd:string">
+  						<xsd:length value="1"></xsd:length>
+  					</xsd:restriction>
+  				</xsd:simpleType>
+  			</xsd:attribute>
+  		</xsd:extension>
+  	</xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="CsvSchema">
     <xsd:complexContent mixed="false">
@@ -390,4 +371,5 @@ NONE means no action at all, if possible.</xsd:documentation>
             </xsd:simpleType>
         </xsd:attribute>
   </xsd:complexType>
+
 </xsd:schema>

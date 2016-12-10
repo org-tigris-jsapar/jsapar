@@ -187,9 +187,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
         assignSchemaLineBase(schemaLine, xmlSchemaLine);
 
-        String sFillChar = getAttributeValue(xmlSchemaLine, ATTRIB_FW_SCHEMA_FILL_CHARACTER);
-        if (sFillChar != null)
-            schemaLine.setFillCharacter(sFillChar.charAt(0));
+        String padCharacter = getAttributeValue(xmlSchemaLine, ATTRIB_FW_SCHEMA_PAD_CHARACTER);
+        if (padCharacter != null)
+            schemaLine.setPadCharacter(padCharacter.charAt(0));
 
         Node xmlTrimFill = xmlSchemaLine.getAttributeNode(ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS);
         if (xmlTrimFill != null)
@@ -203,7 +203,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node child = nodes.item(i);
             if (child instanceof Element)
-                schemaLine.addSchemaCell(buildFixedWidthSchemaCell((Element) child, locale));
+                schemaLine.addSchemaCell(buildFixedWidthSchemaCell((Element) child, locale, schemaLine));
         }
         return schemaLine;
     }
@@ -212,29 +212,41 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * Builds the cell part of a file schema from an xml input
      * 
      * @param xmlSchemaCell The cell schema xml element
+     * @param padCharacter
      * @return A newly created fixed width cell schema.
      * @throws SchemaException
      */
-    private FixedWidthSchemaCell buildFixedWidthSchemaCell(Element xmlSchemaCell, Locale locale) throws SchemaException {
+    private FixedWidthSchemaCell buildFixedWidthSchemaCell(Element xmlSchemaCell, Locale locale, FixedWidthSchemaLine schemaLine) throws SchemaException {
 
         int nLength = getIntValue(getMandatoryAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_CELL_LENGTH));
         String sName = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_NAME);
 
         FixedWidthSchemaCell cell = new FixedWidthSchemaCell(sName, nLength);
+        assignSchemaCellBase(cell, xmlSchemaCell, locale);
 
-        Node xmlAllignment = xmlSchemaCell.getAttributeNode(ATTRIB_FW_SCHEMA_CELL_ALIGNMENT);
-        if (xmlAllignment == null || getStringValue(xmlAllignment).equals("left"))
-            cell.setAlignment(FixedWidthSchemaCell.Alignment.LEFT);
-        else if (getStringValue(xmlAllignment).equals("center"))
-            cell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
-        else if (getStringValue(xmlAllignment).equals("right"))
-            cell.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
-        else {
-            throw new SchemaException("Invalid value for attribute: " + ATTRIB_FW_SCHEMA_CELL_ALIGNMENT + "="
-                    + getStringValue(xmlAllignment));
+        Node xmlAlignment = xmlSchemaCell.getAttributeNode(ATTRIB_FW_SCHEMA_CELL_ALIGNMENT);
+        if(xmlAlignment != null) {
+            if (getStringValue(xmlAlignment).equals("left"))
+                cell.setAlignment(FixedWidthSchemaCell.Alignment.LEFT);
+            else if (getStringValue(xmlAlignment).equals("center"))
+                cell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
+            else if (getStringValue(xmlAlignment).equals("right"))
+                cell.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
+            else {
+                throw new SchemaException("Invalid value for attribute: " + ATTRIB_FW_SCHEMA_CELL_ALIGNMENT + "=" + getStringValue(
+                        xmlAlignment));
+            }
+        }
+        else{
+            cell.setDefaultAlignmentForType();
         }
 
-        assignSchemaCellBase(cell, xmlSchemaCell, locale);
+        String sFillChar = getAttributeValue(xmlSchemaCell, ATTRIB_FW_SCHEMA_PAD_CHARACTER);
+        if (sFillChar != null)
+            cell.setPadCharacter(sFillChar.charAt(0));
+        else
+            cell.setPadCharacter(schemaLine.getPadCharacter());
+
         return cell;
     }
 
