@@ -14,7 +14,6 @@ interface SchemaXmlTypes {
     String ELEMENT_MATCH                            = "match";
     String ATTRIB_FW_SCHEMA_PAD_CHARACTER           = "padcharacter";
     String ATTRIB_FW_SCHEMA_MIN_LENGTH              = "minlength";
-    String ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS    = "trimfillcharacters";
     String ATTRIB_SCHEMA_CELL_NAME                  = "name";
     String ATTRIB_FW_SCHEMA_CELL_LENGTH             = "length";
     String ATTRIB_SCHEMA_LINE_LINETYPE              = "linetype";

@@ -10,7 +10,6 @@ package org.jsapar.schema;
 public class FixedWidthSchemaLine extends SchemaLine {
 
     private java.util.List<FixedWidthSchemaCell> schemaCells        = new java.util.ArrayList<>();
-    private boolean                              trimFillCharacters = true;
     private char                                 padCharacter       = ' ';
     private int                                  minLength          = -1;
 
@@ -89,33 +88,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(super.toString());
-        sb.append(" trimFillCharacters=");
-        sb.append(this.trimFillCharacters);
-
-        sb.append(" padCharacter='");
-        sb.append(this.padCharacter);
-        sb.append("'");
-
-        sb.append(" schemaCells=");
-        sb.append(this.schemaCells);
-        return sb.toString();
-    }
-
-    /**
-     * @return the trimFillCharacters
-     */
-    public boolean isTrimFillCharacters() {
-        return trimFillCharacters;
-    }
-
-    /**
-     * @param trimFillCharacters
-     *            the trimFillCharacters to set
-     */
-    public void setTrimFillCharacters(boolean trimFillCharacters) {
-        this.trimFillCharacters = trimFillCharacters;
+        return super.toString() + " padCharacter='" + this.padCharacter + "' schemaCells=" + this.schemaCells;
     }
 
     /**

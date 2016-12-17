@@ -33,7 +33,6 @@ public class ConcurrentText2TextConverterTest {
         FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine("Person");
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 6));
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 9));
-        inputSchemaLine.setTrimFillCharacters(true);
         inputSchema.addSchemaLine(inputSchemaLine);
         inputSchema.setLineSeparator("\n");
 

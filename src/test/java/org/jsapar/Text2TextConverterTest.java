@@ -52,7 +52,6 @@ public class Text2TextConverterTest {
         FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine("Person");
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 6));
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 9));
-        inputSchemaLine.setTrimFillCharacters(true);
         inputSchema.addSchemaLine(inputSchemaLine);
 
         org.jsapar.schema.CsvSchema outputSchema = new org.jsapar.schema.CsvSchema();
@@ -86,7 +85,6 @@ public class Text2TextConverterTest {
         FixedWidthSchemaCell schemaCell2 = new FixedWidthSchemaCell("Shoe size", 9, new SchemaCellFormat(
                 CellType.INTEGER));
         inputSchemaLine.addSchemaCell(schemaCell2);
-        inputSchemaLine.setTrimFillCharacters(true);
         inputSchema.addSchemaLine(inputSchemaLine);
 
         org.jsapar.schema.CsvSchema outputSchema = new org.jsapar.schema.CsvSchema();
@@ -120,7 +118,6 @@ public class Text2TextConverterTest {
         FixedWidthSchemaCell schemaCell2 = new FixedWidthSchemaCell("Shoe size", 9, new SchemaCellFormat(
                 CellType.INTEGER));
         inputSchemaLine.addSchemaCell(schemaCell2);
-        inputSchemaLine.setTrimFillCharacters(true);
         inputSchema.addSchemaLine(inputSchemaLine);
 
         org.jsapar.schema.CsvSchema outputSchema = new org.jsapar.schema.CsvSchema();
@@ -147,7 +144,6 @@ public class Text2TextConverterTest {
         FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine();
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 6));
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 9));
-        inputSchemaLine.setTrimFillCharacters(true);
         inputSchema.addSchemaLine(inputSchemaLine);
 
         org.jsapar.schema.CsvSchema outputSchema = new org.jsapar.schema.CsvSchema();
@@ -182,7 +178,6 @@ public class Text2TextConverterTest {
         inputSchemaLine = new FixedWidthSchemaLine("Person");
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 6));
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 9));
-        inputSchemaLine.setTrimFillCharacters(true);
         inputSchema.addSchemaLine(inputSchemaLine);
 
         org.jsapar.schema.CsvSchema outputSchema = new org.jsapar.schema.CsvSchema();
@@ -216,7 +211,6 @@ public class Text2TextConverterTest {
         FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine();
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 6));
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 9));
-        inputSchemaLine.setTrimFillCharacters(true);
         inputSchema.addSchemaLine(inputSchemaLine);
 
         org.jsapar.schema.CsvSchema outputSchema = new org.jsapar.schema.CsvSchema();
@@ -261,7 +255,6 @@ public class Text2TextConverterTest {
         inputSchemaLine = new FixedWidthSchemaLine("Names");
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 6));
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 9));
-        inputSchemaLine.setTrimFillCharacters(true);
         inputSchema.addSchemaLine(inputSchemaLine);
 
         org.jsapar.schema.CsvSchema outputSchema = new org.jsapar.schema.CsvSchema();
@@ -301,7 +294,6 @@ public class Text2TextConverterTest {
         inputSchemaLine = new FixedWidthSchemaLine("Names");
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 6));
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 9));
-        inputSchemaLine.setTrimFillCharacters(true);
         inputSchema.addSchemaLine(inputSchemaLine);
 
         org.jsapar.schema.CsvSchema outputSchema = new org.jsapar.schema.CsvSchema();

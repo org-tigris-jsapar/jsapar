@@ -59,7 +59,7 @@ public class FixedWidthLineParser {
                 LineDecoratorErrorEventListener lineErrorEventListener = new LineDecoratorErrorEventListener(
                         errorListener, line);
                 Cell cell = cellParser
-                        .parse(schemaCell, reader, lineSchema.isTrimFillCharacters(), lineErrorEventListener);
+                        .parse(schemaCell, reader, lineErrorEventListener);
                 if (cell == null) {
                     if (oneRead) {
                         setDefaultsOnly = true;

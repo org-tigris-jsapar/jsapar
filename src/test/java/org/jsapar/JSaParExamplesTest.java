@@ -70,10 +70,10 @@ public class JSaParExamplesTest {
         Document document = builder.build();
         fileReader.close();
 
-        assertEquals("Erik    ", document.getLine(0).getCell("First name").getStringValue());
-        assertEquals("Svensson ", document.getLine(0).getCell("Last name").getStringValue());
-        assertEquals("Fredrik ", document.getLine(1).getCell("First name").getStringValue());
-        assertEquals("Larsson  ", document.getLine(1).getCell("Last name").getStringValue());
+        assertEquals("Erik", document.getLine(0).getCell("First name").getStringValue());
+        assertEquals("Svensson", document.getLine(0).getCell("Last name").getStringValue());
+        assertEquals("Fredrik", document.getLine(1).getCell("First name").getStringValue());
+        assertEquals("Larsson", document.getLine(1).getCell("Last name").getStringValue());
     }
 
     /**

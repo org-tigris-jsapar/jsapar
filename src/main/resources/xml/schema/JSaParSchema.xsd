@@ -176,14 +176,6 @@
         <xsd:sequence minOccurs="1" maxOccurs="unbounded">
           <xsd:element name="cell" type="FixedWidthSchemaCell" />
         </xsd:sequence>
-        <xsd:attribute name="trimfillcharacters" type="xsd:boolean" use="optional">
-          <xsd:annotation>
-            <xsd:documentation>
-              Default value is true. If true, all leading and trailing fill-characters are discarded. If false, value is
-              left as is.
-            </xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
         <xsd:attribute name="padcharacter" use="optional">
           <xsd:annotation>
           	<xsd:documentation>Specifices the pad character to use to pad lines that are not reaching the minimum length. Also used as default pad character for cells of this line. Default is space character (ASCII 20). 

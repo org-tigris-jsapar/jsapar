@@ -191,10 +191,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         if (padCharacter != null)
             schemaLine.setPadCharacter(padCharacter.charAt(0));
 
-        Node xmlTrimFill = xmlSchemaLine.getAttributeNode(ATTRIB_FW_SCHEMA_TRIM_FILL_CHARACTERS);
-        if (xmlTrimFill != null)
-            schemaLine.setTrimFillCharacters(getBooleanValue(xmlTrimFill));
-
         String sMinLength = getAttributeValue(xmlSchemaLine, ATTRIB_FW_SCHEMA_MIN_LENGTH);
         if (sMinLength != null && !sMinLength.isEmpty())
             schemaLine.setMinLength(Integer.valueOf(sMinLength));
@@ -212,7 +208,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * Builds the cell part of a file schema from an xml input
      * 
      * @param xmlSchemaCell The cell schema xml element
-     * @param padCharacter
+     * @param locale
+     * @param schemaLine
      * @return A newly created fixed width cell schema.
      * @throws SchemaException
      */

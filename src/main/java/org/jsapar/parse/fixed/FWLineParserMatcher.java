@@ -45,7 +45,7 @@ public class FWLineParserMatcher {
                 for (FWControlCell controlCell : controlCells) {
                     int offset = controlCell.beginPos - read;
                     String value = cellParser
-                            .parseToString(controlCell.schemaCell, reader, offset, schemaLine.isTrimFillCharacters());
+                            .parseToString(controlCell.schemaCell, reader, offset);
                     if (value == null)
                         return LineParserMatcherResult.EOF; // EOF reached
                     if (!controlCell.schemaCell.getLineCondition().satisfies(value))
