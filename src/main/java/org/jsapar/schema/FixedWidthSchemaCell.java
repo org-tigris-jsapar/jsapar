@@ -155,8 +155,9 @@ public class FixedWidthSchemaCell extends SchemaCell {
 
     /**
      * Sets alignment for default value according to current cell type. For type INTEGER and DECIMAL, alignment is
-     * RIGHT, for all other types, alignment is LEFT.
+     * RIGHT. For all other types, alignment is LEFT.
      */
+    @SuppressWarnings("WeakerAccess")
     public void setDefaultAlignmentForType() {
         if(getCellFormat().getCellType() == CellType.INTEGER || getCellFormat().getCellType() == CellType.DECIMAL)
             this.alignment = Alignment.RIGHT;

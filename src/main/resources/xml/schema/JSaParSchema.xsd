@@ -226,7 +226,10 @@ If the sum of the length of the cells is less than this minlength then the line 
   				</xsd:simpleType>
   			</xsd:attribute>
   			<xsd:attribute name="padcharacter">
-  				<xsd:simpleType>
+                    <xsd:annotation>
+                    	<xsd:documentation>Specifices the pad character to use to pad cells that are not reaching the minimum length. The alignment attribute specifies if padding should be done to the rigth, to the left or both. Default is the pad character specified on line level. </xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:simpleType>
   					<xsd:restriction base="xsd:string">
   						<xsd:length value="1"></xsd:length>
   					</xsd:restriction>
