@@ -54,19 +54,20 @@ public class FixedWidthParserFlat extends FixedWidthParser{
     @Override
     public void parse(LineEventListener lineEventListener, ErrorEventListener errorListener) throws IOException {
         long lineNumber = 0;
+        FWLineParserFactory lineParserFactory = new FWLineParserFactory(getSchema(), getConfig());
         while(true){
             lineNumber++;
-            if(getLineParserFactory().isEmpty())
+            if(lineParserFactory.isEmpty())
                 return;
-            FWLineParserFactory.LineParserResult result = getLineParserFactory().makeLineParser(reader);
-            if (result.result != LineParserMatcherResult.SUCCESS) {
-                handleNoParser(lineNumber, result.result, errorListener);
-                if(result.result == LineParserMatcherResult.NOT_MATCHING)
+            FixedWidthLineParser lineParser = lineParserFactory.makeLineParser(reader);
+            if (lineParser == null) {
+                handleNoParser(lineNumber, lineParserFactory.getLastResult(), errorListener);
+                if(lineParserFactory.getLastResult() == LineParserMatcherResult.NOT_MATCHING)
                     continue;
                 else
                     return;
             }
-            Line line = result.lineParser.parse(reader, lineNumber, errorListener);
+            Line line = lineParser.parse(reader, lineNumber, errorListener);
             if (line != null)
                 lineEventListener.lineParsedEvent(new LineParsedEvent(this, line));
             else

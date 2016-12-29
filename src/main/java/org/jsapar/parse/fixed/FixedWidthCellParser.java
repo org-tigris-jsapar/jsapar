@@ -25,7 +25,7 @@ public class FixedWidthCellParser extends CellParser {
      * @param reader             The input reader
      * @param errorEventListener The error event listener to deliver errors to while parsing.
      * @return A Cell filled with the parsed cell value and with the name of this schema cell.
-     * @throws IOException
+     * @throws IOException In case there is an error reading from the reader.
      */
     public Cell parse(FixedWidthSchemaCell cellSchema, Reader reader, ErrorEventListener errorEventListener) throws IOException {
 

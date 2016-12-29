@@ -16,7 +16,6 @@ import java.io.IOException;
  */
 public abstract class FixedWidthParser implements SchemaParser {
     private FixedWidthSchema    schema;
-    private FWLineParserFactory lineParserFactory;
     private ParseConfig config;
     private ValidationHandler validationHandler = new ValidationHandler();
 
@@ -24,7 +23,6 @@ public abstract class FixedWidthParser implements SchemaParser {
     public FixedWidthParser(FixedWidthSchema schema, ParseConfig config) {
         this.schema = schema;
         this.config = config;
-        lineParserFactory = new FWLineParserFactory(schema, config);
     }
 
     protected void handleNoParser(long lineNumber, LineParserMatcherResult result, ErrorEventListener errorEventListener) throws IOException {
@@ -39,9 +37,6 @@ public abstract class FixedWidthParser implements SchemaParser {
         return schema;
     }
 
-    protected FWLineParserFactory getLineParserFactory() {
-        return lineParserFactory;
-    }
 
     public ParseConfig getConfig() {
         return config;

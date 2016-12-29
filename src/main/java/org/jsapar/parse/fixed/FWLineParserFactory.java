@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
  */
 public class FWLineParserFactory {
     private List<FWLineParserMatcher> lineParserMatchers;
+    private LineParserMatcherResult lastResult;
 
     public FWLineParserFactory(FixedWidthSchema schema, ParseConfig config) {
         lineParserMatchers = schema.getFixedWidthSchemaLines().stream()
@@ -22,11 +23,11 @@ public class FWLineParserFactory {
 
     /**
      * @param reader A buffered reader to read input from
-     * @return A {@link LineParserResult} that contains both the lineParser that can be used and a result code indicating
-     * the status of the input.
+     * @return A {@link FixedWidthLineParser} that can be used or null if no line parser could be found. When returning
+     * null, you can call {@link #getLastResult()} to get the reason for failure to return a line parser.
      * @throws IOException
      */
-    public LineParserResult makeLineParser(BufferedReader reader) throws IOException {
+    public FixedWidthLineParser makeLineParser(BufferedReader reader) throws IOException {
         if(lineParserMatchers.isEmpty())
             return null;
         Iterator<FWLineParserMatcher> iter = lineParserMatchers.iterator();
@@ -44,7 +45,8 @@ public class FWLineParserFactory {
                     iter.remove();
                     lineParserMatchers.add(0, currentMatcher);
                 }
-                return new LineParserResult(currentMatcher.getLineParser(), LineParserMatcherResult.SUCCESS);
+                lastResult = LineParserMatcherResult.SUCCESS;
+                return currentMatcher.getLineParser();
             }
             else if(lineParserResult == LineParserMatcherResult.NO_OCCURS)
                 iter.remove();
@@ -54,30 +56,21 @@ public class FWLineParserFactory {
             }
             first = false;
         }
-        LineParserMatcherResult reason;
         if(eof)
-            reason =  LineParserMatcherResult.EOF;
+            lastResult =  LineParserMatcherResult.EOF;
         else if(lineParserMatchers.isEmpty())
-            reason = LineParserMatcherResult.NO_OCCURS;
+            lastResult = LineParserMatcherResult.NO_OCCURS;
         else
-            reason = LineParserMatcherResult.NOT_MATCHING;
-        return new LineParserResult(null, reason);
+            lastResult = LineParserMatcherResult.NOT_MATCHING;
+        return null;
     }
 
     public boolean isEmpty() {
         return lineParserMatchers.isEmpty();
     }
 
-    /**
-     * Internal class used to be able to return both a match result and a line parser as return value.
-     */
-    public class LineParserResult{
-        public FixedWidthLineParser lineParser;
-        public LineParserMatcherResult result;
-
-        public LineParserResult(FixedWidthLineParser lineParser, LineParserMatcherResult result) {
-            this.lineParser = lineParser;
-            this.result = result;
-        }
+    public LineParserMatcherResult getLastResult() {
+        return lastResult;
     }
+
 }

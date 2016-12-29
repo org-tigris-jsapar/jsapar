@@ -34,6 +34,7 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
     @Override
     public void parse(LineEventListener listener, ErrorEventListener errorListener) throws IOException {
 
+        FWLineParserFactory lineParserFactory = new FWLineParserFactory(getSchema(), getConfig());
         long lineNumber = 0;
         while(true){
             lineNumber++;
@@ -44,17 +45,17 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
                 continue;
 
             try(BufferedReader r = new BufferedReader(new StringReader(sLine))) {
-                if(getLineParserFactory().isEmpty())
+                if(lineParserFactory.isEmpty())
                     return;
-                FWLineParserFactory.LineParserResult result = getLineParserFactory().makeLineParser(r);
-                if (result.result != LineParserMatcherResult.SUCCESS) {
-                    handleNoParser(lineNumber, result.result, errorListener);
-                    if(result.result == LineParserMatcherResult.NOT_MATCHING)
+                FixedWidthLineParser lineParser = lineParserFactory.makeLineParser(r);
+                if (lineParser == null) {
+                    handleNoParser(lineNumber, lineParserFactory.getLastResult(), errorListener);
+                    if(lineParserFactory.getLastResult() == LineParserMatcherResult.NOT_MATCHING)
                         continue;
                     else
                         return;
                 }
-                Line line = result.lineParser.parse(r, lineNumber, errorListener );
+                Line line = lineParser.parse(r, lineNumber, errorListener );
                 if (line == null) // Should never occur.
                     throw new AssertionError("Unexpected error while parsing line number " + lineNumber);
                 String remaining = r.readLine();
