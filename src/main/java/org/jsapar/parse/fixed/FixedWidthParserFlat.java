@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ErrorEventListener;
@@ -26,7 +23,7 @@ public class FixedWidthParserFlat extends FixedWidthParser{
      * @param reader The reader to use.
      * @param schema The schema to use.
      */
-    public FixedWidthParserFlat(Reader reader, FixedWidthSchema schema) {
+    FixedWidthParserFlat(Reader reader, FixedWidthSchema schema) {
         this(reader, schema, new ParseConfig());
     }
 
@@ -49,7 +46,7 @@ public class FixedWidthParserFlat extends FixedWidthParser{
      * @param errorListener
      * The {@link ErrorEventListener} that will receive events for each error.
      *
-     * @throws java.io.IOException
+     * @throws java.io.IOException If there is an error reading from the input reader.
      */
     @Override
     public void parse(LineEventListener lineEventListener, ErrorEventListener errorListener) throws IOException {

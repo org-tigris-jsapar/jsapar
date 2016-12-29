@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ErrorEventListener;
@@ -18,7 +15,7 @@ import java.io.StringReader;
  */
 public class FixedWidthParserLinesSeparated extends FixedWidthParser {
 
-    LineReader lineReader;
+    private LineReader lineReader;
 
     /**
      * Creates a parser for fixed with cells where lines are separated.

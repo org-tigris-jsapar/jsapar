@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
 /**
  * Creates fixed width line parsers based on schema.
  */
-public class FWLineParserFactory {
+class FWLineParserFactory {
     private List<FWLineParserMatcher> lineParserMatchers;
     private LineParserMatcherResult lastResult;
 
-    public FWLineParserFactory(FixedWidthSchema schema, ParseConfig config) {
+    FWLineParserFactory(FixedWidthSchema schema, ParseConfig config) {
         lineParserMatchers = schema.getFixedWidthSchemaLines().stream()
                 .map(schemaLine -> new FWLineParserMatcher(schemaLine, config)).collect(Collectors.toList());
     }
@@ -27,7 +27,7 @@ public class FWLineParserFactory {
      * null, you can call {@link #getLastResult()} to get the reason for failure to return a line parser.
      * @throws IOException
      */
-    public FixedWidthLineParser makeLineParser(BufferedReader reader) throws IOException {
+    FixedWidthLineParser makeLineParser(BufferedReader reader) throws IOException {
         if(lineParserMatchers.isEmpty())
             return null;
         Iterator<FWLineParserMatcher> iter = lineParserMatchers.iterator();
@@ -65,11 +65,11 @@ public class FWLineParserFactory {
         return null;
     }
 
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return lineParserMatchers.isEmpty();
     }
 
-    public LineParserMatcherResult getLastResult() {
+    LineParserMatcherResult getLastResult() {
         return lastResult;
     }
 
