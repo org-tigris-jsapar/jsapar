@@ -4,8 +4,8 @@ import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineDecoratorErrorEventListener;
-import org.jsapar.parse.TextParseConfig;
 import org.jsapar.parse.ValidationHandler;
+import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 

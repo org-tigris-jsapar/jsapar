@@ -1,33 +1,35 @@
-package org.jsapar;
+package org.jsapar.parse.text;
 
-import org.jsapar.parse.*;
+import org.jsapar.DocumentBuilder;
+import org.jsapar.parse.AbstractParseTask;
+import org.jsapar.parse.LineEventListener;
+import org.jsapar.parse.ParseTask;
 import org.jsapar.schema.Schema;
 
 import java.io.IOException;
 import java.io.Reader;
 
 /**
- * This class is the starting point for parsing a text (like a text file). <br>
+ * This class is used for a one-off parsing of a text source. You create an instance of this class, calls execute, then dispose it.. <br>
  * The instance of this class will produce events for each line that has been successfully parsed. <br/>
  * If you want to get the result back as a complete Document object, you should use the {@link DocumentBuilder} instead.
  * <br/>
  * <ol>
  * <li>First, create an instance of TextParseTask.</li>
- * <li>Add event listeners for parse events and error events</li>
+ * <li>Set event listeners for parse events and error events</li>
  * <li>Call the {@link #execute()} method. You will receive a callback event for each line that is parsed.</li>
  * </ol>
  * <br/>
  *
- * @see DocumentBuilder
- * @see TextComposer
- * @see ConvertTask
+ * @see org.jsapar.TextParser
+ * @see ParseTask
 *
  */
 public class TextParseTask extends AbstractParseTask implements ParseTask {
 
     private final Schema schema;
     private final Reader reader;
-    private final SchemaParserFactory parserFactory = new SchemaParserFactory();
+    private final TextSchemaParserFactory parserFactory = new TextSchemaParserFactory();
     private final TextParseConfig     parseConfig;
 
     public TextParseTask(Schema schema, Reader reader) {

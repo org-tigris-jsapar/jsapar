@@ -1,6 +1,7 @@
 package org.jsapar.parse;
 
 import org.jsapar.error.JSaParException;
+import org.jsapar.parse.text.TextLineReader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

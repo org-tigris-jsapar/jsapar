@@ -2,15 +2,15 @@ package org.jsapar.parse.csv;
 
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.SchemaParser;
-import org.jsapar.parse.TextParseConfig;
 import org.jsapar.parse.ValidationHandler;
+import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.schema.CsvSchema;
 
 import java.io.IOException;
 import java.io.Reader;
 
-public class CsvParser implements SchemaParser {
+public class CsvParser implements TextSchemaParser {
     
     private CsvLineReader        lineReader;
     private CsvSchema            schema;

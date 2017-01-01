@@ -1,5 +1,6 @@
-package org.jsapar;
+package org.jsapar.parse.bean;
 
+import org.jsapar.Bean2TextConverter;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.*;
@@ -7,7 +8,6 @@ import org.jsapar.parse.AbstractParseTask;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseTask;
-import org.jsapar.parse.bean.BeanParseConfig;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

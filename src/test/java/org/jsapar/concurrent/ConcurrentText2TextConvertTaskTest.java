@@ -1,9 +1,9 @@
 package org.jsapar.concurrent;
 
-import org.jsapar.ConvertTask;
 import org.jsapar.TextComposer;
-import org.jsapar.TextParseTask;
+import org.jsapar.convert.ConvertTask;
 import org.jsapar.error.JSaParException;
+import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.*;
 import org.junit.Assert;
 import org.junit.Test;

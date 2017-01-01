@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.jsapar.parse;
+package org.jsapar.parse.text;
 
 import java.io.IOException;
 import java.io.Reader;

@@ -3,7 +3,6 @@
  */
 package org.jsapar.convert;
 
-import org.jsapar.ConvertTask;
 import org.jsapar.model.Line;
 
 /**

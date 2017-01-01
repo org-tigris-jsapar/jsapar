@@ -2,7 +2,11 @@ package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Line;
-import org.jsapar.parse.*;
+import org.jsapar.parse.LineEventListener;
+import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.text.LineReader;
+import org.jsapar.parse.text.TextLineReader;
+import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
 
 import java.io.BufferedReader;

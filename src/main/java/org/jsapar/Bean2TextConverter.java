@@ -1,7 +1,9 @@
 package org.jsapar;
 
 import org.jsapar.convert.AbstractConverter;
+import org.jsapar.convert.ConvertTask;
 import org.jsapar.parse.bean.BeanParseConfig;
+import org.jsapar.parse.bean.BeanParseTask;
 import org.jsapar.schema.Schema;
 
 import java.io.IOException;

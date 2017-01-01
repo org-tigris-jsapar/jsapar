@@ -1,6 +1,5 @@
 package org.jsapar.parse;
 
-import org.jsapar.DocumentBuilder;
 import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;
 import org.jsapar.parse.xml.XmlParseTask;
@@ -28,8 +27,10 @@ public class XMLDocumentParseTaskTest {
 
         java.io.Reader reader = new java.io.StringReader(sXml);
         ParseTask parseTask = new XmlParseTask(reader);
-        DocumentBuilder builder = new DocumentBuilder(parseTask);
-        Document document = builder.build();
+        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
+        parseTask.setLineEventListener(listener);
+        parseTask.execute();
+        Document document = listener.getDocument();
 
         // System.out.println("Errors: " + parseErrors.toString());
 

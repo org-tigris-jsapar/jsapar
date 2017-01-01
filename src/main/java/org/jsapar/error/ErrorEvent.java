@@ -1,6 +1,6 @@
 package org.jsapar.error;
 
-import org.jsapar.ConvertTask;
+import org.jsapar.convert.ConvertTask;
 import org.jsapar.parse.ParseTask;
 
 import java.util.EventObject;

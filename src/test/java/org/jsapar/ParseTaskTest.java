@@ -7,6 +7,8 @@ import org.jsapar.error.ThresholdRecordingErrorEventListener;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Document;
 import org.jsapar.parse.CellParseException;
+import org.jsapar.parse.DocumentBuilderLineEventListener;
+import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
@@ -65,9 +67,11 @@ public class ParseTaskTest {
         Reader reader = new StringReader(toParse);
         List<JSaParException> parseErrors = new ArrayList<>();
         TextParseTask parser = new TextParseTask(schema, reader);
-        DocumentBuilder builder = new DocumentBuilder(parser);
-        builder.addErrorEventListener(new RecordingErrorEventListener(parseErrors));
-        Document doc = builder.build();
+        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
+        parser.setLineEventListener(listener);
+        parser.setErrorEventListener(new RecordingErrorEventListener(parseErrors));
+        parser.execute();
+        Document doc = listener.getDocument();
         Assert.assertEquals(1, parseErrors.size());
         Assert.assertEquals("Shoe size", ((CellParseException)parseErrors.get(0)).getCellName());
         Assert.assertEquals(1, ((CellParseException)parseErrors.get(0)).getLineNumber());
@@ -84,9 +88,11 @@ public class ParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         TextParseTask parser = new TextParseTask(schema, reader);
-        DocumentBuilder builder = new DocumentBuilder(parser);
-        builder.addErrorEventListener(new ThresholdRecordingErrorEventListener(0));
-        Document doc = builder.build();
+        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
+        parser.setLineEventListener(listener);
+        parser.setErrorEventListener(new ThresholdRecordingErrorEventListener(0));
+        parser.execute();
+        Document doc = listener.getDocument();
     }
     
     
@@ -112,8 +118,10 @@ public class ParseTaskTest {
     private Document build(String toParse, FixedWidthSchema schema) throws IOException {
         Reader reader = new StringReader(toParse);
         TextParseTask parser = new TextParseTask(schema, reader);
-        DocumentBuilder builder = new DocumentBuilder(parser);
-        return builder.build();
+        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
+        parser.setLineEventListener(listener);
+        parser.execute();
+        return listener.getDocument();
     }
 
     @Test

@@ -1,7 +1,7 @@
 package org.jsapar.concurrent;
 
-import org.jsapar.ConvertTask;
 import org.jsapar.compose.Composer;
+import org.jsapar.convert.ConvertTask;
 import org.jsapar.model.Line;
 import org.jsapar.parse.ParseTask;
 

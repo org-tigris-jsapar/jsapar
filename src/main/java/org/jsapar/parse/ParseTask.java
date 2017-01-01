@@ -1,9 +1,9 @@
 package org.jsapar.parse;
 
-import org.jsapar.BeanParseTask;
-import org.jsapar.TextParseTask;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.MulticastErrorEventListener;
+import org.jsapar.parse.bean.BeanParseTask;
+import org.jsapar.parse.text.TextParseTask;
 
 import java.io.IOException;
 

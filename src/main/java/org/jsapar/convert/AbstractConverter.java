@@ -1,6 +1,5 @@
 package org.jsapar.convert;
 
-import org.jsapar.ConvertTask;
 import org.jsapar.error.ErrorEventListener;
 
 import java.io.IOException;

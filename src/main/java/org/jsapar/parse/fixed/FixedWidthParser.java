@@ -4,9 +4,9 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.parse.SchemaParser;
-import org.jsapar.parse.TextParseConfig;
 import org.jsapar.parse.ValidationHandler;
+import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.schema.FixedWidthSchema;
 
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * Abstract base class for fixed width text parser based on schema.
  */
-public abstract class FixedWidthParser implements SchemaParser {
+public abstract class FixedWidthParser implements TextSchemaParser {
     private FixedWidthSchema schema;
     private TextParseConfig  config;
     private ValidationHandler validationHandler = new ValidationHandler();

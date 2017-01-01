@@ -3,8 +3,8 @@
  */
 package org.jsapar.parse.csv;
 
-import org.jsapar.parse.LineReader;
-import org.jsapar.parse.TextLineReader;
+import org.jsapar.parse.text.LineReader;
+import org.jsapar.parse.text.TextLineReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;

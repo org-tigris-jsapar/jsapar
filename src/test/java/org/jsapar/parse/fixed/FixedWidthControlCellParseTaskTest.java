@@ -5,7 +5,7 @@ import org.jsapar.error.ValidationAction;
 import org.jsapar.model.Document;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.parse.LineParseException;
-import org.jsapar.parse.TextParseConfig;
+import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;

@@ -1,13 +1,14 @@
-package org.jsapar.parse;
+package org.jsapar.parse.text;
 
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.parse.LineEventListener;
 
 import java.io.IOException;
 
 /**
  * Internal interface for text parser that can parse text based on a schema.
  */
-public interface SchemaParser {
+public interface TextSchemaParser {
 
     /**
      * This method should only be called by a TextParseTask class. Don't use this

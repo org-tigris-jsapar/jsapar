@@ -1,7 +1,6 @@
-package org.jsapar;
+package org.jsapar.convert;
 
 import org.jsapar.compose.Composer;
-import org.jsapar.convert.LineManipulator;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineEventListener;

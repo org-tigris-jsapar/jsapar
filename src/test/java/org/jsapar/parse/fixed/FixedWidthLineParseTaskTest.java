@@ -8,7 +8,7 @@ import org.jsapar.model.Line;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.LineParseException;
-import org.jsapar.parse.TextParseConfig;
+import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 import org.jsapar.schema.SchemaException;

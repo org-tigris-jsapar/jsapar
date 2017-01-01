@@ -1,7 +1,7 @@
 package org.jsapar.concurrent;
 
 import org.jsapar.TextComposer;
-import org.jsapar.TextParseTask;
+import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
 
 import java.io.Reader;

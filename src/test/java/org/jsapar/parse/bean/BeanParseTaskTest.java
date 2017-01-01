@@ -1,11 +1,13 @@
 /**
  * 
  */
-package org.jsapar;
+package org.jsapar.parse.bean;
 
+import org.jsapar.TstPerson;
+import org.jsapar.TstPostAddress;
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.*;
-import org.jsapar.parse.bean.BeanParseConfig;
+import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -52,8 +54,10 @@ public class BeanParseTaskTest {
         people.add(person);
 
         BeanParseTask<TstPerson> parser = new BeanParseTask<>(people.iterator(), new BeanParseConfig());
-        DocumentBuilder builder = new DocumentBuilder(parser);
-        Document doc = builder.build();
+        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
+        parser.setLineEventListener(listener);
+        parser.execute();
+        Document doc = listener.getDocument();
 
         assertEquals(2, doc.size());
         Line line = doc.getLine(0);

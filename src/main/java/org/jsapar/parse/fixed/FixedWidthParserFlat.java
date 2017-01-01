@@ -4,7 +4,7 @@ import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
-import org.jsapar.parse.TextParseConfig;
+import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
 
 import java.io.BufferedReader;
