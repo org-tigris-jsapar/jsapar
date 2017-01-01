@@ -16,8 +16,8 @@ import java.io.IOException;
 public class CsvLineParser {
 
     private static final String EMPTY_STRING = "";
-    private CsvSchemaLine lineSchema;
-    private ParseConfig   config;
+    private CsvSchemaLine   lineSchema;
+    private TextParseConfig config;
     private long              usedCount         = 0L;
     private CellParser        cellParser        = new CellParser();
     private ValidationHandler validationHandler = new ValidationHandler();
@@ -28,7 +28,7 @@ public class CsvLineParser {
      * @param lineSchema The line schema to use.
      */
     public CsvLineParser(CsvSchemaLine lineSchema) {
-        this(lineSchema, new ParseConfig());
+        this(lineSchema, new TextParseConfig());
     }
 
     /**
@@ -37,7 +37,7 @@ public class CsvLineParser {
      * @param lineSchema The line schema to use.
      * @param config     Configuration for parsing.
      */
-    public CsvLineParser(CsvSchemaLine lineSchema, ParseConfig config) {
+    public CsvLineParser(CsvSchemaLine lineSchema, TextParseConfig config) {
         this.lineSchema = lineSchema;
         this.config = config;
     }

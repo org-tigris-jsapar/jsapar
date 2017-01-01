@@ -24,7 +24,7 @@ public class SchemaParserFactory {
      * @param parseConfig Configuration that the parser should use.
      * @return A {@link SchemaParser} based on a {@link Schema}
      */
-    public SchemaParser makeSchemaParser(Schema schema, Reader reader, ParseConfig parseConfig)  {
+    public SchemaParser makeSchemaParser(Schema schema, Reader reader, TextParseConfig parseConfig)  {
         if (schema instanceof CsvSchema) {
             return new CsvParser(reader, (CsvSchema) schema, parseConfig);
         }

@@ -13,7 +13,7 @@ import java.util.Locale;
 
 import static org.junit.Assert.*;
 
-public class CellParserTest {
+public class CellParseTaskTest {
     CellParser cellParser = new CellParser();
 
     /**

@@ -12,27 +12,32 @@ import java.io.Reader;
  * If you want to get the result back as a complete Document object, you should use the {@link DocumentBuilder} instead.
  * <br/>
  * <ol>
- * <li>First, create an instance of TextParser.</li>
+ * <li>First, create an instance of TextParseTask.</li>
  * <li>Add event listeners for parse events and error events</li>
- * <li>Call the {@link #parse()} method. You will receive a callback event for each line that is parsed.</li>
+ * <li>Call the {@link #execute()} method. You will receive a callback event for each line that is parsed.</li>
  * </ol>
  * <br/>
  *
  * @see DocumentBuilder
  * @see TextComposer
- * @see Converter
+ * @see ConvertTask
 *
  */
-public class TextParser extends AbstractParser implements Parser {
+public class TextParseTask extends AbstractParseTask implements ParseTask {
 
     private final Schema schema;
-    private       Reader reader;
-    private SchemaParserFactory parserFactory = new SchemaParserFactory();
-    private ParseConfig parseConfig = new ParseConfig();
+    private final Reader reader;
+    private final SchemaParserFactory parserFactory = new SchemaParserFactory();
+    private final TextParseConfig     parseConfig;
 
-    public TextParser(Schema schema, Reader reader) {
+    public TextParseTask(Schema schema, Reader reader) {
+        this(schema, reader, new TextParseConfig());
+    }
+
+    public TextParseTask(Schema schema, Reader reader, TextParseConfig parseConfig) {
         this.schema = schema;
         this.reader = reader;
+        this.parseConfig = parseConfig;
     }
 
     /**
@@ -44,7 +49,7 @@ public class TextParser extends AbstractParser implements Parser {
      * @throws IOException If there is an error reading the input
      */
     @Override
-    public void parse() throws IOException {
+    public void execute() throws IOException {
         parserFactory.makeSchemaParser(this.schema, reader, parseConfig).parse(this, this);
     }
 

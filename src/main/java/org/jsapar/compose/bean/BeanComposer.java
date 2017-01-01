@@ -13,31 +13,33 @@ import org.jsapar.model.Line;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Composer class that composes java beans based on a document or by single lines. The result is that for each bean that
  * was successfully composed, a {@link BeanComposedEvent} is generated to all registered {@link BeanComposedEventListener}.
- * You can register a {@link BeanComposedEventListener} by calling {@link #addComposedEventListener(BeanComposedEventListener)}
+ * You can register a {@link BeanComposedEventListener} by calling {@link #setComposedEventListener(BeanComposedEventListener)}
  * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.
  */
 public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, ErrorEventListener {
     private static final String SET_PREFIX = "set";
 
-    private List<BeanComposedEventListener<T>> composedEventListeners = new ArrayList<>();
-    private ErrorEventListener                 errorEventListener     = new ExceptionErrorEventListener();
-    private BeanFactory<T>                     beanFactory            = new BeanFactoryDefault<>();
-    private Map<String, String>                setMethodNameCache     = new HashMap<>();
-    private BeanComposerConfig                 config                 = new BeanComposerConfig();
-    private ValidationHandler                  validationHandler      = new ValidationHandler();
+    private BeanComposedEventListener<T> composedEventListener;
+    private ErrorEventListener  errorEventListener = new ExceptionErrorEventListener();
+    private BeanFactory<T>      beanFactory        = new BeanFactoryDefault<>();
+    private Map<String, String> setMethodNameCache = new HashMap<>();
+    private BeanComposeConfig   config             = new BeanComposeConfig();
+    private ValidationHandler   validationHandler  = new ValidationHandler();
 
     /**
      * Creates a bean composer with {@link BeanFactoryDefault} as {@link BeanFactory}
      */
     public BeanComposer() {
+    }
+
+    public BeanComposer(BeanComposeConfig config) {
+        this.config = config;
     }
 
     /**
@@ -97,8 +99,8 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
         errorEvent(new ErrorEvent(this, new ComposeException(message + " while handling cell " + cell)));
     }
 
-    public void addComposedEventListener(BeanComposedEventListener<T> eventListener) {
-        composedEventListeners.add(eventListener);
+    public void setComposedEventListener(BeanComposedEventListener<T> eventListener) {
+        this.composedEventListener = eventListener;
     }
 
     @Override
@@ -116,8 +118,8 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
 
     @Override
     public void beanComposedEvent(BeanComposedEvent<T> event) {
-        for (BeanComposedEventListener<T> composedEventlistener : composedEventListeners) {
-            composedEventlistener.beanComposedEvent(event);
+        if (composedEventListener != null) {
+            composedEventListener.beanComposedEvent(event);
         }
     }
 
@@ -340,11 +342,11 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
         return false;
     }
 
-    public BeanComposerConfig getConfig() {
+    public BeanComposeConfig getConfig() {
         return config;
     }
 
-    public void setConfig(BeanComposerConfig config) {
+    public void setConfig(BeanComposeConfig config) {
         this.config = config;
     }
 }

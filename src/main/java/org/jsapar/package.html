@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Java Schema Parser</h1>
-The JSaPar package provides a parser for flat and CSV (Comma Separated
+The JSaPar package provides a parseTask for flat and CSV (Comma Separated
 Values) files. 
 <br/><br/>
 The files for the examples below are provided in the <tt>samples</tt> folder of the project. The JUnit test <tt>org.jsapar.JSaParExamplesTest.java</tt> 
@@ -19,8 +19,8 @@ Example of reading <b>CSV file</b> into a org.jsapar.model.Document object accor
         Reader schemaReader = new FileReader("samples/01_CsvSchema.xml");<br/>
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();<br/>
         try(Reader fileReader = new FileReader("samples/01_Names.csv")){<br/>
-        &nbsp;&nbsp;Parser parser = new Parser(xmlBuilder.build(schemaReader));<br/>
-        &nbsp;&nbsp;Document document = parser.build(fileReader);<br/>
+        &nbsp;&nbsp;Parser parseTask = new Parser(xmlBuilder.build(schemaReader));<br/>
+        &nbsp;&nbsp;Document document = parseTask.build(fileReader);<br/>
         }
         </code><br/>
 		<td />
@@ -39,8 +39,8 @@ Example of converting a <b>Fixed width file</b> into a <b>CSV file</b> according
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();<br/>
         Reader inReader = new FileReader("samples/01_Names.csv");<br/>
         Writer outWriter = new FileWriter("samples/02_Names_out.txt");<br/>
-        Converter converter = new Converter(xmlBuilder.build(inSchemaReader), xmlBuilder.build(outSchemaReader));<br/>
-        converter.convert(inReader, outWriter);<br/>
+        Converter convertTask = new Converter(xmlBuilder.build(inSchemaReader), xmlBuilder.build(outSchemaReader));<br/>
+        convertTask.convert(inReader, outWriter);<br/>
         inReader.close();<br/>
         outWriter.close();<br/>
         </code>
@@ -57,9 +57,9 @@ Example of converting a <b>CSV file</b> into a list of <b>Java objects</b> accor
         Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");<br/>
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();<br/>
         Reader fileReader = new FileReader("samples/07_Names.csv");<br/>
-        Parser parser = new Parser(xmlBuilder.build(schemaReader));<br/>
+        Parser parseTask = new Parser(xmlBuilder.build(schemaReader));<br/>
         List<CellParseError> errors = new LinkedList<CellParseError>()<br/>
-        List<TestPerson> people = parser.buildJava(fileReader, errors);<br/>
+        List<TestPerson> people = parseTask.buildJava(fileReader, errors);<br/>
         fileReader.close();<br/>
 		<td />
 	</tr>

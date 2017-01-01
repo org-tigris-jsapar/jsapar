@@ -6,14 +6,14 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Unit test for BeanComposerConfig
+ * Unit test for BeanComposeConfig
  * Created by stejon0 on 2016-10-16.
  */
-public class BeanComposerConfigTest {
+public class BeanComposeConfigTest {
 
     @Test
     public void testGetSetOnUndefinedLineType() throws Exception {
-        BeanComposerConfig c = new BeanComposerConfig();
+        BeanComposeConfig c = new BeanComposeConfig();
         c.setOnUndefinedLineType(ValidationAction.NONE);
         assertEquals(ValidationAction.NONE, c.getOnUndefinedLineType());
         c.setOnUndefinedLineType(ValidationAction.ERROR);

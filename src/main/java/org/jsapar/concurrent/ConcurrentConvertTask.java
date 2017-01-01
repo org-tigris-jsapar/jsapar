@@ -1,19 +1,20 @@
 package org.jsapar.concurrent;
 
-import org.jsapar.Converter;
+import org.jsapar.ConvertTask;
 import org.jsapar.compose.Composer;
-import org.jsapar.parse.Parser;
+import org.jsapar.model.Line;
+import org.jsapar.parse.ParseTask;
 
 import java.io.IOException;
 
 /**
- * Concurrent version of the {@link Converter}. The composer is executed in a separate worker thread. Also the line
+ * Concurrent version of the {@link ConvertTask}. The composer is executed in a separate worker thread. Also the line
  * manipulators are all executed in the worker thread.
  * <p>
  * Reads from supplied parser and outputs each line to the composer. By adding
  * a LineManipulator you are able to make modifications of each line before it is written to the
- * output. The method manipulate() of all added LineManipulators are called for each line that are
- * parsed successfully.
+ * output. The method {@link org.jsapar.convert.LineManipulator#manipulate(Line)} of all added LineManipulators are
+ * called for each line that is successfully parsed.
  * <p>
  * For each line, the line type of the parsed line is
  * considered when choosing the line type of the output schema line. This means that lines with a
@@ -23,22 +24,22 @@ import java.io.IOException;
  * false for the lines that should not be composed.
  *
  */
-public class ConcurrentConverter extends Converter {
+public class ConcurrentConvertTask extends ConvertTask {
 
     /** Creates a converter
-     * @param parser The parser to use while parsing
+     * @param parseTask The parseTask to use while parsing
      * @param composer The composer to use while composing.
      */
-    public ConcurrentConverter(Parser parser, Composer composer) {
-        super(parser, composer);
+    public ConcurrentConvertTask(ParseTask parseTask, Composer composer) {
+        super(parseTask, composer);
     }
 
-    public void convert() throws IOException {
+    public void execute() throws IOException {
         try (ConcurrentLineEventListener concurrentLineEventListener = new ConcurrentLineEventListener()) {
-            getParser().setLineEventListener(concurrentLineEventListener);
+            getParseTask().setLineEventListener(concurrentLineEventListener);
             concurrentLineEventListener.addLineEventListener(new LineForwardListener());
             concurrentLineEventListener.start();
-            getParser().parse();
+            getParseTask().execute();
         }
     }
 

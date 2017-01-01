@@ -3,7 +3,7 @@ package org.jsapar.parse;
 import org.jsapar.DocumentBuilder;
 import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;
-import org.jsapar.parse.xml.XmlParser;
+import org.jsapar.parse.xml.XmlParseTask;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
-public class XMLDocumentParserTest {
+public class XMLDocumentParseTaskTest {
 
     @Before
     public void setUp() throws Exception {
@@ -27,8 +27,8 @@ public class XMLDocumentParserTest {
                 + "<cell name=\"LastSeen\" type=\"date\">2007-12-03T12:48:00</cell>" + "</line></document>";
 
         java.io.Reader reader = new java.io.StringReader(sXml);
-        Parser parser = new XmlParser(reader);
-        DocumentBuilder builder = new DocumentBuilder(parser);
+        ParseTask parseTask = new XmlParseTask(reader);
+        DocumentBuilder builder = new DocumentBuilder(parseTask);
         Document document = builder.build();
 
         // System.out.println("Errors: " + parseErrors.toString());

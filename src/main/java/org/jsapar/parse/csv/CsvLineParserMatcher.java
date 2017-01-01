@@ -1,6 +1,6 @@
 package org.jsapar.parse.csv;
 
-import org.jsapar.parse.ParseConfig;
+import org.jsapar.parse.TextParseConfig;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 
@@ -23,7 +23,7 @@ public class CsvLineParserMatcher {
      * @param schemaLine The line schema to use for this matcher.
      * @param config Behavior.
      */
-    public CsvLineParserMatcher(CsvSchemaLine schemaLine, ParseConfig config) {
+    public CsvLineParserMatcher(CsvSchemaLine schemaLine, TextParseConfig config) {
         this.schemaLine = schemaLine;
         occursLeft = schemaLine.getOccurs();
         lineParser = new CsvLineParser(schemaLine, config);

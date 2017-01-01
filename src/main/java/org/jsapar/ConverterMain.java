@@ -44,9 +44,10 @@ public class ConverterMain {
             java.io.Writer writer = (outFileEncoding == null) ? new java.io.FileWriter(outFileName)
                     : new OutputStreamWriter(new FileOutputStream(outFileName), outFileEncoding);
 
-            Converter converter = makeConverter(inputSchema, inputFileReader, outputSchema, writer);
+            Text2TextConverter converter = makeConverter(inputSchema, outputSchema);
             RecordingErrorEventListener errorEventListener = new RecordingErrorEventListener();
-            converter.convert();
+            converter.setErrorEventListener(errorEventListener);
+            converter.convert(inputFileReader, writer);
             List<JSaParException> parseErrors = errorEventListener.getErrors();
 
             if (parseErrors.size() > 0)
@@ -88,9 +89,8 @@ public class ConverterMain {
      * @param outputSchema
      * @return A new converter.
      */
-    protected Converter makeConverter(Schema inputSchema, Reader reader, Schema outputSchema, Writer writer) {
-        Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
-        return converter;
+    protected Text2TextConverter makeConverter(Schema inputSchema, Schema outputSchema) {
+        return new Text2TextConverter(inputSchema,  outputSchema) ;
     }
 
     /**

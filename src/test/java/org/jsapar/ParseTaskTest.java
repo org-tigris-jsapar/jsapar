@@ -23,7 +23,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 
-public class ParserTest {
+public class ParseTaskTest {
 
     @Test
     public void testBuild_fixed_oneLine() throws IOException {
@@ -64,7 +64,7 @@ public class ParserTest {
 
         Reader reader = new StringReader(toParse);
         List<JSaParException> parseErrors = new ArrayList<>();
-        TextParser parser = new TextParser(schema, reader);
+        TextParseTask parser = new TextParseTask(schema, reader);
         DocumentBuilder builder = new DocumentBuilder(parser);
         builder.addErrorEventListener(new RecordingErrorEventListener(parseErrors));
         Document doc = builder.build();
@@ -83,7 +83,7 @@ public class ParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        TextParser parser = new TextParser(schema, reader);
+        TextParseTask parser = new TextParseTask(schema, reader);
         DocumentBuilder builder = new DocumentBuilder(parser);
         builder.addErrorEventListener(new ThresholdRecordingErrorEventListener(0));
         Document doc = builder.build();
@@ -111,7 +111,7 @@ public class ParserTest {
 
     private Document build(String toParse, FixedWidthSchema schema) throws IOException {
         Reader reader = new StringReader(toParse);
-        TextParser parser = new TextParser(schema, reader);
+        TextParseTask parser = new TextParseTask(schema, reader);
         DocumentBuilder builder = new DocumentBuilder(parser);
         return builder.build();
     }

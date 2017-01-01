@@ -1,6 +1,6 @@
 package org.jsapar.parse.fixed;
 
-import org.jsapar.parse.ParseConfig;
+import org.jsapar.parse.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 
@@ -20,7 +20,7 @@ public class FWLineParserMatcher {
     private int maxControlEndPos;
     private FixedWidthCellParser cellParser = new FixedWidthCellParser();
 
-    public FWLineParserMatcher(FixedWidthSchemaLine schemaLine, ParseConfig config) {
+    public FWLineParserMatcher(FixedWidthSchemaLine schemaLine, TextParseConfig config) {
         this.schemaLine = schemaLine;
         this.lineParser = new FixedWidthLineParser(schemaLine, config);
         occursLeft = schemaLine.getOccurs();

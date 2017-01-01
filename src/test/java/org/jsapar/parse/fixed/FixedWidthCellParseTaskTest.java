@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 @SuppressWarnings("ThrowablePrintedToSystemOut")
-public class FixedWidthCellParserTest {
+public class FixedWidthCellParseTaskTest {
 
 
     @Test

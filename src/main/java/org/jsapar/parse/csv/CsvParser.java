@@ -2,8 +2,8 @@ package org.jsapar.parse.csv;
 
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.ParseConfig;
 import org.jsapar.parse.SchemaParser;
+import org.jsapar.parse.TextParseConfig;
 import org.jsapar.parse.ValidationHandler;
 import org.jsapar.schema.CsvSchema;
 
@@ -12,18 +12,18 @@ import java.io.Reader;
 
 public class CsvParser implements SchemaParser {
     
-    private CsvLineReader lineReader;
-    private CsvSchema schema;
+    private CsvLineReader        lineReader;
+    private CsvSchema            schema;
     private CsvLineParserFactory lineParserFactory;
-    private ParseConfig parseConfig;
+    private TextParseConfig      parseConfig;
     private ValidationHandler validationHandler = new ValidationHandler();
 
     public CsvParser(Reader reader, CsvSchema schema) {
-        this(reader, schema, new ParseConfig());
+        this(reader, schema, new TextParseConfig());
     }
 
 
-    public CsvParser(Reader reader, CsvSchema schema, ParseConfig parseConfig) {
+    public CsvParser(Reader reader, CsvSchema schema, TextParseConfig parseConfig) {
         this.parseConfig = parseConfig;
         lineReader = new CsvLineReader(schema.getLineSeparator(), reader);
         this.schema = schema;

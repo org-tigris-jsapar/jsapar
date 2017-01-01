@@ -7,10 +7,10 @@ import org.jsapar.error.ExceptionErrorEventListener;
 import java.io.IOException;
 
 /**
- * Abstract implementation of {@link Parser} interface. Provides possibility to have multiple line event listeners and
+ * Abstract implementation of {@link ParseTask} interface. Provides possibility to have line event listeners and
  * error event listeners. Override this class to implement a specific parser.
  */
-public abstract class AbstractParser implements Parser, LineEventListener, ErrorEventListener {
+public abstract class AbstractParseTask implements ParseTask, LineEventListener, ErrorEventListener {
     private LineEventListener  lineEventListener  = null;
     private ErrorEventListener errorEventListener = new ExceptionErrorEventListener();
 

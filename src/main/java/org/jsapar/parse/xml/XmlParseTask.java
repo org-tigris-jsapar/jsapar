@@ -33,18 +33,18 @@ import java.util.GregorianCalendar;
 /**
  * Parses xml text that conform to the schema http://jsapar.tigris.org/XMLDocumentFormat/1.0
  */
-public class XmlParser extends AbstractParser implements Parser {
+public class XmlParseTask extends AbstractParseTask implements ParseTask {
     // private final static String SCHEMA_LANGUAGE =
     // "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
 
     private Reader reader;
 
-    public XmlParser(Reader reader) {
+    public XmlParseTask(Reader reader) {
         this.reader = reader;
     }
 
     @Override
-    public void parse() throws IOException{
+    public void execute() throws IOException{
 
         String schemaFileName = "/xml/schema/XMLDocumentFormat.xsd";
         InputStream schemaStream = Xml2SchemaBuilder.class.getResourceAsStream(schemaFileName);

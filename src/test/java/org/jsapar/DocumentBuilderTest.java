@@ -46,7 +46,7 @@ public class DocumentBuilderTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
         schema.addSchemaLine(schemaLine);
 
-        TextParser parser = new TextParser(schema, new StringReader(toParse));
+        TextParseTask parser = new TextParseTask(schema, new StringReader(toParse));
         DocumentBuilder builder = new DocumentBuilder(parser);
         Document doc = builder.build();
 
@@ -64,7 +64,7 @@ public class DocumentBuilderTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Shoe size", 3, new SchemaCellFormat(CellType.INTEGER)));
         schema.addSchemaLine(schemaLine);
 
-        TextParser parser = new TextParser(schema, new StringReader(toParse));
+        TextParseTask parser = new TextParseTask(schema, new StringReader(toParse));
         DocumentBuilder builder = new DocumentBuilder(parser);
         Document doc = builder.build();
     }

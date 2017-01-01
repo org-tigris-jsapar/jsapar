@@ -8,7 +8,7 @@ import org.jsapar.model.Line;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.LineParseException;
-import org.jsapar.parse.ParseConfig;
+import org.jsapar.parse.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 import org.jsapar.schema.SchemaException;
@@ -22,7 +22,7 @@ import java.io.StringReader;
 
 import static org.junit.Assert.*;
 
-public class FixedWidthLineParserTest {
+public class FixedWidthLineParseTaskTest {
     
     boolean foundError = false;
 
@@ -48,7 +48,7 @@ public class FixedWidthLineParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        ParseConfig config = new ParseConfig();
+        TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
         Line line = parser.parse(reader, 1, new ExceptionErrorEventListener() );
         assertNotNull(line);
@@ -70,7 +70,7 @@ public class FixedWidthLineParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        ParseConfig config = new ParseConfig();
+        TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
         Line line = parser.parse(reader, 1, new ExceptionErrorEventListener() );
         assertNotNull(line);
@@ -90,7 +90,7 @@ public class FixedWidthLineParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        ParseConfig config = new ParseConfig();
+        TextParseConfig config = new TextParseConfig();
         config.setOnLineInsufficient(ValidationAction.EXCEPTION);
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
         parser.parse(reader, 1, new ExceptionErrorEventListener() );
@@ -112,7 +112,7 @@ public class FixedWidthLineParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        ParseConfig config = new ParseConfig();
+        TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
         Line line = parser.parse(reader, 1, event -> {
             CellParseException e = (CellParseException) event.getError();
@@ -139,7 +139,7 @@ public class FixedWidthLineParserTest {
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
-        ParseConfig config = new ParseConfig();
+        TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
         Line line = parser.parse(reader, 1, new ExceptionErrorEventListener() );
         assertNotNull(line);

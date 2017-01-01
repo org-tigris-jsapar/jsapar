@@ -3,11 +3,11 @@ package org.jsapar.parse;
 import org.jsapar.error.ValidationAction;
 
 /**
- * Configuration that controls behavior while parsing.
+ * Configuration that controls behavior while parsing text.
  * <p/>
  * Created by stejon0 on 2016-07-12.
  */
-public class ParseConfig {
+public class TextParseConfig {
 
     private ValidationAction onUndefinedLineType = ValidationAction.EXCEPTION;
     private ValidationAction onLineInsufficient  = ValidationAction.NONE;

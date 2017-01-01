@@ -22,8 +22,6 @@ import java.util.Iterator;
  * the Document to a file you should first set the schema,  use a {@link java.io.FileWriter} and
  * call the {@link #compose(Document)} method.
  * 
- * @author Jonas Stenberg
- * 
  */
 public class TextComposer implements Composer {
     private final Writer          writer;
@@ -55,9 +53,7 @@ public class TextComposer implements Composer {
 
     /**
      * Writes the document to a {@link java.io.Writer} according to the schemas of this composer.
-     * Note that you have to add at least one schema to the instance of TextComposer before calling
-     * this method.
-     * 
+     *
      * @param document
      *
      */
@@ -67,8 +63,7 @@ public class TextComposer implements Composer {
     }
 
     /**
-     * Writes the document to a {@link java.io.Writer} according to the schemas of this composer. Note that you have to
-     * add at least one schema to the instance of TextComposer before calling this method.
+     * Writes the document to a {@link java.io.Writer} according to the schemas of this composer.
      * 
      * @param lineIterator
      *            An iterator that iterates over a collection of lines. Can be used to build lines on-the-fly if you

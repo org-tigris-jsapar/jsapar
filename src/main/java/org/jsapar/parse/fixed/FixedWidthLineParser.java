@@ -4,7 +4,7 @@ import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineDecoratorErrorEventListener;
-import org.jsapar.parse.ParseConfig;
+import org.jsapar.parse.TextParseConfig;
 import org.jsapar.parse.ValidationHandler;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
@@ -21,9 +21,9 @@ public class FixedWidthLineParser {
     private FixedWidthSchemaLine lineSchema;
     private FixedWidthCellParser cellParser        = new FixedWidthCellParser();
     private ValidationHandler    validationHandler = new ValidationHandler();
-    private ParseConfig config;
+    private TextParseConfig config;
 
-    public FixedWidthLineParser(FixedWidthSchemaLine lineSchema, ParseConfig config) {
+    public FixedWidthLineParser(FixedWidthSchemaLine lineSchema, TextParseConfig config) {
         this.lineSchema = lineSchema;
         this.config = config;
     }

@@ -25,7 +25,7 @@ import java.io.StringWriter;
  * @author stejon0
  * 
  */
-public class Text2TextConverterTest {
+public class Text2TextConvertTest {
 
     public static final String LN = System.getProperty("line.separator");
 
@@ -64,8 +64,8 @@ public class Text2TextConverterTest {
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
-        Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
-        converter.convert();
+        Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
+        converter.convert(reader, writer);
         reader.close();
         writer.close();
         String sResult = writer.getBuffer().toString();
@@ -95,10 +95,10 @@ public class Text2TextConverterTest {
         outputSchema.addSchemaLine(outputSchemaLine);
 
         try (StringWriter writer = new StringWriter(); StringReader reader = new StringReader(toParse)) {
-            Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
+            Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
             RecordingErrorEventListener errorEventListener = new RecordingErrorEventListener();
-            converter.addErrorEventListener(errorEventListener);
-            converter.convert();
+            converter.setErrorEventListener(errorEventListener);
+            converter.convert(reader, writer);
             String sResult = writer.getBuffer().toString();
             String sExpected = "Jonas;41" + LN + "Frida;" + LN;
 
@@ -128,10 +128,10 @@ public class Text2TextConverterTest {
         outputSchema.addSchemaLine(outputSchemaLine);
 
         try (StringWriter writer = new StringWriter(); StringReader reader = new StringReader(toParse)) {
-            Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
+            Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
             RecordingErrorEventListener errorEventListener = new ThresholdRecordingErrorEventListener(0);
-            converter.addErrorEventListener(errorEventListener);
-            converter.convert();
+            converter.setErrorEventListener(errorEventListener);
+            converter.convert(reader, writer);
         }
 
     }
@@ -155,8 +155,8 @@ public class Text2TextConverterTest {
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
-        Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
-        converter.convert();
+        Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
+        converter.convert(reader, writer);
         String sResult = writer.getBuffer().toString();
         String sExpected = "Jonas;Stenberg" + LN;
 
@@ -193,8 +193,8 @@ public class Text2TextConverterTest {
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
-        Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
-        converter.convert();
+        Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
+        converter.convert(reader, writer);
         String sResult = writer.getBuffer().toString();
         String sExpected = "This file contains names" + LN + "Jonas;Stenberg"
                 + LN + "Frida;Bergsten" + LN;
@@ -223,7 +223,7 @@ public class Text2TextConverterTest {
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
-        Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
+        Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
         converter.addLineManipulator(new LineManipulator() {
             @Override
             public boolean manipulate(Line line) {
@@ -231,7 +231,7 @@ public class Text2TextConverterTest {
                 return true;
             }
         });
-        converter.convert();
+        converter.convert(reader, writer);
         String sResult = writer.getBuffer().toString();
         String sExpected = "Jonas;Stenberg;Stockholm" + LN
                 + "Frida;Bergsten;Stockholm" + LN;
@@ -268,8 +268,8 @@ public class Text2TextConverterTest {
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
-        Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
-        converter.convert();
+        Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
+        converter.convert(reader, writer);
         String sResult = writer.getBuffer().toString();
         String sExpected = "Jonas;Stenberg" + LN + "Frida;Bergsten"
                 + LN;
@@ -307,7 +307,7 @@ public class Text2TextConverterTest {
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
-        Converter converter = new Text2TextConverter(inputSchema, reader, outputSchema, writer);
+        Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
         converter.addLineManipulator(new LineManipulator() {
             @Override
             public boolean manipulate(Line line) {
@@ -317,7 +317,7 @@ public class Text2TextConverterTest {
                     return true;
             }
         });
-        converter.convert();
+        converter.convert(reader, writer);
         String sResult = writer.getBuffer().toString();
         String sExpected = "Jonas;Stenberg" + LN + "Frida;Bergsten"
                 + LN;

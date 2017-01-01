@@ -1,6 +1,6 @@
 package org.jsapar.parse.fixed;
 
-import org.jsapar.parse.ParseConfig;
+import org.jsapar.parse.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
 
 import java.io.BufferedReader;
@@ -16,7 +16,7 @@ class FWLineParserFactory {
     private List<FWLineParserMatcher> lineParserMatchers;
     private LineParserMatcherResult lastResult;
 
-    FWLineParserFactory(FixedWidthSchema schema, ParseConfig config) {
+    FWLineParserFactory(FixedWidthSchema schema, TextParseConfig config) {
         lineParserMatchers = schema.getFixedWidthSchemaLines().stream()
                 .map(schemaLine -> new FWLineParserMatcher(schemaLine, config)).collect(Collectors.toList());
     }

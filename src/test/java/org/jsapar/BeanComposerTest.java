@@ -1,8 +1,8 @@
 package org.jsapar;
 
 import org.jsapar.compose.ComposeException;
+import org.jsapar.compose.bean.BeanComposeConfig;
 import org.jsapar.compose.bean.BeanComposer;
-import org.jsapar.compose.bean.BeanComposerConfig;
 import org.jsapar.compose.bean.BeanFactory;
 import org.jsapar.compose.bean.RecordingBeanEventListener;
 import org.jsapar.error.RecordingErrorEventListener;
@@ -58,7 +58,7 @@ public class BeanComposerTest {
 
         BeanComposer<TstPerson> composer = new BeanComposer<>();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
-        composer.addComposedEventListener(beanEventListener);
+        composer.setComposedEventListener(beanEventListener);
         composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertEquals(2, objects.size());
@@ -88,7 +88,7 @@ public class BeanComposerTest {
 
         BeanComposer<Object> composer = new BeanComposer<>();
         RecordingBeanEventListener<Object> beanEventListener = new RecordingBeanEventListener<>();
-        composer.addComposedEventListener(beanEventListener);
+        composer.setComposedEventListener(beanEventListener);
         composer.compose(document);
         java.util.List<Object> objects = beanEventListener.getBeans();
         assertEquals(1, objects.size());
@@ -107,7 +107,7 @@ public class BeanComposerTest {
 
         BeanComposer composer = new BeanComposer();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
-        composer.addComposedEventListener(beanEventListener);
+        composer.setComposedEventListener(beanEventListener);
         composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertEquals(1, objects.size());
@@ -125,7 +125,7 @@ public class BeanComposerTest {
 
         BeanComposer<TstPerson> composer = new BeanComposer<>();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
-        composer.addComposedEventListener(beanEventListener);
+        composer.setComposedEventListener(beanEventListener);
         composer.compose(document);
         beanEventListener.getBeans();
     }
@@ -147,7 +147,7 @@ public class BeanComposerTest {
 
         BeanComposer<TstPerson> composer = new BeanComposer<>();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
-        composer.addComposedEventListener(beanEventListener);
+        composer.setComposedEventListener(beanEventListener);
         composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
         TstPerson parsedPerson = objects.get(0);
@@ -206,7 +206,7 @@ public class BeanComposerTest {
             }
         });
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
-        composer.addComposedEventListener(beanEventListener);
+        composer.setComposedEventListener(beanEventListener);
         composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
         TstPerson parsedPerson = objects.get(0);
@@ -233,7 +233,7 @@ public class BeanComposerTest {
         BeanComposer composer = new BeanComposer();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
         RecordingErrorEventListener errorEventListener = new RecordingErrorEventListener();
-        composer.addComposedEventListener(beanEventListener);
+        composer.setComposedEventListener(beanEventListener);
         composer.setErrorEventListener(errorEventListener);
         composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
@@ -261,7 +261,7 @@ public class BeanComposerTest {
 
         BeanComposer composer = new BeanComposer();
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
-        composer.addComposedEventListener(beanEventListener);
+        composer.setComposedEventListener(beanEventListener);
         composer.compose(document);
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertEquals(1, objects.size());
@@ -296,7 +296,7 @@ public class BeanComposerTest {
 
     @Test
     public void testGetSetConfig(){
-        BeanComposerConfig testConfig = new BeanComposerConfig();
+        BeanComposeConfig testConfig = new BeanComposeConfig();
         BeanComposer c = new BeanComposer();
         assertNotSame(testConfig, c.getConfig());
         c.setConfig(testConfig);

@@ -1,10 +1,13 @@
 package org.jsapar.error;
 
+import org.jsapar.ConvertTask;
+import org.jsapar.parse.ParseTask;
+
 import java.util.EventObject;
 
 /**
- * The event that is fired in any of the implementations of {@link org.jsapar.parse.Parser},
- * {@link org.jsapar.compose.Composer} or {@link org.jsapar.Converter} in case an error occured.
+ * The event that is fired in any of the implementations of {@link ParseTask},
+ * {@link org.jsapar.compose.Composer} or {@link ConvertTask} in case an error occured.
  * Please register your own {@link ErrorEventListener} in any of these classes in order to deal with the errors that
  * occurs.
  */

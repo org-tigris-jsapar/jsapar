@@ -1,15 +1,13 @@
-/**
- * 
- */
 package org.jsapar;
 
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.*;
-import org.jsapar.parse.AbstractParser;
+import org.jsapar.parse.AbstractParseTask;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.LineParsedEvent;
-import org.jsapar.parse.Parser;
+import org.jsapar.parse.ParseTask;
+import org.jsapar.parse.bean.BeanParseConfig;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -28,26 +26,24 @@ import java.util.*;
  * If you use these rules you can write a {@link org.jsapar.schema.Schema} that converts a bean to a different type of output.
  * @see Bean2TextConverter
  */
-public class BeanParser<T> extends  AbstractParser implements Parser{
-    
+public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
 
-    private int maxSubLevels = 100;
+    private final BeanParseConfig config;
+
     private Iterator<? extends T> iterator;
 
-    public BeanParser(Iterator<? extends T> iterator) {
+    public BeanParseTask(Iterator<? extends T> iterator, BeanParseConfig config) {
         this.iterator = iterator;
+        this.config = config;
     }
 
-    public BeanParser(Collection<? extends T> objects) {
-        this.iterator = objects.iterator();
-    }
 
     /**
      * Starts parsing of an iterated series of beans. The result will be line parsed events where each
      * line hav
      */
     @Override
-    public void parse() throws IOException {
+    public void execute() throws IOException {
         long count = 0;
         while(iterator.hasNext()){
             count++;
@@ -67,7 +63,7 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
      * @return A Line object containing cells according to the getter method of the supplied object.
      *
      */
-    public Line parseBean(Object object, ErrorEventListener errorListener, long lineNumber)  {
+    Line parseBean(Object object, ErrorEventListener errorListener, long lineNumber)  {
 
         Line line = new Line(object.getClass().getName());
         line.setLineNumber(lineNumber);
@@ -81,7 +77,7 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
     private void parseBean(Line line, Object object, String prefix, Set<Object> visited, ErrorEventListener errorListener)  {
 
         // First we avoid loops.
-        if(visited.contains(object) || visited.size()  >  maxSubLevels)
+        if(visited.contains(object) || visited.size()  >  config.getMaxSubLevels())
             return;
         
         Method[] methods = object.getClass().getMethods();
@@ -180,21 +176,6 @@ public class BeanParser<T> extends  AbstractParser implements Parser{
         sb.append(sMethodName.substring(3, 4).toLowerCase());
         sb.append(sMethodName.substring(4));
         return sb.toString();
-    }
-
-    /**
-     * Sets maximum number of sub-objects that are read while storing a line object.
-     * @param maxSubLevels Maximum number of sub-objects that are read while storing a line object
-     */
-    public void setMaxSubLevels(int maxSubLevels) {
-        this.maxSubLevels = maxSubLevels;
-    }
-
-    /**
-     * @return The maximum number of sub-objects that are read while storing a line object.
-     */
-    public int getMaxSubLevels() {
-        return maxSubLevels;
     }
 
 }

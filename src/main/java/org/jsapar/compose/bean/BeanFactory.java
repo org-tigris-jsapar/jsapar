@@ -16,7 +16,7 @@ public interface BeanFactory<T> {
     /**
      * @param line The line to create a bean for.
      * @return A new instance of a java bean created for the supplied line. If this method returns null, the behavior of
-     * the {@link BeanComposer} is denoted by the config parameter {@link BeanComposerConfig#setOnUndefinedLineType(ValidationAction)}
+     * the {@link BeanComposer} is denoted by the config parameter {@link BeanComposeConfig#setOnUndefinedLineType(ValidationAction)}
      * @throws ClassNotFoundException
      * @throws IllegalAccessException
      * @throws InstantiationException

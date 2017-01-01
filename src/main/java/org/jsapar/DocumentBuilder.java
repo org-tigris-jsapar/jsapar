@@ -4,7 +4,7 @@ import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
-import org.jsapar.parse.Parser;
+import org.jsapar.parse.ParseTask;
 
 import java.io.IOException;
 
@@ -13,29 +13,29 @@ import java.io.IOException;
  * parsing, an event is generated to the registered error event listener. If no error event listener is registered, a
  * runtime exception will be thrown. <br/>
  * Use this class only if you are sure that the whole file can be parsed into memory. If the
- * file is too big, a OutOfMemory exception will be thrown. For large files use any of the Parser implementations
+ * file is too big, a OutOfMemory exception will be thrown. For large files use any of the ParseTask implementations
  * directly instead. Dispose instances of this class when they have been used once.
  */
 public class DocumentBuilder {
-    private Parser parser;
+    private ParseTask parseTask;
 
-    public DocumentBuilder(Parser parser, ErrorEventListener errorEventListener) {
-        this.parser = parser;
+    public DocumentBuilder(ParseTask parseTask, ErrorEventListener errorEventListener) {
+        this.parseTask = parseTask;
         addErrorEventListener(errorEventListener);
     }
 
-    public DocumentBuilder(Parser parser) {
-        this.parser = parser;
+    public DocumentBuilder(ParseTask parseTask) {
+        this.parseTask = parseTask;
     }
 
     public void addErrorEventListener(ErrorEventListener errorEventListener) {
-        parser.setErrorEventListener(errorEventListener);
+        parseTask.setErrorEventListener(errorEventListener);
     }
 
     public Document build() throws IOException, JSaParException {
         try (DocumentBuilderLineEventListener eventListener = new DocumentBuilderLineEventListener()) {
-            parser.setLineEventListener(eventListener);
-            parser.parse();
+            parseTask.setLineEventListener(eventListener);
+            parseTask.execute();
             return eventListener.getDocument();
         }
     }

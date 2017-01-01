@@ -3,6 +3,7 @@ package org.jsapar.concurrent;
 import org.jsapar.error.JSaParException;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.ParseTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,10 +12,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Makes it possible to handle line events in a different thread than the {@link org.jsapar.parse.Parser}. Please note
+ * Makes it possible to handle line events in a different thread than the {@link ParseTask}. Please note
  * that neither the {@link LineParsedEvent} or the {@link org.jsapar.model.Line} classes
  * are internally thread safe so if you have more than one event listeners registered to the same
- * {@link org.jsapar.parse.Parser}, all accesses to the events within these event listeners needs to be synchronized on
+ * {@link ParseTask}, all accesses to the events within these event listeners needs to be synchronized on
  * the event object. As long as you have only one event listener registered, no external synchronization is needed.
  * <p>
  * This implementation acts as a mediator which means that you may register multiple line event listeners to an instance

@@ -5,7 +5,7 @@ import org.jsapar.error.ValidationAction;
 import org.jsapar.model.Document;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.parse.LineParseException;
-import org.jsapar.parse.ParseConfig;
+import org.jsapar.parse.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
@@ -20,7 +20,7 @@ import java.io.StringReader;
 
 import static org.junit.Assert.assertEquals;
 
-public class FixedWidthControlCellParserTest {
+public class FixedWidthControlCellParseTaskTest {
 
     @Before
     public void setUp() throws Exception {
@@ -162,7 +162,7 @@ public class FixedWidthControlCellParserTest {
         addSchemaLinesTwoCharControl(schema);
 
         Reader reader = new StringReader(toParse);
-        ParseConfig config = new ParseConfig();
+        TextParseConfig config = new TextParseConfig();
         config.setOnUndefinedLineType(ValidationAction.EXCEPTION);
         Document doc = build(reader, schema, config);
     }
@@ -184,7 +184,7 @@ public class FixedWidthControlCellParserTest {
         addSchemaLinesTwoCharControl(schema);
 
         Reader reader = new StringReader(toParse);
-        ParseConfig config = new ParseConfig();
+        TextParseConfig config = new TextParseConfig();
         config.setOnUndefinedLineType(ValidationAction.OMIT_LINE);
         Document doc = build(reader, schema, config);
 
@@ -197,10 +197,10 @@ public class FixedWidthControlCellParserTest {
     }
 
     private Document build(Reader reader, FixedWidthSchema schema) throws IOException {
-        return build(reader, schema, new ParseConfig());
+        return build(reader, schema, new TextParseConfig());
     }
 
-    private Document build(Reader reader, FixedWidthSchema schema, ParseConfig config) throws IOException {
+    private Document build(Reader reader, FixedWidthSchema schema, TextParseConfig config) throws IOException {
         FixedWidthParser parser = new FixedWidthParserLinesSeparated(reader, schema, config);
         DocumentBuilderLineEventListener builder = new DocumentBuilderLineEventListener();
         parser.parse(builder, new ExceptionErrorEventListener());

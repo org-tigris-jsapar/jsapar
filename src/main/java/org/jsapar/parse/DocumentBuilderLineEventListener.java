@@ -5,7 +5,7 @@ import org.jsapar.model.Document;
 /**
  * This line event listener can be used to build a document based on line events.
  * Use this class only if you are sure that the whole file can be parsed into memory. If the
- * file is too big, a OutOfMemory exception will be thrown. For large files use any of the Parser implementations
+ * file is too big, a OutOfMemory exception will be thrown. For large files use any of the ParseTask implementations
  * directly instead. Dispose instances of this class when they have been used once.
  */
 public class DocumentBuilderLineEventListener implements LineEventListener, AutoCloseable {

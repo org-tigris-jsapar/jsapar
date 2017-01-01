@@ -10,8 +10,8 @@ import java.io.IOException;
 public interface SchemaParser {
 
     /**
-     * This method should only be called by a TextParser class. Don't use this
-     * directly in your code. Use a TextParser instead.
+     * This method should only be called by a TextParseTask class. Don't use this
+     * directly in your code. Use a TextParseTask instead.
      * 
      * @param listener
      * @param errorListener

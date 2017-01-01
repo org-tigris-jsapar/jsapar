@@ -23,7 +23,7 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
      * @param schema The schema to use.
      * @param config The parse configuration to use.
      */
-    public FixedWidthParserLinesSeparated(Reader reader, FixedWidthSchema schema, ParseConfig config) {
+    public FixedWidthParserLinesSeparated(Reader reader, FixedWidthSchema schema, TextParseConfig config) {
         super(schema, config);
         lineReader = new TextLineReader(schema.getLineSeparator(), reader);
     }

@@ -1,27 +1,56 @@
 package org.jsapar;
 
+import org.jsapar.compose.bean.BeanComposeConfig;
 import org.jsapar.compose.bean.BeanComposedEventListener;
 import org.jsapar.compose.bean.BeanComposer;
+import org.jsapar.compose.bean.BeanFactory;
+import org.jsapar.convert.AbstractConverter;
+import org.jsapar.parse.TextParseConfig;
 import org.jsapar.schema.Schema;
 
+import java.io.IOException;
 import java.io.Reader;
 
 /**
- * Created by stejon0 on 2016-02-13.
+ * Converts text input to Java bean objects.
  */
-public class Text2BeanConverter<T> extends Converter{
+public class Text2BeanConverter<T> extends AbstractConverter {
 
-    public Text2BeanConverter(Schema inputSchema, Reader reader) {
-        super(new TextParser(inputSchema, reader), new BeanComposer());
+    private Schema         parseSchema;
+    private BeanFactory<T> beanFactory;
+    private BeanComposeConfig composeConfig = new BeanComposeConfig();
+    private TextParseConfig   parseConfig   = new TextParseConfig();
+
+    public Text2BeanConverter(Schema parseSchema) {
+        this.parseSchema = parseSchema;
     }
 
-    public Text2BeanConverter(Schema inputSchema, Reader reader, BeanComposer<T> composer) {
-        super(new TextParser(inputSchema, reader), composer);
+    public void setBeanFactory(BeanFactory<T> beanFactory) {
+        this.beanFactory = beanFactory;
     }
 
-    public void addComposedEventListener(BeanComposedEventListener<T> eventListener) {
-        ((BeanComposer<T>)getComposer()).addComposedEventListener(eventListener);
+    public void convert(Reader reader, BeanComposedEventListener<T> eventListener) throws IOException {
+        BeanComposer<T> composer = new BeanComposer<>(composeConfig);
+        ConvertTask convertTask = new ConvertTask(new TextParseTask(this.parseSchema, reader, parseConfig), composer);
+        composer.setComposedEventListener(eventListener);
+        if (beanFactory != null)
+            composer.setBeanFactory(beanFactory);
+        execute(convertTask);
     }
 
+    public void setComposeConfig(BeanComposeConfig composeConfig) {
+        this.composeConfig = composeConfig;
+    }
 
+    public BeanComposeConfig getComposeConfig() {
+        return composeConfig;
+    }
+
+    public TextParseConfig getParseConfig() {
+        return parseConfig;
+    }
+
+    public void setParseConfig(TextParseConfig parseConfig) {
+        this.parseConfig = parseConfig;
+    }
 }

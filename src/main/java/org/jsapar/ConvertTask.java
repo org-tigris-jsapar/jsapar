@@ -6,15 +6,15 @@ import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
-import org.jsapar.parse.Parser;
+import org.jsapar.parse.ParseTask;
 
 import java.io.IOException;
 import java.util.List;
 
 /**
- * Reads from supplied parser and outputs each line to the composer. By adding
+ * Reads from supplied parseTask and outputs each line to the composer. By adding
  * a LineManipulator you are able to make modifications of each line before it is written to the
- * output. The method manipulate() of all added LineManipulators are called for each line that are
+ * output. The method {@link LineManipulator#manipulate(Line)} of all added LineManipulators are called for each line that are
  * parsed successfully.
  * <p>
  * For each line, the line type of the parsed line is
@@ -24,18 +24,29 @@ import java.util.List;
  * If your want lines to be discarded from the output depending of their contents, add a LineManipulator that returns
  * false for the lines that should not be composed.
  */
-public class Converter {
-    private Parser   parser;
-    private Composer composer;
+public class ConvertTask {
+    private ParseTask parseTask;
+    private Composer  composer;
     private List<LineManipulator> manipulators = new java.util.LinkedList<>();
 
-    public Converter(Parser parser, Composer composer) {
-        this.parser = parser;
+    /**
+     * Creates a convert task with supplied parse task and composer.
+     * @param parseTask The parse task to use.
+     * @param composer The composer to use.
+     */
+    public ConvertTask(ParseTask parseTask, Composer composer) {
+        this.parseTask = parseTask;
         this.composer = composer;
     }
 
-    public void addErrorEventListener(ErrorEventListener errorListener) {
-        this.parser.setErrorEventListener(errorListener);
+    /**
+     * Sets new error listener to both the parse task and the composer. Can be called after creation but before calling
+     * {@link #execute()}.
+     *
+     * @param errorListener The new error event listener to use for both parsing and composing.
+     */
+    public void setErrorEventListener(ErrorEventListener errorListener) {
+        this.parseTask.setErrorEventListener(errorListener);
         this.composer.setErrorEventListener(errorListener);
     }
 
@@ -49,9 +60,9 @@ public class Converter {
         manipulators.add(manipulator);
     }
 
-    public void convert() throws IOException {
-        parser.setLineEventListener(new LineForwardListener());
-        parser.parse();
+    public void execute() throws IOException {
+        parseTask.setLineEventListener(new LineForwardListener());
+        parseTask.execute();
     }
 
     /**
@@ -74,8 +85,8 @@ public class Converter {
         }
     }
 
-    public Parser getParser() {
-        return parser;
+    public ParseTask getParseTask() {
+        return parseTask;
     }
 
     public Composer getComposer() {

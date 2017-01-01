@@ -1,8 +1,8 @@
 package org.jsapar.concurrent;
 
-import org.jsapar.Converter;
+import org.jsapar.ConvertTask;
 import org.jsapar.TextComposer;
-import org.jsapar.TextParser;
+import org.jsapar.TextParseTask;
 import org.jsapar.error.JSaParException;
 import org.jsapar.schema.*;
 import org.junit.Assert;
@@ -16,13 +16,13 @@ import static org.junit.Assert.assertSame;
 
 /**
  */
-public class ConcurrentText2TextConverterTest {
+public class ConcurrentText2TextConvertTaskTest {
     @Test
     public void testConcurrentText2TextConverter() throws IOException, JSaParException {
-        TextParser p = new TextParser(new CsvSchema(), new StringReader(""));
+        TextParseTask p = new TextParseTask(new CsvSchema(), new StringReader(""));
         TextComposer c = new TextComposer(new FixedWidthSchema(), new StringWriter());
-        Converter instance = new ConcurrentText2TextConverter(p, c);
-        assertSame(p, instance.getParser());
+        ConvertTask instance = new ConcurrentText2TextConverter(p, c);
+        assertSame(p, instance.getParseTask());
         assertSame(c, instance.getComposer());
     }
 
@@ -46,8 +46,8 @@ public class ConcurrentText2TextConverterTest {
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
-        Converter converter = new ConcurrentText2TextConverter(inputSchema, reader, outputSchema, writer);
-        converter.convert();
+        ConvertTask convertTask = new ConcurrentText2TextConverter(inputSchema, reader, outputSchema, writer);
+        convertTask.execute();
         reader.close();
         writer.close();
         String sResult = writer.getBuffer().toString();

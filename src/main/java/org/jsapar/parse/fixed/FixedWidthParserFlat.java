@@ -4,7 +4,7 @@ import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
-import org.jsapar.parse.ParseConfig;
+import org.jsapar.parse.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
 
 import java.io.BufferedReader;
@@ -24,7 +24,7 @@ public class FixedWidthParserFlat extends FixedWidthParser{
      * @param schema The schema to use.
      */
     FixedWidthParserFlat(Reader reader, FixedWidthSchema schema) {
-        this(reader, schema, new ParseConfig());
+        this(reader, schema, new TextParseConfig());
     }
 
     /**
@@ -33,7 +33,7 @@ public class FixedWidthParserFlat extends FixedWidthParser{
      * @param schema The schema to use.
      * @param config Configuration while parsing.
      */
-    public FixedWidthParserFlat(Reader reader, FixedWidthSchema schema, ParseConfig config) {
+    public FixedWidthParserFlat(Reader reader, FixedWidthSchema schema, TextParseConfig config) {
         super(schema, config);
         this.reader = new BufferedReader(reader);
     }

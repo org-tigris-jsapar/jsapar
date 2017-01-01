@@ -7,8 +7,8 @@ import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;
 import org.jsapar.model.Line;
 import org.jsapar.parse.CellParseException;
-import org.jsapar.parse.Parser;
-import org.jsapar.parse.xml.XmlParser;
+import org.jsapar.parse.ParseTask;
+import org.jsapar.parse.xml.XmlParseTask;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.junit.Assert;
@@ -39,7 +39,7 @@ public class JSaParExamplesTest {
         Reader schemaReader = new FileReader("samples/01_CsvSchema.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
         Reader fileReader = new FileReader("samples/01_Names.csv");
-        TextParser parser = new TextParser(xmlBuilder.build(schemaReader), fileReader);
+        TextParseTask parser = new TextParseTask(xmlBuilder.build(schemaReader), fileReader);
         DocumentBuilder builder = new DocumentBuilder(parser);
         Document document = builder.build();
         fileReader.close();
@@ -65,7 +65,7 @@ public class JSaParExamplesTest {
         Reader schemaReader = new FileReader("samples/02_FixedWidthSchema.xml");
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         Reader fileReader = new FileReader("samples/02_Names.txt");
-        TextParser parser = new TextParser(schemaBuilder.build(schemaReader), fileReader);
+        TextParseTask parser = new TextParseTask(schemaBuilder.build(schemaReader), fileReader);
         DocumentBuilder builder = new DocumentBuilder(parser);
         Document document = builder.build();
         fileReader.close();
@@ -86,7 +86,7 @@ public class JSaParExamplesTest {
         Reader schemaReader = new FileReader("samples/03_FlatFileSchema.xml");
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         Reader fileReader = new FileReader("samples/03_FlatFileNames.txt");
-        TextParser parser = new TextParser(schemaBuilder.build(schemaReader), fileReader);
+        TextParseTask parser = new TextParseTask(schemaBuilder.build(schemaReader), fileReader);
         DocumentBuilder builder = new DocumentBuilder(parser);
         Document document = builder.build();
         fileReader.close();
@@ -110,7 +110,7 @@ public class JSaParExamplesTest {
         Reader schemaReader = new FileReader("samples/04_FixedWidthSchemaControlCell.xml");
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         Reader fileReader = new FileReader("samples/04_Names.txt");
-        TextParser parser = new TextParser(schemaBuilder.build(schemaReader), fileReader);
+        TextParseTask parser = new TextParseTask(schemaBuilder.build(schemaReader), fileReader);
         DocumentBuilder builder = new DocumentBuilder(parser);
         Document document = builder.build();
         fileReader.close();
@@ -142,8 +142,8 @@ public class JSaParExamplesTest {
     public final void testExampleXml05() throws SchemaException, IOException, JSaParException {
         java.util.List<CellParseException> parseErrors = new java.util.LinkedList<CellParseException>();
         Reader fileReader = new FileReader("samples/05_Names.xml");
-        Parser parser = new XmlParser(fileReader);
-        DocumentBuilder builder = new DocumentBuilder(parser);
+        ParseTask parseTask = new XmlParseTask(fileReader);
+        DocumentBuilder builder = new DocumentBuilder(parseTask);
         Document document = builder.build();
         fileReader.close();
 
@@ -163,7 +163,7 @@ public class JSaParExamplesTest {
         Reader schemaReader = new FileReader("samples/06_CsvSchemaControlCell.xml");
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         Reader fileReader = new FileReader("samples/06_NamesControlCell.csv");
-        TextParser parser = new TextParser(schemaBuilder.build(schemaReader), fileReader);
+        TextParseTask parser = new TextParseTask(schemaBuilder.build(schemaReader), fileReader);
         DocumentBuilder builder = new DocumentBuilder(parser);
         Document document = builder.build();
         fileReader.close();
@@ -185,12 +185,13 @@ public class JSaParExamplesTest {
         Reader inSchemaReader = new FileReader("samples/01_CsvSchema.xml");
         Reader outSchemaReader = new FileReader("samples/02_FixedWidthSchema.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-        Reader inReader = new FileReader("samples/01_Names.csv");
         File outFile = new File("samples/02_Names_out.txt");
-        Writer outWriter = new FileWriter(outFile);
-        Converter converter = new Text2TextConverter(xmlBuilder.build(inSchemaReader), inReader, xmlBuilder.build(outSchemaReader), outWriter);
-        inReader.close();
-        outWriter.close();
+        try (Reader inReader = new FileReader("samples/01_Names.csv"); Writer outWriter = new FileWriter(outFile)) {
+
+            Text2TextConverter converter = new Text2TextConverter(xmlBuilder.build(inSchemaReader),
+                    xmlBuilder.build(outSchemaReader));
+            converter.convert(inReader, outWriter);
+        }
 
         Assert.assertTrue(outFile.isFile());
     }
@@ -201,10 +202,9 @@ public class JSaParExamplesTest {
         Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
         try(Reader fileReader = new FileReader("samples/07_Names.csv")) {
-            Text2BeanConverter converter = new Text2BeanConverter(xmlBuilder.build(schemaReader), fileReader);
+            Text2BeanConverter converter = new Text2BeanConverter(xmlBuilder.build(schemaReader));
             RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
-            converter.addComposedEventListener(beanEventListener);
-            converter.convert();
+            converter.convert(fileReader, beanEventListener);
             List<TstPerson> people = beanEventListener.getBeans();
             fileReader.close();
 
@@ -243,8 +243,8 @@ public class JSaParExamplesTest {
         Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
         StringWriter writer = new StringWriter();
-        Bean2TextConverter<TstPerson> converter = new Bean2TextConverter<>(people, xmlBuilder.build(schemaReader), writer);
-        converter.convert();
+        Bean2TextConverter<TstPerson> converter = new Bean2TextConverter<>(xmlBuilder.build(schemaReader));
+        converter.convert(people, writer);
 
         String result=writer.toString();
         String[] resultLines = result.split("\r\n");

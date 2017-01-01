@@ -17,7 +17,7 @@ import java.io.StringReader;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class CsvLineParserTest {
+public class CsvLineParseTaskTest {
 
     boolean foundError = false;
 
@@ -428,7 +428,7 @@ public class CsvLineParserTest {
         schemaLine.addSchemaCell(new CsvSchemaCell("Happy"));
 
         String sLine = "Jonas;-)Stenberg";
-        ParseConfig config = new ParseConfig();
+        TextParseConfig config = new TextParseConfig();
         config.setOnLineInsufficient(ValidationAction.EXCEPTION);
         new CsvLineParser(schemaLine, config)
                 .parse(makeCsvLineReaderForString(sLine), event -> fail("Should throw exception"),
@@ -444,7 +444,7 @@ public class CsvLineParserTest {
         schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
 
         String sLine = "Jonas;-)Stenberg;-)Some other";
-        ParseConfig config = new ParseConfig();
+        TextParseConfig config = new TextParseConfig();
         config.setOnLineOverflow(ValidationAction.EXCEPTION);
         new CsvLineParser(schemaLine, config)
                 .parse(makeCsvLineReaderForString(sLine), event -> fail("Should throw exception"),
