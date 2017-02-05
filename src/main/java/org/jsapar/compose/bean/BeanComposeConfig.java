@@ -7,6 +7,7 @@ import org.jsapar.error.ValidationAction;
  *
  * Created by stejon0 on 2016-10-16.
  */
+@SuppressWarnings("WeakerAccess")
 public class BeanComposeConfig {
     /**
      * The action to take if {@link BeanFactory} could not find a suitable bean class to create based on the

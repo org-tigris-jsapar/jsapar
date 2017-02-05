@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.jsapar.text;
 
 import java.text.FieldPosition;

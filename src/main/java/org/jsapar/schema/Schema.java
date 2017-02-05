@@ -1,7 +1,9 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.Document;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -117,7 +119,8 @@ public abstract class Schema implements Cloneable{
      *             if the supplied xml does not comply to the JSaParSchema.xsd or if there is any other error while
      *             loading a schema.
      */
-    public static Schema importFromXml(Reader reader) throws SchemaException, IOException {
+    public static Schema importFromXml(Reader reader)
+            throws SchemaException, IOException, ParserConfigurationException, SAXException {
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         return schemaBuilder.build(reader);
     }

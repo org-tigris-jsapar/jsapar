@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.jsapar.text;
 
 import java.text.FieldPosition;
@@ -23,8 +20,8 @@ import java.text.ParsePosition;
  */
 public class BooleanFormat extends Format {
 
-    String trueValue;
-    String falseValue;
+    private String trueValue;
+    private String falseValue;
 
     /**
      *
@@ -34,6 +31,7 @@ public class BooleanFormat extends Format {
     /**
      * Creates a default instance where the text "true" is the true value and "false" is the false value.
      */
+    @SuppressWarnings("WeakerAccess")
     public BooleanFormat() {
         this("true", "false");
     }

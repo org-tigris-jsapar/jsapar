@@ -13,7 +13,9 @@ import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.junit.Assert;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -35,7 +37,8 @@ public class JSaParExamplesTest {
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Test
-    public final void testExampleCsv01() throws SchemaException, IOException, JSaParException {
+    public final void testExampleCsv01()
+            throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
         Reader schemaReader = new FileReader("samples/01_CsvSchema.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
         Reader fileReader = new FileReader("samples/01_Names.csv");
@@ -62,7 +65,8 @@ public class JSaParExamplesTest {
     }
 
     @Test
-    public final void testExampleFixedWidth02() throws SchemaException, IOException, JSaParException {
+    public final void testExampleFixedWidth02()
+            throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
         Reader schemaReader = new FileReader("samples/02_FixedWidthSchema.xml");
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         Reader fileReader = new FileReader("samples/02_Names.txt");
@@ -84,7 +88,8 @@ public class JSaParExamplesTest {
      *
      */
     @Test
-    public final void testExampleFlatFile03() throws SchemaException, IOException, JSaParException {
+    public final void testExampleFlatFile03()
+            throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
         Reader schemaReader = new FileReader("samples/03_FlatFileSchema.xml");
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         Reader fileReader = new FileReader("samples/03_FlatFileNames.txt");
@@ -109,7 +114,8 @@ public class JSaParExamplesTest {
      *
      */
     @Test
-    public final void testExampleFixedWidth04() throws SchemaException, IOException, JSaParException {
+    public final void testExampleFixedWidth04()
+            throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
         Reader schemaReader = new FileReader("samples/04_FixedWidthSchemaControlCell.xml");
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         Reader fileReader = new FileReader("samples/04_Names.txt");
@@ -164,7 +170,8 @@ public class JSaParExamplesTest {
     }
 
     @Test
-    public final void testExampleCsvControlCell06() throws SchemaException, IOException, JSaParException {
+    public final void testExampleCsvControlCell06()
+            throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
         Reader schemaReader = new FileReader("samples/06_CsvSchemaControlCell.xml");
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         Reader fileReader = new FileReader("samples/06_NamesControlCell.csv");
@@ -187,7 +194,8 @@ public class JSaParExamplesTest {
     }
 
     @Test
-    public final void testConvert01_02() throws IOException, JSaParException, SchemaException {
+    public final void testConvert01_02()
+            throws IOException, JSaParException, SchemaException, ParserConfigurationException, SAXException {
         Reader inSchemaReader = new FileReader("samples/01_CsvSchema.xml");
         Reader outSchemaReader = new FileReader("samples/02_FixedWidthSchema.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
@@ -204,7 +212,9 @@ public class JSaParExamplesTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public final void testExampleCsvToJava07() throws SchemaException, IOException, JSaParException, ParseException {
+    public final void testExampleCsvToJava07()
+            throws SchemaException, IOException, JSaParException, ParseException, ParserConfigurationException,
+            SAXException {
         Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
         try(Reader fileReader = new FileReader("samples/07_Names.csv")) {
@@ -234,7 +244,8 @@ public class JSaParExamplesTest {
     }
     
     @Test
-    public final void testExampleJavaToCsv07() throws SchemaException, IOException, ParseException {
+    public final void testExampleJavaToCsv07()
+            throws SchemaException, IOException, ParseException, ParserConfigurationException, SAXException {
 
         List<TstPerson> people = new LinkedList<TstPerson>();
         TstPerson testPerson1 = new TstPerson("Nils", "Holgersson", (short)4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9, 'A');

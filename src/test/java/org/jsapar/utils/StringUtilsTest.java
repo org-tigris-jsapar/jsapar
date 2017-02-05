@@ -15,9 +15,9 @@ public class StringUtilsTest {
 
 	@Test
 	public final void testRemoveAll_nothing() {
-		String sOriginal = "This text has no dots";
-		String sResult = StringUtils.removeAll(sOriginal, '.');
-		assertEquals("This text has no dots", sResult);
+		String sOriginal = "This text has no colons";
+		String sResult = StringUtils.removeAll(sOriginal, ':');
+		assertEquals("This text has no colons", sResult);
 	}
 
 	@Test

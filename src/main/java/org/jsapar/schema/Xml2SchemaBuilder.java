@@ -46,9 +46,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * 
      * @param node The node to get boolean value from.
      * @return A boolean value.
-     * @throws SchemaException
      */
-    private boolean getBooleanValue(Node node) throws SchemaException {
+    private boolean getBooleanValue(Node node) {
         final String value = node.getNodeValue().trim();
         return DatatypeConverter.parseBoolean(value);
     }
@@ -75,72 +74,72 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @param reader
      *            - A reader linked to the xml file.
      * @return The file parser schema.
-     * @throws SchemaException
+     * @throws SchemaException When there is an error in the schema
+     * @throws IOException When there is an error reading the input
+     * @throws SAXException When there is an error parsing the xml
      */
-    public Schema build(java.io.Reader reader) throws SchemaException, IOException {
-        try {
-            String schemaFileName = "/xml/schema/JSaParSchema.xsd";
-            InputStream schemaStream = Xml2SchemaBuilder.class.getResourceAsStream(schemaFileName);
+    public Schema build(java.io.Reader reader)
+            throws IOException, SchemaException, SAXException, ParserConfigurationException {
+        String schemaFileName = "/xml/schema/JSaParSchema.xsd";
+        InputStream schemaStream = Xml2SchemaBuilder.class.getResourceAsStream(schemaFileName);
 
-            if (schemaStream == null)
-                throw new SchemaException("Could not find schema file: " + schemaFileName);
-            // File schemaFile = new
-            // File("resources/xml/schema/JSaParSchema.xsd");
+        if (schemaStream == null)
+            throw new FileNotFoundException("Could not find schema file: " + schemaFileName);
+        // File schemaFile = new
+        // File("resources/xml/schema/JSaParSchema.xsd");
 
-            // javax.xml.validation.Schema xmlSchema;
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setIgnoringElementContentWhitespace(true);
-            factory.setIgnoringComments(true);
-            factory.setCoalescing(true);
-            factory.setNamespaceAware(true);
-            factory.setValidating(true);
-            factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
-            factory.setAttribute(JAXP_SCHEMA_SOURCE, schemaStream);
+        // javax.xml.validation.Schema xmlSchema;
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setIgnoringElementContentWhitespace(true);
+        factory.setIgnoringComments(true);
+        factory.setCoalescing(true);
+        factory.setNamespaceAware(true);
+        factory.setValidating(true);
+        factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
+        factory.setAttribute(JAXP_SCHEMA_SOURCE, schemaStream);
 
-            // factory.setSchema(xmlSchema);
+        // factory.setSchema(xmlSchema);
 
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            builder.setErrorHandler(new ErrorHandler() {
-                @Override
-                public void error(SAXParseException e) throws SAXException {
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        builder.setErrorHandler(new ErrorHandler() {
+            @Override
+            public void error(SAXParseException e) throws SAXException {
+                if (e != null)
                     throw e;
-                }
+                throw new SAXException("Unknown error while parsing xml");
+            }
 
-                @Override
-                public void fatalError(SAXParseException e) throws SAXException {
+            @Override
+            public void fatalError(SAXParseException e) throws SAXException {
+                if (e != null)
                     throw e;
-                }
+                throw new SAXException("Unknown error while parsing xml");
+            }
 
-                @Override
-                public void warning(SAXParseException e) throws SAXException {
-                    // System.out.println("Warning while validating schema" +
-                    // e);
-                }
-            });
+            @Override
+            public void warning(SAXParseException e) throws SAXException {
+                // System.out.println("Warning while validating schema" +
+                // e);
+            }
+        });
 
-            org.xml.sax.InputSource is = new org.xml.sax.InputSource(reader);
-            org.w3c.dom.Document xmlDocument = builder.parse(is);
+        org.xml.sax.InputSource is = new org.xml.sax.InputSource(reader);
+        org.w3c.dom.Document xmlDocument = builder.parse(is);
 
-            Element xmlRoot = xmlDocument.getDocumentElement();
-            // Element xmlRoot = (Element) xmlDocument.getFirstChild();
+        Element xmlRoot = xmlDocument.getDocumentElement();
+        // Element xmlRoot = (Element) xmlDocument.getFirstChild();
 
-            Element xmlSchema = getChild(xmlRoot, ELEMENT_CSV_SCHEMA);
-            if (null != xmlSchema)
-                return buildCsvSchema(xmlSchema);
+        Element xmlSchema = getChild(xmlRoot, ELEMENT_CSV_SCHEMA);
+        if (null != xmlSchema)
+            return buildCsvSchema(xmlSchema);
 
-            xmlSchema = getChild(xmlRoot, ELEMENT_FIXED_WIDTH_SCHEMA);
-            if (null != xmlSchema)
-                return buildFixedWidthSchema(xmlSchema);
+        xmlSchema = getChild(xmlRoot, ELEMENT_FIXED_WIDTH_SCHEMA);
+        if (null != xmlSchema)
+            return buildFixedWidthSchema(xmlSchema);
 
-            throw new SchemaException("Failed to find specific schema XML element. Expected one of "
-                    + ELEMENT_CSV_SCHEMA + " or " + ELEMENT_FIXED_WIDTH_SCHEMA);
-        } catch (ParserConfigurationException e) {
-            throw new SchemaException("Failed to generate schema from XML file. XML parsing error.", e);
-        } catch (SAXParseException e) {
-            throw new SchemaException("Failed to read XML file. Error at line " + e.getLineNumber(), e);
-        } catch (SAXException e) {
-            throw new SchemaException("Failed to generate schema from XML file. XML parsing error.", e);
-        }
+        throw new SAXException(
+                "Failed to find specific schema XML element. Expected one of " + ELEMENT_CSV_SCHEMA + " or "
+                        + ELEMENT_FIXED_WIDTH_SCHEMA);
     }
 
     /**
@@ -208,10 +207,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * Builds the cell part of a file schema from an xml input
      * 
      * @param xmlSchemaCell The cell schema xml element
-     * @param locale
-     * @param schemaLine
+     * @param locale        The default locale
+     * @param schemaLine    The schema line to add schema cell to
      * @return A newly created fixed width cell schema.
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema.
      */
     private FixedWidthSchemaCell buildFixedWidthSchemaCell(Element xmlSchemaCell, Locale locale, FixedWidthSchemaLine schemaLine) throws SchemaException {
 
@@ -252,7 +251,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * 
      * @param xmlSchema A schema xml element.
      * @return A newly created CSV schema.
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema.
      */
     private Schema buildCsvSchema(Element xmlSchema) throws SchemaException {
         CsvSchema schema = new CsvSchema();
@@ -265,7 +264,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * 
      * @param schema    The schema to assign values to
      * @param xmlSchema A schema xml element
-     * @throws SchemaException
+     * @throws SchemaException If there is an error in the schema.
      */
     private void assignCsvSchema(CsvSchema schema, Element xmlSchema) throws SchemaException {
 
@@ -285,7 +284,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @param xmlSchemaLine    The line schema xml element
      * @param locale The schema default locale.
      * @return A newly created csv schema line.
-     * @throws SchemaException
+     * @throws SchemaException  When there is an error in the schema
      */
     private CsvSchemaLine buildCsvSchemaLine(Element xmlSchemaLine, Locale locale) throws SchemaException {
 
@@ -319,7 +318,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * Creates a CSV cell schema
      * @param xmlSchemaCell A cell schema xml element.
      * @return A newly created CSV cell schema.
-     * @throws SchemaException
+     * @throws SchemaException  When there is an error in the schema
      */
     private CsvSchemaCell buildCsvSchemaCell(Element xmlSchemaCell, Locale locale) throws SchemaException {
 
@@ -337,9 +336,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     /**
      * Assign common parts for base class.
      * 
-     * @param schema
-     * @param xmlSchema
-     * @throws SchemaException
+     * @param schema The schema to assign to
+     * @param xmlSchema The xml element to parse
+     * @throws SchemaException  When there is an error in the schema
      */
     private void assignSchemaBase(Schema schema, Element xmlSchema) throws SchemaException {
         String sSeparator = getAttributeValue(xmlSchema, ATTRIB_SCHEMA_LINESEPARATOR);
@@ -355,10 +354,11 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     }
 
     /**
-     * @param sToReplace
-     * @return
+     * Replaces escaped string value of \n, \r, \t and \f with their ascii control code values.
+     * @param sToReplace The string to replace escaped strings within.
+     * @return The string with all escaped values replaced with control code values.
      */
-    public static String replaceEscapes2Java(String sToReplace) {
+    private static String replaceEscapes2Java(String sToReplace) {
         //   Since it is a regex we need 4 \
         sToReplace = sToReplace.replaceAll("\\\\r", "\r");
         sToReplace = sToReplace.replaceAll("\\\\n", "\n");
@@ -370,9 +370,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     /**
      * Assign common pars for base class.
      * 
-     * @param line
-     * @param xmlSchemaLine
-     * @throws SchemaException
+     * @param line The line to assign to
+     * @param xmlSchemaLine The xml element to parse
+     * @throws SchemaException  When there is an error in the schema
      */
     private void assignSchemaLineBase(SchemaLine line, Element xmlSchemaLine) throws SchemaException {
         Node xmlOccurs = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_OCCURS);
@@ -392,10 +392,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     /**
      * Assign common parts for base class.
      * 
-     * @param cell
-     * @param xmlSchemaCell
-     * @param locale
-     * @throws SchemaException
+     * @param cell The cell to assign to
+     * @param xmlSchemaCell The xml element to parse
+     * @param locale The default locale
+     * @throws SchemaException  When there is an error in the schema
      */
     private void assignSchemaCellBase(SchemaCell cell, Element xmlSchemaCell, Locale locale) throws SchemaException {
         try {
@@ -460,9 +460,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     /**
      * Adds formatting to the cell.
      * 
-     * @param cell
-     * @param xmlFormat
-     * @throws SchemaException
+     * @param cell The cell to assign to
+     * @param xmlFormat The xml element to parse
+     * @throws SchemaException  When there is an error in the schema
      */
     private void assignCellFormat(SchemaCell cell, Element xmlFormat) throws SchemaException {
         String sType = getAttributeValue(xmlFormat, "type");
@@ -477,7 +477,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @param sType
      *            The xml representation of the type.
      * @return The CellType value
-     * @throws SchemaException
+     * @throws SchemaException  When there is an error in the schema
      */
     private CellType makeCellType(String sType) throws SchemaException {
         if (sType.equals("string"))
@@ -508,9 +508,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     /**
      * Builds a java.util.Locale based on a Locale element.
      * 
-     * @param xmlLocale
+     * @param xmlLocale The xml element to parse
      * @return The java Locale object.
-     * @throws SchemaException
+     * @throws SchemaException  When there is an error in the schema
      */
     private Locale buildLocale(Element xmlLocale) throws SchemaException {
         String sLanguage = getMandatoryAttribute(xmlLocale, ATTRIB_LOCALE_LANGUAGE).getValue();
@@ -525,46 +525,49 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * Gets a mandatory xml attribute from a xml element. If the element does not exist, a
      * SchemaException is thrown.
      * 
-     * @param xmlElement
-     * @param sAttributeName
+     * @param xmlElement The xml element to parse
+     * @param sAttributeName The name of the attribute
      * @return The xml attribute.
-     * @throws SchemaException
+     * @throws SchemaException  When there is an error in the schema
      */
     private static Attr getMandatoryAttribute(Element xmlElement, String sAttributeName) throws SchemaException {
         Node xmlAttribute = xmlElement.getAttributeNode(sAttributeName);
-        if (xmlAttribute == null || !(xmlAttribute instanceof Attr))
+        if (xmlAttribute == null)
             throw new SchemaException("Missing mandatory attribute: " + sAttributeName + " of element " + xmlElement);
         return (Attr) xmlAttribute;
     }
     
     /**
      * Utility function for loading a schema from an xml file.
-     * @param file
+     * @param file The file to load schema from
      * @return A newly created schema from the xml file.
-     * @throws SchemaException
-     * @throws IOException
+     * @throws SchemaException  When there is an error in the schema
+     * @throws IOException      When there is an error reading from input
+     * @throws ParserConfigurationException When there is a serious error in the configuration
+     * @throws SAXException     When there is an error reading the xml
      */
-    public static Schema loadSchemaFromXmlFile(File file) throws SchemaException, IOException {
+    public static Schema loadSchemaFromXmlFile(File file)
+            throws SchemaException, IOException, ParserConfigurationException, SAXException {
         return loadSchemaFromXmlFile(file, Charset.defaultCharset().name());
     }
     
     /**
      * Utility function for loading a schema from an xml file.
-     * @param file
+     * @param file      The file to load schema from
      * @param encoding The character encoding to use while reading file.
      * @return A newly created schema from the xml file.
-     * @throws SchemaException
-     * @throws IOException
+     * @throws SchemaException  When there is an error in the schema
+     * @throws IOException      When there is an error reading from input
+     * @throws ParserConfigurationException When there is a serious error in the configuration
+     * @throws SAXException     When there is an error reading the xml
      */
-    public static Schema loadSchemaFromXmlFile(File file, String encoding) throws SchemaException, IOException {
+    @SuppressWarnings("WeakerAccess")
+    public static Schema loadSchemaFromXmlFile(File file, String encoding)
+            throws SchemaException, IOException, ParserConfigurationException, SAXException {
         InputStream is = new FileInputStream(file);
-        Reader schemaReader = new InputStreamReader(is, encoding);
-        try {
+        try (Reader schemaReader = new InputStreamReader(is, encoding)) {
             Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
-            Schema schema = builder.build(schemaReader);
-            return schema;
-        } finally {
-            schemaReader.close();
+            return builder.build(schemaReader);
         }
     }
 
@@ -577,11 +580,14 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @param resourceName
      *            The name of the resource to load.
      * @return A newly created schema from the supplied xml resource.
-     * @throws SchemaException
-     * @throws IOException
+     * @throws SchemaException  When there is an error in the schema
+     * @throws IOException      When there is an error reading from input
+     * @throws ParserConfigurationException When there is a serious error in the configuration
+     * @throws SAXException     When there is an error reading the xml
      */
+    @SuppressWarnings("unused")
     public static Schema loadSchemaFromXmlResource(Class<?> resourceBaseClass, String resourceName)
-            throws SchemaException, IOException {
+            throws SchemaException, IOException, ParserConfigurationException, SAXException {
         return loadSchemaFromXmlResource(resourceBaseClass, resourceName, Charset.defaultCharset().name());
     }    
     
@@ -596,23 +602,23 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @param encoding
      *            The character encoding to use while reading resource.
      * @return A newly created schema from the supplied xml resource.
-     * @throws SchemaException
-     * @throws IOException
+     * @throws SchemaException  When there is an error in the schema
+     * @throws IOException      When there is an error reading from input
+     * @throws ParserConfigurationException When there is a serious error in the configuration
+     * @throws SAXException     When there is an error reading the xml
      */
-    public static Schema loadSchemaFromXmlResource(Class<?> resourceBaseClass, String resourceName, String encoding) throws SchemaException,
-            IOException {
+    @SuppressWarnings("WeakerAccess")
+    public static Schema loadSchemaFromXmlResource(Class<?> resourceBaseClass, String resourceName, String encoding)
+            throws SchemaException, IOException, ParserConfigurationException, SAXException {
         if (resourceBaseClass == null)
             resourceBaseClass = Xml2SchemaBuilder.class;
-        InputStream is = resourceBaseClass.getResourceAsStream(resourceName);
-        if (is == null)
-            throw new SchemaException("Failed to load resource [" + resourceName + "] from class "
-                    + resourceBaseClass.getName());
-        Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
-        try {
-            Schema schema = schemaBuilder.build(new InputStreamReader(is, encoding));
-            return schema;
-        } finally {
-            is.close();
+        try (InputStream is = resourceBaseClass.getResourceAsStream(resourceName)) {
+            if (is == null) {
+                throw new IOException(
+                        "Failed to load resource [" + resourceName + "] from class " + resourceBaseClass.getName());
+            }
+            Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
+            return schemaBuilder.build(new InputStreamReader(is, encoding));
         }
     }
 
