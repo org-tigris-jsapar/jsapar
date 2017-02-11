@@ -113,14 +113,14 @@ public class FixedWidthControlCellParseTaskTest {
     }
 
     private void checkResult(Document doc) {
-        assertEquals("Jonas", doc.getLine(0).getCell("First name").getStringValue());
-        assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
+        assertEquals("Jonas", doc.getLine(0).getCell("First name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
+        assertEquals("Stenberg", doc.getLine(0).getCell("Last name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
 
-        assertEquals("Storgatan", doc.getLine(1).getCell("Street").getStringValue());
-        assertEquals("123 45", doc.getLine(1).getCell("Zip code").getStringValue());
+        assertEquals("Storgatan", doc.getLine(1).getCell("Street").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
+        assertEquals("123 45", doc.getLine(1).getCell("Zip code").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
 
-        assertEquals("Fred", doc.getLine(2).getCell("First name").getStringValue());
-        assertEquals("Bergsten", doc.getLine(2).getCell("Last name").getStringValue());
+        assertEquals("Fred", doc.getLine(2).getCell("First name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
+        assertEquals("Bergsten", doc.getLine(2).getCell("Last name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
     }
 
     /**
@@ -189,11 +189,11 @@ public class FixedWidthControlCellParseTaskTest {
         Document doc = build(reader, schema, config);
 
         assertEquals(2, doc.size());
-        assertEquals("Jonas", doc.getLine(0).getCell("First name").getStringValue());
-        assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
+        assertEquals("Jonas", doc.getLine(0).getCell("First name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
+        assertEquals("Stenberg", doc.getLine(0).getCell("Last name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
 
-        assertEquals("Fred", doc.getLine(1).getCell("First name").getStringValue());
-        assertEquals("Bergsten", doc.getLine(1).getCell("Last name").getStringValue());
+        assertEquals("Fred", doc.getLine(1).getCell("First name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
+        assertEquals("Bergsten", doc.getLine(1).getCell("Last name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
     }
 
     private Document build(Reader reader, FixedWidthSchema schema) throws IOException {

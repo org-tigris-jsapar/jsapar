@@ -22,7 +22,7 @@ public class LineUtilsTest {
     public void testSetStringCellValue()  {
         Line line = new Line("TestLine");
         LineUtils.setStringCellValue(line,"aStringValue", "ABC");
-        assertEquals("ABC", LineUtils.getStringCellValue(line,"aStringValue"));
+        assertEquals("ABC", LineUtils.getStringCellValue(line,"aStringValue").orElse("fail"));
         LineUtils.setStringCellValue(line,"aStringValue", null);
         assertFalse(line.isCell("aStringValue"));
     }
@@ -32,10 +32,9 @@ public class LineUtilsTest {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         LineUtils.setStringCellValue(line, "LastName", "Svensson");
-        assertEquals("Nils", LineUtils.getStringCellValue(line,"FirstName"));
-        assertEquals("Svensson", LineUtils.getStringCellValue(line,"LastName"));
-        assertEquals("Svensson", LineUtils.getStringCellValue(line,"LastName", "Karlsson"));
-        assertEquals("Karlsson", LineUtils.getStringCellValue(line,"Nothing", "Karlsson"));
+        assertEquals("Nils", LineUtils.getStringCellValue(line,"FirstName").orElse("fail"));
+        assertEquals("Svensson", LineUtils.getStringCellValue(line,"LastName").orElse("fail"));
+        assertEquals("Karlsson", LineUtils.getStringCellValue(line,"Nothing").orElse("Karlsson"));
     }
     
 
@@ -64,7 +63,7 @@ public class LineUtilsTest {
     public void testGetEnumCellValue() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("Type", "FIRST"));
-        assertEquals(Testing.FIRST, LineUtils.getEnumCellValue(line,"Type", Testing.class));
+        assertEquals(Testing.FIRST, LineUtils.getEnumCellValue(line,"Type", Testing.class).orElse(Testing.SECOND));
     }
     
     @Test
@@ -125,10 +124,10 @@ public class LineUtilsTest {
         Line line = new Line("TestLine");
         LineUtils.setDoubleCellValue(line, "pi", 3.14159265358979D);
         LineUtils.setDecimalCellValue(line, "e", new BigDecimal("2.718"));
-        assertEquals(new BigDecimal(3.14159265358979D), LineUtils.getDecimalCellValue(line,"pi"));
-        assertEquals(new BigDecimal("2.718"), LineUtils.getDecimalCellValue(line,"e"));
-        assertEquals(new BigDecimal(3.14159265358979D), LineUtils.getDecimalCellValue(line,"pi", new BigDecimal(2.71D)));
-        assertEquals(new BigDecimal("23.14"), LineUtils.getDecimalCellValue(line,"gelfond", new BigDecimal("23.14")));
+        assertEquals(new BigDecimal(3.14159265358979D), LineUtils.getDecimalCellValue(line,"pi").orElse(null));
+        assertEquals(new BigDecimal("2.718"), LineUtils.getDecimalCellValue(line,"e").orElse(null));
+        assertEquals(new BigDecimal(3.14159265358979D), LineUtils.getDecimalCellValue(line,"pi").orElse(new BigDecimal(2.71D)));
+        assertEquals(new BigDecimal("23.14"), LineUtils.getDecimalCellValue(line,"gelfond").orElse(new BigDecimal("23.14")));
     }
 
     @Test
@@ -136,10 +135,10 @@ public class LineUtilsTest {
         Line line = new Line("TestLine");
         LineUtils.setIntCellValue(line, "random", 4711);
         LineUtils.setBigIntegerCellValue(line, "douglas", BigInteger.valueOf(42L));
-        assertEquals(new BigInteger("4711"), LineUtils.getBigIntegerCellValue(line,"random"));
-        assertEquals(new BigInteger("42"), LineUtils.getBigIntegerCellValue(line,"douglas"));
-        assertEquals(new BigInteger("42"), LineUtils.getBigIntegerCellValue(line,"douglas", BigInteger.valueOf(42L)));
-        assertEquals(new BigInteger("23"), LineUtils.getBigIntegerCellValue(line,"pi", new BigInteger("23")));
+        assertEquals(new BigInteger("4711"), LineUtils.getBigIntegerCellValue(line,"random").get());
+        assertEquals(new BigInteger("42"), LineUtils.getBigIntegerCellValue(line,"douglas").get());
+        assertEquals(new BigInteger("42"), LineUtils.getBigIntegerCellValue(line,"douglas").orElse(BigInteger.valueOf(42L)));
+        assertEquals(new BigInteger("23"), LineUtils.getBigIntegerCellValue(line,"pi").orElse(new BigInteger("23")));
     }
 
     @Test
@@ -147,9 +146,9 @@ public class LineUtilsTest {
         Line line = new Line("TestLine");
         Date date = new Date();
         LineUtils.setDateCellValue(line,"aDateValue", date);
-        assertEquals(date, LineUtils.getDateCellValue(line,"aDateValue"));
-        assertSame(date, LineUtils.getDateCellValue(line,"aDateValue", new Date()));
-        assertNotSame(date, LineUtils.getDateCellValue(line,"doesNotExist", new Date()));
+        assertEquals(date, LineUtils.getDateCellValue(line,"aDateValue").get());
+        assertSame(date, LineUtils.getDateCellValue(line,"aDateValue").orElse(new Date()));
+        assertNotSame(date, LineUtils.getDateCellValue(line,"doesNotExist").orElse(new Date()));
         LineUtils.setDateCellValue(line,"aDateValue", null);
         assertFalse(line.isCell("aDateValue"));
     }

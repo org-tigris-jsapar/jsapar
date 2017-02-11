@@ -35,9 +35,9 @@ public class XMLDocumentParseTaskTest {
         // System.out.println("Errors: " + parseErrors.toString());
 
         assertEquals(1, document.size());
-        assertEquals("Hans", document.getLine(0).getCell("FirstName").getStringValue());
-        assertEquals("Hugge", document.getLine(0).getCell("LastName").getStringValue());
-        assertEquals(48, ((IntegerCell) document.getLine(0).getCell("ShoeSize")).getNumberValue().intValue());
+        assertEquals("Hans", document.getLine(0).getCell("FirstName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
+        assertEquals("Hugge", document.getLine(0).getCell("LastName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
+        assertEquals(48, ((IntegerCell) document.getLine(0).getCell("ShoeSize").orElseThrow(() -> new AssertionError("Should be set"))).getNumberValue().intValue());
     }
 
 }

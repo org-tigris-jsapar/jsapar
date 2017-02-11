@@ -2,6 +2,7 @@ package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.Document;
+import org.jsapar.model.LineUtils;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
@@ -41,11 +42,11 @@ public class FixedWidthParseTaskTest {
 
         Document doc = build(reader, schema);
 
-        assertEquals("Jonas", doc.getLine(0).getCell("First name").getStringValue());
-        assertEquals("Stenberg", doc.getLine(0).getCell("Last name").getStringValue());
+        assertEquals("Jonas", LineUtils.getStringCellValue(doc.getLine(0), "First name").orElse("fail"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(0), "Last name").orElse("fail"));
 
-        assertEquals("Frida", doc.getLine(1).getCell("First name").getStringValue());
-        assertEquals("Stenberg", doc.getLine(1).getCell("Last name").getStringValue());
+        assertEquals("Frida", LineUtils.getStringCellValue(doc.getLine(1), "First name").orElse("fail"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(1), "Last name").orElse("fail"));
     }
 
     private Document build(Reader reader, FixedWidthSchema schema) throws IOException {

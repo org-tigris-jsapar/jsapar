@@ -311,7 +311,7 @@ public class Text2TextConvertTest {
         converter.addLineManipulator(new LineManipulator() {
             @Override
             public boolean manipulate(Line line) {
-                if(line.getLineType().equals("Names") && line.getCell("First name").getStringValue().equals("Tomas"))
+                if(line.getLineType().equals("Names") && line.getCell("First name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue().equals("Tomas"))
                     return false;
                 else
                     return true;

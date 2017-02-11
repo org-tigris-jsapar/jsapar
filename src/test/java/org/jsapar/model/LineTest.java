@@ -65,8 +65,8 @@ public class LineTest {
     @Test
     public void testAddCellCell() {
         Line line = makeTestLine();
-        assertEquals("Nils", line.getCell("FirstName").getStringValue());
-        assertEquals("Svensson", line.getCell("LastName").getStringValue());
+        assertEquals("Nils", LineUtils.getStringCellValue(line, "FirstName").orElse("fail"));
+        assertEquals("Svensson", LineUtils.getStringCellValue(line, "LastName").orElse("fail"));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -84,15 +84,15 @@ public class LineTest {
 
         line.putCell(new StringCell("FirstName", "Sven"));
         assertEquals(2, line.size());
-        assertEquals("Sven", line.getCell("FirstName").getStringValue());
-        assertEquals("Svensson", line.getCell("LastName").getStringValue());
+        assertEquals("Sven", LineUtils.getStringCellValue(line, "FirstName").orElse("fail"));
+        assertEquals("Svensson", LineUtils.getStringCellValue(line, "LastName").orElse("fail"));
     }
 
 
     @Test
     public void testGetCellString() {
         Line line = makeTestLine();
-        assertEquals("Nils", line.getCell("FirstName").getStringValue());
+        assertEquals("Nils", LineUtils.getStringCellValue(line, "FirstName").orElse("fail"));
     }
 
 
@@ -124,7 +124,7 @@ public class LineTest {
 
         line.removeCell("FirstName");
         assertEquals(1, line.size());
-        assertEquals("Svensson", line.getCell("LastName").getStringValue());
+        assertEquals("Svensson", LineUtils.getStringCellValue(line, "LastName").orElse("fail"));
     }
 
     private Line makeTestLine() {
@@ -144,8 +144,8 @@ public class LineTest {
         line.addCellError(theError);
         assertTrue(line.hasCellErrors());
         assertEquals(1, line.getCellErrors().size());
-        assertSame(theError, line.getCellError("FirstName"));
-        assertNull(line.getCellError("LastName"));
+        assertSame(theError, line.getCellError("FirstName").orElseThrow(()-> new AssertionError("fail")));
+        assertFalse(line.getCellError("LastName").isPresent());
     }
 
 

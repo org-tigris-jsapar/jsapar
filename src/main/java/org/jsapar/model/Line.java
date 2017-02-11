@@ -124,33 +124,45 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * Removes cell with the given name.
      *
      * @param sName The name of the cell to remove.
-     * @return The removed cell
+     * @return Optional that contains the removed cell if found
      */
-    public Cell removeCell(String sName) {
-        return this.cells.remove(sName);
+    public Optional<Cell> removeCell(String sName) {
+        return Optional.ofNullable(this.cells.remove(sName));
     }
 
     /**
      * Adds a cell to the line end of the line, replacing any existing cell with the same name.
      *
      * @param cell The cell to add
-     * @return The replaced cell or null if there were no cell within the line with the same name.
+     * @return Optional containing the replaced cell if there was one within the line with the same name.
      * @see #addCell(Cell)
      */
-    public Cell putCell(Cell cell) {
-        return this.cells.put(cell.getName(), cell);
+    public Optional<Cell> putCell(Cell cell) {
+        return Optional.ofNullable(this.cells.put(cell.getName(), cell));
     }
 
     /**
      * Gets a cell with specified name. Name is specified by the schema.
      *
      * @param name The name of the cell to get
-     * @return The cell or null if there is no cell with specified name.
+     * @return Optional cell that is set if there is a cell with specified name.
      */
-    public Cell getCell(String name) {
-        return this.cells.get(name);
+    public Optional<Cell> getCell(String name) {
+        return Optional.ofNullable(this.cells.get(name));
     }
 
+    /**
+     * Gets a non empty cell with specified name. Name is specified by the schema.
+     *
+     * @param name The name of the cell to get
+     * @return Optional cell that is set if there is a cell with specified name and that cell is not empty.
+     */
+    public Optional<Cell> getNonEmptyCell(String name) {
+        Cell cell = this.cells.get(name);
+        if(cell==null || cell.isEmpty())
+            return Optional.empty();
+        return Optional.of(cell);
+    }
     /**
      * Gets the number of cells that this line contains.
      *
@@ -207,7 +219,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @return True if there is a cell with the specified name, false otherwise.
      */
     boolean isCell(String cellName) {
-        return this.getCell(cellName) != null;
+        return this.getCell(cellName).isPresent();
     }
 
     public long getLineNumber() {
@@ -253,8 +265,8 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @param cellName The name of the cell to get error for.
      * @return If there is an error for the given cell name, that error is returned.The error with the given cell name.
      */
-    public CellParseException getCellError(String cellName){
-        return cellErrors.get(cellName);
+    public Optional<CellParseException> getCellError(String cellName){
+        return Optional.ofNullable(cellErrors.get(cellName));
     }
 
     /**

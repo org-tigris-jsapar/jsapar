@@ -1,6 +1,8 @@
 package org.jsapar.parse.csv;
 
-import org.jsapar.error.*;
+import org.jsapar.error.ExceptionErrorEventListener;
+import org.jsapar.error.JSaParException;
+import org.jsapar.error.ValidationAction;
 import org.jsapar.model.Line;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.CellParseException;
@@ -45,8 +47,8 @@ public class CsvLineParseTaskTest {
             public void lineParsedEvent(LineParsedEvent event) {
                 Line line = event.getLine();
                 assertEquals(7, line.size());
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Stenberg", line.getCell("1").getStringValue());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+                assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
         assertEquals(true, rc);
@@ -74,8 +76,8 @@ public class CsvLineParseTaskTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) {
                 Line line = event.getLine();
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Stenberg", line.getCell("1").getStringValue());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+                assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
 
@@ -93,12 +95,12 @@ public class CsvLineParseTaskTest {
             public void lineParsedEvent(LineParsedEvent event) {
                 Line line = event.getLine();
                 assertEquals(7, line.size());
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Stenberg", line.getCell("1").getStringValue());
-                assertEquals("", line.getCell("2").getStringValue());
-                assertEquals("Hemvägen ;19", line.getCell("3").getStringValue());
-                assertEquals("\"111 22\"", line.getCell("4").getStringValue());
-                assertEquals("Stockholm", line.getCell("5").getStringValue());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+                assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+                assertEquals("", LineUtils.getStringCellValue(line, "2").orElse("fail"));
+                assertEquals("Hemvägen ;19", LineUtils.getStringCellValue(line, "3").orElse("fail"));
+                assertEquals("\"111 22\"", LineUtils.getStringCellValue(line, "4").orElse("fail"));
+                assertEquals("Stockholm", LineUtils.getStringCellValue(line, "5").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
 
@@ -116,9 +118,9 @@ public class CsvLineParseTaskTest {
             public void lineParsedEvent(LineParsedEvent event) {
                 Line line = event.getLine();
                 assertEquals(7, line.size());
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Stenberg", line.getCell("1").getStringValue());
-                assertEquals("Hemvägen ;19", line.getCell("2").getStringValue());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+                assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+                assertEquals("Hemvägen ;19", LineUtils.getStringCellValue(line, "2").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
 
@@ -136,10 +138,10 @@ public class CsvLineParseTaskTest {
             public void lineParsedEvent(LineParsedEvent event) {
                 Line line = event.getLine();
                 assertEquals(7, line.size());
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Stenberg", line.getCell("1").getStringValue());
-                assertEquals("", line.getCell("2").getStringValue());
-                assertEquals("Hemvägen ;19", line.getCell("3").getStringValue());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+                assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+                assertEquals("", LineUtils.getStringCellValue(line, "2").orElse("fail"));
+                assertEquals("Hemvägen ;19", LineUtils.getStringCellValue(line, "3").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
 
@@ -157,10 +159,10 @@ public class CsvLineParseTaskTest {
             public void lineParsedEvent(LineParsedEvent event) {
                 Line line = event.getLine();
                 assertEquals(7, line.size());
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Stenberg", line.getCell("1").getStringValue());
-                assertEquals("", line.getCell("2").getStringValue());
-                assertEquals("Hemvägen ;19", line.getCell("3").getStringValue());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+                assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+                assertEquals("", LineUtils.getStringCellValue(line, "2").orElse("fail"));
+                assertEquals("Hemvägen ;19", LineUtils.getStringCellValue(line, "3").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
 
@@ -178,10 +180,10 @@ public class CsvLineParseTaskTest {
             public void lineParsedEvent(LineParsedEvent event) {
                 Line line = event.getLine();
                 assertEquals(7, line.size());
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Stenberg", line.getCell("1").getStringValue());
-                assertEquals("Not quoted", line.getCell("2").getStringValue());
-                assertEquals("Hemvägen ;19", line.getCell("3").getStringValue());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+                assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+                assertEquals("Not quoted", LineUtils.getStringCellValue(line, "2").orElse("fail"));
+                assertEquals("Hemvägen ;19", LineUtils.getStringCellValue(line, "3").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
 
@@ -199,9 +201,9 @@ public class CsvLineParseTaskTest {
             public void lineParsedEvent(LineParsedEvent event) {
                 Line line = event.getLine();
                 assertEquals(7, line.size());
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Stenberg", line.getCell("1").getStringValue());
-                assertEquals("Hemvägen ;19", line.getCell("2").getStringValue());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+                assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+                assertEquals("Hemvägen ;19", LineUtils.getStringCellValue(line, "2").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
 
@@ -219,10 +221,10 @@ public class CsvLineParseTaskTest {
             public void lineParsedEvent(LineParsedEvent event) {
                 Line line = event.getLine();
                 assertEquals(6, line.size());
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Stenberg", line.getCell("1").getStringValue());
-                assertEquals("\"Hemvägen ", line.getCell("2").getStringValue());
-                assertEquals("19", line.getCell("3").getStringValue());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+                assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+                assertEquals("\"Hemvägen ", LineUtils.getStringCellValue(line, "2").orElse("fail"));
+                assertEquals("19", LineUtils.getStringCellValue(line, "3").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
 
@@ -240,9 +242,9 @@ public class CsvLineParseTaskTest {
             public void lineParsedEvent(LineParsedEvent event) {
                 Line line = event.getLine();
                 assertEquals(3, line.size());
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Stenberg", line.getCell("1").getStringValue());
-                assertEquals("\"", line.getCell("2").getStringValue());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+                assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+                assertEquals("\"", LineUtils.getStringCellValue(line, "2").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
 
@@ -260,12 +262,12 @@ public class CsvLineParseTaskTest {
             public void lineParsedEvent(LineParsedEvent event) {
                 Line line = event.getLine();
                 assertEquals(7, line.size());
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Stenberg", line.getCell("1").getStringValue());
-                assertEquals("H\"emvägen ", line.getCell("2").getStringValue());
-                assertEquals("19", line.getCell("3").getStringValue());
-                assertEquals("111 \"22\"", line.getCell("4").getStringValue());
-                assertEquals("Stoc\"kholm", line.getCell("5").getStringValue());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+                assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+                assertEquals("H\"emvägen ", LineUtils.getStringCellValue(line, "2").orElse("fail"));
+                assertEquals("19", LineUtils.getStringCellValue(line, "3").orElse("fail"));
+                assertEquals("111 \"22\"", LineUtils.getStringCellValue(line, "4").orElse("fail"));
+                assertEquals("Stoc\"kholm", LineUtils.getStringCellValue(line, "5").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
 
@@ -283,11 +285,11 @@ public class CsvLineParseTaskTest {
             public void lineParsedEvent(LineParsedEvent event) {
                 Line line = event.getLine();
                 assertEquals(7, line.size());
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Stenberg", line.getCell("1").getStringValue());
-                assertEquals("\"Hemvägen ", line.getCell("2").getStringValue());
-                assertEquals("1\"9", line.getCell("3").getStringValue());
-                assertEquals("111 22", line.getCell("4").getStringValue());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+                assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+                assertEquals("\"Hemvägen ", LineUtils.getStringCellValue(line, "2").orElse("fail"));
+                assertEquals("1\"9", LineUtils.getStringCellValue(line, "3").orElse("fail"));
+                assertEquals("111 22", LineUtils.getStringCellValue(line, "4").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
 
@@ -307,8 +309,8 @@ public class CsvLineParseTaskTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) {
                 Line line = event.getLine();
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Stenberg", line.getCell("1").getStringValue());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+                assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
         assertEquals(true, rc);
@@ -332,8 +334,8 @@ public class CsvLineParseTaskTest {
             @Override
             public void lineParsedEvent(LineParsedEvent event) {
                 Line line = event.getLine();
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Stenb", line.getCell("1").getStringValue());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+                assertEquals("Stenb", LineUtils.getStringCellValue(line, "1").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
         assertEquals(true, rc);
@@ -351,16 +353,11 @@ public class CsvLineParseTaskTest {
         schemaLine.addSchemaCell(new CsvSchemaCell("2"));
 
         String sLine = "Jonas;-);-)Stenberg";
-        boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
-
-            @Override
-            public void lineParsedEvent(LineParsedEvent event) {
-                Line line = event.getLine();
-                assertEquals("Jonas", line.getCell("0").getStringValue());
-                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
-                assertEquals("Stenberg", line.getCell("2").getStringValue());
-                assertEquals("yes", LineUtils.getStringCellValue(line, "Happy"));
-            }
+        boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), event -> {
+            Line line = event.getLine();
+            assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
+            assertEquals("Stenberg", LineUtils.getStringCellValue(line, "2").orElse("fail"));
+            assertEquals("yes", LineUtils.getStringCellValue(line, "Happy").orElse("fail"));
         }, new ExceptionErrorEventListener());
         assertEquals(true, rc);
 
@@ -378,21 +375,14 @@ public class CsvLineParseTaskTest {
         schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
 
         String sLine = "Jonas;-);-)Stenberg";
-        boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
-
-            @Override
-            public void lineParsedEvent(LineParsedEvent event) {
-                Line line = event.getLine();
-                assertEquals("Jonas", LineUtils.getStringCellValue(line, "First Name"));
-                assertEquals("Stenberg", line.getCell("Last Name").getStringValue());
-                assertEquals("yes", LineUtils.getStringCellValue(line, "Happy"));
-            }
-        }, new ErrorEventListener() {
-            @Override
-            public void errorEvent(ErrorEvent event) {
-                assertEquals("Happy", ((CellParseException) event.getError()).getCellName());
-                foundError = true;
-            }
+        boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), event -> {
+            Line line = event.getLine();
+            assertEquals("Jonas", LineUtils.getStringCellValue(line, "First Name").orElse("fail"));
+            assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last Name").orElse("fail"));
+            assertEquals("yes", LineUtils.getStringCellValue(line, "Happy").orElse("fail"));
+        }, event -> {
+            assertEquals("Happy", ((CellParseException) event.getError()).getCellName());
+            foundError = true;
         });
         assertEquals(true, rc);
         assertEquals(true, foundError);
@@ -409,15 +399,11 @@ public class CsvLineParseTaskTest {
         schemaLine.addSchemaCell(happyCell);
 
         String sLine = "Jonas;-)Stenberg";
-        boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), new LineEventListener() {
-
-            @Override
-            public void lineParsedEvent(LineParsedEvent event) {
-                Line line = event.getLine();
-                assertEquals("Jonas", LineUtils.getStringCellValue(line, "First Name"));
-                assertEquals("Stenberg", line.getCell("Last Name").getStringValue());
-                assertEquals("yes", LineUtils.getStringCellValue(line, "Happy"));
-            }
+        boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), event -> {
+            Line line = event.getLine();
+            assertEquals("Jonas", LineUtils.getStringCellValue(line, "First Name").orElse("fail"));
+            assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last Name").orElse("fail"));
+            assertEquals("yes", LineUtils.getStringCellValue(line, "Happy").orElse("fail"));
         }, new ExceptionErrorEventListener());
         assertEquals(true, rc);
 

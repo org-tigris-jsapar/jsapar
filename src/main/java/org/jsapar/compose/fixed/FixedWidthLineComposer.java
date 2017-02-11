@@ -9,6 +9,7 @@ import org.jsapar.schema.FixedWidthSchemaLine;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
+import java.util.Optional;
 
 /**
  * Composes line to a fixed width format based on line schema.
@@ -46,8 +47,8 @@ public class FixedWidthLineComposer implements LineComposer {
         while(iter.hasNext()) {
             FixedWidthSchemaCell schemaCell = iter.next();
             totalLength += schemaCell.getLength();
-            Cell cell = line.getCell(schemaCell.getName());
-            cellComposer.compose(cell, schemaCell);
+            Optional<Cell> oCell = line.getCell(schemaCell.getName());
+            cellComposer.compose(oCell.orElse(null), schemaCell);
         }
         if(lineSchema.getMinLength() > totalLength){
             FixedWidthCellComposer.fill(writer, lineSchema.getPadCharacter(), lineSchema.getMinLength() -totalLength);

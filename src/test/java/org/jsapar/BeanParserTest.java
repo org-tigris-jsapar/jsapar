@@ -2,6 +2,7 @@ package org.jsapar;
 
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
+import org.jsapar.model.LineUtils;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.parse.bean.BeanParseConfig;
 import org.junit.Test;
@@ -43,10 +44,10 @@ public class BeanParserTest {
 
         assertEquals(2, doc.size());
         Line line = doc.getLine(0);
-        assertEquals("Jonas", line.getCell("firstName").getStringValue());
+        assertEquals("Jonas", LineUtils.getStringCellValue(line, "firstName").orElse("fail"));
 
         line = doc.getLine(1);
-        assertEquals("Test2", line.getCell("firstName").getStringValue());
+        assertEquals("Test2", LineUtils.getStringCellValue(line, "firstName").orElse("fail"));
 
     }
 

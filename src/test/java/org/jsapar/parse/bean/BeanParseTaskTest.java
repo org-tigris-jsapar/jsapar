@@ -61,10 +61,11 @@ public class BeanParseTaskTest {
 
         assertEquals(2, doc.size());
         Line line = doc.getLine(0);
-        assertEquals("Jonas", line.getCell("firstName").getStringValue());
+        assertEquals("Jonas",
+                line.getCell("firstName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
 
         line = doc.getLine(1);
-        assertEquals("Test2", line.getCell("firstName").getStringValue());
+        assertEquals("Test2", line.getCell("firstName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
 
     }
 
@@ -84,12 +85,12 @@ public class BeanParseTaskTest {
         Line line = builder.parseBean(person, new ExceptionErrorEventListener(), 1);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals(8, line.size());
-        assertEquals("Jonas", line.getCell("firstName").getStringValue());
-        assertEquals(42, ((IntegerCell) line.getCell("shoeSize")).getNumberValue().shortValue());
-        assertEquals(4711, ((IntegerCell) line.getCell("streetNumber")).getNumberValue().intValue());
-        assertEquals(birthTime, ((DateCell) line.getCell("birthTime")).getDateValue());
-        assertEquals(123456787901234567L, ((IntegerCell) line.getCell("luckyNumber")).getNumberValue().longValue());
-        assertEquals("A", LineUtils.getStringCellValue(line,"door"));
+        assertEquals("Jonas", line.getCell("firstName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
+        assertEquals(42, ((IntegerCell) line.getCell("shoeSize").orElseThrow(() -> new AssertionError("Should be set"))).getNumberValue().shortValue());
+        assertEquals(4711, ((IntegerCell) line.getCell("streetNumber").orElseThrow(() -> new AssertionError("Should be set"))).getNumberValue().intValue());
+        assertEquals(birthTime, ((DateCell) line.getCell("birthTime").orElseThrow(() -> new AssertionError("Should be set"))).getDateValue());
+        assertEquals(123456787901234567L, ((IntegerCell) line.getCell("luckyNumber").orElseThrow(() -> new AssertionError("Should be set"))).getNumberValue().longValue());
+        assertEquals("A", LineUtils.getStringCellValue(line,"door").orElse("fail"));
     }
 
     @Test
@@ -100,11 +101,11 @@ public class BeanParseTaskTest {
         BeanParseTask<TstPerson> builder = new BeanParseTask<>(Arrays.asList(new TstPerson[]{person}).iterator(), new BeanParseConfig());
         Line line = builder.parseBean(person, new ExceptionErrorEventListener(), 1);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
-        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
-        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
+        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street").orElse("fail"));
+        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town").orElse("fail"));
         
         // Make sure that loops are avoided.
-        Assert.assertNull(LineUtils.getStringCellValue(line,"address.owner.firstName"));
+        Assert.assertFalse(LineUtils.getStringCellValue(line,"address.owner.firstName").isPresent());
     }
 
     @Test
@@ -116,12 +117,12 @@ public class BeanParseTaskTest {
         BeanParseTask<TstPerson> builder = new BeanParseTask<>(Arrays.asList(new TstPerson[]{person}).iterator(), new BeanParseConfig());
         Line line = builder.parseBean(person, new ExceptionErrorEventListener(), 1);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
-        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
-        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
-        assertEquals("Road", LineUtils.getStringCellValue(line,"address.subAddress.street"));
-        assertEquals("Town", LineUtils.getStringCellValue(line,"address.subAddress.town"));
-        assertEquals("Gatan", LineUtils.getStringCellValue(line,"workAddress.street"));
-        assertEquals("Byn", LineUtils.getStringCellValue(line,"workAddress.town"));
+        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street").orElse("fail"));
+        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town").orElse("fail"));
+        assertEquals("Road", LineUtils.getStringCellValue(line,"address.subAddress.street").orElse("fail"));
+        assertEquals("Town", LineUtils.getStringCellValue(line,"address.subAddress.town").orElse("fail"));
+        assertEquals("Gatan", LineUtils.getStringCellValue(line,"workAddress.street").orElse("fail"));
+        assertEquals("Byn", LineUtils.getStringCellValue(line,"workAddress.town").orElse("fail"));
     }
 
     @Test
@@ -137,12 +138,12 @@ public class BeanParseTaskTest {
                 config);
         Line line = builder.parseBean(person, new ExceptionErrorEventListener(), 1);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
-        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
-        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
-        Assert.assertNull(LineUtils.getStringCellValue(line,"address.subAddress.street"));
-        Assert.assertNull(LineUtils.getStringCellValue(line,"address.subAddress.town"));
-        assertEquals("Gatan", LineUtils.getStringCellValue(line,"workAddress.street"));
-        assertEquals("Byn", LineUtils.getStringCellValue(line,"workAddress.town"));
+        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street").orElse("fail"));
+        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town").orElse("fail"));
+        Assert.assertFalse(LineUtils.getStringCellValue(line,"address.subAddress.street").isPresent());
+        Assert.assertFalse(LineUtils.getStringCellValue(line,"address.subAddress.town").isPresent());
+        assertEquals("Gatan", LineUtils.getStringCellValue(line,"workAddress.street").orElse("fail"));
+        assertEquals("Byn", LineUtils.getStringCellValue(line,"workAddress.town").orElse("fail"));
     }
     
 }
