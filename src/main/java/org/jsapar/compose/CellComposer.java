@@ -23,12 +23,12 @@ public class CellComposer {
         if (schemaCell.isIgnoreWrite())
             return EMPTY_STRING;
 
-        if (cell == null) {
-            return getDefaultValueOrEmpty(schemaCell);
+        if (cell == null || cell.isEmpty()) {
+            return defaultValueOrEmpty(schemaCell);
         }
         String value = cell.getStringValue(schemaCell.getCellFormat().getFormat());
         if (value == null || value.isEmpty()) {
-            return getDefaultValueOrEmpty(schemaCell);
+            return defaultValueOrEmpty(schemaCell);
         }
         return value;
     }
@@ -37,7 +37,7 @@ public class CellComposer {
      * @return The default value if it is not null or empty string otherwise.
      * @param schemaCell The cell schema to use
      */
-    private String getDefaultValueOrEmpty(SchemaCell schemaCell) {
+    private String defaultValueOrEmpty(SchemaCell schemaCell) {
         return schemaCell.getDefaultValue() == null ? EMPTY_STRING : schemaCell.getDefaultValue();
     }
 

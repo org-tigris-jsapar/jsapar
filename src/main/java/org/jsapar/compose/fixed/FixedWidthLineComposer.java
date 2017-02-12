@@ -48,7 +48,7 @@ public class FixedWidthLineComposer implements LineComposer {
             FixedWidthSchemaCell schemaCell = iter.next();
             totalLength += schemaCell.getLength();
             Optional<Cell> oCell = line.getCell(schemaCell.getName());
-            cellComposer.compose(oCell.orElse(null), schemaCell);
+            cellComposer.compose(oCell.orElse(schemaCell.makeEmptyCell()), schemaCell);
         }
         if(lineSchema.getMinLength() > totalLength){
             FixedWidthCellComposer.fill(writer, lineSchema.getPadCharacter(), lineSchema.getMinLength() -totalLength);

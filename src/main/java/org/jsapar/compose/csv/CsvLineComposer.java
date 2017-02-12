@@ -48,7 +48,7 @@ public class CsvLineComposer implements LineComposer {
         Iterator<CsvSchemaCell> iter = schemaLine.getSchemaCells().iterator();
         while(iter.hasNext()) {
             CsvSchemaCell schemaCell = iter.next();
-            Cell cell = line.getCell(schemaCell.getName()).orElse(null);
+            Cell cell = line.getCell(schemaCell.getName()).orElse(schemaCell.makeEmptyCell());
             char quoteChar = schemaLine.getQuoteChar();
 
             cellComposer.compose(cell, schemaCell, sCellSeparator, quoteChar);
