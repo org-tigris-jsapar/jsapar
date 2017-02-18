@@ -20,6 +20,7 @@ public class BooleanCell extends Cell  {
 
 	public BooleanCell(String sName, Boolean value) {
 		super(sName, CellType.BOOLEAN);
+		assert value != null : "Cell value cannot be null, use EmptyCell for empty values.";
 		this.booleanValue = value;
 	}
 
@@ -45,8 +46,6 @@ public class BooleanCell extends Cell  {
 	 */
 	@Override
 	public String getStringValue(Format format) throws IllegalArgumentException {
-	    if(this.booleanValue == null)
-	        return null;
 		if (format != null)
 			return format.format(this.booleanValue);
 		else

@@ -20,11 +20,12 @@ public class StringCell extends Cell {
      * Creates a string cell with the supplied name and value.
      * 
      * @param name The name of the cell
-     * @param value The value
+     * @param value The value. Cannot be null. Use {@link EmptyCell} for empty values.
      */
     public StringCell(String name, String value) {
-	super(name, CellType.STRING);
-	this.stringValue = value;
+        super(name, CellType.STRING);
+        assert value != null : "Cell value cannot be null, use EmptyCell for empty values.";
+        this.stringValue = value;
     }
 
 
@@ -67,8 +68,6 @@ public class StringCell extends Cell {
      */
     @Override
     public String getStringValue(Format format) throws IllegalArgumentException {
-        if (this.stringValue == null)
-            return null;
         if (format != null) {
             return format.format(this.stringValue);
         } else

@@ -1,6 +1,5 @@
 package org.jsapar.parse.text;
 
-import org.jsapar.DocumentBuilder;
 import org.jsapar.parse.AbstractParseTask;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.ParseTask;
@@ -12,7 +11,7 @@ import java.io.Reader;
 /**
  * This class is used for a one-off parsing of a text source. You create an instance of this class, calls execute, then dispose it.. <br>
  * The instance of this class will produce events for each line that has been successfully parsed. <br/>
- * If you want to get the result back as a complete Document object, you should use the {@link DocumentBuilder} instead.
+ * If you want to get the result back as a complete Document object, you should use the {@link org.jsapar.parse.DocumentBuilderLineEventListener}.
  * <br/>
  * <ol>
  * <li>First, create an instance of TextParseTask.</li>

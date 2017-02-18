@@ -254,8 +254,8 @@ public class BeanComposerTest {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new StringCell("firstName", "Jonas"));
-        line1.addCell(new StringCell("lastName", null));
         line1.addCell(new IntegerCell("shoeSize", 42));
+        line1.addCell(new EmptyCell("lastName", CellType.STRING));
        
         document.addLine(line1);
 
@@ -266,9 +266,9 @@ public class BeanComposerTest {
         java.util.List<TstPerson> objects = beanEventListener.getBeans();
         assertEquals(1, objects.size());
         assertEquals("Jonas", objects.get(0).getFirstName());
-        assertNull(objects.get(0).getLastName());
+        assertEquals("Nobody", objects.get(0).getLastName());
         assertEquals(42, objects.get(0).getShoeSize());
-    }    
+    }
 
     @Test
     public void testGetSetBeanFactory(){

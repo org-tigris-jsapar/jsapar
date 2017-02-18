@@ -7,6 +7,7 @@ import org.jsapar.schema.FixedWidthSchemaCell;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Optional;
 
 /**
  * Parses fixed width text source on cell level.
@@ -27,12 +28,12 @@ public class FixedWidthCellParser extends CellParser {
      * @return A Cell filled with the parsed cell value and with the name of this schema cell.
      * @throws IOException In case there is an error reading from the reader.
      */
-    public Cell parse(FixedWidthSchemaCell cellSchema, Reader reader, ErrorEventListener errorEventListener) throws IOException {
+    public Optional<Cell> parse(FixedWidthSchemaCell cellSchema, Reader reader, ErrorEventListener errorEventListener) throws IOException {
 
         String sValue = parseToString(cellSchema, reader, 0);
         if(sValue == null) {
             checkIfMandatory(cellSchema, errorEventListener);
-            return null;
+            return Optional.empty();
         }
         return super.parse(cellSchema, sValue, errorEventListener);
     }

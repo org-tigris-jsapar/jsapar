@@ -109,12 +109,13 @@ public class CsvLineComposerTest {
         schemaLine.setCellSeparator(";-)");
         schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
         schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("Shoe size"));
+        CsvSchemaCell shoeSchema = new CsvSchemaCell("Shoe size");
+        schemaLine.addSchemaCell(shoeSchema);
 
         Line line = new Line();
         line.addCell(new StringCell("First Name", "Jonas"));
         line.addCell(new StringCell("Last Name", "Stenberg"));
-        line.addCell(new StringCell("Shoe size", null));
+        line.addCell(shoeSchema.makeEmptyCell());
         StringWriter writer = new StringWriter();
 
         CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n");

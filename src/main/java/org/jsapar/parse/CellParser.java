@@ -10,6 +10,7 @@ import org.jsapar.schema.SchemaException;
 
 import java.text.Format;
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Internal class for parsing text on cell level.
@@ -32,14 +33,14 @@ public class CellParser {
      * @return A new cell of a type according to the schema specified. Returns null if there is no
      * value.
      */
-    public Cell parse(SchemaCell cellSchema, String sValue, ErrorEventListener errorEventListener) {
+    public Optional<Cell> parse(SchemaCell cellSchema, String sValue, ErrorEventListener errorEventListener) {
         if (sValue.isEmpty()) {
             checkIfMandatory(cellSchema, errorEventListener);
 
             if (cellSchema.isDefaultValue()) {
-                return cellSchema.makeDefaultCell();
+                return Optional.of(cellSchema.makeDefaultCell());
             } else {
-                return cellSchema.makeEmptyCell();
+                return Optional.of(cellSchema.makeEmptyCell());
             }
         }
         return doParse(cellSchema, sValue, errorEventListener);
@@ -54,16 +55,16 @@ public class CellParser {
      * @param errorEventListener Error event listener to deliver errors to.
      * @return A new cell of a type according to the schema specified. Returns null if an error occurs.
      */
-    private Cell doParse(SchemaCell cellSchema, String sValue, ErrorEventListener errorEventListener) {
+    private Optional<Cell> doParse(SchemaCell cellSchema, String sValue, ErrorEventListener errorEventListener) {
 
         try {
             Cell cell = makeCell(cellSchema, sValue);
             validateRange(cellSchema, cell);
-            return cell;
+            return Optional.of(cell);
         } catch (java.text.ParseException e) {
             errorEventListener.errorEvent(new ErrorEvent(this,
                     new CellParseException(cellSchema.getName(), sValue, cellSchema.getCellFormat(), e.getMessage())));
-            return null;
+            return Optional.empty();
         }
 
     }

@@ -11,6 +11,7 @@ import org.jsapar.schema.FixedWidthSchemaLine;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Optional;
 
 /**
  * Parses fixed width text source on line level.
@@ -58,13 +59,14 @@ public class FixedWidthLineParser {
             } else {
                 LineDecoratorErrorEventListener lineErrorEventListener = new LineDecoratorErrorEventListener(
                         errorListener, line);
-                Cell cell = cellParser
+                Optional<Cell> cell = cellParser
                         .parse(schemaCell, reader, lineErrorEventListener);
-                if (cell == null) {
+                if (!cell.isPresent()) {
                     if (oneRead) {
                         setDefaultsOnly = true;
                         if (schemaCell.isDefaultValue())
-                            line.addCell(cellParser.parse(schemaCell, EMPTY_STRING, lineErrorEventListener));
+                            cellParser.parse(schemaCell, EMPTY_STRING, lineErrorEventListener)
+                                    .ifPresent(line::addCell) ;
                         //noinspection ConstantConditions
                         if (handleInsufficient) {
                             if (!validationHandler
@@ -79,7 +81,7 @@ public class FixedWidthLineParser {
                 }
 
                 oneRead = true;
-                line.addCell(cell);
+                line.addCell(cell.get());
             }
         }
         if (line.size() <= 0 && !oneIgnored)

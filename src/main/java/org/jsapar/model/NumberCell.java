@@ -25,6 +25,7 @@ public abstract class NumberCell extends Cell {
      */
     public NumberCell(String name, Number value, CellType cellType) {
         super(name, cellType);
+        assert value != null : "Cell value cannot be null, use EmptyCell for empty values.";
         this.numberValue = value;
     }
 
@@ -52,8 +53,6 @@ public abstract class NumberCell extends Cell {
      */
     @Override
     public String getStringValue(Format format) throws IllegalArgumentException {
-        if(this.numberValue == null)
-            return null;
         if (format != null)
             return format.format(this.numberValue);
         else
