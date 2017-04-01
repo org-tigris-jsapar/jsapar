@@ -22,7 +22,6 @@ import java.io.Reader;
  * </ol>
  * <br/>
  *
- * @see DocumentBuilder
  * @see TextComposer
  * @see Text2TextConverter
  * @see TextParseTask
