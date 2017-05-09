@@ -26,9 +26,6 @@ public class QuotedCellSplitter implements CellSplitter {
      *            of many characters.
      * @param quoteChar
      *            The quote character to use for quoted cells.
-     * @param lineReader
-     *            The line reader to read next line from in case multi-line cells are supported. Set to null if
-     *            multi-line cells are not supported.
      */
     public QuotedCellSplitter(String cellSeparator, char quoteChar) {
         this(cellSeparator, quoteChar, null);
