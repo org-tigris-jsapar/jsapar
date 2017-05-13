@@ -1,5 +1,8 @@
 package org.jsapar.compose.csv;
 
+import org.jsapar.compose.csv.quote.NeverQuote;
+import org.jsapar.compose.csv.quote.NeverQuoteButReplace;
+import org.jsapar.compose.csv.quote.QuoteIfNeeded;
 import org.jsapar.model.*;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.SchemaException;
@@ -22,8 +25,8 @@ public class CsvCellComposerTest {
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name", "Jonas");
 
-        CsvCellComposer composer = new CsvCellComposer(writer);
-        composer.compose(cell, schemaElement, ";", (char) 0);
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new NeverQuote(33));
+        composer.compose(writer, cell);
 
         assertEquals("Jonas", writer.toString());
     }
@@ -35,8 +38,8 @@ public class CsvCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name", "Jonas");
-        CsvCellComposer composer = new CsvCellComposer(writer);
-        composer.compose(cell, schemaElement, ";", (char) 0);
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new NeverQuote(33));
+        composer.compose(writer, cell);
 
         assertEquals("", writer.toString());
     }
@@ -47,8 +50,8 @@ public class CsvCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "Here; we come");
-        CsvCellComposer composer = new CsvCellComposer(writer);
-        composer.compose(cell, schemaElement, ";", '\'');
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n"));
+        composer.compose(writer, cell);
 
         assertEquals("'Here; we come'", writer.toString());
     }
@@ -59,8 +62,8 @@ public class CsvCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "'Here we come'");
-        CsvCellComposer composer = new CsvCellComposer(writer);
-        composer.compose(cell, schemaElement, ";", '\'');
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n"));
+        composer.compose(writer, cell);
 
         assertEquals("''Here we come''", writer.toString());
     }
@@ -71,8 +74,8 @@ public class CsvCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "Joho");
-        CsvCellComposer composer = new CsvCellComposer(writer);
-        composer.compose(cell, schemaElement, ";", '\'');
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n"));
+        composer.compose(writer, cell);
 
         assertEquals("Joho", writer.toString());
     }
@@ -83,8 +86,8 @@ public class CsvCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new IntegerCell("Shoe size", 123);
-        CsvCellComposer composer = new CsvCellComposer(writer);
-        composer.compose(cell, schemaElement, ";", '\'');
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new NeverQuote(33));
+        composer.compose(writer, cell);
 
         assertEquals("123", writer.toString());
     }
@@ -95,8 +98,8 @@ public class CsvCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new BigDecimalCell("test", new BigDecimal("123456.59"));
-        CsvCellComposer composer = new CsvCellComposer(writer);
-        composer.compose(cell, schemaElement, ";", '\'');
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new NeverQuote(33));
+        composer.compose(writer, cell);
 
         // Non breakable space as grouping character.
         assertEquals("123\u00A0456,59", writer.toString());
@@ -109,8 +112,8 @@ public class CsvCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new BooleanCell("Loves", true);
-        CsvCellComposer composer = new CsvCellComposer(writer);
-        composer.compose(cell, schemaElement, ";", '\'');
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new NeverQuote(33));
+        composer.compose(writer, cell);
 
         assertEquals("true", writer.toString());
     }
@@ -121,10 +124,10 @@ public class CsvCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "With;-)love");
-        CsvCellComposer composer = new CsvCellComposer(writer);
-        composer.compose(cell, schemaElement,";-)", (char) 0);
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new NeverQuoteButReplace(33, ";-)", "\n", "*"));
+        composer.compose(writer, cell);
 
-        assertEquals("With\u00A0love", writer.toString());
+        assertEquals("With*love", writer.toString());
     }
 
     @Test
@@ -133,8 +136,8 @@ public class CsvCellComposerTest {
         schemaElement.setMaxLength(4);
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "Jonas");
-        CsvCellComposer composer = new CsvCellComposer(writer);
-        composer.compose(cell, schemaElement, ";", (char)0);
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new NeverQuote(4));
+        composer.compose(writer, cell);
 
         assertEquals("Jona", writer.toString());
     }
@@ -145,8 +148,8 @@ public class CsvCellComposerTest {
         schemaElement.setMaxLength(4);
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "J;onas");
-        CsvCellComposer composer = new CsvCellComposer(writer);
-        composer.compose(cell, schemaElement,";", '"');
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('"', 4, ";", "\n"));
+        composer.compose(writer, cell);
 
         assertEquals("\"J;\"", writer.toString());
     }
@@ -156,12 +159,12 @@ public class CsvCellComposerTest {
         CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
         schemaElement.setMaxLength(4);
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("test", "J;onas");
-        CsvCellComposer composer = new CsvCellComposer(writer);
-        composer.compose(cell, schemaElement,";", (char) 0);
+        Cell cell = new StringCell("test", "J;-)onas");
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new NeverQuoteButReplace(4, ";-)", "\n", "*"));
+        composer.compose(writer, cell);
 
         // Replaces ; with non breaking space.
-        assertEquals("J\u00A0on", writer.toString());
+        assertEquals("J*on", writer.toString());
     }
 
 }

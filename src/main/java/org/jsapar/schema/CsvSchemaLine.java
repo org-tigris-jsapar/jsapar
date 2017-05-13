@@ -196,7 +196,7 @@ public class CsvSchemaLine extends SchemaLine {
     }
 
     @Override
-    public int getSchemaCellsCount() {
+    public int size() {
         return this.schemaCells.size();
     }
 

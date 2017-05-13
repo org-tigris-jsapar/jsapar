@@ -1,6 +1,9 @@
 package org.jsapar.compose.csv;
 
 import org.jsapar.compose.LineComposer;
+import org.jsapar.compose.csv.quote.NeverQuoteButReplace;
+import org.jsapar.compose.csv.quote.QuoteIfNeeded;
+import org.jsapar.compose.csv.quote.Quoter;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
@@ -10,7 +13,10 @@ import org.jsapar.schema.CsvSchemaLine;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Composes csv line output based on schema and provided line.
@@ -21,14 +27,32 @@ public class CsvLineComposer implements LineComposer {
     Writer        writer;
     CsvSchemaLine schemaLine;
     private String lineSeparator;
-    CsvCellComposer cellComposer;
+    Map<String, CsvCellComposer> cellComposers = new HashMap<>();
     boolean firstRow=true;
 
     public CsvLineComposer(Writer writer, CsvSchemaLine schemaLine, String lineSeparator) {
         this.writer = writer;
         this.schemaLine = schemaLine;
         this.lineSeparator = lineSeparator;
-        this.cellComposer = new CsvCellComposer(writer);
+        cellComposers = makeCellComposers(schemaLine, lineSeparator);
+    }
+
+    private Map<String, CsvCellComposer> makeCellComposers(CsvSchemaLine schemaLine, String lineSeparator) {
+        return schemaLine.getSchemaCells().stream()
+                .collect(Collectors.toMap(CsvSchemaCell::getName, it ->makeCellComposer(schemaLine, it, lineSeparator)));
+    }
+
+    private CsvCellComposer makeCellComposer(CsvSchemaLine schemaLine, CsvSchemaCell schemaCell, String lineSeparator) {
+        return new CsvCellComposer(schemaCell, makeQuoter(schemaLine, schemaCell, lineSeparator));
+    }
+
+    private Quoter makeQuoter(CsvSchemaLine schemaLine, CsvSchemaCell schemaCell, String lineSeparator) {
+        // TODO make smarter assumptions for atomic data types and add more quote strategies.
+        char quoteChar = schemaLine.getQuoteChar();
+        if(quoteChar != 0)
+            return new QuoteIfNeeded(quoteChar, schemaCell.getMaxLength(), schemaLine.getCellSeparator(), lineSeparator);
+        else
+            return new NeverQuoteButReplace(schemaCell.getMaxLength(), schemaLine.getCellSeparator(), lineSeparator, "\u00A0");
     }
 
     /**
@@ -49,9 +73,8 @@ public class CsvLineComposer implements LineComposer {
         while(iter.hasNext()) {
             CsvSchemaCell schemaCell = iter.next();
             Cell cell = line.getCell(schemaCell.getName()).orElse(schemaCell.makeEmptyCell());
-            char quoteChar = schemaLine.getQuoteChar();
-
-            cellComposer.compose(cell, schemaCell, sCellSeparator, quoteChar);
+            CsvCellComposer cellComposer = cellComposers.get(schemaCell.getName());
+            cellComposer.compose(writer, cell);
 
             if (iter.hasNext())
                 writer.write(sCellSeparator);

@@ -126,7 +126,7 @@ public abstract class SchemaLine implements Cloneable {
     /**
      * @return Number of cells in a line
      */
-    public abstract int getSchemaCellsCount();
+    public abstract int size();
 
 
     /*

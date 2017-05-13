@@ -149,7 +149,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
     }
 
     @Override
-    public int getSchemaCellsCount() {
+    public int size() {
         return this.schemaCells.size();
     }
 
