@@ -232,7 +232,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
         Element xmlSchemaCell = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
         xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_MAX_LENGTH, String.valueOf(schemaCell.getMaxLength()));
-        xmlSchemaCell.setAttribute(ATTRIB_CSV_QUOTE_STRATEGY, String.valueOf(schemaCell.getQuoteStrategy()));
+        xmlSchemaCell.setAttribute(ATTRIB_CSV_QUOTE_BEHAVIOR, String.valueOf(schemaCell.getQuoteBehavior()));
 
         assignSchemaCellBase(xmlDocument, xmlSchemaCell, schemaCell);
         return xmlSchemaCell;

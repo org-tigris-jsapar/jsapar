@@ -3,7 +3,7 @@ package org.jsapar.schema;
 /**
  * Defines how to quote csv cells.
  */
-public enum QuoteStrategy {
+public enum QuoteBehavior {
     /**
      * If quote character is specified: Quote cells only when needed.
      * Otherwise replace illegal characters with non-breakable space.

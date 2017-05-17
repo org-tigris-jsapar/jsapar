@@ -10,7 +10,7 @@
     </line>
     <line occurs="*" linetype="Person" cellseparator=";">
       <cell name="Type" ><linecondition><match pattern="B"/></linecondition></cell>
-      <cell name="First name" />
+      <cell name="First name" quotebehavior="ALWAYS"/>
       <cell name="Middle name" ignoreread="true"/>
       <cell name="Last name" />
     </line>

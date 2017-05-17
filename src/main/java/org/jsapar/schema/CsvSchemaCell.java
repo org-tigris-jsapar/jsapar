@@ -10,9 +10,9 @@ import java.util.Locale;
 public class CsvSchemaCell extends SchemaCell {
 
     /**
-     *The quote strategy for the cell. Default is SMART
+     *The quote behavior for the cell. Default is SMART
      */
-    private QuoteStrategy quoteStrategy = QuoteStrategy.SMART;
+    private QuoteBehavior quoteBehavior = QuoteBehavior.SMART;
 
     /**
      * The maximum number of characters that are read or written to/from the cell. Input and output
@@ -81,17 +81,17 @@ public class CsvSchemaCell extends SchemaCell {
     }
 
     /**
-     * @return  The quote strategy for the cell.
+     * @return  The quote behavior for the cell.
 
      */
-    public QuoteStrategy getQuoteStrategy() {
-        return quoteStrategy;
+    public QuoteBehavior getQuoteBehavior() {
+        return quoteBehavior;
     }
 
     /**
-     * @param quoteStrategy The quote strategy for the cell.
+     * @param quoteBehavior The quote behavior for the cell.
      */
-    public void setQuoteStrategy(QuoteStrategy quoteStrategy) {
-        this.quoteStrategy = quoteStrategy;
+    public void setQuoteBehavior(QuoteBehavior quoteBehavior) {
+        this.quoteBehavior = quoteBehavior;
     }
 }

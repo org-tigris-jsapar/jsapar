@@ -191,14 +191,15 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
         assignSchemaLineBase(schemaLine, xmlSchemaLine);
 
-        String padCharacter = getAttributeValue(xmlSchemaLine, ATTRIB_FW_SCHEMA_PAD_CHARACTER);
-        if (padCharacter != null)
-            schemaLine.setPadCharacter(padCharacter.charAt(0));
+        attributeValue(xmlSchemaLine, ATTRIB_FW_SCHEMA_PAD_CHARACTER)
+                .map(s->s.charAt(0))
+                .ifPresent(schemaLine::setPadCharacter);
 
-        String sMinLength = getAttributeValue(xmlSchemaLine, ATTRIB_FW_SCHEMA_MIN_LENGTH);
-        if (sMinLength != null && !sMinLength.isEmpty())
-            schemaLine.setMinLength(Integer.valueOf(sMinLength));
-        
+        attributeValue(xmlSchemaLine, ATTRIB_FW_SCHEMA_MIN_LENGTH)
+                .filter(s->!s.isEmpty())
+                .map(Integer::valueOf)
+                .ifPresent(schemaLine::setMinLength);
+
         NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node child = nodes.item(i);
@@ -296,11 +297,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         CsvSchemaLine schemaLine = new CsvSchemaLine();
         assignSchemaLineBase(schemaLine, xmlSchemaLine);
 
-        String sSeparator = getAttributeValue(xmlSchemaLine, ATTRIB_CSV_SCHEMA_CELL_SEPARATOR);
-        if (sSeparator != null){
-            sSeparator = replaceEscapes2Java(sSeparator);
-            schemaLine.setCellSeparator(sSeparator);
-        }
+        attributeValue(xmlSchemaLine, ATTRIB_CSV_SCHEMA_CELL_SEPARATOR)
+                .map(Xml2SchemaBuilder::replaceEscapes2Java)
+                .ifPresent(schemaLine::setCellSeparator);
+
         Node xmlFirstLineAsSchema = xmlSchemaLine.getAttributeNode(ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA);
         if (xmlFirstLineAsSchema != null)
             schemaLine.setFirstLineAsSchema(getBooleanValue(xmlFirstLineAsSchema));
@@ -309,15 +309,15 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         if (sQuoteChar != null)
             schemaLine.setQuoteChar(sQuoteChar.charAt(0));
 
-        QuoteStrategy quoteStrategy = attributeValue(xmlSchemaLine, ATTRIB_CSV_QUOTE_STRATEGY)
-                .map(QuoteStrategy::valueOf)
-                .orElse(QuoteStrategy.SMART);
+        QuoteBehavior quoteBehavior = attributeValue(xmlSchemaLine, ATTRIB_CSV_QUOTE_BEHAVIOR)
+                .map(QuoteBehavior::valueOf)
+                .orElse(QuoteBehavior.SMART);
 
         NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node child = nodes.item(i);
             if (child instanceof Element)
-                schemaLine.addSchemaCell(buildCsvSchemaCell((Element) child, locale, quoteStrategy));
+                schemaLine.addSchemaCell(buildCsvSchemaCell((Element) child, locale, quoteBehavior));
         }
 
         return schemaLine;
@@ -326,22 +326,21 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     /**
      * Creates a CSV cell schema
      * @param xmlSchemaCell A cell schema xml element.
-     * @param quoteStrategy The default quote strategy for the line
+     * @param quoteBehavior The default quote behavior for the line
      * @return A newly created CSV cell schema.
      * @throws SchemaException  When there is an error in the schema
      */
-    private CsvSchemaCell buildCsvSchemaCell(Element xmlSchemaCell, Locale locale, QuoteStrategy quoteStrategy) throws SchemaException {
+    private CsvSchemaCell buildCsvSchemaCell(Element xmlSchemaCell, Locale locale, QuoteBehavior quoteBehavior) throws SchemaException {
 
         String sName = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_NAME);
         CsvSchemaCell cell = new CsvSchemaCell(sName);
         Node xmlMaxLength = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_MAX_LENGTH);
         if (xmlMaxLength != null)
             cell.setMaxLength(getIntValue(xmlMaxLength));
-        cell.setQuoteStrategy( attributeValue(xmlSchemaCell, ATTRIB_CSV_QUOTE_STRATEGY)
-                .map(QuoteStrategy::valueOf)
-                .orElse(quoteStrategy));
+        cell.setQuoteBehavior( attributeValue(xmlSchemaCell, ATTRIB_CSV_QUOTE_BEHAVIOR)
+                .map(QuoteBehavior::valueOf)
+                .orElse(quoteBehavior));
 
-        
         assignSchemaCellBase(cell, xmlSchemaCell, locale);
         return cell;
 

@@ -8,7 +8,7 @@ import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
-import org.jsapar.schema.QuoteStrategy;
+import org.jsapar.schema.QuoteBehavior;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -47,8 +47,8 @@ public class CsvLineComposer implements LineComposer {
 
     private Quoter makeQuoter(CsvSchemaLine schemaLine, CsvSchemaCell schemaCell, String lineSeparator) {
         char quoteChar = schemaLine.getQuoteChar();
-        QuoteStrategy strategy = schemaCell.getQuoteStrategy();
-        switch (strategy) {
+        QuoteBehavior quoteBehavior = schemaCell.getQuoteBehavior();
+        switch (quoteBehavior) {
             case SMART:
                 if (quoteChar != 0)
                     if (schemaCell.getCellFormat().getCellType().isAtomic())
@@ -64,7 +64,7 @@ public class CsvLineComposer implements LineComposer {
             case ALWAYS:
                 return new AlwaysQuote(quoteChar, schemaCell.getMaxLength());
             default:
-                throw new IllegalStateException("Unsupported quote strategy: " + strategy);
+                throw new IllegalStateException("Unsupported quote behavior: " + quoteBehavior);
         }
     }
 
