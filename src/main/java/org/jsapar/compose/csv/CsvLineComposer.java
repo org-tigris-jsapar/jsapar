@@ -1,15 +1,14 @@
 package org.jsapar.compose.csv;
 
 import org.jsapar.compose.LineComposer;
-import org.jsapar.compose.csv.quote.NeverQuoteButReplace;
-import org.jsapar.compose.csv.quote.QuoteIfNeeded;
-import org.jsapar.compose.csv.quote.Quoter;
+import org.jsapar.compose.csv.quote.*;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
+import org.jsapar.schema.QuoteStrategy;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -24,13 +23,13 @@ import java.util.stream.Collectors;
  */
 public class CsvLineComposer implements LineComposer {
 
-    Writer        writer;
-    CsvSchemaLine schemaLine;
+    private Writer        writer;
+    private CsvSchemaLine schemaLine;
     private String lineSeparator;
-    Map<String, CsvCellComposer> cellComposers = new HashMap<>();
-    boolean firstRow=true;
+    private Map<String, CsvCellComposer> cellComposers = new HashMap<>();
+    private boolean firstRow=true;
 
-    public CsvLineComposer(Writer writer, CsvSchemaLine schemaLine, String lineSeparator) {
+    CsvLineComposer(Writer writer, CsvSchemaLine schemaLine, String lineSeparator) {
         this.writer = writer;
         this.schemaLine = schemaLine;
         this.lineSeparator = lineSeparator;
@@ -47,10 +46,31 @@ public class CsvLineComposer implements LineComposer {
     }
 
     private Quoter makeQuoter(CsvSchemaLine schemaLine, CsvSchemaCell schemaCell, String lineSeparator) {
-        // TODO make smarter assumptions for atomic data types and add more quote strategies.
         char quoteChar = schemaLine.getQuoteChar();
-        if(quoteChar != 0)
-            return new QuoteIfNeeded(quoteChar, schemaCell.getMaxLength(), schemaLine.getCellSeparator(), lineSeparator);
+        QuoteStrategy strategy = schemaCell.getQuoteStrategy();
+        switch (strategy) {
+            case SMART:
+                if (quoteChar != 0)
+                    if (schemaCell.getCellFormat().getCellType().isAtomic())
+                        return new NeverQuote(schemaCell.getMaxLength());
+                    else
+                        return new QuoteIfNeeded(quoteChar, schemaCell.getMaxLength(), schemaLine.getCellSeparator(), lineSeparator);
+                else
+                    return makeReplaceQuoter(schemaLine, schemaCell, lineSeparator);
+            case NEVER:
+                return new NeverQuote(schemaCell.getMaxLength());
+            case REPLACE:
+                return makeReplaceQuoter(schemaLine, schemaCell, lineSeparator);
+            case ALWAYS:
+                return new AlwaysQuote(quoteChar, schemaCell.getMaxLength());
+            default:
+                throw new IllegalStateException("Unsupported quote strategy: " + strategy);
+        }
+    }
+
+    private Quoter makeReplaceQuoter(CsvSchemaLine schemaLine, CsvSchemaCell schemaCell, String lineSeparator) {
+        if (schemaCell.getCellFormat().getCellType().isAtomic())
+            return new NeverQuote(schemaCell.getMaxLength());
         else
             return new NeverQuoteButReplace(schemaCell.getMaxLength(), schemaLine.getCellSeparator(), lineSeparator, "\u00A0");
     }
@@ -58,7 +78,7 @@ public class CsvLineComposer implements LineComposer {
     /**
      * This implementation composes a csv output based on the line schema and provided line.
      * @param line The line to compose output of.
-     * @throws IOException
+     * @throws IOException If there is an error writing line to writer.
      */
     @Override
     public void compose(Line line) throws IOException {
@@ -87,7 +107,7 @@ public class CsvLineComposer implements LineComposer {
      * @throws IOException
      *
      */
-    public void composeHeaderLine() throws IOException {
+    private void composeHeaderLine() throws IOException {
         CsvSchemaLine unformattedSchemaLine = schemaLine.clone();
         unformattedSchemaLine.setFirstLineAsSchema(false);
         for (CsvSchemaCell schemaCell : unformattedSchemaLine.getSchemaCells()) {

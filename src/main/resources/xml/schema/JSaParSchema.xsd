@@ -248,38 +248,58 @@ If the sum of the length of the cells is less than this minlength then the line 
     </xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="CsvSchemaLine">
-    <xsd:complexContent mixed="false">
-      <xsd:extension base="SchemaLine">
-        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
-          <xsd:element name="cell" type="CsvSchemaCell" />
-        </xsd:sequence>
-        <xsd:attribute name="cellseparator" type="xsd:string" use="optional">
-          <xsd:annotation>
-            <xsd:documentation>A sequence of characters that are used to delimit each cell of this line. 
-                    	</xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="firstlineasschema" type="xsd:boolean">
-          <xsd:annotation>
-            <xsd:documentation>Specifies if the first line of this type contains a header that should be used as schema. In that case all cells will be considered of type string and no validation will be made.
-						</xsd:documentation>
-          </xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="quotechar" use="optional">
-          <xsd:annotation>
-             <xsd:documentation>Specifies if there is a quote character used to encapsulate cells. Within quotes the cell separator will be ignored. 
-A cell is considered to be quoted if and only if the first and the last character within the cell is the quote character.
-Any other quote characters are considered to be normal characters and thus becomes part of the cell.</xsd:documentation>
-          </xsd:annotation>
-          <xsd:simpleType>
-            <xsd:restriction base="xsd:string">
-              <xsd:maxLength value="1" />
-              <xsd:minLength value="1" />
-            </xsd:restriction>
-          </xsd:simpleType>
-        </xsd:attribute>
-      </xsd:extension>
-    </xsd:complexContent>
+  	<xsd:complexContent mixed="false">
+  		<xsd:extension base="SchemaLine">
+  			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+  				<xsd:element name="cell" type="CsvSchemaCell" />
+  			</xsd:sequence>
+  			<xsd:attribute name="cellseparator" type="xsd:string"
+  				use="optional">
+  				<xsd:annotation>
+  					<xsd:documentation>
+  						A sequence of characters that are used to
+  						delimit each cell of this line.
+  					</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:attribute>
+  			<xsd:attribute name="firstlineasschema"
+  				type="xsd:boolean">
+  				<xsd:annotation>
+  					<xsd:documentation>
+  						Specifies if the first line of this type
+  						contains a header that should be used as
+  						schema. In that case all cells will be
+  						considered of type string and no validation
+  						will be made.
+  					</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:attribute>
+  			<xsd:attribute name="quotechar" use="optional">
+  				<xsd:annotation>
+  					<xsd:documentation>
+  						Specifies if there is a quote character used
+  						to encapsulate cells. Within quotes the cell
+  						separator and line separator will be ignored.
+  						A cell is considered to be quoted if and only
+  						if the first and the last character within the
+  						cell is the quote character. Any other quote
+  						characters are considered to be normal
+  						characters and thus becomes part of the cell.
+  					</xsd:documentation>
+  				</xsd:annotation>
+  				<xsd:simpleType>
+  					<xsd:restriction base="xsd:string">
+  						<xsd:maxLength value="1" />
+  						<xsd:minLength value="1" />
+  					</xsd:restriction>
+  				</xsd:simpleType>
+  			</xsd:attribute>
+  			<xsd:attribute name="quotebehavior" type="QuoteBehaviorType" default="SMART">
+  				<xsd:annotation>
+  					<xsd:documentation>Default quote behavior for the line type. Override this setting on cell level if needed.</xsd:documentation>
+  				</xsd:annotation></xsd:attribute>
+  		</xsd:extension>
+  	</xsd:complexContent>
   </xsd:complexType>
   <xsd:complexType name="Locale">
     <xsd:attribute name="language" use="required">
@@ -322,16 +342,24 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
   </xsd:complexType>
 
   <xsd:complexType name="CsvSchemaCell">
-    <xsd:complexContent>
-      <xsd:extension base="SchemaCell">
-        <xsd:attribute name="maxlength" type="xsd:int">
-          <xsd:annotation>
-            <xsd:documentation>Available since version 1.6.0.
-The maximum length of the cell to read or write. While reading and writing, cell value will be silently trunkated to this length. 
-If you want that an error should occur if length is too long, then you should specify that in the format regexp pattern instead.</xsd:documentation>
-          </xsd:annotation></xsd:attribute>
-      </xsd:extension>
-    </xsd:complexContent>
+  	<xsd:complexContent>
+  		<xsd:extension base="SchemaCell">
+  			<xsd:attribute name="maxlength" type="xsd:int">
+  				<xsd:annotation>
+  					<xsd:documentation>Available since version 1.6.0. The maximum length of the cell to read or write. 
+While reading and writing, cell value will be silently trunkated to this length. If you want
+that an error should occur if length is too long, you should specify that in the
+format regexp pattern instead.
+  					</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:attribute>
+  			<xsd:attribute name="quotebehavior" type="QuoteBehaviorType" default="SMART">
+  				<xsd:annotation>
+  					<xsd:documentation>Quote behavior on cell level. Overrides line behavior.
+Available since 2.0</xsd:documentation>
+  				</xsd:annotation></xsd:attribute>
+  		</xsd:extension>
+  	</xsd:complexContent>
   </xsd:complexType>
 
   <xsd:complexType name="CellValueCondition">
@@ -367,4 +395,19 @@ NONE means no action at all, if possible.</xsd:documentation>
         </xsd:attribute>
   </xsd:complexType>
 
+
+  <xsd:simpleType name="QuoteBehaviorType">
+        <xsd:annotation>
+        	<xsd:documentation>SMART = (default) If quote character is specified: Quote only when needed. If quote character is not specified, replace illegal characters with non-breaking space.
+NEVER = Never quote
+REPLACE = Don't quote but replace illegal characters with non-breaking space.
+ALWAYS = Always quote</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+  		<xsd:enumeration value="SMART"></xsd:enumeration>
+  		<xsd:enumeration value="NEVER"></xsd:enumeration>
+  		<xsd:enumeration value="REPLACE"></xsd:enumeration>
+  		<xsd:enumeration value="ALWAYS"></xsd:enumeration>
+  	</xsd:restriction>
+  </xsd:simpleType>
 </xsd:schema>

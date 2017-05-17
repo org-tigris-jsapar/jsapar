@@ -17,6 +17,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Builds a {@link Schema} instance from xml that conforms to the JSaPar xsd.
@@ -57,11 +58,15 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     }
 
     private String getAttributeValue(Element parent, String name) {
+        return attributeValue(parent, name).orElse(null);
+    }
+
+    private Optional<String> attributeValue(Element parent, String name) {
         Node child = parent.getAttributeNode(name);
         if (child == null)
-            return null;
+            return Optional.empty();
         else
-            return child.getNodeValue();
+            return Optional.of(child.getNodeValue());
     }
 
     private int getIntValue(Node node) {
@@ -304,11 +309,15 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         if (sQuoteChar != null)
             schemaLine.setQuoteChar(sQuoteChar.charAt(0));
 
+        QuoteStrategy quoteStrategy = attributeValue(xmlSchemaLine, ATTRIB_CSV_QUOTE_STRATEGY)
+                .map(QuoteStrategy::valueOf)
+                .orElse(QuoteStrategy.SMART);
+
         NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node child = nodes.item(i);
             if (child instanceof Element)
-                schemaLine.addSchemaCell(buildCsvSchemaCell((Element) child, locale));
+                schemaLine.addSchemaCell(buildCsvSchemaCell((Element) child, locale, quoteStrategy));
         }
 
         return schemaLine;
@@ -317,16 +326,21 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     /**
      * Creates a CSV cell schema
      * @param xmlSchemaCell A cell schema xml element.
+     * @param quoteStrategy The default quote strategy for the line
      * @return A newly created CSV cell schema.
      * @throws SchemaException  When there is an error in the schema
      */
-    private CsvSchemaCell buildCsvSchemaCell(Element xmlSchemaCell, Locale locale) throws SchemaException {
+    private CsvSchemaCell buildCsvSchemaCell(Element xmlSchemaCell, Locale locale, QuoteStrategy quoteStrategy) throws SchemaException {
 
         String sName = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_NAME);
         CsvSchemaCell cell = new CsvSchemaCell(sName);
         Node xmlMaxLength = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_MAX_LENGTH);
         if (xmlMaxLength != null)
             cell.setMaxLength(getIntValue(xmlMaxLength));
+        cell.setQuoteStrategy( attributeValue(xmlSchemaCell, ATTRIB_CSV_QUOTE_STRATEGY)
+                .map(QuoteStrategy::valueOf)
+                .orElse(quoteStrategy));
+
         
         assignSchemaCellBase(cell, xmlSchemaCell, locale);
         return cell;
@@ -341,11 +355,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @throws SchemaException  When there is an error in the schema
      */
     private void assignSchemaBase(Schema schema, Element xmlSchema) throws SchemaException {
-        String sSeparator = getAttributeValue(xmlSchema, ATTRIB_SCHEMA_LINESEPARATOR);
-        if (sSeparator != null) {
-            sSeparator = replaceEscapes2Java(sSeparator);
-            schema.setLineSeparator(sSeparator);
-        }
+        attributeValue(xmlSchema, ATTRIB_SCHEMA_LINESEPARATOR)
+                .map(Xml2SchemaBuilder::replaceEscapes2Java)
+                .ifPresent(schema::setLineSeparator);
 
         Element xmlLocale = getChild(xmlSchema, ELEMENT_LOCALE);
         if (xmlLocale != null)

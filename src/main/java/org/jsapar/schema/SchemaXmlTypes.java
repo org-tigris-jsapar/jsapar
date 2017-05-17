@@ -20,6 +20,7 @@ interface SchemaXmlTypes {
     String ATTRIB_SCHEMA_LINE_OCCURS                = "occurs";
     String ATTRIB_CSV_SCHEMA_CELL_SEPARATOR         = "cellseparator";
     String ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA = "firstlineasschema";
+    String ATTRIB_CSV_QUOTE_STRATEGY = "quotestrategy";
     String ATTRIB_LOCALE_LANGUAGE                   = "language";
     String ATTRIB_LOCALE_COUNTRY                    = "country";
     String ATTRIB_SCHEMA_LINESEPARATOR              = "lineseparator";

@@ -10,6 +10,11 @@ import java.util.Locale;
 public class CsvSchemaCell extends SchemaCell {
 
     /**
+     *The quote strategy for the cell. Default is SMART
+     */
+    private QuoteStrategy quoteStrategy = QuoteStrategy.SMART;
+
+    /**
      * The maximum number of characters that are read or written to/from the cell. Input and output
      * value will be silently truncated to this length. If you want to get an error when field is to
      * long, use the format regexp pattern instead.
@@ -75,4 +80,18 @@ public class CsvSchemaCell extends SchemaCell {
         return this.maxLength > 0;
     }
 
+    /**
+     * @return  The quote strategy for the cell.
+
+     */
+    public QuoteStrategy getQuoteStrategy() {
+        return quoteStrategy;
+    }
+
+    /**
+     * @param quoteStrategy The quote strategy for the cell.
+     */
+    public void setQuoteStrategy(QuoteStrategy quoteStrategy) {
+        this.quoteStrategy = quoteStrategy;
+    }
 }
