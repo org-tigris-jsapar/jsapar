@@ -108,7 +108,22 @@ public class QuotedCellSplitter implements CellSplitter {
                     sFound = sToSplit.substring(nIndex, sToSplit.length() - 1);
                     cells.add(sFound);
                     return;
-                } else {
+                }
+                // The end quote is within the same cell but not last character, consider quote to be part of string.
+                int nextQuoteIndex = sToSplit.indexOf(quoteChar, nIndex);
+                int endOfCellIndex = sToSplit.indexOf(cellSeparator, nIndex);
+                endOfCellIndex = endOfCellIndex > 0 ? endOfCellIndex : sToSplit.length();
+                if(nextQuoteIndex > 0 && nextQuoteIndex < endOfCellIndex){
+                    cells.add(sToSplit.substring(nIndex-1, endOfCellIndex));
+                    nIndex = endOfCellIndex + cellSeparator.length();
+                    if (nIndex >= sToSplit.length()) {
+                        return;
+                    }
+                    sToSplit = sToSplit.substring(nIndex);
+                    nIndex = 1;
+                    continue;
+                }
+                else {
                     if (lineReader == null)
                         throw new JSaParException(
                                 "End quote is missing in line and multi-line cells are not supported for this line.");
@@ -126,7 +141,6 @@ public class QuotedCellSplitter implements CellSplitter {
                                 "Searched 100 lines without finding an end of quoted cell. End quote is probably missing.");
                     }
                     continue;
-
                 }
             }
             sFound = sToSplit.substring(nIndex, nFoundEnd);
