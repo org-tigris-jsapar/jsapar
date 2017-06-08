@@ -109,20 +109,22 @@ public class QuotedCellSplitter implements CellSplitter {
                     cells.add(sFound);
                     return;
                 }
-                int nextQuoteIndex = sToSplit.indexOf(quoteChar, nIndex);
-                if(nextQuoteIndex >= 0){
-                    int endOfCellIndex = sToSplit.indexOf(cellSeparator, nIndex);
-                    endOfCellIndex = endOfCellIndex >= 0 ? endOfCellIndex : sToSplit.length();
-                    if(nextQuoteIndex < endOfCellIndex) {
-                        // The end quote is within the same cell but not last character, consider quote to be part of string.
-                        cells.add(sToSplit.substring(nIndex - 1, endOfCellIndex));
-                        nIndex = endOfCellIndex + cellSeparator.length();
-                        if (nIndex >= sToSplit.length()) {
-                            return;
+                if(lineCounter == 0) {
+                    int nextQuoteIndex = sToSplit.indexOf(quoteChar, nIndex);
+                    if (nextQuoteIndex >= 0) {
+                        int endOfCellIndex = sToSplit.indexOf(cellSeparator, nIndex);
+                        endOfCellIndex = endOfCellIndex >= 0 ? endOfCellIndex : sToSplit.length();
+                        if (nextQuoteIndex < endOfCellIndex) {
+                            // The end quote is within the same cell but not last character, consider quote to be part of string.
+                            cells.add(sToSplit.substring(nIndex - 1, endOfCellIndex));
+                            nIndex = endOfCellIndex + cellSeparator.length();
+                            if (nIndex >= sToSplit.length()) {
+                                return;
+                            }
+                            sToSplit = sToSplit.substring(nIndex);
+                            nIndex = 1;
+                            continue;
                         }
-                        sToSplit = sToSplit.substring(nIndex);
-                        nIndex = 1;
-                        continue;
                     }
                 }
                 if (lineReader == null)
