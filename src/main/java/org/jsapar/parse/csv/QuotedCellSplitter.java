@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jsapar.parse.csv;
 
 import org.jsapar.error.JSaParException;
@@ -17,9 +14,11 @@ public class QuotedCellSplitter implements CellSplitter {
     private static final String[] EMPTY_LINE = new String[0];
 
     private BufferedLineReader lineReader = null;
-    private String       cellSeparator;
-    private char         quoteChar;
-    private CellSplitter simpleCellSplitter;
+    private final String       cellSeparator;
+    private final char         quoteChar;
+    private CellSplitter cellSplitter;
+    private final String separatorAndQuote;
+    private final String quoteAndSeparator;
 
     /**
      * @param cellSeparator
@@ -46,7 +45,10 @@ public class QuotedCellSplitter implements CellSplitter {
         this.cellSeparator = cellSeparator;
         this.quoteChar = quoteChar;
         this.lineReader = lineReader;
-        this.simpleCellSplitter = new SimpleCellSplitter(cellSeparator);
+        this.cellSplitter = new SimpleCellSplitter(cellSeparator);
+        this.separatorAndQuote = cellSeparator + quoteChar;
+        this.quoteAndSeparator = quoteChar + cellSeparator;
+
     }
 
     /*
@@ -73,7 +75,7 @@ public class QuotedCellSplitter implements CellSplitter {
      * 
      * @param cells Resulting list of split cells built by this method.
      * @param sToSplit String to split.
-     * @throws IOException
+     * @throws IOException In case there is an error reading the source.
      */
     private void splitQuoted(List<String> cells, String sToSplit) throws IOException {
         int nIndex = 0;
@@ -90,14 +92,14 @@ public class QuotedCellSplitter implements CellSplitter {
             nIndex++;
         } else {
             // Search for quote character at first position after a cell separator. Otherwise ignore quotes.
-            int nFoundQuoteIndex = sToSplit.indexOf(cellSeparator + quoteChar);
+            int nFoundQuoteIndex = sToSplit.indexOf(separatorAndQuote);
 
             if (nFoundQuoteIndex < 0) {
-                cells.addAll(Arrays.asList(simpleCellSplitter.split(sToSplit)));
+                cells.addAll(Arrays.asList(cellSplitter.split(sToSplit)));
                 return;
             } else if (nFoundQuoteIndex > 0) {
                 String sUnquoted = sToSplit.substring(0, nFoundQuoteIndex);
-                String[] asCells = simpleCellSplitter.split(sUnquoted);
+                String[] asCells = cellSplitter.split(sUnquoted);
                 cells.addAll(Arrays.asList(asCells));
             } else {
                 cells.add("");
@@ -105,11 +107,12 @@ public class QuotedCellSplitter implements CellSplitter {
             nIndex = nFoundQuoteIndex + cellSeparator.length() + 1;
         }
 
-        String quoteSeparator = quoteChar + cellSeparator;
         int lineCounter = 0;
+        // We do this in a do-while loop instead of recursive call since int will exhaust stack in case line separator
+        // is not correctly specified.
         do {
             String sFound;
-            int nFoundEnd = sToSplit.indexOf(quoteSeparator, nIndex);
+            int nFoundEnd = sToSplit.indexOf(quoteAndSeparator, nIndex);
             if (nFoundEnd < 0) {
                 // Last character is quote
                 if (nIndex < sToSplit.length() && sToSplit.length() > 1

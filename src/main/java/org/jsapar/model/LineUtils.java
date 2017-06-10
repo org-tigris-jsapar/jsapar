@@ -10,6 +10,7 @@ import java.util.Optional;
 /**
  * Utility functions for {@link Line} that simplifies to get and set primitive types from line cells.
  */
+@SuppressWarnings("WeakerAccess")
 public class LineUtils {
 
     /**
@@ -513,10 +514,10 @@ public class LineUtils {
      * @param cellName     The name of the cell to get
      * @param defaultValue Default value that will be returned if the cell does not exist or does not have any value.
      * @return The double value of the cell with the specified name.
-     * @throws NumberFormatException
+     * @throws NumberFormatException When value cannot be converted to a double
      */
     public static double getDoubleCellValue(Line line, String cellName, double defaultValue)
-            throws NumberFormatException, IllegalStateException {
+            throws NumberFormatException{
         Optional<Cell> cell = line.getNonEmptyCell(cellName);
         if (!cell.isPresent())
             return defaultValue;
@@ -541,7 +542,7 @@ public class LineUtils {
      * @param line         The line to get from
      * @param cellName     The name of the cell to get
      * @return The optional double value of the cell with the specified name.
-     * @throws NumberFormatException
+     * @throws NumberFormatException When value cannot be converted to a BigDecimal
      */
     public static Optional<BigDecimal> getDecimalCellValue(Line line, String cellName) throws NumberFormatException {
         return line.getNonEmptyCell(cellName).map(LineUtils::bigDecimalOfCell);
@@ -572,7 +573,7 @@ public class LineUtils {
      * @param line         The line to get from
      * @param cellName     The name of the cell to get
      * @return The optional BigInteger value of the cell with the specified name.
-     * @throws NumberFormatException
+     * @throws NumberFormatException When value cannot be converted to a BigInteger
      */
     public static Optional<BigInteger> getBigIntegerCellValue(Line line, String cellName)
             throws NumberFormatException, IllegalStateException {
