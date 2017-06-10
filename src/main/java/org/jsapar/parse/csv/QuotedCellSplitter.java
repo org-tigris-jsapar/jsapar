@@ -117,26 +117,42 @@ public class QuotedCellSplitter implements CellSplitter {
                     sFound = sToSplit.substring(nIndex, sToSplit.length() - 1);
                     cells.add(sFound);
                     return;
-                } else {
-                    if (lineReader == null)
-                        throw new JSaParException(
-                                "End quote is missing in line and multi-line cells are not supported for this line.");
-
-                    String nextLine = lineReader.peekLine();
-                    if (nextLine == null) {
-                        throw new JSaParException("End quote is missing for quoted cell. Reached end of file.");
-                    }
-                    // Add next line and try again to find end quote
-                    sToSplit = sToSplit.substring(nIndex - 1) + lineReader.getLineSeparator() + nextLine;
-                    nIndex = 1;
-                    lineCounter++;
-                    if (lineCounter > 100) {
-                        throw new JSaParException(
-                                "Searched 100 lines without finding an end of quoted cell. End quote is probably missing.");
-                    }
-                    continue;
-
                 }
+                if(lineCounter == 0) {
+                    int nextQuoteIndex = sToSplit.indexOf(quoteChar, nIndex);
+                    if (nextQuoteIndex >= 0) {
+                        int endOfCellIndex = sToSplit.indexOf(cellSeparator, nIndex);
+                        endOfCellIndex = endOfCellIndex >= 0 ? endOfCellIndex : sToSplit.length();
+                        if (nextQuoteIndex < endOfCellIndex) {
+                            // The end quote is within the same cell but not last character, consider quote to be part of string.
+                            cells.add(sToSplit.substring(nIndex - 1, endOfCellIndex));
+                            nIndex = endOfCellIndex + cellSeparator.length();
+                            if (nIndex >= sToSplit.length()) {
+                                return;
+                            }
+                            sToSplit = sToSplit.substring(nIndex);
+                            nIndex = 1;
+                            continue;
+                        }
+                    }
+                }
+                if (lineReader == null)
+                    throw new JSaParException(
+                            "End quote is missing in line and multi-line cells are not supported for this line.");
+
+                String nextLine = lineReader.peekLine();
+                if (nextLine == null) {
+                    throw new JSaParException("End quote is missing for quoted cell. Reached end of file.");
+                }
+                // Add next line and try again to find end quote
+                sToSplit = sToSplit.substring(nIndex - 1) + lineReader.getLineSeparator() + nextLine;
+                nIndex = 1;
+                lineCounter++;
+                if (lineCounter > 25) {
+                    throw new JSaParException(
+                            "Searched 25 lines without finding an end of quoted cell. End quote is probably missing.");
+                }
+                continue;
             }
             sFound = sToSplit.substring(nIndex, nFoundEnd);
             nIndex = nFoundEnd + 1;

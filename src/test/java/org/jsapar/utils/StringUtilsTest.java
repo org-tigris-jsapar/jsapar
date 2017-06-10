@@ -5,8 +5,15 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class StringUtilsTest {
+    @Test
+    public void countMatches() throws Exception {
+        assertEquals(0, StringUtils.countMatches(null, ""));
+        assertEquals(0, StringUtils.countMatches("", ""));
+        assertEquals(2, StringUtils.countMatches("abABabc", "ab"));
+        assertEquals(2, StringUtils.countMatches("ababaABabac", "aba"));
+    }
 
-	@Test
+    @Test
 	public final void testRemoveAll() {
 		String sOriginal = ".This.text.has.lots.of.dots.";
 		String sResult = StringUtils.removeAll(sOriginal, '.');

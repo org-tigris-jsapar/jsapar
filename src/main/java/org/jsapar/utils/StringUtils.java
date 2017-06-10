@@ -56,4 +56,23 @@ public class StringUtils {
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
     }
 
+    /**
+     * Counts number of whole occurrences of subString within s
+     * @param s The string to count occurrences within
+     * @param subString The sub string to count
+     * @return The number of whole occurrences of subString within s.
+     */
+    public static int countMatches(final String s, final String subString) {
+        if (s == null || s.isEmpty() ) {
+            return 0;
+        }
+        int count = 0;
+        int index = 0;
+        while ((index = s.indexOf(subString, index)) >= 0 ) {
+            count++;
+            index += subString.length();
+        }
+        return count;
+    }
+
 }
