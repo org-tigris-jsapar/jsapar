@@ -51,6 +51,7 @@ public class QuotedCellSplitterTest {
     public void testSplit_quoted() throws IOException, JSaParException {
         CellSplitter s = new QuotedCellSplitter(";", '/');
         assertArrayEquals(new String[]{"A", "B", "", "C"}, s.split("A;/B/;;C"));
+        assertArrayEquals(new String[]{"A", "B", "", "C"}, s.split("A;/B/;//;/C/"));
     }
     
     @Test
@@ -68,7 +69,7 @@ public class QuotedCellSplitterTest {
     @Test
     public void testSplit_multiLineCell() throws IOException, JSaParException {
         BufferedLineReader lineReader = new BufferedLineReader("|", new StringReader("Second;S;S|Third;T/;T|Fourth"));
-        CellSplitter s = new QuotedCellSplitter(";", '/', lineReader);
+        CellSplitter s = new QuotedCellSplitter(";", '/', lineReader, 5);
         String[] result = s.split("A;/BB;;C");
         assertArrayEquals(new String[]{"A", "BB;;C|Second;S;S|Third;T", "T"}, result);
     }
@@ -76,7 +77,7 @@ public class QuotedCellSplitterTest {
     @Test
     public void testSplit_multiLineCellWithLineBreakFirst() throws IOException, JSaParException {
         BufferedLineReader lineReader = new BufferedLineReader("|", new StringReader("Second;S;S|Third;T/;T|Fourth"));
-        CellSplitter s = new QuotedCellSplitter(";", '/', lineReader);
+        CellSplitter s = new QuotedCellSplitter(";", '/', lineReader, 5);
         String[] result = s.split("A;B;/");
         assertArrayEquals(new String[]{"A", "B", "|Second;S;S|Third;T", "T"}, result);
     }
@@ -84,17 +85,18 @@ public class QuotedCellSplitterTest {
     @Test
     public void testSplit_endQuoteWithinCell() throws IOException, JSaParException {
         BufferedLineReader lineReader = new BufferedLineReader("|", new StringReader("Second;S;S|Third;T/;T|Fourth"));
-        CellSplitter s = new QuotedCellSplitter(";", '/', lineReader);
+        CellSplitter s = new QuotedCellSplitter(";", '/', lineReader, 5);
         assertArrayEquals(new String[]{"A", "/B/B", "", "C"}, s.split("A;/B/B;;C"));
         assertArrayEquals(new String[]{"A", "//B", "", "C"}, s.split("A;//B;;C"));
         assertArrayEquals(new String[]{"A", "", "C", "/B/B"}, s.split("A;;C;/B/B"));
         assertArrayEquals(new String[]{"A", "", "B/B;/C"}, s.split("A;;/B/B;/C/"));
+        assertArrayEquals(new String[]{"A", "/B;/B", "C"}, s.split("A;/B;/B;C"));
     }
 
     @Test(expected=JSaParException.class)
     public void testSplit_missingEndQuote() throws IOException, JSaParException {
         BufferedLineReader lineReader = new BufferedLineReader("|", new StringReader("No end quote"));
-        CellSplitter s = new QuotedCellSplitter(";", '/', lineReader);
+        CellSplitter s = new QuotedCellSplitter(";", '/', lineReader, 5);
         String[] result = s.split("A;/BB;;C");
         assertArrayEquals(new String[]{"A", "BB;;C|Second;S;S|Third;T", "T"}, result);
     }

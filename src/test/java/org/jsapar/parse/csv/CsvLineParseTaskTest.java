@@ -274,7 +274,7 @@ public class CsvLineParseTaskTest {
         assertEquals(true, rc);
     }
 
-    @Test(expected = JSaParException.class)
+    @Test
     public void testParse_quoted_miss_placed_end() throws IOException {
         CsvSchemaLine schemaLine = makeCsvSchemaLine();
         schemaLine.setQuoteChar('\"');
@@ -287,9 +287,8 @@ public class CsvLineParseTaskTest {
                 assertEquals(7, line.size());
                 assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
                 assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
-                assertEquals("\"Hemvägen ", LineUtils.getStringCellValue(line, "2").orElse("fail"));
-                assertEquals("1\"9", LineUtils.getStringCellValue(line, "3").orElse("fail"));
-                assertEquals("111 22", LineUtils.getStringCellValue(line, "4").orElse("fail"));
+                assertEquals("\"Hemvägen ;1\"9", LineUtils.getStringCellValue(line, "2").orElse("fail"));
+                assertEquals("111 22", LineUtils.getStringCellValue(line, "3").orElse("fail"));
             }
         }, new ExceptionErrorEventListener());
 

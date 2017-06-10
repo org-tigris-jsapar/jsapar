@@ -17,6 +17,7 @@ public class QuotedCellSplitter implements CellSplitter {
     private final String       cellSeparator;
     private final char         quoteChar;
     private CellSplitter cellSplitter;
+    private int maxLinesWithinCell;
     private final String separatorAndQuote;
     private final String quoteAndSeparator;
 
@@ -28,7 +29,7 @@ public class QuotedCellSplitter implements CellSplitter {
      *            The quote character to use for quoted cells.
      */
     public QuotedCellSplitter(String cellSeparator, char quoteChar) {
-        this(cellSeparator, quoteChar, null);
+        this(cellSeparator, quoteChar, null, 25);
     }
 
     /**
@@ -41,11 +42,12 @@ public class QuotedCellSplitter implements CellSplitter {
      *            The line reader to read next line from in case multi-line cells are supported. Set to null if
      *            multi-line cells are not supported.
      */
-    public QuotedCellSplitter(String cellSeparator, char quoteChar, BufferedLineReader lineReader) {
+    public QuotedCellSplitter(String cellSeparator, char quoteChar, BufferedLineReader lineReader, int maxLinesWithinCell) {
         this.cellSeparator = cellSeparator;
         this.quoteChar = quoteChar;
         this.lineReader = lineReader;
         this.cellSplitter = new SimpleCellSplitter(cellSeparator);
+        this.maxLinesWithinCell = maxLinesWithinCell;
         this.separatorAndQuote = cellSeparator + quoteChar;
         this.quoteAndSeparator = quoteChar + cellSeparator;
 
@@ -89,7 +91,6 @@ public class QuotedCellSplitter implements CellSplitter {
                 return;
             }
             // Quote is the first character in the string.
-            nIndex++;
         } else {
             // Search for quote character at first position after a cell separator. Otherwise ignore quotes.
             int nFoundQuoteIndex = sToSplit.indexOf(separatorAndQuote);
@@ -104,14 +105,15 @@ public class QuotedCellSplitter implements CellSplitter {
             } else {
                 cells.add("");
             }
-            nIndex = nFoundQuoteIndex + cellSeparator.length() + 1;
+            nIndex = nFoundQuoteIndex + cellSeparator.length();  // Behind cell separator
         }
 
-        int lineCounter = 0;
+        int lineCounter = 1;
         // We do this in a do-while loop instead of recursive call since int will exhaust stack in case line separator
         // is not correctly specified.
         do {
             String sFound;
+            nIndex++; // Behind first quote
             int nFoundEnd = sToSplit.indexOf(quoteAndSeparator, nIndex);
             if (nFoundEnd < 0) {
                 // Last character is quote
@@ -121,60 +123,57 @@ public class QuotedCellSplitter implements CellSplitter {
                     cells.add(sFound);
                     return;
                 }
-                if(lineCounter == 0) {
+                if(lineCounter <= 1) {
                     int nextQuoteIndex = sToSplit.indexOf(quoteChar, nIndex);
                     if (nextQuoteIndex >= 0) {
-                        int endOfCellIndex = sToSplit.indexOf(cellSeparator, nIndex);
+                        // Find next cell separator after the end quote character
+                        int endOfCellIndex = sToSplit.indexOf(cellSeparator, nextQuoteIndex + 1);
                         endOfCellIndex = endOfCellIndex >= 0 ? endOfCellIndex : sToSplit.length();
                         if (nextQuoteIndex < endOfCellIndex) {
                             // The end quote is within the same cell but not last character, consider quote to be part of string.
                             cells.add(sToSplit.substring(nIndex - 1, endOfCellIndex));
                             nIndex = endOfCellIndex + cellSeparator.length();
-                            if (nIndex >= sToSplit.length()) {
-                                return;
-                            }
-                            sToSplit = sToSplit.substring(nIndex);
-                            nIndex = 1;
                             continue;
                         }
                     }
                 }
-                if (lineReader == null)
-                    throw new JSaParException(
-                            "End quote is missing in line and multi-line cells are not supported for this line.");
+                if(lineReader == null || maxLinesWithinCell <= 1){
+                    int endOfCellIndex = sToSplit.indexOf(cellSeparator, nIndex);
+                    cells.add(sToSplit.substring(nIndex - 1, endOfCellIndex));
+                    nIndex = endOfCellIndex + cellSeparator.length();
+                    continue;
 
+                }
+                else if (lineCounter > maxLinesWithinCell) {
+                    throw new JSaParException(
+                            "Searched "+lineCounter+" lines without finding an end of quoted cell. End quote is probably missing.");
+                }
                 String nextLine = lineReader.peekLine();
                 if (nextLine == null) {
                     throw new JSaParException("End quote is missing for quoted cell. Reached end of file.");
                 }
+                lineCounter++;
                 // Add next line and try again to find end quote
                 sToSplit = sToSplit.substring(nIndex - 1) + lineReader.getLineSeparator() + nextLine;
-                nIndex = 1;
-                lineCounter++;
-                if (lineCounter > 25) {
-                    throw new JSaParException(
-                            "Searched 25 lines without finding an end of quoted cell. End quote is probably missing.");
-                }
+                nIndex = 0;
                 continue;
             }
             sFound = sToSplit.substring(nIndex, nFoundEnd);
-            nIndex = nFoundEnd + 1;
+            nIndex = nFoundEnd + 1; // Behind quote
             cells.add(sFound);
 
-            // Reached end of line
-            if (nIndex >= sToSplit.length()) {
-                return;
-            }
-
+            // Continue to pick quoted cells.
             nIndex += cellSeparator.length();
-            sToSplit = sToSplit.substring(nIndex);
-            // Continue to pick quoted cells but ignore the first quote since we require it in the condition.
-            nIndex = 1;
-        } while (!sToSplit.isEmpty() && sToSplit.charAt(0) == quoteChar);
+        } while (nIndex < sToSplit.length() && sToSplit.charAt(nIndex) == quoteChar);
+
+        // Reached end of line
+        if (nIndex >= sToSplit.length()) {
+            return;
+        }
 
         // Next cell is not quoted
         // Now handle the rest of the string with a recursive call.
-        splitQuoted(cells, sToSplit);
+        splitQuoted(cells, sToSplit.substring(nIndex));
     }
 
 }

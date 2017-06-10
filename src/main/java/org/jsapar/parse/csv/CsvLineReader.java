@@ -75,7 +75,7 @@ public class CsvLineReader {
     private CellSplitter makeCellSplitter(String cellSeparator, char quoteChar, BufferedLineReader lineReader2) {
         return quoteChar == 0 ?
                 new SimpleCellSplitter(cellSeparator) :
-                new QuotedCellSplitter(cellSeparator, quoteChar, lineReader2);
+                new QuotedCellSplitter(cellSeparator, quoteChar, lineReader2, 25);
     }
 
     /**
