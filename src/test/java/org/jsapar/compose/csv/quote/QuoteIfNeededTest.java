@@ -31,8 +31,25 @@ public class QuoteIfNeededTest {
         assertEquals("@@hej@", w.toString());
 
         w = new StringWriter();
+        instance.writeValue(w, "@hej@");
+        assertEquals("@hej@", w.toString());
+
+        w = new StringWriter();
+        instance.writeValue(w, "@@");
+        assertEquals("@@", w.toString());
+
+        w = new StringWriter();
+        instance.writeValue(w, "");
+        assertEquals("", w.toString());
+
+        w = new StringWriter();
+        instance.writeValue(w, "@");
+        assertEquals("@@@", w.toString());
+
+        w = new StringWriter();
         instance.writeValue(w, "hej@");
         assertEquals("hej@", w.toString());
+
 
         w = new StringWriter();
         instance.writeValue(w, "hej;san123456");
