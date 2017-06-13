@@ -379,7 +379,7 @@ Available since 2.0</xsd:documentation>
         </xsd:annotation>
         <xsd:attribute name="action">
             <xsd:annotation>
-            	<xsd:documentation>ERROR means an error event is generated. When this happends it depends how you handle the error events. 
+            	<xsd:documentation>ERROR means an error event is generated. When this happens it depends how you handle the error events.
 EXCEPTION means an exception is thrown, and the parsing is immediately aborted. 
 IGNORE_LINE means that the line is silently ignored from input.
 NONE means no action at all, if possible.</xsd:documentation>
