@@ -39,9 +39,9 @@ public class BigDecimalCell extends NumberCell  {
      * @return The value of this cell as a BigDecimal.
      */
     public BigDecimal getBigDecimalValue() {
-        return (BigDecimal) super.getNumberValue();
+        return (BigDecimal) super.getValue();
     }
-    
+
     /**
      * @return The value of this cell as a BigInteger
      */
@@ -54,13 +54,13 @@ public class BigDecimalCell extends NumberCell  {
      * @see org.jsapar.model.NumberCell#compareValueTo(org.jsapar.model.Cell)
      */
     @Override
-    public int compareValueTo(Cell right) {
+    public int compareValueTo(Cell<Number> right) {
         if(right instanceof BigDecimalCell){
             BigDecimal bdRight = (((BigDecimalCell)right).getBigDecimalValue());
             return getBigDecimalValue().compareTo(bdRight);
         }
         else if(right instanceof NumberCell){
-            BigDecimal bdRight = new BigDecimal(((NumberCell)right).getNumberValue().doubleValue());
+            BigDecimal bdRight = new BigDecimal(right.getValue().doubleValue());
             return getBigDecimalValue().compareTo(bdRight);
         }
         else{

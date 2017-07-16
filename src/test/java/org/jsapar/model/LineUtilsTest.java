@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Date;
 
 import static org.junit.Assert.*;
@@ -151,6 +153,16 @@ public class LineUtilsTest {
         assertNotSame(date, LineUtils.getDateCellValue(line,"doesNotExist").orElse(new Date()));
         LineUtils.setDateCellValue(line,"aDateValue", null);
         assertFalse(line.isCell("aDateValue"));
+    }
+
+    @Test
+    public void testGetSetLocalDateCellValue() {
+        Line line = new Line("TestLine");
+        LocalDate date = LocalDate.of(2017, Month.JULY, 14);
+        line.putCellValue("aDateValue", date, LocalDateCell::new);
+        assertEquals(date, LineUtils.getLocalDateCellValue(line,"aDateValue").orElseThrow(IllegalArgumentException::new));
+        assertSame(date, LineUtils.getLocalDateCellValue(line,"aDateValue").orElseThrow(IllegalArgumentException::new));
+        assertNotSame(date, LineUtils.getLocalDateCellValue(line,"doesNotExist").orElse(LocalDate.of(2017, Month.APRIL, 1)));
     }
 
     @Test

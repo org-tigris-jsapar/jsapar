@@ -19,7 +19,7 @@ public class FloatCellFactoryTest {
     public void testSetValueStringLocale() throws ParseException {
         FloatCell cell = (FloatCell) cellFactory.makeCell("test", "3.141,59", cellFactory.makeFormat(Locale.GERMANY));
 
-        Assert.assertEquals(3141.59, cell.getNumberValue().doubleValue(), 0.001);
+        Assert.assertEquals(3141.59, cell.getValue().doubleValue(), 0.001);
     }
 
     @Test
@@ -27,7 +27,7 @@ public class FloatCellFactoryTest {
         DecimalFormat format = new DecimalFormat("#,###.##", DecimalFormatSymbols.getInstance(Locale.GERMANY));
         FloatCell cell = (FloatCell) cellFactory.makeCell("test", "3.141,59", format);
 
-        Assert.assertEquals(3141.59, cell.getNumberValue().doubleValue(), 0.001);
+        Assert.assertEquals(3141.59, cell.getValue().doubleValue(), 0.001);
     }
 
 }

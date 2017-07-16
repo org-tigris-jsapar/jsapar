@@ -20,7 +20,7 @@ public class BigDecimalCellFactoryTest {
         DecimalFormat format = new DecimalFormat("#.#", DecimalFormatSymbols.getInstance(Locale.GERMAN));
         format.setParseBigDecimal(true);
         cell = (BigDecimalCell) cellFactory.makeCell("test", "3,14", format);
-        assertEquals(new BigDecimal("3.14"), cell.getBigDecimalValue());
+        assertEquals(new BigDecimal("3.14"), cell.getValue());
     }
 
 

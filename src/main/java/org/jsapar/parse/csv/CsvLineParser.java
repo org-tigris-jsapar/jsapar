@@ -177,7 +177,7 @@ public class CsvLineParser {
         }
         if (schemaCell.isMaxLength() && sCell.length() > schemaCell.getMaxLength())
             sCell = sCell.substring(0, schemaCell.getMaxLength());
-        cellParser.parse(schemaCell, sCell, errorEventListener).ifPresent( it-> line.addCell(it));
+        cellParser.parse(schemaCell, sCell, errorEventListener).ifPresent(line::addCell);
     }
 
     /**

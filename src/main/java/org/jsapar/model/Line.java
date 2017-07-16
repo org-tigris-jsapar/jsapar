@@ -4,6 +4,7 @@ import org.jsapar.parse.CellParseException;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.BiFunction;
 
 /**
  * A line is one row of the input buffer. Each line contains a list of cells. Cells within the line can be retrieved
@@ -131,7 +132,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
     }
 
     /**
-     * Adds a cell to the line end of the line, replacing any existing cell with the same name.
+     * Adds a cell to the line, replacing any existing cell with the same name.
      *
      * @param cell The cell to add
      * @return Optional containing the replaced cell if there was one within the line with the same name.
@@ -139,6 +140,22 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      */
     public Optional<Cell> putCell(Cell cell) {
         return Optional.ofNullable(this.cells.put(cell.getName(), cell));
+    }
+
+    /**
+     * Adds an object cell created with the cellCreator to the line, replacing any existing cell with the same name.
+     * If supplied value is null, any existing cell will be removed and no new cell will be added.
+     *
+     * @param cellName The name of the cell to add.
+     * @param value The value of the cell to add.
+     * @param cellCreator {@link BiFunction} that takes cell name and values as parameters and creates the cell to add.
+     * @param <T> The value type of the cell.
+     */
+    public <T> void putCellValue(String cellName, T value, BiFunction<String, T, Cell> cellCreator) {
+        if (value == null)
+            this.cells.remove(cellName);
+        else
+            this.cells.put(cellName, cellCreator.apply(cellName, value));
     }
 
     /**

@@ -9,11 +9,14 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Locale;
 
 import static org.junit.Assert.*;
 
-public class CellParseTaskTest {
+public class CellParserTest {
     CellParser cellParser = new CellParser();
 
     /**
@@ -74,7 +77,7 @@ public class CellParseTaskTest {
         schemaCell.setDefaultValue("123456,78901");
 
         Cell cell = cellParser.makeCell(schemaCell,"");
-        assertEquals(123456.78901, ((FloatCell)cell).getNumberValue().doubleValue(), 0.0001);
+        assertEquals(123456.78901, ((FloatCell)cell).getValue().doubleValue(), 0.0001);
     }
 
     @Test
@@ -83,7 +86,7 @@ public class CellParseTaskTest {
         schemaCell.setEmptyCondition(new MatchingCellValueCondition("NULL"));
 
         Cell nonEmptyCell = cellParser.makeCell(schemaCell,"1,25");
-        assertEquals(1.25, ((FloatCell)nonEmptyCell).getNumberValue().doubleValue(), 0.0001);
+        assertEquals(1.25, ((FloatCell)nonEmptyCell).getValue().doubleValue(), 0.0001);
 
         Cell emptyCell = cellParser.makeCell(schemaCell,"NULL");
         assertTrue(emptyCell instanceof EmptyCell);
@@ -97,7 +100,7 @@ public class CellParseTaskTest {
         schemaCell.setDefaultValue("123456,78901");
 
         Cell cell = cellParser.makeCell(schemaCell,"NULL");
-        assertEquals(123456.78901, ((FloatCell)cell).getNumberValue().doubleValue(), 0.0001);
+        assertEquals(123456.78901, ((FloatCell)cell).getValue().doubleValue(), 0.0001);
     }
 
 
@@ -139,7 +142,7 @@ public class CellParseTaskTest {
         Cell cell;
         cell = CellParser.makeCell(CellType.INTEGER, "number", "12345", Locale.getDefault());
         assertEquals(IntegerCell.class, cell.getClass());
-        assertEquals(12345, ((IntegerCell)cell).getNumberValue().intValue());
+        assertEquals(12345, ((IntegerCell)cell).getValue().intValue());
     }
 
     @Test
@@ -150,7 +153,7 @@ public class CellParseTaskTest {
         Cell cell;
         cell = cellParser.makeCell(schemaCell,"");
         assertEquals(IntegerCell.class, cell.getClass());
-        assertEquals(42, ((IntegerCell)cell).getNumberValue().intValue());
+        assertEquals(42, ((IntegerCell)cell).getValue().intValue());
         assertEquals("A number", cell.getName());
     }
 
@@ -193,6 +196,30 @@ public class CellParseTaskTest {
         assertEquals(12345L, CellParser.makeCell(CellType.INTEGER, "number", "12\u00A0345", locale).getValue());
     }
 
+    @Test
+    public void testMakeCell_LocalDateTime() throws SchemaException, java.text.ParseException {
+        TestSchemaCell schemaCell = new TestSchemaCell("test",CellType.LOCAL_DATE_TIME, "yyyy-MM-dd HH:mm", new Locale("sv","SE"));
+        schemaCell.setDefaultValue("2000-01-01 00:00");
+
+        Cell cell = cellParser.makeCell(schemaCell,"2017-03-27 15:45");
+        assertEquals(LocalDateTime.of(2017, Month.MARCH, 27, 15, 45), ((LocalDateTimeCell)cell).getValue());
+
+        cell = cellParser.makeCell(schemaCell,"");
+        assertEquals(LocalDateTime.of(2000, Month.JANUARY, 1, 0, 0), ((LocalDateTimeCell)cell).getValue());
+    }
+
+    @Test
+    public void testMakeCell_LocalDate() throws SchemaException, java.text.ParseException {
+        TestSchemaCell schemaCell = new TestSchemaCell("test",CellType.LOCAL_DATE, "yyyy-MM-dd", new Locale("sv","SE"));
+        schemaCell.setDefaultValue("2000-01-01");
+
+        Cell cell = cellParser.makeCell(schemaCell,"2017-03-27");
+        assertEquals(LocalDate.of(2017, Month.MARCH, 27), ((LocalDateCell)cell).getValue());
+
+        cell = cellParser.makeCell(schemaCell,"");
+        assertEquals(LocalDate.of(2000, Month.JANUARY, 1), ((LocalDateCell)cell).getValue());
+    }
+
     /**
      *
      */
@@ -206,7 +233,7 @@ public class CellParseTaskTest {
 
         Cell cell = cellParser.makeCell(schemaCell,"12345");
         assertEquals(IntegerCell.class, cell.getClass());
-        assertEquals(12345, ((IntegerCell)cell).getNumberValue().intValue());
+        assertEquals(12345, ((IntegerCell)cell).getValue().intValue());
 
     }
 

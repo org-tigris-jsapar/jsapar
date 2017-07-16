@@ -52,7 +52,7 @@ public class BufferedLineReader implements LineReader {
     public String readLine() throws IOException {
         reader.mark(MAX_LINE_LENGTH);
         lineNumber++;
-        return peekLine();
+        return lineReaderImpl.readLine();
     }
 
     /**

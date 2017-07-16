@@ -12,7 +12,8 @@ import java.util.Locale;
 /**
  * Parses date values into {@link Cell} objects
  */
-public class DateCellFactory implements CellFactory {
+public class
+DateCellFactory implements CellFactory {
 
     private static final SimpleDateFormat ISO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 

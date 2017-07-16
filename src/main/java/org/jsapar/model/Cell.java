@@ -1,14 +1,17 @@
 package org.jsapar.model;
 
 import java.io.Serializable;
+import java.text.Format;
 
 /**
- * Abstract class which represents a parsable item on a line in the original document. A cell has a
+ * Base class which represents a parsable item on a line in the original document. A cell has a
  * name and a value. A cell can be only exist as one of the sub-classes of this class. The type of
  * the value denotes which sub-class to use.
  * 
  */
-public abstract class Cell implements Serializable {
+public abstract class Cell<T> implements Serializable {
+
+    private final T value;
 
     private static final long serialVersionUID = -3609313087173019221L;
 
@@ -29,9 +32,11 @@ public abstract class Cell implements Serializable {
      * @param name        The name of the cell
      * @param cellType    The type of the cell.
      */
-    public Cell(String name, CellType cellType) {
+    public Cell(String name, T value, CellType cellType) {
+        assert value != null : "Cell value cannot be null, use EmptyCell for empty values.";
         this.name = name;
         this.cellType = cellType;
+        this.value = value;
     }
 
     /**
@@ -49,9 +54,14 @@ public abstract class Cell implements Serializable {
      * @param format
      *            A formatter for the specified type or null if default formatting is sufficient.
      * @return The formatted value.
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException - if the Format cannot format the given object
      */
-    public abstract String getStringValue(java.text.Format format) throws IllegalArgumentException;
+    public String getStringValue(Format format) throws IllegalArgumentException {
+        if (format != null)
+            return format.format(this.value);
+        else
+            return this.value.toString();
+    }
 
     /**
      * Gets a string representation of the value formatted as String.valueOf(...)
@@ -64,9 +74,11 @@ public abstract class Cell implements Serializable {
 
 
     /**
-     * @return The value of the cell as an object.
+     * @return The value of the cell.
      */
-    public abstract Object getValue();
+    public T getValue() {
+        return value;
+    }
 
     /**
      * @return A string representation of the cell, including the name of the cell, suitable for
@@ -95,7 +107,7 @@ public abstract class Cell implements Serializable {
      * @return a negative integer, zero, or a positive integer as this cell's value is less than, equal to, or greater than the specified cell's value. 
      * @throws IllegalArgumentException if the value of provided cell cannot be compared to the value of this cell.
      */
-    public abstract int compareValueTo(Cell right) ;
+    public abstract int compareValueTo(Cell<T> right);
     
     /**
      * @return true if the cell is not set to any value, false otherwise.

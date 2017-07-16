@@ -50,8 +50,8 @@ public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
      */
     @Override
     public int compareTo(IntegerCell right){
-    	Long leftValue = this.getNumberValue().longValue();
-    	Long rightValue = right.getNumberValue().longValue();
+    	Long leftValue = this.getValue().longValue();
+    	Long rightValue = right.getValue().longValue();
     	return leftValue.compareTo(rightValue);
     }
 }

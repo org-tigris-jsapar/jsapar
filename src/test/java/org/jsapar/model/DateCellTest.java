@@ -43,16 +43,14 @@ public class DateCellTest {
     public final void testDateCell() {
         DateCell cell = new DateCell("Name", now);
         assertEquals("Name", cell.getName());
-        assertEquals(now, cell.getDateValue());
+        assertEquals(now, cell.getValue());
     }
 
     @Test
     public void testGetSetDateValue() throws Exception {
         Date date = new Date();
         DateCell cell = new DateCell("Name", date);
-        assertEquals(date, cell.getDateValue());
-        cell.setDateValue(aDate);
-        assertEquals(aDate, cell.getDateValue());
+        assertEquals(date, cell.getValue());
 
     }
 }

@@ -77,7 +77,7 @@ public class Text2SAXReader implements XMLReader {
         switch (c.getCellType()) {
         case DATE:
             Calendar cal = Calendar.getInstance();
-            cal.setTime(((DateCell) c).getDateValue());
+            cal.setTime(((DateCell) c).getValue());
             return DatatypeConverter.printDateTime(cal);
         default:
             return c.getStringValue();

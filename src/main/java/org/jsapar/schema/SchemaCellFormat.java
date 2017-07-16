@@ -13,7 +13,7 @@ public class SchemaCellFormat implements Cloneable {
     public final static Locale defaultLocale= Locale.US;
 
     private final CellType cellType;
-    private final java.text.Format format;
+    private final Format format;
     private final String pattern;
 
 

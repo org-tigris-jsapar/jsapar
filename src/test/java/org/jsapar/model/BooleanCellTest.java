@@ -9,7 +9,7 @@ public class BooleanCellTest {
     @Test
     public void testGetSetBooleanValue() throws Exception {
         BooleanCell cell = new BooleanCell("test", false);
-        assertFalse(cell.getBooleanValue());
+        assertFalse(cell.getValue());
     }
 
     @Test

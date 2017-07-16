@@ -20,7 +20,7 @@ public class CharacterCellTest {
     @Test
     public void testGetSetCharacterValue() throws Exception {
         CharacterCell cell = new CharacterCell("test", 'a');
-        assertEquals(new Character('a'), cell.getCharacterValue());
+        assertEquals(new Character('a'), cell.getValue());
     }
 
     @Test

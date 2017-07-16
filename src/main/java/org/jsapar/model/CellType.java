@@ -15,7 +15,11 @@ public enum CellType {
     FLOAT(new FloatCellFactory(), false),
     DECIMAL(new BigDecimalCellFactory(), false),
     CHARACTER(new CharacterCellFactory(), true),
-    CUSTOM(null, false);
+    CUSTOM(null, false),
+    LOCAL_DATE_TIME(new LocalDateTimeCellFactory(), false),
+    LOCAL_DATE(new LocalDateCellFactory(), false),
+    LOCAL_TIME(new LocalTimeCellFactory(), false),
+    ZONED_DATE_TIME(new ZonedDateTimeCellFactory(), false);
 
     private CellFactory cellFactory;
     private boolean atomic;

@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.jsapar.model;
 
 import java.text.Format;
@@ -9,7 +6,7 @@ import java.text.Format;
  * This class is a special case where an empty value has been parsed from a source. It can be used as a type independent
  * placeholder of an empty value.
  */
-public class EmptyCell extends Cell implements Comparable<EmptyCell> {
+public class EmptyCell extends Cell<String> {
     /**
      *
      */
@@ -21,41 +18,21 @@ public class EmptyCell extends Cell implements Comparable<EmptyCell> {
      * @param cellType The type of the cell if one is present. If null, the type will be CellType.STRING
      */
     public EmptyCell(String name, CellType cellType) {
-        super(name, ((cellType == null) ? CellType.STRING : cellType));
+        super(name, STRING_VALUE, ((cellType == null) ? CellType.STRING : cellType));
     }
 
-    /* (non-Javadoc)
-     * @see org.jsapar.model.Cell#getStringValue(java.text.Format)
-     */
     @Override
     public String getStringValue(Format format) {
         return STRING_VALUE;
     }
 
-    /* (non-Javadoc)
-     * @see org.jsapar.model.Cell#getStringValue()
-     */
     @Override
     public String getStringValue() {
         return STRING_VALUE;
     }
 
-    /* (non-Javadoc)
-     * @see org.jsapar.model.Cell#getValue()
-     */
     @Override
-    public Object getValue() {
-        return null;
-    }
-
-    @Override
-    public int compareTo(EmptyCell right) {
-        return 0;
-    }
-
-    @Override
-    public int compareValueTo(Cell right) {
-        // Everything is equal to empty cell :-S.
+    public int compareValueTo(Cell<String> right) {
         return 0;
     }
 

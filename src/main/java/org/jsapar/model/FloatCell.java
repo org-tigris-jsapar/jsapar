@@ -34,14 +34,9 @@ public class FloatCell extends NumberCell implements Comparable<FloatCell> {
     }
 
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
     @Override
     public int compareTo(FloatCell right) {
-	return Double.compare(this.getNumberValue().doubleValue(), right
-		.getNumberValue().doubleValue());
+	return Double.compare(this.getValue().doubleValue(), right
+		.getValue().doubleValue());
     }
 }

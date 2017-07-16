@@ -4,6 +4,10 @@ import org.jsapar.error.JSaParNumberFormatException;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
 import java.util.Date;
 import java.util.Optional;
 
@@ -34,23 +38,10 @@ public class LineUtils {
     @SuppressWarnings("SimplifiableIfStatement")
     public static boolean isCellSet(Line line, String cellName, CellType type) {
         Optional<Cell> cell = line.getNonEmptyCell(cellName);
-        if (!cell.isPresent())
-            return false;
+        return cell.map(cell1 -> cell1.getCellType().equals(type)).orElse(false);
 
-        return cell.get().getCellType().equals(type);
     }
 
-
-    private static <T> void setCellValue(Line line, String cellName, T value, CellCreator<T> cellCreator) {
-        if (value == null)
-            line.removeCell(cellName);
-        else
-            line.putCell(cellCreator.createCell(cellName, value));
-    }
-
-    private interface CellCreator<T> {
-        Cell createCell(String name, T value);
-    }
 
     /**
      * Utility function that adds a cell with the specified name and value to the end of the line or
@@ -61,7 +52,7 @@ public class LineUtils {
      * @param value    The string value to set. If null, existing value will be removed but no new value will be set.
      */
     public static void setStringCellValue(Line line, String cellName, String value) {
-        setCellValue(line, cellName, value, StringCell::new);
+        line.putCellValue(cellName, value, StringCell::new);
     }
 
     /**
@@ -73,7 +64,7 @@ public class LineUtils {
      * @param value    The string value to set. If null, existing value will be removed but no new value will be set.
      */
     public static <E extends Enum<E>> void setEnumCellValue(Line line, String cellName, E value) {
-        setCellValue(line, cellName, value, (n, v) -> new StringCell(n, String.valueOf(v)));
+        line.putCellValue(cellName, value, (n, v) -> new StringCell(n, String.valueOf(v)));
     }
 
     /**
@@ -109,7 +100,7 @@ public class LineUtils {
      * @param value    The double value to set.
      */
     public static void setDoubleCellValue(Line line, String cellName, double value) {
-        line.putCell(new FloatCell(cellName, value));
+        line.putCellValue(cellName, value, FloatCell::new);
     }
 
     /**
@@ -121,7 +112,7 @@ public class LineUtils {
      * @param value    The boolean value to set.
      */
     public static void setBooleanCellValue(Line line, String cellName, boolean value) {
-        line.putCell(new BooleanCell(cellName, value));
+        line.putCellValue(cellName, value, BooleanCell::new);
     }
 
     /**
@@ -132,7 +123,7 @@ public class LineUtils {
      * @param value    The character value to set.
      */
     public static void setCharCellValue(Line line, String cellName, char value) {
-        line.putCell(new CharacterCell(cellName, value));
+        line.putCellValue(cellName, value, CharacterCell::new);
     }
 
     /**
@@ -143,7 +134,7 @@ public class LineUtils {
      * @param value    The date value to set. If null, existing value will be removed but no new value will be set.
      */
     public static void setDateCellValue(Line line, String cellName, Date value) {
-        setCellValue(line, cellName, value, DateCell::new);
+        line.putCellValue(cellName, value, DateCell::new);
     }
 
     /**
@@ -154,7 +145,7 @@ public class LineUtils {
      * @param value    The value to set. If null, existing value will be removed but no new value will be set.
      */
     public static void setDecimalCellValue(Line line, String cellName, BigDecimal value) {
-        setCellValue(line, cellName, value, BigDecimalCell::new);
+        line.putCellValue(cellName, value, BigDecimalCell::new);
     }
 
     /**
@@ -165,7 +156,7 @@ public class LineUtils {
      * @param value    The value to set. If null, existing value will be removed but no new value will be set.
      */
     public static void setBigIntegerCellValue(Line line, String cellName, BigInteger value) {
-        setCellValue(line, cellName, value, BigDecimalCell::new);
+        line.putCellValue(cellName, value, BigDecimalCell::new);
     }
 
     /**
@@ -210,7 +201,7 @@ public class LineUtils {
         Cell cell = getExistingCell(line, cellName);
         if (cell instanceof NumberCell) {
             NumberCell numberCell = (NumberCell) cell;
-            return numberCell.getNumberValue().intValue();
+            return numberCell.getValue().intValue();
         }
         if (cell.isEmpty())
             throw new NumberFormatException(
@@ -242,7 +233,7 @@ public class LineUtils {
             return defaultValue;
         if (cell.get() instanceof NumberCell) {
             NumberCell numberCell = (NumberCell) cell.get();
-            return numberCell.getNumberValue().intValue();
+            return numberCell.getValue().intValue();
         }
 
         try {
@@ -269,7 +260,7 @@ public class LineUtils {
         Cell cell = getExistingCell(line, cellName);
         if (cell instanceof NumberCell) {
             NumberCell numberCell = (NumberCell) cell;
-            return numberCell.getNumberValue().longValue();
+            return numberCell.getValue().longValue();
         }
 
         try {
@@ -299,7 +290,7 @@ public class LineUtils {
             return defaultValue;
         if (cell.get() instanceof NumberCell) {
             NumberCell numberCell = (NumberCell) cell.get();
-            return numberCell.getNumberValue().longValue();
+            return numberCell.getValue().longValue();
         }
 
         try {
@@ -325,7 +316,7 @@ public class LineUtils {
         Cell cell = getExistingCell(line, cellName);
         if (cell instanceof CharacterCell) {
             CharacterCell chCell = (CharacterCell) cell;
-            return chCell.getCharacterValue();
+            return chCell.getValue();
         }
 
         String s = cell.getStringValue();
@@ -352,7 +343,7 @@ public class LineUtils {
             return defaultValue;
         if (cell.get() instanceof CharacterCell) {
             CharacterCell chCell = (CharacterCell) cell.get();
-            return chCell.getCharacterValue();
+            return chCell.getValue();
         }
 
         String s = cell.get().getStringValue();
@@ -376,7 +367,7 @@ public class LineUtils {
         Cell cell = getExistingCell(line, cellName);
         if (cell instanceof BooleanCell) {
             BooleanCell booleanCell = (BooleanCell) cell;
-            return booleanCell.getBooleanValue();
+            return booleanCell.getValue();
         }
 
         return Boolean.valueOf(cell.getStringValue());
@@ -398,35 +389,100 @@ public class LineUtils {
             return defaultValue;
         if (cell.get() instanceof BooleanCell) {
             BooleanCell booleanCell = (BooleanCell) cell.get();
-            return booleanCell.getBooleanValue();
+            return booleanCell.getValue();
         }
 
         return Boolean.valueOf(cell.get().getStringValue());
     }
 
     /**
-     * Utility function that gets the date cell value of the specified cell. If the specified
-     * cell does not exist or if it is not a DateCell, a {@link IllegalStateException} is thrown.
+     * Utility function that gets the date cell value of the specified cell.
      *
      * @param line     The line to get from
      * @param cellName The name of the cell to get
      * @return The date value of the specified cell.
-     * @throws NumberFormatException If the cell does not exist
+     * @throws IllegalStateException If the cell is not of type {@link DateCell}.
      */
     public static Optional<Date> getDateCellValue(Line line, String cellName)
             throws IllegalStateException, NumberFormatException {
-        return line.getNonEmptyCell(cellName).map( it -> dateOfCell(it));
+        return line.getNonEmptyCell(cellName).map(LineUtils::dateOfCell);
     }
 
     private static Date dateOfCell(Cell cell) {
         if (cell instanceof DateCell) {
             DateCell dateCell = (DateCell) cell;
-            return dateCell.getDateValue();
+            return dateCell.getValue();
         }
 
-        throw new NumberFormatException("The cell " + cell + " is not of type DateCell.");
+        throw new IllegalStateException("The cell " + cell + " is not of type DateCell.");
     }
 
+
+    /**
+     * Utility function that gets the local date cell value of the specified cell.
+     *
+     * @param line     The line to get from
+     * @param cellName The name of the cell to get
+     * @return The local date value of the specified cell. Optional.empty if cell does not exist.
+     * @throws IllegalStateException If the cell is not of type {@link TemporalCell}.
+     * @throws java.time.DateTimeException If the value cannot be converted to a local date.
+     */
+    public static Optional<LocalDate> getLocalDateCellValue(Line line, String cellName)
+            throws IllegalStateException{
+        return line.getNonEmptyCell(cellName).map(LineUtils::temporalOfCell).map(LocalDate::from);
+    }
+
+    /**
+     * Utility function that gets the local date time cell value of the specified cell.
+     *
+     * @param line     The line to get from
+     * @param cellName The name of the cell to get
+     * @return The local date value of the specified cell. Optional.empty if cell does not exist.
+     * @throws IllegalStateException If the cell is not of type {@link TemporalCell}.
+     * @throws java.time.DateTimeException If the value cannot be converted to a {@link LocalDateTime}.
+     */
+    public static Optional<LocalDateTime> getLocalDateTimeCellValue(Line line, String cellName)
+            throws IllegalStateException{
+        return line.getNonEmptyCell(cellName).map(LineUtils::temporalOfCell).map(LocalDateTime::from);
+    }
+
+    /**
+     * Utility function that gets the local time cell value of the specified cell.
+     *
+     * @param line     The line to get from
+     * @param cellName The name of the cell to get
+     * @return The local date value of the specified cell. Optional.empty if cell does not exist.
+     * @throws IllegalStateException If the cell is not of type {@link TemporalCell}.
+     * @throws java.time.DateTimeException If the value cannot be converted to a {@link ZonedDateTime}.
+     */
+    public static Optional<ZonedDateTime> getLocalTimeCellValue(Line line, String cellName)
+            throws IllegalStateException{
+        return line.getNonEmptyCell(cellName).map(LineUtils::temporalOfCell).map(ZonedDateTime::from);
+    }
+
+    /**
+     * Utility function that gets the zoned date time cell value of the specified cell.
+     *
+     * @param line     The line to get from
+     * @param cellName The name of the cell to get
+     * @return The zoned date value of the specified cell. Optional.empty if cell does not exist.
+     * @throws IllegalStateException If the cell is not of type {@link TemporalCell}.
+     * @throws java.time.DateTimeException If the value cannot be converted to a zoned date time.
+     */
+    public static Optional<LocalDateTime> getZonedDateTimeCellValue(Line line, String cellName)
+            throws IllegalStateException{
+        return line.getNonEmptyCell(cellName).map(LineUtils::temporalOfCell).map(LocalDateTime::from);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Temporal temporalOfCell(Cell cell) {
+        if (cell instanceof TemporalCell) {
+            TemporalCell<Temporal> temporalCell = (TemporalCell<Temporal>) cell;
+            return temporalCell.getValue();
+        }
+
+        throw new IllegalStateException("The cell " + cell + " is not of type TemporalCell.");
+    }
 
     /**
      * Utility function that gets the enum cell value of the specified cell. If the specified cell does not exist, the
@@ -491,7 +547,7 @@ public class LineUtils {
         Cell cell = getExistingCell(line, cellName);
         if (cell instanceof NumberCell) {
             NumberCell numberCell = (NumberCell) cell;
-            return numberCell.getNumberValue().doubleValue();
+            return numberCell.getValue().doubleValue();
         }
         if (cell.isEmpty())
             throw new NumberFormatException("The cell [" + cell
@@ -523,7 +579,7 @@ public class LineUtils {
             return defaultValue;
         if (cell.get() instanceof NumberCell) {
             NumberCell numberCell = (NumberCell) cell.get();
-            return numberCell.getNumberValue().doubleValue();
+            return numberCell.getValue().doubleValue();
         }
 
         try {
@@ -554,7 +610,7 @@ public class LineUtils {
             return numberCell.getBigDecimalValue();
         }
         else if (cell instanceof NumberCell) {
-            return new BigDecimal(((FloatCell) cell).getNumberValue().doubleValue());
+            return new BigDecimal(((FloatCell) cell).getValue().doubleValue());
         }
 
         try {

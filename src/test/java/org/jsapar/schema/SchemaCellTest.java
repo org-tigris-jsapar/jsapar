@@ -76,7 +76,7 @@ public class SchemaCellTest {
         schemaCell.setLocale(new Locale("sv", "SE"));
         schemaCell.setCellFormat(CellType.DECIMAL, "#,###.0");
         schemaCell.setMinValue("123,34");
-        assertEquals(new BigDecimal("123.34"), ((BigDecimalCell)schemaCell.getMinValue()).getBigDecimalValue());
+        assertEquals(new BigDecimal("123.34"), ((BigDecimalCell)schemaCell.getMinValue()).getValue());
     }
 
     /**

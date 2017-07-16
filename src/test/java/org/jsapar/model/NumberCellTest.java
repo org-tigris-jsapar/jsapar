@@ -44,12 +44,12 @@ public class NumberCellTest {
 
 
     /**
-     * Test method for {@link NumberCell#getNumberValue()}.
+     * Test method for {@link NumberCell#getValue()}.
      */
     @Test
     public void testGetNumberValue() {
         IntegerCell cell = new IntegerCell("test", 42);
-        Assert.assertEquals(new Integer(42), cell.getNumberValue());
+        Assert.assertEquals(new Integer(42), cell.getValue());
     }
 
     /**
@@ -63,13 +63,7 @@ public class NumberCellTest {
     }
 
 
-    @Test
-    public void testCompareValueTo_gt() throws SchemaException{
-        FloatCell left = new FloatCell("test", 10.1);
-        IntegerCell right = new IntegerCell("test", 10);
-        Assert.assertEquals(true, left.compareValueTo(right) > 0 );
-    }
-    
+
     @Test
     public void testCompareValueTo_eq() throws SchemaException{
         NumberCell left = new FloatCell("test", 10.1);

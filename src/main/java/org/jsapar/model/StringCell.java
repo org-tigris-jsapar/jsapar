@@ -1,19 +1,12 @@
 package org.jsapar.model;
 
-import java.text.Format;
-
 /**
  * {@link Cell} implementation carrying a string value of a cell.
  *
  */
-public class StringCell extends Cell {
+public class StringCell extends ComparableCell<String> {
 
     private static final long serialVersionUID = -2776042954053921679L;
-
-    /**
-     * The string representation of the stringValue of this cell.
-     */
-    private final String stringValue;
 
 
     /**
@@ -23,9 +16,7 @@ public class StringCell extends Cell {
      * @param value The value. Cannot be null. Use {@link EmptyCell} for empty values.
      */
     public StringCell(String name, String value) {
-        super(name, CellType.STRING);
-        assert value != null : "Cell value cannot be null, use EmptyCell for empty values.";
-        this.stringValue = value;
+        super(name, value, CellType.STRING);
     }
 
 
@@ -36,47 +27,7 @@ public class StringCell extends Cell {
      * @param value The value
      */
     public StringCell(String name, char value) {
-        super(name, CellType.STRING);
-        this.stringValue = String.valueOf(value);
+        super(name, String.valueOf(value), CellType.STRING);
     }
 
-
-    /**
-     * @return the stringValue as an Object.
-     */
-    @Override
-    public Object getValue() {
-	return this.stringValue;
-    }
-
-
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.model.Cell#getStringValue()
-     */
-    @Override
-    public String getStringValue() {
-	return this.stringValue;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.model.Cell#getStringValue(java.text.Format)
-     */
-    @Override
-    public String getStringValue(Format format) throws IllegalArgumentException {
-        if (format != null) {
-            return format.format(this.stringValue);
-        } else
-            return this.stringValue;
-    }
-
-
-    @Override
-    public int compareValueTo(Cell right) {
-        return getStringValue().compareTo(right.getStringValue());
-    }
 }
