@@ -61,11 +61,11 @@ public class CsvCellComposerTest {
         CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("test", "'Here we come'");
+        Cell cell = new StringCell("test", "'Here we come");
         CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n"));
         composer.compose(writer, cell);
 
-        assertEquals("''Here we come''", writer.toString());
+        assertEquals("''Here we come'", writer.toString());
     }
 
     @Test

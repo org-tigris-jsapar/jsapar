@@ -49,7 +49,7 @@ public class CsvLineComposer implements LineComposer {
         char quoteChar = schemaLine.getQuoteChar();
         QuoteBehavior quoteBehavior = schemaCell.getQuoteBehavior();
         switch (quoteBehavior) {
-            case SMART:
+            case AUTOMATIC:
                 if (quoteChar != 0)
                     if (schemaCell.getCellFormat().getCellType().isAtomic())
                         return new NeverQuote(schemaCell.getMaxLength());

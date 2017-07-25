@@ -8,10 +8,10 @@ public enum QuoteBehavior {
      * If quote character is specified: Quote cells only when needed.
      * Otherwise replace illegal characters with non-breakable space.
      */
-    SMART,
+    AUTOMATIC,
 
     /**
-     * Never quote. Keep cell content as is even when there are illegal characters.
+     * Never quote. Keep cell content as is, even when there are illegal characters.
      */
     NEVER,
 

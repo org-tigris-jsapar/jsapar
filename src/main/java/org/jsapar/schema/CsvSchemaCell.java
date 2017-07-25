@@ -10,9 +10,9 @@ import java.util.Locale;
 public class CsvSchemaCell extends SchemaCell {
 
     /**
-     *The quote behavior for the cell. Default is SMART
+     *The quote behavior for the cell. Default is AUTOMATIC
      */
-    private QuoteBehavior quoteBehavior = QuoteBehavior.SMART;
+    private QuoteBehavior quoteBehavior = QuoteBehavior.AUTOMATIC;
 
     /**
      * The maximum number of characters that are read or written to/from the cell. Input and output

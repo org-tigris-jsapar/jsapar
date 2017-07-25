@@ -294,7 +294,7 @@ If the sum of the length of the cells is less than this minlength then the line 
   					</xsd:restriction>
   				</xsd:simpleType>
   			</xsd:attribute>
-  			<xsd:attribute name="quotebehavior" type="QuoteBehaviorType" default="SMART">
+  			<xsd:attribute name="quotebehavior" type="QuoteBehaviorType" default="AUTOMATIC">
   				<xsd:annotation>
   					<xsd:documentation>Default quote behavior for the line type. Override this setting on cell level if needed.</xsd:documentation>
   				</xsd:annotation></xsd:attribute>
@@ -353,7 +353,7 @@ format regexp pattern instead.
   					</xsd:documentation>
   				</xsd:annotation>
   			</xsd:attribute>
-  			<xsd:attribute name="quotebehavior" type="QuoteBehaviorType" default="SMART">
+  			<xsd:attribute name="quotebehavior" type="QuoteBehaviorType" default="AUTOMATIC">
   				<xsd:annotation>
   					<xsd:documentation>Quote behavior on cell level. Overrides line behavior.
 Available since 2.0</xsd:documentation>
@@ -398,13 +398,13 @@ NONE means no action at all, if possible.</xsd:documentation>
 
   <xsd:simpleType name="QuoteBehaviorType">
         <xsd:annotation>
-        	<xsd:documentation>SMART = (default) If quote character is specified: Quote only when needed. If quote character is not specified, replace illegal characters with non-breaking space.
+        	<xsd:documentation>AUTOMATIC = (default) If quote character is specified: Quote only when needed. If quote character is not specified, replace illegal characters with non-breaking space.
 NEVER = Never quote
 REPLACE = Don't quote but replace illegal characters with non-breaking space.
 ALWAYS = Always quote</xsd:documentation>
         </xsd:annotation>
         <xsd:restriction base="xsd:string">
-  		<xsd:enumeration value="SMART"></xsd:enumeration>
+  		<xsd:enumeration value="AUTOMATIC"></xsd:enumeration>
   		<xsd:enumeration value="NEVER"></xsd:enumeration>
   		<xsd:enumeration value="REPLACE"></xsd:enumeration>
   		<xsd:enumeration value="ALWAYS"></xsd:enumeration>

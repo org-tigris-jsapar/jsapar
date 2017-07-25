@@ -132,9 +132,9 @@ public class CellParser {
     protected void validateRange(SchemaCell cellSchema, Cell cell) throws java.text.ParseException {
 
         if (cellSchema.getMinValue() != null && cell.compareValueTo(cellSchema.getMinValue()) < 0) {
-            throw new java.text.ParseException("The value is below minimum range limit.", 0);
+            throw new java.text.ParseException("The value is below minimum range limit ("+cellSchema.getMinValue().getStringValue()+").", 0);
         } else if (cellSchema.getMaxValue() != null && cell.compareValueTo(cellSchema.getMaxValue()) > 0)
-            throw new java.text.ParseException("The value is above maximum range limit.", 0);
+            throw new java.text.ParseException("The value is above maximum range limit ("+cellSchema.getMaxValue().getStringValue()+").", 0);
     }
 
     /**

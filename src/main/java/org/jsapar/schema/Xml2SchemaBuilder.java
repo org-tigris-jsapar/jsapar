@@ -311,7 +311,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
         QuoteBehavior quoteBehavior = attributeValue(xmlSchemaLine, ATTRIB_CSV_QUOTE_BEHAVIOR)
                 .map(QuoteBehavior::valueOf)
-                .orElse(QuoteBehavior.SMART);
+                .orElse(QuoteBehavior.AUTOMATIC);
 
         NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
         for (int i = 0; i < nodes.getLength(); i++) {

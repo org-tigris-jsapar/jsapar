@@ -78,8 +78,9 @@ public final class CellParseException extends LineParseException {
         if(this.getLineNumber()>0) {
             sb.append("Line=");
             sb.append(this.getLineNumber());
+            sb.append(' ');
         }
-        sb.append(" Cell='");
+        sb.append("Cell='");
         sb.append(this.cellName);
         sb.append("'");
         sb.append(" Value='");
@@ -90,7 +91,7 @@ public final class CellParseException extends LineParseException {
             sb.append(this.cellFormat);
         }
         sb.append(" - ");
-        sb.append(super.getMessage());
+        sb.append(super.getOriginalMessage());
         return sb.toString();
     }
 

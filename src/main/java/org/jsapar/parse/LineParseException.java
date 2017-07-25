@@ -5,6 +5,7 @@ import org.jsapar.error.JSaParException;
 /**
  * Exception that occurs while parsing and that affects the line and not a single cell.
  */
+@SuppressWarnings("WeakerAccess")
 public class LineParseException extends JSaParException {
     private long      lineNumber;
 
@@ -30,10 +31,18 @@ public class LineParseException extends JSaParException {
      */
     @Override
     public String getMessage() {
-        return "Line=" +
-                this.getLineNumber() +
-                " - " +
-                super.getMessage();
+        StringBuilder sb = new StringBuilder();
+        if(this.getLineNumber()>0) {
+            sb.append("Line=");
+            sb.append(this.getLineNumber());
+            sb.append(" - ");
+        }
+        sb.append(super.getMessage());
+        return sb.toString();
+    }
+
+    protected String getOriginalMessage(){
+        return super.getMessage();
     }
 
     public void setLineNumber(long lineNumber) {

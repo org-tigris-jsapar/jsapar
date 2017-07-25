@@ -1,16 +1,17 @@
 package org.jsapar.parse;
 
+import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.model.*;
 import org.jsapar.schema.MatchingCellValueCondition;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.util.Locale;
 
@@ -195,6 +196,18 @@ public class CellParserTest {
         assertEquals(12345L, CellParser.makeCell(CellType.INTEGER, "number", "12 345", locale).getValue());
         assertEquals(12345L, CellParser.makeCell(CellType.INTEGER, "number", "12\u00A0345", locale).getValue());
     }
+    @Test
+    public void testMakeCell_LocalTime() throws SchemaException, java.text.ParseException {
+        TestSchemaCell schemaCell = new TestSchemaCell("test",CellType.LOCAL_TIME, "HH:mm", new Locale("sv","SE"));
+        schemaCell.setDefaultValue("00:00");
+
+        Cell cell = cellParser.makeCell(schemaCell,"15:45");
+        assertEquals(LocalTime.of(15, 45), ((LocalTimeCell)cell).getValue());
+
+        cell = cellParser.makeCell(schemaCell,"");
+        assertEquals(LocalTime.of(0, 0), ((LocalTimeCell)cell).getValue());
+    }
+
 
     @Test
     public void testMakeCell_LocalDateTime() throws SchemaException, java.text.ParseException {
@@ -241,30 +254,34 @@ public class CellParserTest {
      *
      *
      */
-    @Ignore
-    @Test(expected = CellParseException.class)
-    public void testMakeCell_Integer_MinRangeNotValid() throws java.text.ParseException {
+    @Test
+    public void testParse_Integer_MinRangeNotValid() throws java.text.ParseException {
 
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(CellType.INTEGER);
         schemaCell.setMinValue(new IntegerCell("test",54321));
         schemaCell.setMaxValue(new IntegerCell("test",54322));
-        cellParser.makeCell(schemaCell,"12345");
+        RecordingErrorEventListener errorListener = new RecordingErrorEventListener();
+        cellParser.parse(schemaCell,"12345", errorListener);
+        assertEquals(1, errorListener.getErrors().size());
+        assertEquals("Cell='test' Value='12345' Expected: CellType=INTEGER - The value is below minimum range limit (54321).", errorListener.getErrors().get(0).getMessage());
     }
 
     /**
      *
      *
      */
-    @Ignore
-    @Test(expected = CellParseException.class)
+    @Test
     public void testMakeCell_Integer_MaxRangeNotValid() throws java.text.ParseException {
 
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(CellType.INTEGER);
         schemaCell.setMinValue(new IntegerCell("test",0));
         schemaCell.setMaxValue(new IntegerCell("test",100));
-        cellParser.makeCell(schemaCell,"12345");
+        RecordingErrorEventListener errorListener = new RecordingErrorEventListener();
+        cellParser.parse(schemaCell,"12345", errorListener);
+        assertEquals(1, errorListener.getErrors().size());
+        assertEquals("Cell='test' Value='12345' Expected: CellType=INTEGER - The value is above maximum range limit (100).", errorListener.getErrors().get(0).getMessage());
     }
 
 
