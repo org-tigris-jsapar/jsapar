@@ -9,10 +9,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
+import java.time.*;
 import java.util.Locale;
 
 import static org.junit.Assert.*;
@@ -231,6 +228,18 @@ public class CellParserTest {
 
         cell = cellParser.makeCell(schemaCell,"");
         assertEquals(LocalDate.of(2000, Month.JANUARY, 1), ((LocalDateCell)cell).getValue());
+    }
+
+    @Test
+    public void testMakeCell_ZonedDateTime() throws SchemaException, java.text.ParseException {
+        TestSchemaCell schemaCell = new TestSchemaCell("test",CellType.ZONED_DATE_TIME, "yyyy-MM-dd HH:mmX", new Locale("sv","SE"));
+        schemaCell.setDefaultValue("2000-01-01 00:00+00");
+
+        Cell cell = cellParser.makeCell(schemaCell,"2017-03-27 15:45+02");
+        assertEquals(ZonedDateTime.of(2017, 3, 27, 15, 45, 0, 0, ZoneId.of("+02:00")), ((ZonedDateTimeCell)cell).getValue());
+
+        cell = cellParser.makeCell(schemaCell,"");
+        assertEquals(ZonedDateTime.of(2000, 1, 1, 0, 0, 0, 0, ZoneId.of("+00:00")), ((ZonedDateTimeCell)cell).getValue());
     }
 
     /**
