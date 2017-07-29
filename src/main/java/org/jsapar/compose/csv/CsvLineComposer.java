@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * Composes csv line output based on schema and provided line.
  * Created by stejon0 on 2016-01-30.
  */
-public class CsvLineComposer implements LineComposer {
+class CsvLineComposer implements LineComposer {
 
     private Writer        writer;
     private CsvSchemaLine schemaLine;
@@ -82,6 +82,8 @@ public class CsvLineComposer implements LineComposer {
      */
     @Override
     public void compose(Line line) throws IOException {
+        if(schemaLine.isIgnoreWrite())
+            return;
         if(firstRow && schemaLine.isFirstLineAsSchema()){
             composeHeaderLine();
             writer.write(lineSeparator);
@@ -101,10 +103,15 @@ public class CsvLineComposer implements LineComposer {
         }
     }
 
+    @Override
+    public boolean ignoreWrite() {
+        return schemaLine.isIgnoreWrite();
+    }
+
     /**
      * Writes header line if first line is schema.
      *
-     * @throws IOException
+     * @throws IOException if an io-error occurs.
      *
      */
     private void composeHeaderLine() throws IOException {

@@ -14,8 +14,8 @@ public class Text2XmlConverterTest {
 
     @Test
     public void testConvert() throws Exception {
-        try (Reader fileReader = new FileReader("samples/01_Names.csv");
-                Reader schemaReader = new FileReader("samples/01_CsvSchema.xml")) {
+        try (Reader fileReader = new FileReader("exsamples/01_Names.csv");
+                Reader schemaReader = new FileReader("exsamples/01_CsvSchema.xml")) {
             Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
             Schema schema = xmlBuilder.build(schemaReader);
             Text2XmlConverter converter = new Text2XmlConverter(schema);

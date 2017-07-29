@@ -21,7 +21,7 @@
     		</xsd:annotation>
     	</xsd:element>
     </xsd:sequence>
-    <xsd:attribute name="lineseparator" type="xsd:string" use="optional">
+    <xsd:attribute name="lineseparator" type="xsd:string" >
       <xsd:annotation>
         <xsd:documentation>A sequence of characters that separates each line. Default is the system default line separator characters. To specify control characters, use xml syntax e.g. &amp;#13; = \n and &amp;#10; = \r.</xsd:documentation>
       </xsd:annotation>
@@ -44,7 +44,7 @@
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:attribute>
-    <xsd:attribute name="linetype" type="xsd:string" use="optional">
+    <xsd:attribute name="linetype" type="xsd:string" >
       <xsd:annotation>
         <xsd:documentation>
           Specifies the type of the line. If controlcell is used, then
@@ -58,21 +58,37 @@
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
+    <xsd:attribute name="ignoreread" type="xsd:boolean">
+      <xsd:annotation>
+          <xsd:documentation>
+              Default is false. true = Ignore this line when parsing. This means that the line may
+              exist in the input but it will not generate any event. false = Parse and generate event.
+          </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="ignorewrite" type="xsd:boolean">
+      <xsd:annotation>
+          <xsd:documentation>
+              Default is false. true = Ignore this line while composing. This means that the whole line will be ignored
+              as if it did not exist. false = Compose the line to the output.
+          </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
   </xsd:complexType>
   <xsd:complexType name="SchemaCell">
     <xsd:sequence>
-    	<xsd:element minOccurs="0" maxOccurs="1" name="format"
-    		type="CellFormat" />
-    	<xsd:element minOccurs="0" maxOccurs="1" name="range"
-    		type="CellValueRange">
+    	<xsd:element minOccurs="0" name="format"
+                     type="CellFormat" />
+    	<xsd:element minOccurs="0" name="range"
+                     type="CellValueRange">
     		<xsd:annotation>
     			<xsd:documentation>
     				Specifies a valid range for the cell value.
     			</xsd:documentation>
     		</xsd:annotation>
     	</xsd:element>
-    	<xsd:element minOccurs="0" maxOccurs="1" name="locale"
-    		type="Locale">
+    	<xsd:element minOccurs="0" name="locale"
+                     type="Locale">
     		<xsd:annotation>
     			<xsd:documentation>
     				The locale of this cell. Overrides the locale
@@ -227,11 +243,11 @@ If the sum of the length of the cells is less than this minlength then the line 
   			</xsd:attribute>
   			<xsd:attribute name="padcharacter">
                     <xsd:annotation>
-                    	<xsd:documentation>Specifices the pad character to use to pad cells that are not reaching the minimum length. The alignment attribute specifies if padding should be done to the rigth, to the left or both. Default is the pad character specified on line level. </xsd:documentation>
+                    	<xsd:documentation>Specifices the pad character to use to pad cells that are not reaching the minimum length. The alignment attribute specifies if padding should be done to the right, to the left or both. Default is the pad character specified on line level. </xsd:documentation>
                     </xsd:annotation>
                     <xsd:simpleType>
   					<xsd:restriction base="xsd:string">
-  						<xsd:length value="1"></xsd:length>
+                        <xsd:length value="1"/>
   					</xsd:restriction>
   				</xsd:simpleType>
   			</xsd:attribute>
@@ -253,8 +269,7 @@ If the sum of the length of the cells is less than this minlength then the line 
   			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
   				<xsd:element name="cell" type="CsvSchemaCell" />
   			</xsd:sequence>
-  			<xsd:attribute name="cellseparator" type="xsd:string"
-  				use="optional">
+  			<xsd:attribute name="cellseparator" type="xsd:string">
   				<xsd:annotation>
   					<xsd:documentation>
   						A sequence of characters that are used to
@@ -274,7 +289,7 @@ If the sum of the length of the cells is less than this minlength then the line 
   					</xsd:documentation>
   				</xsd:annotation>
   			</xsd:attribute>
-  			<xsd:attribute name="quotechar" use="optional">
+  			<xsd:attribute name="quotechar">
   				<xsd:annotation>
   					<xsd:documentation>
   						Specifies if there is a quote character used

@@ -46,7 +46,7 @@ public class TextComposerTest {
     public final void testWrite() throws IOException {
         String sExpected = "JonasStenberg" + System.getProperty("line.separator") + "FridaBergsten";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("org.jsapar.TstPerson");
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("FirstName", 5));
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("LastName", 8));
         schema.addSchemaLine(schemaLine);
@@ -62,7 +62,7 @@ public class TextComposerTest {
     public final void testWriteCsv() throws IOException {
         String sExpected = "Jonas;Stenberg" + System.getProperty("line.separator") + "Frida;Bergsten";
         org.jsapar.schema.CsvSchema schema = new org.jsapar.schema.CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine(2);
+        CsvSchemaLine schemaLine = new CsvSchemaLine("org.jsapar.TstPerson");
         schemaLine.addSchemaCell(new CsvSchemaCell("FirstName"));
         schemaLine.addSchemaCell(new CsvSchemaCell("LastName"));
         schema.addSchemaLine(schemaLine);

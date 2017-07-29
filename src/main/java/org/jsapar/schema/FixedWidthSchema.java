@@ -1,6 +1,7 @@
 package org.jsapar.schema;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Defines a schema for a fixed position buffer. Each cell is defined by a fixed number of
@@ -86,6 +87,11 @@ public class FixedWidthSchema extends Schema {
     @Override
     public int size() {
         return this.schemaLines.size();
+    }
+
+    @Override
+    public Stream<FixedWidthSchemaLine> stream() {
+        return this.schemaLines.stream();
     }
 
     /**

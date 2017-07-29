@@ -42,7 +42,7 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
             String sLine = lineReader.readLine();
             if(sLine == null)
                 return;
-            if(sLine.isEmpty()) // Just ignore empty lines
+            if(sLine.trim().isEmpty()) // Just ignore empty lines
                 continue;
 
             try(BufferedReader r = new BufferedReader(new StringReader(sLine))) {
@@ -65,6 +65,8 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
                             getConfig().getOnLineOverflow(), errorListener))
                         continue; // Ignore the line.
                 }
+                if(lineParser.isIgnoreRead())
+                    continue;
                 listener.lineParsedEvent(new LineParsedEvent(this, line));
             }
         }

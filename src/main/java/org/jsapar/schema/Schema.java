@@ -9,6 +9,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 /**
  * Abstract base class for all type of jsapar schemata. A schema describes how the buffer should be
@@ -137,4 +138,9 @@ public abstract class Schema implements Cloneable{
         Schema2XmlExtractor extractor = new Schema2XmlExtractor();
         extractor.extractXml(writer, this);
     }
+
+    /**
+     * @return A stream of all schema lines of this schema.
+     */
+    public abstract Stream<? extends SchemaLine> stream();
 }

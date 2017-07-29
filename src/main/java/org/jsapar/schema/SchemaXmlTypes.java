@@ -24,8 +24,8 @@ interface SchemaXmlTypes {
     String ATTRIB_LOCALE_LANGUAGE                   = "language";
     String ATTRIB_LOCALE_COUNTRY                    = "country";
     String ATTRIB_SCHEMA_LINESEPARATOR              = "lineseparator";
-    String ATTRIB_SCHEMA_CELL_IGNOREREAD            = "ignoreread";
-    String ATTRIB_SCHEMA_CELL_IGNOREWRITE           = "ignorewrite";
+    String ATTRIB_SCHEMA_IGNOREREAD = "ignoreread";
+    String ATTRIB_SCHEMA_IGNOREWRITE = "ignorewrite";
     String ATTRIB_FW_SCHEMA_CELL_ALIGNMENT          = "alignment";
     String ELEMENT_SCHEMA_LINE                      = "line";
     String ELEMENT_SCHEMA_LINE_CELL                 = "cell";

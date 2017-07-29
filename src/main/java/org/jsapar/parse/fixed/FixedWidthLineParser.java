@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * Parses fixed width text source on line level.
  */
-public class FixedWidthLineParser {
+class FixedWidthLineParser {
 
     private static final String EMPTY_STRING = "";
     private FixedWidthSchemaLine lineSchema;
@@ -24,9 +24,13 @@ public class FixedWidthLineParser {
     private ValidationHandler    validationHandler = new ValidationHandler();
     private TextParseConfig config;
 
-    public FixedWidthLineParser(FixedWidthSchemaLine lineSchema, TextParseConfig config) {
+    FixedWidthLineParser(FixedWidthSchemaLine lineSchema, TextParseConfig config) {
         this.lineSchema = lineSchema;
         this.config = config;
+    }
+
+    boolean isIgnoreRead(){
+        return lineSchema.isIgnoreRead();
     }
 
     @SuppressWarnings("UnnecessaryContinue")

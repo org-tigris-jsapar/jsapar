@@ -112,13 +112,15 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @param cell The cell to add
      * @throws IllegalStateException if cell with the same name already exist. Use method replaceCell() instead if you
      *                               want existing cells with the same name to be replaced instead.
+     * @return This line. Makes it possible to chain calls to addCell.
      */
-    public void addCell(Cell cell) {
+    public Line addCell(Cell cell) {
         Cell oldCell = cells.get(cell.getName());
         if (oldCell != null)
             throw new IllegalStateException(
                     "A cell with the name '" + cell.getName() + "' already exists. Failed to add cell.");
         this.cells.put(cell.getName(), cell);
+        return this;
     }
 
     /**

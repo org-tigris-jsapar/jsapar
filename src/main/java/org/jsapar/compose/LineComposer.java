@@ -16,12 +16,15 @@ public interface LineComposer {
      * the implementation of this interface can decide how to treat the cell.
      *
      * @param line    The line to compose output of.
-     * @throws IOException
+     * @throws IOException if an io-error occurs
      *
      */
     void compose(Line line) throws IOException;
 
 
-
+    /**
+     * @return True if lines of this type should be ignored when composing.
+     */
+    boolean ignoreWrite();
 
 }

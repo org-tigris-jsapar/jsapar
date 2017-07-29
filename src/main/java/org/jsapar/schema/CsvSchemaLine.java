@@ -3,6 +3,7 @@ package org.jsapar.schema;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Describes the schema for a delimiter separated line.
@@ -210,4 +211,8 @@ public class CsvSchemaLine extends SchemaLine {
         return super.equals(obj) && obj instanceof CsvSchemaLine;
     }
 
+    @Override
+    public Stream<CsvSchemaCell> stream() {
+        return schemaCells.values().stream();
+    }
 }

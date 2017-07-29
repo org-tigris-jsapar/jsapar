@@ -1,6 +1,8 @@
 package org.jsapar.schema;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Defines a schema for a delimited input text. Each cell is delimited by a delimiter character sequence.
@@ -12,12 +14,12 @@ public class CsvSchema extends Schema implements Cloneable{
     /**
      * The schema lines
      */
-    private java.util.ArrayList<CsvSchemaLine> schemaLines = new java.util.ArrayList<>(4);
+    private List<CsvSchemaLine> schemaLines = new ArrayList<>(4);
 
     /**
      * @return the schemaLines
      */
-    public java.util.List<CsvSchemaLine> getCsvSchemaLines() {
+    public List<CsvSchemaLine> getCsvSchemaLines() {
         return schemaLines;
     }
 
@@ -79,6 +81,11 @@ public class CsvSchema extends Schema implements Cloneable{
     @Override
     public int size() {
         return this.schemaLines.size();
+    }
+
+    @Override
+    public Stream<CsvSchemaLine> stream() {
+        return this.schemaLines.stream();
     }
 
 

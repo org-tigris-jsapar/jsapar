@@ -25,7 +25,7 @@ public interface Composer {
     void compose(Document document) throws IOException;
 
     /**
-     * Composes output based on supplied {@link Line}
+     * Composes output based on supplied {@link Line}, including line separator
      *
      * @param line The line to compose
      * @return True if the line was actually composed.

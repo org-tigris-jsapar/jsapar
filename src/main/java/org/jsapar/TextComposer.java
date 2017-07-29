@@ -1,6 +1,3 @@
-/** 
- * Copyright: Jonas Stenberg
- */
 package org.jsapar;
 
 import org.jsapar.compose.Composer;
@@ -8,7 +5,6 @@ import org.jsapar.compose.ComposerFactory;
 import org.jsapar.compose.SchemaComposer;
 import org.jsapar.compose.TextComposerFactory;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
@@ -28,22 +24,23 @@ public class TextComposer implements Composer {
     private final Schema          schema;
     private final ComposerFactory composerFactory;
     private       SchemaComposer  currentSchemaComposer;
-    private ErrorEventListener errorEventListener = new ExceptionErrorEventListener();
 
     /**
      * Creates an TextComposer with a schema.
      * 
-     * @param schema
+     * @param schema The schema to use.
+     * @param writer The writer to write to.
      */
     public TextComposer(Schema schema, Writer writer) {
         this(schema,  writer, new TextComposerFactory());
     }
 
     /**
-     * Creates an TextComposer with a schema.
+     * Creates an TextComposer with a schema allowing to add custom {@link SchemaComposer}.
      *
-     * @param schema
-     * @param writer
+     * @param schema The schema to use.
+     * @param writer The writer to write to.
+     * @param composerFactory A factory interface for creating {@link SchemaComposer} based on schema.
      */
     public TextComposer(Schema schema, Writer writer, ComposerFactory composerFactory) {
         this.schema = schema;
@@ -54,7 +51,7 @@ public class TextComposer implements Composer {
     /**
      * Writes the document to a {@link java.io.Writer} according to the schemas of this composer.
      *
-     * @param document
+     * @param document The document to compose output for.
      *
      */
     @Override
@@ -87,12 +84,12 @@ public class TextComposer implements Composer {
      * Writes the single line to a {@link java.io.Writer} according to the line type of the line.
      * The line is terminated by the line separator.
      * 
-     * @param line
+     * @param line The line to write.
      *
-     * @throws IOException
+     * @throws IOException if io-error occurs.
      * @return True if the line was written, false if there was no matching line type in the schema.
      */
-    public boolean writeLineLn(Line line) throws IOException {
+    private boolean writeLineLn(Line line) throws IOException {
         if(!writeLine(line))
             return false;
         writer.write(schema.getLineSeparator());
@@ -106,17 +103,19 @@ public class TextComposer implements Composer {
 
     @Override
     public void setErrorEventListener(ErrorEventListener errorListener) {
-        errorEventListener = errorListener;
+       // TODO: Add error handling when composing.
     }
 
     /**
      * Writes the single line to a {@link java.io.Writer} according to the line type of the supplied
      * line. Note that the line separator is not written by this method.
      * 
-     * @param line
+     * @param line The line to write
      *
-     * @throws IOException
+     * @throws IOException if an io-error occurs.
+     * @return True if line was composed, false otherwise.
      */
+    @SuppressWarnings("WeakerAccess")
     public boolean writeLine(Line line) throws IOException {
         SchemaComposer schemaComposer = makeSchemaComposer();
         return schemaComposer.composeLine(line);

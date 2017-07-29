@@ -398,6 +398,15 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         if (xmlLineType != null)
             line.setLineType(getStringValue(xmlLineType));
 
+        Node xmlIgnoreRead = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_IGNOREREAD);
+        if (xmlIgnoreRead != null)
+            line.setIgnoreRead(getBooleanValue(xmlIgnoreRead));
+
+        Node xmlIgnoreWrite = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_IGNOREWRITE);
+        if (xmlIgnoreWrite != null)
+            line.setIgnoreWrite(getBooleanValue(xmlIgnoreWrite));
+
+
     }
 
     /**
@@ -415,11 +424,11 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
                 locale = buildLocale(xmlLocale);
             cell.setLocale(locale);
 
-            Node xmlIgnoreRead = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_IGNOREREAD);
+            Node xmlIgnoreRead = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_IGNOREREAD);
             if (xmlIgnoreRead != null)
                 cell.setIgnoreRead(getBooleanValue(xmlIgnoreRead));
 
-            Node xmlIgnoreWrite = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_IGNOREWRITE);
+            Node xmlIgnoreWrite = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_IGNOREWRITE);
             if (xmlIgnoreWrite != null)
                 cell.setIgnoreWrite(getBooleanValue(xmlIgnoreWrite));
 

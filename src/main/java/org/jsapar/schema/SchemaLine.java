@@ -1,5 +1,9 @@
 package org.jsapar.schema;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * Abstract base class that describes the schema for a line.
  */
@@ -9,6 +13,9 @@ public abstract class SchemaLine implements Cloneable {
 
     private int                 occurs               = OCCURS_INFINITE;
     private String              lineType             = NOT_SET;
+
+    private boolean                       ignoreRead            = false;
+    private boolean                       ignoreWrite           = false;
 
     /**
      * Creates a SchemaLine that occurs infinite number of times.
@@ -103,12 +110,27 @@ public abstract class SchemaLine implements Cloneable {
         this.lineType = lineType;
     }
 
+    public boolean isIgnoreRead() {
+        return ignoreRead;
+    }
+
+    public void setIgnoreRead(boolean ignoreRead) {
+        this.ignoreRead = ignoreRead;
+    }
+
+    public boolean isIgnoreWrite() {
+        return ignoreWrite;
+    }
+
+    public void setIgnoreWrite(boolean ignoreWrite) {
+        this.ignoreWrite = ignoreWrite;
+    }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
+         * (non-Javadoc)
+         *
+         * @see java.lang.Object#toString()
+         */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -178,5 +200,12 @@ public abstract class SchemaLine implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError("Can never happen.", e);
         }
+    }
+
+    public abstract Stream<? extends SchemaCell> stream();
+
+
+    public List<SchemaCell> findControlCells() {
+        return this.stream().filter(SchemaCell::hasLineCondition).collect(Collectors.toList());
     }
 }

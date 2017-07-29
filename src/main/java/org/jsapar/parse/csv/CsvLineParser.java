@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * Responsible for parsing csv lines
  */
-public class CsvLineParser {
+class CsvLineParser {
 
     private static final String EMPTY_STRING = "";
     private CsvSchemaLine   lineSchema;
@@ -28,7 +28,7 @@ public class CsvLineParser {
      *
      * @param lineSchema The line schema to use.
      */
-    public CsvLineParser(CsvSchemaLine lineSchema) {
+    CsvLineParser(CsvSchemaLine lineSchema) {
         this(lineSchema, new TextParseConfig());
     }
 
@@ -38,7 +38,7 @@ public class CsvLineParser {
      * @param lineSchema The line schema to use.
      * @param config     Configuration for parsing.
      */
-    public CsvLineParser(CsvSchemaLine lineSchema, TextParseConfig config) {
+    CsvLineParser(CsvSchemaLine lineSchema, TextParseConfig config) {
         this.lineSchema = lineSchema;
         this.config = config;
     }
@@ -50,7 +50,7 @@ public class CsvLineParser {
      * @param listener      The event listener to receive events when parsing is complete.
      * @param errorListener The error event listener to which this method will send events for each error that occurs.
      * @return True if a line was parsed, false if no line could be parsed.
-     * @throws IOException
+     * @throws IOException if an io-error occur
      */
     public boolean parse(CsvLineReader lineReader, LineEventListener listener, ErrorEventListener errorListener)
             throws IOException {
@@ -69,6 +69,9 @@ public class CsvLineParser {
         }
 
         usedCount++;
+        if(lineSchema.isIgnoreRead())
+            return true;
+
         Line line = new Line(lineSchema.getLineType(),
                 (lineSchema.getSchemaCells().size() > 0) ? lineSchema.getSchemaCells().size() : 10);
         line.setLineNumber(lineReader.currentLineNumber());
@@ -109,7 +112,7 @@ public class CsvLineParser {
      * @param asCells          An array of cells in the header line to use for building the schema.
      * @return A CsvSchemaLine created from the header line.
      *
-     * @throws IOException
+     * @throws IOException if an io-error occur
      */
     private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, String[] asCells) throws IOException {
 

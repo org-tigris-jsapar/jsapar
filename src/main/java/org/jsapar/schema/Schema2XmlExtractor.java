@@ -282,9 +282,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
             throws SchemaException {
         xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_NAME, schemaCell.getName());
         if(schemaCell.isIgnoreRead())
-            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_IGNOREREAD, String.valueOf(schemaCell.isIgnoreRead()));
+            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_IGNOREREAD, String.valueOf(schemaCell.isIgnoreRead()));
         if(schemaCell.isIgnoreWrite())
-            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_IGNOREWRITE, String.valueOf(schemaCell.isIgnoreWrite()));
+            xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_IGNOREWRITE, String.valueOf(schemaCell.isIgnoreWrite()));
         xmlSchemaCell.setAttribute(ATTRIB_SCHEMA_CELL_MANDATORY, String.valueOf(schemaCell.isMandatory()));
 
         if(schemaCell.isDefaultValue())
