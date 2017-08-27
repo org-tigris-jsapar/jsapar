@@ -1,12 +1,12 @@
 package org.jsapar.schema;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Abstract base class that describes the schema for a line.
+ * Abstract base class that describes the schema for a line. For instance if you want to ignore a header line you
+ * can add a SchemaLine instance to your schema with occurs==1 and ignoreRead==true;
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class SchemaLine implements Cloneable {
     private static final int    OCCURS_INFINITE      = Integer.MAX_VALUE;
     private static final String NOT_SET              = "";
@@ -14,7 +14,15 @@ public abstract class SchemaLine implements Cloneable {
     private int                 occurs               = OCCURS_INFINITE;
     private String              lineType             = NOT_SET;
 
+    /**
+     * If set to true, this type of line will be read from the input but then ignored, thus it will not produce any line
+     * parsed event.
+     */
     private boolean                       ignoreRead            = false;
+
+    /**
+     * If set to true, this type of line will not be written to the output.
+     */
     private boolean                       ignoreWrite           = false;
 
     /**
@@ -204,8 +212,4 @@ public abstract class SchemaLine implements Cloneable {
 
     public abstract Stream<? extends SchemaCell> stream();
 
-
-    public List<SchemaCell> findControlCells() {
-        return this.stream().filter(SchemaCell::hasLineCondition).collect(Collectors.toList());
-    }
 }

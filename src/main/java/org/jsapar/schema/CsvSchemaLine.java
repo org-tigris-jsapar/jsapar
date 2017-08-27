@@ -14,6 +14,9 @@ public class CsvSchemaLine extends SchemaLine {
     private Map<String, CsvSchemaCell> schemaCells       = new LinkedHashMap<>();
     private boolean                    firstLineAsSchema = false;
 
+    /**
+     * The character sequence that separates each cell. Default is the ';' (semicolon) character.
+     */
     private String cellSeparator = ";";
 
     /**
@@ -31,7 +34,7 @@ public class CsvSchemaLine extends SchemaLine {
     /**
      * Creates an empty schema line which occurs nOccurs number of times.
      *
-     * @param nOccurs The number of times this type of line occurs in the input/output.
+     * @param nOccurs The number of times this type of line occurs in the input.
      */
     public CsvSchemaLine(int nOccurs) {
         super(nOccurs);
@@ -44,6 +47,15 @@ public class CsvSchemaLine extends SchemaLine {
      */
     public CsvSchemaLine(String lineType) {
         super(lineType);
+    }
+
+    /**
+     * Creates a CsvSchemaLine with the supplied line type and occurs supplied number of times.
+     * @param lineType The type of the line
+     * @param nOccurs The number of times this type of line occurs in the input.
+     */
+    public CsvSchemaLine(String lineType, int nOccurs) {
+        super(lineType, nOccurs);
     }
 
     /**
@@ -62,10 +74,6 @@ public class CsvSchemaLine extends SchemaLine {
         this.schemaCells.put(cell.getName(), cell);
     }
 
-    /**
-     *
-     * @return the character sequence that separates each cell.
-     */
     public String getCellSeparator() {
         return cellSeparator;
     }
@@ -137,7 +145,8 @@ public class CsvSchemaLine extends SchemaLine {
 
     /**
      * Set this to true when the first line of the input text contains the names and order of the cells in the following
-     * lines, i.e. the first line is a header line. In that case this schema line instance will only be used to get
+     * lines, i.e. the first line is a header line that works as a schema for the rest of the file. In that case this
+     * schema line instance will only be used to get
      * formatting instructions and default values, it will not denote the order of the cells. The order is given by the
      * first line of the input instead.
      *

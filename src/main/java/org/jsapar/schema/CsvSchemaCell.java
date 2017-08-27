@@ -7,6 +7,7 @@ import java.util.Locale;
 /**
  * Describes the schema for a specific csv cell.
  */
+@SuppressWarnings("WeakerAccess")
 public class CsvSchemaCell extends SchemaCell {
 
     /**

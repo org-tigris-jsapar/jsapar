@@ -271,10 +271,11 @@ public abstract class SchemaCell implements Cloneable {
      * @throws SchemaException If validation fails.
      */
     private void validateDefaultValueRange() throws SchemaException {
-        if (this.minValue != null && defaultCell.compareValueTo(this.minValue) < 0)
+        if (this.minValue != null && defaultCell.compareValueTo(this.minValue) < 0) {
             throw new SchemaException("The value is below minimum range limit.");
-        else if (this.maxValue != null && defaultCell.compareValueTo(this.maxValue) > 0)
+        } else if (this.maxValue != null && defaultCell.compareValueTo(this.maxValue) > 0) {
             throw new SchemaException("The value is above maximum range limit.");
+        }
 
     }
 
