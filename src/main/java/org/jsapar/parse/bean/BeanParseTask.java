@@ -14,6 +14,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
@@ -102,6 +106,22 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
                     } else if (returnType.isAssignableFrom(Character.TYPE)
                             || returnType.isAssignableFrom(Character.class)) {
                         line.addCell(new StringCell(sAttributeName, (Character) f.invoke(object)));
+                    } else if (returnType.isAssignableFrom(LocalDate.class)) {
+                        LocalDate value = (LocalDate) f.invoke(object);
+                        if (value != null)
+                            line.addCell(new LocalDateCell(sAttributeName, value));
+                    } else if (returnType.isAssignableFrom(LocalDateTime.class)) {
+                        LocalDateTime value = (LocalDateTime) f.invoke(object);
+                        if (value != null)
+                            line.addCell(new LocalDateTimeCell(sAttributeName, value));
+                    } else if (returnType.isAssignableFrom(LocalTime.class)) {
+                        LocalTime value = (LocalTime) f.invoke(object);
+                        if (value != null)
+                            line.addCell(new LocalTimeCell(sAttributeName, value));
+                    } else if (returnType.isAssignableFrom(ZonedDateTime.class)) {
+                        ZonedDateTime value = (ZonedDateTime) f.invoke(object);
+                        if (value != null)
+                            line.addCell(new ZonedDateTimeCell(sAttributeName, value));
                     } else if (returnType.isAssignableFrom(Date.class)) {
                         Date value = (Date) f.invoke(object);
                         if (value != null)
