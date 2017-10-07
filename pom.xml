@@ -6,7 +6,7 @@
 	<packaging>jar</packaging>
 	<name>jsapar</name>
 	<url>http://jsapar.tigris.org</url>
-	<description>The JSaPar package is a java library that provides a parseTask for flat and CSV (Comma Separated Values) files.</description>
+	<description>The JSaPar package is a java library that provides a parser for flat and CSV (Comma Separated Values) files.</description>
   
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -17,6 +17,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
+		<project.scm.id>github.com</project.scm.id>
 	</properties>
 
 	<developers>
@@ -195,15 +196,16 @@
 		  </plugins>
 		</pluginManagement>
 	</build>
-  
-  
-	<scm>
-      <url>http://jsapar.tigris.org/svn/jsapar</url>
-      <developerConnection>scm:svn:http://jsapar.tigris.org/svn/jsapar/branches/jsapar-2.0</developerConnection>
-	  <connection>scm:svn:http://jsapar.tigris.org/svn/jsapar</connection>
-	</scm>
-	<organization>
-	  <url>http://jsapar.tigris.org/</url>
-	  <name>JSaPar at Tigris.org</name>
-	</organization>
+
+
+  <scm>
+    <url>http://jsapar.tigris.org/svn/jsapar</url>
+    <developerConnection>scm:git:https://github.com/org-tigris-jsapar/jsapar.git</developerConnection>
+    <connection>scm:git:https://github.com/org-tigris-jsapar/jsapar.git</connection>
+    <tag>HEAD</tag>
+  </scm>
+  <organization>
+    <url>http://jsapar.tigris.org/</url>
+    <name>JSaPar at Tigris.org</name>
+  </organization>
 </project>
