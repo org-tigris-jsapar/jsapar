@@ -36,14 +36,14 @@ Use the class org.jsapar.input.JavaBuilder in order to convert java objects into
 It is possilbe to build a org.jsapar.Document by using a xml document according to the XMLDocumentFormat.xsd (http://jsapar.tigris.org/XMLDocumentFormat/1.0). 
 Use the class org.jsapar.input.XmlDocumentParser in order to convert a xml document into a org.jsapar.Document.  
 <h2>Examples</h2>
-The files for the examples below are provided in the <tt>samples</tt> folder of the project. The JUnit test <tt>org.jsapar.JSaParExamplesTest.java</tt> 
+The files for the examples below are provided in the <code>samples</code> folder of the project. The JUnit test <code>org.jsapar.JSaParExamplesTest.java</code>
 contains a more comprehensive set of examples of how to use the package. 
-<p>
-Example of reading <b>CSV file</b> into a Document object according to an xml-schema:
+<h3>Example of reading <b>CSV file</b> into a Document object according to an xml-schema:</h3>
 <div class="language-java highlighter-rouge">
     <pre class="highlight">
         <code>
-try(Reader schemaReader = new FileReader("samples/01_CsvSchema.xml");Reader fileReader = new FileReader("samples/01_Names.csv")){
+try(Reader schemaReader = new FileReader("samples/01_CsvSchema.xml");
+    Reader fileReader = new FileReader("samples/01_Names.csv")){
    Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
    Parser parser = new Parser(xmlBuilder.build(schemaReader));
    Document document = parser.build(fileReader);
@@ -51,26 +51,26 @@ try(Reader schemaReader = new FileReader("samples/01_CsvSchema.xml");Reader file
         </code>
     </pre>
 </div>
-<p>
-Example of converting a <b>Fixed width file</b> into a <b>CSV file</b> according to two xml-schemas:
+<h3>Example of converting a <b>Fixed width file</b> into a <b>CSV file</b> according to two xml-schemas:</h3>
 <div class="language-java highlighter-rouge">
     <pre class="highlight">
         <code>
-Reader inSchemaReader = new FileReader("samples/01_CsvSchema.xml");
-Reader outSchemaReader = new FileReader("samples/02_FixedWidthSchema.xml");
-Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-Reader inReader = new FileReader("samples/01_Names.csv");
-File outFile = new File("samples/02_Names_out.txt");
-Writer outWriter = new FileWriter(outFile);
-Converter converter = new Converter(xmlBuilder.build(inSchemaReader), xmlBuilder.build(outSchemaReader));
-converter.convert(inReader, outWriter);
-inReader.close();
-outWriter.close();
+try(Reader inSchemaReader = new FileReader("samples/01_CsvSchema.xml");
+    Reader outSchemaReader = new FileReader("samples/02_FixedWidthSchema.xml")) {
+    Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
+    File outFile = new File("samples/02_Names_out.txt");
+    try(Reader inReader = new FileReader("samples/01_Names.csv");
+        Writer outWriter = new FileWriter(outFile)) {
+        Converter converter = new Converter(xmlBuilder.build(inSchemaReader),
+                                            xmlBuilder.build(outSchemaReader));
+        converter.convert(inReader, outWriter);
+    }
+    Assert.assertTrue(outFile.isFile());
+}
         </code>
     </pre>
 </div>
-<p>
-Example of converting a <b>CSV file</b> into a list of <b>Java objects</b> according to an xml-schema:
+<h3>Example of converting a <b>CSV file</b> into a list of <b>Java objects</b> according to an xml-schema:</h3>
 <div class="language-java highlighter-rouge">
     <pre class="highlight">
         <code>
@@ -80,12 +80,10 @@ Reader fileReader = new FileReader("samples/07_Names.csv");
 Parser parser = new Parser(xmlBuilder.build(schemaReader));
 List&lt;CellParseError&gt; parseErrors = new LinkedList&lt;&gt;()
 List&lt;TestPerson&gt; people = parser.buildJava(fileReader, parseErrors);
-fileReader.close();
-        </code>
+fileReader.close();</code>
     </pre>
 </div>
 If you want to run this example, you will need the class org.jsapar.TstPerson within your classpath. 
 The class is not included in the jar file or in the binary package but it can be found in the source package. 
 As an alternative you can create your own TstPerson class and modify the schema 07_CsvSchemaToJava.xml to use that class instead. 
 The class should contain a default constructor plus getters and setters for all the attributes used in the schema. 
-</p>

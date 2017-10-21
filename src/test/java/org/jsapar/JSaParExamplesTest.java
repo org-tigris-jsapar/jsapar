@@ -169,18 +169,19 @@ public class JSaParExamplesTest {
 
     @Test
     public final void testConvert01_02() throws IOException, JSaParException {
-        Reader inSchemaReader = new FileReader("samples/01_CsvSchema.xml");
-        Reader outSchemaReader = new FileReader("samples/02_FixedWidthSchema.xml");
-        Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-        Reader inReader = new FileReader("samples/01_Names.csv");
-        File outFile = new File("samples/02_Names_out.txt");
-        Writer outWriter = new FileWriter(outFile);
-        Converter converter = new Converter(xmlBuilder.build(inSchemaReader), xmlBuilder.build(outSchemaReader));
-        converter.convert(inReader, outWriter);
-        inReader.close();
-        outWriter.close();
+        try(Reader inSchemaReader = new FileReader("samples/01_CsvSchema.xml");
+            Reader outSchemaReader = new FileReader("samples/02_FixedWidthSchema.xml")) {
+            Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
+            File outFile = new File("samples/02_Names_out.txt");
+            try(Reader inReader = new FileReader("samples/01_Names.csv");
+                Writer outWriter = new FileWriter(outFile)) {
+                Converter converter = new Converter(xmlBuilder.build(inSchemaReader),
+                                                    xmlBuilder.build(outSchemaReader));
+                converter.convert(inReader, outWriter);
+            }
+            Assert.assertTrue(outFile.isFile());
+        }
 
-        Assert.assertTrue(outFile.isFile());
     }
 
     @SuppressWarnings("unchecked")
