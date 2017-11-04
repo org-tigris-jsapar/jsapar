@@ -39,7 +39,7 @@ public interface CellFactory {
     Format makeFormat(Locale locale);
 
     /**
-     * Create a format object for the current cell type given the locale and a specified pattern.
+     * Create a {@link Format} instance for the current cell type given the locale and a specified pattern.
      * @param locale The locale to use for the format object.
      * @param pattern A pattern to use for the format object. If null or empty, default format will be returned.
      * @return A format object for the current cell type.

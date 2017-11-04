@@ -27,7 +27,7 @@ public class CsvLineComposerTest {
         schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
         schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
 
-        Line line = new Line();
+        Line line = new Line("");
         line.addCell(new StringCell("First Name", "Jonas"));
         line.addCell(new StringCell("Last Name", "Stenberg"));
         StringWriter writer = new StringWriter();
@@ -49,7 +49,7 @@ public class CsvLineComposerTest {
         schemaLine.addSchemaCell(firstNameSchema);
         schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
 
-        Line line = new Line();
+        Line line = new Line("");
         line.addCell(new StringCell("First Name", "Jonas"));
         line.addCell(new StringCell("Last Name", "Stenberg"));
         StringWriter writer = new StringWriter();
@@ -69,7 +69,7 @@ public class CsvLineComposerTest {
         schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
         schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
 
-        Line line = new Line();
+        Line line = new Line("");
         line.addCell(new StringCell("First Name", "Jonas"));
         line.addCell(new StringCell("Last Name", "Stenberg"));
         StringWriter writer = new StringWriter();
@@ -90,7 +90,7 @@ public class CsvLineComposerTest {
         schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
         schemaLine.addSchemaCell(new CsvSchemaCell("Shoe size"));
 
-        Line line = new Line();
+        Line line = new Line("");
         line.addCell(new StringCell("First Name", "Jonas"));
         line.addCell(new StringCell("Last Name", "Stenberg"));
         StringWriter writer = new StringWriter();
@@ -112,7 +112,7 @@ public class CsvLineComposerTest {
         CsvSchemaCell shoeSchema = new CsvSchemaCell("Shoe size");
         schemaLine.addSchemaCell(shoeSchema);
 
-        Line line = new Line();
+        Line line = new Line("");
         line.addCell(new StringCell("First Name", "Jonas"));
         line.addCell(new StringCell("Last Name", "Stenberg"));
         line.addCell(shoeSchema.makeEmptyCell());
@@ -132,7 +132,7 @@ public class CsvLineComposerTest {
         schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
         schemaLine.setCellSeparator(";");
 
-        Line line = new Line();
+        Line line = new Line("");
         line.addCell(new StringCell("Last Name", "Stenberg"));
         line.addCell(new StringCell("First Name", "Jonas"));
         StringWriter writer = new StringWriter();
@@ -154,7 +154,7 @@ public class CsvLineComposerTest {
         lastNameSchema.setDefaultValue("Svensson");
         schemaLine.addSchemaCell(lastNameSchema);
 
-        Line line = new Line();
+        Line line = new Line("");
         line.addCell(new StringCell("First Name", "Jonas"));
         StringWriter writer = new StringWriter();
 

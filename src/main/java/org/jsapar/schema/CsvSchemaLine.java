@@ -52,7 +52,7 @@ public class CsvSchemaLine extends SchemaLine {
     /**
      * Creates a CsvSchemaLine with the supplied line type and occurs supplied number of times.
      * @param lineType The type of the line
-     * @param nOccurs The number of times this type of line occurs in the input.
+     * @param nOccurs The number of times this type of line occurs in the input/output.
      */
     public CsvSchemaLine(String lineType, int nOccurs) {
         super(lineType, nOccurs);

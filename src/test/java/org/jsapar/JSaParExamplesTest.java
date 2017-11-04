@@ -9,6 +9,7 @@ import org.jsapar.model.StringCell;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.parse.xml.XmlParser;
+import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.junit.Assert;
@@ -39,29 +40,29 @@ public class JSaParExamplesTest {
     @Test
     public final void testExampleCsv01()
             throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
-        Reader schemaReader = new FileReader("exsamples/01_CsvSchema.xml");
-        Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-        Reader fileReader = new FileReader("exsamples/01_Names.csv");
-        TextParser parser = new TextParser(xmlBuilder.build(schemaReader));
-        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-        parser.parse(fileReader, listener);
-        Document document = listener.getDocument();
-        fileReader.close();
+        try (Reader schemaReader = new FileReader("exsamples/01_CsvSchema.xml");
+             Reader fileReader = new FileReader("exsamples/01_Names.csv")) {
+            Schema schema = Schema.fromXml(schemaReader);
+            TextParser parser = new TextParser(schema);
+            DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
+            parser.parse(fileReader, listener);
+            Document document = listener.getDocument();
 
-        assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name").orElse("fail"));
-        assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name").orElse("fail"));
-        assertEquals("true", LineUtils.getStringCellValue(document.getLine(0), "Have dog").orElse("fail"));
-        assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name").orElse("fail"));
-        assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name").orElse("fail"));
-        assertEquals("false", LineUtils.getStringCellValue(document.getLine(1), "Have dog").orElse("fail"));
-        assertEquals(Boolean.FALSE, LineUtils.getBooleanCellValue(document.getLine(1),"Have dog"));
+            assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name").orElse("fail"));
+            assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name").orElse("fail"));
+            assertEquals("true", LineUtils.getStringCellValue(document.getLine(0), "Have dog").orElse("fail"));
+            assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name").orElse("fail"));
+            assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name").orElse("fail"));
+            assertEquals("false", LineUtils.getStringCellValue(document.getLine(1), "Have dog").orElse("fail"));
+            assertEquals(Boolean.FALSE, LineUtils.getBooleanCellValue(document.getLine(1),"Have dog"));
 
-        assertEquals("Alfred", LineUtils.getStringCellValue(document.getLine(2), "First name").orElse("fail"));
-        assertEquals("Nilsson", LineUtils.getStringCellValue(document.getLine(2), "Last name").orElse("fail"));
-        assertEquals("true", LineUtils.getStringCellValue(document.getLine(2), "Have dog").orElse("fail"));
+            assertEquals("Alfred", LineUtils.getStringCellValue(document.getLine(2), "First name").orElse("fail"));
+            assertEquals("Nilsson", LineUtils.getStringCellValue(document.getLine(2), "Last name").orElse("fail"));
+            assertEquals("true", LineUtils.getStringCellValue(document.getLine(2), "Have dog").orElse("fail"));
 
-        assertEquals("Person", document.getLine(0).getLineType());
-        assertEquals("Person", document.getLine(1).getLineType());
+            assertEquals("Person", document.getLine(0).getLineType());
+            assertEquals("Person", document.getLine(1).getLineType());
+        }
     }
 
     @Test

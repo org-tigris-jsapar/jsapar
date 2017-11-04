@@ -31,12 +31,12 @@ public class CsvComposerTest {
 
         Document doc = new Document();
 
-        Line line1 = new Line();
+        Line line1 = new Line("");
         line1.addCell(new StringCell("FirstName","Jonas"));
         line1.addCell(new StringCell("LastName","Stenberg"));
         doc.addLine(line1);
 
-        Line line2 = new Line();
+        Line line2 = new Line("");
         line2.addCell(new StringCell("FirstName","Nils"));
         line2.addCell(new StringCell("LastName", "Nilsson"));
         doc.addLine(line2);

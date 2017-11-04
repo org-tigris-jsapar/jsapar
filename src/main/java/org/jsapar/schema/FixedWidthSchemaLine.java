@@ -46,6 +46,15 @@ public class FixedWidthSchemaLine extends SchemaLine {
 
 
     /**
+     * Creates a fixed width schema line with the supplied line type and specified to occur supplied number of times.
+     * @param lineType The line type of this schema line.
+     * @param nOccurs The number of times it should occur.
+     */
+    public FixedWidthSchemaLine(String lineType, int nOccurs) {
+        super(lineType, nOccurs);
+    }
+
+    /**
      * @return the cells
      */
     public java.util.List<FixedWidthSchemaCell> getSchemaCells() {

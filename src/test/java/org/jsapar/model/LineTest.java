@@ -20,14 +20,14 @@ public class LineTest {
 
     @Test
     public void testLine() {
-        Line line = new Line();
+        Line line = new Line("");
         assertEquals(0, line.size());
         assertEquals("", line.getLineType());
     }
 
     @Test
     public void testLineInt() {
-        Line line = new Line(3);
+        Line line = new Line("", 3);
         assertEquals(0, line.size());
         assertEquals("", line.getLineType());
     }
@@ -106,13 +106,6 @@ public class LineTest {
     public void testGetLineType() {
         Line line = new Line("TestLine");
         assertEquals("TestLine", line.getLineType());
-    }
-
-    @Test
-    public void testSetLineType() {
-        Line line = new Line("TestLine");
-        line.setLineType("Rocking");
-        assertEquals("Rocking", line.getLineType());
     }
 
     /**

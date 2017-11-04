@@ -22,7 +22,7 @@ public class FixedWidthLineComposerTest {
 
     @Test
     public void testOutput() throws IOException, JSaParException, ParseException, SchemaException {
-        Line line = new Line();
+        Line line = new Line("");
         line.addCell(new StringCell("First name","Jonas"));
         line.addCell(new StringCell("Last name","Stenberg"));
         line.addCell(new StringCell("Street address", "Spiselvagen 19"));
@@ -48,7 +48,7 @@ public class FixedWidthLineComposerTest {
 
     @Test
     public void testOutput_minLength() throws IOException, JSaParException, ParseException, SchemaException {
-        Line line = new Line();
+        Line line = new Line("");
         line.addCell(new StringCell("First name","Jonas"));
         line.addCell(new StringCell("Last name","Stenberg"));
         line.addCell(new StringCell("Street address", "Hemvagen 19"));
@@ -75,7 +75,7 @@ public class FixedWidthLineComposerTest {
 
     @Test
     public void testOutput_ignorewrite() throws IOException, JSaParException {
-        Line line = new Line();
+        Line line = new Line("");
         line.addCell(new StringCell("First name","Jonas"));
         line.addCell(new StringCell("Last name","Stenberg"));
         line.addCell(new StringCell("Street address", "Spiselvägen 19"));

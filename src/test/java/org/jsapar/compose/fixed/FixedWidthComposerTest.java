@@ -28,11 +28,11 @@ public class FixedWidthComposerTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
         schema.addSchemaLine(schemaLine);
 
-        Line line1 = new Line();
+        Line line1 = new Line("");
         line1.addCell(new StringCell("First name","Jonas"));
         line1.addCell(new StringCell("Last name","Stenberg"));
 
-        Line line2 = new Line();
+        Line line2 = new Line("");
         line2.addCell(new StringCell("First name","Frida"));
         line2.addCell(new StringCell("Last name","Bergsten"));
 

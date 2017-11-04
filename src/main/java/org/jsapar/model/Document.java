@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -13,13 +14,15 @@ import java.util.stream.Collectors;
  * threads access the same instance, external synchronization is required.
  * 
  */
+@SuppressWarnings({"WeakerAccess", "UnusedReturnValue"})
 public class Document implements Serializable, Iterable<Line> {
 
     /**
-     * 
+     *
      */
-    private static final long serialVersionUID = 6098681751483565285L;
-    ArrayList<Line> lines = null;
+    private static final long serialVersionUID = 6098681751483565286L;
+
+    private List<Line> lines;
 
     /**
      * Creates an empty document.
@@ -29,27 +32,20 @@ public class Document implements Serializable, Iterable<Line> {
     }
 
     /**
-     * Creates a document with an initial capacity to contain nInitialCapacity
+     * Creates a document with an initial capacity to contain initialCapacity
      * lines.
      * 
-     * @param nInitialCapacity Initial capacity.
+     * @param initialCapacity Initial capacity.
      */
-    public Document(int nInitialCapacity) {
-        this.lines = new ArrayList<>(nInitialCapacity);
+    public Document(int initialCapacity) {
+        this.lines = new ArrayList<>(initialCapacity);
     }
 
     /**
-     * For better performance while iterating multiple lines, it is better to
-     * call the {@link #iterator()} method.
-     * 
-     * @return A shallow clone of the internal collection that contains all the lines of
-     *         this documents. Altering the returned collection will not alter
-     *         the original collection of the Document but altering one of the lines will alter the original line.
-     * @see #iterator()
+     * @return The lines of this document.
      */
-    @SuppressWarnings("unchecked")
     public List<Line> getLines() {
-        return (List<Line>) lines.clone();
+        return lines;
     }
 
     /**
@@ -123,7 +119,7 @@ public class Document implements Serializable, Iterable<Line> {
      * @return True if there is at least one line of the supplied line type, false otherwise.
      */
     public boolean containsLineType(String lineType) {
-        return findFirstLineOfType(lineType) != null;
+        return findFirstLineOfType(lineType).isPresent();
     }
 
     /**
@@ -132,15 +128,12 @@ public class Document implements Serializable, Iterable<Line> {
      * 
      * @param lineType
      *            The line type to find first line of.
-     * @return The first line in the document that has the supplied line type.
+     * @return An optional line containing the first line in the document that has the supplied line type or empty if no
+     * such line exist.
      */
-    public Line findFirstLineOfType(String lineType) {
+    public Optional<Line> findFirstLineOfType(String lineType) {
         assert lineType != null;
-        for (Line line : lines) {
-            if (lineType.equals(line.getLineType()))
-                return line;
-        }
-        return null;
+        return lines.stream().filter(l->lineType.equals(l.getLineType())).findFirst();
     }
     
     /**

@@ -22,11 +22,7 @@ import java.util.function.BiFunction;
  */
 public class Line implements Serializable, Cloneable, Iterable<Cell> {
 
-    /**
-     *
-     */
-    private static final long   serialVersionUID = 6026541900371948402L;
-    public static final  String EMPTY            = "";
+    private static final long   serialVersionUID = 6026541900371948403L;
 
     private Map<String, Cell> cells = new LinkedHashMap<>();
     private Map<String, CellParseException> cellErrors = new LinkedHashMap<>();
@@ -34,7 +30,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
     /**
      * Line type.
      */
-    private String lineType = EMPTY;
+    private final String lineType;
 
     /**
      * Assigned when parsing to the line number of the input source. Used primarily for logging and tracking. Has no
@@ -43,29 +39,12 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
     private long lineNumber = 0L;
 
     /**
-     * Creates an empty line without any cells.
-     */
-    public Line() {
-        cells = new LinkedHashMap<>();
-    }
-
-    /**
-     * Creates an empty line without any cells but with an initial capacity.
-     *
-     * @param initialCapacity The initial capacity. Used only to reserve space. If capacity is exceeded, the
-     *                        capacity grows automatically.
-     */
-    public Line(int initialCapacity) {
-        cells = new LinkedHashMap<>(initialCapacity);
-    }
-
-    /**
      * Creates an empty line of a specified type, without any cells but with an initial capacity.
      *
      * @param sLineType The type of the line.
      */
     public Line(String sLineType) {
-        this();
+        cells = new LinkedHashMap<>();
         lineType = sLineType;
     }
 
@@ -77,8 +56,8 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      *                        capacity grows automatically.
      */
     public Line(String sLineType, int initialCapacity) {
-        this(initialCapacity);
         lineType = sLineType;
+        cells = new LinkedHashMap<>(initialCapacity);
     }
 
     /**
@@ -113,6 +92,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @throws IllegalStateException if cell with the same name already exist. Use method replaceCell() instead if you
      *                               want existing cells with the same name to be replaced instead.
      * @return This line. Makes it possible to chain calls to addCell.
+     * @see #putCell(Cell)
      */
     public Line addCell(Cell cell) {
         Cell oldCell = cells.get(cell.getName());
@@ -198,18 +178,6 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
         return lineType;
     }
 
-    /**
-     * Sets the type of this line. The line type attribute is primarily used when parsing lines of
-     * different types, distinguished by a control cell.
-     *
-     * @param lineType the lineType to set. Can not be null. Use empty string if there is no better
-     *                 value.
-     */
-    public void setLineType(String lineType) {
-        if (lineType == null)
-            throw new IllegalArgumentException("Line.lineType can not be set to null value.");
-        this.lineType = lineType;
-    }
 
     @Override
     public String toString() {

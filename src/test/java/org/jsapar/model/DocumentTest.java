@@ -28,11 +28,11 @@ public class DocumentTest {
 
 
     @Test
-    public void testGetLines() {
+    public void testAddAndGetLines() {
         Document d = new Document();
         assertNotNull(d.getLines());
         assertEquals(0, d.size());
-        Line line = new Line();
+        Line line = new Line("");
         d.addLine(line);
         assertNotNull(d.getLines());
         assertEquals(1, d.size());
@@ -42,8 +42,8 @@ public class DocumentTest {
     @Test
     public void testGetLine() {
         Document d = new Document();
-        Line l1 = new Line();
-        Line l2 = new Line();
+        Line l1 = new Line("L1");
+        Line l2 = new Line("L2");
         d.addLine(l1);
         d.addLine(l2);
         assertNotNull(d.getLines());
@@ -55,25 +55,13 @@ public class DocumentTest {
     @Test
     public void testRemoveFirstLine() {
         Document d = new Document();
-        Line l1 = new Line();
-        Line l2 = new Line();
+        Line l1 = new Line("L1");
+        Line l2 = new Line("L2");
         d.addLine(l1);
         d.addLine(l2);
         d.removeFirstLine();
         assertEquals(1, d.size());
         assertSame(l2, d.getLine(0));
-    }
-
-    @Test
-    public void testAddLine() {
-        Document d = new Document();
-        assertNotNull(d.getLines());
-        assertEquals(0, d.size());
-        Line line = new Line();
-        d.addLine(line);
-        assertNotNull(d.getLines());
-        assertEquals(1, d.size());
-        assertSame(line, d.getLines().iterator().next());
     }
 
     @Test
@@ -98,7 +86,7 @@ public class DocumentTest {
     public void testIsEmpty() {
         Document d = new Document();
         assertTrue(d.isEmpty());
-        Line line = new Line();
+        Line line = new Line("");
         d.addLine(line);
         assertFalse(d.isEmpty());
     }
@@ -121,8 +109,8 @@ public class DocumentTest {
         d.addLine(l2);
         Line l3 = new Line("some other type");
         d.addLine(l3);
-        assertSame(l1, d.findFirstLineOfType("type"));
-        assertSame(l3, d.findFirstLineOfType("some other type"));
+        assertSame(l1, d.findFirstLineOfType("type").orElse(null));
+        assertSame(l3, d.findFirstLineOfType("some other type").orElse(null));
     }
 
     @Test
@@ -144,7 +132,7 @@ public class DocumentTest {
     public void testSize() {
         Document d = new Document();
         assertEquals(0, d.size());
-        Line line = new Line();
+        Line line = new Line("");
         d.addLine(line);
         assertEquals(1, d.size());
     }

@@ -54,7 +54,7 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
 
     @Override
     public void compose(Document document) throws IOException {
-        for (Line line : document.getLines()) {
+        for (Line line : document) {
             composeLine(line);
         }
 

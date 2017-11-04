@@ -73,7 +73,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
     }
 
     private CellType makeCellType(String sXmlCellType) {
-        return Enum.valueOf(CellType.class, sXmlCellType.toUpperCase());
+        return sXmlCellType==null ? null : Enum.valueOf(CellType.class, sXmlCellType.toUpperCase());
     }
 
     private class JSaParSAXHandler extends org.xml.sax.helpers.DefaultHandler {
@@ -126,17 +126,13 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
             switch (localName) {
             case "cell":
                 cellStarted = true;
-                for (int i = 0; i < attributes.getLength(); i++) {
-                    if (attributes.getLocalName(i).equals("name"))
-                        this.currentCellName = attributes.getValue(i);
-                    else if (attributes.getLocalName(i).equals("type"))
-                        this.currentCellType = makeCellType(attributes.getValue(i));
-                }
+                this.currentCellName = attributes.getValue("name");
+                this.currentCellType = makeCellType(attributes.getValue("type"));
                 if (this.currentCellType == null)
                     this.currentCellType = CellType.STRING;
                 break;
             case "line":
-                this.currentLine = new Line();
+                this.currentLine = new Line(attributes.getValue("linetype"));
                 this.currentLine.setLineNumber(currentLineNumber);
                 this.currentLineNumber++;
                 break;
