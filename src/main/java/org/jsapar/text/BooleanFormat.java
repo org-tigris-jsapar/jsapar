@@ -3,6 +3,9 @@ package org.jsapar.text;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Format class that can be used to parse or format boolean values based on a true and a false value. For instance, you
@@ -22,6 +25,8 @@ public class BooleanFormat extends Format {
 
     private String trueValue;
     private String falseValue;
+    private String[] optionalTrue;
+    private String[] optionalFalse;
 
     /**
      *
@@ -30,10 +35,14 @@ public class BooleanFormat extends Format {
 
     /**
      * Creates a default instance where the text "true" is the true value and "false" is the false value.
+     * <ul>
+     * <li>Optional true values while parsing are: "on", "1", "yes", "y"</li>
+     * <li>Optional false values while parsing are: "off", "0", "no", "n"</li>
+     * </ul>
      */
     @SuppressWarnings("WeakerAccess")
     public BooleanFormat() {
-        this("true", "false");
+        this(new String[]{"true", "on", "1", "yes", "y"}, new String[]{"false", "off", "0", "no", "n"});
     }
 
     /**
@@ -45,6 +54,25 @@ public class BooleanFormat extends Format {
     public BooleanFormat(String trueValue, String falseValue) {
         this.trueValue = trueValue;
         this.falseValue = falseValue;
+        this.optionalTrue = new String[0];
+        this.optionalFalse = new String[0];
+        if (trueValue.equals(falseValue))
+            throw new IllegalArgumentException("true and false values cannot be the same");
+    }
+
+    /**
+     * Creates a formatter for boolean values.
+     *
+     * @param trueValues  An array of all of the strings that represents the true value. The first item in the array is used when formatting.
+     * @param falseValues An array of all of the strings that represents the false value. The first item in the array is used when formatting.
+     */
+    public BooleanFormat(String[] trueValues, String[] falseValues) {
+        assert trueValues.length > 0: "trueValues needs to contain at least one value";
+        assert falseValues.length > 0: "falseValues needs to contain at least one value";
+        this.trueValue = trueValues[0];
+        this.falseValue = falseValues[0];
+        this.optionalTrue = Arrays.copyOfRange(trueValues, 1, trueValues.length);
+        this.optionalFalse = Arrays.copyOfRange(falseValues, 1, falseValues.length);
         if (trueValue.equals(falseValue))
             throw new IllegalArgumentException("true and false values cannot be the same");
     }
@@ -94,8 +122,20 @@ public class BooleanFormat extends Format {
             pos.setIndex(pos.getIndex() + falseValue.length());
             return Boolean.FALSE;
         }
-        pos.setErrorIndex(pos.getIndex());
-        return null;
+        return matchValue(Arrays.stream(optionalTrue), Boolean.TRUE, toParse, pos, ignoreCase)
+                .orElse(matchValue(Arrays.stream(optionalFalse), Boolean.FALSE, toParse, pos, ignoreCase)
+                        .orElseGet(() -> {
+                            pos.setErrorIndex(pos.getIndex());
+                            return null;
+                        }));
+    }
+
+    private Optional<Boolean> matchValue(Stream<String> values, Boolean result, String toParse, ParsePosition pos, boolean ignoreCase) {
+        return values
+                .filter(v->toParse.regionMatches(ignoreCase, pos.getIndex(), v, 0, v.length()))
+                .peek(v->pos.setIndex(pos.getIndex() + v.length()))
+                .map(v->result)
+                .findFirst();
     }
 
     /**

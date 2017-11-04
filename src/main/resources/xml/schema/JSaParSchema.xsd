@@ -173,7 +173,7 @@
          <xsd:documentation>* If the type is string then the pattern should contain a regular expression to which the value is validated against. This only works while parsing.
 * If the type is any of the numerical types, then the pattern should be described according to the java.text.DecimalFormat (http://java.sun.com/javase/6/docs/api/java/text/DecimalFormat.html).
 * If the type is date, then the pattern should be described according to java.text.SimpleDateFormat (http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html).
-* If the type is boolean, the pattern should contain the true and false values separated with a ; character. Example: pattern="Y;N" will imply that Y represents true and N to represents false. Comparison while parsing is not case sensitive.</xsd:documentation>
+* If the type is boolean, the pattern should contain the true and false values separated with a ; character. Example: pattern="Y;N" will imply that Y represents true and N to represents false. Comparison while parsing is not case sensitive. Multiple true or false values can be specified, separated with the | character but the first value is always the one used while composing. Example: pattern="Y|YES;N|NO"</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
   </xsd:complexType>

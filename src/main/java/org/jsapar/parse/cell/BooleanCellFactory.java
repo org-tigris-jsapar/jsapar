@@ -12,31 +12,18 @@ import java.util.Locale;
  * Parses boolean values into {@link Cell} objects
  */
 public class BooleanCellFactory implements CellFactory {
+    private final static BooleanFormat defaultFormat = new BooleanFormat();
 
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
-        if (format != null)
-            return new BooleanCell(name, (Boolean) format.parseObject(value));
-        value = value.trim().toLowerCase();
-        switch (value) {
-        case "true":
-        case "on":
-        case "1":
-        case "yes":
-            return new BooleanCell(name, true);
-        case "false":
-        case "off":
-        case "0":
-        case "no":
-            return new BooleanCell(name, false);
-        default:
-            throw new ParseException("Failed to parse boolean value from: " + value, 0);
-        }
+        if (format == null)
+            format = defaultFormat;
+        return new BooleanCell(name, (Boolean) format.parseObject(value));
     }
 
     @Override
     public Format makeFormat(Locale locale) {
-        return null;
+        return defaultFormat;
     }
 
     @Override
@@ -45,6 +32,6 @@ public class BooleanCellFactory implements CellFactory {
         if (aTrueFalse.length < 1 || aTrueFalse.length > 2)
             throw new IllegalArgumentException(
                     "Boolean format pattern should only contain two fields separated with ; character");
-        return new BooleanFormat(aTrueFalse[0], aTrueFalse.length == 2 ? aTrueFalse[1] : "");
+        return new BooleanFormat(aTrueFalse[0].split("\\s*\\|\\s*"), aTrueFalse.length == 2 ? aTrueFalse[1].split("\\s*\\|\\s*") : new String[]{""});
     }
 }

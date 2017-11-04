@@ -24,4 +24,5 @@ public class ComparableCell<T extends Comparable<T>> extends Cell<T> implements 
     public int compareTo(ComparableCell<T> right) {
         return this.getValue().compareTo(right.getValue());
     }
+
 }

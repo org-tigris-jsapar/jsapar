@@ -33,6 +33,8 @@ public abstract class Cell<T> implements Serializable {
      * @param cellType    The type of the cell.
      */
     public Cell(String name, T value, CellType cellType) {
+        assert name != null : "Cell name cannot be null.";
+        assert cellType != null : "Cell type cannot be null.";
         assert value != null : "Cell value cannot be null, use EmptyCell for empty values.";
         this.name = name;
         this.cellType = cellType;
@@ -116,4 +118,23 @@ public abstract class Cell<T> implements Serializable {
         return false;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Cell<?> cell = (Cell<?>) o;
+
+        if (!value.equals(cell.value)) return false;
+        if (!name.equals(cell.name)) return false;
+        return cellType == cell.cellType;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = value.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + cellType.hashCode();
+        return result;
+    }
 }

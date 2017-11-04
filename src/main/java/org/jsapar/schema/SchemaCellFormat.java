@@ -7,7 +7,21 @@ import java.text.Format;
 import java.util.Locale;
 
 /**
- * Describes the format of a cell, including the data type.
+ * Describes the format of a cell when converted to or from text, including what data type that the cell is expected
+ * to have.
+ * <p>
+ * When creating an instance of this class you may choose to add a {@link Format} or a pattern and optionally a
+ * {@link Locale}. The pattern has different meaning depending on the data type:
+ * <ul>
+ * <li>When the data type is of type String, the pattern is a regular expression as described in {@link java.util.regex.Pattern} to validate against.</li>
+ * <li>When the data type is of a numerical type, the pattern is the same as described in {@link java.text.DecimalFormat}</li>
+ * <li>If the type is boolean, the pattern should contain the true and false values separated with a ; character.
+ * Example: pattern="Y;N" will imply that Y represents true and N to represents false.
+ * Comparison while parsing is not case sensitive.
+ * Multiple true or false values can be specified, separated with the | character but the first value is always the
+ * one used while composing. Example: pattern="Y|YES;N|NO"</li>
+ * <li>If the type is of a date or time type, the pattern should be described according to {@link java.text.SimpleDateFormat}</li>
+ * </ul>
  */
 public class SchemaCellFormat implements Cloneable {
     public final static Locale defaultLocale= Locale.US;
@@ -19,7 +33,7 @@ public class SchemaCellFormat implements Cloneable {
 
     /**
      * Creates a new cell format object of supplied type.
-     * @param cellType The type of the cell.
+     * @param cellType The expected data type of the cell.
      */
     public SchemaCellFormat(CellType cellType) {
         this.cellType = cellType;
@@ -41,26 +55,26 @@ public class SchemaCellFormat implements Cloneable {
     /**
      * Creates a new cell format object of supplied type and pattern.
      * @param cellType The type of the cell.
-     * @param sPattern The pattern of the cell.
+     * @param pattern The pattern of the cell. See class documentation.
      */
-    public SchemaCellFormat(CellType cellType, String sPattern) {
-        this(cellType, sPattern, defaultLocale);
+    public SchemaCellFormat(CellType cellType, String pattern) {
+        this(cellType, pattern, defaultLocale);
     }
 
     /**
      * Creates a new cell format object of supplied type, pattern and locale.
      * @param cellType The type of the cell.
-     * @param sPattern The pattern of the cell.
+     * @param pattern The pattern of the cell. See class documentation.
      * @param locale   The locale determines for instance how decimal separator should be formatted etc.
      */
-    public SchemaCellFormat(CellType cellType, String sPattern, Locale locale)  {
+    public SchemaCellFormat(CellType cellType, String pattern, Locale locale)  {
         this.cellType = cellType;
-        this.pattern = sPattern;
-        if (sPattern == null) {
+        this.pattern = pattern;
+        if (pattern == null) {
             this.format = null;
             return;
         }
-        this.format = CellFactory.getInstance(cellType).makeFormat(locale, sPattern);
+        this.format = CellFactory.getInstance(cellType).makeFormat(locale, pattern);
     }
 
 
