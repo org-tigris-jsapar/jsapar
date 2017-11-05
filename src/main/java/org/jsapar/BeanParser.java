@@ -21,6 +21,12 @@ import java.util.Iterator;
  * type {@link CellType}.INTEGER.
  *
  * If you use these rules you can write a {@link org.jsapar.schema.Schema} that converts a bean to a different type of output.
+ *
+ * The default error handling is to throw an exception upon the first error that occurs. You can however change that
+ * behavior by adding an {@link org.jsapar.error.ErrorEventListener}. There are several implementations to choose from such as
+ * {@link org.jsapar.error.RecordingErrorEventListener} or
+ * {@link org.jsapar.error.ThresholdRecordingErrorEventListener}, or you may implement your own..
+ *
  * @see Bean2TextConverter
  */
 public class BeanParser<T> extends AbstractParser {

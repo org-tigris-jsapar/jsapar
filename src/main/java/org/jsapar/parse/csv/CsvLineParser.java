@@ -22,7 +22,7 @@ class CsvLineParser {
     private long              usedCount         = 0L;
     private CellParser        cellParser        = new CellParser();
     private ValidationHandler validationHandler = new ValidationHandler();
-
+    private LineDecoratorErrorEventListener lineDecoratorErrorEventListener = new LineDecoratorErrorEventListener();
     /**
      * Creates a csv line parser with the given line schema.
      *
@@ -75,13 +75,13 @@ class CsvLineParser {
         Line line = new Line(lineSchema.getLineType(),
                 (lineSchema.getSchemaCells().size() > 0) ? lineSchema.getSchemaCells().size() : 10);
         line.setLineNumber(lineReader.currentLineNumber());
-        LineDecoratorErrorEventListener lineErrorEventListener = new LineDecoratorErrorEventListener(errorListener, line);
+        lineDecoratorErrorEventListener.initialize(errorListener, line);
 
         java.util.Iterator<CsvSchemaCell> itSchemaCell = lineSchema.getSchemaCells().iterator();
         for (String sCell : asCells) {
             if (itSchemaCell.hasNext()) {
                 CsvSchemaCell schemaCell = itSchemaCell.next();
-                addCellToLineBySchema(line, schemaCell, sCell, lineErrorEventListener);
+                addCellToLineBySchema(line, schemaCell, sCell, lineDecoratorErrorEventListener);
             } else {
                 if(!addCellToLineWithoutSchema(line, sCell, errorListener))
                     return true;
@@ -98,7 +98,7 @@ class CsvLineParser {
                 return true;
             }
             CsvSchemaCell schemaCell = itSchemaCell.next();
-            addCellToLineBySchema(line, schemaCell, EMPTY_STRING, lineErrorEventListener);
+            addCellToLineBySchema(line, schemaCell, EMPTY_STRING, lineDecoratorErrorEventListener);
         }
 
         listener.lineParsedEvent(new LineParsedEvent(this, line));

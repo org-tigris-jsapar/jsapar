@@ -6,22 +6,19 @@ import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseTask;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Makes it possible to handle line events in a different thread than the {@link ParseTask}. Please note
  * that neither the {@link LineParsedEvent} or the {@link org.jsapar.model.Line} classes
- * are internally thread safe so if you have more than one event listeners registered to the same
- * {@link ParseTask}, all accesses to the events within these event listeners needs to be synchronized on
+ * are internally thread safe so if you have more than one event listeners registered in a chain after this listener
+ * (by using {@link org.jsapar.parse.MulticastLineEventListener}) , all accesses to the events within these event
+ * listeners needs to be synchronized on
  * the event object. As long as you have only one event listener registered, no external synchronization is needed.
  * <p>
- * This implementation acts as a mediator which means that you may register multiple line event listeners to an instance
- * of this class and they will all be called in the same order as they were registered and all within the same worker
- * thread. If any of the registered event listeners is an instance of this class, external synchronization of the events
- * will be needed as stated above.
+ * This implementation acts as a decorator which means that you initialize it with an actual line event listener that
+ * gets called from the consumer thread each time there is a line parse event in the producer thread.
  *
  * If a worker thread event listener should throw an exception, the worker thread is immediately terminated and the
  * excption is encapsulated in a {@link JSaParException} and forwarded to the calling thread upon first available occation.
@@ -32,7 +29,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
     private BlockingQueue<LineParsedEvent> events;
     private volatile boolean                 shouldStop = false;
     private volatile boolean                 running    = false;
-    private          List<LineEventListener> listeners  = new ArrayList<>();
+    private          LineEventListener listener;
     private          Throwable               exception  = null;
     private Thread thread;
     private ShutdownHook shutdownHook;
@@ -40,17 +37,19 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
     /**
      * Creates a concurrent line event listener that have a queue size of 10000 events.
      */
-    public ConcurrentLineEventListener() {
-        this(10000);
+    public ConcurrentLineEventListener(LineEventListener lineEventListener) {
+        this(lineEventListener, 10000);
     }
 
     /**
      * Creates a concurrent line event listener with specified queue size.
+     * @param lineEventListener
      * @param queueSize   Maximum size of the queue before the producing thread starts blocking.
      */
-    public ConcurrentLineEventListener(int queueSize) {
+    public ConcurrentLineEventListener(LineEventListener lineEventListener, int queueSize) {
         events = new LinkedBlockingQueue<>(queueSize);
         this.shutdownHook = new ShutdownHook(this);
+        this.listener = lineEventListener;
     }
 
     @Override
@@ -74,17 +73,6 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
         }
     }
 
-    /**
-     * Adds a line event listener to the working thread. If multiple event listeners are added to the same instance of
-     * this class, they will all receive the event in the order they were added and all of them will be called by the
-     * same thread, the working thread of this instance.
-     *
-     * @param eventListener The event listener to add.
-     */
-    public void addLineEventListener(LineEventListener eventListener) {
-        listeners.add(eventListener);
-    }
-
     private class WorkingThread implements Runnable {
         @Override
         public void run() {
@@ -96,9 +84,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
                         return;
                     }
                     if (event != null && event.getLine() != null) {
-                        for (LineEventListener listener : listeners) {
-                            listener.lineParsedEvent(event);
-                        }
+                        listener.lineParsedEvent(event);
                     }
                 }
             } catch (InterruptedException e) {

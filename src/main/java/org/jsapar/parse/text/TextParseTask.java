@@ -28,7 +28,6 @@ public class TextParseTask extends AbstractParseTask implements ParseTask {
 
     private final Schema schema;
     private final Reader reader;
-    private final TextSchemaParserFactory parserFactory = new TextSchemaParserFactory();
     private final TextParseConfig     parseConfig;
 
     public TextParseTask(Schema schema, Reader reader) {
@@ -51,7 +50,7 @@ public class TextParseTask extends AbstractParseTask implements ParseTask {
      */
     @Override
     public void execute() throws IOException {
-        parserFactory.makeSchemaParser(this.schema, reader, parseConfig).parse(this, this);
+        schema.makeSchemaParser(reader, parseConfig).parse(this, this);
     }
 
 }

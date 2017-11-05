@@ -1,5 +1,10 @@
 package org.jsapar.schema;
 
+import org.jsapar.parse.csv.CsvParser;
+import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.parse.text.TextSchemaParser;
+
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -86,6 +91,11 @@ public class CsvSchema extends Schema implements Cloneable{
     @Override
     public Stream<CsvSchemaLine> stream() {
         return this.schemaLines.stream();
+    }
+
+    @Override
+    public TextSchemaParser makeSchemaParser(Reader reader, TextParseConfig parseConfig) {
+        return new CsvParser(reader, this, parseConfig);
     }
 
 

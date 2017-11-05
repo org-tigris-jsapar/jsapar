@@ -6,14 +6,15 @@ import org.jsapar.model.Line;
 
 /**
  * Internal class. Decorates line errors with current line information.
- * Created by stejon0 on 2016-10-02.
  */
 public class LineDecoratorErrorEventListener implements ErrorEventListener {
 
-    private final ErrorEventListener errorListener;
+    private  ErrorEventListener errorListener;
     private       Line               line;
 
-    public LineDecoratorErrorEventListener(ErrorEventListener errorListener, Line line) {
+    public LineDecoratorErrorEventListener(){}
+
+    public void initialize(ErrorEventListener errorListener, Line line) {
         this.errorListener = errorListener;
         this.line = line;
     }

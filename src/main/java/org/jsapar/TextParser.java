@@ -22,6 +22,11 @@ import java.io.Reader;
  * </ol>
  * <br/>
  *
+ * The default error handling is to throw an exception upon the first error that occurs. You can however change that
+ * behavior by adding an {@link org.jsapar.error.ErrorEventListener}. There are several implementations to choose from such as
+ * {@link org.jsapar.error.RecordingErrorEventListener} or
+ * {@link org.jsapar.error.ThresholdRecordingErrorEventListener}, or you may implement your own.
+ *
  * @see TextComposer
  * @see Text2TextConverter
  * @see TextParseTask

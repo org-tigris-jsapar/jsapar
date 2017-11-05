@@ -9,7 +9,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ConcurrentLineEventListenerTest {
-    volatile int count = 0;
+    private volatile int count = 0;
 
     @Before
     public void setUp() throws Exception {
@@ -18,7 +18,7 @@ public class ConcurrentLineEventListenerTest {
 
     @Test
     public void testLineParsedEvent() throws Exception {
-        try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener()) {
+        try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> {})) {
             assertEquals(0, instance.size());
             instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
             assertEquals(1, instance.size());
@@ -32,10 +32,9 @@ public class ConcurrentLineEventListenerTest {
 
     @Test
     public void testAddLineEventListener_run() throws Exception {
-        try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener()) {
+        try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> count += 1)) {
             assertEquals(0, instance.size());
             instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
-            instance.addLineEventListener(event -> count += 1);
             assertEquals(1, instance.size());
             assertEquals(0, count);
             instance.start();
@@ -47,17 +46,17 @@ public class ConcurrentLineEventListenerTest {
 
     @Test
     public void testWorkerTakesLongTime() throws Exception {
-        try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener()) {
+        try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> {
+            try {
+                Thread.sleep(10L);
+                count += 1;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        )) {
             assertEquals(0, instance.size());
             instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
-            instance.addLineEventListener(event -> {
-                try {
-                    Thread.sleep(10L);
-                    count += 1;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            });
             assertEquals(1, instance.size());
             assertEquals(0, count);
             instance.start();
@@ -68,10 +67,9 @@ public class ConcurrentLineEventListenerTest {
 
     @Test
     public void testProducerTakesLongTime() throws Exception {
-        ConcurrentLineEventListener instance = new ConcurrentLineEventListener();
+        ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> count += 1);
         assertEquals(0, instance.size());
         instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
-        instance.addLineEventListener(event -> count += 1);
         instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
 
         assertEquals(2, instance.size());
@@ -89,10 +87,9 @@ public class ConcurrentLineEventListenerTest {
 
     @Test(expected = JSaParException.class)
     public void testExceptionFromListener() throws Exception {
-        try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener()) {
-            instance.addLineEventListener(event -> {
-                throw new AssertionError("Testing error");
-            });
+        try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> {
+            throw new AssertionError("Testing error");
+        })) {
             instance.start();
             instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
 

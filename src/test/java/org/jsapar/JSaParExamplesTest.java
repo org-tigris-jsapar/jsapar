@@ -68,19 +68,18 @@ public class JSaParExamplesTest {
     @Test
     public final void testExampleFixedWidth02()
             throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
-        Reader schemaReader = new FileReader("exsamples/02_FixedWidthSchema.xml");
-        Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
-        Reader fileReader = new FileReader("exsamples/02_Names.txt");
-        TextParser parser = new TextParser(schemaBuilder.build(schemaReader));
-        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-        parser.parse(fileReader, listener);
-        Document document = listener.getDocument();
-        fileReader.close();
+        try(Reader schemaReader = new FileReader("exsamples/02_FixedWidthSchema.xml");
+            Reader fileReader = new FileReader("exsamples/02_Names.txt")) {
+            TextParser parser = new TextParser(Schema.fromXml(schemaReader));
+            DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
+            parser.parse(fileReader, listener);
+            Document document = listener.getDocument();
 
-        assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name").orElse("fail"));
-        assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name").orElse("fail"));
-        assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name").orElse("fail"));
-        assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name").orElse("fail"));
+            assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name").orElse("fail"));
+            assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name").orElse("fail"));
+            assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name").orElse("fail"));
+            assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name").orElse("fail"));
+        }
     }
 
     /**

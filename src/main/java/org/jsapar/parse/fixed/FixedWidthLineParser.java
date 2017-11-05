@@ -23,6 +23,7 @@ class FixedWidthLineParser {
     private FixedWidthCellParser cellParser        = new FixedWidthCellParser();
     private ValidationHandler    validationHandler = new ValidationHandler();
     private TextParseConfig config;
+    private LineDecoratorErrorEventListener lineDecoratorErrorEventListener = new LineDecoratorErrorEventListener();
 
     FixedWidthLineParser(FixedWidthSchemaLine lineSchema, TextParseConfig config) {
         this.lineSchema = lineSchema;
@@ -61,15 +62,14 @@ class FixedWidthLineParser {
                     continue;
                 }
             } else {
-                LineDecoratorErrorEventListener lineErrorEventListener = new LineDecoratorErrorEventListener(
-                        errorListener, line);
+                lineDecoratorErrorEventListener.initialize(errorListener, line);
                 Optional<Cell> cell = cellParser
-                        .parse(schemaCell, reader, lineErrorEventListener);
+                        .parse(schemaCell, reader, lineDecoratorErrorEventListener);
                 if (!cell.isPresent()) {
                     if (oneRead) {
                         setDefaultsOnly = true;
                         if (schemaCell.isDefaultValue())
-                            cellParser.parse(schemaCell, EMPTY_STRING, lineErrorEventListener)
+                            cellParser.parse(schemaCell, EMPTY_STRING, lineDecoratorErrorEventListener)
                                     .ifPresent(line::addCell) ;
                         //noinspection ConstantConditions
                         if (handleInsufficient) {

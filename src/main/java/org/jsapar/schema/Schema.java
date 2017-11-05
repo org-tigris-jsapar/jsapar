@@ -1,6 +1,8 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.Document;
+import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.parse.text.TextSchemaParser;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -143,4 +145,12 @@ public abstract class Schema implements Cloneable{
      * @return A stream of all schema lines of this schema.
      */
     public abstract Stream<? extends SchemaLine> stream();
+
+    /**
+     * Internal method to create a schema parser using this schema.
+     * @param reader
+     * @param parseConfig
+     * @return
+     */
+    public abstract TextSchemaParser makeSchemaParser(Reader reader, TextParseConfig parseConfig);
 }

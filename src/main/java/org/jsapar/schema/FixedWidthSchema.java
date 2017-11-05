@@ -1,5 +1,11 @@
 package org.jsapar.schema;
 
+import org.jsapar.parse.fixed.FixedWidthParserFlat;
+import org.jsapar.parse.fixed.FixedWidthParserLinesSeparated;
+import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.parse.text.TextSchemaParser;
+
+import java.io.Reader;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -92,6 +98,14 @@ public class FixedWidthSchema extends Schema {
     @Override
     public Stream<FixedWidthSchemaLine> stream() {
         return this.schemaLines.stream();
+    }
+
+    @Override
+    public TextSchemaParser makeSchemaParser(Reader reader, TextParseConfig parseConfig) {
+        if (getLineSeparator().isEmpty())
+            return new FixedWidthParserFlat(reader, this, parseConfig);
+        else
+            return new FixedWidthParserLinesSeparated(reader, this, parseConfig);
     }
 
     /**
