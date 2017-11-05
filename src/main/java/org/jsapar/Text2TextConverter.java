@@ -11,7 +11,9 @@ import java.io.Reader;
 import java.io.Writer;
 
 /**
- * Created by stejon0 on 2016-10-15.
+ * Converts one text input to another text output. For instance converting from CSV to fixed with format.
+ * See {@link AbstractConverter} for details about error handling and manipulating data.
+ * @see org.jsapar.concurrent.ConcurrentText2TextConverter
  */
 public class Text2TextConverter extends AbstractConverter {
     private final Schema parseSchema;
@@ -23,11 +25,15 @@ public class Text2TextConverter extends AbstractConverter {
         this.composeSchema = composeSchema;
     }
 
+    public Text2TextConverter(Schema parseSchema, Schema composeSchema, TextParseConfig parseConfig) {
+        this.parseSchema = parseSchema;
+        this.composeSchema = composeSchema;
+        this.parseConfig = parseConfig;
+    }
+
     public void convert(Reader reader, Writer writer) throws IOException {
         TextParseTask parseTask = new TextParseTask(this.parseSchema, reader, parseConfig);
-
         ConvertTask convertTask = new ConvertTask(parseTask, new TextComposer(composeSchema, writer));
-
         execute(convertTask);
     }
 

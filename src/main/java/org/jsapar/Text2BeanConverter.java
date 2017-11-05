@@ -15,6 +15,7 @@ import java.io.Reader;
 
 /**
  * Converts text input to Java bean objects.
+ * See {@link AbstractConverter} for details about error handling and manipulating data.
  */
 public class Text2BeanConverter<T> extends AbstractConverter {
 

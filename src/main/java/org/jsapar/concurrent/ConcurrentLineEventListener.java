@@ -19,26 +19,29 @@ import java.util.concurrent.LinkedBlockingQueue;
  * <p>
  * This implementation acts as a decorator which means that you initialize it with an actual line event listener that
  * gets called from the consumer thread each time there is a line parse event in the producer thread.
- *
+ * <p>
  * If a worker thread event listener should throw an exception, the worker thread is immediately terminated and the
  * excption is encapsulated in a {@link JSaParException} and forwarded to the calling thread upon first available occation.
+ * <p>
+ * When the internal queue is full, the producing thread starts blocking. This means that it waits for an available slot
+ * in the queue before it continues parsing.
  */
 @SuppressWarnings("ALL")
 public class ConcurrentLineEventListener implements LineEventListener, AutoCloseable, Stoppable {
 
     private BlockingQueue<LineParsedEvent> events;
-    private volatile boolean                 shouldStop = false;
-    private volatile boolean                 running    = false;
-    private          LineEventListener listener;
-    private          Throwable               exception  = null;
+    private volatile boolean shouldStop = false;
+    private volatile boolean running = false;
+    private LineEventListener listener;
+    private Throwable exception = null;
     private Thread thread;
     private ShutdownHook shutdownHook;
 
     /**
-     * Creates a concurrent line event listener that have a queue size of 10000 events.
+     * Creates a concurrent line event listener that have a queue size of 1000 events.
      */
     public ConcurrentLineEventListener(LineEventListener lineEventListener) {
-        this(lineEventListener, 10000);
+        this(lineEventListener, 1000);
     }
 
     /**
@@ -83,6 +86,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
                     if (shouldStop) {
                         return;
                     }
+                    // Check if it is just an event to release wait block.
                     if (event != null && event.getLine() != null) {
                         listener.lineParsedEvent(event);
                     }
@@ -109,10 +113,12 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
             return;
         thread = new Thread(new WorkingThread());
         thread.start();
+        // Wait for the consumer thread to start before returning.
         while (!isRunning() && !shouldStop)
             try {
                 Thread.sleep(10L);
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
 
     }
@@ -128,6 +134,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
             if(isRunning())
                 events.put(new LineParsedEvent(this, null)); // Make sure the blocking is released immediately
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
         if(Thread.currentThread() != thread)
             checkException();
@@ -153,6 +160,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
                 }
             }
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
         events.clear();
     }

@@ -38,7 +38,12 @@ public class TextParser extends AbstractParser{
     private TextParseConfig parseConfig = new TextParseConfig();
 
     public TextParser(Schema parseSchema) {
+        this(parseSchema, new TextParseConfig());
+    }
+
+    public TextParser(Schema parseSchema, TextParseConfig parseConfig) {
         this.parseSchema = parseSchema;
+        this.parseConfig = parseConfig;
     }
 
     public void parse(Reader reader, LineEventListener lineEventListener) throws IOException {
@@ -46,4 +51,11 @@ public class TextParser extends AbstractParser{
         execute(parseTask, lineEventListener);
     }
 
+    public TextParseConfig getParseConfig() {
+        return parseConfig;
+    }
+
+    public void setParseConfig(TextParseConfig parseConfig) {
+        this.parseConfig = parseConfig;
+    }
 }
