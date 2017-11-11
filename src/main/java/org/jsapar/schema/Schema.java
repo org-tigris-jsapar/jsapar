@@ -148,9 +148,9 @@ public abstract class Schema implements Cloneable{
 
     /**
      * Internal method to create a schema parser using this schema.
-     * @param reader
-     * @param parseConfig
-     * @return
+     * @param reader The reader to use for the parser.
+     * @param parseConfig Current parse configuration.
+     * @return Create a schema based text parser.
      */
     public abstract TextSchemaParser makeSchemaParser(Reader reader, TextParseConfig parseConfig);
 }

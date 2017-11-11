@@ -13,22 +13,32 @@ title: JSaPar Contents
 
 <h3>Existing features</h3>
 <ul>
-<li>Support for flat files with fixed positions.</li>
-<li>Support for CSV files.</li>
-<li>The schema can be expressed with xml notation or created directly within the java code.</li>
-<li>The parser can either produce a Document class, representing the content of the file, or you can choose to receive events for each line that has been successfully parsed.</li>
-<li>Can handle huge files without loading everything into memory.</li>
-<li>The output Document class contains a list of lines which contains a list of cells.</li>
-<li>The Document class can be transformed into a Java object (via reflection) if the schema is carefully written.</li>
-<li>It is also possible to produce java objects directly from the parser.</li>
-<li>It is possible convert a list of java objects into a file according to a schema if the schema is carefully written.</li>
-<!--<li>The Document class can be transformed into a xml file (according to an internal xml schema).</li>-->
-<li>The Document class can be built from a xml file (according to an internal xml schema).</li>
-<li>The input and outputs are given by java.io.Reader and java.io.Writer which means that it is not necessarily files that are parsed or generated.</li>
-<li>The file parsing schema contains information about how to parse each cell regarding data type and syntax.</li>
-<li>Parsing errors can either be handled by exceptions thrown at first error or the errors can be collected during parsing to be able to deal with them later.</li>
-<li>JUnit tests for most classes within the library.</li>
-<li>Support for localisation.</li>
+    <li>Support for flat files with fixed positions.</li>
+    <li>Support for CSV files.</li>
+    <li>Support converting Java objects to or from any of the other supported input or output formats.</li>
+    <li>The schema can be expressed with xml notation or created directly within the java code.</li>
+    <li>The parser can either produce a Document class, representing the content of the file, or you can choose to
+        receive events for each line that has been successfully parsed.
+    </li>
+    <li>Can handle huge files without loading everything into memory.</li>
+    <li>The output Document class contains a list of lines which contains a list of cells.</li>
+    <li>The Document class can be transformed into a Java object (via reflection) if the schema is carefully written.
+    </li>
+    <li>It is also possible to produce java objects directly from the parser.</li>
+    <li>It is possible convert a list of java objects into a file according to a schema if the schema is carefully
+        written.
+    </li>
+    <!--<li>The Document class can be transformed into a xml file (according to an internal xml schema).</li>-->
+    <li>The Document class can be built from a xml file (according to an internal xml schema).</li>
+    <li>The input and outputs are given by java.io.Reader and java.io.Writer which means that it is not necessarily
+        files that are parsed or generated.
+    </li>
+    <li>The file parsing schema contains information about how to parse each cell regarding data type and syntax.</li>
+    <li>Parsing errors can either be handled by exceptions thrown at first error or the errors can be collected during
+        parsing to be able to deal with them later.
+    </li>
+    <li>JUnit tests for most classes within the library.</li>
+    <li>Support for localisation.</li>
 </ul>
 
 <h3>Resources</h3>

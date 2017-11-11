@@ -15,7 +15,7 @@ class FixedWidthCellComposer {
     CellComposer cellComposer = new CellComposer();
     private Writer writer;
 
-    public FixedWidthCellComposer(Writer writer) {
+    FixedWidthCellComposer(Writer writer) {
         this.writer = writer;
     }
 
@@ -100,7 +100,7 @@ class FixedWidthCellComposer {
      * @param nSize Number of times to write the character
      * @throws IOException
      */
-    public static void fill(Writer writer, char ch, int nSize) throws IOException {
+    static void fill(Writer writer, char ch, int nSize) throws IOException {
         for (int i = 0; i < nSize; i++) {
             writer.write(ch);
         }

@@ -2,10 +2,7 @@ package org.jsapar;
 
 import org.jsapar.compose.bean.RecordingBeanEventListener;
 import org.jsapar.error.JSaParException;
-import org.jsapar.model.Document;
-import org.jsapar.model.Line;
-import org.jsapar.model.LineUtils;
-import org.jsapar.model.StringCell;
+import org.jsapar.model.*;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.parse.xml.XmlParser;
@@ -48,7 +45,9 @@ public class JSaParExamplesTest {
             parser.parse(fileReader, listener);
             Document document = listener.getDocument();
 
+            assertEquals(3, document.size());
             assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name").orElse("fail"));
+            assertEquals("Erik", document.getLine(0).getNonEmptyCell("First name").map(Cell::getStringValue).orElse("fail"));
             assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name").orElse("fail"));
             assertEquals("true", LineUtils.getStringCellValue(document.getLine(0), "Have dog").orElse("fail"));
             assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name").orElse("fail"));
@@ -68,8 +67,8 @@ public class JSaParExamplesTest {
     @Test
     public final void testExampleFixedWidth02()
             throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
-        try(Reader schemaReader = new FileReader("exsamples/02_FixedWidthSchema.xml");
-            Reader fileReader = new FileReader("exsamples/02_Names.txt")) {
+        try (Reader schemaReader = new FileReader("exsamples/02_FixedWidthSchema.xml");
+             Reader fileReader = new FileReader("exsamples/02_Names.txt")) {
             TextParser parser = new TextParser(Schema.fromXml(schemaReader));
             DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
             parser.parse(fileReader, listener);
@@ -90,22 +89,22 @@ public class JSaParExamplesTest {
     @Test
     public final void testExampleFlatFile03()
             throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
-        Reader schemaReader = new FileReader("exsamples/03_FlatFileSchema.xml");
-        Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
-        Reader fileReader = new FileReader("exsamples/03_FlatFileNames.txt");
-        TextParser parser = new TextParser(schemaBuilder.build(schemaReader));
-        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-        parser.parse(fileReader, listener);
-        Document document = listener.getDocument();
-        fileReader.close();
+        try (Reader schemaReader = new FileReader("exsamples/03_FlatFileSchema.xml");
+             Reader fileReader = new FileReader("exsamples/03_FlatFileNames.txt")) {
+            TextParser parser = new TextParser(Schema.fromXml(schemaReader));
+            DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
+            parser.parse(fileReader, listener);
+            Document document = listener.getDocument();
 
-        assertEquals(3, document.size());
-        assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name").orElse("fail"));
-        assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name").orElse("fail"));
-        assertEquals("37", LineUtils.getStringCellValue(document.getLine(0), "Age").orElse("fail"));
-        assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name").orElse("fail"));
-        assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name").orElse("fail"));
-        assertEquals("17", LineUtils.getStringCellValue(document.getLine(1), "Age").orElse("fail"));
+            assertEquals(3, document.size());
+            assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name").orElse("fail"));
+            assertEquals("Erik", document.getLine(0).getNonEmptyCell("First name").map(Cell::getStringValue).orElse("fail"));
+            assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name").orElse("fail"));
+            assertEquals("37", LineUtils.getStringCellValue(document.getLine(0), "Age").orElse("fail"));
+            assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name").orElse("fail"));
+            assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name").orElse("fail"));
+            assertEquals("17", LineUtils.getStringCellValue(document.getLine(1), "Age").orElse("fail"));
+        }
     }
 
     /**
@@ -251,14 +250,14 @@ public class JSaParExamplesTest {
     @Test
     public final void testConvert01_02()
             throws IOException, JSaParException, SchemaException, ParserConfigurationException, SAXException {
-        Reader inSchemaReader = new FileReader("exsamples/01_CsvSchema.xml");
-        Reader outSchemaReader = new FileReader("exsamples/02_FixedWidthSchema.xml");
-        Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-        File outFile = new File("exsamples/02_Names_out.txt");
-        try (Reader inReader = new FileReader("exsamples/01_Names.csv"); Writer outWriter = new FileWriter(outFile)) {
 
-            Text2TextConverter converter = new Text2TextConverter(xmlBuilder.build(inSchemaReader),
-                    xmlBuilder.build(outSchemaReader));
+        File outFile = new File("exsamples/02_Names_out.txt");
+        try (Reader inSchemaReader = new FileReader("exsamples/01_CsvSchema.xml");
+             Reader outSchemaReader = new FileReader("exsamples/02_FixedWidthSchema.xml");
+             Reader inReader = new FileReader("exsamples/01_Names.csv");
+             Writer outWriter = new FileWriter(outFile)) {
+            Text2TextConverter converter = new Text2TextConverter(Schema.fromXml(inSchemaReader),
+                    Schema.fromXml(outSchemaReader));
             converter.convert(inReader, outWriter);
         }
 
@@ -270,14 +269,12 @@ public class JSaParExamplesTest {
     public final void testExampleCsvToJava07()
             throws SchemaException, IOException, JSaParException, ParseException, ParserConfigurationException,
             SAXException {
-        Reader schemaReader = new FileReader("exsamples/07_CsvSchemaToJava.xml");
-        Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-        try(Reader fileReader = new FileReader("exsamples/07_Names.csv")) {
-            Text2BeanConverter converter = new Text2BeanConverter(xmlBuilder.build(schemaReader));
+        try (Reader schemaReader = new FileReader("exsamples/07_CsvSchemaToJava.xml");
+             Reader fileReader = new FileReader("exsamples/07_Names.csv")) {
+            Text2BeanConverter converter = new Text2BeanConverter(Schema.fromXml(schemaReader));
             RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
             converter.convert(fileReader, beanEventListener);
             List<TstPerson> people = beanEventListener.getBeans();
-            fileReader.close();
 
             assertEquals(2, people.size());
             assertEquals("Erik", people.get(0).getFirstName());
