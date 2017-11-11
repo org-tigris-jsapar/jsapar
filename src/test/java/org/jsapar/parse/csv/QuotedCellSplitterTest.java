@@ -1,4 +1,4 @@
-package org.jsapar.parse;
+package org.jsapar.parse.csv;
 
 import org.jsapar.error.JSaParException;
 import org.jsapar.parse.csv.BufferedLineReader;

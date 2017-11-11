@@ -52,7 +52,7 @@ class CsvLineParser {
      * @return True if a line was parsed, false if no line could be parsed.
      * @throws IOException if an io-error occur
      */
-    public boolean parse(CsvLineReader lineReader, LineEventListener listener, ErrorEventListener errorListener)
+    boolean parse(CsvLineReader lineReader, LineEventListener listener, ErrorEventListener errorListener)
             throws IOException {
 
         String[] asCells = lineReader.readLine(lineSchema.getCellSeparator(), lineSchema.getQuoteChar());
@@ -155,7 +155,7 @@ class CsvLineParser {
      *
      */
     @SuppressWarnings("UnusedParameters")
-    protected boolean handleEmptyLine(long lineNumber, ErrorEventListener listener) {
+    private boolean handleEmptyLine(long lineNumber, ErrorEventListener listener) {
         return true;
     }
 

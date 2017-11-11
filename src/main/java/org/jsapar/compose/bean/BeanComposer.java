@@ -136,7 +136,7 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
      * @param objectToAssign The object to assign cell attributes to. The object will be modified.
      * @return The object that was assigned. The same object that was supplied as parameter.
      */
-    public <B> B assign(Line line, B objectToAssign) {
+    private <B> B assign(Line line, B objectToAssign) {
 
         for (Cell cell : line) {
             String sName = cell.getName();

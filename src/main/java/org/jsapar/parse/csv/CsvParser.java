@@ -10,6 +10,9 @@ import org.jsapar.schema.CsvSchema;
 import java.io.IOException;
 import java.io.Reader;
 
+/**
+ * Internal class for parsing CSV input.
+ */
 public class CsvParser implements TextSchemaParser {
     
     private CsvLineReader        lineReader;
@@ -18,7 +21,7 @@ public class CsvParser implements TextSchemaParser {
     private TextParseConfig      parseConfig;
     private ValidationHandler validationHandler = new ValidationHandler();
 
-    public CsvParser(Reader reader, CsvSchema schema) {
+    CsvParser(Reader reader, CsvSchema schema) {
         this(reader, schema, new TextParseConfig());
     }
 
@@ -53,7 +56,7 @@ public class CsvParser implements TextSchemaParser {
 
     }
 
-    protected void handleNoParser(CsvLineReader lineReader, ErrorEventListener errorEventListener) throws IOException {
+    private void handleNoParser(CsvLineReader lineReader, ErrorEventListener errorEventListener) throws IOException {
         if (lineReader.lastLineWasEmpty())
             return;
         validationHandler.lineValidation(this, lineReader.currentLineNumber(), "No schema line could be used to parse line number " + lineReader.currentLineNumber(), parseConfig.getOnUndefinedLineType(), errorEventListener);

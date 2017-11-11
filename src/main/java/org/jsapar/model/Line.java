@@ -34,7 +34,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
 
     /**
      * Assigned when parsing to the line number of the input source. Used primarily for logging and tracking. Has no
-     * significance when composing. First line has lineNumber=1. Equals 0 if not assigned.
+     * significance when composing. First line has lineNumber=1. Has the value 0 if not assigned.
      */
     private long lineNumber = 0L;
 

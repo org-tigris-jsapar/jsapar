@@ -16,7 +16,7 @@ class CsvCellComposer {
     private final static CellComposer cellComposer = new CellComposer();
     private Quoter quoter;
 
-    public CsvCellComposer(CsvSchemaCell schemaCell, Quoter quoter)
+    CsvCellComposer(CsvSchemaCell schemaCell, Quoter quoter)
     {
         this.schemaCell = schemaCell;
         this.quoter = quoter;

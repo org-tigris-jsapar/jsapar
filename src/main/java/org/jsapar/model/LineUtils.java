@@ -18,12 +18,17 @@ import java.util.Optional;
 public class LineUtils {
 
     /**
+     * Just to avoid that anyone creates an instance.
+     */
+    private LineUtils() {
+    }
+
+    /**
      * Checks if there is a cell with the specified name and if it is not empty.
      *
      * @param cellName The name of the cell to check.
      * @return true if the cell with the specified name exists and that it contains a value.
      */
-    @SuppressWarnings("SimplifiableIfStatement")
     public static boolean isCellSet(Line line, String cellName) {
         return line.getNonEmptyCell(cellName).isPresent();
     }
@@ -35,11 +40,10 @@ public class LineUtils {
      * @param type     The type to check.
      * @return true if the cell with the specified name contains a value of the specified type.
      */
-    @SuppressWarnings("SimplifiableIfStatement")
     public static boolean isCellSet(Line line, String cellName, CellType type) {
-        Optional<Cell> cell = line.getNonEmptyCell(cellName);
-        return cell.map(cell1 -> cell1.getCellType().equals(type)).orElse(false);
-
+        return line.getNonEmptyCell(cellName)
+                .map(cell1 -> cell1.getCellType().equals(type))
+                .orElse(false);
     }
 
 
@@ -282,7 +286,7 @@ public class LineUtils {
      * @param cellName     The name of the cell to get
      * @param defaultValue Default value that will be returned if the cell does not exist or does not have any value.
      * @return The long integer value of the cell with the specified name.
-     * @throws NumberFormatException
+     * @throws NumberFormatException If the cell value could not be converted into a long integer value.
      */
     public static long getLongCellValue(Line line, String cellName, long defaultValue) throws NumberFormatException {
         Optional<Cell> cell = line.getNonEmptyCell(cellName);
@@ -335,7 +339,7 @@ public class LineUtils {
      * @param cellName     The name of the cell to get
      * @param defaultValue Default value that will be returned if the cell does not exist or does not have any value.
      * @return The char value of the cell with the specified name.
-     * @throws NumberFormatException
+     * @throws NumberFormatException If cell value is empty.
      */
     public static char getCharCellValue(Line line, String cellName, char defaultValue) throws NumberFormatException {
         Optional<Cell> cell = line.getNonEmptyCell(cellName);
@@ -349,7 +353,7 @@ public class LineUtils {
         String s = cell.get().getStringValue();
         if (s.isEmpty())
             throw new NumberFormatException(
-                    "Could not convert string cell [" + cell + "] to a character since string is empty.");
+                    "Could not convert string cell [" + cell + "] to a character since cell value is empty.");
         return s.charAt(0);
     }
 
@@ -525,6 +529,7 @@ public class LineUtils {
      * @throws IllegalArgumentException If the enum type of the defaultValue does not have an enum constant with the name equal to the value
      *                                  of the specified cell.
      */
+    @SuppressWarnings("unchecked")
     public static <E extends Enum<E>> E getEnumCellValue(Line line, String cellName, E defaultValue)
             throws IllegalArgumentException {
         Optional<E> optionalEnum = line.getNonEmptyCell(cellName).map(it -> (E)enumOfCell(it, defaultValue.getClass()));

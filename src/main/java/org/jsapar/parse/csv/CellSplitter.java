@@ -2,7 +2,7 @@ package org.jsapar.parse.csv;
 
 import java.io.IOException;
 
-public interface CellSplitter {
+interface CellSplitter {
     
     /**
      * @param sLine The line to split

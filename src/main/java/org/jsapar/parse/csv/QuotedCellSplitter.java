@@ -10,14 +10,14 @@ import java.util.List;
  * Responsible for splitting quoted cells into a raw array of Strings.
  *
  */
-public class QuotedCellSplitter implements CellSplitter {
+class QuotedCellSplitter implements CellSplitter {
     private static final String[] EMPTY_LINE = new String[0];
 
-    private BufferedLineReader lineReader = null;
+    private final BufferedLineReader lineReader;
     private final String       cellSeparator;
     private final char         quoteChar;
-    private CellSplitter cellSplitter;
-    private int maxLinesWithinCell;
+    private final CellSplitter cellSplitter;
+    private final int maxLinesWithinCell;
     private final String separatorAndQuote;
     private final String quoteAndSeparator;
 
@@ -28,7 +28,7 @@ public class QuotedCellSplitter implements CellSplitter {
      * @param quoteChar
      *            The quote character to use for quoted cells.
      */
-    public QuotedCellSplitter(String cellSeparator, char quoteChar) {
+    QuotedCellSplitter(String cellSeparator, char quoteChar) {
         this(cellSeparator, quoteChar, null, 25);
     }
 
@@ -41,8 +41,9 @@ public class QuotedCellSplitter implements CellSplitter {
      * @param lineReader
      *            The line reader to read next line from in case multi-line cells are supported. Set to null if
      *            multi-line cells are not supported.
+     * @param maxLinesWithinCell Maximum number of line breaks allowed within one cell.
      */
-    public QuotedCellSplitter(String cellSeparator, char quoteChar, BufferedLineReader lineReader, int maxLinesWithinCell) {
+    QuotedCellSplitter(String cellSeparator, char quoteChar, BufferedLineReader lineReader, int maxLinesWithinCell) {
         this.cellSeparator = cellSeparator;
         this.quoteChar = quoteChar;
         this.lineReader = lineReader;

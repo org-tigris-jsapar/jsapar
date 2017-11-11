@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Checks if line matches the current criteria defined within this line schema.
  */
-public class CsvLineParserMatcher {
+class CsvLineParserMatcher {
     private final CsvSchemaLine schemaLine;
     private List<CsvControlCell> controlCells = new ArrayList<>();
     private CsvLineParser lineParser;
@@ -23,7 +23,7 @@ public class CsvLineParserMatcher {
      * @param schemaLine The line schema to use for this matcher.
      * @param config Behavior.
      */
-    public CsvLineParserMatcher(CsvSchemaLine schemaLine, TextParseConfig config) {
+    CsvLineParserMatcher(CsvSchemaLine schemaLine, TextParseConfig config) {
         this.schemaLine = schemaLine;
         occursLeft = schemaLine.getOccurs();
         lineParser = new CsvLineParser(schemaLine, config);
@@ -41,9 +41,9 @@ public class CsvLineParserMatcher {
      * Creates a line parser object if next line to be parsed matches the criteria of this line chema.
      * @param lineReader A line reader to read the line from.
      * @return A {@link CsvLineParser} ready to parse the line or null if next line cannot be parsed by using this schema.
-     * @throws IOException
+     * @throws IOException If there is an io error.
      */
-    public CsvLineParser makeLineParserIfMatching(CsvLineReader lineReader) throws IOException{
+    CsvLineParser makeLineParserIfMatching(CsvLineReader lineReader) throws IOException{
         if (occursLeft <= 0)
             return null;
 
@@ -81,7 +81,7 @@ public class CsvLineParserMatcher {
         final int           pos;
         final CsvSchemaCell schemaCell;
 
-        public CsvControlCell(int pos, CsvSchemaCell schemaCell) {
+        CsvControlCell(int pos, CsvSchemaCell schemaCell) {
             this.pos = pos;
             this.schemaCell = schemaCell;
         }
@@ -91,7 +91,7 @@ public class CsvLineParserMatcher {
      * @return True if this line schema can be used regarding number of occurrences. False if number of occurrences are
      * exceeded.
      */
-    public boolean isOccursLeft() {
+    boolean isOccursLeft() {
         return schemaLine.isOccursInfinitely() || occursLeft > 0;
     }
 }

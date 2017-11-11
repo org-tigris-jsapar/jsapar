@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.jsapar.parse.csv;
 
 import org.jsapar.parse.text.LineReader;
@@ -19,7 +16,7 @@ import java.io.Reader;
  * The class may read characters ahead from the provided reader before it is used in any result.
  *
  */
-public class BufferedLineReader implements LineReader {
+class BufferedLineReader implements LineReader {
 
     private static final int MAX_LINE_LENGTH = 10 * 1024;
 
@@ -33,7 +30,7 @@ public class BufferedLineReader implements LineReader {
      * @param lineSeparator The line separator character to use while parsing lines.
      * @param reader        The reader to read from.
      */
-    public BufferedLineReader(String lineSeparator, Reader reader) {
+    BufferedLineReader(String lineSeparator, Reader reader) {
         super();
         this.reader = new BufferedReader(reader);
         this.lineReaderImpl = new TextLineReader(lineSeparator, this.reader);
@@ -45,7 +42,7 @@ public class BufferedLineReader implements LineReader {
      * action later.
      *
      * @return The line read from the internal input reader.
-     * @throws IOException
+     * @throws IOException If there is an io error.
      *
      */
     @Override
@@ -61,19 +58,19 @@ public class BufferedLineReader implements LineReader {
      * instead the previous call to readLine()
      *
      * @return The line read from the internal input reader.
-     * @throws IOException
+     * @throws IOException If there is an io error.
      *
      */
-    public String peekLine() throws IOException {
+    String peekLine() throws IOException {
         return lineReaderImpl.readLine();
     }
 
     /**
      * Resets state of reader to before last call to readLine
      *
-     * @throws IOException
+     * @throws IOException If there is an io error.
      */
-    public void reset() throws IOException {
+    void reset() throws IOException {
         reader.reset();
         lineNumber--;
         lineReaderImpl.resetEof();
@@ -92,7 +89,7 @@ public class BufferedLineReader implements LineReader {
     /**
      * @return The internal reader that is used to read lines.
      */
-    public Reader getReader() {
+    Reader getReader() {
         return reader;
     }
 
@@ -100,13 +97,14 @@ public class BufferedLineReader implements LineReader {
      * @return 0 before any line has been read. The number of lines read by realLine() after that if not reset by call
      * to reset(). Calls to peekLine() are not counted.
      */
-    public long getLineNumber() {
+    long getLineNumber() {
         return lineNumber;
     }
 
     /**
      * @return True if End of input stream was reached, false otherwise.
      */
+    @Override
     public boolean eofReached() {
         return lineReaderImpl.eofReached();
     }

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jsapar.compose.bean;
 
 import java.util.EventListener;

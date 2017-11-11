@@ -8,12 +8,12 @@ import java.util.regex.Pattern;
 /**
  * Simple cell splitter that can be used when we don't have to consider quotes.
  */
-public class SimpleCellSplitter implements CellSplitter {
+class SimpleCellSplitter implements CellSplitter {
 
     private static final String[] EMPTY_LINE = new String[0];
-    private String splitPattern;
+    private final String splitPattern;
 
-    public SimpleCellSplitter(String cellSeparator) {
+    SimpleCellSplitter(String cellSeparator) {
         this.splitPattern = Pattern.quote(cellSeparator);
     }
 

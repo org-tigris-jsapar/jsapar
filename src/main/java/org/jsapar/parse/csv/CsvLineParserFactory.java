@@ -12,11 +12,11 @@ import java.util.List;
 /**
  * Creates csv line parsers based on schema.
  */
-public class CsvLineParserFactory {
+class CsvLineParserFactory {
 
     private List<CsvLineParserMatcher> lineParserMatchers;
 
-    public CsvLineParserFactory(CsvSchema schema, TextParseConfig config) {
+    CsvLineParserFactory(CsvSchema schema, TextParseConfig config) {
         lineParserMatchers = new LinkedList<>();
         for (CsvSchemaLine schemaLine : schema.getCsvSchemaLines()) {
             lineParserMatchers.add(new CsvLineParserMatcher(schemaLine, config));
@@ -26,9 +26,9 @@ public class CsvLineParserFactory {
     /**
      * @param lineReader A {@link CsvLineReader} that can read csv lines.
      * @return A line parser that can be used to parse the next line.
-     * @throws IOException
+     * @throws IOException If there is an io error.
      */
-    public CsvLineParser makeLineParser(CsvLineReader lineReader) throws IOException {
+    CsvLineParser makeLineParser(CsvLineReader lineReader) throws IOException {
         if (lineParserMatchers.isEmpty())
             return null;
         Iterator<CsvLineParserMatcher> iter = lineParserMatchers.iterator();
@@ -56,7 +56,7 @@ public class CsvLineParserFactory {
         return null;
     }
 
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return lineParserMatchers.isEmpty();
     }
 }
