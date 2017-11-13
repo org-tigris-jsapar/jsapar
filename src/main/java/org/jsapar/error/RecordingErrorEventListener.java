@@ -53,4 +53,18 @@ public class RecordingErrorEventListener implements ErrorEventListener{
     public void clear(){
         this.errors.clear();
     }
+
+    /**
+     * @return True if there were no errors recorded.
+     */
+    public boolean isEmpty(){
+        return errors.isEmpty();
+    }
+
+    /**
+     * @return Number of errors recorded.
+     */
+    public int size() {
+        return errors.size();
+    }
 }

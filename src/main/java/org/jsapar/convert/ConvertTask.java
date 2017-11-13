@@ -59,9 +59,13 @@ public class ConvertTask {
         manipulators.add(manipulator);
     }
 
-    public void execute() throws IOException {
+    /**
+     * @return Number of converted lines.
+     * @throws IOException In case of IO error.
+     */
+    public long execute() throws IOException {
         parseTask.setLineEventListener(new LineForwardListener());
-        parseTask.execute();
+        return parseTask.execute();
     }
 
     /**

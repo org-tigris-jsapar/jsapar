@@ -191,8 +191,8 @@ public class LineUtilsTest {
     public void testIsCellSet() throws Exception {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
-        assertTrue(LineUtils.isCellSet(line, "FirstName"));
-        assertFalse(LineUtils.isCellSet(line, "LastName"));
+        assertTrue(line.isCellSet("FirstName"));
+        assertFalse(line.isCellSet("LastName"));
     }
 
     @Test

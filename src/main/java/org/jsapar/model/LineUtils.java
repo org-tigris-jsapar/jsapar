@@ -17,16 +17,6 @@ import java.util.Optional;
 @SuppressWarnings("WeakerAccess")
 public class LineUtils {
 
-    /**
-     * Checks if there is a cell with the specified name and if it is not empty.
-     *
-     * @param cellName The name of the cell to check.
-     * @return true if the cell with the specified name exists and that it contains a value.
-     */
-    @SuppressWarnings("SimplifiableIfStatement")
-    public static boolean isCellSet(Line line, String cellName) {
-        return line.getNonEmptyCell(cellName).isPresent();
-    }
 
     /**
      * Checks if there is a cell with the specified name and type and that is not empty.

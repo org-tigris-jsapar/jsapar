@@ -261,4 +261,13 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
         return cellErrors.values();
     }
 
+    /**
+     * Checks if there is a cell with the specified name and if it is not empty.
+     *
+     * @param cellName The name of the cell to check.
+     * @return true if the cell with the specified name exists and that it contains a value. False otherwise.
+     */
+    public boolean isCellSet(String cellName) {
+        return getNonEmptyCell(cellName).isPresent();
+    }
 }

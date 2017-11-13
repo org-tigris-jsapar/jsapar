@@ -18,7 +18,8 @@ public interface TextSchemaParser {
      * @param errorListener
      *
      * @throws IOException
+     * @return Number of lines parsed
      */
-    void parse(LineEventListener listener, ErrorEventListener errorListener) throws IOException;
+    long parse(LineEventListener listener, ErrorEventListener errorListener) throws IOException;
 
 }

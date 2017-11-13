@@ -48,10 +48,10 @@ public abstract class AbstractConverter {
         this.errorListener = errorListener;
     }
 
-    protected void execute(ConvertTask convertTask) throws IOException {
+    protected long execute(ConvertTask convertTask) throws IOException {
         manipulators.forEach(convertTask::addLineManipulator);
         if(errorListener != null)
             convertTask.setErrorEventListener(errorListener);
-        convertTask.execute();
+        return convertTask.execute();
     }
 }
