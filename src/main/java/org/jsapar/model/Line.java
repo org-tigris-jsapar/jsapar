@@ -5,6 +5,7 @@ import org.jsapar.parse.CellParseException;
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.stream.Stream;
 
 /**
  * A line is one row of the input buffer. Each line contains a list of cells. Cells within the line can be retrieved
@@ -269,5 +270,12 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      */
     public boolean isCellSet(String cellName) {
         return getNonEmptyCell(cellName).isPresent();
+    }
+
+    /**
+     * @return A stream of all cells within this line.
+     */
+    public Stream<Cell> stream() {
+        return this.cells.values().stream();
     }
 }

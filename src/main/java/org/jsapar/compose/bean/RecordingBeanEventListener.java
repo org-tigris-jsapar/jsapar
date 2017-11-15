@@ -30,4 +30,18 @@ public class RecordingBeanEventListener<T> implements BeanComposedEventListener<
     public void beanComposedEvent(BeanComposedEvent<T> event) {
         beans.add(event.getBean());
     }
+
+    /**
+     * Clears all recorded beans.
+     */
+    public void clear(){
+        beans.clear();
+    }
+
+    /**
+     * @return Number of recorded beans.
+     */
+    public int size(){
+        return beans.size();
+    }
 }

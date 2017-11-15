@@ -38,7 +38,7 @@ try (Reader schemaReader = new FileReader("exsamples/07_CsvSchemaToJava.xml");
     Text2BeanConverter converter = new Text2BeanConverter(Schema.fromXml(schemaReader));
     RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
     converter.convert(fileReader, beanEventListener);
-    List<TstPerson> people = beanEventListener.getBeans();
+    List<TstPerson> people = beanEventListener.getLines();
 }
  * }</pre>
  */
