@@ -1,5 +1,7 @@
 package org.jsapar.schema;
 
+import java.util.Iterator;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -95,6 +97,16 @@ public class FixedWidthSchemaLine extends SchemaLine {
     @Override
     public Stream<FixedWidthSchemaCell> stream() {
         return this.schemaCells.stream();
+    }
+
+    @Override
+    public Iterator<? extends SchemaCell> iterator() {
+        return this.schemaCells.iterator();
+    }
+
+    @Override
+    public void forEach(Consumer<? super SchemaCell> consumer) {
+        this.schemaCells.forEach(consumer);
     }
 
     /*

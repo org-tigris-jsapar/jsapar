@@ -91,7 +91,7 @@ class CsvLineComposer implements LineComposer {
         firstRow = false;
         String sCellSeparator = schemaLine.getCellSeparator();
 
-        Iterator<CsvSchemaCell> iter = schemaLine.getSchemaCells().iterator();
+        Iterator<CsvSchemaCell> iter = schemaLine.iterator();
         while(iter.hasNext()) {
             CsvSchemaCell schemaCell = iter.next();
             Cell cell = line.getCell(schemaCell.getName()).orElse(schemaCell.makeEmptyCell());

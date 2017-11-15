@@ -1,8 +1,7 @@
 package org.jsapar.schema;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -198,11 +197,7 @@ public class CsvSchemaLine extends SchemaLine {
      * @return CsvSchemaCell with specified name that is attached to this line or null if no such cell exist.
      */
     public CsvSchemaCell getCsvSchemaCell(String cellName) {
-        for (CsvSchemaCell schemaCell : this.getSchemaCells()) {
-            if (schemaCell.getName().equals(cellName))
-                return schemaCell;
-        }
-        return null;
+        return schemaCells.get(cellName);
     }
 
     @Override
@@ -224,4 +219,13 @@ public class CsvSchemaLine extends SchemaLine {
     public Stream<CsvSchemaCell> stream() {
         return schemaCells.values().stream();
     }
+
+    public Iterator<CsvSchemaCell> iterator() {
+        return schemaCells.values().iterator();
+    }
+
+    public void forEach(Consumer<? super SchemaCell> consumer) {
+        schemaCells.values().forEach(consumer);
+    }
+
 }
