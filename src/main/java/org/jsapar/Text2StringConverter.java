@@ -1,5 +1,6 @@
 package org.jsapar;
 
+import org.jsapar.compose.string.StringComposedEvent;
 import org.jsapar.compose.string.StringComposedEventListener;
 import org.jsapar.compose.string.StringComposer;
 import org.jsapar.convert.AbstractConverter;
@@ -13,7 +14,13 @@ import java.io.Reader;
 import java.io.Writer;
 
 /**
- * Converts one text input to an output of Stream of String.
+ * Converts a text input to  {@link StringComposedEvent} for each line that is parsed.
+ * <p>
+ * The {@link StringComposedEvent} provides a
+ * {@link java.util.stream.Stream} of {@link java.lang.String} for the current {@link org.jsapar.model.Line} where each
+ * string is matches the cell in a schema. Each cell is formatted according to provided
+ * {@link org.jsapar.schema.Schema}.  *
+ * <p>
  * See {@link AbstractConverter} for details about error handling and manipulating data.
  */
 public class Text2StringConverter extends AbstractConverter {
@@ -33,7 +40,7 @@ public class Text2StringConverter extends AbstractConverter {
     }
 
     /**
-     * @param reader The reader to read input from
+     * @param reader                The reader to read input from
      * @param composedEventListener The string composed event listener that get notification of each line.
      * @return Number of converted lines.
      * @throws IOException In case of IO error

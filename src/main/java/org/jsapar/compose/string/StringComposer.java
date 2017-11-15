@@ -14,7 +14,7 @@ import org.jsapar.schema.SchemaLine;
  * The {@link StringComposedEvent} provides a
  * {@link java.util.stream.Stream} of {@link java.lang.String} for the current {@link org.jsapar.model.Line} where each
  * string is matches the cell in a schema. Each cell is formatted according to provided
- * {@link org.jsapar.schema.Schema}. *
+ * {@link org.jsapar.schema.Schema}.
  */
 public class StringComposer implements Composer, StringComposedEventListener {
 
