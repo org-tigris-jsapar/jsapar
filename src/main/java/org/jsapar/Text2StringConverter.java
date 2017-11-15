@@ -19,7 +19,10 @@ import java.io.Writer;
  * The {@link StringComposedEvent} provides a
  * {@link java.util.stream.Stream} of {@link java.lang.String} for the current {@link org.jsapar.model.Line} where each
  * string is matches the cell in a schema. Each cell is formatted according to provided
- * {@link org.jsapar.schema.Schema}.  *
+ * {@link org.jsapar.schema.Schema}.
+ * <p>
+ * The schema can be of either CSV or FixedWith, the only thing that is significant is the order of the cells and the
+ * cell formatting.
  * <p>
  * See {@link AbstractConverter} for details about error handling and manipulating data.
  */
