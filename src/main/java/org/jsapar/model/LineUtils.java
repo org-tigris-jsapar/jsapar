@@ -17,7 +17,6 @@ import java.util.Optional;
 @SuppressWarnings("WeakerAccess")
 public class LineUtils {
 
-
     /**
      * Just to avoid that anyone creates an instance.
      */

@@ -39,7 +39,7 @@ public class ConcurrentConvertTask extends ConvertTask {
                      = new ConcurrentLineEventListener(new LineForwardListener())) {
             getParseTask().setLineEventListener(concurrentLineEventListener);
             concurrentLineEventListener.start();
-            getParseTask().execute();
+            return getParseTask().execute();
         }
     }
 
