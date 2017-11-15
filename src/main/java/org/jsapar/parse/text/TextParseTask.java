@@ -49,8 +49,8 @@ public class TextParseTask extends AbstractParseTask implements ParseTask {
      * @throws IOException If there is an error reading the input
      */
     @Override
-    public void execute() throws IOException {
-        schema.makeSchemaParser(reader, parseConfig).parse(this, this);
+    public long execute() throws IOException {
+        return schema.makeSchemaParser(reader, parseConfig).parse(this, this);
     }
 
 }

@@ -34,7 +34,8 @@ public interface ParseTask {
     /**
      * Start the parsing. Should only be called once for each {@link ParseTask}. Consecutive calls may have unexpected behavior.
      * @throws IOException In case there is an error reading the input.
+     * @return Number of line events that were generated, i.e. the number of lines parsed.
      */
-    void execute() throws IOException;
+    long execute() throws IOException;
 
 }

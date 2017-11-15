@@ -34,7 +34,7 @@ public class ConcurrentConvertTask extends ConvertTask {
         super(parseTask, composer);
     }
 
-    public void execute() throws IOException {
+    public long execute() throws IOException {
         try (ConcurrentLineEventListener concurrentLineEventListener
                      = new ConcurrentLineEventListener(new LineForwardListener())) {
             getParseTask().setLineEventListener(concurrentLineEventListener);

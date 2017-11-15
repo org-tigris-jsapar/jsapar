@@ -47,12 +47,13 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
      * line hav
      */
     @Override
-    public void execute() throws IOException {
+    public long execute() throws IOException {
         long count = 0;
         while(iterator.hasNext()){
             count++;
             lineParsedEvent( new LineParsedEvent(this, parseBean(iterator.next(), this, count)) );
         }
+        return count;
     }
 
     /**

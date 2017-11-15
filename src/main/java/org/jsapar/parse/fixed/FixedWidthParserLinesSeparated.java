@@ -33,7 +33,7 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
     }
 
     @Override
-    public void parse(LineEventListener listener, ErrorEventListener errorListener) throws IOException {
+    public long parse(LineEventListener listener, ErrorEventListener errorListener) throws IOException {
 
         FWLineParserFactory lineParserFactory = new FWLineParserFactory(getSchema(), getConfig());
         long lineNumber = 0;
@@ -41,20 +41,20 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
             lineNumber++;
             String sLine = lineReader.readLine();
             if(sLine == null)
-                return;
+                return lineNumber-1;
             if(sLine.trim().isEmpty()) // Just ignore empty lines
                 continue;
 
             try(BufferedReader r = new BufferedReader(new StringReader(sLine))) {
                 if(lineParserFactory.isEmpty())
-                    return;
+                    return lineNumber-1;
                 FixedWidthLineParser lineParser = lineParserFactory.makeLineParser(r);
                 if (lineParser == null) {
                     handleNoParser(lineNumber, lineParserFactory.getLastResult(), errorListener);
                     if(lineParserFactory.getLastResult() == LineParserMatcherResult.NOT_MATCHING)
                         continue;
                     else
-                        return;
+                        return lineNumber-1;
                 }
                 Line line = lineParser.parse(r, lineNumber, errorListener );
                 if (line == null) // Should never occur.

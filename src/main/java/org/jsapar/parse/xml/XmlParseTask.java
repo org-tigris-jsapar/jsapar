@@ -44,7 +44,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
     }
 
     @Override
-    public void execute() throws IOException{
+    public long execute() throws IOException{
 
         String schemaFileName = "/xml/schema/XMLDocumentFormat.xsd";
         InputStream schemaStream = Xml2SchemaBuilder.class.getResourceAsStream(schemaFileName);
@@ -66,7 +66,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
             org.xml.sax.InputSource is = new org.xml.sax.InputSource(reader);
             JSaParSAXHandler handler = new JSaParSAXHandler(this, this);
             parser.parse(is, handler);
-
+            return handler.currentLineNumber-1;
         } catch (ParserConfigurationException | SAXException e) {
             throw new JSaParException("XML parsing error.", e);
         }
