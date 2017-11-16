@@ -51,7 +51,7 @@ public class ConcurrentText2TextConvertTaskTest {
         reader.close();
         writer.close();
         String sResult = writer.getBuffer().toString();
-        String sExpected = "Jonas;Stenberg|Frida;Bergsten|";
+        String sExpected = "Jonas;Stenberg|Frida;Bergsten";
 
         Assert.assertEquals(sExpected, sResult);
 

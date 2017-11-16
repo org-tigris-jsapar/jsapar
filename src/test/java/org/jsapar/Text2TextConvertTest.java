@@ -69,7 +69,7 @@ public class Text2TextConvertTest {
         reader.close();
         writer.close();
         String sResult = writer.getBuffer().toString();
-        String sExpected = "Jonas;Stenberg|Frida;Bergsten|";
+        String sExpected = "Jonas;Stenberg|Frida;Bergsten";
 
         Assert.assertEquals(sExpected, sResult);
 
@@ -100,7 +100,7 @@ public class Text2TextConvertTest {
             converter.setErrorEventListener(errorEventListener);
             converter.convert(reader, writer);
             String sResult = writer.getBuffer().toString();
-            String sExpected = "Jonas;41" + LN + "Frida;" + LN;
+            String sExpected = "Jonas;41" + LN + "Frida;";
 
             Assert.assertEquals(1, errorEventListener.getErrors().size());
             Assert.assertEquals(sExpected, sResult);
@@ -158,7 +158,7 @@ public class Text2TextConvertTest {
         Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
         converter.convert(reader, writer);
         String sResult = writer.getBuffer().toString();
-        String sExpected = "Jonas;Stenberg" + LN;
+        String sExpected = "Jonas;Stenberg";
 
         Assert.assertEquals(sExpected, sResult);
 
@@ -197,7 +197,7 @@ public class Text2TextConvertTest {
         converter.convert(reader, writer);
         String sResult = writer.getBuffer().toString();
         String sExpected = "This file contains names" + LN + "Jonas;Stenberg"
-                + LN + "Frida;Bergsten" + LN;
+                + LN + "Frida;Bergsten";
 
         Assert.assertEquals(sExpected, sResult);
 
@@ -234,7 +234,7 @@ public class Text2TextConvertTest {
         converter.convert(reader, writer);
         String sResult = writer.getBuffer().toString();
         String sExpected = "Jonas;Stenberg;Stockholm" + LN
-                + "Frida;Bergsten;Stockholm" + LN;
+                + "Frida;Bergsten;Stockholm";
 
         Assert.assertEquals(sExpected, sResult);
 
@@ -271,8 +271,7 @@ public class Text2TextConvertTest {
         Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
         converter.convert(reader, writer);
         String sResult = writer.getBuffer().toString();
-        String sExpected = "Jonas;Stenberg" + LN + "Frida;Bergsten"
-                + LN;
+        String sExpected = "Jonas;Stenberg" + LN + "Frida;Bergsten";
 
         Assert.assertEquals(sExpected, sResult);
 
@@ -319,8 +318,7 @@ public class Text2TextConvertTest {
         });
         converter.convert(reader, writer);
         String sResult = writer.getBuffer().toString();
-        String sExpected = "Jonas;Stenberg" + LN + "Frida;Bergsten"
-                + LN;
+        String sExpected = "Jonas;Stenberg" + LN + "Frida;Bergsten";
 
         Assert.assertEquals(sExpected, sResult);
 

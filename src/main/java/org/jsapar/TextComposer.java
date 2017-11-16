@@ -24,6 +24,7 @@ public class TextComposer implements Composer {
     private final Schema          schema;
     private final ComposerFactory composerFactory;
     private       SchemaComposer  currentSchemaComposer;
+    private boolean breakBefore = false;
 
     /**
      * Creates an TextComposer with a schema.
@@ -82,7 +83,7 @@ public class TextComposer implements Composer {
 
     /**
      * Writes the single line to a {@link java.io.Writer} according to the line type of the line.
-     * The line is terminated by the line separator.
+     * The line is prefixed with the line separator unless it is the first line.
      * 
      * @param line The line to write.
      *
@@ -90,9 +91,12 @@ public class TextComposer implements Composer {
      * @return True if the line was written, false if there was no matching line type in the schema.
      */
     private boolean writeLineLn(Line line) throws IOException {
+        if(breakBefore) {
+            writer.write(schema.getLineSeparator());
+        }
         if(!writeLine(line))
             return false;
-        writer.write(schema.getLineSeparator());
+        breakBefore = true;
         return true;
     }
 
@@ -115,8 +119,7 @@ public class TextComposer implements Composer {
      * @throws IOException if an io-error occurs.
      * @return True if line was composed, false otherwise.
      */
-    @SuppressWarnings("WeakerAccess")
-    public boolean writeLine(Line line) throws IOException {
+    boolean writeLine(Line line) throws IOException {
         SchemaComposer schemaComposer = makeSchemaComposer();
         return schemaComposer.composeLine(line);
     }
