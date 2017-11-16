@@ -8,9 +8,11 @@ import java.util.stream.Stream;
 public class StringComposedEvent {
     private final String lineType;
     private final Stream<String> line;
+    private final long lineNumber;
 
-    public StringComposedEvent(String lineType, Stream<String> line) {
+    public StringComposedEvent(String lineType, long lineNumber, Stream<String> line) {
         this.lineType = lineType;
+        this.lineNumber = lineNumber;
         this.line = line;
     }
 
@@ -28,5 +30,12 @@ public class StringComposedEvent {
      */
     public String getLineType() {
         return lineType;
+    }
+
+    /**
+     * @return The line number within the parsed input of the line in this event.
+     */
+    public long getLineNumber() {
+        return lineNumber;
     }
 }

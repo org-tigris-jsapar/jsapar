@@ -38,7 +38,7 @@ public class StringComposer implements Composer, StringComposedEventListener {
         SchemaLine schemaLine = schema.getSchemaLine(line.getLineType());
         if (schemaLine == null || schemaLine.isIgnoreWrite())
             return false;
-        stringComposedEvent(new StringComposedEvent(line.getLineType(), schemaLine.stream()
+        stringComposedEvent(new StringComposedEvent(line.getLineType(), line.getLineNumber(), schemaLine.stream()
                 .map(schemaCell -> cellComposer.format(line.getCell(schemaCell.getName()).orElse(null), schemaCell))));
         return true;
     }

@@ -42,4 +42,11 @@ public class RecordingStringEventListener implements StringComposedEventListener
     public int size(){
         return lines.size();
     }
+
+    /**
+     * @return True if there were no recorded lines, false otherwise.
+     */
+    public boolean isEmpty(){
+        return lines.isEmpty();
+    }
 }
