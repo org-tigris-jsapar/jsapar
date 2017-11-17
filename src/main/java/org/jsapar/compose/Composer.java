@@ -22,7 +22,7 @@ public interface Composer {
      * @param document The document to compose output from.
      * @throws IOException When a low level IO error occurs.
      */
-    void compose(Document document) throws IOException;
+    void compose(Document document);
 
     /**
      * Composes output based on supplied {@link Line}, including line separator
@@ -30,7 +30,7 @@ public interface Composer {
      * @param line The line to compose
      * @return True if the line was actually composed.
      */
-    boolean composeLine(Line line) throws IOException;
+    boolean composeLine(Line line);
 
     /**
      * Sets an error event listener to this composer. If you want to add more than one error event listeners, use the {@link MulticastErrorEventListener}

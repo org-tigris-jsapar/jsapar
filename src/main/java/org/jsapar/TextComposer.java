@@ -10,6 +10,7 @@ import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.Iterator;
 
@@ -56,7 +57,7 @@ public class TextComposer implements Composer {
      *
      */
     @Override
-    public void compose(Document document) throws IOException {
+    public void compose(Document document)  {
         compose(document.iterator());
     }
 
@@ -68,7 +69,7 @@ public class TextComposer implements Composer {
      *            don't want to store them all in memory.
      *
      */
-    public void compose(Iterator<Line> lineIterator) throws IOException {
+    public void compose(Iterator<Line> lineIterator)  {
         SchemaComposer schemaComposer = makeSchemaComposer();
         schemaComposer.beforeCompose();
         schemaComposer.compose(lineIterator);
@@ -90,18 +91,22 @@ public class TextComposer implements Composer {
      * @throws IOException if io-error occurs.
      * @return True if the line was written, false if there was no matching line type in the schema.
      */
-    private boolean writeLineLn(Line line) throws IOException {
-        if(breakBefore) {
-            writer.write(schema.getLineSeparator());
+    private boolean writeLineLn(Line line) {
+        try {
+            if (breakBefore) {
+                writer.write(schema.getLineSeparator());
+            }
+            if (!writeLine(line))
+                return false;
+            breakBefore = true;
+            return true;
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
-        if(!writeLine(line))
-            return false;
-        breakBefore = true;
-        return true;
     }
 
     @Override
-    public boolean composeLine(Line line) throws IOException {
+    public boolean composeLine(Line line) {
         return writeLineLn(line);
     }
 
@@ -119,7 +124,7 @@ public class TextComposer implements Composer {
      * @throws IOException if an io-error occurs.
      * @return True if line was composed, false otherwise.
      */
-    boolean writeLine(Line line) throws IOException {
+    boolean writeLine(Line line) {
         SchemaComposer schemaComposer = makeSchemaComposer();
         return schemaComposer.composeLine(line);
     }

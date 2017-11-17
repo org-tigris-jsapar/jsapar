@@ -23,7 +23,7 @@ public interface SchemaComposer {
      * @throws IOException if an io-error occurs
      *
      */
-    void compose(Iterator<Line> iterator) throws IOException, JSaParException;
+    void compose(Iterator<Line> iterator) throws JSaParException;
 
     /**
      * Called before compose() in order to set up or write file header.
@@ -31,7 +31,7 @@ public interface SchemaComposer {
      * @throws IOException if an io-error occurs
      *
      */
-    void beforeCompose() throws IOException, JSaParException;
+    void beforeCompose() throws JSaParException;
 
     /**
      * Called after compose() in order to clean up or write file footer.
@@ -39,7 +39,7 @@ public interface SchemaComposer {
      * @throws IOException if an io-error occurs
      *
      */
-    void afterCompose() throws IOException, JSaParException;
+    void afterCompose() throws JSaParException;
 
     /**
      * Composes the supplied line but does not write any line separator.
@@ -48,5 +48,5 @@ public interface SchemaComposer {
      * @return True if line was actually composed, false otherwise.
      * @throws IOException if an io-error occurs
      */
-    boolean composeLine(Line line) throws IOException;
+    boolean composeLine(Line line) ;
 }

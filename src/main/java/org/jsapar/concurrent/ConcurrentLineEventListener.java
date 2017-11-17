@@ -56,7 +56,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
     }
 
     @Override
-    public void lineParsedEvent(LineParsedEvent event) throws IOException {
+    public void lineParsedEvent(LineParsedEvent event)  {
         checkException();
         try {
             events.put(event);

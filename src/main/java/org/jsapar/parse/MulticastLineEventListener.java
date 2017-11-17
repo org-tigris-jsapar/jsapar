@@ -29,7 +29,7 @@ public class MulticastLineEventListener implements LineEventListener{
      * @throws IOException
      */
     @Override
-    public void lineParsedEvent(LineParsedEvent event) throws IOException {
+    public void lineParsedEvent(LineParsedEvent event)  {
         for (LineEventListener l : this.lineEventListeners) {
             l.lineParsedEvent(event);
         }

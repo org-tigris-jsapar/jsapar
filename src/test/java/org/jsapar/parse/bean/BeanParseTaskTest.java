@@ -53,7 +53,7 @@ public class BeanParseTaskTest {
         person.setFirstName("Test2");
         people.add(person);
 
-        BeanParseTask<TstPerson> parser = new BeanParseTask<>(people.iterator(), new BeanParseConfig());
+        BeanParseTask<TstPerson> parser = new BeanParseTask<>(people.stream(), new BeanParseConfig());
         DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
         parser.setLineEventListener(listener);
         parser.execute();

@@ -19,7 +19,7 @@ public interface LineComposer {
      * @throws IOException if an io-error occurs
      *
      */
-    void compose(Line line) throws IOException;
+    void compose(Line line);
 
 
     /**

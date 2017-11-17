@@ -78,7 +78,7 @@ public class ConvertTask {
         }
 
         @Override
-        public void lineParsedEvent(LineParsedEvent event) throws IOException {
+        public void lineParsedEvent(LineParsedEvent event) {
             Line line = event.getLine();
             for (LineManipulator manipulator : manipulators) {
                 if (!manipulator.manipulate(line))

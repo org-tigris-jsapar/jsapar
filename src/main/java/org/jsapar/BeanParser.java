@@ -12,6 +12,7 @@ import org.jsapar.parse.bean.BeanParseTask;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 /**
  * Uses a collection of java bean objects to build {@link LineParsedEvent}. The {@link Line#lineType} of each line will be
@@ -48,13 +49,28 @@ public class BeanParser<T> extends AbstractParser {
     }
 
     /**
+     * Parses beans supplied by the stream and produces {@link LineParsedEvent} to the provided lineEventListener for
+     * each bean within the stream.
+     * @param stream The stream to get beans from.
+     * @param lineEventListener The listener that will receive events for each parsed bean.
+     */
+    public void parse(Stream<? extends T> stream, LineEventListener lineEventListener)  {
+        BeanParseTask<T> parseTask = new BeanParseTask<>(stream, parseConfig);
+        try {
+            execute(parseTask, lineEventListener);
+        } catch (IOException e) {
+            throw new AssertionError("Parsing beans should never throw IOException", e);
+        }
+    }
+
+    /**
      * Parses beans supplied within the collection and produces {@link LineParsedEvent} to the provided lineEventListener for
      * each bean within the iterator.
      * @param collection The collection to get beans from.
      * @param lineEventListener The listener that will receive events for each parsed bean.
      */
     public void parse(Collection<? extends T> collection, LineEventListener lineEventListener) {
-        parse(collection.iterator(), lineEventListener);
+        parse(collection.stream(), lineEventListener);
     }
 
     /**

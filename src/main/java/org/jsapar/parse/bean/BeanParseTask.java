@@ -19,6 +19,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Uses a collection of java bean objects to build {@link LineParsedEvent}. The {@link Line#lineType} of each line will be
@@ -34,10 +37,15 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
 
     private final BeanParseConfig config;
 
-    private Iterator<? extends T> iterator;
+    private Stream<? extends T> stream;
+
+    public BeanParseTask(Stream<? extends T> stream, BeanParseConfig config) {
+        this.stream = stream;
+        this.config = config;
+    }
 
     public BeanParseTask(Iterator<? extends T> iterator, BeanParseConfig config) {
-        this.iterator = iterator;
+        this.stream = StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false);
         this.config = config;
     }
 
@@ -48,12 +56,12 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
      */
     @Override
     public long execute() throws IOException {
-        long count = 0;
-        while(iterator.hasNext()){
-            count++;
-            lineParsedEvent( new LineParsedEvent(this, parseBean(iterator.next(), this, count)) );
-        }
-        return count;
+        AtomicLong count = new AtomicLong(1);
+        stream.forEach(bean->
+                lineParsedEvent( new LineParsedEvent(
+                        this,
+                        parseBean(bean, this, count.incrementAndGet())) ));
+        return count.get();
     }
 
     /**

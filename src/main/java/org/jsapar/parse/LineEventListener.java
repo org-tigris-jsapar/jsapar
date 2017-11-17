@@ -17,7 +17,7 @@ public interface LineEventListener extends EventListener {
      * @param event
      *            The event that contains the parsed line.
      */
-    void lineParsedEvent(LineParsedEvent event) throws IOException;
+    void lineParsedEvent(LineParsedEvent event) ;
 
 
 }

@@ -108,7 +108,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
                     this.listener.lineParsedEvent(new LineParsedEvent(this, this.currentLine));
                     this.currentLine = null;
                 }
-            } catch (IOException | JSaParException e) {
+            } catch (JSaParException e) {
                 throw new SAXException("Error while handling parsed line.", e);
             }
         }

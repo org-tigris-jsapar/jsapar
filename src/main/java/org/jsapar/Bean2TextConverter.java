@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 /**
  * Converts from beans to text output.
@@ -38,6 +39,19 @@ public class Bean2TextConverter<T> extends AbstractConverter {
     }
 
     /**
+     * Converts objects referenced by supplied stream into a text output written to supplied writer.
+     * @param stream The stream to get beans from.
+     * @param writer The text writer to write text output to.
+     * @throws IOException If there is an error writing text output.
+     */
+    public void convert(Stream<? extends T> stream, Writer writer) throws IOException {
+        TextComposer composer = new TextComposer(this.composerSchema, writer);
+        BeanParseTask<T> parseTask = new BeanParseTask<>(stream, parseConfig);
+        ConvertTask convertTask = new ConvertTask(parseTask, composer);
+        execute(convertTask);
+    }
+
+    /**
      * Converts objects referenced by supplied iterator into a text output written to supplied writer.
      * @param iterator The iterator to get beans from.
      * @param writer The text writer to write text output to.
@@ -57,7 +71,7 @@ public class Bean2TextConverter<T> extends AbstractConverter {
      * @throws IOException If there is an error writing text output.
      */
     public void convert(Collection<? extends T> collection, Writer writer) throws IOException {
-        convert(collection.iterator(), writer);
+        convert(collection.stream(), writer);
     }
 
     /**

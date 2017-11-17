@@ -6,6 +6,7 @@ import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaLine;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
@@ -36,40 +37,44 @@ public abstract class AbstractSchemaComposer implements SchemaComposer{
     /**
      * This implementation composes output based on schema and supplied lines.
      * @param iterator The lines to compose output for.
-     * @throws IOException when an IO error occurs
+     * @throws UncheckedIOException when an IO error occurs
      *
      */
     @Override
-    public void compose(Iterator<Line> iterator) throws IOException, JSaParException {
-        while (iterator.hasNext()) {
-            if (composeLine(iterator.next()) && iterator.hasNext()) {
-                writer.write(schema.getLineSeparator());
+    public void compose(Iterator<Line> iterator) throws JSaParException {
+        try {
+            while (iterator.hasNext()) {
+                if (composeLine(iterator.next()) && iterator.hasNext()) {
+                    writer.write(schema.getLineSeparator());
+                }
             }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 
     /**
      * This implementation does nothing
-     * @throws IOException when an IO error occurs
+     * @throws UncheckedIOException when an IO error occurs
      *
      */
     @Override
-    public void beforeCompose() throws IOException, JSaParException {
+    public void beforeCompose() throws JSaParException {
 
     }
 
     /**
      * This implementation does nothing
-     * @throws IOException when an IO error occurs
+     * @throws UncheckedIOException when an IO error occurs
      *
      */
     @Override
-    public void afterCompose() throws IOException, JSaParException {
+    public void afterCompose() throws JSaParException {
 
     }
 
     @Override
-    public boolean composeLine(Line line) throws IOException {
+    public boolean composeLine(Line line)  {
         LineComposer lineComposer = lineComposers.get(line.getLineType());
         if (lineComposer == null || lineComposer.ignoreWrite())
             return false;

@@ -11,6 +11,7 @@ import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.QuoteBehavior;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -78,28 +79,32 @@ class CsvLineComposer implements LineComposer {
     /**
      * This implementation composes a csv output based on the line schema and provided line.
      * @param line The line to compose output of.
-     * @throws IOException If there is an error writing line to writer.
+     * @throws UncheckedIOException If there is an error writing line to writer.
      */
     @Override
-    public void compose(Line line) throws IOException {
-        if(schemaLine.isIgnoreWrite())
-            return;
-        if(firstRow && schemaLine.isFirstLineAsSchema()){
-            composeHeaderLine();
-            writer.write(lineSeparator);
-        }
-        firstRow = false;
-        String sCellSeparator = schemaLine.getCellSeparator();
+    public void compose(Line line) {
+        try {
+            if (schemaLine.isIgnoreWrite())
+                return;
+            if (firstRow && schemaLine.isFirstLineAsSchema()) {
+                composeHeaderLine();
+                writer.write(lineSeparator);
+            }
+            firstRow = false;
+            String sCellSeparator = schemaLine.getCellSeparator();
 
-        Iterator<CsvSchemaCell> iter = schemaLine.iterator();
-        while(iter.hasNext()) {
-            CsvSchemaCell schemaCell = iter.next();
-            Cell cell = line.getCell(schemaCell.getName()).orElse(schemaCell.makeEmptyCell());
-            CsvCellComposer cellComposer = cellComposers.get(schemaCell.getName());
-            cellComposer.compose(writer, cell);
+            Iterator<CsvSchemaCell> iter = schemaLine.iterator();
+            while (iter.hasNext()) {
+                CsvSchemaCell schemaCell = iter.next();
+                Cell cell = line.getCell(schemaCell.getName()).orElse(schemaCell.makeEmptyCell());
+                CsvCellComposer cellComposer = cellComposers.get(schemaCell.getName());
+                cellComposer.compose(writer, cell);
 
-            if (iter.hasNext())
-                writer.write(sCellSeparator);
+                if (iter.hasNext())
+                    writer.write(sCellSeparator);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 

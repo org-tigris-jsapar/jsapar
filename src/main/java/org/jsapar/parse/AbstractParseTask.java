@@ -26,7 +26,7 @@ public abstract class AbstractParseTask implements ParseTask, LineEventListener,
     }
 
     @Override
-    public void lineParsedEvent(LineParsedEvent event) throws IOException {
+    public void lineParsedEvent(LineParsedEvent event)  {
         if(lineEventListener != null)
             lineEventListener.lineParsedEvent(event);
     }

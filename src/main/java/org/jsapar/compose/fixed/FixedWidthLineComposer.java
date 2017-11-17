@@ -7,6 +7,7 @@ import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Optional;
@@ -35,25 +36,30 @@ class FixedWidthLineComposer implements LineComposer {
      *
      * @param line
      *            The line to write to the writer
-     * @throws IOException If an IO error occurs.
+     * @throws UncheckedIOException If an IO error occurs.
      *
      */
     @Override
-    public void compose(Line line) throws IOException {
-        if (lineSchema.isIgnoreWrite())
-            return;
-        Iterator<FixedWidthSchemaCell> iter = lineSchema.getSchemaCells().iterator();
+    public void compose(Line line)  {
+        try {
+            if (lineSchema.isIgnoreWrite())
+                return;
+            Iterator<FixedWidthSchemaCell> iter = lineSchema.getSchemaCells().iterator();
 
-        // Iterate all schema cells.
-        int totalLength = 0;
-        while (iter.hasNext()) {
-            FixedWidthSchemaCell schemaCell = iter.next();
-            totalLength += schemaCell.getLength();
-            Optional<Cell> oCell = line.getCell(schemaCell.getName());
-            cellComposer.compose(oCell.orElse(schemaCell.makeEmptyCell()), schemaCell);
+            // Iterate all schema cells.
+            int totalLength = 0;
+            while (iter.hasNext()) {
+                FixedWidthSchemaCell schemaCell = iter.next();
+                totalLength += schemaCell.getLength();
+                Optional<Cell> oCell = line.getCell(schemaCell.getName());
+                cellComposer.compose(oCell.orElse(schemaCell.makeEmptyCell()), schemaCell);
+            }
+            if (lineSchema.getMinLength() > totalLength) {
+                FixedWidthCellComposer.fill(writer, lineSchema.getPadCharacter(), lineSchema.getMinLength() - totalLength);
+            }
         }
-        if (lineSchema.getMinLength() > totalLength) {
-            FixedWidthCellComposer.fill(writer, lineSchema.getPadCharacter(), lineSchema.getMinLength() - totalLength);
+        catch (IOException e){
+            throw new UncheckedIOException(e);
         }
     }
 
