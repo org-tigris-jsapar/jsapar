@@ -17,14 +17,7 @@ import static org.junit.Assert.assertSame;
 /**
  */
 public class ConcurrentText2TextConvertTaskTest {
-    @Test
-    public void testConcurrentText2TextConverter() throws IOException, JSaParException {
-        TextParseTask p = new TextParseTask(new CsvSchema(), new StringReader(""));
-        TextComposer c = new TextComposer(new FixedWidthSchema(), new StringWriter());
-        ConvertTask instance = new ConcurrentText2TextConverter(p, c);
-        assertSame(p, instance.getParseTask());
-        assertSame(c, instance.getComposer());
-    }
+
 
     @Test
     public void testConvert() throws IOException, JSaParException {
@@ -44,16 +37,13 @@ public class ConcurrentText2TextConvertTaskTest {
         outputSchema.addSchemaLine(outputSchemaLine);
         outputSchema.setLineSeparator("|");
 
-        StringWriter writer = new StringWriter();
-        StringReader reader = new StringReader(toParse);
-        ConvertTask convertTask = new ConcurrentText2TextConverter(inputSchema, reader, outputSchema, writer);
-        convertTask.execute();
-        reader.close();
-        writer.close();
-        String sResult = writer.getBuffer().toString();
-        String sExpected = "Jonas;Stenberg|Frida;Bergsten";
-
-        Assert.assertEquals(sExpected, sResult);
+        try (StringWriter writer = new StringWriter(); StringReader reader = new StringReader(toParse)) {
+            ConcurrentText2TextConverter converter = new ConcurrentText2TextConverter(inputSchema, outputSchema);
+            converter.convert(reader, writer);
+            String sResult = writer.getBuffer().toString();
+            String sExpected = "Jonas;Stenberg|Frida;Bergsten";
+            Assert.assertEquals(sExpected, sResult);
+        }
 
     }
 

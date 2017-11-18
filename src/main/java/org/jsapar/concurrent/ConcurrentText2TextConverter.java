@@ -1,38 +1,58 @@
 package org.jsapar.concurrent;
 
 import org.jsapar.TextComposer;
+import org.jsapar.convert.AbstractConverter;
+import org.jsapar.convert.ConvertTask;
+import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
 /**
  * A multi threaded version of {@link org.jsapar.Text2TextConverter} where the composer is started in a separate worker
  * thread.
+ * See {@link AbstractConverter} for details about error handling and manipulating data.
  *
  * @see ConcurrentConvertTask
  * @see org.jsapar.Text2TextConverter
  *
  */
-public class ConcurrentText2TextConverter extends ConcurrentConvertTask {
+public class ConcurrentText2TextConverter extends AbstractConverter{
+    private final Schema parseSchema;
+    private final Schema composeSchema;
+    private TextParseConfig parseConfig = new TextParseConfig();
 
-    /** Creates a converter
-     * @param parser The parser to use while parsing
-     * @param composer The composer to use while composing.
-     */
-    public ConcurrentText2TextConverter(TextParseTask parser, TextComposer composer) {
-        super(parser, composer);
+    public ConcurrentText2TextConverter(Schema parseSchema, Schema composeSchema) {
+        this.parseSchema = parseSchema;
+        this.composeSchema = composeSchema;
     }
 
-    /** Creates a converter
-     * @param inputSchema The schema to use while parsing
-     * @param reader The reader to parse text from
-     * @param outputSchema The schema to use while composing
-     * @param writer The writer to compose output to.
-     */
-    public ConcurrentText2TextConverter(Schema inputSchema, Reader reader, Schema outputSchema, Writer writer) {
-        super(new TextParseTask(inputSchema, reader), new TextComposer(outputSchema, writer));
+    public ConcurrentText2TextConverter(Schema parseSchema, Schema composeSchema, TextParseConfig parseConfig) {
+        this.parseSchema = parseSchema;
+        this.composeSchema = composeSchema;
+        this.parseConfig = parseConfig;
     }
 
+    /**
+     * @param reader The reader to read input from
+     * @param writer The writer to write converted result to.
+     * @return Number of converted lines.
+     * @throws IOException In case of IO error
+     */
+    public long convert(Reader reader, Writer writer) throws IOException {
+        TextParseTask parseTask = new TextParseTask(this.parseSchema, reader, parseConfig);
+        ConvertTask convertTask = new ConcurrentConvertTask(parseTask, new TextComposer(composeSchema, writer));
+        return execute(convertTask);
+    }
+
+    public TextParseConfig getParseConfig() {
+        return parseConfig;
+    }
+
+    public void setParseConfig(TextParseConfig parseConfig) {
+        this.parseConfig = parseConfig;
+    }
 }

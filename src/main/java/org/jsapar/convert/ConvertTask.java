@@ -8,12 +8,13 @@ import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseTask;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.List;
 
 /**
  * Reads from supplied parseTask and outputs each line to the composer. By adding
  * a LineManipulator you are able to make modifications of each line before it is written to the
- * output. The method {@link LineManipulator#manipulate(Line)} of all added LineManipulators are called for each line that are
+ * output. The method {@link LineManipulator#manipulate(Line)} of all added LineManipulators are called for each line that is
  * parsed successfully.
  * <p>
  * For each line, the line type of the parsed line is
@@ -64,8 +65,12 @@ public class ConvertTask {
      * @throws IOException In case of IO error.
      */
     public long execute() throws IOException {
-        parseTask.setLineEventListener(new LineForwardListener());
-        return parseTask.execute();
+        try {
+            parseTask.setLineEventListener(new LineForwardListener());
+            return parseTask.execute();
+        }catch (UncheckedIOException e){
+            throw e.getCause() != null ? e.getCause() : new IOException(e);
+        }
     }
 
     /**

@@ -4,7 +4,7 @@ import org.jsapar.model.Cell;
 import org.jsapar.schema.SchemaCell;
 
 /**
- * Utility class that helps composing a cell.
+ * Internal utility class that helps composing a cell.
  */
 public class CellComposer {
 

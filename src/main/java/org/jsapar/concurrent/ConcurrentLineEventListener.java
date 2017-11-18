@@ -81,6 +81,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
         public void run() {
             try {
                 running = true;
+                onStart();
                 while (!shouldStop) {
                     LineParsedEvent event = events.take();
                     if (shouldStop) {
@@ -100,8 +101,25 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
                 }
             } finally {
                 running = false;
+                onStop();
             }
         }
+    }
+
+    /**
+     * Called by consumer thread when it starts up but before it starts handling any event. Override this in order to
+     * implement initialization needed for the new
+     * thread.
+     */
+    protected void onStart(){
+    }
+
+    /**
+     * Called by consumer thread just before it dies. Override this in order to
+     * implement resource dealoccation etc. This method called also when the thread is terminated with an exception so
+     * be aware that you may end up here also when a serious error has occurred.
+     */
+    protected void onStop(){
     }
 
     /**

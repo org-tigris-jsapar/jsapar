@@ -88,7 +88,7 @@ public class TextComposer implements Composer {
      * 
      * @param line The line to write.
      *
-     * @throws IOException if io-error occurs.
+     * @throws UncheckedIOException if io-error occurs.
      * @return True if the line was written, false if there was no matching line type in the schema.
      */
     private boolean writeLineLn(Line line) {
@@ -121,7 +121,7 @@ public class TextComposer implements Composer {
      * 
      * @param line The line to write
      *
-     * @throws IOException if an io-error occurs.
+     * @throws UncheckedIOException if an io-error occurs.
      * @return True if line was composed, false otherwise.
      */
     boolean writeLine(Line line) {
