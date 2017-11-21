@@ -36,23 +36,24 @@ public class CsvParser implements TextSchemaParser {
 
     @Override
     public long parse(LineEventListener listener, ErrorEventListener errorListener) throws IOException {
+        if(schema.isEmpty()) {
+            return 0;
+        }
         long lineNumber = 0;
-        if(schema.isEmpty())
-            return lineNumber-1;
         while(true){
-
             CsvLineParser lineParser = lineParserFactory.makeLineParser(lineReader);
             if(lineParser == null) {
                 if(lineParserFactory.isEmpty())
-                    return lineNumber-1; // No more parsers. We should not read any more. Leave rest of input as is.
+                    return lineNumber; // No more parsers. We should not read any more. Leave rest of input as is.
                 if(lineReader.eofReached())
-                    return lineNumber-1;
+                    return lineNumber;
                 handleNoParser(lineReader, errorListener);
                 continue;
             }
             if(!lineParser.parse(lineReader, listener, errorListener))
-                return lineNumber-1;
-
+                return lineNumber;
+            if(!lineReader.lastLineWasEmpty())
+                lineNumber++;
         }
 
     }

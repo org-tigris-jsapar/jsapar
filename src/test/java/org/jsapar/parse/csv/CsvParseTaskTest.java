@@ -34,7 +34,7 @@ public class CsvParseTaskTest {
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg;Hemgatan 19;111 22;Stockholm";
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        Document doc = build(schema, reader);
+        Document doc = build(schema, reader,1);
 
         assertEquals(1, doc.size());
 
@@ -53,7 +53,7 @@ public class CsvParseTaskTest {
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg;Hemgatan 19;111 22;Stockholm" + System.getProperty("line.separator");
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        Document doc = build(schema, reader);
+        Document doc = build(schema, reader,1);
 
         assertEquals(1, doc.size());
 
@@ -72,7 +72,7 @@ public class CsvParseTaskTest {
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator") + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        Document doc = build(schema, reader);
+        Document doc = build(schema, reader, 2);
 
         Line line = doc.getLine(0);
         assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
@@ -91,7 +91,7 @@ public class CsvParseTaskTest {
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator")
                 + System.getProperty("line.separator") + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        Document doc = build(schema, reader);
+        Document doc = build(schema, reader, 2);
 
         assertEquals(2, doc.size());
 
@@ -112,7 +112,7 @@ public class CsvParseTaskTest {
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator") + " \t \t  "
                 + System.getProperty("line.separator") + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        Document doc = build(schema, reader);
+        Document doc = build(schema, reader,2);
 
         assertEquals(2, doc.size());
 
@@ -144,7 +144,7 @@ public class CsvParseTaskTest {
         String sToParse = "First Name;Last Name;Shoe Size" + sLineSep + "Jonas;Stenberg;41" + sLineSep
                 + "Nils;Nilsson;";
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        Document doc = build(schema, reader);
+        Document doc = build(schema, reader,3);
 
         Line line = doc.getLine(0);
         assertEquals("Jonas", LineUtils.getStringCellValue(line, "First Name").orElse("fail"));
@@ -170,7 +170,7 @@ public class CsvParseTaskTest {
         String sLineSep = System.getProperty("line.separator");
         String sToParse = "$First Name$;$Last Name$" + sLineSep + "Jonas;$Stenberg$" + sLineSep + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        Document doc = build(schema, reader);
+        Document doc = build(schema, reader, 3);
 
         Line line = doc.getLine(0);
         assertEquals("Jonas", LineUtils.getStringCellValue(line, "First Name").orElse("fail"));
@@ -205,7 +205,7 @@ public class CsvParseTaskTest {
 
         String sToParse = "Name;Jonas;Stenberg\nAddress:Storgatan 4:12345:Storstan";
         java.io.Reader reader = new java.io.StringReader(sToParse);
-        Document doc = build(schema, reader);
+        Document doc = build(schema, reader, 2);
 
         assertEquals(2, doc.size());
         Line line = doc.getLine(0);
@@ -220,10 +220,11 @@ public class CsvParseTaskTest {
         assertEquals("Storstan", LineUtils.getStringCellValue(line, "post.town").orElse("fail"));
     }
 
-    private Document build(CsvSchema schema, Reader reader) throws IOException {
+    private Document build(CsvSchema schema, Reader reader, int actualRows) throws IOException {
         CsvParser parser = new CsvParser(reader, schema);
         DocumentBuilderLineEventListener builder = new DocumentBuilderLineEventListener();
-        parser.parse(builder, new ExceptionErrorEventListener());
+        long rows = parser.parse(builder, new ExceptionErrorEventListener());
+        assertEquals(actualRows, rows);
         return builder.getDocument();
     }
 

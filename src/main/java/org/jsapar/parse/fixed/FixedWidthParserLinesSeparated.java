@@ -38,13 +38,12 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
         FWLineParserFactory lineParserFactory = new FWLineParserFactory(getSchema(), getConfig());
         long lineNumber = 0;
         while(true){
-            lineNumber++;
             String sLine = lineReader.readLine();
             if(sLine == null)
-                return lineNumber-1;
+                return lineNumber;
             if(sLine.trim().isEmpty()) // Just ignore empty lines
                 continue;
-
+            lineNumber++;
             try(BufferedReader r = new BufferedReader(new StringReader(sLine))) {
                 if(lineParserFactory.isEmpty())
                     return lineNumber-1;

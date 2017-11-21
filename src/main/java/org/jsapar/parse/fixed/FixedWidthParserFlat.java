@@ -53,9 +53,9 @@ public class FixedWidthParserFlat extends FixedWidthParser{
         long lineNumber = 0;
         FWLineParserFactory lineParserFactory = new FWLineParserFactory(getSchema(), getConfig());
         while(true){
-            lineNumber++;
             if(lineParserFactory.isEmpty())
-                return lineNumber-1;
+                return lineNumber;
+            lineNumber++;
             FixedWidthLineParser lineParser = lineParserFactory.makeLineParser(reader);
             if (lineParser == null) {
                 handleNoParser(lineNumber, lineParserFactory.getLastResult(), errorListener);
