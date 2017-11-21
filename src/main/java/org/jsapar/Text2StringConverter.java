@@ -1,5 +1,6 @@
 package org.jsapar;
 
+import org.jsapar.compose.Composer;
 import org.jsapar.compose.string.StringComposedEvent;
 import org.jsapar.compose.string.StringComposedEventListener;
 import org.jsapar.compose.string.StringComposer;
@@ -50,8 +51,17 @@ public class Text2StringConverter extends AbstractConverter {
      */
     public long convert(Reader reader, StringComposedEventListener composedEventListener) throws IOException {
         TextParseTask parseTask = new TextParseTask(this.parseSchema, reader, parseConfig);
-        ConvertTask convertTask = new ConvertTask(parseTask, new StringComposer(composeSchema, composedEventListener));
+        ConvertTask convertTask = new ConvertTask(parseTask, makeComposer(composeSchema, composedEventListener));
         return execute(convertTask);
+    }
+
+    /**
+     * Creates the composer
+     * @param composedEventListener
+     * @return The composer to use in this converter
+     */
+    protected Composer makeComposer(Schema schema, StringComposedEventListener composedEventListener) {
+        return new StringComposer(schema, composedEventListener);
     }
 
     public TextParseConfig getParseConfig() {
