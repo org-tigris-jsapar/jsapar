@@ -12,6 +12,9 @@ import org.jsapar.schema.SchemaLine;
 /**
  * Composer that creates {@link StringComposedEvent} for each line that is composed.
  * <p>
+ * This implementation will return null for all cells of type EmptyCell from the parsed input and
+ * where there is no default value.
+ * <p>
  * The {@link StringComposedEvent} provides a
  * {@link java.util.stream.Stream} of {@link String} for the current {@link Line} where each
  * string is matches the cell in a schema. Each cell is formatted according to provided
@@ -39,15 +42,13 @@ public class StringComposerNullOnEmptyCell implements Composer, StringComposedEv
         SchemaLine schemaLine = schema.getSchemaLine(line.getLineType());
         if (schemaLine == null || schemaLine.isIgnoreWrite())
             return false;
-        stringComposedEvent(new StringComposedEvent(line.getLineType(), line.getLineNumber(), schemaLine.stream()
-                .map(schemaCell -> {
-                    if(schemaCell.getDefaultValue() != null)
+        stringComposedEvent(new StringComposedEvent(line.getLineType(), line.getLineNumber(),
+                schemaLine.stream().map(schemaCell -> {
+                    if (schemaCell.getDefaultValue() != null)
                         return cellComposer.format(line.getCell(schemaCell.getName()).orElse(null), schemaCell);
                     else
-                        return line.getCell(schemaCell.getName())
-                                .filter(cell->!(cell instanceof EmptyCell))
-                                .map(cell->cellComposer.format(cell, schemaCell))
-                                .orElse(null);
+                        return line.getCell(schemaCell.getName()).filter(cell -> !(cell instanceof EmptyCell))
+                                .map(cell -> cellComposer.format(cell, schemaCell)).orElse(null);
                 })));
         return true;
     }
