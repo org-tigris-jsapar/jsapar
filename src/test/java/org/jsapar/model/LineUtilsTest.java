@@ -73,32 +73,22 @@ public class LineUtilsTest {
         Line line = new Line("TestLine");
         line.addCell(new IntegerCell("shoeSize", 42));
         line.addCell(new FloatCell("pi", 3.141));
-        LineUtils.setStringCellValue(line, "aStringValue", "17");
         LineUtils.setIntCellValue(line, "anIntValue", 4711);
 
-        assertEquals(42, LineUtils.getIntCellValue(line,"shoeSize"));
+        assertEquals(42, LineUtils.getNumberCellValue(line,"shoeSize").orElse(-1).intValue());
         assertEquals(42, LineUtils.getIntCellValue(line,"shoeSize", 55));
         assertEquals(4711, LineUtils.getIntCellValue(line,"doesNotExist", 4711));
-        assertEquals(17, LineUtils.getIntCellValue(line,"aStringValue"));
-        assertEquals(3, LineUtils.getIntCellValue(line,"pi"));
-        assertEquals(4711, LineUtils.getIntCellValue(line,"anIntValue"));
+        assertEquals(3, LineUtils.getNumberCellValue(line,"pi").orElse(-1).intValue());
+        assertEquals(4711, LineUtils.getNumberCellValue(line,"anIntValue").orElse(-1).intValue());
 
-    }
-
-    @Test(expected=IllegalStateException.class)
-    public void testGetIntCellValue_dont_exist() {
-        Line line = new Line("TestLine");
-
-        LineUtils.getIntCellValue(line,"shoeSize");
-        Assert.fail("Should throw exception");
     }
 
     @Test(expected=NumberFormatException.class)
     public void testGetIntCellValue_not_parsable() {
         Line line = new Line("TestLine");
-        LineUtils.setStringCellValue(line,"aStringValue", "ABC");
+        LineUtils.setStringCellValue(line,"aStringValue", "17");
 
-        LineUtils.getIntCellValue(line,"aStringValue");
+        LineUtils.getNumberCellValue(line,"aStringValue");
         Assert.fail("Should throw exception");
     }
 
@@ -106,8 +96,8 @@ public class LineUtilsTest {
     public void testGetSetLongCellValue() throws Exception {
         Line line = new Line("TestLine");
         LineUtils.setLongCellValue(line, "Value", 314159265358979L);
-        assertEquals(314159265358979L, LineUtils.getLongCellValue(line,"Value"));
-        assertEquals(314159265358979L, LineUtils.getLongCellValue(line,"Value"), 17L);
+        assertEquals(314159265358979L, LineUtils.getNumberCellValue(line,"Value").orElse( -1.0).longValue());
+        assertEquals(314159265358979L, LineUtils.getNumberCellValue(line,"Value").orElse( -1.0).longValue(), 17L);
         assertEquals(17L, LineUtils.getLongCellValue(line,"DoesNotExist", 17L));
     }
 
@@ -115,7 +105,7 @@ public class LineUtilsTest {
     public void testGetSetDoubleCellValue() throws Exception {
         Line line = new Line("TestLine");
         LineUtils.setDoubleCellValue(line, "Value", 3.14159265358979D);
-        assertEquals(3.14159265358979D, LineUtils.getDoubleCellValue(line,"Value"), 0.0000000001);
+        assertEquals(3.14159265358979D, LineUtils.getNumberCellValue(line,"Value").orElse( -1.0).doubleValue(), 0.0000000001);
         assertEquals(3.14159265358979D, LineUtils.getDoubleCellValue(line,"Value", 2.71D), 0.0000000001);
         assertEquals(2.718D, LineUtils.getDoubleCellValue(line,"DoesNotExist", 2.718D), 0.0000000001);
     }
@@ -170,10 +160,10 @@ public class LineUtilsTest {
         Line line = new Line("TestLine");
         LineUtils.setBooleanCellValue(line,"aTrueValue", true);
         LineUtils.setBooleanCellValue(line,"aFalseValue", false);
-        assertTrue(LineUtils.getBooleanCellValue(line,"aTrueValue"));
+        assertTrue(LineUtils.getBooleanCellValue(line,"aTrueValue").orElseThrow(AssertionError::new));
         assertTrue(LineUtils.getBooleanCellValue(line,"aTrueValue", false));
         assertFalse(LineUtils.getBooleanCellValue(line,"anotherValue", false));
-        assertFalse(LineUtils.getBooleanCellValue(line,"aFalseValue"));
+        assertFalse(LineUtils.getBooleanCellValue(line,"aFalseValue").orElseThrow(AssertionError::new));
     }
 
     @Test
@@ -181,7 +171,7 @@ public class LineUtilsTest {
         Line line = new Line("TestLine");
         char ch = 'A';
         LineUtils.setCharCellValue(line,"aCharValue", ch);
-        assertEquals('A', LineUtils.getCharCellValue(line,"aCharValue"));
+        assertEquals(Character.valueOf('A'), LineUtils.getCharCellValue(line,"aCharValue").orElse('B'));
         assertEquals('A', LineUtils.getCharCellValue(line,"aCharValue", 'B'));
         assertEquals('B', LineUtils.getCharCellValue(line,"another", 'B'));
     }

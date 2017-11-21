@@ -158,7 +158,8 @@ public class LineUtils {
      *
      * @param line     The line to get value from
      * @param cellName The name of the cell to get
-     * @return The optional value of the specified cell, not present if there is no such cell.
+     * @return The optional value of the specified cell, not present if there is no such cell. If the cell exists but
+     * contains an empty cell, this method returns an Optional containing an empty cell.
      */
     public static Optional<String> getStringCellValue(Line line, String cellName) {
         return line.getCell(cellName).map(Cell::getStringValue);
@@ -180,10 +181,9 @@ public class LineUtils {
     }
 
     /**
-     * Utility function that gets the integer cell value of the specified cell. If the specified
-     * cell does not exist, a {@link IllegalStateException} is thrown. Tries to parse an integer value if cell is
-     * not of type NumberCell. Throws a NumberFormatException if the value is not a parsable
-     * integer.
+     * Utility function that gets the {@link Number} cell value of the specified cell. If the specified
+     * cell does not exist or does not contain any value, Optional.empty is returned.
+     * Throws a NumberFormatException if the value is not of type Number.
      *
      * @param line     The line to get from
      * @param cellName The name of the cell to get.
@@ -191,23 +191,17 @@ public class LineUtils {
      * @throws IllegalStateException If the cell does not exist
      * @throws NumberFormatException If the cell could not be converted into an integer value
      */
-    public static int getIntCellValue(Line line, String cellName) throws IllegalStateException, NumberFormatException {
-        Cell cell = getExistingCell(line, cellName);
-        if (cell instanceof NumberCell) {
-            NumberCell numberCell = (NumberCell) cell;
-            return numberCell.getValue().intValue();
-        }
-        if (cell.isEmpty())
-            throw new NumberFormatException(
-                    "The cell [" + cell + "] does not have a value and thus cannot be parsed into an integer value.");
-
-        try {
-            return Integer.parseInt(cell.getStringValue());
-        } catch (NumberFormatException e) {
-            throw new JSaParNumberFormatException(
-                    "Error while trying to convert cell [" + cell + "] to an integer value.", e);
-        }
+    public static Optional<Number> getNumberCellValue(Line line, String cellName)
+            throws IllegalStateException, NumberFormatException {
+        return line.getNonEmptyCell(cellName).map(cell -> {
+            if (cell instanceof NumberCell) {
+                NumberCell numberCell = (NumberCell) cell;
+                return numberCell.getValue();
+            }
+            throw new NumberFormatException("The cell [" + cell + "] is not a number cell.");
+        });
     }
+
 
     /**
      * Utility function that gets the integer cell value of the specified cell. If the specified
@@ -220,6 +214,7 @@ public class LineUtils {
      * @param defaultValue Default value that will be returned if the cell does not exist or does not have any value.
      * @return The integer value of the cell with the specified name.
      * @throws NumberFormatException If the cell could not be converted into an integer value
+     * @see #getNumberCellValue(Line, String)
      */
     public static int getIntCellValue(Line line, String cellName, int defaultValue) throws NumberFormatException {
         Optional<Cell> cell = line.getNonEmptyCell(cellName);
@@ -236,34 +231,6 @@ public class LineUtils {
             throw new JSaParNumberFormatException(
                     "Error while trying to convert cell [" + cell + "] to an integer value.", e);
         }
-    }
-
-    /**
-     * Utility function that gets the long integer cell value of the specified cell. If the specified
-     * cell does not exist, a {@link IllegalStateException} is thrown. Tries to parse a long integer value if cell is
-     * not of type NumberCell. Throws a NumberFormatException if the value is not a parsable
-     * integer.
-     *
-     * @param line     The line to get from
-     * @param cellName The name of the cell to get
-     * @return The long integer value of the cell with the specified name.
-     * @throws IllegalStateException If the cell does not exist
-     * @throws NumberFormatException If the cell could not be converted into an integer value
-     */
-    public static long getLongCellValue(Line line, String cellName) throws NumberFormatException {
-        Cell cell = getExistingCell(line, cellName);
-        if (cell instanceof NumberCell) {
-            NumberCell numberCell = (NumberCell) cell;
-            return numberCell.getValue().longValue();
-        }
-
-        try {
-            return Long.parseLong(cell.getStringValue());
-        } catch (NumberFormatException e) {
-            throw new JSaParNumberFormatException(
-                    "Error while trying to convert cell [" + cell + "] to a long integer value.", e);
-        }
-
     }
 
     /**
@@ -297,27 +264,28 @@ public class LineUtils {
 
     /**
      * Utility function that gets the char cell value of the specified cell. If the specified cell does not exist, a
-     * {@link IllegalStateException} is thrown. Tries to parse a character value if cell is not of type CharacterCell. Throws a
+     * Optional.empty is returned. Tries to parse a character value if cell is not of type CharacterCell. Throws a
      * NumberFormatException if the value is not a parsable character.
      *
      * @param line     The line to get from
      * @param cellName The name of the cell to get
-     * @return The char value of the cell with the specified name.
+     * @return The optional char value of the cell with the specified name. Optional.empty if the cell does not exist or is empty.
      * @throws IllegalStateException If the cell does not exist
      * @throws NumberFormatException If the cell could not be converted into an integer value
      */
-    public static char getCharCellValue(Line line, String cellName) throws NumberFormatException {
-        Cell cell = getExistingCell(line, cellName);
-        if (cell instanceof CharacterCell) {
-            CharacterCell chCell = (CharacterCell) cell;
-            return chCell.getValue();
-        }
+    public static Optional<Character> getCharCellValue(Line line, String cellName) throws NumberFormatException {
+        return line.getNonEmptyCell(cellName).map(cell -> {
+            if (cell instanceof CharacterCell) {
+                CharacterCell chCell = (CharacterCell) cell;
+                return chCell.getValue();
+            }
 
-        String s = cell.getStringValue();
-        if (s.isEmpty())
-            throw new NumberFormatException(
-                    "Could not convert string cell [" + cell + "] to a character since string is empty.");
-        return s.charAt(0);
+            String s = cell.getStringValue();
+            if (s.isEmpty())
+                throw new NumberFormatException(
+                        "Could not convert string cell [" + cell + "] to a character since string is empty.");
+            return s.charAt(0);
+        });
     }
 
     /**
@@ -357,14 +325,14 @@ public class LineUtils {
      * @return The boolean value of the cell with the supplied name.
      * @throws IllegalStateException If the cell does not exist
      */
-    public static boolean getBooleanCellValue(Line line, String cellName) throws IllegalStateException {
-        Cell cell = getExistingCell(line, cellName);
-        if (cell instanceof BooleanCell) {
-            BooleanCell booleanCell = (BooleanCell) cell;
-            return booleanCell.getValue();
-        }
-
-        return Boolean.valueOf(cell.getStringValue());
+    public static Optional<Boolean> getBooleanCellValue(Line line, String cellName) throws IllegalStateException {
+        return line.getNonEmptyCell(cellName).map(cell -> {
+            if (cell instanceof BooleanCell) {
+                BooleanCell booleanCell = (BooleanCell) cell;
+                return booleanCell.getValue();
+            }
+            return Boolean.valueOf(cell.getStringValue());
+        });
     }
 
     /**
@@ -526,35 +494,6 @@ public class LineUtils {
         return optionalEnum.orElse(defaultValue);
     }
 
-    /**
-     * Utility function that gets the double cell value of the specified cell. If the specified cell
-     * does not exist, a {@link IllegalStateException} is thrown. Tries to parse a double value if cell is not of
-     * type FloatCell. Throws a NumberFormatException if the value is not a parsable double.
-     *
-     * @param line     The line to get from
-     * @param cellName The name of the cell to get
-     * @return The double value of the cell with the specified name.
-     * @throws IllegalStateException If the cell does not exist
-     * @throws NumberFormatException If the cell could not be converted into a double value
-     */
-    public static double getDoubleCellValue(Line line, String cellName)
-            throws IllegalStateException, NumberFormatException {
-        Cell cell = getExistingCell(line, cellName);
-        if (cell instanceof NumberCell) {
-            NumberCell numberCell = (NumberCell) cell;
-            return numberCell.getValue().doubleValue();
-        }
-        if (cell.isEmpty())
-            throw new NumberFormatException("The cell [" + cell
-                    + "] does not have a value and thus cannot be parsed into a floating point value.");
-
-        try {
-            return Double.parseDouble(cell.getStringValue());
-        } catch (NumberFormatException e) {
-            throw new JSaParNumberFormatException(
-                    "Error while trying to convert cell [" + cell + "] to a floating point value.", e);
-        }
-    }
 
     /**
      * Utility function that gets the double cell value of the specified cell. If the specified cell does not exist, the

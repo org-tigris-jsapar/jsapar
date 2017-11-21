@@ -123,7 +123,7 @@ public abstract class Schema implements Cloneable{
      *             loading a schema.
      */
     public static Schema fromXml(Reader reader)
-            throws SchemaException, IOException, ParserConfigurationException, SAXException {
+            throws SchemaException, IOException{
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         return schemaBuilder.build(reader);
     }

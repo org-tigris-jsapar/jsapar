@@ -133,7 +133,7 @@ public class Xml2SchemaBuilderTest {
 
 
 
-    @Test(expected = SAXParseException.class)
+    @Test(expected = SchemaException.class)
     public final void testBuild_Csv_firstlineasschema_error()
             throws SchemaException, IOException, ParserConfigurationException, SAXException {
 

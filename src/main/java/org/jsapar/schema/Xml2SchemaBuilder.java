@@ -83,8 +83,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @throws IOException When there is an error reading the input
      * @throws SAXException When there is an error parsing the xml
      */
-    public Schema build(java.io.Reader reader)
-            throws IOException, SchemaException, SAXException, ParserConfigurationException {
+    public Schema build(java.io.Reader reader) throws IOException, SchemaException {
         String schemaFileName = "/xml/schema/JSaParSchema.xsd";
         InputStream schemaStream = Xml2SchemaBuilder.class.getResourceAsStream(schemaFileName);
 
@@ -104,47 +103,51 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
         factory.setAttribute(JAXP_SCHEMA_SOURCE, schemaStream);
 
         // factory.setSchema(xmlSchema);
+        try {
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            builder.setErrorHandler(new ErrorHandler() {
+                @Override
+                public void error(SAXParseException e) throws SAXException {
+                    if (e != null)
+                        throw e;
+                    throw new SAXException("Unknown error while parsing xml");
+                }
 
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        builder.setErrorHandler(new ErrorHandler() {
-            @Override
-            public void error(SAXParseException e) throws SAXException {
-                if (e != null)
-                    throw e;
-                throw new SAXException("Unknown error while parsing xml");
-            }
+                @Override
+                public void fatalError(SAXParseException e) throws SAXException {
+                    if (e != null)
+                        throw e;
+                    throw new SAXException("Unknown error while parsing xml");
+                }
 
-            @Override
-            public void fatalError(SAXParseException e) throws SAXException {
-                if (e != null)
-                    throw e;
-                throw new SAXException("Unknown error while parsing xml");
-            }
+                @Override
+                public void warning(SAXParseException e) throws SAXException {
+                    // System.out.println("Warning while validating schema" +
+                    // e);
+                }
+            });
 
-            @Override
-            public void warning(SAXParseException e) throws SAXException {
-                // System.out.println("Warning while validating schema" +
-                // e);
-            }
-        });
+            org.xml.sax.InputSource is = new org.xml.sax.InputSource(reader);
+            org.w3c.dom.Document xmlDocument = builder.parse(is);
 
-        org.xml.sax.InputSource is = new org.xml.sax.InputSource(reader);
-        org.w3c.dom.Document xmlDocument = builder.parse(is);
+            Element xmlRoot = xmlDocument.getDocumentElement();
+            // Element xmlRoot = (Element) xmlDocument.getFirstChild();
 
-        Element xmlRoot = xmlDocument.getDocumentElement();
-        // Element xmlRoot = (Element) xmlDocument.getFirstChild();
+            Element xmlSchema = getChild(xmlRoot, ELEMENT_CSV_SCHEMA);
+            if (null != xmlSchema)
+                return buildCsvSchema(xmlSchema);
 
-        Element xmlSchema = getChild(xmlRoot, ELEMENT_CSV_SCHEMA);
-        if (null != xmlSchema)
-            return buildCsvSchema(xmlSchema);
+            xmlSchema = getChild(xmlRoot, ELEMENT_FIXED_WIDTH_SCHEMA);
+            if (null != xmlSchema)
+                return buildFixedWidthSchema(xmlSchema);
 
-        xmlSchema = getChild(xmlRoot, ELEMENT_FIXED_WIDTH_SCHEMA);
-        if (null != xmlSchema)
-            return buildFixedWidthSchema(xmlSchema);
-
-        throw new SAXException(
-                "Failed to find specific schema XML element. Expected one of " + ELEMENT_CSV_SCHEMA + " or "
-                        + ELEMENT_FIXED_WIDTH_SCHEMA);
+            throw new SAXException(
+                    "Failed to find specific schema XML element. Expected one of " + ELEMENT_CSV_SCHEMA + " or "
+                            + ELEMENT_FIXED_WIDTH_SCHEMA);
+        }
+        catch(ParserConfigurationException|SAXException e){
+            throw new SchemaException("Failed to load schema from xml ", e);
+        }
     }
 
     /**
@@ -629,7 +632,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      */
     @SuppressWarnings("WeakerAccess")
     public static Schema loadSchemaFromXmlResource(Class<?> resourceBaseClass, String resourceName, String encoding)
-            throws SchemaException, IOException, ParserConfigurationException, SAXException {
+            throws SchemaException, IOException {
         if (resourceBaseClass == null)
             resourceBaseClass = Xml2SchemaBuilder.class;
         try (InputStream is = resourceBaseClass.getResourceAsStream(resourceName)) {

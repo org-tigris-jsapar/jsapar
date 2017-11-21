@@ -133,6 +133,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @param value The value of the cell to add.
      * @param cellCreator {@link BiFunction} that takes cell name and values as parameters and creates the cell to add.
      * @param <T> The value type of the cell.
+     *           @see #addCell(Cell)
      */
     public <T> void putCellValue(String cellName, T value, BiFunction<String, T, Cell> cellCreator) {
         if (value == null)

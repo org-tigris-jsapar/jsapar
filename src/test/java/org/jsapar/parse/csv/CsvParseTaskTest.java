@@ -149,14 +149,14 @@ public class CsvParseTaskTest {
         Line line = doc.getLine(0);
         assertEquals("Jonas", LineUtils.getStringCellValue(line, "First Name").orElse("fail"));
         assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last Name").orElse("fail"));
-        assertEquals(41, LineUtils.getIntCellValue(line,"Shoe Size"));
-        assertEquals(Boolean.FALSE, LineUtils.getBooleanCellValue(line, "HasDog"));
+        assertEquals(41, LineUtils.getIntCellValue(line,"Shoe Size", -1));
+        assertEquals(Boolean.FALSE, LineUtils.getBooleanCellValue(line, "HasDog").orElseThrow(AssertionError::new));
 
         line = doc.getLine(1);
         assertEquals("Nils", LineUtils.getStringCellValue(line, "First Name").orElse("fail"));
         assertEquals("Nilsson", LineUtils.getStringCellValue(line, "Last Name").orElse("fail"));
-        assertEquals(43, LineUtils.getIntCellValue(line,"Shoe Size"));
-        assertEquals(Boolean.FALSE, LineUtils.getBooleanCellValue(line, "HasDog"));
+        assertEquals(43, LineUtils.getIntCellValue(line,"Shoe Size", -1));
+        assertEquals(Boolean.FALSE, LineUtils.getBooleanCellValue(line, "HasDog").orElseThrow(AssertionError::new));
     }
 
     @Test
