@@ -570,7 +570,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @throws SAXException     When there is an error reading the xml
      */
     public static Schema loadSchemaFromXmlFile(File file)
-            throws SchemaException, IOException, ParserConfigurationException, SAXException {
+            throws SchemaException, IOException{
         return loadSchemaFromXmlFile(file, Charset.defaultCharset().name());
     }
     
@@ -586,7 +586,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      */
     @SuppressWarnings("WeakerAccess")
     public static Schema loadSchemaFromXmlFile(File file, String encoding)
-            throws SchemaException, IOException, ParserConfigurationException, SAXException {
+            throws SchemaException, IOException {
         InputStream is = new FileInputStream(file);
         try (Reader schemaReader = new InputStreamReader(is, encoding)) {
             Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
@@ -610,7 +610,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      */
     @SuppressWarnings("unused")
     public static Schema loadSchemaFromXmlResource(Class<?> resourceBaseClass, String resourceName)
-            throws SchemaException, IOException, ParserConfigurationException, SAXException {
+            throws SchemaException, IOException {
         return loadSchemaFromXmlResource(resourceBaseClass, resourceName, Charset.defaultCharset().name());
     }    
     
