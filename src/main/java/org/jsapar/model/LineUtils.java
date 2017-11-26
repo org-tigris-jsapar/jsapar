@@ -23,20 +23,6 @@ public class LineUtils {
     private LineUtils() {
     }
 
-   /**
-     * Checks if there is a cell with the specified name and type and that is not empty.
-     *
-     * @param cellName The name of the cell to check.
-     * @param type     The type to check.
-     * @return true if the cell with the specified name contains a value of the specified type.
-     */
-    public static boolean isCellOfType(Line line, String cellName, CellType type) {
-        return line.getNonEmptyCell(cellName)
-                .map(cell1 -> cell1.getCellType().equals(type))
-                .isPresent();
-    }
-
-
     /**
      * Utility function that adds a cell with the specified name and value to the end of the line or
      * replaces an existing cell if there already is one with the same name.
@@ -165,20 +151,6 @@ public class LineUtils {
         return line.getCell(cellName).map(Cell::getStringValue);
     }
 
-
-    /**
-     * Get a cell in the specified line but throw an {@link IllegalStateException} if the cell does not exist in the
-     * line.
-     *
-     * @param line     The line to check in
-     * @param cellName The name of the cell to get
-     * @return The cell with the specified name.
-     * @throws IllegalStateException if the cell does not exist.
-     */
-    private static Cell getExistingCell(Line line, String cellName) throws IllegalStateException {
-        return line.getCell(cellName).orElseThrow(
-                () -> new IllegalStateException("There is no cell with the name '" + cellName + "' in this line"));
-    }
 
     /**
      * Utility function that gets the {@link Number} cell value of the specified cell. If the specified

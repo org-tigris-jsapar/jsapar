@@ -185,12 +185,4 @@ public class LineUtilsTest {
         assertFalse(line.isCellSet("LastName"));
     }
 
-    @Test
-    public void testIsCellOfType() throws Exception {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        assertTrue(LineUtils.isCellOfType(line, "FirstName", CellType.STRING));
-        assertFalse(LineUtils.isCellOfType(line, "FirstName", CellType.INTEGER));
-        assertFalse(LineUtils.isCellOfType(line, "LastName", CellType.STRING));
-    }
 }

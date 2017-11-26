@@ -115,7 +115,7 @@ public class LineTest {
     public void testRemoveCell() {
         Line line = makeTestLine();
 
-        line.removeCell("FirstName");
+        assertEquals("Nils", line.removeCell("FirstName").map(Cell::getStringValue).orElse(""));
         assertEquals(1, line.size());
         assertEquals("Svensson", LineUtils.getStringCellValue(line, "LastName").orElse("fail"));
     }
@@ -141,5 +141,14 @@ public class LineTest {
         assertFalse(line.getCellError("LastName").isPresent());
     }
 
+
+    @Test
+    public void testIsCellOfType() throws Exception {
+        Line line = new Line("TestLine");
+        line.addCell(new StringCell("FirstName", "Nils"));
+        assertTrue(line.containsNonEmptyCell("FirstName", CellType.STRING));
+        assertFalse(line.containsNonEmptyCell("FirstName", CellType.INTEGER));
+        assertFalse(line.containsNonEmptyCell("LastName", CellType.STRING));
+    }
 
 }

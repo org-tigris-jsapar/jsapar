@@ -21,6 +21,7 @@ import java.util.stream.Stream;
  * @see Cell
  * @see Document
  */
+@SuppressWarnings("WeakerAccess")
 public class Line implements Serializable, Cloneable, Iterable<Cell> {
 
     private static final long   serialVersionUID = 6026541900371948403L;
@@ -63,13 +64,14 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
 
     /**
      * Returns a clone of the internal collection that contains all the cells.
-     * For better performance while iterating multiple lines, it is better to call the
-     * {@link #iterator()} method.
+     * For better performance while iterating multiple lines, it is better to use the
+     * {@link #iterator()} or the {@link #stream()} method.
      *
      * @return A shallow clone of the internal collection that contains all the cells of this line.
      * Altering the returned collection will not alter the original collection of the this
      * Line but altering one of its cells will alter the cell within this line.
      * @see #iterator()
+     * @see #stream()
      */
     public List<Cell> getCells() {
         return new ArrayList<>(cells.values());
@@ -181,6 +183,10 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
     }
 
 
+    /**
+     * Returns a string representation of the line that can be used for debugging purposes.
+     * @return A string representation of the line that can be used for debugging purposes.
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -274,6 +280,20 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
     }
 
     /**
+     * Checks if there is a cell with the specified name and type and that is not empty.
+     *
+     * @param cellName The name of the cell to check.
+     * @param type     The type to check.
+     * @return true if the cell with the specified name contains a value of the specified type.
+     */
+    public boolean containsNonEmptyCell(String cellName, CellType type) {
+        return getNonEmptyCell(cellName)
+                .filter(cell1 -> cell1.getCellType().equals(type))
+                .isPresent();
+    }
+
+    /**
+     * Returns a stream of all cells within this line.
      * @return A stream of all cells within this line.
      */
     public Stream<Cell> stream() {
