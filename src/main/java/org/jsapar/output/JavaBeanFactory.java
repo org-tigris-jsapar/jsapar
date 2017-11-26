@@ -7,8 +7,7 @@ import org.jsapar.Line;
 public interface JavaBeanFactory {
 
     /**
-     * @param lineType
-     * @param line
+     * @param line 
      * @return A new instance of a java bean created for the supplied line.
      * @throws ClassNotFoundException
      * @throws IllegalAccessException

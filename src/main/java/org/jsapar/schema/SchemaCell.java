@@ -191,8 +191,6 @@ public abstract class SchemaCell implements Cloneable {
      * @param format
      * @return A cell object that has been parsed from the supplied sValue parameter according to
      *         the supplied format.
-     * @throws ParseE
-     *             , java.lang.Comparable, java.lang.Comparable, java.lang.Comparablexception
      * @throws java.text.ParseException
      * @throws SchemaException
      */
@@ -208,8 +206,6 @@ public abstract class SchemaCell implements Cloneable {
      * @param locale
      * @return A cell object that has been parsed from the supplied sValue parameter according to
      *         the default format for supplied type and locale.
-     * @throws ParseE
-     *             , java.lang.Comparable, java.lang.Comparable, java.lang.Comparablexception
      * @throws java.text.ParseException
      * @throws SchemaException
      */
@@ -507,9 +503,9 @@ public abstract class SchemaCell implements Cloneable {
      * @param emptyPattern
      *            the regexp pattern string that will be matched against to determine if this cell is empty
      */
-    public void setEmptyPattern(String sEmptyPattern) {
-        if(sEmptyPattern != null && !sEmptyPattern.isEmpty())
-            this.emptyPattern = Pattern.compile(sEmptyPattern);
+    public void setEmptyPattern(String emptyPattern) {
+        if(emptyPattern != null && !emptyPattern.isEmpty())
+            this.emptyPattern = Pattern.compile(emptyPattern);
     }
     
 }

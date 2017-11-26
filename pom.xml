@@ -5,7 +5,7 @@
 	<version>1.8.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>jsapar</name>
-	<url>http://jsapar.tigris.org</url>
+	<url>https://org-tigris-jsapar.github.io/jsapar</url>
 	<description>The JSaPar package is a java library that provides a parser for flat and CSV (Comma Separated Values) files.</description>
   
     <parent>
@@ -139,10 +139,7 @@
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-release-plugin</artifactId>
-              <configuration>
-                  <tagBase>http://jsapar.tigris.org/svn/jsapar/tags</tagBase>
-              </configuration>
-          </plugin>      
+          </plugin>
   
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -205,7 +202,7 @@
     <tag>HEAD</tag>
   </scm>
   <organization>
-    <url>http://jsapar.tigris.org/</url>
-    <name>JSaPar at Tigris.org</name>
+    <url>https://org-tigris-jsapar.github.io/jsapar/</url>
+    <name>JSaPar at tigris.org</name>
   </organization>
 </project>

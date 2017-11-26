@@ -1,20 +1,5 @@
 package org.jsapar.schema;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.Charset;
-import java.text.ParseException;
-import java.util.Locale;
-
-import javax.xml.bind.DatatypeConverter;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.jsapar.CellType;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -23,6 +8,15 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import javax.xml.bind.DatatypeConverter;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.util.Locale;
 
 public class Xml2SchemaBuilder implements SchemaXmlTypes {
 
@@ -238,7 +232,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @param xmlSchemaLine
      * @return
      * @throws SchemaException
-     * @throws DataConversionException
      */
     private FixedWidthSchemaLine buildFixedWidthSchemaLine(Element xmlSchemaLine, Locale locale) throws SchemaException {
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine();
@@ -272,7 +265,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @param xmlSchemaCell
      * @return
      * @throws SchemaException
-     * @throws DataConversionException
      */
     private FixedWidthSchemaCell buildFixedWidthSchemaCell(Element xmlSchemaCell, Locale locale) throws SchemaException {
 
@@ -301,7 +293,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * 
      * @param xmlSchema
      * @return
-     * @throws DataConversionException
      * @throws SchemaException
      */
     private Schema buildCsvSchema(Element xmlSchema) throws SchemaException {
@@ -315,7 +306,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * 
      * @param xmlSchema
      * @return
-     * @throws DataConversionException
      * @throws SchemaException
      */
     private void assignCsvSchema(CsvSchema schema, Element xmlSchema) throws SchemaException {
@@ -335,7 +325,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * 
      * @param xmlSchema
      * @return
-     * @throws DataConversionException
      * @throws SchemaException
      */
     private Schema buildCsvControlCellSchema(Element xmlSchema) throws SchemaException {
@@ -359,7 +348,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     /**
      * @param xmlSchemaLine
      * @return
-     * @throws DataConversionException
      * @throws SchemaException
      */
     private CsvSchemaLine buildCsvSchemaLine(Element xmlSchemaLine, Locale locale) throws SchemaException {
@@ -411,7 +399,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * Assign common parts for base class.
      * 
      * @param schema
-     * @param xmlSchemaCell
+     * @param xmlSchema
      * @throws SchemaException
      */
     private void assignSchemaBase(Schema schema, Element xmlSchema) throws SchemaException {
@@ -428,8 +416,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     }
 
     /**
-     * @param sToReplace
-     * @return
+     * Replaces Java style escaped command characters \n with the acutal command, 0xA in this case.
+     * @param sToReplace The java style escaped string.
+     * @return A string where Java style escaped command characters are replaced with their actual command.
      */
     public static String replaceEscapes2Java(String sToReplace) {
         //   Since it is a regex we need 4 \
@@ -446,7 +435,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @param line
      * @param xmlSchemaLine
      * @throws SchemaException
-     * @throws DataConversionException
      */
     private void assignSchemaLineBase(SchemaLine line, Element xmlSchemaLine) throws SchemaException {
         Node xmlOccurs = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_OCCURS);
@@ -478,8 +466,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
     /**
      * Assign common parts for base class.
      * 
-     * @param schema
+     * @param cell
      * @param xmlSchemaCell
+     * @param locale
      * @throws SchemaException
      */
     private void assignSchemaCellBase(SchemaCell cell, Element xmlSchemaCell, Locale locale) throws SchemaException {

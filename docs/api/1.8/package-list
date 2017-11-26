@@ -1,0 +1,11 @@
+org.jsapar
+org.jsapar.format
+org.jsapar.input
+org.jsapar.input.parse
+org.jsapar.input.parse.csv
+org.jsapar.input.parse.fixed
+org.jsapar.input.parse.xml
+org.jsapar.io
+org.jsapar.output
+org.jsapar.schema
+org.jsapar.utils

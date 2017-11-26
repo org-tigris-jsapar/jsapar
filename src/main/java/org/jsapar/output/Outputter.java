@@ -1,6 +1,3 @@
-/** 
- * Copyright: Jonas Stenberg
- */
 package org.jsapar.output;
 
 import java.io.IOException;
@@ -145,7 +142,7 @@ public class Outputter {
     /**
      * Writes the header line if the first line is schema.
      * 
-     * @param schemaLine
+     * @param lineType
      * @param writer
      * @throws JSaParException
      */

@@ -13,7 +13,7 @@ public abstract class SchemaLineParser {
     /**
      * @param nLineNumber
      * @param listener
-     * @return
+     * @return True if a line was actually parsed, false otherwise.
      * @throws IOException 
      * @throws JSaParException 
      */
