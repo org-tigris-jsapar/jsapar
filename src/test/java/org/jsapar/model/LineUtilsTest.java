@@ -186,11 +186,11 @@ public class LineUtilsTest {
     }
 
     @Test
-    public void testIsCellSetType() throws Exception {
+    public void testIsCellOfType() throws Exception {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
-        assertTrue(LineUtils.isCellSet(line, "FirstName", CellType.STRING));
-        assertFalse(LineUtils.isCellSet(line, "FirstName", CellType.INTEGER));
-        assertFalse(LineUtils.isCellSet(line, "LastName", CellType.STRING));
+        assertTrue(LineUtils.isCellOfType(line, "FirstName", CellType.STRING));
+        assertFalse(LineUtils.isCellOfType(line, "FirstName", CellType.INTEGER));
+        assertFalse(LineUtils.isCellOfType(line, "LastName", CellType.STRING));
     }
 }

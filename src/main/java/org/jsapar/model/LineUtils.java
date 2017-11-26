@@ -30,10 +30,10 @@ public class LineUtils {
      * @param type     The type to check.
      * @return true if the cell with the specified name contains a value of the specified type.
      */
-    public static boolean isCellSet(Line line, String cellName, CellType type) {
+    public static boolean isCellOfType(Line line, String cellName, CellType type) {
         return line.getNonEmptyCell(cellName)
                 .map(cell1 -> cell1.getCellType().equals(type))
-                .orElse(false);
+                .isPresent();
     }
 
 
