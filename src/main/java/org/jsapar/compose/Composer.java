@@ -23,7 +23,7 @@ public interface Composer {
     void compose(Document document);
 
     /**
-     * Composes output based on supplied {@link Line}, including line separator
+     * Composes output based on supplied {@link Line}, including line separator if applicable.
      *
      * @param line The line to compose
      * @return True if the line was actually composed.

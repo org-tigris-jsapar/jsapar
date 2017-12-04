@@ -91,7 +91,8 @@ public class TextComposer implements Composer {
      * @throws UncheckedIOException if io-error occurs.
      * @return True if the line was written, false if there was no matching line type in the schema.
      */
-    private boolean writeLineLn(Line line) {
+    @Override
+    public boolean composeLine(Line line) {
         try {
             if (breakBefore) {
                 writer.write(schema.getLineSeparator());
@@ -103,11 +104,6 @@ public class TextComposer implements Composer {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-    }
-
-    @Override
-    public boolean composeLine(Line line) {
-        return writeLineLn(line);
     }
 
     @Override
