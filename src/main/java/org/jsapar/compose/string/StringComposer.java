@@ -8,6 +8,8 @@ import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaLine;
 
+import java.util.stream.Stream;
+
 /**
  * Composer that creates {@link StringComposedEvent} for each line that is composed.
  * <p>
@@ -35,12 +37,18 @@ public class StringComposer implements Composer, StringComposedEventListener {
 
     @Override
     public boolean composeLine(Line line) {
-        SchemaLine schemaLine = schema.getSchemaLine(line.getLineType());
-        if (schemaLine == null || schemaLine.isIgnoreWrite())
-            return false;
-        stringComposedEvent(new StringComposedEvent(line.getLineType(), line.getLineNumber(), schemaLine.stream()
-                .map(schemaCell -> cellComposer.format(line.getCell(schemaCell.getName()).orElse(null), schemaCell))));
-        return true;
+        return schema.getSchemaLine(line.getLineType())
+                .filter(schemaLine -> !schemaLine.isIgnoreWrite())
+                .map(schemaLine -> stringComposedEvent(new StringComposedEvent(
+                        line.getLineType(),
+                        line.getLineNumber(),
+                        composeStringLine(schemaLine, line))))
+                .orElse(false);
+    }
+
+    private Stream<String> composeStringLine(SchemaLine schemaLine, Line line) {
+        return schemaLine.stream().map(schemaCell -> cellComposer
+                .format(line.getCell(schemaCell.getName()).orElse(null), schemaCell));
     }
 
     @Override
@@ -49,9 +57,12 @@ public class StringComposer implements Composer, StringComposedEventListener {
     }
 
     @Override
-    public void stringComposedEvent(StringComposedEvent event) {
-        if (this.stringComposedEventListener != null)
+    public boolean stringComposedEvent(StringComposedEvent event) {
+        if (this.stringComposedEventListener != null) {
             stringComposedEventListener.stringComposedEvent(event);
+            return true;
+        }
+        return false;
     }
 
 }

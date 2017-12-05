@@ -6,7 +6,10 @@ import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
 
 import java.io.Reader;
-import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -27,21 +30,14 @@ public class FixedWidthSchema extends Schema {
     /**
      * A list of fixed with schema lines which builds up this schema.
      */
-    private java.util.List<FixedWidthSchemaLine> schemaLines = new java.util.LinkedList<>();
-
-    /**
-     * @return the list of line schemas.
-     */
-    public java.util.List<FixedWidthSchemaLine> getFixedWidthSchemaLines() {
-        return schemaLines;
-    }
+    private LinkedHashMap<String, FixedWidthSchemaLine> schemaLines = new LinkedHashMap<>();
 
 
     /**
      * @param schemaLine the schemaLines to set
      */
     public void addSchemaLine(FixedWidthSchemaLine schemaLine) {
-        this.schemaLines.add(schemaLine);
+        this.schemaLines.put(schemaLine.getLineType(), schemaLine);
     }
 
     @Override
@@ -58,10 +54,8 @@ public class FixedWidthSchema extends Schema {
     public FixedWidthSchema clone() {
         FixedWidthSchema schema = (FixedWidthSchema) super.clone();
 
-        schema.schemaLines = new java.util.LinkedList<>();
-        for (FixedWidthSchemaLine line : this.schemaLines) {
-            schema.addSchemaLine(line.clone());
-        }
+        schema.schemaLines = new LinkedHashMap<>();
+        this.stream().map(FixedWidthSchemaLine::clone).forEach(schema::addSchemaLine);
         return schema;
     }
 
@@ -76,18 +70,13 @@ public class FixedWidthSchema extends Schema {
     }
 
     @Override
-    public List<? extends SchemaLine> getSchemaLines() {
-        return this.schemaLines;
+    public Collection<FixedWidthSchemaLine> getSchemaLines() {
+        return this.schemaLines.values();
     }
 
     @Override
-    public SchemaLine getSchemaLine(String lineType) {
-        for (FixedWidthSchemaLine lineSchema : getFixedWidthSchemaLines()) {
-            if (lineSchema.getLineType().equals(lineType)) {
-                return lineSchema;
-            }
-        }
-        return null;
+    public Optional<FixedWidthSchemaLine> getSchemaLine(String lineType) {
+        return Optional.ofNullable(schemaLines.get(lineType));
     }
 
     @Override
@@ -97,7 +86,12 @@ public class FixedWidthSchema extends Schema {
 
     @Override
     public Stream<FixedWidthSchemaLine> stream() {
-        return this.schemaLines.stream();
+        return this.schemaLines.values().stream();
+    }
+
+    @Override
+    public Iterator<FixedWidthSchemaLine> iterator() {
+        return schemaLines.values().iterator();
     }
 
     @Override
@@ -116,7 +110,7 @@ public class FixedWidthSchema extends Schema {
      * behavior.
      */
     void addFillerCellsToReachLineMinLength() {
-        getFixedWidthSchemaLines().forEach(FixedWidthSchemaLine::addFillerCellToReachMinLength);
+        stream().forEach(FixedWidthSchemaLine::addFillerCellToReachMinLength);
     }
 
 }

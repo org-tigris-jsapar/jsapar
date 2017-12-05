@@ -1,13 +1,9 @@
-/** 
- * Copyrigth: Jonas Stenberg
- */
 package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -16,16 +12,11 @@ import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
-/**
- * @author Jonas
- * 
- */
 public class Xml2SchemaBuilderTest {
 
     /**
      * Test method for {@link org.jsapar.schema.Xml2SchemaBuilder#build(java.io.Reader)} .
      * 
-     * @throws SchemaException
      */
     @Test
     public final void testBuild_FixedWidth()
@@ -46,7 +37,7 @@ public class Xml2SchemaBuilderTest {
 
         assertEquals("\r\n", fwSchema.getLineSeparator());
 
-        FixedWidthSchemaLine firstLineSchema = fwSchema.getFixedWidthSchemaLines().get(0);
+        FixedWidthSchemaLine firstLineSchema = fwSchema.getSchemaLines().iterator().next();
         assertEquals(240, firstLineSchema.getMinLength());
         FixedWidthSchemaCell firstNameSchema = firstLineSchema.getSchemaCells().get(0);
         assertEquals("First name", firstNameSchema.getName());
@@ -61,7 +52,7 @@ public class Xml2SchemaBuilderTest {
         assertEquals(CellType.INTEGER, shoeSizeSchema
                 .getCellFormat().getCellType());
 
-        SchemaLine schemaLine = fwSchema.getSchemaLine("Person");
+        SchemaLine schemaLine = fwSchema.getSchemaLine("Person").orElse(null);
         Assert.assertNotNull(schemaLine);
         FixedWidthSchemaCell schemaCell = ((FixedWidthSchemaLine)schemaLine).getSchemaCells().get(2);
         assertEquals( FixedWidthSchemaCell.Alignment.RIGHT, schemaCell.getAlignment() );
@@ -72,15 +63,19 @@ public class Xml2SchemaBuilderTest {
     public final void testBuild_Csv() throws SchemaException, IOException, ParserConfigurationException, SAXException {
 
         String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
-                + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/2.0' >" + "<csvschema><line occurs='4'>"
-                + "<cell name='First name'/>" + "<cell name='Last name'/>" + "</line></csvschema></schema>";
+                + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/2.0' >"
+                + "<csvschema><line linetype='P' occurs='4'>"
+                + "<cell name='First name'/>"
+                + "<cell name='Last name'/>"
+                + "</line></csvschema></schema>";
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
         java.io.Reader reader = new java.io.StringReader(sXmlSchema);
         Schema schema = builder.build(reader);
         CsvSchema csvSchema = (CsvSchema) schema;
 
-        Collection<CsvSchemaCell> schemaCells = csvSchema.getCsvSchemaLines().get(0).getSchemaCells();
+        Collection<CsvSchemaCell> schemaCells = csvSchema.getSchemaLine("P").orElseThrow(AssertionError::new)
+                .getSchemaCells();
         Iterator<CsvSchemaCell> it = schemaCells.iterator();
         assertEquals("First name", it.next().getName());
         assertEquals("Last name", it.next().getName());
@@ -103,7 +98,7 @@ public class Xml2SchemaBuilderTest {
         Schema schema = builder.build(reader);
         CsvSchema csvSchema = (CsvSchema) schema;
 
-        Collection<CsvSchemaCell> schemaCells = csvSchema.getCsvSchemaLines().get(0).getSchemaCells();
+        Collection<CsvSchemaCell> schemaCells = csvSchema.getSchemaLines().iterator().next().getSchemaCells();
         Iterator<CsvSchemaCell> it = schemaCells.iterator();
         CsvSchemaCell controlCell = it.next();
         assertTrue(controlCell.getLineCondition().satisfies("P"));
@@ -120,14 +115,15 @@ public class Xml2SchemaBuilderTest {
 
         String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>"
                 + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/2.0' >"
-                + "<csvschema><line occurs='4' firstlineasschema='true' >" + "</line></csvschema></schema>";
+                + "<csvschema><line linetype='P' occurs='4' firstlineasschema='true' >"
+                + "</line></csvschema></schema>";
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
         java.io.Reader reader = new java.io.StringReader(sXmlSchema);
         Schema schema = builder.build(reader);
         CsvSchema csvSchema = (CsvSchema) schema;
 
-        assertEquals(true, csvSchema.getCsvSchemaLines().get(0).isFirstLineAsSchema());
+        assertEquals(true, csvSchema.getSchemaLines().iterator().next().isFirstLineAsSchema());
 
     }
 

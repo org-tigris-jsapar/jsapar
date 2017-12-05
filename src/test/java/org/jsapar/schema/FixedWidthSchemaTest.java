@@ -22,9 +22,9 @@ public class FixedWidthSchemaTest {
         // Does not clone strings values yet. Might do that in the future.
         assertTrue(schema.getLineSeparator() == theClone.getLineSeparator());
 
-        assertEquals(schema.getFixedWidthSchemaLines().get(0).getLineType(), theClone.getFixedWidthSchemaLines().get(0)
+        assertEquals(schema.getSchemaLines().iterator().next().getLineType(), theClone.getSchemaLines().iterator().next()
                 .getLineType());
-        assertFalse(schema.getFixedWidthSchemaLines().get(0) == theClone.getFixedWidthSchemaLines().get(0));
+        assertFalse(schema.getSchemaLines().iterator().next() == theClone.getSchemaLines().iterator().next());
     }
 
 }

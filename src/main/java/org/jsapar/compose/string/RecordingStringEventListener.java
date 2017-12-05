@@ -25,8 +25,9 @@ public class RecordingStringEventListener implements StringComposedEventListener
      * @param event The event that contains the composed bean.
      */
     @Override
-    public void stringComposedEvent(StringComposedEvent event) {
+    public boolean stringComposedEvent(StringComposedEvent event) {
         lines.add(event.stream().collect(Collectors.toList()));
+        return true;
     }
 
     /**

@@ -5,8 +5,7 @@ import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
 
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -19,20 +18,14 @@ public class CsvSchema extends Schema implements Cloneable{
     /**
      * The schema lines
      */
-    private List<CsvSchemaLine> schemaLines = new ArrayList<>(4);
+    private LinkedHashMap<String, CsvSchemaLine> schemaLines = new LinkedHashMap<>();
 
-    /**
-     * @return the schemaLines
-     */
-    public List<CsvSchemaLine> getCsvSchemaLines() {
-        return schemaLines;
-    }
 
     /**
      * @param schemaLine the schemaLines to set
      */
     public void addSchemaLine(CsvSchemaLine schemaLine) {
-        this.schemaLines.add(schemaLine);
+        this.schemaLines.put(schemaLine.getLineType(), schemaLine);
     }
 
     @Override
@@ -45,10 +38,8 @@ public class CsvSchema extends Schema implements Cloneable{
         CsvSchema schema;
         schema = (CsvSchema) super.clone();
 
-        schema.schemaLines = new java.util.ArrayList<>();
-        for (CsvSchemaLine line : this.schemaLines) {
-            schema.addSchemaLine(line.clone());
-        }
+        schema.schemaLines = new LinkedHashMap<>();
+        this.stream().map(CsvSchemaLine::clone).forEach(schema::addSchemaLine);
         return schema;
     }
 
@@ -65,8 +56,8 @@ public class CsvSchema extends Schema implements Cloneable{
     }
 
     @Override
-    public List<? extends SchemaLine> getSchemaLines() {
-        return this.schemaLines;
+    public Collection<CsvSchemaLine> getSchemaLines() {
+        return this.schemaLines.values();
     }
 
     /*
@@ -75,12 +66,8 @@ public class CsvSchema extends Schema implements Cloneable{
      * @see org.jsapar.schema.Schema#getSchemaLine(java.lang.String)
      */
     @Override
-    public SchemaLine getSchemaLine(String lineType) {
-        for (CsvSchemaLine lineSchema : this.getCsvSchemaLines()) {
-            if (lineSchema.getLineType().equals(lineType))
-                return lineSchema;
-        }
-        return null;
+    public Optional<CsvSchemaLine> getSchemaLine(String lineType) {
+        return Optional.ofNullable(schemaLines.get(lineType));
     }
 
     @Override
@@ -90,7 +77,12 @@ public class CsvSchema extends Schema implements Cloneable{
 
     @Override
     public Stream<CsvSchemaLine> stream() {
-        return this.schemaLines.stream();
+        return this.schemaLines.values().stream();
+    }
+
+    @Override
+    public Iterator<CsvSchemaLine> iterator() {
+        return schemaLines.values().iterator();
     }
 
     @Override

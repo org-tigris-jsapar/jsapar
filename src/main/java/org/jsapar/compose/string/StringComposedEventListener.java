@@ -6,6 +6,6 @@ package org.jsapar.compose.string;
  */
 public interface StringComposedEventListener {
 
-    void stringComposedEvent(StringComposedEvent event) ;
+    boolean stringComposedEvent(StringComposedEvent event) ;
 
 }

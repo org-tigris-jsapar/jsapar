@@ -9,6 +9,8 @@ import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaLine;
 
+import java.util.stream.Stream;
+
 /**
  * Composer that creates {@link StringComposedEvent} for each line that is composed.
  * <p>
@@ -39,18 +41,23 @@ public class StringComposerNullOnEmptyCell implements Composer, StringComposedEv
 
     @Override
     public boolean composeLine(Line line) {
-        SchemaLine schemaLine = schema.getSchemaLine(line.getLineType());
-        if (schemaLine == null || schemaLine.isIgnoreWrite())
-            return false;
-        stringComposedEvent(new StringComposedEvent(line.getLineType(), line.getLineNumber(),
-                schemaLine.stream().map(schemaCell -> {
-                    if (schemaCell.getDefaultValue() != null)
-                        return cellComposer.format(line.getCell(schemaCell.getName()).orElse(null), schemaCell);
-                    else
-                        return line.getCell(schemaCell.getName()).filter(cell -> !(cell instanceof EmptyCell))
-                                .map(cell -> cellComposer.format(cell, schemaCell)).orElse(null);
-                })));
-        return true;
+        return schema.getSchemaLine(line.getLineType())
+                .filter(schemaLine -> !schemaLine.isIgnoreWrite())
+                .map(schemaLine -> stringComposedEvent(new StringComposedEvent(
+                        line.getLineType(),
+                        line.getLineNumber(),
+                        composeStringLine(schemaLine, line))))
+                .orElse(false);
+    }
+
+    private Stream<String> composeStringLine(SchemaLine schemaLine, Line line) {
+        return schemaLine.stream().map(schemaCell -> {
+            if (schemaCell.getDefaultValue() != null)
+                return cellComposer.format(line.getCell(schemaCell.getName()).orElse(null), schemaCell);
+            else
+                return line.getCell(schemaCell.getName()).filter(cell -> !(cell instanceof EmptyCell))
+                        .map(cell -> cellComposer.format(cell, schemaCell)).orElse(null);
+        });
     }
 
     @Override
@@ -59,9 +66,12 @@ public class StringComposerNullOnEmptyCell implements Composer, StringComposedEv
     }
 
     @Override
-    public void stringComposedEvent(StringComposedEvent event) {
-        if (this.stringComposedEventListener != null)
+    public boolean stringComposedEvent(StringComposedEvent event) {
+        if (this.stringComposedEventListener != null) {
             stringComposedEventListener.stringComposedEvent(event);
+            return true;
+        }
+        return false;
     }
 
 }

@@ -3,14 +3,14 @@ package org.jsapar.schema;
 import org.jsapar.model.Document;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -81,7 +81,7 @@ public abstract class Schema implements Cloneable{
     /**
      * @return list of all schema lines.
      */
-    public abstract List<? extends SchemaLine> getSchemaLines();
+    public abstract Collection<? extends SchemaLine> getSchemaLines();
 
     /*
      * (non-Javadoc)
@@ -99,10 +99,10 @@ public abstract class Schema implements Cloneable{
 
     /**
      * @param lineType The line type to get {@link SchemaLine} for.
-     * @return The {@link SchemaLine} with the supplied line type name. Null if no such schema line was
+     * @return The {@link SchemaLine} with the supplied line type name. Optional.empty if no such schema line was
      *         found.
      */
-    public abstract SchemaLine getSchemaLine(String lineType);
+    public abstract Optional<? extends SchemaLine> getSchemaLine(String lineType);
 
 
     /**
@@ -146,6 +146,10 @@ public abstract class Schema implements Cloneable{
      */
     public abstract Stream<? extends SchemaLine> stream();
 
+    /**
+     * @return An iterator of all schema lines of this schema.
+     */
+    public abstract Iterator<? extends SchemaLine> iterator();
     /**
      * Internal method to create a schema parser using this schema.
      * @param reader The reader to use for the parser.

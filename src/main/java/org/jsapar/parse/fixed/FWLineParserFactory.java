@@ -17,7 +17,7 @@ class FWLineParserFactory {
     private LineParserMatcherResult lastResult;
 
     FWLineParserFactory(FixedWidthSchema schema, TextParseConfig config) {
-        lineParserMatchers = schema.getFixedWidthSchemaLines().stream()
+        lineParserMatchers = schema.stream()
                 .map(schemaLine -> new FWLineParserMatcher(schemaLine, config)).collect(Collectors.toList());
     }
 

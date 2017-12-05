@@ -111,7 +111,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
 
         assignSchemaBase(xmlDocument, xmlSchema, schema);
 
-        for (FixedWidthSchemaLine schemaLine : schema.getFixedWidthSchemaLines()) {
+        for (FixedWidthSchemaLine schemaLine : schema.getSchemaLines()) {
             Element xmlLine = extractFixedWidthSchemaLine(xmlDocument, schemaLine);
             xmlSchema.appendChild(xmlLine);
         }
@@ -189,7 +189,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     private void assignCsvSchema(Document xmlDocument, Element xmlSchema, CsvSchema schema) throws SchemaException {
         assignSchemaBase(xmlDocument, xmlSchema, schema);
 
-        for (CsvSchemaLine schemaLine : schema.getCsvSchemaLines()) {
+        for (CsvSchemaLine schemaLine : schema.getSchemaLines()) {
             Element xmlLine = extractCsvSchemaLine(xmlDocument, schemaLine);
             xmlSchema.appendChild(xmlLine);
         }

@@ -18,7 +18,7 @@ class CsvLineParserFactory {
 
     CsvLineParserFactory(CsvSchema schema, TextParseConfig config) {
         lineParserMatchers = new LinkedList<>();
-        for (CsvSchemaLine schemaLine : schema.getCsvSchemaLines()) {
+        for (CsvSchemaLine schemaLine : schema.getSchemaLines()) {
             lineParserMatchers.add(new CsvLineParserMatcher(schemaLine, config));
         }
     }
