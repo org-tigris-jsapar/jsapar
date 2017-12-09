@@ -503,28 +503,32 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @throws SchemaException  When there is an error in the schema
      */
     private CellType makeCellType(String sType) throws SchemaException {
-        if (sType.equals("string"))
-            return CellType.STRING;
-
-        if (sType.equals("integer"))
-            return CellType.INTEGER;
-
-        if (sType.equals("date"))
-            return CellType.DATE;
-
-        if (sType.equals("float"))
-            return CellType.FLOAT;
-
-        if (sType.equals("decimal"))
-            return CellType.DECIMAL;
-
-        if (sType.equals("boolean"))
-            return CellType.BOOLEAN;
-
-        if (sType.equals("character"))
-            return CellType.CHARACTER;
-        
-        throw new SchemaException("Unknown cell format type: " + sType);
+        switch (sType) {
+            case "string":
+                return CellType.STRING;
+            case "integer":
+                return CellType.INTEGER;
+            case "date":
+                return CellType.DATE;
+            case "local_date":
+                return CellType.LOCAL_DATE;
+            case "local_date_time":
+                return CellType.LOCAL_DATE_TIME;
+            case "local_time":
+                return CellType.LOCAL_TIME;
+            case "zoned_date_time":
+                return CellType.ZONED_DATE_TIME;
+            case "float":
+                return CellType.FLOAT;
+            case "decimal":
+                return CellType.DECIMAL;
+            case "boolean":
+                return CellType.BOOLEAN;
+            case "character":
+                return CellType.CHARACTER;
+            default:
+                throw new SchemaException("Unknown cell format type: " + sType);
+        }
 
     }
 

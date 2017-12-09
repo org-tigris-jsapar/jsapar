@@ -7,6 +7,7 @@ import org.jsapar.model.*;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.parse.xml.XmlParser;
+import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
@@ -354,38 +355,37 @@ public class JSaParExamplesTest {
         }
     }
 
-/*
 
     @Test
     public final void testExampleCsv08_FirstLineAsSchemaCompose()
             throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
-        try (Reader schemaReader = new FileReader("exsamples/01_CsvSchema.xml");
+        try (Reader schemaReader = new FileReader("exsamples/08_CsvFirstLineAsSchema.xml");
                 Writer writer = new StringWriter())
         {
             Schema schema = Schema.fromXml(schemaReader);
-            schema.getSchemaLine("Person").
             Composer composer = new TextComposer(schema, writer);
 
+            Line line1 = new Line("Person");
+            line1.putCellValue("First name", "Erik", StringCell::new);
+            line1.putCellValue("Middle name", "Jan", StringCell::new);
+            line1.putCellValue("Last name", "Svensson", StringCell::new);
+            line1.putCellValue("Have dog", true, BooleanCell::new);
 
-            assertEquals(3, document.size());
-            assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name").orElse("fail"));
-            assertEquals("Erik", document.getLine(0).getNonEmptyCell("First name").map(Cell::getStringValue).orElse("fail"));
-            assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name").orElse("fail"));
-            assertEquals(true, LineUtils.getBooleanCellValue(document.getLine(0), "Have dog", false));
-            assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name").orElse("fail"));
-            assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name").orElse("fail"));
-            assertEquals("false", LineUtils.getStringCellValue(document.getLine(1), "Have dog").orElse("fail"));
-            assertEquals(false, LineUtils.getBooleanCellValue(document.getLine(1),"Have dog").orElseThrow(AssertionError::new));
+            Line line2 = new Line("Person");
+            line2.putCellValue("First name", "Sven", StringCell::new);
+            line2.putCellValue("Middle name", "Göran", StringCell::new);
+            line2.putCellValue("Last name", "Nilsson", StringCell::new);
+            line2.putCellValue("Have dog", false, BooleanCell::new);
 
-            assertEquals("Alfred", LineUtils.getStringCellValue(document.getLine(2), "First name").orElse("fail"));
-            assertEquals("Nilsson", LineUtils.getStringCellValue(document.getLine(2), "Last name").orElse("fail"));
-            assertEquals(false, LineUtils.getBooleanCellValue(document.getLine(2), "Have dog").orElseThrow(AssertionError::new));
-
-            assertEquals("Person", document.getLine(0).getLineType());
-            assertEquals("Person", document.getLine(1).getLineType());
+            composer.composeLine(line1);
+            composer.composeLine(line2);
+            String[] lines = writer.toString().split("\n");
+            assertEquals(3, lines.length);
+            assertEquals("Middle name;Have dog;First name", lines[0]);
+            assertEquals("Jan;yes;Erik", lines[1]);
+            assertEquals("Göran;no;Sven", lines[2]);
         }
     }
 
-*/
 
 }

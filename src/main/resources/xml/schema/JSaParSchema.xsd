@@ -11,8 +11,8 @@
   </xsd:element>
   <xsd:complexType name="Schema">
     <xsd:sequence>
-    	<xsd:element minOccurs="0" maxOccurs="1" name="locale"
-    		type="Locale">
+    	<xsd:element minOccurs="0" name="locale"
+                     type="Locale">
     		<xsd:annotation>
     			<xsd:documentation>
     				The locale specifies how numbers and dates should be
@@ -97,9 +97,9 @@
     		</xsd:annotation>
     	</xsd:element>
     	<xsd:element name="linecondition" type="CellValueCondition"
-    		maxOccurs="1" minOccurs="0">
+                     minOccurs="0">
     	</xsd:element>
-    	<xsd:element name="emptycondition" type="CellValueCondition" maxOccurs="1" minOccurs="0"></xsd:element>
+        <xsd:element name="emptycondition" type="CellValueCondition" minOccurs="0"/>
     </xsd:sequence>
     <xsd:attribute name="name" type="xsd:string" use="required">
       <xsd:annotation>
@@ -150,6 +150,10 @@
             Have to be one of the following:
                string
                date
+               local_date
+               local_time
+               local_date_time
+               zoned_date_time
                decimal
                integer
                float
@@ -160,15 +164,19 @@
       	<xsd:restriction base="xsd:string">
       		<xsd:enumeration value="string" />
       		<xsd:enumeration value="date" />
+      		<xsd:enumeration value="local_date" />
+      		<xsd:enumeration value="local_time" />
+      		<xsd:enumeration value="local_date_time" />
+      		<xsd:enumeration value="zoned_date_time" />
       		<xsd:enumeration value="decimal" />
       		<xsd:enumeration value="integer" />
       		<xsd:enumeration value="float" />
       		<xsd:enumeration value="boolean" />
-      		<xsd:enumeration value="character"></xsd:enumeration>
+            <xsd:enumeration value="character"/>
       	</xsd:restriction>
       </xsd:simpleType>
     </xsd:attribute>
-    <xsd:attribute name="pattern" type="xsd:string" use="optional">
+    <xsd:attribute name="pattern" type="xsd:string">
       <xsd:annotation>
          <xsd:documentation>* If the type is string then the pattern should contain a regular expression to which the value is validated against. This only works while parsing.
 * If the type is any of the numerical types, then the pattern should be described according to the java.text.DecimalFormat (http://java.sun.com/javase/6/docs/api/java/text/DecimalFormat.html).
@@ -180,8 +188,8 @@
   <xsd:complexType name="FixedWidthSchema">
     <xsd:complexContent mixed="false">
       <xsd:extension base="Schema">
-        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
-          <xsd:element minOccurs="1" maxOccurs="unbounded" name="line" type="FixedWidthSchemaLine" />
+        <xsd:sequence maxOccurs="unbounded">
+          <xsd:element maxOccurs="unbounded" name="line" type="FixedWidthSchemaLine" />
         </xsd:sequence>
       </xsd:extension>
     </xsd:complexContent>
@@ -189,10 +197,10 @@
   <xsd:complexType name="FixedWidthSchemaLine">
     <xsd:complexContent mixed="false">
       <xsd:extension base="SchemaLine">
-        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
+        <xsd:sequence maxOccurs="unbounded">
           <xsd:element name="cell" type="FixedWidthSchemaCell" />
         </xsd:sequence>
-        <xsd:attribute name="padcharacter" use="optional">
+        <xsd:attribute name="padcharacter">
           <xsd:annotation>
           	<xsd:documentation>Specifices the pad character to use to pad lines that are not reaching the minimum length. Also used as default pad character for cells of this line. Default is space character (ASCII 20). 
             </xsd:documentation>
@@ -224,7 +232,7 @@ If the sum of the length of the cells is less than this minlength then the line 
   					</xsd:documentation>
   				</xsd:annotation>
   			</xsd:attribute>
-  			<xsd:attribute name="alignment" use="optional">
+  			<xsd:attribute name="alignment">
   				<xsd:annotation>
   					<xsd:documentation>
   						Defines the cell alignment. The remaining
@@ -280,14 +288,18 @@ If the sum of the length of the cells is less than this minlength then the line 
   			<xsd:attribute name="firstlineasschema"
   				type="xsd:boolean">
   				<xsd:annotation>
-  					<xsd:documentation>
-  						Specifies if the first line of this type
-  						contains a header that should be used as
-  						schema. In that case all cells will be
-  						considered of type string and no validation
-  						will be made.
-  					</xsd:documentation>
-  				</xsd:annotation>
+                    <xsd:documentation>
+                        Specifies if the first line of this type contains a header line that should be used as schema.
+                        If set to true:
+                        While parsing, the order of the cells and what cells to expect are denoted by the first line within the input.
+                        Default values and other formatting information is defined in the schema as usual. Cell names
+                        that exist in the input header line but not within the schema are considered to be of type string.
+
+                        While composing, the schema is used as usual but an additional header line with the name of each
+                        cell, is written first.
+
+                    </xsd:documentation>
+                </xsd:annotation>
   			</xsd:attribute>
   			<xsd:attribute name="quotechar">
   				<xsd:annotation>
@@ -328,7 +340,7 @@ http://www.loc.gov/standards/iso639-2/englangn.html</xsd:documentation>
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:attribute>
-    <xsd:attribute name="country" use="optional">
+    <xsd:attribute name="country">
       <xsd:annotation>
         <xsd:documentation>A valid ISO Country Code. These codes are the upper-case, two-letter codes as defined by ISO-3166. You can find a full list of these codes at a number of sites, such as:
 http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1.html</xsd:documentation>
@@ -344,12 +356,12 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
     <xsd:annotation>
       <xsd:documentation>Contains a range for a cell value. The format of the min and max attribute are the same as for the parsing of the cell values.</xsd:documentation>
     </xsd:annotation>
-    <xsd:attribute name="min" type="xsd:string" use="optional">
+    <xsd:attribute name="min" type="xsd:string">
       <xsd:annotation>
         <xsd:documentation>The smallest value allowed for this cell.</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="max" type="xsd:string" use="optional">
+    <xsd:attribute name="max" type="xsd:string">
       <xsd:annotation>
         <xsd:documentation>The largest value allowed for this cell.</xsd:documentation>
       </xsd:annotation>
@@ -361,7 +373,7 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
   		<xsd:extension base="SchemaCell">
   			<xsd:attribute name="maxlength" type="xsd:int">
   				<xsd:annotation>
-  					<xsd:documentation>Available since version 1.6.0. The maximum length of the cell to read or write. 
+  					<xsd:documentation>The maximum length of the cell to read or write.
 While reading and writing, cell value will be silently trunkated to this length. If you want
 that an error should occur if length is too long, you should specify that in the
 format regexp pattern instead.
@@ -379,12 +391,12 @@ Available since 2.0</xsd:documentation>
 
   <xsd:complexType name="CellValueCondition">
   	<xsd:choice>
-            <xsd:element name="match" type="CellRegex"></xsd:element>
+        <xsd:element name="match" type="CellRegex"/>
   	</xsd:choice>
   </xsd:complexType>
 
   <xsd:complexType name="CellRegex">
-  	<xsd:attribute name="pattern" type="xsd:string"></xsd:attribute>
+      <xsd:attribute name="pattern" type="xsd:string"/>
   </xsd:complexType>
 
   <xsd:complexType name="SchemaValidationType">
@@ -401,10 +413,10 @@ NONE means no action at all, if possible.</xsd:documentation>
             </xsd:annotation>
             <xsd:simpleType>
             	<xsd:restriction base="xsd:string">
-            		<xsd:enumeration value="ERROR"></xsd:enumeration>
-            		<xsd:enumeration value="EXCEPTION"></xsd:enumeration>
-            		<xsd:enumeration value="IGNORE_LINE"></xsd:enumeration>
-            		<xsd:enumeration value="NONE"></xsd:enumeration>
+                    <xsd:enumeration value="ERROR"/>
+                    <xsd:enumeration value="EXCEPTION"/>
+                    <xsd:enumeration value="IGNORE_LINE"/>
+                    <xsd:enumeration value="NONE"/>
             	</xsd:restriction>
             </xsd:simpleType>
         </xsd:attribute>
@@ -413,16 +425,18 @@ NONE means no action at all, if possible.</xsd:documentation>
 
   <xsd:simpleType name="QuoteBehaviorType">
         <xsd:annotation>
-        	<xsd:documentation>AUTOMATIC = (default) If quote character is specified: Quote only when needed. If quote character is not specified, replace illegal characters with non-breaking space.
-NEVER = Never quote
-REPLACE = Don't quote but replace illegal characters with non-breaking space.
-ALWAYS = Always quote</xsd:documentation>
+        	<xsd:documentation>AUTOMATIC = (default) If quote character is specified: Quote only when needed. If quote
+                character is not specified, replace illegal characters with non-breaking space. Atomic cells,
+                e.g. integer cells, will not be quoted.
+                NEVER = Never quote
+                REPLACE = Don't quote but replace illegal characters with non-breaking space.
+                ALWAYS = Always quote</xsd:documentation>
         </xsd:annotation>
         <xsd:restriction base="xsd:string">
-  		<xsd:enumeration value="AUTOMATIC"></xsd:enumeration>
-  		<xsd:enumeration value="NEVER"></xsd:enumeration>
-  		<xsd:enumeration value="REPLACE"></xsd:enumeration>
-  		<xsd:enumeration value="ALWAYS"></xsd:enumeration>
+            <xsd:enumeration value="AUTOMATIC"/>
+            <xsd:enumeration value="NEVER"/>
+            <xsd:enumeration value="REPLACE"/>
+            <xsd:enumeration value="ALWAYS"/>
   	</xsd:restriction>
   </xsd:simpleType>
 </xsd:schema>
