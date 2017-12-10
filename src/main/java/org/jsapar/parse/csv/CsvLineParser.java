@@ -72,8 +72,8 @@ class CsvLineParser {
         if(lineSchema.isIgnoreRead())
             return true;
 
-        Line line = new Line(lineSchema.getLineType(),
-                (lineSchema.getSchemaCells().size() > 0) ? lineSchema.getSchemaCells().size() : 10);
+        // Create with same size as schema plus 1 to handle trailing cell separator which is quite common.
+        Line line = new Line(lineSchema.getLineType(), 1 + lineSchema.getSchemaCells().size());
         line.setLineNumber(lineReader.currentLineNumber());
         lineDecoratorErrorEventListener.initialize(errorListener, line);
 

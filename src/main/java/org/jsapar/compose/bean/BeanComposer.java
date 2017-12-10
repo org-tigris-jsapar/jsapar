@@ -10,7 +10,6 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -22,6 +21,7 @@ import java.util.Map;
  * You can register a {@link BeanComposedEventListener} by calling {@link #setComposedEventListener(BeanComposedEventListener)}
  * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, ErrorEventListener {
     private static final String SET_PREFIX = "set";
 
@@ -258,9 +258,9 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
      * @param cell           The cell to get the parameter from.
      * @param objectToAssign The object to assign cell attributes to. The object will be modified.
      * @return True if the parameter was assigned to the object, false otherwise.
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     * @throws IllegalArgumentException
+     * @throws InvocationTargetException if the underlying method throws an exception.
+     * @throws IllegalAccessException if this Method object is enforcing Java language access control and the underlying method is inaccessible.
+     * @throws IllegalArgumentException if the method is an instance method and the specified object argument is not an instance of the class or interface declaring the underlying method (or of a subclass or implementor thereof); if the number of actual and formal parameters differ; if an unwrapping conversion for primitive arguments fails; or if, after possible unwrapping, a parameter value cannot be converted to the corresponding formal parameter type by a method invocation conversion.
      */
     private <B> boolean assignParameterBySignature(B objectToAssign, String sSetMethodName, Cell cell)
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
@@ -285,9 +285,9 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
      * @param cell           The cell to get the parameter from.
      * @param objectToAssign The object to assign cell attributes to. The object will be modified.
      * @return True if the parameter was assigned to the object, false otherwise.
-     * @throws IllegalAccessException
-     * @throws IllegalArgumentException
-     * @throws InvocationTargetException
+     * @throws InvocationTargetException if the underlying method throws an exception.
+     * @throws IllegalAccessException if this Method object is enforcing Java language access control and the underlying method is inaccessible.
+     * @throws IllegalArgumentException if the method is an instance method and the specified object argument is not an instance of the class or interface declaring the underlying method (or of a subclass or implementor thereof); if the number of actual and formal parameters differ; if an unwrapping conversion for primitive arguments fails; or if, after possible unwrapping, a parameter value cannot be converted to the corresponding formal parameter type by a method invocation conversion.
      */
     @SuppressWarnings("unchecked")
     private <B> boolean assignParameterByName(B objectToAssign, String sSetMethodName, Cell cell)

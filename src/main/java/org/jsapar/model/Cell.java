@@ -2,6 +2,7 @@ package org.jsapar.model;
 
 import java.io.Serializable;
 import java.text.Format;
+import java.util.Objects;
 
 /**
  * Base class which represents a parsable item on a line in the original document. A cell has a
@@ -13,7 +14,7 @@ public abstract class Cell<T> implements Serializable {
 
     private final T value;
 
-    private static final long serialVersionUID = -3609313087173019221L;
+    private static final long serialVersionUID = -3609313087173019222L;
 
     /**
      * The name of the cell. Can be null if there is no name.
@@ -22,9 +23,13 @@ public abstract class Cell<T> implements Serializable {
 
     /**
      * Denotes the type of the cell.
-     *
      */
-    private final CellType          cellType;
+    private final CellType cellType;
+
+    /**
+     * Since all members are final, we can cache the hash code when needed.
+     */
+    private volatile int hashCode = 0;
 
     /**
      * Creates a cell with a name.
@@ -88,10 +93,7 @@ public abstract class Cell<T> implements Serializable {
      */
     @Override
     public String toString() {
-        if (this.name != null)
-            return this.name + "=" + getStringValue();
-        else
-            return getStringValue();
+        return this.name + "=" + getStringValue();
     }
 
     /**
@@ -124,17 +126,18 @@ public abstract class Cell<T> implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
 
         Cell<?> cell = (Cell<?>) o;
-
-        if (!value.equals(cell.value)) return false;
-        if (!name.equals(cell.name)) return false;
-        return cellType == cell.cellType;
+        return Objects.equals(value, cell.value) &&
+                Objects.equals(name, cell.name) &&
+                cellType == cell.cellType;
     }
 
     @Override
     public int hashCode() {
-        int result = value.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + cellType.hashCode();
-        return result;
+        // Since all members are final, we can cache the hash code.
+        if(this.hashCode == 0){
+            this.hashCode = Objects.hash(value, name, cellType);
+        }
+        return this.hashCode;
     }
+
 }

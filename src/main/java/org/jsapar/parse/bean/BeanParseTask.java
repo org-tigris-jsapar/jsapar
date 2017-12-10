@@ -9,7 +9,6 @@ import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseTask;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -55,7 +54,7 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
      * line hav
      */
     @Override
-    public long execute() throws IOException {
+    public long execute() {
         AtomicLong count = new AtomicLong(1);
         stream.forEach(bean->
                 lineParsedEvent( new LineParsedEvent(

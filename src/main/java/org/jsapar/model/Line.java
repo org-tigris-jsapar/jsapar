@@ -26,7 +26,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
 
     private static final long   serialVersionUID = 6026541900371948403L;
 
-    private Map<String, Cell> cells = new LinkedHashMap<>();
+    private Map<String, Cell> cells;
     private Map<String, CellParseException> cellErrors = new LinkedHashMap<>();
 
     /**

@@ -20,6 +20,9 @@ import java.util.stream.Stream;
  * assert !format.parse("N");
  * }
  * </pre>
+ * You can provide an array of valid true and false strings. In that case the first true and the first false strings
+ * are used when formatting.
+ *
  */
 public class BooleanFormat extends Format {
 
@@ -61,12 +64,22 @@ public class BooleanFormat extends Format {
     }
 
     /**
-     * Creates a formatter for boolean values.
+     * Creates a formatter for boolean values where multiple values are accepted as true or false values. When parsing,
+     * the supplied
+     * values are tested for equality against the input in following order:
+     * <ol>
+     *     <li>The first true value.</li>
+     *     <li>The first false value.</li>
+     *     <li>The rest of the true values are tested in supplied order.</li>
+     *     <li>The rest of the false values are tested in supplied order.</li>
+     * </ol>
      *
      * @param trueValues  An array of all of the strings that represents the true value. The first item in the array is used when formatting.
      * @param falseValues An array of all of the strings that represents the false value. The first item in the array is used when formatting.
      */
     public BooleanFormat(String[] trueValues, String[] falseValues) {
+        assert trueValues != null: "trueValues parameter cannot be null";
+        assert falseValues != null: "falseValues parameter cannot be null";
         assert trueValues.length > 0: "trueValues needs to contain at least one value";
         assert falseValues.length > 0: "falseValues needs to contain at least one value";
         this.trueValue = trueValues[0];
