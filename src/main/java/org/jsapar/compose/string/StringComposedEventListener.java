@@ -6,6 +6,10 @@ package org.jsapar.compose.string;
  */
 public interface StringComposedEventListener {
 
-    boolean stringComposedEvent(StringComposedEvent event) ;
+    /**
+     * Called when a line of string has been composed.
+     * @param event The event containing the composed strings.
+     */
+    void stringComposedEvent(StringComposedEvent event) ;
 
 }

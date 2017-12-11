@@ -22,7 +22,7 @@ import java.util.stream.Stream;
  * string is matches the cell in a schema. Each cell is formatted according to provided
  * {@link Schema}.
  */
-public class StringComposerNullOnEmptyCell implements Composer, StringComposedEventListener {
+public class StringComposerNullOnEmptyCell implements Composer {
 
     private       ErrorEventListener errorEventListener;
     private final Schema             schema;
@@ -65,8 +65,8 @@ public class StringComposerNullOnEmptyCell implements Composer, StringComposedEv
         this.errorEventListener = errorListener;
     }
 
-    @Override
-    public boolean stringComposedEvent(StringComposedEvent event) {
+
+    private boolean stringComposedEvent(StringComposedEvent event) {
         if (this.stringComposedEventListener != null) {
             stringComposedEventListener.stringComposedEvent(event);
             return true;

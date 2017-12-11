@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * string is matches the cell in a schema. Each cell is formatted according to provided
  * {@link org.jsapar.schema.Schema}.
  */
-public class StringComposer implements Composer, StringComposedEventListener {
+public class StringComposer implements Composer {
 
     private       ErrorEventListener errorEventListener;
     private final Schema             schema;
@@ -56,8 +56,7 @@ public class StringComposer implements Composer, StringComposedEventListener {
         this.errorEventListener = errorListener;
     }
 
-    @Override
-    public boolean stringComposedEvent(StringComposedEvent event) {
+    private boolean stringComposedEvent(StringComposedEvent event) {
         if (this.stringComposedEventListener != null) {
             stringComposedEventListener.stringComposedEvent(event);
             return true;
