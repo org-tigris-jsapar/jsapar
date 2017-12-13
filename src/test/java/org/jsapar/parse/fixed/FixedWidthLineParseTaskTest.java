@@ -52,9 +52,9 @@ public class FixedWidthLineParseTaskTest {
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
         Line line = parser.parse(reader, 1, new ExceptionErrorEventListener() );
         assertNotNull(line);
-        assertEquals("Jonas", LineUtils.getStringCellValue(line, "First name").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last name").orElse("fail"));
-        assertEquals("Huddinge", LineUtils.getStringCellValue(line,"City").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(line, "First name"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last name"));
+        assertEquals("Huddinge", LineUtils.getStringCellValue(line,"City"));
     }
 
     @Test
@@ -74,9 +74,9 @@ public class FixedWidthLineParseTaskTest {
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
         Line line = parser.parse(reader, 1, new ExceptionErrorEventListener() );
         assertNotNull(line);
-        assertEquals("Jonas", LineUtils.getStringCellValue(line, "First name").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last name").orElse("fail"));
-        assertEquals("Falun", LineUtils.getStringCellValue(line,"City").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(line, "First name"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last name"));
+        assertEquals("Falun", LineUtils.getStringCellValue(line,"City"));
     }
 
     @Test(expected = LineParseException.class)

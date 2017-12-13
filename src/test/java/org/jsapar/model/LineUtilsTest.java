@@ -24,7 +24,7 @@ public class LineUtilsTest {
     public void testSetStringCellValue()  {
         Line line = new Line("TestLine");
         LineUtils.setStringCellValue(line,"aStringValue", "ABC");
-        assertEquals("ABC", LineUtils.getStringCellValue(line,"aStringValue").orElse("fail"));
+        assertEquals("ABC", LineUtils.getStringCellValue(line,"aStringValue"));
         LineUtils.setStringCellValue(line,"aStringValue", null);
         assertFalse(line.isCell("aStringValue"));
     }
@@ -34,11 +34,16 @@ public class LineUtilsTest {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         LineUtils.setStringCellValue(line, "LastName", "Svensson");
-        assertEquals("Nils", LineUtils.getStringCellValue(line,"FirstName").orElse("fail"));
-        assertEquals("Svensson", LineUtils.getStringCellValue(line,"LastName").orElse("fail"));
-        assertEquals("Karlsson", LineUtils.getStringCellValue(line,"Nothing").orElse("Karlsson"));
+        assertEquals("Nils", LineUtils.getStringCellValue(line,"FirstName"));
+        assertEquals("Svensson", LineUtils.getStringCellValue(line,"LastName"));
     }
-    
+
+    @Test(expected = IllegalStateException.class)
+    public void testGetStringCellValue_notExists(){
+        Line line = new Line("TestLine");
+        line.addCell(new StringCell("FirstName", "Nils"));
+        LineUtils.getStringCellValue(line,"Nothing");
+    }
 
     private enum Testing{
         FIRST, SECOND

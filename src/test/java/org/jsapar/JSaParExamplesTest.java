@@ -48,18 +48,18 @@ public class JSaParExamplesTest {
             Document document = listener.getDocument();
 
             assertEquals(3, document.size());
-            assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name").orElse("fail"));
+            assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name"));
             assertEquals("Erik", document.getLine(0).getNonEmptyCell("First name").map(Cell::getStringValue).orElse("fail"));
-            assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name").orElse("fail"));
-            assertEquals("true", LineUtils.getStringCellValue(document.getLine(0), "Have dog").orElse("fail"));
-            assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name").orElse("fail"));
-            assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name").orElse("fail"));
-            assertEquals("false", LineUtils.getStringCellValue(document.getLine(1), "Have dog").orElse("fail"));
+            assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name"));
+            assertEquals("true", LineUtils.getStringCellValue(document.getLine(0), "Have dog"));
+            assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name"));
+            assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name"));
+            assertEquals("false", LineUtils.getStringCellValue(document.getLine(1), "Have dog"));
             assertEquals(Boolean.FALSE, LineUtils.getBooleanCellValue(document.getLine(1),"Have dog").orElseThrow(AssertionError::new));
 
-            assertEquals("Alfred", LineUtils.getStringCellValue(document.getLine(2), "First name").orElse("fail"));
-            assertEquals("Nilsson", LineUtils.getStringCellValue(document.getLine(2), "Last name").orElse("fail"));
-            assertEquals("true", LineUtils.getStringCellValue(document.getLine(2), "Have dog").orElse("fail"));
+            assertEquals("Alfred", LineUtils.getStringCellValue(document.getLine(2), "First name"));
+            assertEquals("Nilsson", LineUtils.getStringCellValue(document.getLine(2), "Last name"));
+            assertEquals("true", LineUtils.getStringCellValue(document.getLine(2), "Have dog"));
 
             assertEquals("Person", document.getLine(0).getLineType());
             assertEquals("Person", document.getLine(1).getLineType());
@@ -76,10 +76,10 @@ public class JSaParExamplesTest {
             parser.parse(fileReader, listener);
             Document document = listener.getDocument();
 
-            assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name").orElse("fail"));
-            assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name").orElse("fail"));
-            assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name").orElse("fail"));
-            assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name").orElse("fail"));
+            assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name"));
+            assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name"));
+            assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name"));
+            assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name"));
         }
     }
 
@@ -99,13 +99,13 @@ public class JSaParExamplesTest {
             Document document = listener.getDocument();
 
             assertEquals(3, document.size());
-            assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name").orElse("fail"));
+            assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name"));
             assertEquals("Erik", document.getLine(0).getNonEmptyCell("First name").map(Cell::getStringValue).orElse("fail"));
-            assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name").orElse("fail"));
-            assertEquals("37", LineUtils.getStringCellValue(document.getLine(0), "Age").orElse("fail"));
-            assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name").orElse("fail"));
-            assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name").orElse("fail"));
-            assertEquals("17", LineUtils.getStringCellValue(document.getLine(1), "Age").orElse("fail"));
+            assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name"));
+            assertEquals("37", LineUtils.getStringCellValue(document.getLine(0), "Age"));
+            assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name"));
+            assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name"));
+            assertEquals("17", LineUtils.getStringCellValue(document.getLine(1), "Age"));
         }
     }
 
@@ -128,25 +128,25 @@ public class JSaParExamplesTest {
 
         Line headerLine = document.getLine(0);
         assertEquals("Header", headerLine.getLineType());
-        assertEquals("04_Names.txt", LineUtils.getStringCellValue(headerLine, "FileName").orElse("fail"));
-        assertEquals("2007-07-07", LineUtils.getStringCellValue(headerLine, "Created date").orElse("fail"));
+        assertEquals("04_Names.txt", LineUtils.getStringCellValue(headerLine, "FileName"));
+        assertEquals("2007-07-07", LineUtils.getStringCellValue(headerLine, "Created date"));
 
         Line lineB = document.getLine(1);
         assertEquals("Person", lineB.getLineType());
-        assertEquals("B", LineUtils.getStringCellValue(lineB, "Type").orElse("fail"));
-        assertEquals("Svensson", LineUtils.getStringCellValue(lineB, "Last name").orElse("fail"));
-        assertEquals("Erik", LineUtils.getStringCellValue(lineB, "First name").orElse("fail"));
-        assertEquals("Svensson", LineUtils.getStringCellValue(lineB, "Last name").orElse("fail"));
+        assertEquals("B", LineUtils.getStringCellValue(lineB, "Type"));
+        assertEquals("Svensson", LineUtils.getStringCellValue(lineB, "Last name"));
+        assertEquals("Erik", LineUtils.getStringCellValue(lineB, "First name"));
+        assertEquals("Svensson", LineUtils.getStringCellValue(lineB, "Last name"));
 
         Line lineP = document.getLine(2);
-        assertEquals("P", LineUtils.getStringCellValue(lineP, "Type").orElse("fail"));
-        assertEquals("Fredrik", LineUtils.getStringCellValue(lineP, "First name").orElse("fail"));
-        assertEquals("Larsson", LineUtils.getStringCellValue(lineP, "Last name").orElse("fail"));
+        assertEquals("P", LineUtils.getStringCellValue(lineP, "Type"));
+        assertEquals("Fredrik", LineUtils.getStringCellValue(lineP, "First name"));
+        assertEquals("Larsson", LineUtils.getStringCellValue(lineP, "Last name"));
 
         Line footerLine = document.getLine(3);
         assertEquals("Footer", footerLine.getLineType());
-        assertEquals("2", LineUtils.getStringCellValue(footerLine, "Rowcount").orElse("fail"));
-        assertEquals("F", LineUtils.getStringCellValue(footerLine, "Type").orElse("fail"));
+        assertEquals("2", LineUtils.getStringCellValue(footerLine, "Rowcount"));
+        assertEquals("F", LineUtils.getStringCellValue(footerLine, "Type"));
     }
 
     /**
@@ -217,11 +217,11 @@ public class JSaParExamplesTest {
         // System.out.println("Errors: " + parseErrors.toString());
 
         assertEquals(2, document.size());
-        assertEquals("Hans", LineUtils.getStringCellValue(document.getLine(0), "FirstName").orElse("fail"));
-        assertEquals("Hugge", LineUtils.getStringCellValue(document.getLine(0), "LastName").orElse("fail"));
+        assertEquals("Hans", LineUtils.getStringCellValue(document.getLine(0), "FirstName"));
+        assertEquals("Hugge", LineUtils.getStringCellValue(document.getLine(0), "LastName"));
         assertEquals(48, LineUtils.getIntCellValue(document.getLine(0), "ShoeSize", 0));
-        assertEquals("Greta", LineUtils.getStringCellValue(document.getLine(1), "FirstName").orElse("fail"));
-        assertEquals("Skog", LineUtils.getStringCellValue(document.getLine(1), "LastName").orElse("fail"));
+        assertEquals("Greta", LineUtils.getStringCellValue(document.getLine(1), "FirstName"));
+        assertEquals("Skog", LineUtils.getStringCellValue(document.getLine(1), "LastName"));
         assertEquals(31, LineUtils.getIntCellValue(document.getLine(1), "ShoeSize", 0));
     }
 
@@ -237,16 +237,16 @@ public class JSaParExamplesTest {
         Document document = listener.getDocument();
         fileReader.close();
 
-        assertEquals("06_NamesControlCell.csv", LineUtils.getStringCellValue(document.getLine(0), "FileName").orElse("fail"));
-        assertEquals("2007-07-07", LineUtils.getStringCellValue(document.getLine(0), "Created date").orElse("fail"));
+        assertEquals("06_NamesControlCell.csv", LineUtils.getStringCellValue(document.getLine(0), "FileName"));
+        assertEquals("2007-07-07", LineUtils.getStringCellValue(document.getLine(0), "Created date"));
         assertEquals("Header", document.getLine(0).getLineType());
         assertEquals("Person", document.getLine(1).getLineType());
-        assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(1), "Last name").orElse("fail"));
-        assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(1), "First name").orElse("fail"));
-        assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(1), "Last name").orElse("fail"));
-        assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(2), "First name").orElse("fail"));
-        assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(2), "Last name").orElse("fail"));
-        assertEquals("2", LineUtils.getStringCellValue(document.getLine(3), "Rowcount").orElse("fail"));
+        assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(1), "Last name"));
+        assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(1), "First name"));
+        assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(1), "Last name"));
+        assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(2), "First name"));
+        assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(2), "Last name"));
+        assertEquals("2", LineUtils.getStringCellValue(document.getLine(3), "Rowcount"));
     }
 
     @Test
@@ -337,17 +337,17 @@ public class JSaParExamplesTest {
             Document document = listener.getDocument();
 
             assertEquals(3, document.size());
-            assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name").orElse("fail"));
+            assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name"));
             assertEquals("Erik", document.getLine(0).getNonEmptyCell("First name").map(Cell::getStringValue).orElse("fail"));
-            assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name").orElse("fail"));
+            assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name"));
             assertEquals(true, LineUtils.getBooleanCellValue(document.getLine(0), "Have dog", false));
-            assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name").orElse("fail"));
-            assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name").orElse("fail"));
-            assertEquals("false", LineUtils.getStringCellValue(document.getLine(1), "Have dog").orElse("fail"));
+            assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name"));
+            assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name"));
+            assertEquals("false", LineUtils.getStringCellValue(document.getLine(1), "Have dog"));
             assertEquals(false, LineUtils.getBooleanCellValue(document.getLine(1),"Have dog").orElseThrow(AssertionError::new));
 
-            assertEquals("Alfred", LineUtils.getStringCellValue(document.getLine(2), "First name").orElse("fail"));
-            assertEquals("Nilsson", LineUtils.getStringCellValue(document.getLine(2), "Last name").orElse("fail"));
+            assertEquals("Alfred", LineUtils.getStringCellValue(document.getLine(2), "First name"));
+            assertEquals("Nilsson", LineUtils.getStringCellValue(document.getLine(2), "Last name"));
             assertEquals(false, LineUtils.getBooleanCellValue(document.getLine(2), "Have dog").orElseThrow(AssertionError::new));
 
             assertEquals("Person", document.getLine(0).getLineType());

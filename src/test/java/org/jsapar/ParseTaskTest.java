@@ -40,8 +40,8 @@ public class ParseTaskTest {
         Document doc = build(toParse, schema);
 
         assertEquals(1, doc.size());
-        assertEquals("Jonas", LineUtils.getStringCellValue(doc.getLine(0), "First name").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(0), "Last name").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(doc.getLine(0), "First name"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(0), "Last name"));
     }
 
     @Test(expected=CellParseException.class)
@@ -109,11 +109,11 @@ public class ParseTaskTest {
         Document doc = build(toParse, schema);
 
         assertEquals(2, doc.size());
-        assertEquals("Jonas", LineUtils.getStringCellValue(doc.getLine(0), "First name").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(0), "Last name").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(doc.getLine(0), "First name"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(0), "Last name"));
 
-        assertEquals("Frida", LineUtils.getStringCellValue(doc.getLine(1), "First name").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(1), "Last name").orElse("fail"));
+        assertEquals("Frida", LineUtils.getStringCellValue(doc.getLine(1), "First name"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(1), "Last name"));
     }
 
     private Document build(String toParse, FixedWidthSchema schema) throws IOException {
@@ -135,8 +135,8 @@ public class ParseTaskTest {
 
         Document doc = build(toParse, schema);
         assertEquals(2, doc.size());
-        assertEquals("Jonas", LineUtils.getStringCellValue(doc.getLine(0), "First name").orElse("fail"));
-        assertEquals("Frida", LineUtils.getStringCellValue(doc.getLine(1), "First name").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(doc.getLine(0), "First name"));
+        assertEquals("Frida", LineUtils.getStringCellValue(doc.getLine(1), "First name"));
     }
 
     @Test
@@ -150,8 +150,8 @@ public class ParseTaskTest {
 
         Document doc = build(toParse, schema);
 
-        assertEquals("Jonas", LineUtils.getStringCellValue(doc.getLine(0), "First name").orElse("fail"));
-        assertEquals("Frida", LineUtils.getStringCellValue(doc.getLine(1), "First name").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(doc.getLine(0), "First name"));
+        assertEquals("Frida", LineUtils.getStringCellValue(doc.getLine(1), "First name"));
     }
     
 }

@@ -42,11 +42,11 @@ public class FixedWidthParseTaskTest {
 
         Document doc = build(reader, schema);
 
-        assertEquals("Jonas", LineUtils.getStringCellValue(doc.getLine(0), "First name").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(0), "Last name").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(doc.getLine(0), "First name"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(0), "Last name"));
 
-        assertEquals("Frida", LineUtils.getStringCellValue(doc.getLine(1), "First name").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(1), "Last name").orElse("fail"));
+        assertEquals("Frida", LineUtils.getStringCellValue(doc.getLine(1), "First name"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(1), "Last name"));
     }
 
     private Document build(Reader reader, FixedWidthSchema schema) throws IOException {

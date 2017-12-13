@@ -39,11 +39,11 @@ public class CsvParseTaskTest {
         assertEquals(1, doc.size());
 
         Line line = doc.getLine(0);
-        assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
-        assertEquals("Hemgatan 19", LineUtils.getStringCellValue(line, "2").orElse("fail"));
-        assertEquals("111 22", LineUtils.getStringCellValue(line, "3").orElse("fail"));
-        assertEquals("Stockholm", LineUtils.getStringCellValue(line, "4").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1"));
+        assertEquals("Hemgatan 19", LineUtils.getStringCellValue(line, "2"));
+        assertEquals("111 22", LineUtils.getStringCellValue(line, "3"));
+        assertEquals("Stockholm", LineUtils.getStringCellValue(line, "4"));
     }
 
     @Test
@@ -58,11 +58,11 @@ public class CsvParseTaskTest {
         assertEquals(1, doc.size());
 
         Line line = doc.getLine(0);
-        assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
-        assertEquals("Hemgatan 19", LineUtils.getStringCellValue(line, "2").orElse("fail"));
-        assertEquals("111 22", LineUtils.getStringCellValue(line, "3").orElse("fail"));
-        assertEquals("Stockholm", LineUtils.getStringCellValue(line, "4").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1"));
+        assertEquals("Hemgatan 19", LineUtils.getStringCellValue(line, "2"));
+        assertEquals("111 22", LineUtils.getStringCellValue(line, "3"));
+        assertEquals("Stockholm", LineUtils.getStringCellValue(line, "4"));
     }
 
     @Test
@@ -75,12 +75,12 @@ public class CsvParseTaskTest {
         Document doc = build(schema, reader, 2);
 
         Line line = doc.getLine(0);
-        assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1"));
 
         line = doc.getLine(1);
-        assertEquals("Nils", LineUtils.getStringCellValue(line, "0").orElse("fail"));
-        assertEquals("Nilsson", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+        assertEquals("Nils", LineUtils.getStringCellValue(line, "0"));
+        assertEquals("Nilsson", LineUtils.getStringCellValue(line, "1"));
     }
 
     @Test
@@ -96,12 +96,12 @@ public class CsvParseTaskTest {
         assertEquals(2, doc.size());
 
         Line line = doc.getLine(0);
-        assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1"));
 
         line = doc.getLine(1);
-        assertEquals("Nils", LineUtils.getStringCellValue(line, "0").orElse("fail"));
-        assertEquals("Nilsson", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+        assertEquals("Nils", LineUtils.getStringCellValue(line, "0"));
+        assertEquals("Nilsson", LineUtils.getStringCellValue(line, "1"));
     }
 
     @Test
@@ -117,12 +117,12 @@ public class CsvParseTaskTest {
         assertEquals(2, doc.size());
 
         Line line = doc.getLine(0);
-        assertEquals("Jonas", LineUtils.getStringCellValue(line, "0").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1"));
 
         line = doc.getLine(1);
-        assertEquals("Nils", LineUtils.getStringCellValue(line, "0").orElse("fail"));
-        assertEquals("Nilsson", LineUtils.getStringCellValue(line, "1").orElse("fail"));
+        assertEquals("Nils", LineUtils.getStringCellValue(line, "0"));
+        assertEquals("Nilsson", LineUtils.getStringCellValue(line, "1"));
     }
 
 
@@ -147,14 +147,14 @@ public class CsvParseTaskTest {
         Document doc = build(schema, reader,3);
 
         Line line = doc.getLine(0);
-        assertEquals("Jonas", LineUtils.getStringCellValue(line, "First Name").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last Name").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(line, "First Name"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last Name"));
         assertEquals(41, LineUtils.getIntCellValue(line,"Shoe Size", -1));
         assertEquals(Boolean.FALSE, LineUtils.getBooleanCellValue(line, "HasDog").orElseThrow(AssertionError::new));
 
         line = doc.getLine(1);
-        assertEquals("Nils", LineUtils.getStringCellValue(line, "First Name").orElse("fail"));
-        assertEquals("Nilsson", LineUtils.getStringCellValue(line, "Last Name").orElse("fail"));
+        assertEquals("Nils", LineUtils.getStringCellValue(line, "First Name"));
+        assertEquals("Nilsson", LineUtils.getStringCellValue(line, "Last Name"));
         assertEquals(43, LineUtils.getIntCellValue(line,"Shoe Size", -1));
         assertEquals(Boolean.FALSE, LineUtils.getBooleanCellValue(line, "HasDog").orElseThrow(AssertionError::new));
     }
@@ -173,12 +173,12 @@ public class CsvParseTaskTest {
         Document doc = build(schema, reader, 3);
 
         Line line = doc.getLine(0);
-        assertEquals("Jonas", LineUtils.getStringCellValue(line, "First Name").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last Name").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(line, "First Name"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last Name"));
 
         line = doc.getLine(1);
-        assertEquals("Nils", LineUtils.getStringCellValue(line, "First Name").orElse("fail"));
-        assertEquals("Nilsson", LineUtils.getStringCellValue(line, "Last Name").orElse("fail"));
+        assertEquals("Nils", LineUtils.getStringCellValue(line, "First Name"));
+        assertEquals("Nilsson", LineUtils.getStringCellValue(line, "Last Name"));
     }
 
     @Test
@@ -210,14 +210,14 @@ public class CsvParseTaskTest {
         assertEquals(2, doc.size());
         Line line = doc.getLine(0);
         assertEquals("Name", line.getLineType());
-        assertEquals("Jonas", LineUtils.getStringCellValue(line, "first.name").orElse("fail"));
-        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "last.name").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(line, "first.name"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(line, "last.name"));
 
         line = doc.getLine(1);
         assertEquals("Address", line.getLineType());
-        assertEquals("Storgatan 4", LineUtils.getStringCellValue(line, "street").orElse("fail"));
-        assertEquals("12345", LineUtils.getStringCellValue(line, "postcode").orElse("fail"));
-        assertEquals("Storstan", LineUtils.getStringCellValue(line, "post.town").orElse("fail"));
+        assertEquals("Storgatan 4", LineUtils.getStringCellValue(line, "street"));
+        assertEquals("12345", LineUtils.getStringCellValue(line, "postcode"));
+        assertEquals("Storstan", LineUtils.getStringCellValue(line, "post.town"));
     }
 
     private Document build(CsvSchema schema, Reader reader, int actualRows) throws IOException {

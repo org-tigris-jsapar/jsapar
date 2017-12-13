@@ -65,8 +65,8 @@ public class LineTest {
     @Test
     public void testAddCellCell() {
         Line line = makeTestLine();
-        assertEquals("Nils", LineUtils.getStringCellValue(line, "FirstName").orElse("fail"));
-        assertEquals("Svensson", LineUtils.getStringCellValue(line, "LastName").orElse("fail"));
+        assertEquals("Nils", LineUtils.getStringCellValue(line, "FirstName"));
+        assertEquals("Svensson", LineUtils.getStringCellValue(line, "LastName"));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -84,15 +84,15 @@ public class LineTest {
 
         line.putCell(new StringCell("FirstName", "Sven"));
         assertEquals(2, line.size());
-        assertEquals("Sven", LineUtils.getStringCellValue(line, "FirstName").orElse("fail"));
-        assertEquals("Svensson", LineUtils.getStringCellValue(line, "LastName").orElse("fail"));
+        assertEquals("Sven", LineUtils.getStringCellValue(line, "FirstName"));
+        assertEquals("Svensson", LineUtils.getStringCellValue(line, "LastName"));
     }
 
 
     @Test
     public void testGetCellString() {
         Line line = makeTestLine();
-        assertEquals("Nils", LineUtils.getStringCellValue(line, "FirstName").orElse("fail"));
+        assertEquals("Nils", LineUtils.getStringCellValue(line, "FirstName"));
     }
 
 
@@ -117,7 +117,7 @@ public class LineTest {
 
         assertEquals("Nils", line.removeCell("FirstName").map(Cell::getStringValue).orElse(""));
         assertEquals(1, line.size());
-        assertEquals("Svensson", LineUtils.getStringCellValue(line, "LastName").orElse("fail"));
+        assertEquals("Svensson", LineUtils.getStringCellValue(line, "LastName"));
     }
 
     private Line makeTestLine() {

@@ -1,5 +1,6 @@
 package org.jsapar.model;
 
+import org.jsapar.error.JSaParException;
 import org.jsapar.error.JSaParNumberFormatException;
 
 import java.math.BigDecimal;
@@ -144,13 +145,32 @@ public class LineUtils {
      *
      * @param line     The line to get value from
      * @param cellName The name of the cell to get
-     * @return The optional value of the specified cell, not present if there is no such cell. If the cell exists but
-     * contains an empty cell, this method returns an Optional containing an empty cell.
+     * @return Value of the specified cell. If the cell exists but
+     * contains an empty cell, this method returns an empty string.
+     * @throws IllegalStateException if the line does not have any cell with the specified name. This happens when the
+     * schema does not specify any cell with this name.
+     * @see #getNonEmptyStringCellValue(Line, String)
+     * @see Line#getNonEmptyCell(String)
+     * @see Line#getCell(String)
      */
-    public static Optional<String> getStringCellValue(Line line, String cellName) {
-        return line.getCell(cellName).map(Cell::getStringValue);
+    public static String getStringCellValue(Line line, String cellName) {
+        return line.getCell(cellName).map(Cell::getStringValue).orElseThrow(()->new IllegalStateException("The line does not contain any cell with name " + cellName));
     }
 
+    /**
+     * Utility function that gets a non empty string cell value of the specified cell.
+     *
+     * @param line     The line to get value from
+     * @param cellName The name of the cell to get
+     * @return The optional value of the specified cell, not present if there is no such cell or if the cell was an
+     * empty string.
+     * @see #getStringCellValue(Line, String)
+     * @see Line#getNonEmptyCell(String)
+     * @see Line#getCell(String)
+     */
+    public static Optional<String> getNonEmptyStringCellValue(Line line, String cellName) {
+        return line.getNonEmptyCell(cellName).map(Cell::getStringValue);
+    }
 
     /**
      * Utility function that gets the {@link Number} cell value of the specified cell. If the specified

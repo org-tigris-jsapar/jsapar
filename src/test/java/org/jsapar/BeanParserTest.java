@@ -44,10 +44,10 @@ public class BeanParserTest {
 
         assertEquals(2, doc.size());
         Line line = doc.getLine(0);
-        assertEquals("Jonas", LineUtils.getStringCellValue(line, "firstName").orElse("fail"));
+        assertEquals("Jonas", LineUtils.getStringCellValue(line, "firstName"));
 
         line = doc.getLine(1);
-        assertEquals("Test2", LineUtils.getStringCellValue(line, "firstName").orElse("fail"));
+        assertEquals("Test2", LineUtils.getStringCellValue(line, "firstName"));
 
     }
 

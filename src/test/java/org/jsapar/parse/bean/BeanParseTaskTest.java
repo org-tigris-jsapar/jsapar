@@ -90,7 +90,7 @@ public class BeanParseTaskTest {
         assertEquals(4711, ((IntegerCell) line.getCell("streetNumber").orElseThrow(() -> new AssertionError("Should be set"))).getValue().intValue());
         assertEquals(birthTime, ((DateCell) line.getCell("birthTime").orElseThrow(() -> new AssertionError("Should be set"))).getValue());
         assertEquals(123456787901234567L, ((IntegerCell) line.getCell("luckyNumber").orElseThrow(() -> new AssertionError("Should be set"))).getValue().longValue());
-        assertEquals("A", LineUtils.getStringCellValue(line,"door").orElse("fail"));
+        assertEquals("A", LineUtils.getStringCellValue(line,"door"));
     }
 
     @Test
@@ -101,11 +101,11 @@ public class BeanParseTaskTest {
         BeanParseTask<TstPerson> builder = new BeanParseTask<>(Arrays.asList(new TstPerson[]{person}).iterator(), new BeanParseConfig());
         Line line = builder.parseBean(person, new ExceptionErrorEventListener(), 1);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
-        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street").orElse("fail"));
-        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town").orElse("fail"));
+        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
+        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
         
         // Make sure that loops are avoided.
-        Assert.assertFalse(LineUtils.getStringCellValue(line,"address.owner.firstName").isPresent());
+        Assert.assertFalse(line.isCellSet("address.owner.firstName"));
     }
 
     @Test
@@ -117,12 +117,12 @@ public class BeanParseTaskTest {
         BeanParseTask<TstPerson> builder = new BeanParseTask<>(Arrays.asList(new TstPerson[]{person}).iterator(), new BeanParseConfig());
         Line line = builder.parseBean(person, new ExceptionErrorEventListener(), 1);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
-        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street").orElse("fail"));
-        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town").orElse("fail"));
-        assertEquals("Road", LineUtils.getStringCellValue(line,"address.subAddress.street").orElse("fail"));
-        assertEquals("Town", LineUtils.getStringCellValue(line,"address.subAddress.town").orElse("fail"));
-        assertEquals("Gatan", LineUtils.getStringCellValue(line,"workAddress.street").orElse("fail"));
-        assertEquals("Byn", LineUtils.getStringCellValue(line,"workAddress.town").orElse("fail"));
+        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
+        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
+        assertEquals("Road", LineUtils.getStringCellValue(line,"address.subAddress.street"));
+        assertEquals("Town", LineUtils.getStringCellValue(line,"address.subAddress.town"));
+        assertEquals("Gatan", LineUtils.getStringCellValue(line,"workAddress.street"));
+        assertEquals("Byn", LineUtils.getStringCellValue(line,"workAddress.town"));
     }
 
     @Test
@@ -138,12 +138,12 @@ public class BeanParseTaskTest {
                 config);
         Line line = builder.parseBean(person, new ExceptionErrorEventListener(), 1);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
-        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street").orElse("fail"));
-        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town").orElse("fail"));
-        Assert.assertFalse(LineUtils.getStringCellValue(line,"address.subAddress.street").isPresent());
-        Assert.assertFalse(LineUtils.getStringCellValue(line,"address.subAddress.town").isPresent());
-        assertEquals("Gatan", LineUtils.getStringCellValue(line,"workAddress.street").orElse("fail"));
-        assertEquals("Byn", LineUtils.getStringCellValue(line,"workAddress.town").orElse("fail"));
+        assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
+        assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
+        Assert.assertFalse(line.isCellSet("address.subAddress.street"));
+        Assert.assertFalse(line.isCellSet("address.subAddress.town"));
+        assertEquals("Gatan", LineUtils.getStringCellValue(line,"workAddress.street"));
+        assertEquals("Byn", LineUtils.getStringCellValue(line,"workAddress.town"));
     }
     
 }
