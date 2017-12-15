@@ -35,42 +35,30 @@ public abstract class AbstractSchemaComposer implements SchemaComposer{
     }
 
     /**
-     * This implementation composes output based on schema and supplied lines.
-     * @param iterator The lines to compose output for.
+     * This implementation composes line separator accoring to schema.
      * @throws UncheckedIOException when an IO error occurs
-     *
      */
     @Override
-    public void compose(Iterator<Line> iterator) throws JSaParException {
+    public void composeLineSeparator() {
         try {
-            while (iterator.hasNext()) {
-                if (composeLine(iterator.next()) && iterator.hasNext()) {
-                    writer.write(schema.getLineSeparator());
-                }
-            }
+            writer.write(schema.getLineSeparator());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
     /**
-     * This implementation does nothing
+     * Composes output based on schema and supplied lines. Mainly for test purpose.
+     * @param iterator The lines to compose output for.
      * @throws UncheckedIOException when an IO error occurs
      *
      */
-    @Override
-    public void beforeCompose() throws JSaParException {
-
-    }
-
-    /**
-     * This implementation does nothing
-     * @throws UncheckedIOException when an IO error occurs
-     *
-     */
-    @Override
-    public void afterCompose() throws JSaParException {
-
+    public void compose(Iterator<Line> iterator) {
+        while (iterator.hasNext()) {
+            if (composeLine(iterator.next()) && iterator.hasNext()) {
+                composeLineSeparator();
+            }
+        }
     }
 
     @Override

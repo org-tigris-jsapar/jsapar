@@ -52,13 +52,6 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
         this.beanFactory = beanFactory;
     }
 
-    @Override
-    public void compose(Document document)  {
-        for (Line line : document) {
-            composeLine(line);
-        }
-
-    }
 
     @Override
     public boolean composeLine(Line line)  {

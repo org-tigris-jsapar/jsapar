@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A document contains multiple lines where each line corresponds to a line of
@@ -88,6 +89,12 @@ public class Document implements Serializable, Iterable<Line> {
         return this.lines.iterator();
     }
 
+    /**
+     * @return A stream of all lines within this document.
+     */
+    public Stream<Line> stream(){
+        return lines.stream();
+    }
 
     @Override
     public String toString() {

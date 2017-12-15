@@ -14,32 +14,10 @@ import java.util.Iterator;
 public interface SchemaComposer {
 
     /**
-     * This method should only be called by a {@link org.jsapar.TextComposer}. You should normally not use this class directly in your code.
-     * Use a {@link org.jsapar.TextComposer} instead.
-     *
-     * Composes all the lines supplied by the iterator and adds line separator between each composed line.
-     *
-     * @param iterator A line iterator to get lines from.
-     * @throws IOException if an io-error occurs
-     *
+     * Composes line separator accoring to schema.
      */
-    void compose(Iterator<Line> iterator) throws JSaParException;
+    void composeLineSeparator();
 
-    /**
-     * Called before compose() in order to set up or write file header.
-     *
-     * @throws IOException if an io-error occurs
-     *
-     */
-    void beforeCompose() throws JSaParException;
-
-    /**
-     * Called after compose() in order to clean up or write file footer.
-     *
-     * @throws IOException if an io-error occurs
-     *
-     */
-    void afterCompose() throws JSaParException;
 
     /**
      * Composes the supplied line but does not write any line separator.

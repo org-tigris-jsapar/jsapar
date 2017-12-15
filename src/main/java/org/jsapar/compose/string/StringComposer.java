@@ -31,11 +31,6 @@ public class StringComposer implements Composer {
     }
 
     @Override
-    public void compose(Document document) {
-        document.forEach(this::composeLine);
-    }
-
-    @Override
     public boolean composeLine(Line line) {
         return schema.getSchemaLine(line.getLineType())
                 .filter(schemaLine -> !schemaLine.isIgnoreWrite())

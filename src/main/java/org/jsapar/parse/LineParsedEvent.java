@@ -34,5 +34,10 @@ public final class LineParsedEvent extends EventObject {
         return line;
     }
 
-
+    /**
+     * @return The line number of the line in this event.
+     */
+    public long getLineNumber() {
+        return line.getLineNumber();
+    }
 }

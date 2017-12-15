@@ -12,7 +12,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -33,9 +32,8 @@ public class Text2XmlConverter {
      *
      * @param reader The reader to read text input from.
      * @param writer The writer to write xml to.
-     * @throws IOException In case of input or output exceptions.
      */
-    public void convert(Reader reader, Writer writer) throws IOException {
+    public void convert(Reader reader, Writer writer) {
         try {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformXml(transformer, writer, reader);
@@ -50,9 +48,8 @@ public class Text2XmlConverter {
      * @param reader     The reader to read text input from.
      * @param xsltReader Reader to the xslt.
      * @param writer     The writer to write xml to.
-     * @throws IOException In case of input or output exceptions.
      */
-    public void convert(Reader reader, Reader xsltReader, Writer writer) throws IOException {
+    public void convert(Reader reader, Reader xsltReader, Writer writer) {
         try {
             Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(xsltReader));
             transformXml(transformer, writer, reader);

@@ -12,7 +12,6 @@ import org.jsapar.schema.Schema;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.io.Writer;
-import java.util.Iterator;
 
 /**
  * This class contains methods for transforming a Document or Line into a text output. E.g. if you want to write
@@ -50,32 +49,6 @@ public class TextComposer implements Composer {
         this.composerFactory = composerFactory;
     }
 
-    /**
-     * Writes the document to a {@link java.io.Writer} according to the schemas of this composer.
-     *
-     * @param document The document to compose output for.
-     *
-     */
-    @Override
-    public void compose(Document document)  {
-        compose(document.iterator());
-    }
-
-    /**
-     * Writes the document to a {@link java.io.Writer} according to the schemas of this composer.
-     * 
-     * @param lineIterator
-     *            An iterator that iterates over a collection of lines. Can be used to build lines on-the-fly if you
-     *            don't want to store them all in memory.
-     *
-     */
-    public void compose(Iterator<Line> lineIterator)  {
-        SchemaComposer schemaComposer = makeSchemaComposer();
-        schemaComposer.beforeCompose();
-        schemaComposer.compose(lineIterator);
-        schemaComposer.afterCompose();
-    }
-
     private SchemaComposer makeSchemaComposer() {
         if (currentSchemaComposer == null)
             currentSchemaComposer = composerFactory.makeComposer(schema, writer);
@@ -97,10 +70,9 @@ public class TextComposer implements Composer {
             if (breakBefore) {
                 writer.write(schema.getLineSeparator());
             }
-            if (!writeLine(line))
-                return false;
-            breakBefore = true;
-            return true;
+            boolean written = writeLine(line);
+            breakBefore = written;
+            return written;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
