@@ -17,4 +17,7 @@ public class DateCell extends ComparableCell<Date> {
         super(sName, value, CellType.DATE);
     }
 
+    public static Cell emptyOf(String name) {
+        return new EmptyCell(name, CellType.DATE);
+    }
 }
