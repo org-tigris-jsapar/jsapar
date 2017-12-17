@@ -4,6 +4,7 @@ import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.ConvertTask;
 import org.jsapar.parse.bean.BeanParseConfig;
 import org.jsapar.parse.bean.BeanParseTask;
+import org.jsapar.parse.bean.BeanParseTaskForConvert;
 import org.jsapar.schema.Schema;
 
 import java.io.IOException;
@@ -27,7 +28,6 @@ import java.util.stream.Stream;
 public class Bean2TextConverter<T> extends AbstractConverter {
 
     private final Schema composerSchema;
-    private BeanParseConfig parseConfig = new BeanParseConfig();
 
     /**
      * Creates a converter with supplied composer schema.
@@ -46,7 +46,7 @@ public class Bean2TextConverter<T> extends AbstractConverter {
      */
     public void convert(Stream<? extends T> stream, Writer writer) throws IOException {
         TextComposer composer = new TextComposer(this.composerSchema, writer);
-        BeanParseTask<T> parseTask = new BeanParseTask<>(stream, parseConfig);
+        BeanParseTaskForConvert<T> parseTask = new BeanParseTaskForConvert<>(stream);
         ConvertTask convertTask = new ConvertTask(parseTask, composer);
         execute(convertTask);
     }
@@ -59,7 +59,7 @@ public class Bean2TextConverter<T> extends AbstractConverter {
      */
     public void convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
         TextComposer composer = new TextComposer(this.composerSchema, writer);
-        BeanParseTask<T> parseTask = new BeanParseTask<>(iterator, parseConfig);
+        BeanParseTaskForConvert<T> parseTask = new BeanParseTaskForConvert<>(iterator);
         ConvertTask convertTask = new ConvertTask(parseTask, composer);
         execute(convertTask);
     }
@@ -74,17 +74,4 @@ public class Bean2TextConverter<T> extends AbstractConverter {
         convert(collection.stream(), writer);
     }
 
-    /**
-     * @return Configuration used while parsing beans.
-     */
-    public BeanParseConfig getParseConfig() {
-        return parseConfig;
-    }
-
-    /**
-     * @param parseConfig Configuration to be used while parsing beans.
-     */
-    public void setParseConfig(BeanParseConfig parseConfig) {
-        this.parseConfig = parseConfig;
-    }
 }

@@ -48,15 +48,6 @@ public class Bean2TextConverterTest {
     }
 
 
-    @Test
-    public void getParseConfig() throws Exception {
-        Bean2TextConverter<TstPerson> converter = new Bean2TextConverter<>(new CsvSchema());
-        assertNotNull(converter.getParseConfig());
-        BeanParseConfig config = new BeanParseConfig();
-        converter.setParseConfig(config);
-        assertSame(config, converter.getParseConfig());
-
-    }
 
     @Test
     public void setParseConfig() throws Exception {
