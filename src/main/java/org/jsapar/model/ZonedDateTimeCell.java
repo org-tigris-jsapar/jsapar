@@ -20,4 +20,8 @@ public class ZonedDateTimeCell extends Cell<ZonedDateTime>{
     public int compareValueTo(Cell<ZonedDateTime> right) {
         return this.getValue().compareTo(right.getValue());
     }
+
+    public static Cell emptyOf(String name) {
+        return new EmptyCell(name, CellType.ZONED_DATE_TIME);
+    }
 }

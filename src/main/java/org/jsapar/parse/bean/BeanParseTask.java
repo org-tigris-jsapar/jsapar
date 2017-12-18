@@ -3,20 +3,20 @@ package org.jsapar.parse.bean;
 import org.jsapar.Bean2TextConverter;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.model.*;
+import org.jsapar.error.JSaParException;
+import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
+import org.jsapar.model.Line;
 import org.jsapar.parse.AbstractParseTask;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseTask;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
@@ -28,8 +28,9 @@ import java.util.stream.StreamSupport;
  * a cell with the bean property name The {@link Cell#name} of each cell will be the name of the bean property, e.g. if
  * the bean has a method declared as {@code public int getNumber()}, it will result in a cell with the name "number" of
  * type {@link CellType}.INTEGER.
- *
+ * <p>
  * If you use these rules you can write a {@link org.jsapar.schema.Schema} that converts a bean to a different type of output.
+ *
  * @see Bean2TextConverter
  */
 public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
@@ -56,10 +57,10 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
     @Override
     public long execute() {
         AtomicLong count = new AtomicLong(1);
-        stream.forEach(bean->
-                lineParsedEvent( new LineParsedEvent(
+        stream.forEach(bean ->
+                lineParsedEvent(new LineParsedEvent(
                         this,
-                        parseBean(bean, this, count.incrementAndGet())) ));
+                        parseBean(bean, this, count.incrementAndGet()))));
         return count.get();
     }
 
@@ -68,14 +69,12 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
      * be named according to the java bean attribute name. This means that if there is a member
      * method called <tt>getStreetAddress()</tt>, the name of the cell will be
      * <tt>streetAddress</tt>.
-     * 
-     * @param object
-     *            The object.
+     *
+     * @param object     The object.
      * @param lineNumber The number of the line being parsed. Numbering starts from 1.
      * @return A Line object containing cells according to the getter method of the supplied object.
-     *
      */
-    Line parseBean(Object object, ErrorEventListener errorListener, long lineNumber)  {
+    Line parseBean(Object object, ErrorEventListener errorListener, long lineNumber) {
 
         Line line = new Line(object.getClass().getName());
         line.setLineNumber(lineNumber);
@@ -83,82 +82,27 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
         this.parseBean(line, object, null, visited, errorListener);
         return line;
     }
-    
+
 
     @SuppressWarnings("unchecked")
-    private void parseBean(Line line, Object object, String prefix, Set<Object> visited, ErrorEventListener errorListener)  {
+    private void parseBean(Line line, Object object, String prefix, Set<Object> visited, ErrorEventListener errorListener) {
 
         // First we avoid loops.
-        if(visited.contains(object) || visited.size()  >  config.getMaxSubLevels())
+        if (visited.contains(object) || visited.size() > config.getMaxSubLevels())
             return;
-        
-        Method[] methods = object.getClass().getMethods();
-
-        for (Method f : methods) {
-            String sAttributeName="?";
-            try {
-                String sMethodName = f.getName();
-                if (f.getParameterTypes().length == 0 && sMethodName.length() > 3
-                        && sMethodName.substring(0, 3).equals("get")) {
-                    sAttributeName = makeAttributeName(prefix, sMethodName);
-                    @SuppressWarnings("rawtypes")
-                    Class returnType = f.getReturnType();
-
-                    if (returnType.isAssignableFrom(Class.class)) {
-                        //noinspection UnnecessaryContinue
-                        continue;
-                    } else if (returnType.isAssignableFrom(String.class)) {
-                        String value = (String) f.invoke(object);
-                        if (value != null)
-                            line.addCell(new StringCell(sAttributeName, value));
-                    } else if (returnType.isAssignableFrom(Character.TYPE)
-                            || returnType.isAssignableFrom(Character.class)) {
-                        line.addCell(new StringCell(sAttributeName, (Character) f.invoke(object)));
-                    } else if (returnType.isAssignableFrom(LocalDate.class)) {
-                        LocalDate value = (LocalDate) f.invoke(object);
-                        if (value != null)
-                            line.addCell(new LocalDateCell(sAttributeName, value));
-                    } else if (returnType.isAssignableFrom(LocalDateTime.class)) {
-                        LocalDateTime value = (LocalDateTime) f.invoke(object);
-                        if (value != null)
-                            line.addCell(new LocalDateTimeCell(sAttributeName, value));
-                    } else if (returnType.isAssignableFrom(LocalTime.class)) {
-                        LocalTime value = (LocalTime) f.invoke(object);
-                        if (value != null)
-                            line.addCell(new LocalTimeCell(sAttributeName, value));
-                    } else if (returnType.isAssignableFrom(ZonedDateTime.class)) {
-                        ZonedDateTime value = (ZonedDateTime) f.invoke(object);
-                        if (value != null)
-                            line.addCell(new ZonedDateTimeCell(sAttributeName, value));
-                    } else if (returnType.isAssignableFrom(Date.class)) {
-                        Date value = (Date) f.invoke(object);
-                        if (value != null)
-                            line.addCell(new DateCell(sAttributeName, value));
-                    } else if (returnType.isAssignableFrom(Calendar.class)) {
-                        Calendar value = (Calendar) f.invoke(object);
-                        if (value != null)
-                            line.addCell(new DateCell(sAttributeName, value.getTime()));
-                    } else if (returnType.isAssignableFrom(Integer.TYPE) || returnType.isAssignableFrom(Integer.class)) {
-                        line.addCell(new IntegerCell(sAttributeName, (Integer) f.invoke(object)));
-                    } else if (returnType.isAssignableFrom(Byte.TYPE) || returnType.isAssignableFrom(Byte.class)) {
-                        line.addCell(new IntegerCell(sAttributeName, (Byte) f.invoke(object)));
-                    } else if (returnType.isAssignableFrom(Short.TYPE) || returnType.isAssignableFrom(Short.class)) {
-                        line.addCell(new IntegerCell(sAttributeName, (Short) f.invoke(object)));
-                    } else if (returnType.isAssignableFrom(Long.TYPE) || returnType.isAssignableFrom(Long.class)) {
-                        line.addCell(new IntegerCell(sAttributeName, (Long) f.invoke(object)));
-                    } else if (returnType.isAssignableFrom(Boolean.TYPE) || returnType.isAssignableFrom(Boolean.class)) {
-                        line.addCell(new BooleanCell(sAttributeName, (Boolean) f.invoke(object)));
-                    } else if (returnType.isAssignableFrom(Float.TYPE) || returnType.isAssignableFrom(Float.class)) {
-                        line.addCell(new FloatCell(sAttributeName, (Float) f.invoke(object)));
-                    } else if (returnType.isAssignableFrom(Double.TYPE) || returnType.isAssignableFrom(Double.class)) {
-                        line.addCell(new FloatCell(sAttributeName, (Double) f.invoke(object)));
-                    } else if (returnType.isAssignableFrom(BigDecimal.class)) {
-                        line.addCell(new BigDecimalCell(sAttributeName, (BigDecimal) f.invoke(object)));
-                    } else if (returnType.isAssignableFrom(BigInteger.class)) {
-                        line.addCell(new BigDecimalCell(sAttributeName, (BigInteger) f.invoke(object)));
-                    } else {
+        try {
+            for (PropertyDescriptor pd : Introspector.getBeanInfo(object.getClass()).getPropertyDescriptors()) {
+                Method f = pd.getReadMethod();
+                String sAttributeName = pd.getName();
+                if (f == null || "class".equals(sAttributeName))
+                    continue;
+                try {
+                    sAttributeName = makeAttributeName(prefix, sAttributeName);
+                    Optional<Cell> oCell = Bean2Cell.makeCell(object, f, sAttributeName);
+                    oCell.ifPresent(line::addCell);
+                    if (!oCell.isPresent()) {
                         Object subObject = f.invoke(object);
-                        if(subObject == null)
+                        if (subObject == null)
                             continue;
                         // We only want to avoid loops not multiple paths to same object.
                         Set<Object> visitedClone = new HashSet<>(visited);
@@ -166,14 +110,16 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
                         // Recursively add sub classes.
                         this.parseBean(line, subObject, sAttributeName, visitedClone, errorListener);
                     }
+                } catch (IllegalArgumentException e) {
+                    handleCellError(errorListener, sAttributeName, object, line, "Illegal argument in getter method.");
+                } catch (IllegalAccessException e) {
+                    handleCellError(errorListener, sAttributeName, object, line, "Attribute getter does not have public access.");
+                } catch (InvocationTargetException e) {
+                    handleCellError(errorListener, sAttributeName, object, line, "Getter method fails to execute.");
                 }
-            } catch (IllegalArgumentException e) {
-                handleCellError(errorListener, sAttributeName, object, line, "Illegal argument in getter method.");
-            } catch (IllegalAccessException e) {
-                handleCellError(errorListener, sAttributeName, object, line, "Attribute getter does not have public access.");
-            } catch (InvocationTargetException e) {
-                handleCellError(errorListener, sAttributeName, object, line, "Getter method fails to execute.");
             }
+        } catch (IntrospectionException e) {
+            throw new JSaParException("Unable to parse bean", e);
         }
     }
 
@@ -191,18 +137,18 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
 
     /**
      * Creates the attribute name based on get method name.
-     * @param prefix A prefix that will be appended before the attribute name.
-     * @param sMethodName The method that is used to construct the attribute name.
+     *
+     * @param prefix   A prefix that will be appended before the attribute name.
+     * @param property The attribute name.
      * @return The attribute name that is built from the getter name.
      */
-    private String makeAttributeName(String prefix, String sMethodName) {
+    private String makeAttributeName(String prefix, String property) {
         StringBuilder sb = new StringBuilder();
         if (prefix != null) {
             sb.append(prefix);
             sb.append('.');
         }
-        sb.append(sMethodName.substring(3, 4).toLowerCase());
-        sb.append(sMethodName.substring(4));
+        sb.append(property);
         return sb.toString();
     }
 

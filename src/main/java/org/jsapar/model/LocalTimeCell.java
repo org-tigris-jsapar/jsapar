@@ -20,4 +20,8 @@ public class LocalTimeCell extends TemporalCell<LocalTime>{
     public int compareValueTo(Cell<LocalTime> right) {
         return this.getValue().compareTo(right.getValue());
     }
+
+    public static Cell emptyOf(String name) {
+        return new EmptyCell(name, CellType.LOCAL_TIME);
+    }
 }
