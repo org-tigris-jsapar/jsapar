@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.beans.IntrospectionException;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -299,7 +300,7 @@ public class JSaParExamplesTest {
     
     @Test
     public final void testExampleJavaToCsv07()
-            throws SchemaException, IOException, ParseException{
+            throws SchemaException, IOException, ParseException, IntrospectionException, ClassNotFoundException {
 
         List<TstPerson> people = new LinkedList<TstPerson>();
         TstPerson testPerson1 = new TstPerson("Nils", "Holgersson", (short)4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9, 'A');

@@ -1,5 +1,6 @@
 package org.jsapar.schema;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -217,4 +218,6 @@ public abstract class SchemaLine implements Cloneable {
     public abstract Iterator<? extends SchemaCell> iterator();
 
     public abstract void forEach(Consumer<? super SchemaCell> consumer);
+
+    public abstract Collection<? extends SchemaCell> getSchemaCells();
 }

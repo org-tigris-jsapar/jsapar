@@ -13,10 +13,8 @@ import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseTask;
 
 import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
@@ -35,18 +33,18 @@ import java.util.stream.StreamSupport;
  */
 public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
 
-    private final BeanParseConfig config;
+    private final BeanMap beanMap;
 
     private Stream<? extends T> stream;
 
-    public BeanParseTask(Stream<? extends T> stream, BeanParseConfig config) {
+    public BeanParseTask(Stream<? extends T> stream, BeanMap beanMap) {
         this.stream = stream;
-        this.config = config;
+        this.beanMap = beanMap;
     }
 
-    public BeanParseTask(Iterator<? extends T> iterator, BeanParseConfig config) {
+    public BeanParseTask(Iterator<? extends T> iterator, BeanMap beanMap) {
         this.stream = StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false);
-        this.config = config;
+        this.beanMap = beanMap;
     }
 
 
@@ -58,68 +56,56 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
     public long execute() {
         AtomicLong count = new AtomicLong(1);
         stream.forEach(bean ->
-                lineParsedEvent(new LineParsedEvent(
-                        this,
-                        parseBean(bean, this, count.incrementAndGet()))));
+                parseBean(bean, this, count.incrementAndGet()).ifPresent(line ->
+                        lineParsedEvent(new LineParsedEvent(
+                                this,
+                                line))));
         return count.get();
     }
 
     /**
-     * Builds a line object according to the getter fields of the object. Each cell in the line will
+     * Builds a line bean according to the getter fields of the bean. Each cell in the line will
      * be named according to the java bean attribute name. This means that if there is a member
      * method called <tt>getStreetAddress()</tt>, the name of the cell will be
      * <tt>streetAddress</tt>.
      *
-     * @param object     The object.
+     * @param bean     The bean.
      * @param lineNumber The number of the line being parsed. Numbering starts from 1.
-     * @return A Line object containing cells according to the getter method of the supplied object.
+     * @return A Line bean containing cells according to the getter method of the supplied bean.
      */
-    Line parseBean(Object object, ErrorEventListener errorListener, long lineNumber) {
-
-        Line line = new Line(object.getClass().getName());
-        line.setLineNumber(lineNumber);
-        Set<Object> visited = new HashSet<>();
-        this.parseBean(line, object, null, visited, errorListener);
-        return line;
+    Optional<Line> parseBean(T bean, ErrorEventListener errorListener, long lineNumber) {
+        return beanMap.getBean2Line(bean.getClass()).map(bean2Line -> {
+            Line line = new Line(bean2Line.getLineType());
+            line.setLineNumber(lineNumber);
+            this.parseBean(line, bean, bean2Line, errorListener);
+            return line;
+        });
     }
 
 
     @SuppressWarnings("unchecked")
-    private void parseBean(Line line, Object object, String prefix, Set<Object> visited, ErrorEventListener errorListener) {
+    private void parseBean(Line line, Object object, Bean2Line bean2Line, ErrorEventListener errorListener) {
 
-        // First we avoid loops.
-        if (visited.contains(object) || visited.size() > config.getMaxSubLevels())
-            return;
-        try {
-            for (PropertyDescriptor pd : Introspector.getBeanInfo(object.getClass()).getPropertyDescriptors()) {
-                Method f = pd.getReadMethod();
-                String sAttributeName = pd.getName();
-                if (f == null || "class".equals(sAttributeName))
-                    continue;
-                try {
-                    sAttributeName = makeAttributeName(prefix, sAttributeName);
-                    Optional<Cell> oCell = Bean2Cell.makeCell(object, f, sAttributeName);
-                    oCell.ifPresent(line::addCell);
-                    if (!oCell.isPresent()) {
-                        Object subObject = f.invoke(object);
-                        if (subObject == null)
-                            continue;
-                        // We only want to avoid loops not multiple paths to same object.
-                        Set<Object> visitedClone = new HashSet<>(visited);
-                        visitedClone.add(object);
-                        // Recursively add sub classes.
-                        this.parseBean(line, subObject, sAttributeName, visitedClone, errorListener);
-                    }
-                } catch (IllegalArgumentException e) {
-                    handleCellError(errorListener, sAttributeName, object, line, "Illegal argument in getter method.");
-                } catch (IllegalAccessException e) {
-                    handleCellError(errorListener, sAttributeName, object, line, "Attribute getter does not have public access.");
-                } catch (InvocationTargetException e) {
-                    handleCellError(errorListener, sAttributeName, object, line, "Getter method fails to execute.");
-                }
+        for (Bean2Cell bean2Cell : bean2Line.getBean2Cells()) {
+            PropertyDescriptor pd = bean2Cell.getPropertyDescriptor();
+
+            try {
+                Bean2Line children = bean2Cell.getChildren();
+                if (children != null) {
+                    Object subObject = pd.getReadMethod().invoke(object);
+                    if (subObject == null)
+                        continue;
+                    // Recursively add sub classes.
+                    this.parseBean(line, subObject, children, errorListener);
+                } else
+                    bean2Cell.makeCell(object).ifPresent(line::addCell);
+            } catch (IllegalArgumentException e) {
+                handleCellError(errorListener, bean2Cell.getCellName(), object, line, "Illegal argument in getter method.");
+            } catch (IllegalAccessException e) {
+                handleCellError(errorListener, bean2Cell.getCellName(), object, line, "Attribute getter does not have public access.");
+            } catch (InvocationTargetException e) {
+                handleCellError(errorListener, bean2Cell.getCellName(), object, line, "Getter method fails to execute.");
             }
-        } catch (IntrospectionException e) {
-            throw new JSaParException("Unable to parse bean", e);
         }
     }
 

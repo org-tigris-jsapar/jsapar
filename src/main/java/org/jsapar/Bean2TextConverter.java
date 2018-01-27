@@ -2,11 +2,11 @@ package org.jsapar;
 
 import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.ConvertTask;
-import org.jsapar.parse.bean.BeanParseConfig;
+import org.jsapar.parse.bean.BeanMap;
 import org.jsapar.parse.bean.BeanParseTask;
-import org.jsapar.parse.bean.BeanParseTaskForConvert;
 import org.jsapar.schema.Schema;
 
+import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
@@ -28,14 +28,16 @@ import java.util.stream.Stream;
 public class Bean2TextConverter<T> extends AbstractConverter {
 
     private final Schema composerSchema;
+    private BeanMap beanMap;
 
     /**
      * Creates a converter with supplied composer schema.
      * @param composerSchema The schema to use while composing text output.
      */
-    public Bean2TextConverter(Schema composerSchema) {
+    public Bean2TextConverter(Schema composerSchema) throws IntrospectionException, ClassNotFoundException {
         assert composerSchema != null;
         this.composerSchema = composerSchema;
+        beanMap = BeanMap.ofSchema(composerSchema);
     }
 
     /**
@@ -46,7 +48,7 @@ public class Bean2TextConverter<T> extends AbstractConverter {
      */
     public void convert(Stream<? extends T> stream, Writer writer) throws IOException {
         TextComposer composer = new TextComposer(this.composerSchema, writer);
-        BeanParseTaskForConvert<T> parseTask = new BeanParseTaskForConvert<>(stream);
+        BeanParseTask<T> parseTask = new BeanParseTask<>(stream, beanMap);
         ConvertTask convertTask = new ConvertTask(parseTask, composer);
         execute(convertTask);
     }
@@ -59,7 +61,7 @@ public class Bean2TextConverter<T> extends AbstractConverter {
      */
     public void convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
         TextComposer composer = new TextComposer(this.composerSchema, writer);
-        BeanParseTaskForConvert<T> parseTask = new BeanParseTaskForConvert<>(iterator);
+        BeanParseTask<T> parseTask = new BeanParseTask<>(iterator, beanMap);
         ConvertTask convertTask = new ConvertTask(parseTask, composer);
         execute(convertTask);
     }
