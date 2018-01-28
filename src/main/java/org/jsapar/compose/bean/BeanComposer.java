@@ -7,7 +7,6 @@ import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.Cell;
-import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 
 import java.lang.reflect.InvocationTargetException;

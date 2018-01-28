@@ -3,7 +3,6 @@ package org.jsapar.parse.bean;
 import org.jsapar.Bean2TextConverter;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
@@ -12,10 +11,12 @@ import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseTask;
 
-import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -98,7 +99,7 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
                     // Recursively add sub classes.
                     this.parseBean(line, subObject, children, errorListener);
                 } else
-                    bean2Cell.makeCell(object).ifPresent(line::addCell);
+                    line.addCell(bean2Cell.makeCell(object));
             } catch (IllegalArgumentException e) {
                 handleCellError(errorListener, bean2Cell.getCellName(), object, line, "Illegal argument in getter method.");
             } catch (IllegalAccessException e) {

@@ -15,7 +15,6 @@ import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Optional;
 
 public class Bean2Cell {
 
@@ -60,7 +59,7 @@ public class Bean2Cell {
         return propertyDescriptor;
     }
 
-    public Optional<Cell> makeCell(Object object) throws InvocationTargetException, IllegalAccessException {
+    public Cell makeCell(Object object) throws InvocationTargetException, IllegalAccessException {
         return cellCreator.makeCell(object);
     }
 
@@ -80,88 +79,94 @@ public class Bean2Cell {
             return (bean) -> {
                 String value = (String) f.invoke(bean);
                 if (value != null)
-                    return Optional.of(new StringCell(cellName, value));
+                    return new StringCell(cellName, value);
                 else
-                    return Optional.of(StringCell.emptyOf(cellName));
+                    return StringCell.emptyOf(cellName);
             };
         } else if (returnType.isAssignableFrom(Character.TYPE)
                 || returnType.isAssignableFrom(Character.class)) {
-            return (bean)-> Optional.of(new StringCell(cellName, (Character) f.invoke(bean)));
+            return (bean)-> new StringCell(cellName, (Character) f.invoke(bean));
         } else if (returnType.isAssignableFrom(LocalDate.class)) {
             return (bean)-> {
                 LocalDate value = (LocalDate) f.invoke(bean);
                 if (value != null)
-                    return Optional.of(new LocalDateCell(cellName, value));
+                    return new LocalDateCell(cellName, value);
                 else
-                    return Optional.of(LocalDateCell.emptyOf(cellName));
+                    return LocalDateCell.emptyOf(cellName);
             };
         } else if (returnType.isAssignableFrom(LocalDateTime.class)) {
             return (bean)-> {
                 LocalDateTime value = (LocalDateTime) f.invoke(bean);
                 if (value != null)
-                    return Optional.of(new LocalDateTimeCell(cellName, value));
+                    return new LocalDateTimeCell(cellName, value);
                 else
-                    return Optional.of(LocalDateTimeCell.emptyOf(cellName));
+                    return LocalDateTimeCell.emptyOf(cellName);
             };
         } else if (returnType.isAssignableFrom(LocalTime.class)) {
             return (bean)-> {
                 LocalTime value = (LocalTime) f.invoke(bean);
                 if (value != null)
-                    return Optional.of(new LocalTimeCell(cellName, value));
+                    return new LocalTimeCell(cellName, value);
                 else
-                    return Optional.of(LocalTimeCell.emptyOf(cellName));
+                    return LocalTimeCell.emptyOf(cellName);
             };
         } else if (returnType.isAssignableFrom(ZonedDateTime.class)) {
             return (bean)-> {
                 ZonedDateTime value = (ZonedDateTime) f.invoke(bean);
                 if (value != null)
-                    return Optional.of(new ZonedDateTimeCell(cellName, value));
+                    return new ZonedDateTimeCell(cellName, value);
                 else
-                    return Optional.of(ZonedDateTimeCell.emptyOf(cellName));
+                    return ZonedDateTimeCell.emptyOf(cellName);
             };
         } else if (returnType.isAssignableFrom(Date.class)) {
             return (bean)-> {
                 Date value = (Date) f.invoke(bean);
                 if (value != null)
-                    return Optional.of(new DateCell(cellName, value));
+                    return new DateCell(cellName, value);
                 else
-                    return Optional.of(DateCell.emptyOf(cellName));
+                    return DateCell.emptyOf(cellName);
             };
         } else if (returnType.isAssignableFrom(Calendar.class)) {
             return (bean)-> {
                 Calendar value = (Calendar) f.invoke(bean);
                 if (value != null)
-                    return Optional.of(new DateCell(cellName, value.getTime()));
+                    return new DateCell(cellName, value.getTime());
                 else
-                    return Optional.of(DateCell.emptyOf(cellName));
+                    return DateCell.emptyOf(cellName);
             };
         } else if (returnType.isAssignableFrom(Integer.TYPE) || returnType.isAssignableFrom(Integer.class)) {
-            return (bean)->Optional.of(new IntegerCell(cellName, (Integer) f.invoke(bean)));
+            return (bean)->new IntegerCell(cellName, (Integer) f.invoke(bean));
         } else if (returnType.isAssignableFrom(Byte.TYPE) || returnType.isAssignableFrom(Byte.class)) {
-            return (bean)->Optional.of(new IntegerCell(cellName, (Byte) f.invoke(bean)));
+            return (bean)->new IntegerCell(cellName, (Byte) f.invoke(bean));
         } else if (returnType.isAssignableFrom(Short.TYPE) || returnType.isAssignableFrom(Short.class)) {
-            return (bean)->Optional.of(new IntegerCell(cellName, (Short) f.invoke(bean)));
+            return (bean)->new IntegerCell(cellName, (Short) f.invoke(bean));
         } else if (returnType.isAssignableFrom(Long.TYPE) || returnType.isAssignableFrom(Long.class)) {
-            return (bean)->Optional.of(new IntegerCell(cellName, (Long) f.invoke(bean)));
+            return (bean)->new IntegerCell(cellName, (Long) f.invoke(bean));
         } else if (returnType.isAssignableFrom(Boolean.TYPE) || returnType.isAssignableFrom(Boolean.class)) {
-            return (bean)->Optional.of(new BooleanCell(cellName, (Boolean) f.invoke(bean)));
+            return (bean)->new BooleanCell(cellName, (Boolean) f.invoke(bean));
         } else if (returnType.isAssignableFrom(Float.TYPE) || returnType.isAssignableFrom(Float.class)) {
-            return (bean)->Optional.of(new FloatCell(cellName, (Float) f.invoke(bean)));
+            return (bean)->new FloatCell(cellName, (Float) f.invoke(bean));
         } else if (returnType.isAssignableFrom(Double.TYPE) || returnType.isAssignableFrom(Double.class)) {
-            return (bean)->Optional.of(new FloatCell(cellName, (Double) f.invoke(bean)));
+            return (bean)->new FloatCell(cellName, (Double) f.invoke(bean));
         } else if (returnType.isAssignableFrom(BigDecimal.class)) {
-            return (bean)->Optional.of(new BigDecimalCell(cellName, (BigDecimal) f.invoke(bean)));
+            return (bean)->new BigDecimalCell(cellName, (BigDecimal) f.invoke(bean));
         } else if (returnType.isAssignableFrom(BigInteger.class)) {
-            return (bean)->Optional.of(new BigDecimalCell(cellName, (BigInteger) f.invoke(bean)));
+            return (bean)->new BigDecimalCell(cellName, (BigInteger) f.invoke(bean));
         }
-        return (bean)->Optional.of(new StringCell(cellName, String.valueOf(f.invoke(bean))));
+        return (bean) -> {
+            Object value = f.invoke(bean);
+            if(value != null)
+                return new StringCell(cellName, String.valueOf(value));
+            else
+                return StringCell.emptyOf(cellName);
+        };
     }
 
     /**
      * Cell creator interface. Needed to be able to let makeCell method throw exception.
      */
     private interface CellCreator{
-        Optional<Cell> makeCell(Object o) throws InvocationTargetException, IllegalAccessException;
+        Cell makeCell(Object o) throws InvocationTargetException, IllegalAccessException;
     }
 
 }
