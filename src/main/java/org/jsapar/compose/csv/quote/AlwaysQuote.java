@@ -12,7 +12,7 @@ public class AlwaysQuote implements Quoter {
 
     public AlwaysQuote(char quoteChar, int maxLength) {
         valueComposer = maxLength >=0 ? new MaxLengthComposer(maxLength-2) : new AtomicValueComposer();
-        this.quoteChar = quoteChar;
+        this.quoteChar = (quoteChar == 0 ? '"' : quoteChar);
     }
 
     @Override

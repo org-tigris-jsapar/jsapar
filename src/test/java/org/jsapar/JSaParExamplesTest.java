@@ -4,18 +4,15 @@ import org.jsapar.compose.Composer;
 import org.jsapar.compose.bean.RecordingBeanEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.*;
-import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
+import org.jsapar.parse.bean.BeanMap;
 import org.jsapar.parse.xml.XmlParser;
-import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.junit.Assert;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.beans.IntrospectionException;
 import java.io.*;
 import java.text.DateFormat;
@@ -39,10 +36,10 @@ public class JSaParExamplesTest {
 
     @Test
     public final void testExampleCsv01()
-            throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
-        try (Reader schemaReader = new FileReader("exsamples/01_CsvSchema.xml");
-             Reader fileReader = new FileReader("exsamples/01_Names.csv")) {
-            Schema schema = Schema.fromXml(schemaReader);
+            throws SchemaException, IOException, JSaParException {
+        try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
+             Reader fileReader = new FileReader("examples/01_Names.csv")) {
+            Schema schema = Schema.ofXml(schemaReader);
             TextParser parser = new TextParser(schema);
             DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
             parser.parse(fileReader, listener);
@@ -69,10 +66,10 @@ public class JSaParExamplesTest {
 
     @Test
     public final void testExampleFixedWidth02()
-            throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
-        try (Reader schemaReader = new FileReader("exsamples/02_FixedWidthSchema.xml");
-             Reader fileReader = new FileReader("exsamples/02_Names.txt")) {
-            TextParser parser = new TextParser(Schema.fromXml(schemaReader));
+            throws SchemaException, IOException, JSaParException {
+        try (Reader schemaReader = new FileReader("examples/02_FixedWidthSchema.xml");
+             Reader fileReader = new FileReader("examples/02_Names.txt")) {
+            TextParser parser = new TextParser(Schema.ofXml(schemaReader));
             DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
             parser.parse(fileReader, listener);
             Document document = listener.getDocument();
@@ -84,17 +81,12 @@ public class JSaParExamplesTest {
         }
     }
 
-    /**
-     * @throws SchemaException
-     * @throws IOException
-     *
-     */
     @Test
     public final void testExampleFlatFile03()
-            throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
-        try (Reader schemaReader = new FileReader("exsamples/03_FlatFileSchema.xml");
-             Reader fileReader = new FileReader("exsamples/03_FlatFileNames.txt")) {
-            TextParser parser = new TextParser(Schema.fromXml(schemaReader));
+            throws SchemaException, IOException, JSaParException {
+        try (Reader schemaReader = new FileReader("examples/03_FlatFileSchema.xml");
+             Reader fileReader = new FileReader("examples/03_FlatFileNames.txt")) {
+            TextParser parser = new TextParser(Schema.ofXml(schemaReader));
             DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
             parser.parse(fileReader, listener);
             Document document = listener.getDocument();
@@ -110,17 +102,12 @@ public class JSaParExamplesTest {
         }
     }
 
-    /**
-     * @throws SchemaException
-     * @throws IOException
-     *
-     */
     @Test
     public final void testExampleFixedWidth04_parse()
-            throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
-        Reader schemaReader = new FileReader("exsamples/04_FixedWidthSchemaControlCell.xml");
+            throws SchemaException, IOException, JSaParException {
+        Reader schemaReader = new FileReader("examples/04_FixedWidthSchemaControlCell.xml");
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
-        Reader fileReader = new FileReader("exsamples/04_Names.txt");
+        Reader fileReader = new FileReader("examples/04_Names.txt");
         TextParser parser = new TextParser(schemaBuilder.build(schemaReader));
         DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
         parser.parse(fileReader, listener);
@@ -150,15 +137,10 @@ public class JSaParExamplesTest {
         assertEquals("F", LineUtils.getStringCellValue(footerLine, "Type"));
     }
 
-    /**
-     * @throws SchemaException
-     * @throws IOException
-     *
-     */
     @Test
     public final void testExampleFixedWidth04_compose()
-            throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
-        Reader schemaReader = new FileReader("exsamples/04_FixedWidthSchemaControlCell.xml");
+            throws SchemaException, IOException, JSaParException {
+        Reader schemaReader = new FileReader("examples/04_FixedWidthSchemaControlCell.xml");
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
 
         Document document = new Document();
@@ -206,9 +188,8 @@ public class JSaParExamplesTest {
     }
 
     @Test
-    public final void testExampleXml05() throws SchemaException, IOException, JSaParException {
-        java.util.List<CellParseException> parseErrors = new java.util.LinkedList<CellParseException>();
-        Reader fileReader = new FileReader("exsamples/05_Names.xml");
+    public final void testExampleXml05() throws IOException, JSaParException {
+        Reader fileReader = new FileReader("examples/05_Names.xml");
         XmlParser parser = new XmlParser();
         DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
         parser.parse(fileReader, listener);
@@ -228,10 +209,10 @@ public class JSaParExamplesTest {
 
     @Test
     public final void testExampleCsvControlCell06()
-            throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
-        Reader schemaReader = new FileReader("exsamples/06_CsvSchemaControlCell.xml");
+            throws SchemaException, IOException, JSaParException {
+        Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
-        Reader fileReader = new FileReader("exsamples/06_NamesControlCell.csv");
+        Reader fileReader = new FileReader("examples/06_NamesControlCell.csv");
         TextParser parser = new TextParser(schemaBuilder.build(schemaReader));
         DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
         parser.parse(fileReader, listener);
@@ -252,15 +233,15 @@ public class JSaParExamplesTest {
 
     @Test
     public final void testConvert01_02()
-            throws IOException, JSaParException, SchemaException, ParserConfigurationException, SAXException {
+            throws IOException, JSaParException, SchemaException {
 
-        File outFile = new File("exsamples/02_Names_out.txt");
-        try (Reader inSchemaReader = new FileReader("exsamples/01_CsvSchema.xml");
-             Reader outSchemaReader = new FileReader("exsamples/02_FixedWidthSchema.xml");
-             Reader inReader = new FileReader("exsamples/01_Names.csv");
+        File outFile = new File("examples/02_Names_out.txt");
+        try (Reader inSchemaReader = new FileReader("examples/01_CsvSchema.xml");
+             Reader outSchemaReader = new FileReader("examples/02_FixedWidthSchema.xml");
+             Reader inReader = new FileReader("examples/01_Names.csv");
              Writer outWriter = new FileWriter(outFile)) {
-            Text2TextConverter converter = new Text2TextConverter(Schema.fromXml(inSchemaReader),
-                    Schema.fromXml(outSchemaReader));
+            Text2TextConverter converter = new Text2TextConverter(Schema.ofXml(inSchemaReader),
+                    Schema.ofXml(outSchemaReader));
             converter.convert(inReader, outWriter);
         }
 
@@ -270,11 +251,10 @@ public class JSaParExamplesTest {
     @SuppressWarnings("unchecked")
     @Test
     public final void testExampleCsvToJava07()
-            throws SchemaException, IOException, JSaParException, ParseException, ParserConfigurationException,
-            SAXException {
-        try (Reader schemaReader = new FileReader("exsamples/07_CsvSchemaToJava.xml");
-             Reader fileReader = new FileReader("exsamples/07_Names.csv")) {
-            Text2BeanConverter converter = new Text2BeanConverter(Schema.fromXml(schemaReader));
+            throws SchemaException, IOException, JSaParException, ParseException {
+        try (Reader schemaReader = new FileReader("examples/07_CsvSchemaToJava.xml");
+             Reader fileReader = new FileReader("examples/07_Names.csv")) {
+            Text2BeanConverter converter = new Text2BeanConverter(Schema.ofXml(schemaReader));
             RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
             converter.convert(fileReader, beanEventListener);
             List<TstPerson> people = beanEventListener.getBeans();
@@ -302,7 +282,7 @@ public class JSaParExamplesTest {
     public final void testExampleJavaToCsv07()
             throws SchemaException, IOException, ParseException, IntrospectionException, ClassNotFoundException {
 
-        List<TstPerson> people = new LinkedList<TstPerson>();
+        List<TstPerson> people = new LinkedList<>();
         TstPerson testPerson1 = new TstPerson("Nils", "Holgersson", (short)4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9, 'A');
         testPerson1.setAddress(new TstPostAddress("Track", "Village"));
         people.add(testPerson1);
@@ -312,7 +292,7 @@ public class JSaParExamplesTest {
         people.add(testPerson2);
         
         
-        Reader schemaReader = new FileReader("exsamples/07_CsvSchemaToJava.xml");
+        Reader schemaReader = new FileReader("examples/07_CsvSchemaToJava.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
         StringWriter writer = new StringWriter();
         Bean2TextConverter<TstPerson> converter = new Bean2TextConverter<>(xmlBuilder.build(schemaReader));
@@ -325,13 +305,46 @@ public class JSaParExamplesTest {
         assertEquals("Jonathan;;Lionheart;37;17;1955-03-17 12:33;C;Path;City", resultLines[1]);
     }
 
+    /**
+     * Example that displays how to use an existing schema that does not use bean property names and still use it to
+     * compose a csv based on a list of beans by using a bean map that maps between the bean property names and the schema
+     * names.
+     */
+    @Test
+    public final void testExampleJavaToFixedWidth07()
+            throws SchemaException, IOException, ParseException, ClassNotFoundException {
+
+        List<TstPerson> people = new LinkedList<>();
+        TstPerson testPerson1 = new TstPerson("Nils", "Holgersson", (short) 4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9, 'A');
+        testPerson1.setAddress(new TstPostAddress("Track", "Village"));
+        people.add(testPerson1);
+
+        TstPerson testPerson2 = new TstPerson("Jonathan", "Lionheart", (short) 37, 17, dateFormat.parse("1955-03-17 12:33:12"), 123456, 'C');
+        testPerson2.setAddress(new TstPostAddress("Path", "City"));
+        people.add(testPerson2);
+
+        Bean2TextConverter<TstPerson> converter;
+        try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
+             Reader beanMapReader = new FileReader("examples/07_BeanMap.xml")) {
+            converter = new Bean2TextConverter<>(Schema.ofXml(schemaReader), BeanMap.ofXml(beanMapReader));
+        }
+        StringWriter writer = new StringWriter();
+        converter.convert(people, writer);
+
+        String result = writer.toString();
+        String[] resultLines = result.split("\r\n");
+//        System.out.println(result);
+        assertEquals("B;\"Nils\";;Holgersson", resultLines[0]);
+        assertEquals("B;\"Jonathan\";;Lionheart", resultLines[1]);
+    }
+
 
     @Test
     public final void testExampleCsv08_FirstLineAsSchemaParse()
-            throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
-        try (Reader schemaReader = new FileReader("exsamples/08_CsvFirstLineAsSchema.xml");
-                Reader fileReader = new FileReader("exsamples/08_NamesWithHeader.csv")) {
-            Schema schema = Schema.fromXml(schemaReader);
+            throws SchemaException, IOException, JSaParException {
+        try (Reader schemaReader = new FileReader("examples/08_CsvFirstLineAsSchema.xml");
+                Reader fileReader = new FileReader("examples/08_NamesWithHeader.csv")) {
+            Schema schema = Schema.ofXml(schemaReader);
             TextParser parser = new TextParser(schema);
             DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
             parser.parse(fileReader, listener);
@@ -359,11 +372,11 @@ public class JSaParExamplesTest {
 
     @Test
     public final void testExampleCsv08_FirstLineAsSchemaCompose()
-            throws SchemaException, IOException, JSaParException, ParserConfigurationException, SAXException {
-        try (Reader schemaReader = new FileReader("exsamples/08_CsvFirstLineAsSchema.xml");
+            throws SchemaException, IOException, JSaParException {
+        try (Reader schemaReader = new FileReader("examples/08_CsvFirstLineAsSchema.xml");
                 Writer writer = new StringWriter())
         {
-            Schema schema = Schema.fromXml(schemaReader);
+            Schema schema = Schema.ofXml(schemaReader);
             Composer composer = new TextComposer(schema, writer);
 
             Line line1 = new Line("Person");

@@ -19,7 +19,7 @@ import java.util.Date;
 public class Bean2Cell {
 
     private String cellName;
-    private Bean2Line children;
+    private BeanPropertyMap children;
     private PropertyDescriptor propertyDescriptor;
     private CellCreator cellCreator;
 
@@ -32,14 +32,18 @@ public class Bean2Cell {
         this.propertyDescriptor = propertyDescriptor;
     }
 
-    public static Bean2Cell ofSchemaCell(SchemaCell schemaCell, PropertyDescriptor propertyDescriptor) {
-        Bean2Cell bean2Cell = new Bean2Cell(schemaCell.getName(), propertyDescriptor);
+    public static Bean2Cell ofCellName(String cellName, PropertyDescriptor propertyDescriptor) {
+        Bean2Cell bean2Cell = new Bean2Cell(cellName, propertyDescriptor);
         // Prepare best way to create cell depending on return type
         bean2Cell.cellCreator = bean2Cell.makeCellCreator();
         return bean2Cell;
     }
 
-    static Bean2Cell ofBaseProperty(PropertyDescriptor propertyDescriptor, Bean2Line children) {
+    public static Bean2Cell ofSchemaCell(SchemaCell schemaCell, PropertyDescriptor propertyDescriptor) {
+        return ofCellName(schemaCell.getName(), propertyDescriptor);
+    }
+
+    static Bean2Cell ofBaseProperty(PropertyDescriptor propertyDescriptor, BeanPropertyMap children) {
         // The name is not important here, just make sure there is no conflict with other names.
         Bean2Cell bean2Cell = new Bean2Cell("@@" + propertyDescriptor.getName());
         bean2Cell.propertyDescriptor = propertyDescriptor;
@@ -51,7 +55,7 @@ public class Bean2Cell {
         return cellName;
     }
 
-    public Bean2Line getChildren() {
+    public BeanPropertyMap getChildren() {
         return children;
     }
 

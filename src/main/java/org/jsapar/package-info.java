@@ -16,9 +16,9 @@
  * Example of reading <b>CSV file</b> into a {@link org.jsapar.model.Document} object according to an xml-schema:
  * <p>
  * <pre>{@code
- * try (Reader schemaReader = new FileReader("exsamples/01_CsvSchema.xml");
- *    Reader fileReader = new FileReader("exsamples/01_Names.csv")) {
- *    Schema schema = Schema.fromXml(schemaReader);
+ * try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
+ *    Reader fileReader = new FileReader("examples/01_Names.csv")) {
+ *    Schema schema = Schema.ofXml(schemaReader);
  *    TextParser parser = new TextParser(schema);
  *    DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
  *    parser.parse(fileReader, listener);
@@ -28,22 +28,22 @@
  * <p>
  * Example of converting a <b>CSV file</b> into a <b>Fixed width file</b> according to two xml-schemas:
  * <pre>{@code
- * File outFile = new File("exsamples/02_Names_out.txt");
- * try (Reader inSchemaReader = new FileReader("exsamples/01_CsvSchema.xml");
- *    Reader outSchemaReader = new FileReader("exsamples/02_FixedWidthSchema.xml");
- *    Reader inReader = new FileReader("exsamples/01_Names.csv");
+ * File outFile = new File("examples/02_Names_out.txt");
+ * try (Reader inSchemaReader = new FileReader("examples/01_CsvSchema.xml");
+ *    Reader outSchemaReader = new FileReader("examples/02_FixedWidthSchema.xml");
+ *    Reader inReader = new FileReader("examples/01_Names.csv");
  *    Writer outWriter = new FileWriter(outFile)) {
- *    Text2TextConverter converter = new Text2TextConverter(Schema.fromXml(inSchemaReader),
- *    Schema.fromXml(outSchemaReader));
+ *    Text2TextConverter converter = new Text2TextConverter(Schema.ofXml(inSchemaReader),
+ *    Schema.ofXml(outSchemaReader));
  *    converter.convert(inReader, outWriter);
  * }
  * }</pre>
  * <p>
  * Example of converting a <b>CSV file</b> into a list of <b>Java objects</b> according to an xml-schema:
  * <pre>{@code
- * try (Reader schemaReader = new FileReader("exsamples/07_CsvSchemaToJava.xml");
- *    Reader fileReader = new FileReader("exsamples/07_Names.csv")) {
- *    Text2BeanConverter converter = new Text2BeanConverter(Schema.fromXml(schemaReader));
+ * try (Reader schemaReader = new FileReader("examples/07_CsvSchemaToJava.xml");
+ *    Reader fileReader = new FileReader("examples/07_Names.csv")) {
+ *    Text2BeanConverter converter = new Text2BeanConverter(Schema.ofXml(schemaReader));
  *    RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
  *    converter.convert(fileReader, beanEventListener);
  *    List<TstPerson> people = beanEventListener.getLines();

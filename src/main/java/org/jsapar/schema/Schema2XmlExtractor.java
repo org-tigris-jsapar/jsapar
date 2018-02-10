@@ -1,6 +1,7 @@
 package org.jsapar.schema;
 
 import org.jsapar.compose.CellComposer;
+import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -20,7 +21,7 @@ import java.util.Locale;
  * Extracts xml representation for a {@link Schema} and writes it to a writer.
  */
 @SuppressWarnings("WeakerAccess")
-public class Schema2XmlExtractor implements SchemaXmlTypes {
+public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
 
     private static final CellComposer cellComposer = new CellComposer();
 
@@ -54,7 +55,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @return The xml document
      * @throws SchemaException If there is an error in the schema
      */
-    private org.w3c.dom.Document extractXmlDocument(Schema schema) throws SchemaException {
+    private Document extractXmlDocument(Schema schema) throws SchemaException {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setIgnoringElementContentWhitespace(true);
@@ -65,7 +66,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
             factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
 
             DocumentBuilder builder = factory.newDocumentBuilder();
-            org.w3c.dom.Document xmlDocument = builder.newDocument();
+            Document xmlDocument = builder.newDocument();
             xmlDocument.setXmlStandalone(true);
             Element xmlRoot = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_ROOT);
             xmlDocument.appendChild(xmlRoot);
@@ -245,9 +246,8 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @param xmlDocument The root xml document
      * @param xmlSchema The schema xml element to assign to
      * @param schema The schema to extract
-     * @throws SchemaException If there is an error in the schema
      */
-    private void assignSchemaBase(Document xmlDocument, Element xmlSchema, Schema schema) throws SchemaException {
+    private void assignSchemaBase(Document xmlDocument, Element xmlSchema, Schema schema) {
         String lineSeparator = schema.getLineSeparator();
         lineSeparator = replaceJava2Escapes(lineSeparator);
         xmlSchema.setAttribute(ATTRIB_SCHEMA_LINESEPARATOR, lineSeparator);
@@ -261,9 +261,8 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      *
      * @param xmlSchemaLine    The schema line xml element to assign to
      * @param schemaLine The schema line to extract
-     * @throws SchemaException If there is an error in the schema
      */
-    private void assignSchemaLineBase(Element xmlSchemaLine, SchemaLine schemaLine) throws SchemaException {
+    private void assignSchemaLineBase(Element xmlSchemaLine, SchemaLine schemaLine) {
         String sOccurs = schemaLine.isOccursInfinitely() ? "*" : String.valueOf(schemaLine.getOccurs());
         xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_OCCURS, sOccurs);
 
@@ -328,9 +327,8 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @param xmlDocument The root xml document
      * @param schemaCell The schema cell to extract
      * @return The schema cell xml element
-     * @throws SchemaException If there is an error in the schema
      */
-    private Element extractCellRange(Document xmlDocument, SchemaCell schemaCell) throws SchemaException {
+    private Element extractCellRange(Document xmlDocument, SchemaCell schemaCell) {
         Element xmlRange = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_RANGE);
         if (schemaCell.getMinValue() != null)
             xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MIN, cellComposer.format(schemaCell.getMinValue(), schemaCell));
@@ -340,7 +338,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
     }
 
 
-    private Element extractLocale(Document xmlDocument, Locale locale) throws SchemaException {
+    private Element extractLocale(Document xmlDocument, Locale locale) {
         Element xmlLocale = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_LOCALE);
         xmlLocale.setAttribute(ATTRIB_LOCALE_COUNTRY, locale.getCountry());
         xmlLocale.setAttribute(ATTRIB_LOCALE_LANGUAGE, locale.getLanguage());
@@ -351,9 +349,8 @@ public class Schema2XmlExtractor implements SchemaXmlTypes {
      * @param xmlDocument The root xml document
      * @param format The format to extract
      * @return The format xml element
-     * @throws SchemaException If there is an error in the schema
      */
-    private Element extractCellFormat(Document xmlDocument, SchemaCellFormat format) throws SchemaException {
+    private Element extractCellFormat(Document xmlDocument, SchemaCellFormat format) {
         Element xmlFormat = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_FORMAT);
         xmlFormat.setAttribute("type", format.getCellType().toString().toLowerCase());
         if (format.getPattern() != null && format.getPattern().length() > 0)

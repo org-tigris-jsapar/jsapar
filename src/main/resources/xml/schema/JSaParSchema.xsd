@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!--Created with Liquid XML Studio 6.1.18.0 - FREE Community Edition (http://www.liquid-technologies.com)-->
-<xsd:schema elementFormDefault="qualified" targetNamespace="http://jsapar.tigris.org/JSaParSchema/2.0" xmlns="http://jsapar.tigris.org/JSaParSchema/2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <xsd:element name="schema">
-    <xsd:complexType>
-      <xsd:choice>
-        <xsd:element name="csvschema" type="CsvSchema" />
-        <xsd:element name="fixedwidthschema" type="FixedWidthSchema" />
-      </xsd:choice>
-    </xsd:complexType>
-  </xsd:element>
-  <xsd:complexType name="Schema">
+<xsd:schema elementFormDefault="qualified" targetNamespace="http://jsapar.tigris.org/JSaParSchema/2.0"
+            xmlns="http://jsapar.tigris.org/JSaParSchema/2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="schema">
+        <xsd:complexType>
+            <xsd:choice>
+                <xsd:element name="csvschema" type="CsvSchema"/>
+                <xsd:element name="fixedwidthschema" type="FixedWidthSchema"/>
+            </xsd:choice>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:complexType name="Schema">
     <xsd:sequence>
     	<xsd:element minOccurs="0" name="locale"
                      type="Locale">

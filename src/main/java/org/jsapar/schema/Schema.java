@@ -122,7 +122,7 @@ public abstract class Schema implements Cloneable{
      *             if the supplied xml does not comply to the JSaParSchema.xsd or if there is any other error while
      *             loading a schema.
      */
-    public static Schema fromXml(Reader reader)
+    public static Schema ofXml(Reader reader)
             throws SchemaException, IOException{
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         return schemaBuilder.build(reader);

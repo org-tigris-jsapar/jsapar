@@ -35,9 +35,18 @@ public class Bean2TextConverter<T> extends AbstractConverter {
      * @param composerSchema The schema to use while composing text output.
      */
     public Bean2TextConverter(Schema composerSchema) throws IntrospectionException, ClassNotFoundException {
+        this(composerSchema, BeanMap.ofSchema(composerSchema));
+    }
+
+    /**
+     * Creates a converter with supplied composer schema.
+     * @param composerSchema The schema to use while composing text output.
+     * @param beanMap        The bean map to use to map schema names to bean properties.
+     */
+    public Bean2TextConverter(Schema composerSchema, BeanMap beanMap) {
         assert composerSchema != null;
         this.composerSchema = composerSchema;
-        beanMap = BeanMap.ofSchema(composerSchema);
+        this.beanMap = beanMap;
     }
 
     /**

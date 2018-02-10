@@ -1,6 +1,7 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
+import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -22,7 +23,7 @@ import java.util.Optional;
 /**
  * Builds a {@link Schema} instance from xml that conforms to the JSaPar xsd.
  */
-public class Xml2SchemaBuilder implements SchemaXmlTypes {
+public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
 
     /**
      * Utility function to retrieve first matching child element.
@@ -32,45 +33,11 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @return The child element or null if none found.
      */
     private Element getChild(Element parentElement, String sChildName) {
-        org.w3c.dom.NodeList nodes = parentElement.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, sChildName);
-        for (int i = 0; i < nodes.getLength(); i++) {
-            org.w3c.dom.Node child = nodes.item(i);
-            if (child instanceof org.w3c.dom.Element) {
-                return (org.w3c.dom.Element) child;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Utility function to convert a boolean xml node into a boolean.
-     * 
-     * @param node The node to get boolean value from.
-     * @return A boolean value.
-     */
-    private boolean getBooleanValue(Node node) {
-        final String value = node.getNodeValue().trim();
-        return DatatypeConverter.parseBoolean(value);
-    }
-
-    private String getStringValue(Node node) {
-        return node.getNodeValue().trim();
+        return getChild(JSAPAR_XML_SCHEMA, parentElement, sChildName).orElse(null);
     }
 
     private String getAttributeValue(Element parent, String name) {
         return attributeValue(parent, name).orElse(null);
-    }
-
-    private Optional<String> attributeValue(Element parent, String name) {
-        Node child = parent.getAttributeNode(name);
-        if (child == null)
-            return Optional.empty();
-        else
-            return Optional.of(child.getNodeValue());
-    }
-
-    private int getIntValue(Node node) {
-        return DatatypeConverter.parseInt(node.getNodeValue().trim());
     }
 
     /**
@@ -83,27 +50,26 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes {
      * @throws IOException When there is an error reading the input
      * @throws SAXException When there is an error parsing the xml
      */
-    public Schema build(java.io.Reader reader) throws IOException, SchemaException {
+    public Schema build(Reader reader) throws IOException, SchemaException {
         String schemaFileName = "/xml/schema/JSaParSchema.xsd";
-        InputStream schemaStream = Xml2SchemaBuilder.class.getResourceAsStream(schemaFileName);
 
-        if (schemaStream == null)
-            throw new FileNotFoundException("Could not find schema file: " + schemaFileName);
-        // File schemaFile = new
-        // File("resources/xml/schema/JSaParSchema.xsd");
+        try(InputStream schemaStream = Xml2SchemaBuilder.class.getResourceAsStream(schemaFileName)) {
+            if (schemaStream == null)
+                throw new FileNotFoundException("Could not find schema file: " + schemaFileName);
+            // File schemaFile = new
+            // File("resources/xml/schema/JSaParSchema.xsd");
 
-        // javax.xml.validation.Schema xmlSchema;
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setIgnoringElementContentWhitespace(true);
-        factory.setIgnoringComments(true);
-        factory.setCoalescing(true);
-        factory.setNamespaceAware(true);
-        factory.setValidating(true);
-        factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
-        factory.setAttribute(JAXP_SCHEMA_SOURCE, schemaStream);
+            // javax.xml.validation.Schema xmlSchema;
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setIgnoringElementContentWhitespace(true);
+            factory.setIgnoringComments(true);
+            factory.setCoalescing(true);
+            factory.setNamespaceAware(true);
+            factory.setValidating(true);
+            factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
+            factory.setAttribute(JAXP_SCHEMA_SOURCE, schemaStream);
 
-        // factory.setSchema(xmlSchema);
-        try {
+            // factory.setSchema(xmlSchema);
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(new ErrorHandler() {
                 @Override

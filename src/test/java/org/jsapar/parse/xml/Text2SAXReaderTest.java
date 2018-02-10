@@ -23,8 +23,8 @@ public class Text2SAXReaderTest {
     public void testParse() throws Exception {
 
 
-        try (Reader fileReader = new FileReader("exsamples/01_Names.csv");
-                Reader schemaReader = new FileReader("exsamples/01_CsvSchema.xml")) {
+        try (Reader fileReader = new FileReader("examples/01_Names.csv");
+                Reader schemaReader = new FileReader("examples/01_CsvSchema.xml")) {
             Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
             TextParser parser = new TextParser(xmlBuilder.build(schemaReader));
             Text2SAXReader saxReader = new Text2SAXReader(parser);

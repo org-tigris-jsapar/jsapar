@@ -38,9 +38,6 @@ interface SchemaXmlTypes {
     String ATTRIB_SCHEMA_CELL_DEFAULT_VALUE = "default";
     String ATTRIB_PATTERN = "pattern";
 
-    String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
-    String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
-    String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
     String JSAPAR_XML_SCHEMA = "http://jsapar.tigris.org/JSaParSchema/2.0";
 
 }

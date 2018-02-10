@@ -66,32 +66,33 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
 
     /**
      * Builds a line bean according to the getter fields of the bean. Each cell in the line will
-     * be named according to the java bean attribute name. This means that if there is a member
+     * be named according to the property name defined in the current {@link BeanMap}. If not stated otherwise this will
+     * be the java bean attribute name. This means that if there is a member
      * method called <tt>getStreetAddress()</tt>, the name of the cell will be
-     * <tt>streetAddress</tt>.
+     * <tt>streetAddress</tt>. Only properties defined in the current {@link BeanMap} will be added to the created line.
      *
-     * @param bean     The bean.
+     * @param bean       The bean.
      * @param lineNumber The number of the line being parsed. Numbering starts from 1.
      * @return A Line bean containing cells according to the getter method of the supplied bean.
      */
     Optional<Line> parseBean(T bean, ErrorEventListener errorListener, long lineNumber) {
-        return beanMap.getBean2Line(bean.getClass()).map(bean2Line -> {
-            Line line = new Line(bean2Line.getLineType());
+        return beanMap.getBeanPropertyMap(bean.getClass()).map(beanPropertyMap -> {
+            Line line = new Line(beanPropertyMap.getLineType());
             line.setLineNumber(lineNumber);
-            this.parseBean(line, bean, bean2Line, errorListener);
+            this.parseBean(line, bean, beanPropertyMap, errorListener);
             return line;
         });
     }
 
 
     @SuppressWarnings("unchecked")
-    private void parseBean(Line line, Object object, Bean2Line bean2Line, ErrorEventListener errorListener) {
+    private void parseBean(Line line, Object object, BeanPropertyMap beanPropertyMap, ErrorEventListener errorListener) {
 
-        for (Bean2Cell bean2Cell : bean2Line.getBean2Cells()) {
+        for (Bean2Cell bean2Cell : beanPropertyMap.getBean2Cells()) {
             PropertyDescriptor pd = bean2Cell.getPropertyDescriptor();
 
             try {
-                Bean2Line children = bean2Cell.getChildren();
+                BeanPropertyMap children = bean2Cell.getChildren();
                 if (children != null) {
                     Object subObject = pd.getReadMethod().invoke(object);
                     if (subObject == null)
@@ -122,21 +123,4 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
         errorListener.errorEvent(new ErrorEvent(this, error));
     }
 
-    /**
-     * Creates the attribute name based on get method name.
-     *
-     * @param prefix   A prefix that will be appended before the attribute name.
-     * @param property The attribute name.
-     * @return The attribute name that is built from the getter name.
-     */
-    private String makeAttributeName(String prefix, String property) {
-        StringBuilder sb = new StringBuilder();
-        if (prefix != null) {
-            sb.append(prefix);
-            sb.append('.');
-        }
-        sb.append(property);
-        return sb.toString();
-    }
-
-}
+ }

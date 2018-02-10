@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema elementFormDefault="qualified" targetNamespace="http://jsapar.tigris.org/BeanMapSchema/2.0"
+            xmlns="http://jsapar.tigris.org/BeanMapSchema/2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:element name="beanmap" type="BeanMapType"/>
+
+    <xsd:complexType name="BeanMapType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="bean" type="BeanType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="BeanType">
+        <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="property" type="PropertyType"/>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="linetype" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="PropertyType">
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="cellname" type="xsd:string"/>
+    </xsd:complexType>
+</xsd:schema>
