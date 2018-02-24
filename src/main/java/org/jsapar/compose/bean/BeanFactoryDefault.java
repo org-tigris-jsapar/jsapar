@@ -1,5 +1,9 @@
 package org.jsapar.compose.bean;
 
+import org.jsapar.compose.ComposeException;
+import org.jsapar.error.ErrorEvent;
+import org.jsapar.error.ErrorEventListener;
+import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 
 import java.lang.reflect.InvocationTargetException;
@@ -23,12 +27,54 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
         return (T) c.newInstance();
     }
 
+    @Override
+    public void assignCellToBean(String lineType, T bean, Cell cell) throws BeanComposeException {
+        String sName = cell.getName();
+        try {
+            String[] nameLevels = sName.split("\\.");
+            Object currentObject = bean;
+            for (int i = 0; i + 1 < nameLevels.length; i++) {
+                try {
+                    // Continue looping to next object.
+                    currentObject = findOrCreateChildBean(currentObject, nameLevels[i]);
+                    if (currentObject == null) {
+                        throw new BeanComposeException("BeanFactory failed to find or create child bean to parent of class " + bean
+                                        .getClass().getName() + ", cell value is omitted.");
+                    }
+                } catch (InstantiationException e) {
+                    throw new BeanComposeException("Skipped assigning cell - Failed to execute default constructor for class accessed by "
+                                    + nameLevels[i], e);
+                }
+            }
+            sName = nameLevels[nameLevels.length - 1];
+            assignAttribute(cell, sName, currentObject);
+        } catch (InvocationTargetException | IllegalArgumentException e) {
+            throw new BeanComposeException("Skipped assigning cell - Failed to execute getter or setter method in class " + bean
+                            .getClass().getName(), e);
+        } catch (IllegalAccessException e) {
+            throw new BeanComposeException("Skipped assigning cell - Failed to access getter or setter method in class " + bean
+                            .getClass().getName(), e);
+        } catch (NoSuchMethodException e) {
+            throw new BeanComposeException(
+                    "Skipped assigning cell - Missing getter or setter method in class " + bean.getClass()
+                            .getName() + " or a sub class", e);
+        }
+
+    }
+
     /**
      * This implementation uses reflection methods to assign correct object.
-     * @see BeanFactory#findOrCreateChildBean(java.lang.Object, java.lang.String)
+     * @param parentBean
+     * @param childBeanName
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws NoSuchMethodException
+     * @throws SecurityException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
      */
-    @Override
-    public Object findOrCreateChildBean(Object parentBean, String childBeanName) throws InstantiationException,
+    private Object findOrCreateChildBean(Object parentBean, String childBeanName) throws InstantiationException,
             IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException,
             InvocationTargetException {
         String getterMethodName = createGetMethodName(childBeanName);
@@ -72,5 +118,125 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
     private String createBeanMethodName(String prefix, String sAttributeName) {
         return prefix + sAttributeName.substring(0, 1).toUpperCase() + sAttributeName.substring(1);
     }
+
+    private void generateErrorEvent(Cell cell, String message, Throwable t, ErrorEventListener errorEventListener) {
+        errorEventListener.errorEvent(new ErrorEvent(this, new ComposeException(message + " while handling cell " + cell, t)));
+    }
+
+    private void generateErrorEvent(Cell cell, String message, ErrorEventListener errorEventListener) {
+        errorEventListener.errorEvent(new ErrorEvent(this, new ComposeException(message + " while handling cell " + cell)));
+    }
+
+
+
+    /**
+     * Assigns an attribute value to supplied object.
+     *  @param cell           The cell to get the value from
+     * @param sName          The name of the field
+     * @param objectToAssign The object to assign to
+     * @throws BeanComposeException
+     */
+    private void assignAttribute(Cell cell, String sName, Object objectToAssign) throws BeanComposeException, InvocationTargetException, IllegalAccessException {
+        if (cell.isEmpty())
+            return;
+
+        String sSetMethodName = createSetMethodName(sName);
+        boolean success = assignParameterBySignature(objectToAssign, sSetMethodName, cell);
+        if (!success) // Try again but use the name and try to cast.
+            assignParameterByName(objectToAssign, sSetMethodName, cell);
+    }
+
+    /**
+     * Assigns the cells of a line as attributes to an object.
+     *
+     * @param <B>            The type of the object to assign
+     * @param cell           The cell to get the parameter from.
+     * @param objectToAssign The object to assign cell attributes to. The object will be modified.
+     * @return True if the parameter was assigned to the object, false otherwise.
+     * @throws InvocationTargetException if the underlying method throws an exception.
+     * @throws IllegalAccessException if this Method object is enforcing Java language access control and the underlying method is inaccessible.
+     * @throws IllegalArgumentException if the method is an instance method and the specified object argument is not an instance of the class or interface declaring the underlying method (or of a subclass or implementor thereof); if the number of actual and formal parameters differ; if an unwrapping conversion for primitive arguments fails; or if, after possible unwrapping, a parameter value cannot be converted to the corresponding formal parameter type by a method invocation conversion.
+     */
+    private <B> boolean assignParameterBySignature(B objectToAssign, String sSetMethodName, Cell cell)
+            throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+
+        if (cell.getValue() == null)
+            return false;
+        try {
+            Class<?> type = cell.getValue().getClass();
+            Method f = objectToAssign.getClass().getMethod(sSetMethodName, type);
+            f.invoke(objectToAssign, cell.getValue());
+            return true;
+        } catch (NoSuchMethodException e) {
+            // We don't care here since we will try again if this method fails.
+        }
+        return false;
+    }
+
+    /**
+     * Assigns the cells of a line as attributes to an object.
+     *
+     * @param objectToAssign The object to assign cell attributes to. The object will be modified.
+     * @param sSetMethodName
+     * @param cell           The cell to get the parameter from.
+     * @param <B>            The type of the object to assign
+     * @throws InvocationTargetException if the underlying method throws an exception.
+     * @throws IllegalAccessException if this Method object is enforcing Java language access control and the underlying method is inaccessible.
+     * @throws IllegalArgumentException if the method is an instance method and the specified object argument is not an instance of the class or interface declaring the underlying method (or of a subclass or implementor thereof); if the number of actual and formal parameters differ; if an unwrapping conversion for primitive arguments fails; or if, after possible unwrapping, a parameter value cannot be converted to the corresponding formal parameter type by a method invocation conversion.
+     * @throws BeanComposeException
+     */
+    @SuppressWarnings("unchecked")
+    private <B> void assignParameterByName(B objectToAssign, String sSetMethodName, Cell cell)
+            throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, BeanComposeException {
+
+        try {
+            Method[] methods = objectToAssign.getClass().getMethods();
+            for (Method f : methods) {
+                Class<?>[] paramTypes = f.getParameterTypes();
+                if (paramTypes.length != 1 || !f.getName().equals(sSetMethodName))
+                    continue;
+
+                Object value = cell.getValue();
+                // Casts between simple types does not work automatically
+                Class<?> paramType = paramTypes[0];
+                if (paramType == Integer.TYPE && value instanceof Number)
+                    f.invoke(objectToAssign, ((Number) value).intValue());
+                else if (paramType == Short.TYPE && value instanceof Number)
+                    f.invoke(objectToAssign, ((Number) value).shortValue());
+                else if (paramType == Byte.TYPE && value instanceof Number)
+                    f.invoke(objectToAssign, ((Number) value).byteValue());
+                else if (paramType == Float.TYPE && value instanceof Number)
+                    f.invoke(objectToAssign, ((Number) value).floatValue());
+                    // Will squeeze in first character of any datatype's string representation.
+                else if (paramType == Character.TYPE) {
+                    if (value instanceof Character) {
+                        f.invoke(objectToAssign, (Character) value);
+                    } else {
+                        String sValue = value.toString();
+                        if (!sValue.isEmpty())
+                            f.invoke(objectToAssign, sValue.charAt(0));
+                    }
+                } else if (Enum.class.isAssignableFrom(paramType) && value instanceof String) {
+                    f.invoke(objectToAssign, Enum.valueOf((Class<Enum>) paramType, String.valueOf(value)));
+                } else {
+                    try {
+                        f.invoke(objectToAssign, value);
+                    } catch (IllegalArgumentException e) {
+                        // There may be more methods that fits the name.
+                        continue;
+                    }
+                }
+                return;
+            }
+            throw new BeanComposeException(
+                    "Skipped assigning cell - No method called " + sSetMethodName + "() found in class "
+                            + objectToAssign.getClass().getName() + " that fits the cell ");
+        } catch (SecurityException e) {
+            throw new BeanComposeException(
+                    "Skipped assigning cell - The method " + sSetMethodName + "() in class " + objectToAssign.getClass()
+                            .getName() + " does not have public access", e);
+        }
+    }
+
 
 }

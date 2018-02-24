@@ -1,5 +1,6 @@
 package org.jsapar.parse.bean;
 
+import org.jsapar.model.Cell;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
 
@@ -17,6 +18,7 @@ public class BeanPropertyMap {
     private String lineType;
 
     private Map<String, Bean2Cell> bean2CellByProperty = new HashMap<>();
+    private Map<String, Bean2Cell> bean2CellByCellName = new HashMap<>();
     private BeanInfo beanInfo;
     private Class lineClass;
 
@@ -36,6 +38,15 @@ public class BeanPropertyMap {
 
     public Bean2Cell getBean2CellByProperty(String propertyName){
         return bean2CellByProperty.get(propertyName);
+    }
+
+    public Bean2Cell getBean2CellByName(String cellName){
+        return bean2CellByCellName.get(cellName);
+    }
+
+
+    public Object createBean() throws IllegalAccessException, InstantiationException {
+        return lineClass.newInstance();
     }
 
     public static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine) throws ClassNotFoundException, IntrospectionException{
@@ -99,9 +110,12 @@ public class BeanPropertyMap {
 
     private void putBean2Cell(String propertyName, Bean2Cell bean2Cell) {
         this.bean2CellByProperty.put(propertyName, bean2Cell);
+        this.bean2CellByCellName.put(bean2Cell.getCellName(), bean2Cell);
     }
 
     public Class getLineClass() {
         return lineClass;
     }
+
+
 }

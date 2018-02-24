@@ -1,6 +1,7 @@
 package org.jsapar.compose.bean;
 
 import org.jsapar.error.ValidationAction;
+import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 
 import java.lang.reflect.InvocationTargetException;
@@ -23,25 +24,15 @@ public interface BeanFactory<T> {
      */
     T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException;
 
-    /**
-     * Should find or create the child bean referred to by the specified child bean name in relation to the parent bean.
-     * If a new child is created, it should also be assigned to the parentBean by this method. Dot notation should be
-     * used in a cell name to access sub-levels. This method will be
-     * called once for each level with the previous level as parentBean.
-     * @param parentBean The parent of this specific child. Note that it might not be the base bean of type generic type T, it can also be a child bean thereof.
-     * @param childBeanName
-     *            A child bean name.
-     * @return The child bean based on the supplied childBeanName. If no bean is assigned yet, a new instance is created
-     *         and assigned by this method. If this method returns null, an error event is generated and the field is
-     *         ignored.
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws NoSuchMethodException
-     * @throws SecurityException
-     * @throws IllegalArgumentException
-     * @throws InvocationTargetException
+
+    /** Should assign the value of the specified cell to the proper bean property.
+     *
+     * @param lineType
+     * @param bean The bean to assign to.
+     * @param cell The cell to assign.
+     * @throws BeanComposeException In case there is an error assigning the cell. This exception will be caught by the
+     * calling {@link BeanComposer} and converted into an {@link org.jsapar.error.ErrorEvent}.
      */
-    Object findOrCreateChildBean(Object parentBean, String childBeanName) throws InstantiationException,
-            IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException,
-            InvocationTargetException;
+    void assignCellToBean(String lineType, T bean, Cell cell) throws BeanComposeException, InvocationTargetException, InstantiationException, IllegalAccessException;
+
 }

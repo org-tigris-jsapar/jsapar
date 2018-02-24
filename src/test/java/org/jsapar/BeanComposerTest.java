@@ -5,6 +5,7 @@ import org.jsapar.compose.bean.BeanComposeConfig;
 import org.jsapar.compose.bean.BeanComposer;
 import org.jsapar.compose.bean.BeanFactory;
 import org.jsapar.compose.bean.RecordingBeanEventListener;
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.model.*;
 import org.junit.After;
@@ -182,28 +183,29 @@ public class BeanComposerTest {
             }
 
             @Override
-            public Object findOrCreateChildBean(Object parentBean, String childBeanName)
-                    throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException,
-                    IllegalArgumentException, InvocationTargetException {
-                if(childBeanName.equals("a") && parentBean instanceof TstPerson){
-                    TstPerson p = (TstPerson)parentBean;
-                    if(p.getAddress() != null)
-                        return p.getAddress();
-                    TstPostAddress child = new TstPostAddress();
-                    p.setAddress(child);
-                    return child;
-                }
-                else if(childBeanName.equals("aa") && parentBean instanceof TstPostAddress){
-                    TstPostAddress a = (TstPostAddress)parentBean;
-                    if(a.getSubAddress() != null)
-                        return a.getSubAddress();
-                    TstPostAddress child = new TstPostAddress();
-                    a.setSubAddress(child);
-                    return child;
-                }
+            public void assignCellToBean(String lineType, TstPerson bean, Cell cell) {
 
-                return null;
+                switch (cell.getName()){
+                    case "a.street":
+                        if(bean.getAddress() == null)
+                            bean.setAddress(new TstPostAddress());
+                        bean.getAddress().setStreet(cell.getStringValue());
+                        break;
+                    case "a.town":
+                        if(bean.getAddress() == null)
+                            bean.setAddress(new TstPostAddress());
+                        bean.getAddress().setTown(cell.getStringValue());
+                        break;
+                    case "a.aa.town":
+                        if(bean.getAddress() == null)
+                            bean.setAddress(new TstPostAddress());
+                        if(bean.getAddress().getSubAddress() == null)
+                            bean.getAddress().setSubAddress(new TstPostAddress());
+                        bean.getAddress().getSubAddress().setTown(cell.getStringValue());
+                        break;
+                }
             }
+
         });
         RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
         composer.setComposedEventListener(beanEventListener);
@@ -287,11 +289,10 @@ public class BeanComposerTest {
         }
 
         @Override
-        public Object findOrCreateChildBean(Object parentBean, String childBeanName)
-                throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException,
-                IllegalArgumentException, InvocationTargetException {
-            return null;
+        public void assignCellToBean(String lineType, Object bean, Cell cell) {
+
         }
+
     }
 
     @Test

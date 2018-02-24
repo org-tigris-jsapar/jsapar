@@ -251,7 +251,7 @@ public class JSaParExamplesTest {
     @SuppressWarnings("unchecked")
     @Test
     public final void testExampleCsvToJava07()
-            throws SchemaException, IOException, JSaParException, ParseException {
+            throws SchemaException, IOException, JSaParException, ParseException, IntrospectionException, ClassNotFoundException {
         try (Reader schemaReader = new FileReader("examples/07_CsvSchemaToJava.xml");
              Reader fileReader = new FileReader("examples/07_Names.csv")) {
             Text2BeanConverter converter = new Text2BeanConverter(Schema.ofXml(schemaReader));

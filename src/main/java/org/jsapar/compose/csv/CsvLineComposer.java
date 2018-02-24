@@ -13,7 +13,6 @@ import org.jsapar.schema.QuoteBehavior;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,7 +26,7 @@ class CsvLineComposer implements LineComposer {
     private Writer        writer;
     private CsvSchemaLine schemaLine;
     private String lineSeparator;
-    private Map<String, CsvCellComposer> cellComposers = new HashMap<>();
+    private Map<String, CsvCellComposer> cellComposers;
     private boolean firstRow=true;
 
     CsvLineComposer(Writer writer, CsvSchemaLine schemaLine, String lineSeparator) {
@@ -115,11 +114,8 @@ class CsvLineComposer implements LineComposer {
 
     /**
      * Writes header line if first line is schema.
-     *
-     * @throws IOException if an io-error occurs.
-     *
      */
-    private void composeHeaderLine() throws IOException {
+    private void composeHeaderLine() {
         CsvSchemaLine unformattedSchemaLine = schemaLine.clone();
         unformattedSchemaLine.setFirstLineAsSchema(false);
         for (CsvSchemaCell schemaCell : unformattedSchemaLine.getSchemaCells()) {

@@ -19,6 +19,7 @@ import java.util.Optional;
 public class BeanMap {
 
     private Map<Class, BeanPropertyMap> beanPropertyMap = new HashMap<>();
+    private Map<String, BeanPropertyMap> beanPropertyMapByLineType = new HashMap<>();
 
     /**
      * @param aClass The class to get a {@link BeanPropertyMap} for.
@@ -35,12 +36,17 @@ public class BeanMap {
         return getBeanPropertyMap(superClass);
     }
 
+    public BeanPropertyMap getBeanPropertyMap(String lineType){
+        return beanPropertyMapByLineType.get(lineType);
+    }
+
     public void putBean2Line(String className, BeanPropertyMap beanPropertyMap) throws ClassNotFoundException {
         putBean2Line(Class.forName(className), beanPropertyMap);
     }
 
     public void putBean2Line(Class<?> aClass, BeanPropertyMap beanPropertyMap) {
         this.beanPropertyMap.put(aClass, beanPropertyMap);
+        this.beanPropertyMapByLineType.put(beanPropertyMap.getLineType(), beanPropertyMap);
     }
 
     /**
