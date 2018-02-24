@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.jsapar;
 
@@ -13,12 +13,19 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * @author stejon0
- * 
+ * Command line utility that converts one file to another using provided input and output schemas.
+ * <p>
+ * Usage:
+ * <pre>{@code
+  java -jar jsapar-<version>.jar -in.schema <input schema name> -out.schema <output schema name>
+  -in.file <input file name> [-out.file <output file name>]
+  [-in.file.encoding <input file encoding (or system default is used)>]
+  [-out.file.encoding <output file encoding (or system default is used)>]
+}</pre>
  */
 public class ConverterMain {
     private static final String APP_NAME = "jsapar.jar";
-    
+
     private String applicationName = APP_NAME;
 
     public void run(String[] args) {
@@ -66,7 +73,8 @@ public class ConverterMain {
 
     /**
      * Prints usage information to supplied output stream.
-     * @param e An exception that occurred.
+     *
+     * @param e   An exception that occurred.
      * @param out The stream to write to.
      */
     protected void printUsage(Exception e, PrintStream out) {
@@ -85,21 +93,20 @@ public class ConverterMain {
 
     /**
      * Override to implement other converter behavior.
+     *
      * @param inputSchema
      * @param outputSchema
      * @return A new converter.
      */
     protected Text2TextConverter makeConverter(Schema inputSchema, Schema outputSchema) {
-        return new Text2TextConverter(inputSchema,  outputSchema) ;
+        return new Text2TextConverter(inputSchema, outputSchema);
     }
 
     /**
      * Reads command line arguments into property structure.
-     * 
-     * @param properties
-     *            The properties to be filled with arguments.
-     * @param args
-     *            The arguments.
+     *
+     * @param properties The properties to be filled with arguments.
+     * @param args       The arguments.
      */
     protected void readArgs(Properties properties, String[] args) {
         for (int i = 0; i < args.length; i++) {
@@ -116,9 +123,8 @@ public class ConverterMain {
     /**
      * @param properties
      * @param key
-     *
      */
-    protected void checkMandatory(Properties properties, String key)  {
+    protected void checkMandatory(Properties properties, String key) {
         if (null == properties.getProperty(key))
             throw new IllegalArgumentException("Mandatory argument -" + key + " is missing.");
     }
@@ -146,7 +152,7 @@ public class ConverterMain {
         return properties;
     }
 
-    
+
     /**
      * @param args
      */
