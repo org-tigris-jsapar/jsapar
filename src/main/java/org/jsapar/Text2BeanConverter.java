@@ -13,7 +13,13 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * Converts text input to Java bean objects.
+ * Converts text input to Java bean objects. You can choose to use the standard behavior or you may customize assigning
+ * of bean properties. The default behavior is to use the schema names where the line type name needs to match the class
+ * name of the class to create and the cell names needs to match bean property names. Any sub-objects needs to be of a
+ * class that provides a default constructor. By supplying a {@link BeanMap} instance to the constructor you can map
+ * different line and cell names to property names. {@link BeanMap} instance can be created form an xml input by using
+ * the {@link BeanMap#ofXml(Reader)} method.
+ *
  * See {@link AbstractConverter} for details about error handling and manipulating data.
  * @see AbstractConverter
  */
@@ -24,11 +30,37 @@ public class Text2BeanConverter<T> extends AbstractConverter {
     private BeanComposeConfig composeConfig = new BeanComposeConfig();
     private TextParseConfig   parseConfig   = new TextParseConfig();
 
-    public Text2BeanConverter(Schema parseSchema) throws IntrospectionException, ClassNotFoundException {
+    /**
+     * Creates a converter with supplied composer schema.
+     * @param parseSchema The schema to use while reading the text input.
+     * @param beanMap     The bean map to use to map schema names to bean properties. By supplying a {@link BeanMap} instance to the constructor you can map
+     * different line and cell names to property names. {@link BeanMap} instance can be created form an xml input by using
+     * the {@link BeanMap#ofXml(Reader)} method.
+     */
+    public Text2BeanConverter(Schema parseSchema, BeanMap beanMap) {
         this.parseSchema = parseSchema;
-        this.beanFactory = new BeanFactoryByMap<>(BeanMap.ofSchema(parseSchema));
+        this.beanFactory = new BeanFactoryByMap<>(beanMap);
     }
 
+    /**
+     * The default behavior is to use the schema names where the line type name needs to match the class
+     * name of the class to create and the cell names needs to match bean property names.
+     * @param parseSchema The schema to use while reading the text input.
+     * @throws IntrospectionException If a referenced property
+     * @throws ClassNotFoundException If a class d
+     */
+    public Text2BeanConverter(Schema parseSchema) throws IntrospectionException, ClassNotFoundException {
+        this(parseSchema, BeanMap.ofSchema(parseSchema));
+    }
+
+    /**
+     * Assigns a different bean factory. The bean factory is responsible for creating beans and assigning bean values. You may implement your own or use any of the existing:
+     * <ul>
+     *     <li>{@link BeanFactoryByMap} - Default for this class. Uses input schema with optional {@link BeanMap} to map properties.</li>
+     *     <li>{@link BeanFactoryDefault} - Default if no schema is present. Uses cell names to guess the property names.</li>
+     * </ul>
+     * @param beanFactory The bean factory to use.
+     */
     public void setBeanFactory(BeanFactory<T> beanFactory) {
         this.beanFactory = beanFactory;
     }

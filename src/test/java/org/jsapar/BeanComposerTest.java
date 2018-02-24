@@ -30,12 +30,12 @@ public class BeanComposerTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects() throws IOException {
+    public final void testCreateJavaObjects() {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new StringCell("firstName", "Jonas"));
@@ -79,7 +79,7 @@ public class BeanComposerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_Long_to_int() throws IOException {
+    public final void testCreateJavaObjects_Long_to_int() {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new IntegerCell("shoeSize", 42L));
@@ -98,7 +98,7 @@ public class BeanComposerTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_Int_to_long() throws  IOException {
+    public final void testCreateJavaObjects_Int_to_long() {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new IntegerCell("luckyNumber", 1234));
@@ -116,7 +116,7 @@ public class BeanComposerTest {
     }
 
     @Test(expected = ComposeException.class)
-    public final void testCreateJavaObjects_wrongType() throws IOException {
+    public final void testCreateJavaObjects_wrongType() {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new IntegerCell("firstName", 1234));
@@ -136,7 +136,7 @@ public class BeanComposerTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_subclass() throws IOException {
+    public final void testCreateJavaObjects_subclass() {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new StringCell("address.street", "Stigen"));
@@ -164,7 +164,7 @@ public class BeanComposerTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_subclass_BeanFactory() throws IOException {
+    public final void testCreateJavaObjects_subclass_BeanFactory() {
         Document document = new Document();
         Line line1 = new Line("Test person");
         line1.addCell(new StringCell("a.street", "Stigen"));
@@ -174,8 +174,7 @@ public class BeanComposerTest {
 
         BeanComposer<TstPerson> composer = new BeanComposer<>(new BeanFactory<TstPerson>() {
             @Override
-            public TstPerson createBean(Line line)
-                    throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+            public TstPerson createBean(Line line) {
                 if(line.getLineType().equals("Test person"))
                     return new TstPerson();
                 else
@@ -222,7 +221,7 @@ public class BeanComposerTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_subclass_error() throws IOException {
+    public final void testCreateJavaObjects_subclass_error() {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new StringCell("address.doNotExist", "Stigen"));
@@ -252,7 +251,7 @@ public class BeanComposerTest {
      */
     @SuppressWarnings("unchecked")
     @Test
-    public final void testCreateJavaObjects_null_value() throws IOException {
+    public final void testCreateJavaObjects_null_value() {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new StringCell("firstName", "Jonas"));
@@ -284,7 +283,7 @@ public class BeanComposerTest {
     private class BeanFactoryMock implements BeanFactory<Object> {
         @Override
         public Object createBean(Line line)
-                throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException {
+                throws ClassCastException {
             return null;
         }
 
