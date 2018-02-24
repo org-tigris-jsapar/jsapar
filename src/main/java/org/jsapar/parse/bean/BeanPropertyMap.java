@@ -80,12 +80,13 @@ public class BeanPropertyMap {
             String[] propertyNames = propertyName.split("\\.", 2);
             PropertyDescriptor propertyDescriptor = descriptors.get(propertyNames[0]);
             if(propertyDescriptor != null) {
-                beanPropertyMap.putBean2Cell(propertyNames[0],
+                beanPropertyMap.putBean2Cell(propertyNames[0], cellName,
                         cellOfChildObject(cellName,
                                 propertyNames[1],
                                 propertyDescriptor,
                                 beanPropertyMap.getBean2CellByProperty(propertyNames[0])));
             }
+
         }
     }
 
@@ -100,7 +101,7 @@ public class BeanPropertyMap {
 
         PropertyDescriptor propertyDescriptor = descriptors.get(propertyName);
         if(propertyDescriptor != null){
-            beanPropertyMap.putBean2Cell(propertyName, Bean2Cell.ofCellName(cellName, propertyDescriptor));
+            beanPropertyMap.putBean2Cell(propertyName, cellName, Bean2Cell.ofCellName(cellName, propertyDescriptor));
             return baseBean2Cell;
         }
         else
@@ -108,9 +109,13 @@ public class BeanPropertyMap {
         return baseBean2Cell;
     }
 
-    private void putBean2Cell(String propertyName, Bean2Cell bean2Cell) {
+    private void putBean2Cell(String propertyName, String cellName, Bean2Cell bean2Cell) {
         this.bean2CellByProperty.put(propertyName, bean2Cell);
-        this.bean2CellByCellName.put(bean2Cell.getCellName(), bean2Cell);
+        this.bean2CellByCellName.put(cellName, bean2Cell);
+    }
+
+    private void putBean2Cell(String propertyName, Bean2Cell bean2Cell) {
+        putBean2Cell(propertyName, bean2Cell.getCellName(), bean2Cell);
     }
 
     public Class getLineClass() {
