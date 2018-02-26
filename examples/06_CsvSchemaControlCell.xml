@@ -2,7 +2,7 @@
 <schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 ../src/main/resources/xml/schema/JSaParSchema.xsd ">
-  <csvschema lineseparator="\r\n">
+  <csvschema lineseparator="\n">
     <line linetype="Header" cellseparator=";">
       <cell name="Type" default="H"><linecondition><match pattern="H"/></linecondition></cell>
       <cell name="FileName"/>

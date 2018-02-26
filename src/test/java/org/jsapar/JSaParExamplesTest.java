@@ -178,7 +178,7 @@ public class JSaParExamplesTest {
             TextComposer composer = new TextComposer(schemaBuilder.build(schemaReader), w);
             composer.compose(document);
             System.out.println(w.toString());
-            String[] strings=w.toString().split("\r\n");
+            String[] strings=w.toString().split("\n");
             assertEquals(4, strings.length);
             assertEquals("H04_Names.txt   2017-07-07", strings[0]);
             assertEquals("BÅsa-NissKnut     Nilsson ", strings[1]);
@@ -299,7 +299,7 @@ public class JSaParExamplesTest {
         converter.convert(people, writer);
 
         String result=writer.toString();
-        String[] resultLines = result.split("\r\n");
+        String[] resultLines = result.split("\n");
 //        System.out.println(result);
         assertEquals("Nils;;Holgersson;4;4711;1902-08-07 12:43;A;Track;Village", resultLines[0]);
         assertEquals("Jonathan;;Lionheart;37;17;1955-03-17 12:33;C;Path;City", resultLines[1]);
@@ -332,7 +332,7 @@ public class JSaParExamplesTest {
         converter.convert(people, writer);
 
         String result = writer.toString();
-        String[] resultLines = result.split("\r\n");
+        String[] resultLines = result.split("\n");
 //        System.out.println(result);
         assertEquals("B;\"Nils\";;Holgersson", resultLines[0]);
         assertEquals("B;\"Jonathan\";;Lionheart", resultLines[1]);
