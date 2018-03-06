@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jsapar.parse.text;
 
 import java.io.IOException;
@@ -13,26 +10,35 @@ import java.io.Reader;
  * {@link Reader} object should be closed by caller. Once End of File has been reached, the instance will no longer be useful.
  * 
  */
-public class TextLineReader implements LineReader {
+public class TextLineReaderAnyCRLF extends TextLineReader {
 
     private static final int MAX_LINE_LENGTH = 10 * 1024;
-    private final String lineSeparator;
+    private final static String[] lineSeparators=new String[]{"\n", "\r\n"};
+    private int lineSeparatorIndex=-1;
 
     private Reader  reader;
 
-    private boolean eofReached = false;
+    public static boolean isLineSeparatorSupported(String lineSeparator){
+        for(int i=0; i<2 ; i++)
+            if(lineSeparator.equals(lineSeparators[i]))
+                return true;
+        return false;
+    }
 
     /**
      * Creates a lineReader instance reading from a reader.
-     * 
-     * @param lineSeparator
-     *            The line separator character to use while parsing lines.
+     *
+     * @param lineSeparator  The line separator returned as default before any line is detected.
      * @param reader
      *            The reader to read from.
      */
-    public TextLineReader(String lineSeparator, Reader reader) {
-        super();
-        this.lineSeparator = lineSeparator;
+    public TextLineReaderAnyCRLF(String lineSeparator, Reader reader) {
+        super(lineSeparator, reader);
+        for(int i=0; i<2 ; i++)
+            if(lineSeparator.equals(lineSeparators[i]))
+                lineSeparatorIndex = i;
+        if(lineSeparatorIndex < 0)
+            throw new IllegalArgumentException("Only line separator CR+LF or LF are allowed.");
         this.reader = reader;
     }
 
@@ -43,32 +49,30 @@ public class TextLineReader implements LineReader {
      */
     @Override
     public String readLine() throws IOException {
-        if (eofReached)
+        if (eofReached())
             return null;
-        String lineSeparator = getLineSeparator();
-        char chLineSeparatorNext = lineSeparator.charAt(0);
         StringBuilder lineBuilder = new StringBuilder();
-        StringBuilder pending = new StringBuilder();
+        boolean crFound = false;
         while (true) {
             int nRead = reader.read();
             if (nRead == -1) {
-                eofReached = true;
+                setEofReached(true);
                 return lineBuilder.toString();
             }
             char chRead = (char) nRead;
-            if (chRead == chLineSeparatorNext) {
-                pending.append(chRead);
-                if (lineSeparator.length() > pending.length())
-                    chLineSeparatorNext = lineSeparator.charAt(pending.length());
-                else
-                    break; // End of line found.
+            if (chRead == '\n') {
+                lineSeparatorIndex = crFound ? 1 : 0;
+                break; // End of line found.
+            }
+            else if(chRead == '\r'){
+                crFound = true;
             }
             // It was not a complete line separator.
-            else if (pending.length() > 0) {
+            else if (crFound) {
                 // Move pending characters to lineBuilder.
-                lineBuilder.append(pending);
-                pending.setLength(0);
+                lineBuilder.append('\r');
                 lineBuilder.append(chRead);
+                crFound = false;
             } else
                 lineBuilder.append(chRead);
             if (lineBuilder.length() > MAX_LINE_LENGTH)
@@ -79,14 +83,12 @@ public class TextLineReader implements LineReader {
     }
 
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.input.parse.LineReader#getLineSeparator()
+    /**
+     * @return This implementation returns the last detected line separator. Could be any of LF or CR+LF.
      */
     @Override
     public String getLineSeparator() {
-        return lineSeparator;
+        return lineSeparators[lineSeparatorIndex];
     }
 
 
@@ -97,16 +99,5 @@ public class TextLineReader implements LineReader {
         return reader;
     }
 
-    @Override
-    public boolean eofReached() {
-        return eofReached;
-    }
 
-    public void resetEof() {
-        this.eofReached = false;
-    }
-
-    void setEofReached(boolean eofReached){
-        this.eofReached = eofReached;
-    }
 }

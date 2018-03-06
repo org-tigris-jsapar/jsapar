@@ -2,6 +2,7 @@ package org.jsapar.parse.csv;
 
 import org.jsapar.parse.text.LineReader;
 import org.jsapar.parse.text.TextLineReader;
+import org.jsapar.parse.text.TextLineReaderAnyCRLF;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,7 +34,13 @@ class BufferedLineReader implements LineReader {
     BufferedLineReader(String lineSeparator, Reader reader) {
         super();
         this.reader = new BufferedReader(reader);
-        this.lineReaderImpl = new TextLineReader(lineSeparator, this.reader);
+        this.lineReaderImpl = makeLineReaderImpl(this.reader, lineSeparator);
+    }
+
+    private TextLineReader makeLineReaderImpl(Reader reader, String lineSeparator) {
+        return TextLineReaderAnyCRLF.isLineSeparatorSupported(lineSeparator) ?
+                new TextLineReaderAnyCRLF(lineSeparator, reader) :
+                new TextLineReader(lineSeparator, reader);
     }
 
     /**

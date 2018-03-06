@@ -6,6 +6,7 @@ import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.text.LineReader;
 import org.jsapar.parse.text.TextLineReader;
+import org.jsapar.parse.text.TextLineReaderAnyCRLF;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
 
@@ -29,7 +30,13 @@ public class FixedWidthParserLinesSeparated extends FixedWidthParser {
      */
     public FixedWidthParserLinesSeparated(Reader reader, FixedWidthSchema schema, TextParseConfig config) {
         super(schema, config);
-        lineReader = new TextLineReader(schema.getLineSeparator(), reader);
+        lineReader = makeLineReader(reader, schema.getLineSeparator());
+    }
+
+    private LineReader makeLineReader(Reader reader, String lineSeparator) {
+        return TextLineReaderAnyCRLF.isLineSeparatorSupported(lineSeparator) ?
+                new TextLineReaderAnyCRLF(lineSeparator, reader) :
+                new TextLineReader(lineSeparator, reader);
     }
 
     @Override

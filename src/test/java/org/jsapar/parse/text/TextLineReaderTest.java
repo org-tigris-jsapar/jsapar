@@ -1,7 +1,6 @@
-package org.jsapar.parse;
+package org.jsapar.parse.text;
 
 import org.jsapar.error.JSaParException;
-import org.jsapar.parse.text.TextLineReader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +11,7 @@ import java.io.StringReader;
 
 import static org.junit.Assert.*;
 
-public class ReaderLineReaderTest {
+public class TextLineReaderTest {
 
     @Before
     public void setUp() throws Exception {
