@@ -5,14 +5,15 @@ import java.io.Reader;
 
 /**
  * Internal class for reading lines from a text.
- * {@link LineReader} implementation that reads lines from a text {@link Reader} object.
+ * {@link LineReader} implementation that reads lines from a text {@link Reader} object. This implementation handles
+ * any combination of CR+LF or LF as line separator.
  * 
  * {@link Reader} object should be closed by caller. Once End of File has been reached, the instance will no longer be useful.
- * 
+ *
+ * Calling {@link #getLineSeparator()} will return the last line separator that was detected.
  */
 public class TextLineReaderAnyCRLF extends TextLineReader {
 
-    private static final int MAX_LINE_LENGTH = 10 * 1024;
     private final static String[] lineSeparators=new String[]{"\n", "\r\n"};
     private int lineSeparatorIndex=-1;
 

@@ -23,7 +23,12 @@
     </xsd:sequence>
     <xsd:attribute name="lineseparator" type="xsd:string" >
       <xsd:annotation>
-        <xsd:documentation>A sequence of characters that separates each line. Default is the system default line separator characters. To specify control characters, use xml syntax e.g. &amp;#13; = \n and &amp;#10; = \r.</xsd:documentation>
+        <xsd:documentation>A sequence of characters that separates each line. Default is the system default line
+            separator characters. To specify control characters, use either xml syntax e.g. &amp;#13; for LF and &amp;#10; for CR or
+            java notation such as '\n' for LF or '\r' for CR.
+            When parsing, if one of either '\r\n' or '\n' is specified as line separator, both both will be regarded as
+            line separator anyway. When composing, the specified sequence will be used.
+        </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
   </xsd:complexType>

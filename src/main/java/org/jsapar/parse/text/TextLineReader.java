@@ -15,7 +15,7 @@ import java.io.Reader;
  */
 public class TextLineReader implements LineReader {
 
-    private static final int MAX_LINE_LENGTH = 10 * 1024;
+    static final int MAX_LINE_LENGTH = 10 * 1024;
     private final String lineSeparator;
 
     private Reader  reader;
