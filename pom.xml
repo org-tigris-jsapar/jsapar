@@ -139,10 +139,7 @@
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-release-plugin</artifactId>
-              <configuration>
-                  <tagBase>http://jsapar.tigris.org/svn/jsapar/tags</tagBase>
-              </configuration>
-          </plugin>      
+          </plugin>
   
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -199,7 +196,6 @@
 
 
   <scm>
-    <url>http://jsapar.tigris.org/svn/jsapar</url>
     <connection>scm:git:git@github.com:org-tigris-jsapar/jsapar.git</connection>
     <tag>HEAD</tag>
   </scm>
