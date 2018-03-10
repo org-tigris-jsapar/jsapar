@@ -7,9 +7,9 @@ import java.io.Reader;
  * Internal class for reading lines from a text.
  * {@link LineReader} implementation that reads lines from a text {@link Reader} object. This implementation handles
  * any combination of CR+LF or LF as line separator.
- * 
+ * <p>
  * {@link Reader} object should be closed by caller. Once End of File has been reached, the instance will no longer be useful.
- *
+ * <p>
  * Calling {@link #getLineSeparator()} will return the last line separator that was detected.
  */
 public class TextLineReaderAnyCRLF extends TextLineReader {
@@ -18,13 +18,6 @@ public class TextLineReaderAnyCRLF extends TextLineReader {
     private int lineSeparatorIndex=-1;
 
     private Reader  reader;
-
-    public static boolean isLineSeparatorSupported(String lineSeparator){
-        for(int i=0; i<2 ; i++)
-            if(lineSeparator.equals(lineSeparators[i]))
-                return true;
-        return false;
-    }
 
     /**
      * Creates a lineReader instance reading from a reader.
@@ -41,6 +34,17 @@ public class TextLineReaderAnyCRLF extends TextLineReader {
         if(lineSeparatorIndex < 0)
             throw new IllegalArgumentException("Only line separator CR+LF or LF are allowed.");
         this.reader = reader;
+    }
+
+    /**
+     * @param lineSeparator The line separator to test.
+     * @return True if supplied line separator is one of either CR+LF or LF.
+     */
+    public static boolean isLineSeparatorSupported(String lineSeparator){
+        for(int i=0; i<2 ; i++)
+            if(lineSeparator.equals(lineSeparators[i]))
+                return true;
+        return false;
     }
 
     /*
