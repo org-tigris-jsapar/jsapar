@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.tigris.jsapar</groupId>
 	<artifactId>jsapar</artifactId>
-	<version>2.0.0.a1-SNAPSHOT</version>
+	<version>2.0.0.a1</version>
 	<packaging>jar</packaging>
 	<name>jsapar</name>
 	<url>http://jsapar.tigris.org</url>
