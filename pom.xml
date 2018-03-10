@@ -196,6 +196,7 @@
 
 
   <scm>
+    <developerConnection>scm:git:git@github.com:org-tigris-jsapar/jsapar.git</developerConnection>
     <connection>scm:git:git@github.com:org-tigris-jsapar/jsapar.git</connection>
     <tag>HEAD</tag>
   </scm>
