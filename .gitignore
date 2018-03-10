@@ -7,3 +7,5 @@
 .svn
 target
 bin
+/pom.xml.releaseBackup
+/release.properties
