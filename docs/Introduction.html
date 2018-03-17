@@ -7,8 +7,8 @@ title: JSaPar Introduction
 The <a href="api/index.html">javadoc</a> contains more comprehensive documentation regarding the classes mentioned below. <br/><br/>
 The JSaPar package is a java library that provides a parser for flat and CSV (Comma Separated Values) files. 
 The concept is that a schema denotes the way a file should be parsed or composed. The schema instance to be used can be built by specifying a xml-document or it can be constructed programmatically by using java code.
-The parser is event driven meaning that you need to provide an event handler while parsing. For convenience there are some
-provided event handler or you may implement your own. For instance, the org.jsapar.parse.DocumentBuilderLineEventHandler
+The parser is event driven, meaning that you need to provide an event handler while parsing. For convenience there are some
+event handlers provided or you may implement your own. For instance, the org.jsapar.parse.DocumentBuilderLineEventHandler
 builds a  a org.jsapar.model.Document object that contains a list of org.jsapar.model.Line objects which contains a list
 of org.jsapar.model.Cell objects. <br/> <br/>
 Supported file formats:
@@ -16,6 +16,58 @@ Supported file formats:
 <li><b>Fixed width </b><i>- Also refered to as flat file. Each cell is described only by its positions within the line. </i></li>
 <li><b>CSV </b><i>- (Comma Separated Values) Each cell is limited by a separator character (or characters).</i></li>
 </ul>
+<h2>Simple example of parsing CSV file</h2>
+Let us say that we have a CSV file that we need to parse. In this example the file contains lines that all have the same type. They each contain four cells (columns). Here is an example of the content of such a file.
+<pre lang="">
+Erik;Vidfare;Svensson;yes
+Fredrik;Allvarlig;Larsson;no
+"Alfred";"Stark";Nilsson;yes
+</pre>
+The first column contains the first name. The second column contains a middle name (that we are not interested in parsing). The fourth column contains a boolean value that can have one of the values "yes" or "no" where yes is considered as boolean true.
+
+In order to parse this type of files you first need to define a schema of the file. The easiest way to do this is to use the xml format. Here is a simple example of a schema file that can be used to parse the file above:
+<textarea style="width: 100%; height: 15em">
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0">
+  <csvschema lineseparator="\n">
+    <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;">
+      <cell name="First name" />
+      <cell name="Middle name" ignoreread="true"/>
+      <cell name="Last name" />
+      <cell name="Have dog"><format type="boolean" pattern="yes;no"/></cell>
+    </line>
+  </csvschema>
+</schema>
+</textarea>
+
+The code that you need to write in order to use the JSaPar library to parse files of this type is this:
+<pre class="highlight" lang="java">
+try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
+     Reader fileReader = new FileReader("examples/01_Names.csv")) {
+    Schema schema = Schema.ofXml(schemaReader);
+    TextParser parser = new TextParser(schema);
+    DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
+    parser.parse(fileReader, listener);
+    Document document = listener.getDocument();
+}
+</pre>
+<div>
+In this example we first load the Schema from a file by using a FileReader for the schema file. Then we use that schema to create
+a TextParser. We then create a DocumentBuilderLineEventListener that is a pre defined event listener that collects all
+the events for each line and then builds a Document object that can be fetched when done parsing. The resulting document
+instance contains a list of Line where each Line represent a line in the input file. Now, depending on what we want to do
+with the parsed result, we may for example use the LineUtils class that contains a number of convenient methods to get cell
+values of different types from a Line.
+</div>
+<div>
+The example above is a small simple example. For larget files you probably want to implement a different event listener
+    that handles each line as it is parsed. This way you will never load the whole content of the input file in the memory.
+    If you rather work with your own Java class instead of getting Line objects, you probably want to look at the Text2BeanConverter class.
+</div>
+<div>
+    The advantage of this schema approach is that if you parse a large number of similar files you can adapt the schema
+    file if the file format changes instead of making changes within your code.
+</div>
 
 <h2>Line types</h2>
 Within the schema, you specify a number of line types. When parsing, the type of the line is either denoted by it's position

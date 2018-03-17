@@ -8,7 +8,7 @@ title: JSaPar Contents
 
 <h3>Mission</h3>
 
-<p>The goal of this project is to create a java library that contains a parser of flat files and csv files. The library should be simple to use and possible to extend.
+<p>The goal of this project is a java library that contains a parser and composer of flat files and csv files. The library should be simple to use and possible to extend. The idea is to separate the format of the parsed/composed file into a schema.
 </p>
 
 <h3>Existing features</h3>
@@ -22,11 +22,11 @@ title: JSaPar Contents
     </li>
     <li>Can handle huge files without loading everything into memory.</li>
     <li>The output Document class contains a list of lines which contains a list of cells.</li>
-    <li>The Document class can be transformed into a Java object (via reflection) if the schema is carefully written.
+    <li>The Document class can be transformed into a Java object (via reflection) if the schema is carefully written or by applying a mapping configuration.
     </li>
-    <li>It is also possible to produce java objects directly from the parser.</li>
+    <li>It is also possible to produce java objects directly by using a converter.</li>
     <li>It is possible convert a list of java objects into a file according to a schema if the schema is carefully
-        written.
+        written or by applying a mapping configuration.
     </li>
     <!--<li>The Document class can be transformed into a xml file (according to an internal xml schema).</li>-->
     <li>The Document class can be built from a xml file (according to an internal xml schema).</li>
