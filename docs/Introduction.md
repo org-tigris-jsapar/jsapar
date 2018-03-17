@@ -18,11 +18,12 @@ Supported file formats:
 </ul>
 <h2>Simple example of parsing CSV file</h2>
 Let us say that we have a CSV file that we need to parse. In this example the file contains lines that all have the same type. They each contain four cells (columns). Here is an example of the content of such a file.
-<pre lang="">
+
+```csv
 Erik;Vidfare;Svensson;yes
 Fredrik;Allvarlig;Larsson;no
 "Alfred";"Stark";Nilsson;yes
-</pre>
+```
 The first column contains the first name. The second column contains a middle name (that we are not interested in parsing). The fourth column contains a boolean value that can have one of the values "yes" or "no" where yes is considered as boolean true.
 
 In order to parse this type of files you first need to define a schema of the file. The easiest way to do this is to use the xml format. Here is a simple example of a schema file that can be used to parse the file above:
