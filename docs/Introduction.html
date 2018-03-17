@@ -41,7 +41,8 @@ In order to parse this type of files you first need to define a schema of the fi
 </textarea>
 
 The code that you need to write in order to use the JSaPar library to parse files of this type is this:
-```java
+<pre class="highlight" lang="java">
+    <code class="highlight" lang="java">
 try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
      Reader fileReader = new FileReader("examples/01_Names.csv")) {
     Schema schema = Schema.ofXml(schemaReader);
@@ -50,7 +51,8 @@ try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
     parser.parse(fileReader, listener);
     Document document = listener.getDocument();
 }
-```
+    </code>
+</pre>
 <div>
 In this example we first load the Schema from a file by using a FileReader for the schema file. Then we use that schema to create
 a TextParser. We then create a DocumentBuilderLineEventListener that is a pre defined event listener that collects all
