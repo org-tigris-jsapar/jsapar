@@ -15,4 +15,11 @@ public class CharacterCell extends ComparableCell<Character> {
         super(sName, value, CellType.CHARACTER);
     }
 
+    /**
+     * @param name The name of the empty cell.
+     * @return A new Empty cell of supplied name.
+     */
+    public static Cell emptyOf(String name) {
+        return new EmptyCell(name, CellType.CHARACTER);
+    }
 }

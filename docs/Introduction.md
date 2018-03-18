@@ -39,7 +39,6 @@ In order to parse this type of files you first need to define a schema of the fi
     </line>
   </csvschema>
 </schema>
-</textarea>
 ```
 
 The code that you need to write in order to use the JSaPar library to parse files of this type is this:

@@ -54,4 +54,13 @@ public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
     	Long rightValue = right.getValue().longValue();
     	return leftValue.compareTo(rightValue);
     }
+
+    /**
+     * @param name The name of the empty cell.
+     * @return A new Empty cell of supplied name.
+     */
+    public static Cell emptyOf(String name) {
+        return new EmptyCell(name, CellType.INTEGER);
+    }
+
 }

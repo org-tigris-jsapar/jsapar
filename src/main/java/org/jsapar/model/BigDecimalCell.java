@@ -67,4 +67,13 @@ public class BigDecimalCell extends NumberCell  {
             throw new IllegalArgumentException("Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType());
         }
     }
+
+    /**
+     * @param name The name of the empty cell.
+     * @return A new Empty cell of supplied name.
+     */
+    public static Cell emptyOf(String name) {
+        return new EmptyCell(name, CellType.DECIMAL);
+    }
+
 }

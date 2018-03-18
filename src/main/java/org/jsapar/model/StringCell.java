@@ -37,4 +37,9 @@ public class StringCell extends ComparableCell<String> {
     public static Cell emptyOf(String name) {
         return new EmptyCell(name, CellType.STRING);
     }
+
+    @Override
+    public boolean isEmpty() {
+        return getValue().isEmpty();
+    }
 }

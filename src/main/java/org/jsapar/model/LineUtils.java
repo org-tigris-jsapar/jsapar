@@ -164,6 +164,8 @@ public class LineUtils {
      * @param cellName The name of the cell to get
      * @return The optional value of the specified cell, not present if there is no such cell or if the cell was an
      * empty string.
+     * @throws IllegalStateException if the line does not have any cell with the specified name. This happens when the
+     * schema does not specify any cell with this name.
      * @see #getStringCellValue(Line, String)
      * @see Line#getNonEmptyCell(String)
      * @see Line#getCell(String)
@@ -179,8 +181,9 @@ public class LineUtils {
      *
      * @param line     The line to get from
      * @param cellName The name of the cell to get.
-     * @return The integer value of the cell with the specified name.
-     * @throws IllegalStateException If the cell does not exist
+     * @return The integer value of the cell with the specified name or optional empty if the cell is empty.
+     * @throws IllegalStateException if the line does not have any cell with the specified name. This happens when the
+     * schema does not specify any cell with this name.
      * @throws NumberFormatException If the cell could not be converted into an integer value
      */
     public static Optional<Number> getNumberCellValue(Line line, String cellName)
@@ -451,7 +454,7 @@ public class LineUtils {
      *                                  of the specified cell.
      */
     public static <E extends Enum<E>> Optional<E> getEnumCellValue(Line line, String cellName, Class<E> enumClass)
-            throws IllegalArgumentException {
+            throws IllegalArgumentException, IllegalStateException {
         return line.getNonEmptyCell(cellName).map( it -> enumOfCell(it, enumClass));
     }
 

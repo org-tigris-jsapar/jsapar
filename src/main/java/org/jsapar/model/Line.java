@@ -155,13 +155,26 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
     }
 
     /**
+     * Gets a cell with specified name. Name is specified by the schema.
+
+     * @param name The name of the cell to get
+     * @return A cell with the supplied name
+     * @throws IllegalStateException if there is no cell with the specified name.
+     */
+    public Cell getExistingCell(String name) {
+        return getCell(name).orElseThrow(()->new IllegalStateException("The line does not contain any cell with name " + name + " This happens when the parsing schema does not contain any cell with that name."));
+    }
+
+    /**
      * Gets a non empty cell with specified name. Name is specified by the schema.
      *
      * @param name The name of the cell to get
      * @return Optional cell that is set if there is a cell with specified name and that cell is not empty.
+     * @throws IllegalStateException if there is no cell with the specified name.
      */
     public Optional<Cell> getNonEmptyCell(String name) {
-        return getCell(name).filter(c->!c.isEmpty());
+        Cell c = getExistingCell(name);
+        return c.isEmpty() ? Optional.empty() : Optional.of(c);
     }
     /**
      * Gets the number of cells that this line contains.
@@ -276,7 +289,9 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @return true if the cell with the specified name exists and that it contains a value. False otherwise.
      */
     public boolean isCellSet(String cellName) {
-        return getNonEmptyCell(cellName).isPresent();
+        return getCell(cellName)
+                .filter(cell->!cell.isEmpty())
+                .isPresent();
     }
 
     /**
@@ -287,7 +302,8 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @return true if the cell with the specified name contains a value of the specified type.
      */
     public boolean containsNonEmptyCell(String cellName, CellType type) {
-        return getNonEmptyCell(cellName)
+        return getCell(cellName)
+                .filter(cell->!cell.isEmpty())
                 .filter(cell1 -> cell1.getCellType().equals(type))
                 .isPresent();
     }
