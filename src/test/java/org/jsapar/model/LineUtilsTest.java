@@ -34,8 +34,12 @@ public class LineUtilsTest {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         LineUtils.setStringCellValue(line, "LastName", "Svensson");
+        line.addCell(StringCell.emptyOf("empty"));
         assertEquals("Nils", LineUtils.getStringCellValue(line,"FirstName"));
         assertEquals("Svensson", LineUtils.getStringCellValue(line,"LastName"));
+        assertEquals("Svensson", LineUtils.getNonEmptyStringCellValue(line,"LastName").orElse(null));
+        assertEquals("", LineUtils.getStringCellValue(line,"empty"));
+        assertEquals("other", LineUtils.getNonEmptyStringCellValue(line,"empty").orElse("other"));
     }
 
     @Test(expected = IllegalStateException.class)

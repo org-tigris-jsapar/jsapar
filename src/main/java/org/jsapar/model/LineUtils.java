@@ -1,6 +1,5 @@
 package org.jsapar.model;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.error.JSaParNumberFormatException;
 
 import java.math.BigDecimal;
@@ -154,7 +153,7 @@ public class LineUtils {
      * @see Line#getCell(String)
      */
     public static String getStringCellValue(Line line, String cellName) {
-        return line.getCell(cellName).map(Cell::getStringValue).orElseThrow(()->new IllegalStateException("The line does not contain any cell with name " + cellName));
+        return line.getExistingCell(cellName).getStringValue();
     }
 
     /**
