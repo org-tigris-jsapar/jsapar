@@ -37,12 +37,12 @@ parsing to be able to deal with them later.
 * JUnit tests for most classes within the library.
 * Support for localisation.
 
-<h3>Documentation</h3>
+## Documentation
 <a href="Introduction">Introduction</a><br/>
-<a href="upgradingfrom1.html">Upgrading from JSaPar 1.x versions</a><br/>
-<a href="api/index.html">Javadocs API documentation</a><br/>
+<a href="upgradingfrom1">Upgrading from JSaPar 1.x versions</a><br/>
+<a href="api">Javadocs API documentation</a><br/>
 
-<h3>Resources</h3>
+## Resources
 <a href="https://github.com/org-tigris-jsapar/jsapar">Source code</a><br/>
 <a href="http://jsapar.tigris.org/servlets/ProjectDocumentList">Download binaries</a><br/>
 <a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">Maven coordinates</a><br/>
@@ -62,7 +62,7 @@ parsing to be able to deal with them later.
 
 </ul>
 
-<h3>Other sources of information</h3>
+## Other sources of information
 <ul>
 <li><a href="http://jsapar.blogspot.com/">The JSaPar developer blog</a>.</li>
 <li><a href="http://ezroad.blogspot.com/2010/02/last-week-friend-of-mine-decided-to.html">Parsing Huge Text Files Using Java and JSaPar</a></li>

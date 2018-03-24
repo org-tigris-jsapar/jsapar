@@ -73,7 +73,7 @@ The advantage of this schema approach is that if you parse a large number of sim
 file if the file format changes instead of making changes within your code.
 
 # The schema
-##Line types
+## Line types
 Within the schema, you specify a number of line types. When parsing, the type of the line is either denoted by it's position
 within the input or by a number of conditional cells. For one type of line you can for instance specify that the first cell
 has a specific constant value. When composing, the line type is determined when you create the Line objects. When
