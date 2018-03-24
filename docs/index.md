@@ -47,12 +47,10 @@ parsing to be able to deal with them later.
 <a href="http://jsapar.tigris.org/servlets/ProjectDocumentList">Download binaries</a><br/>
 <a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">Maven coordinates</a><br/>
 
-<h3>Dependencies</h3>
-<p>This project has no dependencies to other external libraries in runtime.
-</p>
+## Dependencies
+This project has no dependencies to other external libraries in runtime.
 
-<p> However if you plan to build and test the source consider the following:
-</p>
+However if you plan to build and test the source consider the following:
 
 <ul>
     <li>To build the source it is recommended to use <a href="https://maven.apache.org/">Maven</a>. A Maven pom.xml is provided. As of version 1.6, the library is published in the public <a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">Maven repository</a>.</li>

@@ -52,7 +52,6 @@ try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
     Document document = listener.getDocument();
     Line firstLine = document.iterator().next();
     assert "Erik".equals( LineUtils.getStringCellValue(firstLine, "First name")) );
-
 }
 ```
 In this example we
@@ -87,14 +86,14 @@ All parsers in this library requires that you provide an event handler that impl
 
 The JSaPar library contains some convenient implementations of the org.jsapar.parse.LineEventListener interface:
 <table>
-    <tr><td><b>org.jsapar.parse.&shy;DocumentBuilderLineEventListener</b></td>
+    <tr><td><b>org.jsapar.parse. DocumentBuilderLineEventListener</b></td>
         <td>For smaller files you may want to handle all
         the events after the parsing is complete. In that case you may choose to use this implementation.
         That listener builds a org.jsapar.model.Document object containing all the parsed lines that you can iterate afterwards.</td></tr>
-    <tr><td><b>org.jsapar.parse.&shy;MulticastLineEventListener</b></td>
+    <tr><td><b>org.jsapar.parse. MulticastLineEventListener</b></td>
         <td>If you need to handle the events in multiple event listener implementation, this implementation provides a
             way to register multiple line event listeners which are called one by one for each line event.</td></tr>
-    <tr><td><b>org.jsapar.concurrent.&shy;ConcurrentLineEventListener</b></td>
+    <tr><td><b>org.jsapar.concurrent. ConcurrentLineEventListener</b></td>
         <td>This implementation separates the parsing thread from the consuming thread. It makes it possible for you to
             register a consumer line event listener that is called from a separate consumer thread.</td></tr>
 </table>
