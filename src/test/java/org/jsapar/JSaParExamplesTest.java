@@ -46,10 +46,11 @@ public class JSaParExamplesTest {
             Document document = listener.getDocument();
 
             assertEquals(3, document.size());
-            assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name"));
-            assertEquals("Erik", document.getLine(0).getNonEmptyCell("First name").map(Cell::getStringValue).orElse("fail"));
-            assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name"));
-            assertEquals("true", LineUtils.getStringCellValue(document.getLine(0), "Have dog"));
+            Line firstLine = document.iterator().next();
+            assertEquals("Erik", LineUtils.getStringCellValue(firstLine, "First name"));
+            assertEquals("Erik", firstLine.getNonEmptyCell("First name").map(Cell::getStringValue).orElse("fail"));
+            assertEquals("Svensson", LineUtils.getStringCellValue(firstLine, "Last name"));
+            assertEquals("true", LineUtils.getStringCellValue(firstLine, "Have dog"));
             assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name"));
             assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name"));
             assertEquals("false", LineUtils.getStringCellValue(document.getLine(1), "Have dog"));
@@ -59,7 +60,7 @@ public class JSaParExamplesTest {
             assertEquals("Nilsson", LineUtils.getStringCellValue(document.getLine(2), "Last name"));
             assertEquals("true", LineUtils.getStringCellValue(document.getLine(2), "Have dog"));
 
-            assertEquals("Person", document.getLine(0).getLineType());
+            assertEquals("Person", firstLine.getLineType());
             assertEquals("Person", document.getLine(1).getLineType());
         }
     }
