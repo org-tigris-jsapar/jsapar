@@ -2,7 +2,6 @@ package org.jsapar.concurrent;
 
 import org.jsapar.TextComposer;
 import org.jsapar.convert.AbstractConverter;
-import org.jsapar.convert.ConvertTask;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
@@ -20,19 +19,15 @@ import java.io.Writer;
  * @see org.jsapar.Text2TextConverter
  *
  */
-public class ConcurrentText2TextConverter extends AbstractConverter{
-    private final Schema parseSchema;
-    private final Schema composeSchema;
+public class ConcurrentText2TextConverter extends AbstractConcurrentConverter{
     private TextParseConfig parseConfig = new TextParseConfig();
 
     public ConcurrentText2TextConverter(Schema parseSchema, Schema composeSchema) {
-        this.parseSchema = parseSchema;
-        this.composeSchema = composeSchema;
+        super(parseSchema, composeSchema);
     }
 
     public ConcurrentText2TextConverter(Schema parseSchema, Schema composeSchema, TextParseConfig parseConfig) {
-        this.parseSchema = parseSchema;
-        this.composeSchema = composeSchema;
+        super(parseSchema, composeSchema);
         this.parseConfig = parseConfig;
     }
 
@@ -43,9 +38,9 @@ public class ConcurrentText2TextConverter extends AbstractConverter{
      * @throws IOException In case of IO error
      */
     public long convert(Reader reader, Writer writer) throws IOException {
-        TextParseTask parseTask = new TextParseTask(this.parseSchema, reader, parseConfig);
-        ConvertTask convertTask = new ConcurrentConvertTask(parseTask, new TextComposer(composeSchema, writer));
-        return execute(convertTask);
+        TextParseTask parseTask = new TextParseTask(this.getParseSchema(), reader, parseConfig);
+        TextComposer composer = new TextComposer(getComposeSchema(), writer);
+        return super.convert(parseTask, composer);
     }
 
     public TextParseConfig getParseConfig() {

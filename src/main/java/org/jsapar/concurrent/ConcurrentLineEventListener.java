@@ -5,7 +5,8 @@ import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.ParseTask;
 
-import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -26,7 +27,6 @@ import java.util.concurrent.LinkedBlockingQueue;
  * When the internal queue is full, the producing thread starts blocking. This means that it waits for an available slot
  * in the queue before it continues parsing.
  */
-@SuppressWarnings("ALL")
 public class ConcurrentLineEventListener implements LineEventListener, AutoCloseable, Stoppable {
 
     private BlockingQueue<LineParsedEvent> events;
@@ -35,10 +35,12 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
     private LineEventListener listener;
     private Throwable exception = null;
     private Thread thread;
-    private ShutdownHook shutdownHook;
+    private List<Runnable> onStart = new LinkedList<>();
+    private List<Runnable> onStop = new LinkedList<>();
 
     /**
      * Creates a concurrent line event listener that have a queue size of 1000 events.
+     * @param lineEventListener The line event listener that will be called by consumer thread.
      */
     public ConcurrentLineEventListener(LineEventListener lineEventListener) {
         this(lineEventListener, 1000);
@@ -46,12 +48,12 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
 
     /**
      * Creates a concurrent line event listener with specified queue size.
-     * @param lineEventListener
+     * @param lineEventListener The line event listener that will be called by consumer thread.
      * @param queueSize   Maximum size of the queue before the producing thread starts blocking.
      */
     public ConcurrentLineEventListener(LineEventListener lineEventListener, int queueSize) {
         events = new LinkedBlockingQueue<>(queueSize);
-        this.shutdownHook = new ShutdownHook(this);
+        Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
         this.listener = lineEventListener;
     }
 
@@ -61,6 +63,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
         try {
             events.put(event);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -81,7 +84,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
         public void run() {
             try {
                 running = true;
-                onStart();
+                onStart.forEach(Runnable::run);
                 while (!shouldStop) {
                     LineParsedEvent event = events.take();
                     if (shouldStop) {
@@ -101,25 +104,31 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
                 }
             } finally {
                 running = false;
-                onStop();
+                onStop.forEach(Runnable::run);
             }
         }
     }
 
     /**
-     * Called by consumer thread when it starts up but before it starts handling any event. Override this in order to
+     * Each registered onStart runnable will be called in the same order that they were registered by consumer thread
+     * when it starts up but before it starts handling any event. Use this in order to
      * implement initialization needed for the new
      * thread.
+     * @param onStart The runnable that will be called by consumer thread when starting up.
      */
-    protected void onStart(){
+    public void registerOnStart(Runnable onStart){
+        this.onStart.add(onStart);
     }
 
     /**
-     * Called by consumer thread just before it dies. Override this in order to
-     * implement resource dealoccation etc. This method called also when the thread is terminated with an exception so
+     * Each registered onStop runnable will be called in the same order that they were registered by consumer
+     * thread just before it dies. Use this in order to
+     * implement resource dealoccation etc. These handlers are called also when the thread is terminated with an exception so
      * be aware that you may end up here also when a serious error has occurred.
+     * @param onStop The runnable that will be called by consumer thread when stopping.
      */
-    protected void onStop(){
+    public void registerOnStop(Runnable onStop){
+        this.onStop.add(onStop);
     }
 
     /**

@@ -10,23 +10,33 @@ import static org.junit.Assert.*;
 
 public class ConcurrentLineEventListenerTest {
     private volatile int count = 0;
+    private boolean started = false;
+    private boolean stopped = false;
 
     @Before
     public void setUp() throws Exception {
         count = 0;
+        started = false;
+        stopped = false;
     }
 
     @Test
     public void testLineParsedEvent() throws Exception {
         try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> {})) {
             assertEquals(0, instance.size());
+            instance.registerOnStart(()-> this.started = true);
+            instance.registerOnStop(()-> this.stopped = true);
             instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
             assertEquals(1, instance.size());
+            assertFalse(this.started);
             instance.start();
+            assertTrue(this.started);
             Thread.sleep(10L);
             assertEquals(0, instance.size());
+            assertFalse(this.stopped);
             assertTrue(instance.isRunning());
         }
+        assertTrue(this.stopped);
 
     }
 
