@@ -37,10 +37,8 @@
       <xsd:annotation>
         <xsd:documentation>
           Denotes how many times this type of line occurs. A '*'
-          character denotes that it occurs infinitely amout of times
-          until the end of input buffer is reached. If the attribute
-          linetypeby is set to controlcell, then this attribute will be
-          ignored.
+          character denotes that it occurs infinitely amount of times
+          until the end of input buffer is reached.
         </xsd:documentation>
       </xsd:annotation>
       <xsd:simpleType>
@@ -52,14 +50,12 @@
     <xsd:attribute name="linetype" type="xsd:string" >
       <xsd:annotation>
         <xsd:documentation>
-          Specifies the type of the line. If controlcell is used, then
+          Specifies the type of the line. If there are more than one type of line or if linecondition cells are used, then
           this field is mandatory. Otherwise this field can be supplied
           as information. Line-type can be regarded as the class of the
           line if there are many different type of lines. The line types
           can be denoted by either the occurs attribute at each schema
-          line or by the value of a control cell (the first cell at each
-          line). If control cell is used, also the attibute
-          linetypecontrolvalue is mandatory.
+          line or by the value of a linecondition control cell.
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>

@@ -119,7 +119,7 @@ the `lineseparator` attribute will result that system default is used. For fixed
 empty string if lines are determined only by the length of the line which can be the case for Mainframe computers (COBOL).
 
 When parsing, if you have specified one of either `"\n"` or `"\r\n"` as line separator, then the parser will consider both of them to be valid
-line separators, but when composing, only the specified line separator will be used.
+line separators but when composing, only the specified line separator will be used.
 
 ## The Schema xml for CSV 
 
