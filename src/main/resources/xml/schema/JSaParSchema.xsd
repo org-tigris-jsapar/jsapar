@@ -92,7 +92,7 @@
                      type="Locale">
     		<xsd:annotation>
     			<xsd:documentation>
-    				The locale of this cell. Overrides the locale
+    				The locale of this cell. It affects how decimal separators etc. are formatted/parsed. Overrides the locale
     				setting for the whole schema.
     			</xsd:documentation>
     		</xsd:annotation>
@@ -129,7 +129,7 @@
     <xsd:attribute default="false" name="mandatory" type="xsd:boolean">
       <xsd:annotation>
         <xsd:documentation>
-          States if this cell have to contain a value or not. If this attribute is false, an empty value is accepted as
+          States if this cell have to contain a value or if it is optional. If this attribute is false, an empty value is accepted as
           long as the parsing mechanism can handle it for the given format. If this attribute is true, a parsing error
           is reported back. Default is false.
         </xsd:documentation>
@@ -138,12 +138,13 @@
     <xsd:attribute name="default" type="xsd:string">
       <xsd:annotation>
         <xsd:documentation>
-          The default value of this cell. This value is used if the cell does not conatin any value. The value should be
+          The default value of this cell. This value is used if the cell does not conatain any value. The value should be
           formatted according to the rules of the schema cell itself.
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
   </xsd:complexType>
+
   <xsd:complexType name="CellFormat">
     <xsd:attribute name="type" use="required">
       <xsd:annotation>
@@ -195,6 +196,7 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+
   <xsd:complexType name="FixedWidthSchemaLine">
     <xsd:complexContent mixed="false">
       <xsd:extension base="SchemaLine">
@@ -221,6 +223,7 @@ If the sum of the length of the cells is less than this minlength then the line 
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+
   <xsd:complexType name="FixedWidthSchemaCell">
   	<xsd:complexContent mixed="false">
   		<xsd:extension base="SchemaCell">
@@ -272,6 +275,7 @@ If the sum of the length of the cells is less than this minlength then the line 
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+
   <xsd:complexType name="CsvSchemaLine">
   	<xsd:complexContent mixed="false">
   		<xsd:extension base="SchemaLine">
@@ -324,11 +328,14 @@ If the sum of the length of the cells is less than this minlength then the line 
   			</xsd:attribute>
   			<xsd:attribute name="quotebehavior" type="QuoteBehaviorType" default="AUTOMATIC">
   				<xsd:annotation>
-  					<xsd:documentation>Default quote behavior for the line type. Override this setting on cell level if needed.</xsd:documentation>
+  					<xsd:documentation>Default quote behavior for the line type. Override this setting on cell level if needed. Should have one of the values:
+                        AUTOMATIC, NEVER, REPLACE or ALWAYS.
+                    </xsd:documentation>
   				</xsd:annotation></xsd:attribute>
   		</xsd:extension>
   	</xsd:complexContent>
   </xsd:complexType>
+
   <xsd:complexType name="Locale">
     <xsd:attribute name="language" use="required">
       <xsd:annotation>
@@ -353,6 +360,7 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
       </xsd:simpleType>
     </xsd:attribute>
   </xsd:complexType>
+
   <xsd:complexType name="CellValueRange">
     <xsd:annotation>
       <xsd:documentation>Contains a range for a cell value. The format of the min and max attribute are the same as for the parsing of the cell values.</xsd:documentation>
@@ -399,30 +407,6 @@ Available since 2.0</xsd:documentation>
   <xsd:complexType name="CellRegex">
       <xsd:attribute name="pattern" type="xsd:string"/>
   </xsd:complexType>
-
-  <xsd:complexType name="SchemaValidationType">
-        <xsd:annotation>
-        	<xsd:documentation>Defines one type of validation that is performed while parsing and the action to take when validation fails.
-</xsd:documentation>
-        </xsd:annotation>
-        <xsd:attribute name="action">
-            <xsd:annotation>
-            	<xsd:documentation>ERROR means an error event is generated. When this happens it depends how you handle the error events.
-EXCEPTION means an exception is thrown, and the parsing is immediately aborted. 
-IGNORE_LINE means that the line is silently ignored from input.
-NONE means no action at all, if possible.</xsd:documentation>
-            </xsd:annotation>
-            <xsd:simpleType>
-            	<xsd:restriction base="xsd:string">
-                    <xsd:enumeration value="ERROR"/>
-                    <xsd:enumeration value="EXCEPTION"/>
-                    <xsd:enumeration value="IGNORE_LINE"/>
-                    <xsd:enumeration value="NONE"/>
-            	</xsd:restriction>
-            </xsd:simpleType>
-        </xsd:attribute>
-  </xsd:complexType>
-
 
   <xsd:simpleType name="QuoteBehaviorType">
         <xsd:annotation>
