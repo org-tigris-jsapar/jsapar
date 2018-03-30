@@ -5,7 +5,7 @@
 	<version>2.0.0.a2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>jsapar</name>
-	<url>http://jsapar.tigris.org</url>
+	<url>https://org-tigris-jsapar.github.io/jsapar/</url>
 	<description>The JSaPar package is a java library that provides parser and composer for flat and CSV (Comma Separated Values) files.</description>
   
     <parent>
@@ -26,7 +26,7 @@
 			<roles>
 				<role>Main Developer</role>
 			</roles>
-			<url>http://jsapar.tigris.org</url>
+			<url>https://github.com/stenix71</url>
 		</developer>
 	</developers>
 

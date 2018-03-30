@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 ../src/main/resources/xml/schema/JSaParSchema.xsd ">
+        xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 http://jsapar.tigris.org/JSaParSchema/2.0/JSaParSchema.xsd">
   <csvschema lineseparator="&#10;">
     <line occurs="*" linetype="org.jsapar.TstPerson" cellseparator=";">
       <cell name="firstName" />

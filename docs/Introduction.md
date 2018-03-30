@@ -72,6 +72,56 @@ The advantage of this schema approach is that if you parse a large number of sim
 file if the file format changes instead of making changes within your code.
 
 # The schema
+The schema is what describes the format of the input or output. Usually the easiest way to work with a schema is to use the
+xml format. The example below describes a simple schema for a CSV file taken from the first example above.
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 http://jsapar.tigris.org/JSaParSchema/2.0/JSaParSchema.xsd">
+   <csvschema lineseparator="\n">
+    <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;">
+      <cell name="First name" />
+      <cell name="Middle name" ignoreread="true"/>
+      <cell name="Last name" />
+      <cell name="Have dog"><format type="boolean" pattern="yes;no"/></cell>
+    </line>
+  </csvschema>
+</schema>
+```
+## The schema of the schema
+In the schema above, I have added the xsi:schemaLocation which helps intelligent xml editors to find the 
+<a href="https://en.wikipedia.org/wiki/XML_Schema_(W3C)">XSD</a> that is used for JSaPar schemas. The XSD itself provides
+a lot of documentation about the details of each allowed element and attribute within the schema xml. A published version
+of the schema is located at. 
+
+http://jsapar.tigris.org/JSaParSchema/2.0/JSaParSchema.xsd
+
+If you want to download the XSD as a file, you will probably need to right click on the link above and choose *"Save link as..."* depending on your browser.
+
+## The Schema xml
+After the leading root `<schema>` element you need to define what type of input or output you have. Here there are two choises:
+1. `<csvschema>`
+1. `<fixedwidthschema>`
+Depending on the choice here, the rest of the schema will be different. 
+
+### The line separator
+On this level you may also specify what type of line separator your input or output have. You can use any character 
+sequence as line separator but for convenience the following escaped characters will also work within the xml:
+
+* `\n` - LF (line feed) or hex 0A. 
+* `\r` - CR (carrige return) or hex 0D.
+* `\t` - TAB (horizontal tab) or hex 09.
+
+For Unix systems the normal line separator is `"\n"` and for Windows systems the normal line separator is `"\r\n"`. Omitting
+the `lineseparator` attribute will result that system default is used. For fixed with files you may also specify an 
+empty string if lines are determined only by the length of the line which can be the case for Mainframe computers (COBOL).
+
+When parsing, if you have specified one of either `"\n"` or `"\r\n"` as line separator, then the parser will consider both of them to be valid
+line separators, but when composing, only the specified line separator will be used.
+
+## The Schema xml for CSV 
+
+
 ## Line types
 Within the schema, you specify a number of line types. When parsing, the type of the line is either denoted by it's position
 within the input or by a number of conditional cells. For one type of line you can for instance specify that the first cell

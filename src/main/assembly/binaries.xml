@@ -26,14 +26,14 @@
     </fileSet>
     <fileSet>
       <directory>src/test/java/org/jsapar</directory>
-      <outputDirectory>exsamples</outputDirectory>
+      <outputDirectory>examples</outputDirectory>
       <includes>
         <include>JSaParExamplesTest.java</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>exsamples</directory>
-      <outputDirectory>exsamples</outputDirectory>
+      <directory>examples</directory>
+      <outputDirectory>examples</outputDirectory>
       <includes>
         <include>**</include>
       </includes>
