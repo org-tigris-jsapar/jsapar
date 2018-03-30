@@ -126,13 +126,62 @@ When parsing, if you have specified one of either `"\n"` or `"\r\n"` as line sep
 line separators but when composing, only the specified line separator will be used.
 
 ## The Schema xml for CSV 
+### Line
+### Cell
+### Quoted values
+### The first line describes cell layout
+It is quite common in CSV files to have one header row that contains the name of the columns within the file. For instance, the file might look like this:
+```csv
+First name;Middle name;Last name;Have dog
+Erik;Vidfare;Svensson;yes
+Fredrik;Allvarlig;Larsson;no
+"Alfred";"Stark";Nilsson;yes
+```
+This type of format is supported by the library out-of-the-box. All you need to do is to is to set the attribute 
+`firstlineasschema="true"` on the `<line>` element. Then the order of the cell while parsing is no longer denoted by the 
+order of the `<cell>` elements in the schema. Instead the order is fetched from the first header row. It is important though that 
+the name of the cells within the schema matches the names in the header. The advantage of using such a format is that the
+producer of the CSV file can choose to re-arrange, add or remove columns without impacts on neither the code or the schema.   
 
+Here is a schema that could be used to parse the file above:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0">
+  <csvschema lineseparator="\n">
+    <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;" firstlineasschema="true">
+      <cell name="Middle name" ignoreread="true"/>
+      <cell name="Have dog"><format type="boolean" pattern="yes;no"/></cell>
+    </line>
+  </csvschema>
+</schema>
+```   
+As you can see in this example, not all cells are described in the schema. Only those cells where additional information 
+is needed from the schema needs to be present. By default a string cell is otherwise expected. For instance the values of the 
+`First name` column will still be parsed as if they are string value cells. This means that could have omitted all the `<cell>` elements
+from the schema above but then the parser would have parsed also the `Middle name` cells which we have no interest in 
+and the `Have dog` cell would have
+been parsed as string values `"yes"` and `"no"` instead of true boolean values. 
+
+It is important though that if you provide `<cell>` elements for such a schema, the cell names need to match exactly what 
+is specified in the header line. Matching is case sensitive.
+
+Providing default values for missing columns is a good example of where you would need to add `<cell>` elements.   
+
+When composing, if `firstlineasschema="true"` then the output will be produced according to the cell layout of the schema
+and with an additional header line with the name of the cells as specified by the schema. So in this case it is important that all the cells are present
+and in the correct position.
+
+## The Schema xml for fixed width files
+### Line
+### Cell
 
 ## Line types
 Within the schema, you specify a number of line types. When parsing, the type of the line is either denoted by it's position
 within the input (governed by the `occurs` attribute) or by a number of conditional cells. For one type of line you can for instance specify that the first cell
 has a specific constant value. When composing, the line type is assigned when you create the Line objects. When
 converting from one format to another, the line type names of the input and the output schema needs to match.
+
+## Internationalization 
 
 # Parsing
 ## Events for each line
@@ -171,26 +220,13 @@ that way you convert the text to any other text output format such as HTML.
 ## Using XML as input
 It is possilbe to parse an xml document that conforms to the XMLDocumentFormat.xsd (http://jsapar.tigris.org/XMLDocumentFormat/1.0).
 Use the class org.jsapar.XmlParser in order to parse an xml file and produce line parsed events.
+## Manipulating lines while converting
+
 # Further Examples
-The files for the examples below are provided in the <code>samples</code> folder of the project. The JUnit test <code>org.jsapar.JSaParExamplesTest.java</code>
-contains a more comprehensive set of examples of how to use the package. 
-<h3>Example of reading <b>CSV file</b> into a Document object according to an xml-schema:</h3>
-<div class="language-java highlighter-rouge">
-    <pre class="highlight">
-        <code>
-try(Reader schemaReader = new FileReader("samples/01_CsvSchema.xml");
-    Reader fileReader = new FileReader("samples/01_Names.csv")){
-   Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-   Parser parser = new Parser(xmlBuilder.build(schemaReader));
-   Document document = parser.build(fileReader);
-}
-        </code>
-    </pre>
-</div>
-<h3>Example of converting a <b>Fixed width file</b> into a <b>CSV file</b> according to two xml-schemas:</h3>
-<div class="language-java highlighter-rouge">
-    <pre class="highlight">
-        <code>
+The files for the examples below are provided in the <code>examples</code> folder of the project. The JUnit test <code>org.jsapar.JSaParExamplesTest.java</code>
+contains a more comprehensive set of examples of how to use the package.
+##Example of converting a <b>Fixed width file</b> into a <b>CSV file</b> according to two xml-schemas
+```java
 try(Reader inSchemaReader = new FileReader("samples/01_CsvSchema.xml");
     Reader outSchemaReader = new FileReader("samples/02_FixedWidthSchema.xml")) {
     Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
@@ -203,22 +239,17 @@ try(Reader inSchemaReader = new FileReader("samples/01_CsvSchema.xml");
     }
     Assert.assertTrue(outFile.isFile());
 }
-        </code>
-    </pre>
-</div>
-<h3>Example of converting a <b>CSV file</b> into a list of <b>Java objects</b> according to an xml-schema:</h3>
-<div class="language-java highlighter-rouge">
-    <pre class="highlight">
-        <code>
+```
+##Example of converting a <b>CSV file</b> into a list of <b>Java objects</b> according to an xml-schema
+```java
 Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");
 Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
 Reader fileReader = new FileReader("samples/07_Names.csv");
 Parser parser = new Parser(xmlBuilder.build(schemaReader));
 List&lt;CellParseError&gt; parseErrors = new LinkedList&lt;&gt;()
 List&lt;TestPerson&gt; people = parser.buildJava(fileReader, parseErrors);
-fileReader.close();</code>
-    </pre>
-</div>
+fileReader.close();
+```
 If you want to run this example, you will need the class org.jsapar.TstPerson within your classpath. 
 The class is not included in the jar file or in the binary package but it can be found in the source package. 
 As an alternative you can create your own TstPerson class and modify the schema 07_CsvSchemaToJava.xml to use that class instead. 
