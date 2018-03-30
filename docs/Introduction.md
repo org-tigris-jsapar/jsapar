@@ -169,7 +169,7 @@ Use the class Bean2TextConverter in order to convert java objects an output text
 Use the class Text2XmlConverter in order to produce a xml output. You can register a XSLT together with this converter and in
 that way you convert the text to any other text output format such as HTML.
 ## Using XML as input
-It is possilbe to parse an xml document that conforms to the XMLDocumentFormat.xsd (http://jsapar.tigris.org/XMLDocumentFormat/1.0).
+It is possible to parse an xml document that conforms to the XMLDocumentFormat.xsd (http://jsapar.tigris.org/XMLDocumentFormat/1.0).
 Use the class org.jsapar.XmlParser in order to parse an xml file and produce line parsed events.
 # Further Examples
 The files for the examples below are provided in the <code>samples</code> folder of the project. The JUnit test <code>org.jsapar.JSaParExamplesTest.java</code>
