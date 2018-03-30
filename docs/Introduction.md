@@ -115,7 +115,11 @@ sequence as line separator but for convenience the following escaped characters 
 * `\t` - TAB (horizontal tab) or hex 09.
 
 For Unix systems the normal line separator is `"\n"` and for Windows systems the normal line separator is `"\r\n"`. Omitting
-the `lineseparator` attribute will result that system default is used. For fixed with files you may also specify an 
+the `lineseparator` attribute will result in that the system default is used. Be aware though that if you rely on system 
+default, the schema will behave differently if you move it to a different platform. It is therefore recommended to always 
+specify the line separator explicitly.  
+
+For fixed width files you may also specify an 
 empty string if lines are determined only by the length of the line which can be the case for Mainframe computers (COBOL).
 
 When parsing, if you have specified one of either `"\n"` or `"\r\n"` as line separator, then the parser will consider both of them to be valid
@@ -126,8 +130,8 @@ line separators but when composing, only the specified line separator will be us
 
 ## Line types
 Within the schema, you specify a number of line types. When parsing, the type of the line is either denoted by it's position
-within the input or by a number of conditional cells. For one type of line you can for instance specify that the first cell
-has a specific constant value. When composing, the line type is determined when you create the Line objects. When
+within the input (governed by the `occurs` attribute) or by a number of conditional cells. For one type of line you can for instance specify that the first cell
+has a specific constant value. When composing, the line type is assigned when you create the Line objects. When
 converting from one format to another, the line type names of the input and the output schema needs to match.
 
 # Parsing
