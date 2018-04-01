@@ -68,11 +68,36 @@ The example above is a small simple example. For larger files you probably want 
 that handles each line immediately as it is parsed. This way you will never load the whole content of the input file in the memory.
 If you rather work with your own Java class directly instead of getting Line objects, you probably want to look at the Text2BeanConverter class.
 
-The advantage of this schema approach is that if you parse a large number of similar files you can adapt the schema
-file if the file format changes instead of making changes within your code.
+The code to use the JSaPar library to compose a file, using the schema above could look like this:
+```java
+try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
+     Writer writer = new FileWriter("out.csv")) {
+    Schema schema = Schema.ofXml(schemaReader);
+    TextComposer composer = new TextComposer(schema, writer);
+    Line line1 = new Line("Person")
+            .addCell(new StringCell("First name", "Erik"))
+            .addCell(new StringCell("Middle name", "Vidfare"));
+    LineUtils.setStringCellValue(line1, "Last name", "Svensson");
+    composer.composeLine(line1);
+
+    composer.composeLine(new Line("Person")
+            .addCell(new StringCell("First name", "Fredrik"))
+            .addCell(new StringCell("Last name", "Larsson"))
+            .addCell(new BooleanCell("Have dog", false)));
+}
+```
+In this example we
+1. Load the Schema from a file by using a FileReader for the schema file.
+1. Then we use that schema to create a TextComposer.
+1. Then we feed the composer with newly created Line objects. As you can see, the cell values can be set in some 
+different ways. The [Java doc](api) provides more details about your different options.
+
+The advantage of this schema approach is that if you parse or compose a large number of similar files you can adapt the 
+schema file if the file format changes instead of making changes within your code.
 
 # The schema
-The schema is what describes the format of the input or output. Usually the easiest way to work with a schema is to use the
+The schema is what describes the format of the input or output. The same schema can be used for both parsing and composing.
+Usually the easiest way to work with a schema is to use the
 xml format. The example below describes a simple schema for a CSV file taken from the first example above.
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -99,7 +124,7 @@ of the schema is located at.
 If you want to download the XSD as a file, you will probably need to right click on the link above and choose *"Save link as..."* depending on your browser.
 
 ## The Schema xml
-After the leading root `<schema>` element you need to define what type of input or output you have. Here there are two choises:
+After the leading root `<schema>` element you need to define what type of input or output you have. There are two choices:
 
 1. `<csvschema>`
 1. `<fixedwidthschema>`
@@ -113,6 +138,7 @@ sequence as line separator but for convenience the following escaped characters 
 * `\n` - LF (line feed) or hex 0A. 
 * `\r` - CR (carrige return) or hex 0D.
 * `\t` - TAB (horizontal tab) or hex 09.
+* `\f` - FF (form feed) or hex 0C.
 
 For Unix systems the normal line separator is `"\n"` and for Windows systems the normal line separator is `"\r\n"`. Omitting
 the `lineseparator` attribute will result in that the system default is used. Be aware though that if you rely on system 
@@ -127,6 +153,60 @@ line separators but when composing, only the specified line separator will be us
 
 ## The Schema xml for CSV 
 ### Line
+The `<line>` element describes a type of line that can occur in your input or output. For instance, you may have a 
+different header line that have a different set of columns than the rest of the file. The `occurs` attribute describes 
+how many lines to expect of a certain type. By setting `occurs="*"` you indicate that the line may occur infinite number 
+of times.
+
+The attribute `linetype` sets the name of the type of line described by the line element. When parsing, the line type is
+present in all parsed Line objects and can be used to determine how to treat the Line. When composing, you need to set the 
+lineType of all Line objects that you provide to the Composer in order to make it produce lines of a specific type.
+
+On this level you need to specify the `cellseparator` attribute which should describe how cells/columns are separated 
+within the input/output. You can use any character sequence 
+and you can use the same escaped characters as with the line separator described above. Please note that if the cell 
+separator may occur within a value of a cell, you will need to quote the cell. See chapter about Quoted values below.
+
+The attributes `ignoreread` and `ignorewrite` can be used to indicate that the line should be ignored while parsing or 
+composing.
+
+#### Line condition
+Sometimes the type of line is not determined by position but instead by the value of one of the cells. If you for instance have the following file to parse:
+```csv
+H;06_NamesControlCell.csv;2007-07-07
+B;Erik;Vidfare;Svensson
+B;Fredrik;;Larsson
+F;2
+```
+In this file, the value of the first column determines how to parse the rest of the line. `H` means header, `B` means body and `F` means footer.
+
+In order to parse file above, you can use a schema that looks like this:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0">
+  <csvschema lineseparator="\n">
+    <line linetype="Header" cellseparator=";">
+      <cell name="Type" default="H"><linecondition><match pattern="H"/></linecondition></cell>
+      <cell name="FileName"/>
+      <cell name="Created date"/>
+    </line>
+    <line linetype="Person" cellseparator=";" quotechar="&quot;">
+      <cell name="Type" default="B" ><linecondition><match pattern="B"/></linecondition></cell>
+      <cell name="First name"/>
+      <cell name="Middle name" ignoreread="true"/>
+      <cell name="Last name" />
+    </line>
+    <line linetype="Footer" cellseparator=";">
+      <cell name="Type" default="F"><linecondition><match pattern="F"/></linecondition></cell>
+      <cell name="Rowcount"/>
+    </line>
+  </csvschema>
+</schema>
+```
+When parsing a file with a schema like this, it is important that you check the line type of the returned Line instance.
+ 
+You may combine the a line condition with the `occurs` attribute. In this case, the `occurs` value indicates the maximum number
+of times that a line condition is checked.
 ### Cell
 ### Quoted values
 ### The first line describes cell layout
@@ -141,7 +221,7 @@ This type of format is supported by the library out-of-the-box. All you need to 
 `firstlineasschema="true"` on the `<line>` element. Then the order of the cell while parsing is no longer denoted by the 
 order of the `<cell>` elements in the schema. Instead the order is fetched from the first header row. It is important though that 
 the name of the cells within the schema matches the names in the header. The advantage of using such a format is that the
-producer of the CSV file can choose to re-arrange, add or remove columns without impacts on neither the code or the schema.   
+producer of the CSV file can choose to re-arrange, add or remove columns without impacts on neither the code nor the schema.   
 
 Here is a schema that could be used to parse the file above:
 ```xml
@@ -155,9 +235,9 @@ Here is a schema that could be used to parse the file above:
   </csvschema>
 </schema>
 ```   
-As you can see in this example, not all cells are described in the schema. Only those cells where additional information 
-is needed from the schema needs to be present. By default a string cell is otherwise expected. For instance the values of the 
-`First name` column will still be parsed as if they are string value cells. This means that could have omitted all the `<cell>` elements
+As you can see in this example, not all cells are described in the schema. Only those cells, where additional information 
+is needed from the schema, needs to be present. By default a string cell is otherwise expected. For instance the values of the 
+`First name` column will still be parsed as if they are string value cells. This means that we could have omitted all the `<cell>` elements
 from the schema above but then the parser would have parsed also the `Middle name` cells which we have no interest in 
 and the `Have dog` cell would have
 been parsed as string values `"yes"` and `"no"` instead of true boolean values. 
@@ -165,7 +245,7 @@ been parsed as string values `"yes"` and `"no"` instead of true boolean values.
 It is important though that if you provide `<cell>` elements for such a schema, the cell names need to match exactly what 
 is specified in the header line. Matching is case sensitive.
 
-Providing default values for missing columns is a good example of where you would need to add `<cell>` elements.   
+You may for instance provide default values for missing columns or specify that a cell is mandatory by adding a `<cell>` element for that column.   
 
 When composing, if `firstlineasschema="true"` then the output will be produced according to the cell layout of the schema
 and with an additional header line with the name of the cells as specified by the schema. So in this case it is important that all the cells are present

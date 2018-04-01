@@ -35,7 +35,7 @@ public class JSaParExamplesTest {
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Test
-    public final void testExampleCsv01()
+    public final void testExampleCsv01_parse()
             throws SchemaException, IOException, JSaParException {
         try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
              Reader fileReader = new FileReader("examples/01_Names.csv")) {
@@ -62,6 +62,31 @@ public class JSaParExamplesTest {
 
             assertEquals("Person", firstLine.getLineType());
             assertEquals("Person", document.getLine(1).getLineType());
+        }
+    }
+
+    @Test
+    public final void testExampleCsv01_compose()
+            throws SchemaException, IOException{
+        try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
+             StringWriter writer = new StringWriter()) {
+            Schema schema = Schema.ofXml(schemaReader);
+            TextComposer composer = new TextComposer(schema, writer);
+            Line line1 = new Line("Person")
+                    .addCell(new StringCell("First name", "Erik"))
+                    .addCell(new StringCell("Middle name", "Vidfare"));
+            LineUtils.setStringCellValue(line1, "Last name", "Svensson");
+            composer.composeLine(line1);
+
+            composer.composeLine(new Line("Person")
+                    .addCell(new StringCell("First name", "Fredrik"))
+                    .addCell(new StringCell("Last name", "Larsson"))
+                    .addCell(new BooleanCell("Have dog", false)));
+
+            String[] lines = writer.toString().split("\n");
+            assertEquals(2, lines.length);
+            assertEquals("Erik;Vidfare;Svensson;", lines[0]);
+            assertEquals("Fredrik;;Larsson;no", lines[1]);
         }
     }
 
