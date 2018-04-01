@@ -90,7 +90,8 @@ In this example we
 1. Load the Schema from a file by using a FileReader for the schema file.
 1. Then we use that schema to create a TextComposer.
 1. Then we feed the composer with newly created Line objects. As you can see, the cell values can be set in some 
-different ways. The [Java doc](api) provides more details about your different options.
+different ways. The [Java doc](api) provides more details about your different options. You may for instance feed lines 
+to the composer by using a java `Stream<Line>` or an `Iterator<Line>`. 
 
 The advantage of this schema approach is that if you parse or compose a large number of similar files you can adapt the 
 schema file if the file format changes instead of making changes within your code.
@@ -204,9 +205,16 @@ In order to parse file above, you can use a schema that looks like this:
 </schema>
 ```
 When parsing a file with a schema like this, it is important that you check the line type of the returned Line instance.
+
+You may add a line condition on any cell within your schema. If you add more than one line condition on the same line, 
+all of them need to comply in order for the line type to be used.
  
 You may combine the a line condition with the `occurs` attribute. In this case, the `occurs` value indicates the maximum number
-of times that a line condition is checked.
+of times that a line type is used when parsing.
+
+When composing, you set the value of the line condition cell as with any other cell so the line condition as no effect 
+when composing. By assigning a default value for the line condition cell as we do above, we make sure that we do not need 
+to assign any value to that cell while composing. 
 ### Cell
 ### Quoted values
 ### The first line describes cell layout
