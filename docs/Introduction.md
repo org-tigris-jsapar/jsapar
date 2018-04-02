@@ -255,7 +255,7 @@ The `pattern` attribute behaves differently depending on the type:
 * If the type is string then the pattern should contain a regular expression to which the value is validated against. See [java.util.regex.Pattern](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) This only works while parsing.
 * If the type is any of the numerical types, then the pattern should be described according to the [java.text.DecimalFormat](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html). See chapter Internationalization below to be able to handle locale specific formatting of numerical values.
 * If the type is date, then the pattern should be described according to [java.text.SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
-* If the type is boolean, the pattern should contain the true and false values separated with a ; character. Example: `pattern="Y;N"` will imply that Y represents true and N to represents false. Comparison while parsing is not case sensitive. Multiple true or false values can be specified, separated with the | character but the first value is always the one used while composing. Example: `pattern="Y|YES;N|NO"`
+* If the type is boolean, the pattern should contain the true and false values separated with a `;` character. Example: `pattern="Y;N"` will imply that `Y` represents true and `N` to represents false. Comparison while parsing is not case sensitive. Multiple true or false values can be specified, separated with the `|` character but the first value is always the one used while composing. Example: `pattern="Y|YES;N|NO"`
 
 If the `pattern` attribute is omitted, the default system pattern is used.
 ### Quoted values
