@@ -160,6 +160,7 @@
                integer
                float
                boolean
+               character
             Note that the number formats are parsed according to the specified locale.</xsd:documentation>
       </xsd:annotation>
       <xsd:simpleType>
@@ -382,10 +383,7 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
   		<xsd:extension base="SchemaCell">
   			<xsd:attribute name="maxlength" type="xsd:int">
   				<xsd:annotation>
-  					<xsd:documentation>The maximum length of the cell to read or write.
-While reading and writing, cell value will be silently trunkated to this length. If you want
-that an error should occur if length is too long, you should specify that in the
-format regexp pattern instead.
+  					<xsd:documentation>
   					</xsd:documentation>
   				</xsd:annotation>
   			</xsd:attribute>

@@ -44,21 +44,19 @@ parsing to be able to deal with them later.
 
 ## Resources
 <a href="https://github.com/org-tigris-jsapar/jsapar">Source code</a><br/>
-<a href="http://jsapar.tigris.org/servlets/ProjectDocumentList">Download binaries</a><br/>
-<a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">Maven coordinates</a><br/>
+<a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">Maven coordinates and binaries download</a><br/>
+<a href="http://jsapar.tigris.org/servlets/ProjectDocumentList">Download historical binaries</a><br/>
+<a href="http://jsapar.tigris.org">The original project web page with historical archive.</a><br/>
 
 ## Dependencies
 This project has no dependencies to other external libraries in runtime.
 
 However if you plan to build and test the source consider the following:
 
-<ul>
-    <li>To build the source it is recommended to use <a href="https://maven.apache.org/">Maven</a>. A Maven pom.xml is provided. As of version 1.6, the library is published in the public <a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">Maven repository</a>.</li>
-<li>The provided test classes require JUnit4 in order to run.</li>
-<li>Since JSaPar 1.5.0 the library in the download packages are built with java 1.7. Earlier versions of the library in the download packages are built with java 1.6 but with target compatibility level 1.5. It is no guarantee that the library will work for earlier version of Java.</li>
-<li>The upcoming JSaPar version 2.0 will require Java 1.8.</li>
-
-</ul>
+* To build the source it is recommended to use <a href="https://maven.apache.org/">Maven</a>. A Maven pom.xml is provided. As of version 1.6, the library is published in the public <a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">Maven repository</a>.
+* The provided test classes require JUnit4 in order to run.
+* Since JSaPar 1.5.0 the library in the download packages are built with java 1.7. Earlier versions of the library in the download packages are built with java 1.6 but with target compatibility level 1.5. It is no guarantee that the library will work for earlier version of Java.
+* JSaPar version 2.0 requires Java 1.8 or later.
 
 ## Other sources of information
 <ul>

@@ -68,6 +68,7 @@ The example above is a small simple example. For larger files you probably want 
 that handles each line immediately as it is parsed. This way you will never load the whole content of the input file in the memory.
 If you rather work with your own Java class directly instead of getting Line objects, you probably want to look at the Text2BeanConverter class.
 
+## Simple example of composing a CSV file
 The code to use the JSaPar library to compose a file, using the schema above could look like this:
 ```java
 try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
@@ -216,6 +217,47 @@ When composing, you set the value of the line condition cell as with any other c
 when composing. By assigning a default value for the line condition cell as we do above, we make sure that we do not need 
 to assign any value to that cell while composing. 
 ### Cell
+The `<cell>` element describes the format of a particular cell or column. Each cell needs to have a name. By default the 
+cell type is string so if you do not want the library to do any type conversion, the minimal configuration for a cell is:
+
+```xml
+<cell name="TheName"/>
+```
+With the attribute `default="true"`, you can specify that an error is generated if a cell does not have any value. See 
+chapter about error handling below.
+ 
+The attribute `default` can be used to assign a default value that will be used if the cell does not contain any value.
+
+As with lines, you can use `ignoreread` and `ignorewrite` on cell level to skip reading while parsing or to skip writing 
+a cell value while composing. If `ignorewrite=true`, an empty cell will be written as if it contained an empty string. 
+#### Cell formats
+If you want the library to do type conversion while parsing or composing, you need to specify the format of a cell. For 
+example, by adding the format:
+```xml
+<cell name="Birthdate"><format type="date" pattern="YYYY-mm-DD"/></cell>
+```
+The parser will convert string date values into DateCell containing a java.util.Date with the parsed date.
+
+The following types are supported:
+* string
+* character
+* decimal
+* integer
+* float
+* boolean
+* date
+* local_date
+* local_time
+* local_date_time
+* zoned_date_time
+
+The `pattern` attribute behaves differently depending on the type: 
+* If the type is string then the pattern should contain a regular expression to which the value is validated against. See [java.util.regex.Pattern](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) This only works while parsing.
+* If the type is any of the numerical types, then the pattern should be described according to the [java.text.DecimalFormat](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html). See chapter Internationalization below to be able to handle locale specific formatting of numerical values.
+* If the type is date, then the pattern should be described according to [java.text.SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
+* If the type is boolean, the pattern should contain the true and false values separated with a ; character. Example: `pattern="Y;N"` will imply that Y represents true and N to represents false. Comparison while parsing is not case sensitive. Multiple true or false values can be specified, separated with the | character but the first value is always the one used while composing. Example: `pattern="Y|YES;N|NO"`
+
+If the `pattern` attribute is omitted, the default system pattern is used.
 ### Quoted values
 ### The first line describes cell layout
 It is quite common in CSV files to have one header row that contains the name of the columns within the file. For instance, the file might look like this:
@@ -291,6 +333,9 @@ The JSaPar library contains some convenient implementations of the org.jsapar.pa
             register a consumer line event listener that is called from a separate consumer thread.</td></tr>
 </table>
 
+## Error handling 
+# Composing
+## Error handling 
 # Converting
 ## Text to text
 If you are only interesting in converting a file of one format into another, you can use the org.jsapar.Text2TextConverter where you specify the input and the output schema for the conversion.
@@ -334,8 +379,8 @@ Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");
 Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
 Reader fileReader = new FileReader("samples/07_Names.csv");
 Parser parser = new Parser(xmlBuilder.build(schemaReader));
-List&lt;CellParseError&gt; parseErrors = new LinkedList&lt;&gt;()
-List&lt;TestPerson&gt; people = parser.buildJava(fileReader, parseErrors);
+List<CellParseError> parseErrors = new LinkedList<>()
+List<TestPerson> people = parser.buildJava(fileReader, parseErrors);
 fileReader.close();
 ```
 If you want to run this example, you will need the class org.jsapar.TstPerson within your classpath. 
