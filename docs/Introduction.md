@@ -223,7 +223,7 @@ cell type is string so if you do not want the library to do any type conversion,
 ```xml
 <cell name="TheName"/>
 ```
-With the attribute `default="true"`, you can specify that an error is generated if a cell does not have any value. See 
+With the attribute `mandatory="true"`, you can specify that an error is generated if a cell does not have any value. See 
 chapter about error handling below.
  
 The attribute `default` can be used to assign a default value that will be used if the cell does not contain any value.
