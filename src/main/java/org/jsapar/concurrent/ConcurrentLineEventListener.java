@@ -22,7 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * gets called from the consumer thread each time there is a line parse event in the producer thread.
  * <p>
  * If a worker thread event listener should throw an exception, the worker thread is immediately terminated and the
- * excption is encapsulated in a {@link JSaParException} and forwarded to the calling thread upon first available occation.
+ * exception is encapsulated in a {@link JSaParException} and forwarded to the calling thread upon first available occasion.
  * <p>
  * When the internal queue is full, the producing thread starts blocking. This means that it waits for an available slot
  * in the queue before it continues parsing.
@@ -83,8 +83,8 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
         @Override
         public void run() {
             try {
-                running = true;
                 onStart.forEach(Runnable::run);
+                running = true;
                 while (!shouldStop) {
                     LineParsedEvent event = events.take();
                     if (shouldStop) {
@@ -103,8 +103,8 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
                     shouldStop = true;
                 }
             } finally {
-                running = false;
                 onStop.forEach(Runnable::run);
+                running = false;
             }
         }
     }
@@ -143,7 +143,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
         // Wait for the consumer thread to start before returning.
         while (!isRunning() && !shouldStop)
             try {
-                Thread.sleep(10L);
+                Thread.sleep(1L);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -177,13 +177,13 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
         try {
             if(Thread.currentThread() != this.thread) {
                 while (running && !events.isEmpty()) {
-                    Thread.sleep(100L);
+                    Thread.sleep(1L);
                 }
             }
             stop();
             if(Thread.currentThread() != this.thread) {
                 while (running) {
-                    Thread.sleep(100L);
+                    Thread.sleep(1L);
                 }
             }
         } catch (InterruptedException e) {
