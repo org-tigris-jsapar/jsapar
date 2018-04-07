@@ -39,7 +39,7 @@ parsing to be able to deal with them later.
 
 ## Documentation
 * [Introduction](introduction)
-* [Basics of Schema](schemaintroduction)
+* [Basics of Schema](basics_schema)
 * [Javadocs API documentation](api)
 * [Upgrading from JSaPar 1.x versions](upgradingfrom1)
 

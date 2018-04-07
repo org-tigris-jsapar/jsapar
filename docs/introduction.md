@@ -2,8 +2,6 @@
 layout: default
 title: JSaPar Introduction
 --- 
-[Home](index) | [Introduction](introduction) | [Baics of Schemas](schemaintroduction)
-
 # Java Schema Parser
 The <a href="api/index.html">javadoc</a> contains more comprehensive documentation regarding the classes mentioned below. <br/><br/>
 The JSaPar is a java library that provides a parser for flat and CSV (Comma Separated Values) files.
@@ -41,6 +39,7 @@ In order to parse this type of files you first need to define a schema of the fi
   </csvschema>
 </schema>
 ```
+The page [Basics of Schemas](basics_schema) describes schemas in more details. 
 
 The code that you need to write in order to use the JSaPar library to parse files of this type is this:
 ```java
@@ -65,12 +64,14 @@ instance contains a list of Line objects where each Line represent a line in the
 with the parsed result, we may for example use the LineUtils class that contains a number of convenient methods to get cell
 values of different types from a Line.
 
+That is all you need to parse a CSV file.
+
 The example above is a small simple example. For larger files you probably want to implement a different event listener
-that handles each line immediately as it is parsed. This way you will never load the whole content of the input file in the memory.
+that handles each line immediately as it is parsed. That way you will never load the whole content of the input file in the memory.
 If you rather work with your own Java class directly instead of getting Line objects, you probably want to look at the Text2BeanConverter class.
 
 ## Simple example of composing a CSV file
-The code to use the JSaPar library to compose a file, using the schema above could look like this:
+The code to use the JSaPar library to compose a file, using the same schema as when parsing above, could look like this:
 ```java
 try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
      Writer writer = new FileWriter("out.csv")) {
@@ -98,47 +99,36 @@ to the composer by using a java `Stream<Line>` or an `Iterator<Line>`.
 The advantage of this schema approach is that if you parse or compose a large number of similar files you can adapt the 
 schema file if the file format changes instead of making changes within your code.
 
-# Parsing
-## Events for each line
-For very large files there can be a problem to build the complete org.jsapar.model.Document in the memory before further processing.
-It may simply take up to much memory. 
-All parsers in this library requires that you provide an event handler that implements org.jsapar.parse.LineEventListener while parsing.
+## Simple example of parsing and composing fixed width file
+As long as only the file format differs, only the schema needs to change. That is the whole idea of working with schemas.
+This means that if you want to parse or compose fixed with file you can use exactly the same code as with the CSV example 
+above. The only thing that needs to be changed is the schema.
 
-The JSaPar library contains some convenient implementations of the org.jsapar.parse.LineEventListener interface:
-<table>
-    <tr><td><b>org.jsapar.parse. DocumentBuilderLineEventListener</b></td>
-        <td>For smaller files you may want to handle all
-        the events after the parsing is complete. In that case you may choose to use this implementation.
-        That listener builds a org.jsapar.model.Document object containing all the parsed lines that you can iterate afterwards.</td></tr>
-    <tr><td><b>org.jsapar.parse. MulticastLineEventListener</b></td>
-        <td>If you need to handle the events in multiple event listener implementation, this implementation provides a
-            way to register multiple line event listeners which are called one by one for each line event.</td></tr>
-    <tr><td><b>org.jsapar.concurrent. ConcurrentLineEventListener</b></td>
-        <td>This implementation separates the parsing thread from the consuming thread. It makes it possible for you to
-            register a consumer line event listener that is called from a separate consumer thread.</td></tr>
-</table>
+If you have a fixed with file that looks like this:
+```text
+Erik    Vidfare   Svensson Y
+Fredrik Allvarlig Larsson  N
+Alfred  Stark     Nilsson  Y
+```
+...you can use a schema like this to parse (or compose) it:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0">
+<fixedwidthschema lineseparator="\n">
+    <line linetype="Person" occurs="*" >
+      <cell name="First name" length="8"/>
+      <cell name="Middle name" length="10" ignoreread="true"/>
+      <cell name="Last name" length="9"/>
+      <cell name="Have dog" length="1"><format type="boolean" pattern="Y;N"/></cell>
+    </line>
+  </fixedwidthschema>
+</schema>
+``` 
+The noticeable difference from working with CSV files above is that you need to specify a length for the cell. The length 
+describes how many character each cell/column has.
 
-## Error handling 
-# Composing
-## Error handling 
-# Converting
-## Text to text
-If you are only interesting in converting a file of one format into another, you can use the org.jsapar.Text2TextConverter where you specify the input and the output schema for the conversion.
-The converter uses the event mechanism under the hood, thus it reads, converts and writes one line at a time.
-This means it is very lean regarding memory usage.
-## Text to Java beans
-Use the org.jsapar.Text2BeanConverter in order to build java objects for each line in a file (or input).
-Note that in order to be able to use this feature, the schema have to be carefully written. 
-For instance, the line type (name) of the line within the schema have to contain the complete class name of the java class to build for each line. 
-## Java objects to text
-Use the class Bean2TextConverter in order to convert java objects an output text file according to a schema.
-## Text to markup (XML or HTML)
-Use the class Text2XmlConverter in order to produce a xml output. You can register a XSLT together with this converter and in
-that way you convert the text to any other text output format such as HTML.
-## Using XML as input
-It is possible to parse an xml document that conforms to the XMLDocumentFormat.xsd (http://jsapar.tigris.org/XMLDocumentFormat/1.0).
-Use the class org.jsapar.XmlParser in order to parse an xml file and produce line parsed events.
-## Manipulating lines while converting
+Here you can see the advantage of keeping the format of the file separated from your Java code. If the file format 
+changes you do not need to alter your code.
 
 # Further Examples
 The files for the examples below are provided in the <code>examples</code> folder of the project. The JUnit test <code>org.jsapar.JSaParExamplesTest.java</code>
