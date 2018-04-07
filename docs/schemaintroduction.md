@@ -1,6 +1,6 @@
 ---
 layout: page
-title: JSaPar Introduction
+title: Basics of JSaPar Schemas
 ---
 
 # The schema
