@@ -38,9 +38,10 @@ parsing to be able to deal with them later.
 * Support for localisation.
 
 ## Documentation
-<a href="Introduction">Introduction</a><br/>
-<a href="upgradingfrom1">Upgrading from JSaPar 1.x versions</a><br/>
-<a href="api">Javadocs API documentation</a><br/>
+* [Introduction](introduction)
+* [Basics of Schema](schemaintroduction)
+* [Javadocs API documentation](api)
+* [Upgrading from JSaPar 1.x versions](upgradingfrom1)
 
 ## Resources
 <a href="https://github.com/org-tigris-jsapar/jsapar">Source code</a><br/>
