@@ -33,6 +33,8 @@ public class Text2TextConverter extends AbstractConverter {
     }
 
     /**
+     * Converts text read from the reader according to the parse schema and writes the output to the writer according
+     * to the compose schema.
      * @param reader The reader to read input from
      * @param writer The writer to write converted result to.
      * @return Number of converted lines.

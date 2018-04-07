@@ -34,12 +34,6 @@ public class ConcurrentText2TextConverter extends Text2TextConverter implements 
         super(parseSchema, composeSchema, parseConfig);
     }
 
-    /**
-     * @param reader The reader to read input from
-     * @param writer The writer to write converted result to.
-     * @return Number of converted lines.
-     * @throws IOException In case of IO error
-     */
     public long convert(Reader reader, Writer writer) throws IOException {
         return execute(convertTaskFactory.makeConvertTask(makeParseTask(reader), makeComposer(writer)));
     }
