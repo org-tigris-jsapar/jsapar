@@ -1,10 +1,10 @@
 package org.jsapar.concurrent;
 
-import org.jsapar.TextComposer;
-import org.jsapar.convert.ConvertTask;
 import org.jsapar.error.JSaParException;
-import org.jsapar.parse.text.TextParseTask;
-import org.jsapar.schema.*;
+import org.jsapar.schema.CsvSchemaCell;
+import org.jsapar.schema.CsvSchemaLine;
+import org.jsapar.schema.FixedWidthSchemaCell;
+import org.jsapar.schema.FixedWidthSchemaLine;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,11 +12,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import static org.junit.Assert.assertSame;
-
 /**
  */
-public class ConcurrentText2TextConvertTaskTest {
+public class ConcurrentText2TextConverterTest {
 
 
     @Test

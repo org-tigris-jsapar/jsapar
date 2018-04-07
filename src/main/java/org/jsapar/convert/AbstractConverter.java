@@ -2,6 +2,7 @@ package org.jsapar.convert;
 
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Line;
+import org.jsapar.schema.Schema;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,6 +32,9 @@ public abstract class AbstractConverter {
     private List<LineManipulator> manipulators = new java.util.LinkedList<>();
     private ErrorEventListener errorListener;
 
+    public AbstractConverter() {
+    }
+
     /**
      * Adds LineManipulator to this converter. All present line manipulators are executed for each
      * line.
@@ -54,4 +58,5 @@ public abstract class AbstractConverter {
             convertTask.setErrorEventListener(errorListener);
         return convertTask.execute();
     }
+
 }

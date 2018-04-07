@@ -1,47 +1,45 @@
 package org.jsapar.concurrent;
 
-import org.jsapar.Text2TextConverter;
-import org.jsapar.TextComposer;
+import org.jsapar.Bean2TextConverter;
 import org.jsapar.convert.AbstractConverter;
-import org.jsapar.parse.text.TextParseConfig;
-import org.jsapar.parse.text.TextParseTask;
+import org.jsapar.parse.bean.BeanMap;
 import org.jsapar.schema.Schema;
 
+import java.beans.IntrospectionException;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
+import java.util.Iterator;
+import java.util.stream.Stream;
 
 /**
- * A multi threaded version of {@link org.jsapar.Text2TextConverter} where the composer is started in a separate worker
+ * A multi threaded version of {@link org.jsapar.Bean2TextConverter} where the composer is started in a separate worker
  * thread.
  * See {@link AbstractConverter} for details about error handling and manipulating data.
  * <p>
  * As a rule of thumb while working with normal files on disc, don't use this concurrent version unless your input
  * normally exceeds at least 1MB of data, as the overhead of starting
  * a new thread and synchronizing threads are otherwise greater than the gain by the concurrency.
- *
- * @see ConcurrentConvertTask
- * @see org.jsapar.Text2TextConverter
+ * @param <T> The base class for the beans to convert.
  */
-public class ConcurrentText2TextConverter extends Text2TextConverter {
+public class ConcurrentBean2TextConverter<T> extends Bean2TextConverter<T>{
     private ConcurrentConvertTaskFactory convertTaskFactory = new ConcurrentConvertTaskFactory();
 
-    public ConcurrentText2TextConverter(Schema parseSchema, Schema composeSchema) {
-        super(parseSchema, composeSchema);
+    public ConcurrentBean2TextConverter(Schema composerSchema) throws IntrospectionException, ClassNotFoundException {
+        super(composerSchema);
     }
 
-    public ConcurrentText2TextConverter(Schema parseSchema, Schema composeSchema, TextParseConfig parseConfig) {
-        super(parseSchema, composeSchema, parseConfig);
+    public ConcurrentBean2TextConverter(Schema composerSchema, BeanMap beanMap) {
+        super(composerSchema, beanMap);
     }
 
-    /**
-     * @param reader The reader to read input from
-     * @param writer The writer to write converted result to.
-     * @return Number of converted lines.
-     * @throws IOException In case of IO error
-     */
-    public long convert(Reader reader, Writer writer) throws IOException {
-        return execute(convertTaskFactory.makeConvertTask(makeParseTask(reader), makeComposer(writer)));
+    @Override
+    public void convert(Stream<? extends T> stream, Writer writer) throws IOException {
+        execute(convertTaskFactory.makeConvertTask(makeParseTask(stream), makeComposer(writer)));
+    }
+
+    @Override
+    public void convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
+        execute(convertTaskFactory.makeConvertTask(makeParseTask(iterator), makeComposer(writer)));
     }
 
     /**
@@ -67,5 +65,4 @@ public class ConcurrentText2TextConverter extends Text2TextConverter {
     public void registerOnStop(Runnable onStop) {
         this.convertTaskFactory.registerOnStop(onStop);
     }
-
 }

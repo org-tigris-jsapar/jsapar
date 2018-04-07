@@ -18,11 +18,12 @@ import java.io.Writer;
 public class Text2TextConverter extends AbstractConverter {
     private final Schema parseSchema;
     private final Schema composeSchema;
-    private TextParseConfig parseConfig = new TextParseConfig();
+    private TextParseConfig parseConfig;
 
     public Text2TextConverter(Schema parseSchema, Schema composeSchema) {
         this.parseSchema = parseSchema;
         this.composeSchema = composeSchema;
+        parseConfig = new TextParseConfig();
     }
 
     public Text2TextConverter(Schema parseSchema, Schema composeSchema, TextParseConfig parseConfig) {
@@ -38,9 +39,16 @@ public class Text2TextConverter extends AbstractConverter {
      * @throws IOException In case of IO error
      */
     public long convert(Reader reader, Writer writer) throws IOException {
-        TextParseTask parseTask = new TextParseTask(this.parseSchema, reader, parseConfig);
-        ConvertTask convertTask = new ConvertTask(parseTask, new TextComposer(composeSchema, writer));
+        ConvertTask convertTask = new ConvertTask(makeParseTask(reader), makeComposer(writer));
         return execute(convertTask);
+    }
+
+    protected TextComposer makeComposer(Writer writer) {
+        return new TextComposer(composeSchema, writer);
+    }
+
+    protected TextParseTask makeParseTask(Reader reader) {
+        return new TextParseTask(parseSchema, reader, parseConfig);
     }
 
     public TextParseConfig getParseConfig() {
@@ -50,4 +58,13 @@ public class Text2TextConverter extends AbstractConverter {
     public void setParseConfig(TextParseConfig parseConfig) {
         this.parseConfig = parseConfig;
     }
+
+    public Schema getParseSchema() {
+        return parseSchema;
+    }
+
+    public Schema getComposeSchema() {
+        return composeSchema;
+    }
+
 }

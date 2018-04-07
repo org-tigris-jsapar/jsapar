@@ -138,7 +138,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
     public void start() {
         if(isRunning())
             return;
-        thread = new Thread(new WorkingThread());
+        thread = new Thread(new WorkingThread(), Thread.currentThread().getName() + "-listener");
         thread.start();
         // Wait for the consumer thread to start before returning.
         while (!isRunning() && !shouldStop)

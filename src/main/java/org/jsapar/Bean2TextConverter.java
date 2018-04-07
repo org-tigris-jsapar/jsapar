@@ -56,10 +56,7 @@ public class Bean2TextConverter<T> extends AbstractConverter {
      * @throws IOException If there is an error writing text output.
      */
     public void convert(Stream<? extends T> stream, Writer writer) throws IOException {
-        TextComposer composer = new TextComposer(this.composerSchema, writer);
-        BeanParseTask<T> parseTask = new BeanParseTask<>(stream, beanMap);
-        ConvertTask convertTask = new ConvertTask(parseTask, composer);
-        execute(convertTask);
+        execute(new ConvertTask(makeParseTask(stream), makeComposer(writer)));
     }
 
     /**
@@ -69,10 +66,20 @@ public class Bean2TextConverter<T> extends AbstractConverter {
      * @throws IOException If there is an error writing text output.
      */
     public void convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
-        TextComposer composer = new TextComposer(this.composerSchema, writer);
-        BeanParseTask<T> parseTask = new BeanParseTask<>(iterator, beanMap);
-        ConvertTask convertTask = new ConvertTask(parseTask, composer);
+        ConvertTask convertTask = new ConvertTask(makeParseTask(iterator), makeComposer(writer));
         execute(convertTask);
+    }
+
+    protected TextComposer makeComposer(Writer writer) {
+        return new TextComposer(this.composerSchema, writer);
+    }
+
+    protected BeanParseTask<T> makeParseTask(Stream<? extends T> stream) {
+        return new BeanParseTask<>(stream, beanMap);
+    }
+
+    protected BeanParseTask<T> makeParseTask(Iterator<? extends T> iterator) {
+        return new BeanParseTask<>(iterator, beanMap);
     }
 
     /**
