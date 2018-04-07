@@ -24,7 +24,7 @@ import java.io.IOException;
  * false for the lines that should not be composed.
  *
  */
-public class ConcurrentConvertTask extends ConvertTask {
+public class ConcurrentConvertTask extends ConvertTask implements ConcurrentStartStop{
     private ConcurrentLineEventListener concurrentLineEventListener = new ConcurrentLineEventListener(new LineForwardListener());
     /** Creates a converter
      * @param parseTask The parseTask to use while parsing
@@ -43,24 +43,10 @@ public class ConcurrentConvertTask extends ConvertTask {
     }
 
 
-    /**
-     * Each registered onStart runnable will be called in the same order that they were registered by consumer thread
-     * when it starts up but before it starts handling any event. Use this in order to
-     * implement initialization needed for the new
-     * thread.
-     * @param onStart The runnable that will be called by consumer thread when starting up.
-     */
     public void registerOnStart(Runnable onStart){
         this.concurrentLineEventListener.registerOnStart(onStart);
     }
 
-    /**
-     * Each registered onStop runnable will be called in the same order that they were registered by consumer
-     * thread just before it dies. Use this in order to
-     * implement resource dealoccation etc. These handlers are called also when the thread is terminated with an exception so
-     * be aware that you may end up here also when a serious error has occurred.
-     * @param onStop The runnable that will be called by consumer thread when stopping.
-     */
     public void registerOnStop(Runnable onStop){
         this.concurrentLineEventListener.registerOnStop(onStop);
     }
