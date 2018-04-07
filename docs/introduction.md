@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: JSaPar Introduction
 --- 
 # Java Schema Parser
