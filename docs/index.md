@@ -48,10 +48,11 @@ into any markup language by the use of xslt.
 * [Upgrading from JSaPar 1.x versions](upgradingfrom1)
 
 ## Resources
-<a href="https://github.com/org-tigris-jsapar/jsapar">Source code</a><br/>
-<a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">Maven coordinates and binaries download</a><br/>
-<a href="http://jsapar.tigris.org/servlets/ProjectDocumentList">Download historical binaries</a><br/>
-<a href="http://jsapar.tigris.org">The original project web page with historical archive.</a><br/>
+* [Source code and issues](https://github.com/org-tigris-jsapar/jsapar)
+* <a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">Maven coordinates and binaries download</a><br/>
+* <a href="http://jsapar.tigris.org/servlets/ProjectDocumentList">Download historical binaries</a><br/>
+* <a href="http://jsapar.tigris.org">The original project web page with historical archive.</a><br/>
+* For questions about usage, use [Stack overflow with the jsapar tag](https://stackoverflow.com/questions/tagged/jsapar)
 
 ## Dependencies
 This project has no dependencies to other external libraries in runtime.
