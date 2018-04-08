@@ -9,33 +9,37 @@ JSaPar is a Java library providing a schema based parser and composer of CSV (Co
 The goal of this project is a java library that removes the burden of parsing and composing flat files and csv files from the developer.
 
 The library should
-* Be simple to use.
-* Possible to extend.
-* Separate the format of the parsed/composed file from the parsing/composing code by the use of schemas.
+* Be easy to use for both simple and complex situations.
+* Be possible to extend.
+* Have a low memory impact and good performance.
+* Be flexible to use in different situations.
+* Be independent of other (third party) libraries.
+* Use schemas in order to distinctly separate the description of the format of the data source from the code.
+* Unburden the tremendous tasks of a developer dealing with fixed width and delimited data sources.
 
 ## Existing features
 * Support for flat files with fixed positions.
-* Support for CSV files.
+* Support for CSV and all other delimited files such as TAB-separated or multi character separated.
+* Configurable line separator character sequence.
+* Support for quoted CSV cells.
+* Support for multi line quoted CSV cells. Line breaks are allowed within quoted cells.
+* Support for type conversion while parsing and composing.
+* Can handle internationalization of numbers and dates both while parsing and composing.
+* Support for different type of lines where line type is determined by the value of defined "condition cells". 
 * Support converting Java objects to or from any of the other supported input or output formats.
 * The schema can be expressed with xml notation or created directly within the java code.
 * The parser can either produce a Document class, representing the content of the file, or you can choose to receive
  events for each line that has been successfully parsed.
 * Can handle huge files without loading everything into memory.
 * The output Document class contains a list of lines which contains a list of cells.
-* The Document class can be transformed into a Java object (via reflection) if the schema is carefully written or by
-applying a mapping configuration.
-* It is also possible to produce java objects directly by using a converter.
-* It is possible convert a list of java objects into a file according to a schema if the schema is carefully written
-or by applying a mapping configuration.
-    <!--<li>The Document class can be transformed into a xml file (according to an internal xml schema).-->
-* The Document class can be built from a xml file (according to an internal xml schema).
 * The input and outputs are given by java.io.Reader and java.io.Writer which means that it is not necessarily files
 that are parsed or generated.
-* The file parsing schema contains information about how to parse each cell regarding data type and syntax.
+* The schema contains information about the format of each cell regarding data type and syntax.
 * Parsing errors can either be handled by exceptions thrown at first error or the errors can be collected during
 parsing to be able to deal with them later.
+* Support for consuming or producing an internal xml format which can be used to transform any of the supported formats 
+into any markup language by the use of xslt.
 * JUnit tests for most classes within the library.
-* Support for localisation.
 
 ## Documentation
 * [Introduction](introduction)
