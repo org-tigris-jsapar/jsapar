@@ -151,4 +151,33 @@ public class LineTest {
         assertFalse(line.containsNonEmptyCell("LastName", CellType.STRING));
     }
 
+    @Test
+    public void testGetNonEmptyCell() {
+        Line line = new Line("TestLine");
+        line.addCell(new StringCell("FirstName", "Nils"));
+        line.addCell(StringCell.emptyOf("LastName"));
+
+        assertEquals("Nils", line.getNonEmptyCell("FirstName").map(Cell::getStringValue).orElse(""));
+        assertFalse(line.getNonEmptyCell("LastName").isPresent());
+        assertFalse(line.getNonEmptyCell("DoesNotExist").isPresent());
+    }
+
+    @Test
+    public void testGetExistingCell() {
+        Line line = new Line("TestLine");
+        line.addCell(new StringCell("FirstName", "Nils"));
+        line.addCell(StringCell.emptyOf("LastName"));
+
+        assertEquals("Nils", line.getExistingCell("FirstName").getStringValue());
+        assertEquals("", line.getExistingCell("LastName").getStringValue());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testGetExistingCell_nonExisting() {
+        Line line = new Line("TestLine");
+
+        line.getExistingCell("NonExisting");
+        fail("Should throw exception");
+    }
+
 }

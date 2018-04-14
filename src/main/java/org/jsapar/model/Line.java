@@ -170,11 +170,9 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      *
      * @param name The name of the cell to get
      * @return Optional cell that is set if there is a cell with specified name and that cell is not empty.
-     * @throws IllegalStateException if there is no cell with the specified name.
      */
     public Optional<Cell> getNonEmptyCell(String name) {
-        Cell c = getExistingCell(name);
-        return c.isEmpty() ? Optional.empty() : Optional.of(c);
+        return getCell(name).filter(c->!c.isEmpty());
     }
     /**
      * Gets the number of cells that this line contains.
