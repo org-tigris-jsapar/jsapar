@@ -17,7 +17,7 @@ beans, that is instead considered converting.
 ## org.jsapar.model.Document
 The `Document` class is equivalent of the [DOM Document](https://en.wikipedia.org/wiki/Document_Object_Model) while parsing xml.
 It is the container of all the following `Lines`. The `Document` class should only be used when handling small sized 
-data since it contains all the lines in memory. When dealing with larger data inputs or outputs you should use the `Line`
+data since it stores all the lines in memory. When dealing with larger data inputs or outputs you should use the `Line`
 directly, using events while parsing or feeding lines one-by-one while composing.
 
 You can add lines to a document and you can iterate existing lines.
@@ -82,9 +82,9 @@ These type of errors indicate a bug or maybe a error reading the input.
  
 ### Format errors
 Format error are handled by the library in a similar way as with line parsed events. An event is fired for every error 
-and passed to a registered `ErrorEventListener` by default, the `ExceptionErrorEventListener` is registered so if you 
-don't do anything, an exception will be thrown at first error. As with the line event listener ,there are some provided 
-alternatives, in the 'org.jsapar.error' package, to use if you don't want to implement your own:
+and passed to a registered `ErrorEventListener`. By default, the `ExceptionErrorEventListener` is registered so if you 
+don't do anything, an exception will be thrown at first error. As with the line event listener there are some provided 
+alternatives, in the `org.jsapar.error` package, to use if you don't want to implement your own:
 
 `ExceptionErrorEventListener` | Throws an exception upon the first error
 `RecordingErrorEventListener` | Records all errors in a list and allows you to retrieve all errors when parsing is done.
@@ -93,9 +93,9 @@ alternatives, in the 'org.jsapar.error' package, to use if you don't want to imp
 
 Each error event contains detailed information about where in the input the error occurred and what was the cause of the errors. 
 
-You can also access all errors that have occurred while parsing directly on the `Line` object so if you want to deal with the
+You can also access all errors that have occurred while parsing a line directly on the `Line` object so if you want to deal with the
 errors together with you parsing code, you can just register an error event listener that does nothing in order to avoid 
-exceptions and handle errors when dealing with the lines.  
+exceptions and handle errors when dealing with the lines instead.  
 # Composing
 ## Error handling 
 # Converting

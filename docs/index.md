@@ -43,6 +43,7 @@ into any markup language by the use of xslt.
 
 ## Documentation
 * [Introduction](introduction)
+* [Basics](basics)
 * [Basics of Schema](basics_schema)
 * [Javadocs API documentation](api)
 * [Upgrading from JSaPar 1.x versions](upgradingfrom1)
