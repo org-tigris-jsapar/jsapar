@@ -2,8 +2,10 @@
 layout: default
 title: JSaPar Contents
 ---
+JSaPar = **J**ava **S**chem**a** based **Par**ser
 
-JSaPar is a Java library providing a schema based parser and composer of CSV (Comma Separated Values) and flat files.
+JSaPar is a Java library providing a schema based parser and composer of almost all sorts of delimited and fixed 
+width files.
 
 ## Mission
 The goal of this project is a java library that removes the burden of parsing and composing flat files and csv files from the developer.
@@ -39,7 +41,8 @@ that are parsed or generated.
 parsing to be able to deal with them later.
 * Support for consuming or producing an internal xml format which can be used to transform any of the supported formats 
 into any markup language by the use of xslt.
-* JUnit tests for most classes within the library.
+## Quality goals
+* Unit tests for (almost) all classes within the library.
 
 ## Documentation
 * [Introduction](introduction)

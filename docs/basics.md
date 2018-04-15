@@ -6,13 +6,12 @@ This article will describe the basics of using the library. Since schemas are a 
 described in this separate article](basics_chema).
 
 There are three different tasks that the JSaPar library can be used for:
-1. **Parsing** - Parsing a text source and handle the result in code. 
-2. **Composing** - Compose text output by feeding information in java code. 
+1. **Parsing** - Parsing a text source into the internal data model and handle the result in code. 
+2. **Composing** - Compose text output by feeding data of the internal data model in java code. 
 3. **Converting**  - Convert one source into an output on a different format.
 
-All parsers uses uses the internal data model described below as output   
-and all the composers uses that data model as input. When it comes to other data forms, for instance parsing text into Java 
-beans, that is instead considered converting.    
+All parsers uses uses the internal data model described below as output and all the composers uses that data model as input. 
+When it comes to other data forms, for instance parsing text into Java beans, that is instead considered converting.    
 # The model
 ## org.jsapar.model.Document
 The `Document` class is equivalent of the [DOM Document](https://en.wikipedia.org/wiki/Document_Object_Model) while parsing xml.
@@ -35,7 +34,7 @@ The `org.jsapar.model.LineUtils` class contains a large set of utility functions
 line by native java types. 
  
 # Parsing
-When we talk about parsing, we mean parsing a text source. A text source can be for instance either a delimited file such as CSV or a 
+When we talk about parsing below, we mean parsing a text source into the internal data model described above. A text source can be for instance either a delimited file such as CSV or a 
 fixed width file. 
 
 In order to parse a text source we use the `org.jsapar.TextParser` class. As we saw in the the initial example earlier you create an 
@@ -97,22 +96,144 @@ You can also access all errors that have occurred while parsing a line directly 
 errors together with you parsing code, you can just register an error event listener that does nothing in order to avoid 
 exceptions and handle errors when dealing with the lines instead.  
 # Composing
+When we talk about composing below, we mean composing a text output out of the internal data model described above.
+
+In order to compose a text output we use the `org.jsapar.TextComposer` class. As in the introduction example we create a `TextComposer` 
+by supplying a schema and a writer. The schema is used to format the output. 
+
+```java
+...
+    TextComposer composer = new TextComposer(schema, writer);
+    composer.composeLine(new Line("Person")
+            .addCell(new StringCell("First name", "Fredrik"))
+            .addCell(new StringCell("Last name", "Larsson"))
+            .addCell(new BooleanCell("Have dog", false)));
+...
+```
+Then we feed the composer with lines. There are some options when it comes to feeding data to the composer. You may:
+
+* Feed lines one by one by calling `composeLine()` method for each line
+* Feed an entire `Document` instance  
+* Provide a `java.util.stream.Stream<Line>` with lines
+* Provide a `java.util.Iterator<Line>` with lines
+
+All the formatting information is described by the schema. [See Basics of Schemas for information about schemas.](basics_schema) 
+
+See [api docs](api) for class `TextComposer` for more details.
 ## Error handling 
+IOErrors and other serious runtime errors are thrown immediately as exceptions and should be dealt with by the caller. 
+These type of errors indicate a bug or maybe a error writing to the output.
 # Converting
+Converting is when you have one data source and want to produce a different output. The internal data model is still used internally
+as an intermediate data format but input and output are of different type. All the converters converter uses the event 
+mechanism under the hood, thus it reads, converts and writes one line at a time. This means it is very lean regarding memory usage.
 ## Text to text
-If you are only interesting in converting a file of one format into another, you can use the org.jsapar.Text2TextConverter where you specify the input and the output schema for the conversion.
-The converter uses the event mechanism under the hood, thus it reads, converts and writes one line at a time.
-This means it is very lean regarding memory usage.
+If you are only interesting in converting a file of one format into another, you can use the `org.jsapar.Text2TextConverter` 
+where you specify the input and the output schema for the conversion.
+
+There is not much code that is needed for converting from one text format to another:  
+```java
+try (Reader inSchemaReader = new FileReader(inSchemaXmlFile);
+     Reader outSchemaReader = new FileReader(outSchemaXmlFile);
+     Reader inReader = new FileReader(inFile);
+     Writer outWriter = new FileWriter(outFile)) {
+    Text2TextConverter converter = new Text2TextConverter(Schema.ofXml(inSchemaReader),
+            Schema.ofXml(outSchemaReader));
+    converter.convert(inReader, outWriter);
+}
+```
+When converting it is important that the line types and cell names matches between the input and the output schemas. It works like this:
+1. The converter first parses one line using the input schema
+1. The line type of the parsed line is used to match a line with the same type in the output schema. Lines that are not matched are omitted.
+1. For each cell in the parsed line, the converter uses the name of the cell to find a cell in the output schema to use. 
+Cells that are not matched are omitted. Cells in the output schema that was not provided in the data source are left empty.
+ 
+All line types and cell names are case sensitive so be thorough.  
+  
+Almost all the job lies in defining the schemas. You can even run the text to text converter directly from the command line without coding. See below. 
 ## Text to Java beans
-Use the org.jsapar.Text2BeanConverter in order to build java objects for each line in a file (or input).
-Note that in order to be able to use this feature, the schema have to be carefully written. 
-For instance, the line type (name) of the line within the schema have to contain the complete class name of the java class to build for each line. 
+You can use the `org.jsapar.Text2BeanConverter` in order to build java objects directly for each line in the data source.
+For this to work, the line type of each line in the input schema needs to contain the full name of the java bean that 
+you want to create for that line and the cell name for each cell needs to match against the bean property that you want 
+to assign a value to. Use dot notation to separate sub properties. See example below.
+
+The [advanced](advanced) section will describe how to handle the case that you want to re-use an existing schema that does
+ not conform to these rules or if you want to provide your own bean factory implementation. 
+
+The following of the [java bean requirements](https://en.wikipedia.org/wiki/JavaBeans) apply for the bean class:
+* There has to be a constructor with no arguments.
+* There have be both getter and setter methods for all bean properties.
+
+As with the parser the `Text2BeanConverter` produces events for each bean that has been parsed. You need to provide an implementation
+of the `org.jsapar.compose.bean.BeanEventListener` which will be notified for each bean that is parsed. 
+
+There is a provided implementation: `org.jsapar.compose.bean.RecordingBeanEventListener` that saves all beans that was 
+created in an internal list to be retrieved later. Not to be used for large data sets since it will store all beans in memory.   
+
+### Example
+This example will describe how to convert CSV text into instances of a class `com.example.Employee` defined as:
+```java
+public class Employee {
+    private String         name;
+    private int            employeeNumber;
+    private Address        address;
+    private LocalDate      birthDate;
+
+    public Employee() {}
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public int getEmployeeNumber()  { return employeeNumber; }
+    public void setEmployeeNumber(int employeeNumber) { this.employeeNumber = employeeNumber; }
+    public Address getAddress()  { return address; }
+    public void setAddress(Address address) { this.address = address; }
+    public LocalDate getBirthDate() { return birthDate; }
+    public void setBirthDate(LocalDate localDate) {this.birthDate = birthDate;}
+}
+```
+
+...having a property of class `com.example.Address` like this:
+```java
+public class Address {
+    private String         street;
+
+    public Address() {}
+    public String getStreet() { return street; }
+    public void setStreet(String street) { this.street = street; }
+}
+```
+If the input looks like this:
+```csv
+Donald Duck,17,1931-02-19,Duckborg 13
+Mickey Mouse,42,1930-09-15,Holestreet 3
+```
+The schema to use could look like this:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0">
+  <csvschema lineseparator="\n">
+    <line occurs="*" linetype="com.example.Employee" cellseparator=",">
+      <cell name="name" />
+      <cell name="employeeNumber" ><format type="integer"/></cell>
+      <cell name="birthDate" > <format type="local_date" pattern="yyyy-MM-dd"/></cell>
+      <cell name="address.street" />
+    </line>
+  </csvschema>
+</schema>
+```
+As you can see. We need to add a dot between address and street as an indication that this is a property of a property. 
+There is no limit to the number of levels you can have. 
+
+The java code needed for this to work:
+```java
+    Text2BeanConverter converter = new Text2BeanConverter(Schema.ofXml(inputSchemaXmlReader));
+    converter.convert(fileReader, (beanEvent)->{ 
+        Emplyee employee = beanEvent.getBean();
+        // Handle each emplyee here...
+    });
+    
+```
 ## Java objects to text
 Use the class Bean2TextConverter in order to convert java objects an output text file according to a schema.
-## Text to markup (XML or HTML)
-Use the class Text2XmlConverter in order to produce a xml output. You can register a XSLT together with this converter and in
-that way you convert the text to any other text output format such as HTML.
-## Using XML as input
-It is possible to parse an xml document that conforms to the XMLDocumentFormat.xsd (http://jsapar.tigris.org/XMLDocumentFormat/1.0).
-Use the class org.jsapar.XmlParser in order to parse an xml file and produce line parsed events.
 ## Manipulating lines while converting
+## Asynchronous conversion
+## Running text to text conversion from command line

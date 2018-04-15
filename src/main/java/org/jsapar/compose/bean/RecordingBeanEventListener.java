@@ -1,7 +1,10 @@
 package org.jsapar.compose.bean;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * Saves all beans that was composed into a list that can be retrieved by calling {@link #getBeans()} when done
@@ -10,7 +13,7 @@ import java.util.List;
  * created could not be converted into the class defined by T.
  * Created by stejon0 on 2016-10-15.
  */
-public class RecordingBeanEventListener<T> implements BeanComposedEventListener<T> {
+public class RecordingBeanEventListener<T> implements BeanEventListener<T>, Iterable<T> {
     private List<T> beans = new ArrayList<>();
 
     /**
@@ -27,7 +30,7 @@ public class RecordingBeanEventListener<T> implements BeanComposedEventListener<
      * @param event The event that contains the composed bean.
      */
     @Override
-    public void beanComposedEvent(BeanComposedEvent<T> event) {
+    public void beanComposedEvent(BeanEvent<T> event) {
         beans.add(event.getBean());
     }
 
@@ -43,5 +46,19 @@ public class RecordingBeanEventListener<T> implements BeanComposedEventListener<
      */
     public int size(){
         return beans.size();
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return beans.iterator();
+    }
+
+    @Override
+    public void forEach(Consumer<? super T> consumer) {
+        beans.forEach(consumer);
+    }
+
+    public Stream<T> stream(){
+        return beans.stream();
     }
 }

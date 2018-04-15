@@ -65,7 +65,7 @@ public class Text2BeanConverter<T> extends AbstractConverter {
         this.beanFactory = beanFactory;
     }
 
-    public void convert(Reader reader, BeanComposedEventListener<T> eventListener) throws IOException {
+    public void convert(Reader reader, BeanEventListener<T> eventListener) throws IOException {
         BeanComposer<T> composer = new BeanComposer<>(composeConfig, beanFactory);
         ConvertTask convertTask = new ConvertTask(new TextParseTask(this.parseSchema, reader, parseConfig), composer);
         composer.setComposedEventListener(eventListener);

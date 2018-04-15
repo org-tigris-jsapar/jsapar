@@ -157,13 +157,9 @@ public class SchemaCellFormat implements Cloneable {
             return false;
         }
         if (pattern == null) {
-            if (other.pattern != null) {
-                return false;
-            }
-        } else if (!pattern.equals(other.pattern)) {
-            return false;
-        }
-        return true;
+            return other.pattern == null;
+        } else
+            return pattern.equals(other.pattern);
     }
     
 }

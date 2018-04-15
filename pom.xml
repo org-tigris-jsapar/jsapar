@@ -127,7 +127,7 @@
             <configuration>
               <archive>
                 <manifest>
-                  <mainClass>org.jsapar.ConverterMain</mainClass>
+                  <mainClass>org.jsapar.Text2TextConverter</mainClass>
                   <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                   <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                 </manifest>

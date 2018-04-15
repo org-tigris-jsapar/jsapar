@@ -13,14 +13,14 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * Composer class that composes java beans based on a document or by single lines. The result is that for each bean that
- * was successfully composed, a {@link BeanComposedEvent} is generated to all registered {@link BeanComposedEventListener}.
- * You can register a {@link BeanComposedEventListener} by calling {@link #setComposedEventListener(BeanComposedEventListener)}
+ * was successfully composed, a {@link BeanEvent} is generated to all registered {@link BeanEventListener}.
+ * You can register a {@link BeanEventListener} by calling {@link #setComposedEventListener(BeanEventListener)}
  *
  * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.
  */
 @SuppressWarnings("UnusedReturnValue")
-public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, ErrorEventListener {
-    private BeanComposedEventListener<T> composedEventListener;
+public class BeanComposer<T> implements Composer, BeanEventListener<T>, ErrorEventListener {
+    private BeanEventListener<T> composedEventListener;
     private ErrorEventListener errorEventListener = new ExceptionErrorEventListener();
     private BeanFactory<T> beanFactory;
     private BeanComposeConfig config;
@@ -85,7 +85,7 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
                     "Class of the created bean is not inherited from the generic type specified when creating the BeanComposer",
                     e);
         }
-        beanComposedEvent(new BeanComposedEvent<>(this, bean, line.getLineNumber()));
+        beanComposedEvent(new BeanEvent<>(this, bean, line.getLineNumber()));
         return true;
     }
 
@@ -94,7 +94,7 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
     }
 
 
-    public void setComposedEventListener(BeanComposedEventListener<T> eventListener) {
+    public void setComposedEventListener(BeanEventListener<T> eventListener) {
         this.composedEventListener = eventListener;
     }
 
@@ -112,7 +112,7 @@ public class BeanComposer<T> implements Composer, BeanComposedEventListener<T>, 
     }
 
     @Override
-    public void beanComposedEvent(BeanComposedEvent<T> event) {
+    public void beanComposedEvent(BeanEvent<T> event) {
         if (composedEventListener != null) {
             composedEventListener.beanComposedEvent(event);
         }
