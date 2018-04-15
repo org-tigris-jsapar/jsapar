@@ -125,9 +125,9 @@ IOErrors and other serious runtime errors are thrown immediately as exceptions a
 These type of errors indicate a bug or maybe a error writing to the output.
 # Converting
 Converting is when you have one data source and want to produce a different output. The internal data model is still used internally
-as an intermediate data format but input and output are of different type. All the converters converter uses the event 
+as an intermediate data format but input and output are of different type. All the converters uses the event 
 mechanism under the hood, thus it reads, converts and writes one line at a time. This means it is very lean regarding memory usage.
-## Text to text
+## Converting text to text
 If you are only interesting in converting a file of one format into another, you can use the `org.jsapar.Text2TextConverter` 
 where you specify the input and the output schema for the conversion.
 
@@ -150,8 +150,8 @@ Cells that are not matched are omitted. Cells in the output schema that was not 
  
 All line types and cell names are case sensitive so be thorough.  
   
-Almost all the job lies in defining the schemas. You can even run the text to text converter directly from the command line without coding. See below. 
-## Text to Java beans
+Almost all the job lies in defining the schemas. You can even run the text to text converter directly from the command line without coding. [See below](#Running text to text conversion from command line). 
+## Converting text to Java beans
 You can use the `org.jsapar.Text2BeanConverter` in order to build java objects directly for each line in the data source.
 For this to work, the line type of each line in the input schema needs to contain the full name of the java bean that 
 you want to create for that line and the cell name for each cell needs to match against the bean property that you want 
@@ -220,7 +220,7 @@ The schema to use could look like this:
   </csvschema>
 </schema>
 ```
-As you can see. We need to add a dot between address and street as an indication that this is a property of a property. 
+As you can see. We need to add a `.` between address and street as an indication that this is a property of a property. 
 There is no limit to the number of levels you can have. 
 
 The java code needed for this to work:
@@ -232,8 +232,50 @@ The java code needed for this to work:
     });
     
 ```
-## Java objects to text
-Use the class Bean2TextConverter in order to convert java objects an output text file according to a schema.
+## Converting java objects to text
+Use the class `org.jsapar.Bean2TextConverter` in order to convert java objects into an output text according to a schema. Basically
+it works the other way around compared to converting from text to java beans as described above. The same rules apply to both
+how the schema is created and to the java beans. You feed the converter with java beans and the schema will handle the 
+formatting of the text output.
+
+The example code for converting employees to text as in previous example would be like this:
+```java
+Collection<Employee> employees = new ArrayList<>();
+// Fill the list with employees
+
+Bean2TextConverter<Employee> converter = new Bean2TextConverter<>(Schema.ofXml(schemaXmlReader));
+converter.convert(employees, writer);
+```  
+
+If you have a large set of beans that you want to add to the output, you should implement the `java.util.Iterator` interface
+in order to provide beans one-by-one. 
+
+Also the `java.util.stream.Stream` interface is supported and can be used for the same purpose.
 ## Manipulating lines while converting
+Not everything can be converted one-to-one by simple mapping of the format. Sometimes you need to add, remove or filter data for each line while converting.
+The `org.jsapar.convert.LineManipulator` interface can be used to act as both 
+[Content Enricher](http://www.enterpriseintegrationpatterns.com/patterns/messaging/DataEnricher.html) and
+[Content Filter](http://www.enterpriseintegrationpatterns.com/patterns/messaging/ContentFilter.html). You can add line manipulators
+to all converters and thus tap in to the stream of lines and manipulate them before they are processed further. By returning 
+false from the `manipulate()` method, you can indicate that the line should be omitted from the output.
+
+For example, if you may need to convert a cost contained in a cell between currencies. Then you can add a line manipulator to the converter like this:
+ 
+```java
+    Text2TextConverter converter = new Text2TextConverter(Schema.ofXml(inSchemaReader),
+            Schema.ofXml(outSchemaReader));
+
+    converter.addLineManipulator(line -> {
+        LineUtils.setDecimalCellValue(line, "costInSEK", convertGBPtoSEK(LineUtils.getDecimalCellValue(line, "costInGBP"));
+        return true;
+    });
+        
+    converter.convert(inReader, outWriter);
+```
+You can add multiple line manipulators to a converter and they will be called in the same order as they were added. 
+Returning false from a manipulator indicates that the line should be omitted completely from the output.
+
+You can both add and remove cells in a line manipulator.
 ## Asynchronous conversion
+
 ## Running text to text conversion from command line
