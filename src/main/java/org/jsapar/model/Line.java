@@ -233,6 +233,9 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
         this.lineNumber = lineNumber;
     }
 
+    /**
+     * @return A clone of this line. Since all cell values are final, only shallow copy is needed of all the cells.
+     */
     @Override
     public Line clone() {
         Line clone;
@@ -243,9 +246,9 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
             throw new AssertionError(e);
         }
 
-        clone.cells = new LinkedHashMap<>(this.cells.size());
         // No need to make a deep copy since cells are all final.
-        clone.cells.putAll(this.cells);
+        clone.cells = new LinkedHashMap<>(this.cells);
+        clone.cellErrors  = new LinkedHashMap<>(this.cellErrors);
 
         return clone;
     }
