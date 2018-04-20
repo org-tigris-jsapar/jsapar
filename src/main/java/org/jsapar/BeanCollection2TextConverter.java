@@ -14,36 +14,41 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 
 /**
- * Converts from beans to text output.
+ * Converts from a collection or a stream of beans to text output. Pulls beans from the provided source and converts to
+ * text. See {@link SingleBean2TextConverter} for an implementation where you can push bean instances one by one instead.
+ * <p>
  * The Generic type T should be set to a common base class of all the expected beans. Use Object as
  * base class if there is no common base class for all beans.
  * <p/>
  * ExampleUsage:
  * <pre>{@code
-  Bean2TextConverter<TstPerson> converter = new Bean2TextConverter<>(schema);
-  converter.convert(people, writer);
+ * BeanCollection2TextConverter<TstPerson> converter = new BeanCollection2TextConverter<>(schema);
+ * converter.convert(people, writer);
  * }</pre>
+ * @see SingleBean2TextConverter
  */
 @SuppressWarnings("WeakerAccess")
-public class Bean2TextConverter<T> extends AbstractConverter {
+public class BeanCollection2TextConverter<T> extends AbstractConverter {
 
-    private final Schema composerSchema;
-    private BeanMap beanMap;
+    private final Schema  composerSchema;
+    private       BeanMap beanMap;
 
     /**
      * Creates a converter with supplied composer schema.
+     *
      * @param composerSchema The schema to use while composing text output.
      */
-    public Bean2TextConverter(Schema composerSchema) throws IntrospectionException, ClassNotFoundException {
+    public BeanCollection2TextConverter(Schema composerSchema) throws IntrospectionException, ClassNotFoundException {
         this(composerSchema, BeanMap.ofSchema(composerSchema));
     }
 
     /**
      * Creates a converter with supplied composer schema.
+     *
      * @param composerSchema The schema to use while composing text output.
      * @param beanMap        The bean map to use to map schema names to bean properties.
      */
-    public Bean2TextConverter(Schema composerSchema, BeanMap beanMap) {
+    public BeanCollection2TextConverter(Schema composerSchema, BeanMap beanMap) {
         assert composerSchema != null;
         this.composerSchema = composerSchema;
         this.beanMap = beanMap;
@@ -51,6 +56,7 @@ public class Bean2TextConverter<T> extends AbstractConverter {
 
     /**
      * Converts objects referenced by supplied stream into a text output written to supplied writer.
+     *
      * @param stream The stream to get beans from.
      * @param writer The text writer to write text output to.
      * @throws IOException If there is an error writing text output.
@@ -61,8 +67,9 @@ public class Bean2TextConverter<T> extends AbstractConverter {
 
     /**
      * Converts objects referenced by supplied iterator into a text output written to supplied writer.
+     *
      * @param iterator The iterator to get beans from.
-     * @param writer The text writer to write text output to.
+     * @param writer   The text writer to write text output to.
      * @throws IOException If there is an error writing text output.
      */
     public void convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
@@ -84,8 +91,9 @@ public class Bean2TextConverter<T> extends AbstractConverter {
 
     /**
      * Converts objects of supplied collection into a text output written to supplied writer.
+     *
      * @param collection The collection of beans to convert
-     * @param writer The text writer to write text output to.
+     * @param writer     The text writer to write text output to.
      * @throws IOException If there is an error writing text output.
      */
     public void convert(Collection<? extends T> collection, Writer writer) throws IOException {

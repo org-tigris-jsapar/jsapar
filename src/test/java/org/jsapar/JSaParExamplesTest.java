@@ -305,7 +305,7 @@ public class JSaParExamplesTest {
     }
     
     @Test
-    public final void testExampleJavaToCsv07()
+    public final void testExampleBeanCollectionToCsv07()
             throws SchemaException, IOException, ParseException, IntrospectionException, ClassNotFoundException {
 
         List<TstPerson> people = new LinkedList<>();
@@ -321,12 +321,36 @@ public class JSaParExamplesTest {
         Reader schemaReader = new FileReader("examples/07_CsvSchemaToJava.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
         StringWriter writer = new StringWriter();
-        Bean2TextConverter<TstPerson> converter = new Bean2TextConverter<>(xmlBuilder.build(schemaReader));
+        BeanCollection2TextConverter<TstPerson> converter = new BeanCollection2TextConverter<>(xmlBuilder.build(schemaReader));
         converter.convert(people, writer);
 
         String result=writer.toString();
         String[] resultLines = result.split("\n");
 //        System.out.println(result);
+        assertEquals("Nils;;Holgersson;4;4711;1902-08-07 12:43;A;Track;Village", resultLines[0]);
+        assertEquals("Jonathan;;Lionheart;37;17;1955-03-17 12:33;C;Path;City", resultLines[1]);
+    }
+
+    @Test
+    public final void testExampleBeanToCsv07()
+            throws SchemaException, IOException, ParseException, IntrospectionException, ClassNotFoundException {
+
+        TstPerson testPerson1 = new TstPerson("Nils", "Holgersson", (short)4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9, 'A');
+        testPerson1.setAddress(new TstPostAddress("Track", "Village"));
+
+        TstPerson testPerson2 = new TstPerson("Jonathan", "Lionheart", (short)37, 17, dateFormat.parse("1955-03-17 12:33:12"), 123456, 'C');
+        testPerson2.setAddress(new TstPostAddress("Path", "City"));
+
+        Reader schemaReader = new FileReader("examples/07_CsvSchemaToJava.xml");
+        Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
+        StringWriter writer = new StringWriter();
+        SingleBean2TextConverter<TstPerson> converter = new SingleBean2TextConverter<>(xmlBuilder.build(schemaReader), writer);
+        converter.convert(testPerson1);
+        converter.convert(testPerson2);
+
+        String result=writer.toString();
+        String[] resultLines = result.split("\n");
+        //        System.out.println(result);
         assertEquals("Nils;;Holgersson;4;4711;1902-08-07 12:43;A;Track;Village", resultLines[0]);
         assertEquals("Jonathan;;Lionheart;37;17;1955-03-17 12:33;C;Path;City", resultLines[1]);
     }
@@ -349,10 +373,10 @@ public class JSaParExamplesTest {
         testPerson2.setAddress(new TstPostAddress("Path", "City"));
         people.add(testPerson2);
 
-        Bean2TextConverter<TstPerson> converter;
+        BeanCollection2TextConverter<TstPerson> converter;
         try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
              Reader beanMapReader = new FileReader("examples/07_BeanMap.xml")) {
-            converter = new Bean2TextConverter<>(Schema.ofXml(schemaReader), BeanMap.ofXml(beanMapReader));
+            converter = new BeanCollection2TextConverter<>(Schema.ofXml(schemaReader), BeanMap.ofXml(beanMapReader));
         }
         StringWriter writer = new StringWriter();
         converter.convert(people, writer);

@@ -3,6 +3,7 @@
  */
 package org.jsapar.convert;
 
+import org.jsapar.BeanCollection2TextConverter;
 import org.jsapar.model.Line;
 
 /**
@@ -16,7 +17,7 @@ import org.jsapar.model.Line;
  * @see org.jsapar.Text2StringConverter
  * @see org.jsapar.Text2XmlConverter
  * @see org.jsapar.Xml2TextConverter
- * @see org.jsapar.Bean2TextConverter
+ * @see BeanCollection2TextConverter
  * @see ConvertTask
  */
 public interface LineManipulator {

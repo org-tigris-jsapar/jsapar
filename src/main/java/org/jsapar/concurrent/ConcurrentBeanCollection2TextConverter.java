@@ -1,6 +1,6 @@
 package org.jsapar.concurrent;
 
-import org.jsapar.Bean2TextConverter;
+import org.jsapar.BeanCollection2TextConverter;
 import org.jsapar.convert.AbstractConverter;
 import org.jsapar.parse.bean.BeanMap;
 import org.jsapar.schema.Schema;
@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 
 /**
- * A multi threaded version of {@link org.jsapar.Bean2TextConverter} where the composer is started in a separate worker
+ * A multi threaded version of {@link BeanCollection2TextConverter} where the composer is started in a separate worker
  * thread.
  * See {@link AbstractConverter} for details about error handling and manipulating data.
  * <p>
@@ -21,14 +21,14 @@ import java.util.stream.Stream;
  * a new thread and synchronizing threads are otherwise greater than the gain by the concurrency.
  * @param <T> The base class for the beans to convert.
  */
-public class ConcurrentBean2TextConverter<T> extends Bean2TextConverter<T> implements ConcurrentStartStop{
+public class ConcurrentBeanCollection2TextConverter<T> extends BeanCollection2TextConverter<T> implements ConcurrentStartStop{
     private ConcurrentConvertTaskFactory convertTaskFactory = new ConcurrentConvertTaskFactory();
 
-    public ConcurrentBean2TextConverter(Schema composerSchema) throws IntrospectionException, ClassNotFoundException {
+    public ConcurrentBeanCollection2TextConverter(Schema composerSchema) throws IntrospectionException, ClassNotFoundException {
         super(composerSchema);
     }
 
-    public ConcurrentBean2TextConverter(Schema composerSchema, BeanMap beanMap) {
+    public ConcurrentBeanCollection2TextConverter(Schema composerSchema, BeanMap beanMap) {
         super(composerSchema, beanMap);
     }
 

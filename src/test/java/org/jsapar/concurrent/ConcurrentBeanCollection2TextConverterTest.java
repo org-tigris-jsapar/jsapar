@@ -1,7 +1,9 @@
-package org.jsapar;
+package org.jsapar.concurrent;
 
+import org.jsapar.BeanCollection2TextConverter;
+import org.jsapar.TstPerson;
+import org.jsapar.TstPostAddress;
 import org.jsapar.model.CellType;
-import org.jsapar.parse.bean.BeanParseConfig;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
@@ -15,9 +17,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-/**
- */
-public class Bean2TextConverterTest {
+public class ConcurrentBeanCollection2TextConverterTest {
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Test
@@ -37,7 +37,7 @@ public class Bean2TextConverterTest {
         schemaLine.addSchemaCell(new CsvSchemaCell("lastName", CellType.STRING));
         schema.addSchemaLine(schemaLine);
         StringWriter writer = new StringWriter();
-        Bean2TextConverter<TstPerson> converter = new Bean2TextConverter<>(schema);
+        BeanCollection2TextConverter<TstPerson> converter = new ConcurrentBeanCollection2TextConverter<>(schema);
         converter.convert(people, writer);
 
         String result=writer.toString();
@@ -45,13 +45,6 @@ public class Bean2TextConverterTest {
         //        System.out.println(result);
         assertEquals("Nils;Holgersson", resultLines[0]);
         assertEquals("Jonathan;Lionheart", resultLines[1]);
-    }
-
-
-
-    @Test
-    public void setParseConfig() throws Exception {
-
     }
 
 }

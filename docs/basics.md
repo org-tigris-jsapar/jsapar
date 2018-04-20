@@ -233,7 +233,7 @@ The java code needed for this to work:
     
 ```
 ## Converting java objects to text
-Use the class `org.jsapar.Bean2TextConverter` in order to convert java objects into an output text according to a schema. Basically
+Use the class `org.jsapar.BeanCollection2TextConverter` in order to convert java objects into an output text according to a schema. Basically
 it works the other way around compared to converting from text to java beans as described above. The same rules apply to both
 how the schema is created and to the java beans. You feed the converter with java beans and the schema will handle the 
 formatting of the text output.
