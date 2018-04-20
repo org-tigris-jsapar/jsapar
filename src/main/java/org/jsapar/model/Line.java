@@ -316,4 +316,14 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
     public Stream<Cell> stream() {
         return this.cells.values().stream();
     }
+
+    /**
+     * Allows scripting languages such as Groovy to access cell values with simple . notation.
+     * @param cellName The name of the cell to get
+     * @return The cell value in its native type.
+     */
+    public Object getProperty(String cellName){
+        return getCell(cellName).map(Cell::getValue).orElse(null);
+    }
+
 }
