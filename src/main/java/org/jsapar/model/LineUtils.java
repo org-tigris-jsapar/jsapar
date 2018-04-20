@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
 import java.util.Date;
@@ -115,6 +116,51 @@ public class LineUtils {
      */
     public static void setDateCellValue(Line line, String cellName, Date value) {
         line.putCellValue(cellName, value, DateCell::new);
+    }
+
+    /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or
+     * replaces an existing cell if there already is one with the same name.
+     *
+     * @param cellName The name of the cell to add/replace.
+     * @param value    The date value to set. If null, existing value will be removed but no new value will be set.
+     */
+    public static void setLocalDateCellValue(Line line, String cellName, LocalDate value) {
+        line.putCellValue(cellName, value, LocalDateCell::new);
+    }
+
+
+    /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or
+     * replaces an existing cell if there already is one with the same name.
+     *
+     * @param cellName The name of the cell to add/replace.
+     * @param value    The date value to set. If null, existing value will be removed but no new value will be set.
+     */
+    public static void setLocalTimeCellValue(Line line, String cellName, LocalTime value) {
+        line.putCellValue(cellName, value, LocalTimeCell::new);
+    }
+
+    /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or
+     * replaces an existing cell if there already is one with the same name.
+     *
+     * @param cellName The name of the cell to add/replace.
+     * @param value    The date value to set. If null, existing value will be removed but no new value will be set.
+     */
+    public static void setLocalDateTimeCellValue(Line line, String cellName, LocalDateTime value) {
+        line.putCellValue(cellName, value, LocalDateTimeCell::new);
+    }
+
+    /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or
+     * replaces an existing cell if there already is one with the same name.
+     *
+     * @param cellName The name of the cell to add/replace.
+     * @param value    The date value to set. If null, existing value will be removed but no new value will be set.
+     */
+    public static void setZonedDateTimeCellValue(Line line, String cellName, ZonedDateTime value) {
+        line.putCellValue(cellName, value, ZonedDateTimeCell::new);
     }
 
     /**
