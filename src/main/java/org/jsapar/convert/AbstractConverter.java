@@ -59,4 +59,7 @@ public abstract class AbstractConverter {
         return convertTask.execute();
     }
 
+    protected List<LineManipulator> getManipulators() {
+        return manipulators;
+    }
 }

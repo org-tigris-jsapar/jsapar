@@ -344,7 +344,7 @@ public class JSaParExamplesTest {
         Reader schemaReader = new FileReader("examples/07_CsvSchemaToJava.xml");
         Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
         StringWriter writer = new StringWriter();
-        SingleBean2TextConverter<TstPerson> converter = new SingleBean2TextConverter<>(xmlBuilder.build(schemaReader), writer);
+        Bean2TextConverter<TstPerson> converter = new Bean2TextConverter<>(xmlBuilder.build(schemaReader), writer);
         converter.convert(testPerson1);
         converter.convert(testPerson2);
 

@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 /**
  * Converts from a collection or a stream of beans to text output. Pulls beans from the provided source and converts to
- * text. See {@link SingleBean2TextConverter} for an implementation where you can push bean instances one by one instead.
+ * text. See {@link Bean2TextConverter} for an implementation where you can push bean instances one by one instead.
  * <p>
  * The Generic type T should be set to a common base class of all the expected beans. Use Object as
  * base class if there is no common base class for all beans.
@@ -25,7 +25,7 @@ import java.util.stream.Stream;
  * BeanCollection2TextConverter<TstPerson> converter = new BeanCollection2TextConverter<>(schema);
  * converter.convert(people, writer);
  * }</pre>
- * @see SingleBean2TextConverter
+ * @see Bean2TextConverter
  */
 @SuppressWarnings("WeakerAccess")
 public class BeanCollection2TextConverter<T> extends AbstractConverter {
