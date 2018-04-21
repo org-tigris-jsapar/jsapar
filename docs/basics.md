@@ -280,7 +280,7 @@ Returning false from a manipulator indicates that the line should be omitted com
 You can both add and remove cells in a line manipulator.
 ## Asynchronous conversion
 The `org.jsapar.concurrent.ConcurrentText2TextConverter` is an asynchronous version of the `Text2TextConverter`.
-Internally it starts a separate thread internally that handles the composing part and thus can utilize resources more efficiently.
+Internally it starts a separate thread that handles the composing part and thus can utilize resources more efficiently.
 
 Tests have shown though that unless the data source is really large, the gain of concurrency is less
 than the overhead of starting a new thread and synchronizing threads. As a rule of thumb while working with normal
