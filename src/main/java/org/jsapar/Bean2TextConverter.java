@@ -1,6 +1,5 @@
 package org.jsapar;
 
-import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.LineManipulator;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ExceptionErrorEventListener;
@@ -10,6 +9,7 @@ import org.jsapar.schema.Schema;
 
 import java.beans.IntrospectionException;
 import java.io.Writer;
+import java.util.List;
 
 /**
  * Converts from beans to text output. This implementation accepts beans pushed one by one to be converted. See
@@ -20,7 +20,8 @@ import java.io.Writer;
  * The Generic type T should be set to a common base class of all the expected beans. Use Object as
  * base class if there is no common base class for all beans.
  * <p/>
- * Instances of this class should only be used once, then disposed.
+ * An instance of this class can only be used once for one writer, then it needs to be disposed. Instances of {@link BeanCollection2TextConverter} on
+ * the other hand can be used multiple times for multiple writers.
  * <p>
  * ExampleUsage:
  * <pre>{@code
@@ -28,22 +29,27 @@ import java.io.Writer;
  * converter.convert(person1);
  * converter.convert(person2);
  * }</pre>
+ * <p>
+ * The default error handling is to throw an exception upon the first error that occurs. You can however change that
+ * behavior by adding an {@link org.jsapar.error.ErrorEventListener}. There are several implementations to choose from such as
+ * {@link org.jsapar.error.RecordingErrorEventListener} or
+ * {@link org.jsapar.error.ThresholdRecordingErrorEventListener}, or you may implement your own.
  *
  * @see BeanCollection2TextConverter
  */
-@SuppressWarnings("WeakerAccess")
-public class Bean2TextConverter<T> extends AbstractConverter {
+public class Bean2TextConverter<T> {
 
     private final BeanParser<T> beanParser;
     private final TextComposer  textComposer;
-    private long               lineNumber         = 1;
-    private ErrorEventListener errorEventListener = new ExceptionErrorEventListener();
+    private long                  lineNumber         = 1;
+    private List<LineManipulator> manipulators       = new java.util.LinkedList<>();
+    private ErrorEventListener    errorEventListener = new ExceptionErrorEventListener();
 
     /**
      * Creates a converter with supplied composer schema.
      *
      * @param composerSchema The schema to use while composing text output.
-     * @param writer         The writer to write text output to
+     * @param writer         The writer to write text output to. Caller is responsible for closing the writer.
      * @throws IntrospectionException If string names of properties could not be mapped to actual properties.
      * @throws ClassNotFoundException In case any of the classes described in the schema does not exist in the classpath.
      */
@@ -71,7 +77,7 @@ public class Bean2TextConverter<T> extends AbstractConverter {
      */
     public void convert(T bean) {
         beanParser.parseBean(bean, errorEventListener, lineNumber++).ifPresent(line -> {
-            for (LineManipulator manipulator : getManipulators()) {
+            for (LineManipulator manipulator : manipulators) {
                 if (!manipulator.manipulate(line))
                     return;
             }
@@ -79,12 +85,18 @@ public class Bean2TextConverter<T> extends AbstractConverter {
         });
     }
 
-    public ErrorEventListener getErrorEventListener() {
-        return errorEventListener;
-    }
-
-    @Override
     public void setErrorEventListener(ErrorEventListener errorEventListener) {
         this.errorEventListener = errorEventListener;
     }
+
+    /**
+     * Adds LineManipulator to this converter. All present line manipulators are executed for each
+     * line in the same order that they were added.
+     *
+     * @param manipulator The line manipulator to add.
+     */
+    public void addLineManipulator(LineManipulator manipulator) {
+        manipulators.add(manipulator);
+    }
+
 }

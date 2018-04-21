@@ -20,14 +20,18 @@ import java.util.stream.Stream;
  * The Generic type T should be set to a common base class of all the expected beans. Use Object as
  * base class if there is no common base class for all beans.
  * <p/>
+ * The difference compared to {@link Bean2TextConverter} is that instances of this class can be used multiple times for
+ * different writers by calling one of the convert methods where as {@link Bean2TextConverter} only can be used once and
+ * the writer needs to be supplied in the constructor.
+ * <p>
  * ExampleUsage:
  * <pre>{@code
  * BeanCollection2TextConverter<TstPerson> converter = new BeanCollection2TextConverter<>(schema);
  * converter.convert(people, writer);
  * }</pre>
+ *
  * @see Bean2TextConverter
  */
-@SuppressWarnings("WeakerAccess")
 public class BeanCollection2TextConverter<T> extends AbstractConverter {
 
     private final Schema  composerSchema;
@@ -58,7 +62,7 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * Converts objects referenced by supplied stream into a text output written to supplied writer.
      *
      * @param stream The stream to get beans from.
-     * @param writer The text writer to write text output to.
+     * @param writer The text writer to write text output to. Caller is responsible for closing the writer.
      * @throws IOException If there is an error writing text output.
      */
     public void convert(Stream<? extends T> stream, Writer writer) throws IOException {
@@ -69,7 +73,7 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * Converts objects referenced by supplied iterator into a text output written to supplied writer.
      *
      * @param iterator The iterator to get beans from.
-     * @param writer   The text writer to write text output to.
+     * @param writer   The text writer to write text output to. Caller is responsible for closing the writer.
      * @throws IOException If there is an error writing text output.
      */
     public void convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
