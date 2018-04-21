@@ -2,42 +2,42 @@
 layout: page
 title: Basics
 ---
-This article will describe the basics of using the library. Since schemas are a large part of the library, [basics of schemas are 
-described in this separate article](basics_chema).
+This article will describe the basics of using the library. Since schemas are a large part of the library, [basics of schemas](basics_chema)  are described in this separate article.
 
 There are three different tasks that the JSaPar library can be used for:
 1. **Parsing** - Parsing a text source into the internal data model and handle the result in code. 
 2. **Composing** - Compose text output by feeding data of the internal data model in java code. 
 3. **Converting**  - Convert one source into an output on a different format.
 
-All parsers uses uses the internal data model described below as output and all the composers uses that data model as input. 
+All parsers produces output represented by the internal data model described below and all the composers accepts that data model as input.
 When it comes to other data forms, for instance parsing text into Java beans, that is instead considered converting.    
 # The model
+## org.jsapar.model.Cell
+A `Cell` represents one table data field.
+
+The `Cell` class is the base class for all type of cells where sub-classes handles different primary types.
+All cells has a name that is matched with the name specified by the schema. You can query the type of a cell and you can always get a string value of a cell but for numbers and dates the string value is
+always converted to java native string representation. When parsing, if the text input
+does not contain any value for the cell, an `EmptyCell` instance takes it's place.
+## org.jsapar.model.Line
+The `Line` class represents one line in the text and contains a collection of `Cells`. You can find cells in a line by
+cell name (specified by schema) or you can iterate all cells. See [api docs](api) for more details.
+
+The `org.jsapar.model.LineUtils` class contains a large set of utility functions for getting and setting cell values on a
+line by native java types.
 ## org.jsapar.model.Document
-The `Document` class is equivalent of the [DOM Document](https://en.wikipedia.org/wiki/Document_Object_Model) while parsing xml.
+The `Document` class is equivalent of the [DOM Document](https://en.wikipedia.org/wiki/Document_Object_Model) while parsing XML.
 It is the container of all the following `Lines`. The `Document` class should only be used when handling small sized 
 data since it stores all the lines in memory. When dealing with larger data inputs or outputs you should use the `Line`
 directly, using events while parsing or feeding lines one-by-one while composing.
 
 You can add lines to a document and you can iterate existing lines.
-## org.jsapar.model.Line
-The `Line` class represents one line in the text an contains a collection of `Cells`. You can find cells in a line by 
-cell name (specified by schema) or you can iterate all cells. See [api docs](api) for more details. 
 
-## org.jsapar.model.Cell
-The `Cell` class is the base class for all type of cells. All cells has a name that is matched with the name specified by 
-the schema. You can query the type of a cell and you can always get a string value of a cell but for numbers and dates the string value is 
-always converted to java native string representation. When parsing, if the text input 
-does not contain any value for the cell, an `EmptyCell` instance takes it's place.  
-
-The `org.jsapar.model.LineUtils` class contains a large set of utility functions for getting and setting cell values on a 
-line by native java types. 
- 
 # Parsing
 When we talk about parsing below, we mean parsing a text source into the internal data model described above. A text source can be for instance either a delimited file such as CSV or a 
-fixed width file. 
+fixed width file but the library is not limited to handling files as text source.
 
-In order to parse a text source we use the `org.jsapar.TextParser` class. As we saw in the the initial example earlier you create an 
+In order to parse a text source we use the `org.jsapar.TextParser` class. As we saw in the initial example earlier you create an
 instance of the `TextParser` by supplying a schema. 
 ```java
 ...
@@ -46,12 +46,14 @@ instance of the `TextParser` by supplying a schema.
     parser.parse(fileReader, listener);
 ...    
 ```
-The schema is used for describing the text format. [See Basics of Schemas for information about schemas](basics_schema). After that we start the parsing by calling the parse method. 
+The schema is used for describing the text format. [See Basics of Schemas](basics_schema) for information about schemas. After that we start the parsing by calling the parse method.
 The supplied line event listener is the class that receives an event for each line that is parsed.
 
 ## Events for each line
-For very large files there can be a problem to build the complete `org.jsapar.model.Document` in the memory before further processing.
-It may simply take up to much memory. 
+For very large data sources there can be a problem to build the complete `org.jsapar.model.Document` in the memory before further processing.
+It may simply take up to much memory. There are other situations where you may prefer to handle one line at a time instead of getting all
+lines in a `Document` when parsing is complete.
+
 All parsers in this library requires that you provide an event handler that implements org.jsapar.parse.LineEventListener while parsing.
 
 The JSaPar library contains some convenient implementations of the org.jsapar.parse.LineEventListener interface:
@@ -73,11 +75,11 @@ your own implementation for instance if you need to feed the result to a databas
 ## Configuration
 The parser behavior can be configured in some cases; for instance what should happen if none of the schema lines can be 
 used or what should happen if there are more or less cells on a line than described by the schema.
-. See [api docs](api) for class `TextParseConfig` for more details.
+See [api docs](api) for class `TextParseConfig` for more details.
 ## Error handling
 ### IOErrors and other serious errors
 IOErrors and other serious runtime errors are thrown immediately as exceptions and should be dealt with by the caller. 
-These type of errors indicate a bug or maybe a error reading the input.
+These type of errors indicate a bug or maybe an error reading the input.
  
 ### Format errors
 Format error are handled by the library in a similar way as with line parsed events. An event is fired for every error 
@@ -119,7 +121,7 @@ Then we feed the composer with lines. There are some options when it comes to fe
 
 All the formatting information is described by the schema. [See Basics of Schemas for information about schemas.](basics_schema) 
 
-See [api docs](api) for class `TextComposer` for more details.
+See [API docs](api) for class `TextComposer` for more details.
 ## Error handling 
 IOErrors and other serious runtime errors are thrown immediately as exceptions and should be dealt with by the caller. 
 These type of errors indicate a bug or maybe a error writing to the output.
@@ -203,8 +205,8 @@ public class Address {
 ```
 If the input looks like this:
 ```csv
-Donald Duck,17,1931-02-19,Duckborg 13
-Mickey Mouse,42,1930-09-15,Holestreet 3
+Famous Duck,17,1931-02-19,Duckcity 13
+Mats Mouse,42,1930-09-15,Holestreet 3
 ```
 The schema to use could look like this:
 ```xml
@@ -256,7 +258,7 @@ Not everything can be converted one-to-one by simple mapping of the format. Some
 The `org.jsapar.convert.LineManipulator` interface can be used to act as both 
 [Content Enricher](http://www.enterpriseintegrationpatterns.com/patterns/messaging/DataEnricher.html) and
 [Content Filter](http://www.enterpriseintegrationpatterns.com/patterns/messaging/ContentFilter.html). You can add line manipulators
-to all converters and thus tap in to the stream of lines and manipulate them before they are processed further. By returning 
+to all converters and thus tap into the stream of lines and manipulate them before they are processed further. By returning
 false from the `manipulate()` method, you can indicate that the line should be omitted from the output.
 
 For example, if you may need to convert a cost contained in a cell between currencies. Then you can add a line manipulator to the converter like this:
@@ -277,5 +279,29 @@ Returning false from a manipulator indicates that the line should be omitted com
 
 You can both add and remove cells in a line manipulator.
 ## Asynchronous conversion
+The `org.jsapar.concurrent.ConcurrentText2TextConverter` is an asynchronous version of the `Text2TextConverter`.
+Internally it starts a separate thread internally that handles the composing part and thus can utilize resources more efficiently.
 
+Tests have shown though that unless the data source is really large, the gain of concurrency is less
+than the overhead of starting a new thread and synchronizing threads. As a rule of thumb while working with normal
+files on disc, don't use this concurrent version unless your input normally exceeds at least 1MB.
 ## Running text to text conversion from command line
+The class `org.jsapar.Text2TextConverter` has a main method that is also registered as the default main method for the jar file.
+This means that you can run the converter without any coding at all.
+
+If you run it without any arguments you will get a help text with further instructions:
+```bash
+$ java -jar jsapar-2.0.0.jar
+IllegalArgumentException: Too few arguments
+
+Usage:
+ 1. jsapar.jar <property file name>
+ 2. jsapar.jar -in.schema <input schem name> -out.schema <output schema name>
+               -in.file <input file name> [-out.file <output file name>]
+               [-in.file.encoding <input file encoding (or system default is used)>]
+               [-out.file.encoding <output file encoding (or system default is used)>]
+
+Alternative 1. above reads the arguments from a property file.
+
+```
+
