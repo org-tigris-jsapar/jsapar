@@ -1,6 +1,5 @@
 package org.jsapar.parse;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,14 +25,10 @@ public class MulticastLineEventListener implements LineEventListener{
     /**
      * Will call each registered line event listener one by one in order of registration.
      * @param event The event to distribute.
-     * @throws IOException
      */
     @Override
     public void lineParsedEvent(LineParsedEvent event)  {
-        for (LineEventListener l : this.lineEventListeners) {
-            l.lineParsedEvent(event);
-        }
-
+        this.lineEventListeners.forEach(l->l.lineParsedEvent(event));
     }
 
     /**

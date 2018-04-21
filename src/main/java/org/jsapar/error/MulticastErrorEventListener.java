@@ -38,14 +38,10 @@ public class MulticastErrorEventListener implements ErrorEventListener{
      */
     @Override
     public void errorEvent(ErrorEvent event) {
-        if(eventListeners.isEmpty()){
+        if(eventListeners.isEmpty())
             defaultEventListener.errorEvent(event);
-            return;
-        }
-
-        for (ErrorEventListener eventListener : eventListeners) {
-            eventListener.errorEvent(event);
-        }
+        else
+            eventListeners.forEach(l->l.errorEvent(event));
     }
 
     /**
