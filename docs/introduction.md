@@ -15,9 +15,21 @@ Supported file formats:
 * <b>Fixed width </b><i>- Also refered to as flat file. Each cell is described only by its positions within the line. </i>
 * <b>CSV </b><i>- (Comma Separated Values) Each cell is limited by a separator character (or characters).</i>
 
-## Simple example of parsing CSV file
-Let us say that we have a CSV file that we need to parse. In this example the file contains lines that all have the same type. They each contain four cells (columns). Here is an example of the content of such a file.
+## Installation
+The JSaPar library uses [Maven](https://maven.apache.org/) as build tool and the binaries are published to the [maven central repository](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22).
+If you also use maven, all you need to do is to add dependency JSaPar into your project pom-file:
+```xml
+<dependency>
+    <groupId>org.tigris.jsapar</groupId>
+    <artifactId>jsapar</artifactId>
+    <version>2.0.0.a2</version>
+</dependency>
+```
+On the [maven central page for each version]([maven central repository here](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22) you will find instructions of how to add dependency in all the most common build tools and if you
+want to download the binaries and install them locally in your project classpath you also find download links there.
 
+## Simple example of parsing CSV file
+Let us say that we have a CSV (or rather a semi colon separated) file that we need to parse. In this example the file contains lines that all have the same type. They each contain four cells (columns). Here is an example of the content of such a file.
 ```csv
 Erik;Vidfare;Svensson;yes
 Fredrik;Allvarlig;Larsson;no
@@ -64,10 +76,10 @@ instance contains a list of Line objects where each Line represent a line in the
 with the parsed result, we may for example use the LineUtils class that contains a number of convenient methods to get cell
 values of different types from a Line.
 
-That is all you need to parse a CSV file.
+That is all you need to parse a CSV file. As you can see with this example the library works with readers so the data source is not actually limited to just files, it can be of any text data source.
 
-The example above is a small simple example. For larger files you probably want to implement a different event listener
-that handles each line immediately as it is parsed. That way you will never load the whole content of the input file in the memory.
+The example above is a small simple example. For larger data sources you probably want to implement a different event listener
+that handles each line immediately as it is parsed. That way you will never load the whole content of the data source in the memory.
 If you rather work with your own Java class directly instead of getting Line objects, you probably want to look at the Text2BeanConverter class.
 
 ## Simple example of composing a CSV file
@@ -131,34 +143,5 @@ Here you can see the advantage of keeping the format of the file separated from 
 changes you do not need to alter your code.
 
 # Further Examples
-The files for the examples below are provided in the <code>examples</code> folder of the project. The JUnit test <code>org.jsapar.JSaParExamplesTest.java</code>
-contains a more comprehensive set of examples of how to use the package.
-##Example of converting a <b>Fixed width file</b> into a <b>CSV file</b> according to two xml-schemas
-```java
-try(Reader inSchemaReader = new FileReader("samples/01_CsvSchema.xml");
-    Reader outSchemaReader = new FileReader("samples/02_FixedWidthSchema.xml")) {
-    Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-    File outFile = new File("samples/02_Names_out.txt");
-    try(Reader inReader = new FileReader("samples/01_Names.csv");
-        Writer outWriter = new FileWriter(outFile)) {
-        Converter converter = new Converter(xmlBuilder.build(inSchemaReader),
-                                            xmlBuilder.build(outSchemaReader));
-        converter.convert(inReader, outWriter);
-    }
-    Assert.assertTrue(outFile.isFile());
-}
-```
-##Example of converting a <b>CSV file</b> into a list of <b>Java objects</b> according to an xml-schema
-```java
-Reader schemaReader = new FileReader("samples/07_CsvSchemaToJava.xml");
-Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-Reader fileReader = new FileReader("samples/07_Names.csv");
-Parser parser = new Parser(xmlBuilder.build(schemaReader));
-List<CellParseError> parseErrors = new LinkedList<>()
-List<TestPerson> people = parser.buildJava(fileReader, parseErrors);
-fileReader.close();
-```
-If you want to run this example, you will need the class org.jsapar.TstPerson within your classpath. 
-The class is not included in the jar file or in the binary package but it can be found in the source package. 
-As an alternative you can create your own TstPerson class and modify the schema 07_CsvSchemaToJava.xml to use that class instead. 
-The class should contain a default constructor plus getters and setters for all the attributes used in the schema.
+See the [jsapar-examples project](https://github.com/org-tigris-jsapar/jsapar-examples) for further examples or just continue to read
+about the [basics of JSaPar](basics).

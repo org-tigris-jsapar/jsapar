@@ -6,7 +6,8 @@
 	<packaging>jar</packaging>
 	<name>jsapar</name>
 	<url>https://org-tigris-jsapar.github.io/jsapar/</url>
-	<description>The JSaPar package is a java library that provides parser and composer for flat and CSV (Comma Separated Values) files.</description>
+	<description>JSaPar is a Java library providing a schema based parser and composer of almost all sorts of delimited and fixed
+		width files.</description>
   
     <parent>
         <groupId>org.sonatype.oss</groupId>
