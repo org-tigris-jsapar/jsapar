@@ -4,9 +4,10 @@ title: Basics of JSaPar Schemas
 ---
 
 # The schema
-The schema is what describes the format of the input or output. The same schema can be used for both parsing and composing.
-Usually the easiest way to work with a schema is to use the
-xml format. The example below describes a simple schema for a CSV file taken from the first example above.
+The schema is what describes the structure of the input or output data. The same schema can be used for both parsing and composing.
+Usually the easiest way to work with a schema is to use the XML format but you may also create a schema directly in java code.
+The documentation below is however based on the XML form.
+The example below describes a simple schema for a CSV file taken from the first example above.
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -43,26 +44,29 @@ Depending on the choice here, the rest of the schema will be different.
 On this level you may also specify what type of line separator your input or output have. You can use any character 
 sequence as line separator but for convenience the following escaped characters will also work within the xml:
 
-* `\n` - LF (line feed) or hex 0A. 
+* `\n` - LF (line feed) or hex 0A.
 * `\r` - CR (carrige return) or hex 0D.
 * `\t` - TAB (horizontal tab) or hex 09.
 * `\f` - FF (form feed) or hex 0C.
 
-For Unix systems the normal line separator is `"\n"` and for Windows systems the normal line separator is `"\r\n"`. Omitting
+You can also specify the line separator by using the hex code but in that case you need to use the XML-standard for
+escaping. E.g. in order to use LF as line separator you need to write `lineseparator="&#10;"`
+
+For Unix systems the normal line separator is `\n` and for Windows systems the normal line separator is `\r\n`. Omitting
 the `lineseparator` attribute will result in that the system default is used. Be aware though that if you rely on system 
 default, the schema will behave differently if you move it to a different platform. It is therefore recommended to always 
-specify the line separator explicitly.  
+specify the line separator explicitly.
 
-For fixed width files you may also specify an 
+For fixed width files you may also specify an
 empty string if lines are determined only by the length of the line which can be the case for Mainframe computers (COBOL).
 
-When parsing, if you have specified one of either `"\n"` or `"\r\n"` as line separator, then the parser will consider both of them to be valid
+When parsing, if you have specified one of either `\n` or `\r\n` as line separator, then the parser will consider both of them to be valid
 line separators but when composing, only the specified line separator will be used.
 
 ## The Schema xml for CSV 
 ### Line
-The `<line>` element describes a type of line that can occur in your input or output. For instance, you may have a 
-different header line that have a different set of columns than the rest of the file. The `occurs` attribute describes 
+The `<line>` element describes a type of line that can occur in your input or output data. For instance, you may have a
+different header line that has a different set of columns than the rest of the file. The `occurs` attribute describes
 how many lines to expect of a certain type. By setting `occurs="*"` you indicate that the line may occur infinite number 
 of times.
 
@@ -73,7 +77,7 @@ lineType of all Line objects that you provide to the Composer in order to make i
 On this level you need to specify the `cellseparator` attribute which should describe how cells/columns are separated 
 within the input/output. You can use any character sequence 
 and you can use the same escaped characters as with the line separator described above. Please note that if the cell 
-separator may occur within a value of a cell, you will need to quote the cell. See chapter about Quoted values below.
+separator may occur as valid text also within a value of a cell, you will need to quote the cell. See chapter about Quoted values below.
 
 The attributes `ignoreread` and `ignorewrite` can be used to indicate that the line should be ignored while parsing or 
 composing.
@@ -88,7 +92,10 @@ F;2
 ```
 In this file, the value of the first column determines how to parse the rest of the line. `H` means header, `B` means body and `F` means footer.
 
-In order to parse file above, you can use a schema that looks like this:
+When parsing this file you need a condition on the first cell on each line where a specific value should map to the type of the line.
+By adding a line condition on the first cell you can specify a pattern that needs to match in order to use that line type.
+
+The schema could look like this:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0">
@@ -113,6 +120,24 @@ In order to parse file above, you can use a schema that looks like this:
 ```
 When parsing a file with a schema like this, it is important that you check the line type of the returned Line instance.
 
+For instance, in your `LineEventListener` you should have a check like this:
+```java
+void lineParsedEvent(LineParsedEvent event){
+   Line line = event.getLine();
+   switch(line.getLineType(){
+      case "Header":
+         handleHeader(line);
+         break;
+      case "Person":
+         handlePerson(line);
+         break;
+      case "Footer":
+         handleFooter(line);
+         break;
+   }
+}
+```
+
 You may add a line condition on any cell within your schema. If you add more than one line condition on the same line, 
 all of them need to comply in order for the line type to be used.
  
@@ -121,7 +146,7 @@ of times that a line type is used when parsing.
 
 When composing, you set the value of the line condition cell as with any other cell so the line condition as no effect 
 when composing. By assigning a default value for the line condition cell as we do above, we make sure that we do not need 
-to assign any value to that cell while composing. 
+to explicitly assign any value to that cell while composing.
 ### Cell
 The `<cell>` element describes the format of a particular cell or column. Each cell needs to have a name. By default the 
 cell type is string so if you do not want the library to do any type conversion, the minimal configuration for a cell is:
@@ -130,9 +155,10 @@ cell type is string so if you do not want the library to do any type conversion,
 <cell name="TheName"/>
 ```
 With the attribute `mandatory="true"`, you can specify that an error is generated if a cell does not have any value. See 
-chapter about error handling below.
+chapter about error handling in the [basics](basics) article.
  
 The attribute `default` can be used to assign a default value that will be used if the cell does not contain any value.
+This works both while parsing and while composing.
 
 As with lines, you can use `ignoreread` and `ignorewrite` on cell level to skip reading while parsing or to skip writing 
 a cell value while composing. If `ignorewrite=true`, an empty cell will be written as if it contained an empty string. 
@@ -142,7 +168,7 @@ example, by adding the format:
 ```xml
 <cell name="Birthdate"><format type="date" pattern="YYYY-mm-DD"/></cell>
 ```
-The parser will convert string date values into DateCell containing a java.util.Date with the parsed date.
+The parser will convert string date values into `DateCell` containing a `java.util.Date` with the parsed date.
 
 The following types are supported:
 * string
@@ -205,7 +231,7 @@ You may for instance provide default values for missing columns or specify that 
 
 When composing, if `firstlineasschema="true"` then the output will be produced according to the cell layout of the schema
 and with an additional header line with the name of the cells as specified by the schema. So in this case it is important that all the cells are present
-and in the correct position.
+and in the correct order.
 
 ## The Schema xml for fixed width files
 ### Line
