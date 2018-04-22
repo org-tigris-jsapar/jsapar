@@ -51,7 +51,7 @@ public class CsvSchemaLine extends SchemaLine {
     /**
      * Creates a CsvSchemaLine with the supplied line type and occurs supplied number of times.
      * @param lineType The type of the line
-     * @param nOccurs The number of times this type of line occurs in the input/output.
+     * @param nOccurs The number of times this type of line occurs in the input/output. Use {@link #OCCURS_INFINITE} constant for infinite number of times.
      */
     public CsvSchemaLine(String lineType, int nOccurs) {
         super(lineType, nOccurs);
@@ -68,9 +68,11 @@ public class CsvSchemaLine extends SchemaLine {
      * Adds a schema cell to this row.
      *
      * @param cell The cell to add
+     * @return This instance of the schema line, allows to chain calls.
      */
-    public void addSchemaCell(CsvSchemaCell cell) {
+    public CsvSchemaLine addSchemaCell(CsvSchemaCell cell) {
         this.schemaCells.put(cell.getName(), cell);
+        return this;
     }
 
     public String getCellSeparator() {

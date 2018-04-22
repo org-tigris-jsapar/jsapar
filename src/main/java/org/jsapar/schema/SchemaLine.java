@@ -11,6 +11,9 @@ import java.util.stream.Stream;
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class SchemaLine implements Cloneable {
+    /**
+     * Constant to be used in occurs attribute and that indicates that lines can occur infinite number of times.
+     */
     private static final int    OCCURS_INFINITE      = Integer.MAX_VALUE;
     private static final String NOT_SET              = "";
 
@@ -39,7 +42,7 @@ public abstract class SchemaLine implements Cloneable {
      * Creates a SchemaLine that occurs supplied number of times.
      * 
      * @param nOccurs
-     *            The number of times that a line of this type occurs in the input or output text.
+     *            The number of times that a line of this type occurs in the input or output text. Use {@link #OCCURS_INFINITE} constant for infinite number of times.
      */
     public SchemaLine(int nOccurs) {
         this.occurs = nOccurs;
@@ -67,7 +70,8 @@ public abstract class SchemaLine implements Cloneable {
 
 
     /**
-     * @return The number of times this type of line occurs in the corresponding buffer.
+     * @return The number of times this type of line occurs in the corresponding buffer. Returns {@link #OCCURS_INFINITE} constant value when infinite number.
+     * @see #isOccursInfinitely()
      */
     public int getOccurs() {
         return occurs;
@@ -75,7 +79,8 @@ public abstract class SchemaLine implements Cloneable {
 
     /**
      * @param occurs
-     *            The number of times this type of line occurs in the corresponding buffer.
+     *            The number of times this type of line occurs in the corresponding buffer. Use {@link #OCCURS_INFINITE} constant for infinite number of times or use the {@link #setOccursInfinitely()} method.
+     * @see #setOccursInfinitely()
      */
     public void setOccurs(int occurs) {
         this.occurs = occurs;

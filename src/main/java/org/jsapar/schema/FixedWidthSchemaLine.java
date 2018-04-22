@@ -29,7 +29,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
      * has occured nOccurs times this schema-line will not be used any more.
      * 
      * @param nOccurs
-     *            The number of times this schema line is used while parsing or writing.
+     *            The number of times this schema line is used while parsing or writing. Use {@link #OCCURS_INFINITE} constant for infinite number of times.
      */
     public FixedWidthSchemaLine(int nOccurs) {
         super(nOccurs);
@@ -50,7 +50,7 @@ public class FixedWidthSchemaLine extends SchemaLine {
     /**
      * Creates a fixed width schema line with the supplied line type and specified to occur supplied number of times.
      * @param lineType The line type of this schema line.
-     * @param nOccurs The number of times it should occur.
+     * @param nOccurs The number of times it should occur. Use {@link #OCCURS_INFINITE} constant for infinite number of times.
      */
     public FixedWidthSchemaLine(String lineType, int nOccurs) {
         super(lineType, nOccurs);
@@ -67,11 +67,13 @@ public class FixedWidthSchemaLine extends SchemaLine {
      * Adds a schema cell to this row.
      * 
      * @param schemaCell The schema cell to add
+     * @return This instance of the schema line, allows to chain calls.
      */
-    public void addSchemaCell(FixedWidthSchemaCell schemaCell) {
+    public FixedWidthSchemaLine addSchemaCell(FixedWidthSchemaCell schemaCell) {
         if(schemaCell == null)
             throw new IllegalArgumentException("Cell schema cannot be null.");
         this.schemaCells.add(schemaCell);
+        return this;
     }
 
 
