@@ -7,12 +7,11 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * A parser that reads the internal xml format defined in XMLDocumentFormat.xsd.
- *
- * The default error handling is to throw an exception upon the first error that occurs. You can however change that
- * behavior by adding an {@link org.jsapar.error.ErrorEventListener}. There are several implementations to choose from such as
- * {@link org.jsapar.error.RecordingErrorEventListener} or
- * {@link org.jsapar.error.ThresholdRecordingErrorEventListener}, or you may implement your own..
+ * Parses xml text of the internal xml format and produces parse events. The xml needs to conform to the internal XML schema XMLDocumentFormat.xsd (http://jsapar.tigris.org/XMLDocumentFormat/1.0)
+ * <p>
+ * This class can for instance be used to parse xml text that was created by {@link org.jsapar.Text2XmlConverter}.
+ * <p>
+ * See {@link AbstractParser} about error handling.
  */
 public class XmlParser extends AbstractParser {
 
