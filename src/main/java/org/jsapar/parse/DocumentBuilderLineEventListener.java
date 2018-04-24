@@ -4,12 +4,27 @@ import org.jsapar.model.Document;
 
 /**
  * This line event listener can be used to build a document based on line events.
- * Use this class only if you are sure that the whole file can be parsed into memory. If the
- * file is too big, a OutOfMemory exception will be thrown. For large files use any of the ParseTask implementations
- * directly instead. Dispose instances of this class when they have been used once.
+ * Use this class only if you are sure that the whole data can be parsed into memory. If the
+ * data source is too big, most likely a OutOfMemory exception will be thrown. For large data sources use your own {@link LineEventListener} implementation instead and handle lines one by one.
  */
 public class DocumentBuilderLineEventListener implements LineEventListener, AutoCloseable {
-    private Document document = new Document();
+    private Document document;
+
+    /**
+     * Creates an event listener that add lines to the provided document.
+     * @param document The document to add lines to.
+     */
+    public DocumentBuilderLineEventListener(Document document) {
+        this.document = document;
+    }
+
+    /**
+     * Creates an event listener that add lines to an internally created document. Use {@link #getDocument()} to
+     * retrieve the instance when done.
+     */
+    public DocumentBuilderLineEventListener() {
+        this.document = new Document();
+    }
 
     @Override
     public void lineParsedEvent(LineParsedEvent event) {
@@ -27,7 +42,7 @@ public class DocumentBuilderLineEventListener implements LineEventListener, Auto
     }
 
     /**
-     * Closes this instance and clears all internal storage. After calling this method on an instance, the instance cannot be
+     * Closes this instance and detaches all internal storage. After calling this method on an instance, the instance cannot be
      * used as event listener any more and {@link #getDocument()} will return null.
      */
     @Override
