@@ -3,8 +3,10 @@
 [![HitCount](http://hits.dwyl.io/stenix71/github.com/org-tigris-jsapar/jsapar.svg)](http://hits.dwyl.io/stenix71/github.com/org-tigris-jsapar/jsapar)
 
 [![Java 8](https://img.shields.io/badge/java-8-brightgreen.svg)](#java-8)
+<!--
 [![Java 9-ea](https://img.shields.io/badge/java-9-brightgreen.svg)](#java-9)
 [![Java 10-ea](https://img.shields.io/badge/java-10-brightgreen.svg)](#java-10)
+ -->
 # jsapar
 JSaPar is a Java library providing a schema based parser/producer of CSV (Comma Separated Values) and flat files.
 
