@@ -324,6 +324,7 @@ public abstract class SchemaCell implements Cloneable {
      *            The default value formatted according to this schema. Will be used if input/output
      *            is missing for this cell.
      * @throws java.text.ParseException When the supplied value cannot be parsed according to this cell schema.
+     * @throws SchemaException If there was a configuration error in the schema.
      */
     public void setDefaultValue(String sDefaultValue) throws java.text.ParseException, SchemaException {
         CellParser cellParser = new CellParser();

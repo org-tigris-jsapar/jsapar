@@ -71,7 +71,8 @@ public class Text2TextConverter extends AbstractConverter {
     }
 
     /**
-     * @param args
+     * Starts stand alone text to text converter.
+     * @param args The main program arguments
      */
     public static void main(String[] args) {
         Text2TextConverterMain main = new Text2TextConverterMain();

@@ -12,7 +12,7 @@ public interface LineReader {
      * 
      * @return The next available line from the input without trailing line separator or null if end of input buffer was
      *         reached.
-     * @throws IOException
+     * @throws IOException In case there was an error reading from input.
      */
     String readLine() throws IOException;
 

@@ -121,6 +121,7 @@ public abstract class Schema implements Cloneable{
      * @throws SchemaException
      *             if the supplied xml does not comply to the JSaParSchema.xsd or if there is any other error while
      *             loading a schema.
+     * @throws IOException In case there was an error reading from the input.
      */
     public static Schema ofXml(Reader reader)
             throws SchemaException, IOException{
