@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  * <p>
  * The Generic type T should be set to a common base class of all the expected beans. Use Object as
  * base class if there is no common base class for all beans.
- * <p/>
+ * <p>
  * The difference compared to {@link Bean2TextConverter} is that instances of this class can be used multiple times for
  * different writers by calling one of the convert methods where as {@link Bean2TextConverter} only can be used once and
  * the writer needs to be supplied in the constructor.
@@ -41,6 +41,8 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * Creates a converter with supplied composer schema.
      *
      * @param composerSchema The schema to use while composing text output.
+     * @throws IntrospectionException If string names of properties could not be mapped to actual properties.
+     * @throws ClassNotFoundException In case any of the classes described in the schema does not exist in the classpath.
      */
     public BeanCollection2TextConverter(Schema composerSchema) throws IntrospectionException, ClassNotFoundException {
         this(composerSchema, BeanMap.ofSchema(composerSchema));

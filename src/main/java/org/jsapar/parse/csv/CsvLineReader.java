@@ -9,7 +9,7 @@ import java.io.Reader;
  * again. This makes it possible to read the line once first to match against cell conditions and then again to do
  * the actual parsing.
  * Also makes it possible to handle the fact that a quoted cell can contain line-breaks.
- * <p/>
+ * <p>
  */
 class CsvLineReader {
 

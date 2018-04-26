@@ -10,25 +10,23 @@ import java.io.Reader;
 
 /**
  * This class is used for a one-off parsing of a text source. You create an instance of this class, calls execute, then dispose it.. <br>
- * The instance of this class will produce events for each line that has been successfully parsed. <br/>
+ * The instance of this class will produce events for each line that has been successfully parsed.
+ * <p>
  * If you want to get the result back as a complete Document object, you should use the {@link org.jsapar.parse.DocumentBuilderLineEventListener}.
- * <br/>
  * <ol>
  * <li>First, create an instance of TextParseTask.</li>
  * <li>Set event listeners for parse events and error events</li>
  * <li>Call the {@link #execute()} method. You will receive a callback event for each line that is parsed.</li>
  * </ol>
- * <br/>
  *
  * @see org.jsapar.TextParser
  * @see ParseTask
-*
  */
 public class TextParseTask extends AbstractParseTask implements ParseTask {
 
-    private final Schema schema;
-    private final Reader reader;
-    private final TextParseConfig     parseConfig;
+    private final Schema          schema;
+    private final Reader          reader;
+    private final TextParseConfig parseConfig;
 
     public TextParseTask(Schema schema, Reader reader) {
         this(schema, reader, new TextParseConfig());
@@ -46,6 +44,7 @@ public class TextParseTask extends AbstractParseTask implements ParseTask {
      * parsing a line, a CellErrorEvent or ErrorEvent is generated to all registered error event listeners <br>
      * Before calling this method you have to call {@link #setLineEventListener(LineEventListener)} to be able to handle the
      * result
+     *
      * @throws IOException If there is an error reading the input
      */
     @Override

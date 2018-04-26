@@ -12,7 +12,6 @@ import org.jsapar.schema.Schema;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.Writer;
 
 /**
  * Converts a text input to  {@link StringComposedEvent} for each line that is parsed.
@@ -57,7 +56,7 @@ public class Text2StringConverter extends AbstractConverter {
 
     /**
      * Creates the composer
-     * @param composedEventListener
+     * @param composedEventListener The string composed event listener that get notification of each line.
      * @return The composer to use in this converter
      */
     protected Composer makeComposer(Schema schema, StringComposedEventListener composedEventListener) {

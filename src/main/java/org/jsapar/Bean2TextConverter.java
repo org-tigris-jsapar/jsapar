@@ -19,7 +19,7 @@ import java.util.List;
  * <p>
  * The Generic type T should be set to a common base class of all the expected beans. Use Object as
  * base class if there is no common base class for all beans.
- * <p/>
+ * <p>
  * An instance of this class can only be used once for one writer, then it needs to be disposed. Instances of {@link BeanCollection2TextConverter} on
  * the other hand can be used multiple times for multiple writers.
  * <p>
@@ -39,11 +39,11 @@ import java.util.List;
  */
 public class Bean2TextConverter<T> {
 
-    private final BeanParser<T> beanParser;
-    private final TextComposer  textComposer;
-    private long                  lineNumber         = 1;
-    private List<LineManipulator> manipulators       = new java.util.LinkedList<>();
-    private ErrorEventListener    errorEventListener = new ExceptionErrorEventListener();
+    private final BeanParser<T>         beanParser;
+    private final TextComposer          textComposer;
+    private       long                  lineNumber         = 1;
+    private       List<LineManipulator> manipulators       = new java.util.LinkedList<>();
+    private       ErrorEventListener    errorEventListener = new ExceptionErrorEventListener();
 
     /**
      * Creates a converter with supplied composer schema.

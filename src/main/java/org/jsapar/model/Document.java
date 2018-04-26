@@ -54,7 +54,7 @@ public class Document implements Serializable, Iterable<Line> {
      * @param index The index of the line to retrieve.
      * @return The line at the specified index. 
      * @throws IndexOutOfBoundsException
-     *             - if the index is out of range (index < 0 || index >= size())
+     *             - if the index is out of range <pre>{@code (index < 0 || index >= size())}</pre>
      */
     public Line getLine(int index) {
         return this.lines.get(index);
@@ -187,7 +187,7 @@ public class Document implements Serializable, Iterable<Line> {
      * @param index The index of the line to remove.
      * @return The line that was removed.
      * @throws IndexOutOfBoundsException
-     *             - if the index is out of range (index < 0 || index >= size())
+     *             - if the index is out of range <pre>{@code (index < 0 || index >= size())}</pre>
      */
     public Line removeLineAt(int index){
         return lines.remove(index);

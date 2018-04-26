@@ -18,20 +18,24 @@ public interface BeanFactory<T> {
      * @param line The line to create a bean for.
      * @return A new instance of a java bean created for the supplied line. If this method returns null, the behavior of
      * the {@link BeanComposer} is denoted by the config parameter {@link BeanComposeConfig#setOnUndefinedLineType(ValidationAction)}
-     * @throws ClassNotFoundException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
+     * @throws ClassNotFoundException In case any of the classes described in the schema does not exist in the classpath.
+     * @throws IllegalAccessException In case a setter method is not publicly accessible.
+     * @throws InstantiationException If it was not possible to instantiate a bean.
+     * @throws ClassCastException     In case an illegal cast is done while trying to use a setter.
      */
     T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException;
 
 
     /** Should assign the value of the specified cell to the proper bean property.
      *
-     * @param lineType
+     * @param lineType The name of the line type to use.
      * @param bean The bean to assign to.
      * @param cell The cell to assign.
      * @throws BeanComposeException In case there is an error assigning the cell. This exception will be caught by the
      * calling {@link BeanComposer} and converted into an {@link org.jsapar.error.ErrorEvent}.
+     * @throws InvocationTargetException If not possible to invoke method.
+     * @throws IllegalAccessException In case a setter method is not publicly accessible.
+     * @throws InstantiationException If it was not possible to instantiate a bean.
      */
     void assignCellToBean(String lineType, T bean, Cell cell) throws BeanComposeException, InvocationTargetException, InstantiationException, IllegalAccessException;
 

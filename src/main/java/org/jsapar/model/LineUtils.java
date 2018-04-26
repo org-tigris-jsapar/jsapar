@@ -100,6 +100,7 @@ public class LineUtils {
      * Utility function that adds a cell with the specified name and value to the end of the line or replaces an
      * existing cell if there already is one with the same name.
      *
+     * @param line     The line to alter
      * @param cellName The name of the cell to add/replace.
      * @param value    The character value to set.
      */
@@ -111,6 +112,7 @@ public class LineUtils {
      * Utility function that adds a cell with the specified name and value to the end of the line or
      * replaces an existing cell if there already is one with the same name.
      *
+     * @param line     The line to alter
      * @param cellName The name of the cell to add/replace.
      * @param value    The date value to set. If null, existing value will be removed but no new value will be set.
      */
@@ -122,6 +124,7 @@ public class LineUtils {
      * Utility function that adds a cell with the specified name and value to the end of the line or
      * replaces an existing cell if there already is one with the same name.
      *
+     * @param line     The line to alter
      * @param cellName The name of the cell to add/replace.
      * @param value    The date value to set. If null, existing value will be removed but no new value will be set.
      */
@@ -134,6 +137,7 @@ public class LineUtils {
      * Utility function that adds a cell with the specified name and value to the end of the line or
      * replaces an existing cell if there already is one with the same name.
      *
+     * @param line     The line to alter
      * @param cellName The name of the cell to add/replace.
      * @param value    The date value to set. If null, existing value will be removed but no new value will be set.
      */
@@ -145,6 +149,7 @@ public class LineUtils {
      * Utility function that adds a cell with the specified name and value to the end of the line or
      * replaces an existing cell if there already is one with the same name.
      *
+     * @param line     The line to alter
      * @param cellName The name of the cell to add/replace.
      * @param value    The date value to set. If null, existing value will be removed but no new value will be set.
      */
@@ -156,6 +161,7 @@ public class LineUtils {
      * Utility function that adds a cell with the specified name and value to the end of the line or
      * replaces an existing cell if there already is one with the same name.
      *
+     * @param line     The line to alter
      * @param cellName The name of the cell to add/replace.
      * @param value    The date value to set. If null, existing value will be removed but no new value will be set.
      */
@@ -167,6 +173,7 @@ public class LineUtils {
      * Utility function that adds a cell with the specified name and value to the end of the line or
      * replaces an existing cell if there already is one with the same name.
      *
+     * @param line     The line to alter
      * @param cellName The name of the cell to add/replace.
      * @param value    The value to set. If null, existing value will be removed but no new value will be set.
      */
@@ -178,6 +185,7 @@ public class LineUtils {
      * Utility function that adds a cell with the specified name and value to the end of the line or
      * replaces an existing cell if there already is one with the same name.
      *
+     * @param line     The line to alter
      * @param cellName The name of the cell to add/replace.
      * @param value    The value to set. If null, existing value will be removed but no new value will be set.
      */
@@ -522,9 +530,11 @@ public class LineUtils {
      * @param line      The line to get from
      * @param cellName  The name of the cell to get
      * @param enumClass The class of the enum to convert the value into.
+     * @param <E>       The enum type.
      * @return The enum cell value if the cell or empty if cell does not have any value or does not exist.
      * @throws IllegalArgumentException If the enum type of the defaultValue does not have an enum constant with the name equal to the value
      *                                  of the specified cell.
+     * @throws IllegalStateException If there is no cell with specified value within the line.
      */
     public static <E extends Enum<E>> Optional<E> getEnumCellValue(Line line, String cellName, Class<E> enumClass)
             throws IllegalArgumentException, IllegalStateException {
@@ -550,6 +560,7 @@ public class LineUtils {
      * @param line         The line to get from
      * @param cellName     The name of the cell to get
      * @param defaultValue Default value that will be returned if the cell does not exist or does not have any value.
+     * @param <E>          The enum type.
      * @return The enum cell value if the cell exist and can be converted to an enum. Returns the defaultValue if the cell does
      * not exist.
      * @throws IllegalArgumentException If the enum type of the defaultValue does not have an enum constant with the name equal to the value

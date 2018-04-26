@@ -1,10 +1,6 @@
 package org.jsapar.compose;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
-
-import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * Internal common interface for all schema composers that uses a schema to compose text output.
@@ -24,7 +20,6 @@ public interface SchemaComposer {
      *
      * @param line The line to compose output from.
      * @return True if line was actually composed, false otherwise.
-     * @throws IOException if an io-error occurs
      */
     boolean composeLine(Line line) ;
 }

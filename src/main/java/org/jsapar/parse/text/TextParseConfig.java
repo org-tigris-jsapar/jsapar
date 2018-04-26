@@ -4,7 +4,7 @@ import org.jsapar.error.ValidationAction;
 
 /**
  * Configuration that controls behavior while parsing text.
- * <p/>
+ * <p>
  * Created by stejon0 on 2016-07-12.
  */
 public class TextParseConfig {

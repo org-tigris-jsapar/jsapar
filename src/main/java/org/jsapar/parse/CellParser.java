@@ -9,6 +9,7 @@ import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
 
 import java.text.Format;
+import java.text.ParseException;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -77,10 +78,9 @@ public class CellParser {
      * @param sValue The value to assign to the new cell
      * @return A new cell of a type according to the schema specified. Returns null if there is no
      *         value.
-     * @throws SchemaException If there is an error in the schema
-     * @throws java.text.ParseException If the value cannot be parsed according to the format of this cell schema.
+     * @throws ParseException If the value cannot be parsed according to the format of this cell schema.
      */
-    public Cell makeCell(SchemaCell schemaCell, String sValue) throws java.text.ParseException{
+    public Cell makeCell(SchemaCell schemaCell, String sValue) throws ParseException {
 
         String name = schemaCell.getName();
         // If the cell is empty, check if default value exists.
@@ -111,8 +111,7 @@ public class CellParser {
      * @param locale   The locale to use to create default format
      * @return A cell object that has been parsed from the supplied sValue parameter according to
      *         the default format for supplied type and locale.
-     * @throws java.text.ParseException
-     * @throws SchemaException
+     * @throws ParseException If the value cannot be parsed according to the format of this cell schema.
      */
     public static Cell makeCell(CellType cellType, String sName, String sValue, Locale locale)
             throws java.text.ParseException {
@@ -127,7 +126,7 @@ public class CellParser {
      *
      * @param cellSchema The cell schema to use
      * @param cell       The cell to validate
-     * @throws java.text.ParseException
+     * @throws ParseException If the value cannot be parsed according to the format of this cell schema.
      */
     protected void validateRange(SchemaCell cellSchema, Cell cell) throws java.text.ParseException {
 

@@ -72,15 +72,9 @@ public class Text2TextConverterMain {
         }
     }
 
-    /**
-     * Prints usage information to supplied output stream.
-     *
-     * @param e   An exception that occurred.
-     * @param out The stream to write to.
-     */
-    protected void printUsage(Exception e, PrintStream out) {
+    private void printUsage(Exception e, PrintStream out) {
         out.println(e.getClass().getSimpleName() + ": " + e.getMessage());
-        out.println("");
+        out.println();
         out.println("Usage:");
         out.println(" 1. " + getApplicationName() + " <property file name> ");
         out.println(" 2. " + getApplicationName()
@@ -88,28 +82,15 @@ public class Text2TextConverterMain {
         out.println("               -in.file <input file name> [-out.file <output file name>]");
         out.println("               [-in.file.encoding <input file encoding (or system default is used)>] ");
         out.println("               [-out.file.encoding <output file encoding (or system default is used)>] ");
-        out.println("");
+        out.println();
         out.println("Alternative 1. above reads the arguments from a property file.");
     }
 
-    /**
-     * Override to implement other converter behavior.
-     *
-     * @param inputSchema
-     * @param outputSchema
-     * @return A new converter.
-     */
-    protected Text2TextConverter makeConverter(Schema inputSchema, Schema outputSchema) {
+    private Text2TextConverter makeConverter(Schema inputSchema, Schema outputSchema) {
         return new Text2TextConverter(inputSchema, outputSchema);
     }
 
-    /**
-     * Reads command line arguments into property structure.
-     *
-     * @param properties The properties to be filled with arguments.
-     * @param args       The arguments.
-     */
-    protected void readArgs(Properties properties, String[] args) {
+    private void readArgs(Properties properties, String[] args) {
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (arg.length() > 1 && arg.charAt(0) == '-') {
@@ -121,22 +102,12 @@ public class Text2TextConverterMain {
         }
     }
 
-    /**
-     * @param properties
-     * @param key
-     */
-    protected void checkMandatory(Properties properties, String key) {
+    private void checkMandatory(Properties properties, String key) {
         if (null == properties.getProperty(key))
             throw new IllegalArgumentException("Mandatory argument -" + key + " is missing.");
     }
 
-    /**
-     * @param args
-     * @return A Properties instance filled with all the configuration.
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    protected Properties readConfig(String[] args) throws IOException {
+    private Properties readConfig(String[] args) throws IOException {
         Properties properties = new Properties();
         if (args.length == 1) {
             properties.load(new FileReader(args[0]));
