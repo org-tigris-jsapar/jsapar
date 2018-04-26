@@ -42,6 +42,7 @@ public class BeanParser<T>  {
      * <tt>streetAddress</tt>. Only properties defined in the current {@link BeanMap} will be added to the created line.
      *
      * @param bean       The bean.
+     * @param errorListener The error listener to which error events are propagated.
      * @param lineNumber The number of the line being parsed. Numbering starts from 1.
      * @return A Line bean containing cells according to the getter method of the supplied bean.
      */

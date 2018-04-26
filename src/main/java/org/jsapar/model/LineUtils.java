@@ -43,6 +43,7 @@ public class LineUtils {
      * @param line     The line to alter
      * @param cellName The name of the cell to add/replace.
      * @param value    The string value to set. If null, existing value will be removed but no new value will be set.
+     * @param <E>          The enum type.
      */
     public static <E extends Enum<E>> void setEnumCellValue(Line line, String cellName, E value) {
         line.putCellValue(cellName, value, (n, v) -> new StringCell(n, String.valueOf(v)));

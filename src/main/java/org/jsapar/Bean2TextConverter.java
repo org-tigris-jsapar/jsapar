@@ -63,6 +63,7 @@ public class Bean2TextConverter<T> {
      *
      * @param composerSchema The schema to use while composing text output.
      * @param beanMap        The bean map to use to map schema names to bean properties.
+     * @param writer         The writer to write text output to. Caller is responsible for closing the writer.
      */
     public Bean2TextConverter(Schema composerSchema, BeanMap beanMap, Writer writer) {
         assert composerSchema != null;

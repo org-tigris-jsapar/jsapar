@@ -38,16 +38,6 @@ public class FixedWidthParserFlat extends FixedWidthParser{
         this.reader = new BufferedReader(reader);
     }
 
-    /**
-     * Sends line parce events to the supplied lineEventListener while parsing.
-     *
-     * @param lineEventListener
-     *            The {@link LineEventListener} which will receive events for each parsed line.
-     * @param errorListener
-     * The {@link ErrorEventListener} that will receive events for each error.
-     *
-     * @throws java.io.IOException If there is an error reading from the input reader.
-     */
     @Override
     public long parse(LineEventListener lineEventListener, ErrorEventListener errorListener) throws IOException {
         long lineNumber = 0;

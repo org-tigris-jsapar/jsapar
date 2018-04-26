@@ -22,6 +22,7 @@ public interface XmlTypes {
     /**
      * Utility function to retrieve first matching child element.
      *
+     * @param nameSpace     The name space of the child.
      * @param parentElement The parent element
      * @param sChildName The name of the child element to get.
      * @return The child element or null if none found.

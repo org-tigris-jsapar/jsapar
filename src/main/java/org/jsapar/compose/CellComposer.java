@@ -17,6 +17,7 @@ public class CellComposer {
      *            The cell to format. If this parameter is null or an empty string, the default
      *            value will be returned or if there is no default value, an empty string will be
      *            returned.
+     * @param schemaCell The cell schema to use for this cell
      * @return The formatted value for this cell.
      */
     public String format(Cell cell, SchemaCell schemaCell) {

@@ -26,7 +26,6 @@ public class ConcurrentConvertTaskFactory implements ConcurrentStartStop{
      * @param parseTask The parse task to use
      * @param composer The composer to use
      * @return Number of converted lines.
-     * @throws IOException In case of IO error
      */
     protected ConvertTask makeConvertTask(ParseTask parseTask, Composer composer)  {
         ConcurrentConvertTask convertTask = new ConcurrentConvertTask(parseTask, composer);

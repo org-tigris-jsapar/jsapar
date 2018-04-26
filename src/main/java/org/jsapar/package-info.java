@@ -14,7 +14,6 @@
  * contains a more comprehensive set of examples of how to use the package.
  * <p>
  * Example of reading <b>CSV file</b> into a {@link org.jsapar.model.Document} object according to an xml-schema:
- * <p>
  * <pre>{@code
  * try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
  *    Reader fileReader = new FileReader("examples/01_Names.csv")) {

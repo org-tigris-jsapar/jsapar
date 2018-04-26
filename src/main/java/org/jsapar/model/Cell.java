@@ -35,6 +35,7 @@ public abstract class Cell<T> implements Serializable {
      * Creates a cell with a name.
      * 
      * @param name        The name of the cell
+     * @param value       The value to set for this cell.
      * @param cellType    The type of the cell.
      */
     public Cell(String name, T value, CellType cellType) {

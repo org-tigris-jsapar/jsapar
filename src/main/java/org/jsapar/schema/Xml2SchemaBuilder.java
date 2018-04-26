@@ -10,7 +10,6 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,7 +17,6 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Locale;
-import java.util.Optional;
 
 /**
  * Builds a {@link Schema} instance from xml that conforms to the JSaPar xsd.
@@ -48,7 +46,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      * @return The file parser schema.
      * @throws SchemaException When there is an error in the schema
      * @throws IOException When there is an error reading the input
-     * @throws SAXException When there is an error parsing the xml
      */
     public Schema build(Reader reader) throws IOException, SchemaException {
         String schemaFileName = "/xml/schema/JSaParSchema.xsd";
@@ -87,7 +84,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
                 }
 
                 @Override
-                public void warning(SAXParseException e) throws SAXException {
+                public void warning(SAXParseException e)  {
                     // System.out.println("Warning while validating schema" +
                     // e);
                 }
@@ -197,15 +194,20 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
 
         Node xmlAlignment = xmlSchemaCell.getAttributeNode(ATTRIB_FW_SCHEMA_CELL_ALIGNMENT);
         if(xmlAlignment != null) {
-            if (getStringValue(xmlAlignment).equals("left"))
+            switch (getStringValue(xmlAlignment)) {
+            case "left":
                 cell.setAlignment(FixedWidthSchemaCell.Alignment.LEFT);
-            else if (getStringValue(xmlAlignment).equals("center"))
+                break;
+            case "center":
                 cell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
-            else if (getStringValue(xmlAlignment).equals("right"))
+                break;
+            case "right":
                 cell.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
-            else {
-                throw new SchemaException("Invalid value for attribute: " + ATTRIB_FW_SCHEMA_CELL_ALIGNMENT + "=" + getStringValue(
-                        xmlAlignment));
+                break;
+            default:
+                throw new SchemaException(
+                        "Invalid value for attribute: " + ATTRIB_FW_SCHEMA_CELL_ALIGNMENT + "=" + getStringValue(
+                                xmlAlignment));
             }
         }
         else{
@@ -352,9 +354,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      * 
      * @param line The line to assign to
      * @param xmlSchemaLine The xml element to parse
-     * @throws SchemaException  When there is an error in the schema
      */
-    private void assignSchemaLineBase(SchemaLine line, Element xmlSchemaLine) throws SchemaException {
+    private void assignSchemaLineBase(SchemaLine line, Element xmlSchemaLine)  {
         Node xmlOccurs = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_OCCURS);
         if (xmlOccurs != null) {
             if (getStringValue(xmlOccurs).equals("*"))
@@ -536,8 +537,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      * @return A newly created schema from the xml file.
      * @throws SchemaException  When there is an error in the schema
      * @throws IOException      When there is an error reading from input
-     * @throws ParserConfigurationException When there is a serious error in the configuration
-     * @throws SAXException     When there is an error reading the xml
      */
     public static Schema loadSchemaFromXmlFile(File file)
             throws SchemaException, IOException{
@@ -551,8 +550,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      * @return A newly created schema from the xml file.
      * @throws SchemaException  When there is an error in the schema
      * @throws IOException      When there is an error reading from input
-     * @throws ParserConfigurationException When there is a serious error in the configuration
-     * @throws SAXException     When there is an error reading the xml
      */
     @SuppressWarnings("WeakerAccess")
     public static Schema loadSchemaFromXmlFile(File file, String encoding)
@@ -575,8 +572,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      * @return A newly created schema from the supplied xml resource.
      * @throws SchemaException  When there is an error in the schema
      * @throws IOException      When there is an error reading from input
-     * @throws ParserConfigurationException When there is a serious error in the configuration
-     * @throws SAXException     When there is an error reading the xml
      */
     @SuppressWarnings("unused")
     public static Schema loadSchemaFromXmlResource(Class<?> resourceBaseClass, String resourceName)
@@ -597,8 +592,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      * @return A newly created schema from the supplied xml resource.
      * @throws SchemaException  When there is an error in the schema
      * @throws IOException      When there is an error reading from input
-     * @throws ParserConfigurationException When there is a serious error in the configuration
-     * @throws SAXException     When there is an error reading the xml
      */
     @SuppressWarnings("WeakerAccess")
     public static Schema loadSchemaFromXmlResource(Class<?> resourceBaseClass, String resourceName, String encoding)
