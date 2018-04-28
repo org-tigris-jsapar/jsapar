@@ -42,7 +42,7 @@ instance of the `TextParser` by supplying a schema.
 ```java
 ...
     TextParser parser = new TextParser(schema);
-    DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
+    DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener(document);
     parser.parse(fileReader, listener);
 ...    
 ```

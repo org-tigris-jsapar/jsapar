@@ -59,9 +59,9 @@ try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
     Reader fileReader = new FileReader("examples/01_Names.csv")) {
     Schema schema = Schema.ofXml(schemaReader);
     TextParser parser = new TextParser(schema);
-    DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
+    Document document = new Document();
+    DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener(document);
     parser.parse(fileReader, listener);
-    Document document = listener.getDocument();
     Line firstLine = document.iterator().next();
     assert "Erik".equals( LineUtils.getStringCellValue(firstLine, "First name")) );
 }
@@ -70,9 +70,9 @@ In this example we
 1. Load the Schema from a file by using a FileReader for the schema file.
 1. Then we use that schema to create a TextParser.
 1. We then create a DocumentBuilderLineEventListener that is a pre defined event listener that collects all
-the events for each line and then builds a Document object that can be fetched when done parsing.
-1. The resulting document
-instance contains a list of Line objects where each Line represent a line in the input file. Now, depending on what we want to do
+the events for each line and then fills a Document object with lines that can be fetched when done parsing.
+1. The resulting document instance contains a list of Line objects where each Line represent a line in the input file. 
+Now, depending on what we want to do
 with the parsed result, we may for example use the LineUtils class that contains a number of convenient methods to get cell
 values of different types from a Line.
 
