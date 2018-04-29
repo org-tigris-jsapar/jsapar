@@ -38,7 +38,8 @@ After the leading root `<schema>` element you need to define what type of input 
 1. `<csvschema>`
 1. `<fixedwidthschema>`
 
-Depending on the choice here, the rest of the schema will be different. 
+Depending on the choice here, the rest of the schema will be different. Please note that `csvschema` can be used for any
+type of delimited input/output, not only **comma** separated.
 
 ### The line separator
 On this level you may also specify what type of line separator your input or output have. You can use any character 
@@ -190,7 +191,32 @@ The `pattern` attribute behaves differently depending on the type:
 * If the type is boolean, the pattern should contain the true and false values separated with a `;` character. Example: `pattern="Y;N"` will imply that `Y` represents true and `N` to represents false. Comparison while parsing is not case sensitive. Multiple true or false values can be specified, separated with the `|` character but the first value is always the one used while composing. Example: `pattern="Y|YES;N|NO"`
 
 If the `pattern` attribute is omitted, the default system pattern is used.
+#### Empty cell values while parsing
+Sometimes empty cells in the input data are not really empty. They may contain a text like `NULL` or something like that. 
+In that case you can still make the parser consider this to be an empty cell by specifying an `<emptypattern>` element within the cell.
+For example:
+```xml
+<cell name="TheName"><emptypattern><match pattern="NULL"/></emptypattern></cell>
+```  
+This example will make sure that all cells that contain the string `NULL` will be regarded as empty. The pattern attribute can contain
+any [regular expression](https://en.wikipedia.org/wiki/Regular_expression) that will be matched against the whole cell content. 
+This means that for example if your input may contain white spaces before or after the text `NULL` and still should be considered empty you can 
+change the match pattern to:
+```xml
+<match pattern="\s*NULL\s*"/>
+```  
+While parsing a delimited (CSV) input, cells containing white space characters are by default not considered empty, 
+instead white space characters are parsed as cell value. If you instead want the parser to consider all cells that contain only white spaces as empty, 
+you may specify an empty pattern that matches any number of white space characters. Like this:  
+```xml
+<match pattern="\s*"/>
+```  
 ### Quoted values
+The problem with delimited (CSV) data is that the value of a specific cell may also contain the delimiter character or even the line separator. 
+I order to handle this scenario the JSaPar library is capable of handling quoted cells. 
+<!--It does not fully comply to the CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180) but we will get to that in a moment.-->
+
+
 ### The first line describes cell layout
 It is quite common in CSV files to have one header row that contains the name of the columns within the file. For instance, the file might look like this:
 ```csv
