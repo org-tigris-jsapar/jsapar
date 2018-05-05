@@ -113,14 +113,13 @@ class QuotedCellSplitter implements CellSplitter {
         // We do this in a do-while loop instead of recursive call since int will exhaust stack in case line separator
         // is not correctly specified.
         do {
-            String sFound;
             nIndex++; // Behind first quote
             int nFoundEnd = sToSplit.indexOf(quoteAndSeparator, nIndex);
             if (nFoundEnd < 0) {
                 // Last character is quote
                 if (nIndex < sToSplit.length() && sToSplit.length() > 1
                         && sToSplit.charAt(sToSplit.length() - 1) == quoteChar) {
-                    sFound = sToSplit.substring(nIndex, sToSplit.length() - 1);
+                    final String sFound = sToSplit.substring(nIndex, sToSplit.length() - 1);
                     cells.add(sFound);
                     return;
                 }
@@ -159,7 +158,7 @@ class QuotedCellSplitter implements CellSplitter {
                 nIndex = 0;
                 continue;
             }
-            sFound = sToSplit.substring(nIndex, nFoundEnd);
+            final String sFound = sToSplit.substring(nIndex, nFoundEnd);
             nIndex = nFoundEnd + 1; // Behind quote
             cells.add(sFound);
 

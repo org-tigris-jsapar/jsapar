@@ -311,8 +311,8 @@ If the sum of the length of the cells is less than this minlength then the line 
   				<xsd:annotation>
   					<xsd:documentation>
   						Specifies if there is a quote character used
-  						to encapsulate cells. Within quotes the cell
-  						separator and line separator will be ignored.
+  						to encapsulate cells. Between the quotes, also the cell
+  						separator and line separator will be regarded as content of the cell.
   						A cell is considered to be quoted if and only
   						if the first and the last character within the
   						cell is the quote character. Any other quote
