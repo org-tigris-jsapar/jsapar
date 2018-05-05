@@ -213,10 +213,10 @@ you may specify an empty pattern that matches any number of white space characte
 ```  
 ### Quoted values
 The problem with delimited (CSV) data is that the value of a specific cell may also contain the delimiter character or even the line separator. 
-I order to handle this scenario the JSaPar library is capable of handling quoted cells. It does not fully comply to the 
+In order to handle this scenario the JSaPar library is capable of handling quoted cells. It does not fully comply to the 
 CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180) but we will get back to that in a moment.
 
-You activate support for quoted values on a line type by specifying a quote character attribute:
+You activate support for quoted values on a line type by specifying a quote character with the `quotechar` attribute:
 ```xml
 ...
     <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;">
@@ -238,7 +238,7 @@ which states that:
        "aaa","b""bb","ccc"
 ```
 JSaPar will instead only strip the first and the last quote of a cell regardless of if the cell content contains one or
-more additional quote characters which in the example above would give the value `b""bb` of the second cell. This applies 
+more additional quote characters. In the example above JSaPar would parse the value `b""bb` for the second cell. This applies 
 better to the majority of the real life delimited files since most of them do not really comply to [RFC-4180](https://tools.ietf.org/html/rfc4180). 
 This also means that if you have a correctly placed start quote and the end quote is not the last character of the cell, the cell is not 
 considered to be quoted and the quote characters will instead be part of the cell value. 
