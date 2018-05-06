@@ -73,7 +73,9 @@ of times.
 
 The attribute `linetype` sets the name of the type of line described by the line element. When parsing, the line type is
 present in all parsed Line objects and can be used to determine how to treat the Line. When composing, you need to set the 
-lineType of all Line objects that you provide to the Composer in order to make it produce lines of a specific type.
+lineType of all Line objects that you provide to the Composer in order to make it produce lines of a specific type. 
+This also means that when
+converting from one format to another, the line type names of the input and the output schemas needs to match. 
 
 On this level you need to specify the `cellseparator` attribute which should describe how cells/columns are separated 
 within the input/output. You can use any character sequence 
@@ -163,6 +165,10 @@ This works both while parsing and while composing.
 
 As with lines, you can use `ignoreread` and `ignorewrite` on cell level to skip reading while parsing or to skip writing 
 a cell value while composing. If `ignorewrite=true`, an empty cell will be written as if it contained an empty string. 
+
+You can specify a maximum length to read or write to a cell value with the `maxlenght` attribute. Input and output
+value will then be silently truncated to this length. If you want to get an error when field is to
+long, use the format regexp pattern described below instead.
 #### Cell formats
 If you want the library to do type conversion while parsing or composing, you need to specify the format of a cell. For 
 example, by adding the format:
@@ -248,6 +254,29 @@ A maximum of 25 line separators are allowed within the same cell. If that value 
 since the input is probably invalid in some sense. This means that if a start quote is found but no end quote within the 
 following 25 lines or until the end of input data, it is considered an irreparable error.
 #### Composing quoted values
+If your data might contain characters like the line separator or the cell separator you will need to quote the output when 
+composing a delimited file. You activate quoting by specifying the quote character as described above. Now you have the option
+to specify the quoting behavior on each cell by adding the `quotebehavior` attribute like this:
+```xml
+...
+      <cell name="First name" quotebehavior="ALWAYS"/>
+...
+``` 
+There are several options:
+1. **ALWAYS** - Always quote this cell in the output.
+1. **AUTOMATIC** - Quotes the cell only if needed, i.e. only if there is a cell separator, a line separator or a quote character 
+present in the data. This is the default. 
+1. **NEVER** - Never quote this cell. This may lead to invalid delimited output if the cell or line separator is present in the cell value.
+1. **REPLACE** - No quoting is done, instead it replaces all illegal characters with non breakable space in order to always 
+guarantee consistency of the delimited output. Can be used if the consumer of the output does not support quoted cells. 
+This is the default if no quote character is specified on the line. 
+
+You can change the default quote behavior for a whole line type by specifying the `quotebehavior` attribute on the line level:
+```xml
+...
+    <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;" quotebehavior="ALWAYS">
+...
+```
 
 ### The first line describes cell layout
 It is quite common in CSV files to have one header row that contains the name of the columns within the file. For instance, the file might look like this:
@@ -294,12 +323,6 @@ and in the correct order.
 ## The Schema xml for fixed width files
 ### Line
 ### Cell
-
-## Line types
-Within the schema, you specify a number of line types. When parsing, the type of the line is either denoted by it's position
-within the input (governed by the `occurs` attribute) or by a number of conditional cells. For one type of line you can for instance specify that the first cell
-has a specific constant value. When composing, the line type is assigned when you create the Line objects. When
-converting from one format to another, the line type names of the input and the output schema needs to match.
 
 ## Internationalization 
 

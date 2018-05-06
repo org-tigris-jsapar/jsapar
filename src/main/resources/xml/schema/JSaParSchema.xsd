@@ -384,7 +384,10 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
   			<xsd:attribute name="maxlength" type="xsd:int">
   				<xsd:annotation>
   					<xsd:documentation>
-  					</xsd:documentation>
+                        The maximum number of characters that are read or written to/from the cell. Input and output
+                        value will be silently truncated to this length. If you want to get an error when field is to
+                        long, use the format regexp pattern instead.
+                    </xsd:documentation>
   				</xsd:annotation>
   			</xsd:attribute>
   			<xsd:attribute name="quotebehavior" type="QuoteBehaviorType" default="AUTOMATIC">
