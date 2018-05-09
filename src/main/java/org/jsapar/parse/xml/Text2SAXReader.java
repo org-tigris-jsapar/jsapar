@@ -9,18 +9,19 @@ import org.jsapar.parse.LineParsedEvent;
 import org.xml.sax.*;
 import org.xml.sax.helpers.AttributesImpl;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
-import java.util.Calendar;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 
 /**
  */
 public class Text2SAXReader implements XMLReader {
 
-    public static final String URI = "";
-    private ContentHandler contentHandler;
-    private TextParser textParser;
-    private ErrorHandler errorHandler;
+    private static final String         URI = "";
+    private              ContentHandler contentHandler;
+    private              TextParser     textParser;
+    private              ErrorHandler   errorHandler;
 
     public Text2SAXReader(TextParser textParser) {
         this.textParser = textParser;
@@ -76,9 +77,9 @@ public class Text2SAXReader implements XMLReader {
     private String makeCellXmlValue(Cell c) {
         switch (c.getCellType()) {
         case DATE:
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(((DateCell) c).getValue());
-            return DatatypeConverter.printDateTime(cal);
+            Date value = ((DateCell) c).getValue();
+            ZonedDateTime zDate = ZonedDateTime.ofInstant(value.toInstant(), ZoneId.systemDefault());
+            return zDate.toString();
         default:
             return c.getStringValue();
         }
@@ -89,27 +90,27 @@ public class Text2SAXReader implements XMLReader {
     }
 
     @Override
-    public void parse(String s) throws IOException, SAXException {
+    public void parse(String s) {
 
     }
 
     @Override
-    public boolean getFeature(String s) throws SAXNotRecognizedException, SAXNotSupportedException {
+    public boolean getFeature(String s) {
         return false;
     }
 
     @Override
-    public void setFeature(String s, boolean b) throws SAXNotRecognizedException, SAXNotSupportedException {
+    public void setFeature(String s, boolean b) {
 
     }
 
     @Override
-    public Object getProperty(String s) throws SAXNotRecognizedException, SAXNotSupportedException {
+    public Object getProperty(String s) {
         return null;
     }
 
     @Override
-    public void setProperty(String s, Object o) throws SAXNotRecognizedException, SAXNotSupportedException {
+    public void setProperty(String s, Object o) {
 
     }
 

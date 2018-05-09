@@ -7,9 +7,7 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import javax.xml.bind.DatatypeConverter;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -61,8 +59,17 @@ public interface XmlTypes {
      * @return A boolean value.
      */
     default boolean getBooleanValue(Node node) {
-        final String value = node.getNodeValue().trim();
-        return DatatypeConverter.parseBoolean(value);
+        final String value = node.getNodeValue().trim().toLowerCase();
+        switch (value) {
+        case "true":
+        case "1":
+            return true;
+        case "false":
+        case "0":
+            return false;
+        default:
+            throw new NumberFormatException("Failed to parse boolean node: " + node);
+        }
     }
 
     default String getStringValue(Node node) {
@@ -78,7 +85,7 @@ public interface XmlTypes {
     }
 
     default int getIntValue(Node node) {
-        return DatatypeConverter.parseInt(node.getNodeValue().trim());
+        return Integer.parseInt(node.getNodeValue().trim());
     }
 
 
@@ -99,7 +106,7 @@ public interface XmlTypes {
             }
 
             @Override
-            public void warning(SAXParseException e) throws SAXException {
+            public void warning(SAXParseException e) {
                 // System.out.println("Warning while validating schema" +
                 // e);
             }
