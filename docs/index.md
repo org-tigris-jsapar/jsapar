@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: JSaPar Contents
 ---
 **JSaPar** stands for  **J**ava **S**chem**a** based **Par**ser
