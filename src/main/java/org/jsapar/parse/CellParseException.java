@@ -2,6 +2,8 @@ package org.jsapar.parse;
 
 import org.jsapar.schema.SchemaCellFormat;
 
+import java.text.ParseException;
+
 /**
  * This class is used as a way for the parser to report back parsing errors. The
  * class contains error information about a cell that failed to parse.
@@ -46,7 +48,12 @@ public final class CellParseException extends LineParseException {
         this.cellFormat = cellFormat;
     }
 
-
+    public CellParseException(String cellName, String value, SchemaCellFormat cellFormat, Throwable cause) {
+        super(0, cause);
+        this.cellName = cellName;
+        this.cellValue = value;
+        this.cellFormat = cellFormat;
+    }
 
 
     /**

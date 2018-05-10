@@ -19,7 +19,7 @@ public abstract class NumberCellFactory implements CellFactory{
 
     protected Number parseObject(Format format, String value) throws ParseException {
         ParsePosition pos = new ParsePosition(0);
-        value = adjustValueForSpaces(value, format);
+        value = adjustValueForOddLocales(value, format);
         Number number= (Number) format.parseObject(value, pos);
 
         if (pos.getIndex() < value.length())
@@ -29,7 +29,14 @@ public abstract class NumberCellFactory implements CellFactory{
         return number;
     }
 
-    private String adjustValueForSpaces(String sValue, Format format) {
+    /**
+     * As of JDK 9 some locales have got new decimal symbols. This is a work around to also still be able to parse the
+     * old format since they are still widely used.
+     * @param sValue The value to parse
+     * @param format The format to use
+     * @return A modified value that can be parsed with supplied Format.
+     */
+    private String adjustValueForOddLocales(String sValue, Format format) {
         if (format != null && format instanceof DecimalFormat) {
             // This is necessary because some locales (e.g. swedish)
             // have non breakable space as thousands grouping character. Naturally
@@ -38,6 +45,18 @@ public abstract class NumberCellFactory implements CellFactory{
             char groupingSeparator = decFormat.getDecimalFormatSymbols().getGroupingSeparator();
             if (Character.isSpaceChar(groupingSeparator)) {
                 sValue = StringUtils.removeAllSpaces(sValue);
+            }
+
+            String minusPrefix = decFormat.getNegativePrefix();
+            if(!minusPrefix.equals("-") && !sValue.isEmpty() && sValue.charAt(0)=='-'){
+                sValue = decFormat.getNegativePrefix() + sValue.substring(1);
+            }
+
+            String exp = decFormat.getDecimalFormatSymbols().getExponentSeparator();
+            if(!exp.equals("E")){
+                int pos = sValue.indexOf('E');
+                if(pos > 0)
+                    sValue = sValue.substring(0, pos) + exp + sValue.substring(pos+1);
             }
         }
         return sValue;

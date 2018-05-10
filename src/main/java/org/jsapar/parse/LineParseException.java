@@ -19,6 +19,12 @@ public class LineParseException extends JSaParException {
         this.lineNumber = lineNumber;
     }
 
+    public LineParseException(long lineNumber, Throwable cause) {
+        super(cause);
+
+        this.lineNumber = lineNumber;
+    }
+
     /**
      * @return the lineNumber
      */

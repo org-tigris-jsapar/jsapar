@@ -19,7 +19,7 @@ public class JSaParException extends RuntimeException{
      * @param cause A nesting exception that caused the error.
      */
     public JSaParException(Throwable cause) {
-        super(makeSuperMessage(null, cause));
+        super(makeSuperMessage(null, cause), cause);
     }
 
     private static String makeSuperMessage(String message, Throwable cause) {

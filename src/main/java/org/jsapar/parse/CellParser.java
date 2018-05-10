@@ -64,7 +64,7 @@ public class CellParser {
             return Optional.of(cell);
         } catch (java.text.ParseException e) {
             errorEventListener.errorEvent(new ErrorEvent(this,
-                    new CellParseException(cellSchema.getName(), sValue, cellSchema.getCellFormat(), e.getMessage())));
+                    new CellParseException(cellSchema.getName(), sValue, cellSchema.getCellFormat(), e)));
             return Optional.empty();
         }
 
