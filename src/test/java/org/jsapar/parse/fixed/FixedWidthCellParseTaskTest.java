@@ -145,6 +145,39 @@ public class FixedWidthCellParseTaskTest {
     }
 
     @Test
+    public final void testParse_integer_pad_zero() throws IOException {
+        String toParse = "000000123";
+        FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Integer", 11);
+        schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
+        schemaCell.setPadCharacter('0');
+        schemaCell.setCellFormat(CellType.INTEGER);
+
+        Reader reader = new StringReader(toParse);
+        FixedWidthCellParser cellParser = new FixedWidthCellParser();
+        NumberCell cell = (NumberCell) cellParser.parse(schemaCell,reader, new ExceptionErrorEventListener()).orElse(null);
+        int value = cell.getValue().intValue();
+
+        assertEquals(123, value);
+    }
+
+    @Test
+    public final void testParse_integer_pad_zero_zero() throws IOException {
+        String toParse = "000000000";
+        FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Integer", 11);
+        schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
+        schemaCell.setPadCharacter('0');
+        schemaCell.setCellFormat(CellType.INTEGER);
+
+        Reader reader = new StringReader(toParse);
+        FixedWidthCellParser cellParser = new FixedWidthCellParser();
+        NumberCell cell = (NumberCell) cellParser.parse(schemaCell,reader, new ExceptionErrorEventListener()).orElse(null);
+        int value = cell.getValue().intValue();
+
+        assertEquals(0, value);
+    }
+
+
+    @Test
     public final void testBuild_decimal_sv() throws IOException {
         String toParse = "-123 456,78  ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Decimal", 11);

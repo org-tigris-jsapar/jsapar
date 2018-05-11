@@ -11,58 +11,60 @@ public enum CellType {
     /**
      * Cell contains {@link String} content.
      */
-    STRING(new StringCellFactory(), false),
+    STRING(new StringCellFactory(), false, false),
     /**
      * Cell contains {@link java.util.Date} content
      */
-    DATE(new DateCellFactory(), false),
+    DATE(new DateCellFactory(), false, false),
     /**
      * Cell contains integer content, up to the size of a long.
      */
-    INTEGER(new IntegerCellFactory(), true),
+    INTEGER(new IntegerCellFactory(), true, true),
     /**
      * Cell contains boolean content.
      */
-    BOOLEAN(new BooleanCellFactory(), true),
+    BOOLEAN(new BooleanCellFactory(), true, false),
     /**
      * Cell contains floating point precision content up to the size of a double.
      */
-    FLOAT(new FloatCellFactory(), false),
+    FLOAT(new FloatCellFactory(), false, true),
     /**
      * Cell contains {@link java.math.BigDecimal} or {@link java.math.BigInteger} content.
      */
-    DECIMAL(new BigDecimalCellFactory(), false),
+    DECIMAL(new BigDecimalCellFactory(), false, true),
     /**
      * Cell contains single character content.
      */
-    CHARACTER(new CharacterCellFactory(), true),
+    CHARACTER(new CharacterCellFactory(), true, false),
     /**
      * Cell contains custom content.
      */
-    CUSTOM(null, false),
+    CUSTOM(null, false, false),
     /**
      * Cell contains {@link java.time.LocalDateTime} content.
      */
-    LOCAL_DATE_TIME(new LocalDateTimeCellFactory(), false),
+    LOCAL_DATE_TIME(new LocalDateTimeCellFactory(), false, false),
     /**
      * Cell contains {@link java.time.LocalDate} content.
      */
-    LOCAL_DATE(new LocalDateCellFactory(), false),
+    LOCAL_DATE(new LocalDateCellFactory(), false, false),
     /**
      * Cell contains {@link java.time.LocalTime} content.
      */
-    LOCAL_TIME(new LocalTimeCellFactory(), false),
+    LOCAL_TIME(new LocalTimeCellFactory(), false, false),
     /**
      * Cell contains {@link java.time.ZonedDateTime} content.
      */
-    ZONED_DATE_TIME(new ZonedDateTimeCellFactory(), false);
+    ZONED_DATE_TIME(new ZonedDateTimeCellFactory(), false, false);
 
     private CellFactory cellFactory;
     private boolean atomic;
+    private boolean number;
 
-    CellType(CellFactory cellFactory, boolean atomic) {
+    CellType(CellFactory cellFactory, boolean atomic, boolean number) {
         this.cellFactory = cellFactory;
         this.atomic = atomic;
+        this.number = number;
     }
 
     public CellFactory getCellFactory() {
@@ -74,5 +76,9 @@ public enum CellType {
      */
     public boolean isAtomic() {
         return atomic;
+    }
+
+    public boolean isNumber(){
+        return number;
     }
 }

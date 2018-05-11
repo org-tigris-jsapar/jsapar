@@ -60,17 +60,23 @@ public class FixedWidthCellParser extends CellParser {
         }
         nLength = nRead;
         int readOffset = 0;
+        char padCharacter = cellSchema.getPadCharacter();
         if(cellSchema.getAlignment() != FixedWidthSchemaCell.Alignment.LEFT) {
-            while (readOffset < nLength && buffer[readOffset] == cellSchema.getPadCharacter()) {
+            while (readOffset < nLength && buffer[readOffset] == padCharacter) {
                 readOffset++;
             }
         }
         if(cellSchema.getAlignment() != FixedWidthSchemaCell.Alignment.RIGHT) {
-            while (nLength > readOffset && buffer[nLength - 1] == cellSchema.getPadCharacter()) {
+            while (nLength > readOffset && buffer[nLength - 1] == padCharacter) {
                 nLength--;
             }
         }
         nLength -= readOffset;
+        if(nLength == 0){
+            if(padCharacter == '0' && cellSchema.getCellFormat().getCellType().isNumber())
+                return String.valueOf(padCharacter);
+            return EMPTY_STRING;
+        }
         return new String(buffer, readOffset, nLength);
     }
 }
