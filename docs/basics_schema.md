@@ -320,9 +320,26 @@ When composing, if `firstlineasschema="true"` then the output will be produced a
 and with an additional header line with the name of the cells as specified by the schema. So in this case it is important that all the cells are present
 and in the correct order.
 
-## The Schema xml for fixed width files
+## The Schema xml for fixed width data
 ### Line
+The line schema for fixed with data source is very similar to the CSV line schema described above. The difference is that you have two additional attributes:
+* `minlength` - The minimal length of a fixed with line when writing output.
+                If the sum of the length of the cells is less than this value then the line is filled with the pad character so that the line will never be shorter than this length. 
+* `padcharacter` - The pad character to use to pad lines that are not reaching the minimum length. Also used as default
+ pad character for cells of this line. Default is space character (ASCII 20).
+ 
+As with CSV schema lines you can specify a line condition on any cell if the line type is determined by the value of one of the cells. See above.
 ### Cell
+The cell has these additional attributes compared to CSV cell schema:
+* `length` - The length of this cell in the input or output data. When parsing, only this amount of characters are read 
+and when composing, the value of the cell is padded or truncated to fit this length.    
+* `alignment` - Defines the cell alignment. The remaining space is filled with the pad character. Have to be one of the following:
+  * `left` - The value of the cell is assumed to be to left within the cell. Padding is done to the right when composing and pad characters are removed from the right when parsing. In case value does not fit the cell, truncating is done from the right of the value. 
+  * `right` - The value of the cell is assumed to be to right within the cell. Padding is done to the left when composing and pad characters are removed from the left when parsing. In case value does not fit the cell, truncating is done from the left of the value. 
+  * `center` - The value of the cell is assumed to be in the center of the cell. Padding is done equally much to the left and to the right when composing and pad characters are removed from both the left and right side when parsing. In case value does not fit the cell, truncating is done both from the left and from the right of the value.
+  
+  Default is `right` when cell type is any kind of number type and `left` for all other type of cells. 
+* `padcharacter` - Specifies the pad character to use to pad cells that are not reaching the minimum length. The alignment attribute specifies if padding should be done to the right, to the left or both. Default is space character (ASCII 20) unless there is a default pad character specified on the line level. 
 
 ## Internationalization 
 
