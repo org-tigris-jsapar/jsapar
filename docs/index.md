@@ -58,7 +58,7 @@ We are not quite there yet, but we are working on it...
 * [Introduction](introduction)
 * [Basics](basics)
 * [Basics of Schema](basics_schema)
-* [Javadocs API documentation](api)
+* [Javadocs API documentation](https://javadoc.io/doc/org.tigris.jsapar/jsapar)
 * [Upgrading from JSaPar 1.x versions](upgradingfrom1)
 
 ## Resources
