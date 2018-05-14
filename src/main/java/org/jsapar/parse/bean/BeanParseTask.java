@@ -28,17 +28,17 @@ import java.util.stream.StreamSupport;
  */
 public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
 
-    private final BeanParser<T> beanParser;
-    private Stream<? extends T> stream;
+    private final BeanMarshaller<T>   beanMarshaller;
+    private       Stream<? extends T> stream;
 
     public BeanParseTask(Stream<? extends T> stream, BeanMap beanMap) {
         this.stream = stream;
-        this.beanParser = new BeanParser<>(beanMap);
+        this.beanMarshaller = new BeanMarshaller<>(beanMap);
     }
 
     public BeanParseTask(Iterator<? extends T> iterator, BeanMap beanMap) {
         this.stream = StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false);
-        this.beanParser = new BeanParser<>(beanMap);
+        this.beanMarshaller = new BeanMarshaller<>(beanMap);
     }
 
 
@@ -50,7 +50,7 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
     public long execute() {
         AtomicLong count = new AtomicLong(1);
         stream.forEach(bean ->
-                beanParser.parseBean(bean, this, count.incrementAndGet()).ifPresent(line ->
+                beanMarshaller.marshal(bean, this, count.incrementAndGet()).ifPresent(line ->
                         lineParsedEvent(new LineParsedEvent(
                                 this,
                                 line))));

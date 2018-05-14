@@ -4,7 +4,7 @@ import org.jsapar.convert.LineManipulator;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.parse.bean.BeanMap;
-import org.jsapar.parse.bean.BeanParser;
+import org.jsapar.parse.bean.BeanMarshaller;
 import org.jsapar.schema.Schema;
 
 import java.beans.IntrospectionException;
@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class Bean2TextConverter<T> {
 
-    private final BeanParser<T>         beanParser;
+    private final BeanMarshaller<T>     beanMarshaller;
     private final TextComposer          textComposer;
     private       long                  lineNumber         = 1;
     private       List<LineManipulator> manipulators       = new java.util.LinkedList<>();
@@ -67,7 +67,7 @@ public class Bean2TextConverter<T> {
      */
     public Bean2TextConverter(Schema composerSchema, BeanMap beanMap, Writer writer) {
         assert composerSchema != null;
-        beanParser = new BeanParser<>(beanMap);
+        beanMarshaller = new BeanMarshaller<>(beanMap);
         textComposer = new TextComposer(composerSchema, writer);
     }
 
@@ -77,7 +77,7 @@ public class Bean2TextConverter<T> {
      * @param bean The bean to convert
      */
     public void convert(T bean) {
-        beanParser.parseBean(bean, errorEventListener, lineNumber++).ifPresent(line -> {
+        beanMarshaller.marshal(bean, errorEventListener, lineNumber++).ifPresent(line -> {
             for (LineManipulator manipulator : manipulators) {
                 if (!manipulator.manipulate(line))
                     return;

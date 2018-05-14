@@ -14,7 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 /**
- * Builds {@link LineParsedEvent} from single bean instances. The {@link Line#lineType} of each line will be
+ * Builds {@link Line} objects from single bean instances. The {@link Line#lineType} of each line will be
  * the name of the class denoted by {@link Class#getName()}. Each bean property that have a getter method will result in
  * a cell with the bean property name The {@link Cell#name} of each cell will be the name of the bean property, e.g. if
  * the bean has a method declared as {@code public int getNumber()}, it will result in a cell with the name "number" of
@@ -24,18 +24,18 @@ import java.util.Optional;
  *
  * @see BeanCollection2TextConverter
  */
-public class BeanParser<T>  {
+public class BeanMarshaller<T>  {
 
     private final BeanMap beanMap;
 
 
-    public BeanParser(BeanMap beanMap) {
+    public BeanMarshaller(BeanMap beanMap) {
         this.beanMap = beanMap;
     }
 
 
     /**
-     * Builds a line bean according to the getter fields of the bean. Each cell in the line will
+     * Builds a {@link Line} object according to the getter fields of the bean. Each cell in the line will
      * be named according to the property name defined in the current {@link BeanMap}. If not stated otherwise this will
      * be the java bean attribute name. This means that if there is a member
      * method called <tt>getStreetAddress()</tt>, the name of the cell will be
@@ -44,20 +44,20 @@ public class BeanParser<T>  {
      * @param bean       The bean.
      * @param errorListener The error listener to which error events are propagated.
      * @param lineNumber The number of the line being parsed. Numbering starts from 1.
-     * @return A Line bean containing cells according to the getter method of the supplied bean.
+     * @return A {@link Line} object containing cells according to the getter method of the supplied bean.
      */
-    public Optional<Line> parseBean(T bean, ErrorEventListener errorListener, long lineNumber) {
+    public Optional<Line> marshal(T bean, ErrorEventListener errorListener, long lineNumber) {
         return beanMap.getBeanPropertyMap(bean.getClass()).map(beanPropertyMap -> {
             Line line = new Line(beanPropertyMap.getLineType());
             line.setLineNumber(lineNumber);
-            this.parseBean(line, bean, beanPropertyMap, errorListener);
+            this.marshal(line, bean, beanPropertyMap, errorListener);
             return line;
         });
     }
 
 
     @SuppressWarnings("unchecked")
-    private void parseBean(Line line, Object object, BeanPropertyMap beanPropertyMap, ErrorEventListener errorListener) {
+    private void marshal(Line line, Object object, BeanPropertyMap beanPropertyMap, ErrorEventListener errorListener) {
 
         for (Bean2Cell bean2Cell : beanPropertyMap.getBean2Cells()) {
             PropertyDescriptor pd = bean2Cell.getPropertyDescriptor();
@@ -69,7 +69,7 @@ public class BeanParser<T>  {
                     if (subObject == null)
                         continue;
                     // Recursively add sub classes.
-                    this.parseBean(line, subObject, children, errorListener);
+                    this.marshal(line, subObject, children, errorListener);
                 } else
                     line.addCell(bean2Cell.makeCell(object));
             } catch (IllegalArgumentException e) {

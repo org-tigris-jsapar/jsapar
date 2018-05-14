@@ -12,12 +12,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.beans.IntrospectionException;
-import java.util.Arrays;
 import java.util.Date;
 
 import static org.junit.Assert.*;
 
-public class BeanParserTest {
+public class BeanMarshallerTest {
     static final Date birthTime = new Date();
 
     @Test
@@ -36,8 +35,8 @@ public class BeanParserTest {
         person.setDoor('A');
 
 
-        BeanParser<TstPerson> beanParser = new BeanParser<>(makeBeanMap());
-        Line line = beanParser.parseBean(person, new ExceptionErrorEventListener(), 1).orElse(null);
+        BeanMarshaller<TstPerson> beanMarshaller = new BeanMarshaller<>(makeBeanMap());
+        Line line = beanMarshaller.marshal(person, new ExceptionErrorEventListener(), 1).orElse(null);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         //        assertEquals(8, line.size());
         assertEquals("Jonas", line.getCell("firstName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
@@ -53,8 +52,8 @@ public class BeanParserTest {
         TstPerson person = new TstPerson();
         person.setFirstName("Jonas");
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
-        BeanParser<TstPerson> beanParser = new BeanParser<>(makeBeanMap());
-        Line line = beanParser.parseBean(person, new ExceptionErrorEventListener(), 1).orElse(null);
+        BeanMarshaller<TstPerson> beanMarshaller = new BeanMarshaller<>(makeBeanMap());
+        Line line = beanMarshaller.marshal(person, new ExceptionErrorEventListener(), 1).orElse(null);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
         assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
@@ -69,8 +68,8 @@ public class BeanParserTest {
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
         person.getAddress().setSubAddress(new TstPostAddress("Road", "Town"));
         person.setWorkAddress(new TstPostAddress("Gatan", "Byn"));
-        BeanParser<TstPerson> beanParser = new BeanParser<>(makeBeanMap());
-        Line line = beanParser.parseBean(person, new ExceptionErrorEventListener(), 1).orElse(null);
+        BeanMarshaller<TstPerson> beanMarshaller = new BeanMarshaller<>(makeBeanMap());
+        Line line = beanMarshaller.marshal(person, new ExceptionErrorEventListener(), 1).orElse(null);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
         assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));

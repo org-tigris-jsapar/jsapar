@@ -4,23 +4,16 @@
 package org.jsapar.parse.bean;
 
 import org.jsapar.TstPerson;
-import org.jsapar.TstPostAddress;
-import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.*;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
-import org.jsapar.schema.CsvSchema;
-import org.jsapar.schema.CsvSchemaCell;
-import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.Schema;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -48,11 +41,11 @@ public class BeanParseTaskTest {
     }
 
     private Schema makeOutputSchema(){
-        return BeanParserTest.makeOutputSchema();
+        return BeanMarshallerTest.makeOutputSchema();
     }
 
     private BeanMap makeBeanMap() throws IntrospectionException, ClassNotFoundException {
-        return BeanParserTest.makeBeanMap();
+        return BeanMarshallerTest.makeBeanMap();
     }
 
     @Test
