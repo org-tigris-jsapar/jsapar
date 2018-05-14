@@ -25,6 +25,7 @@ import java.util.stream.StreamSupport;
  * If you use these rules you can write a {@link org.jsapar.schema.Schema} that converts a bean to a different type of output.
  *
  * @see BeanCollection2TextConverter
+ * @see org.jsapar.Bean2TextConverter
  */
 public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
 

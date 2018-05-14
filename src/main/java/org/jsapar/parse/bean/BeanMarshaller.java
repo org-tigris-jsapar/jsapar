@@ -7,7 +7,6 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
 import org.jsapar.parse.CellParseException;
-import org.jsapar.parse.LineParsedEvent;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -22,6 +21,7 @@ import java.util.Optional;
  * <p>
  * If you use these rules you can write a {@link org.jsapar.schema.Schema} that converts a bean to a different type of output.
  *
+ * @see org.jsapar.Bean2TextConverter
  * @see BeanCollection2TextConverter
  */
 public class BeanMarshaller<T>  {
