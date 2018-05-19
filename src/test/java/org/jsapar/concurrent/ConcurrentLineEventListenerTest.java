@@ -22,10 +22,11 @@ public class ConcurrentLineEventListenerTest {
 
     @Test
     public void testLineParsedEvent() throws Exception {
-        try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> {})) {
+        try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> {
+        })) {
             assertEquals(0, instance.size());
-            instance.registerOnStart(()-> this.started = true);
-            instance.registerOnStop(()-> this.stopped = true);
+            instance.registerOnStart(() -> this.started = true);
+            instance.registerOnStop(() -> this.stopped = true);
             instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
             assertEquals(1, instance.size());
             assertFalse(this.started);
@@ -41,7 +42,7 @@ public class ConcurrentLineEventListenerTest {
     }
 
     @Test
-    public void testAddLineEventListener_run() throws Exception {
+    public void testAddLineEventListener_run() {
         try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> count += 1)) {
             assertEquals(0, instance.size());
             instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
@@ -55,7 +56,7 @@ public class ConcurrentLineEventListenerTest {
     }
 
     @Test
-    public void testWorkerTakesLongTime() throws Exception {
+    public void testWorkerTakesLongTime() {
         try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> {
             try {
                 Thread.sleep(10L);
@@ -96,15 +97,32 @@ public class ConcurrentLineEventListenerTest {
     }
 
     @Test(expected = JSaParException.class)
-    public void testExceptionFromListener() throws Exception {
+    public void testExceptionFromListener_slow() {
+        try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> {
+            try {
+                Thread.sleep(10); // Do some work.
+                throw new AssertionError("Testing error");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        })) {
+            instance.start();
+            instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
+        }
+        fail("Exception expected");
+
+    }
+
+    @Test(expected = JSaParException.class)
+    public void testExceptionFromListener_fast() {
         try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> {
             throw new AssertionError("Testing error");
         })) {
             instance.start();
             instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
-
         }
         fail("Exception expected");
 
     }
+
 }

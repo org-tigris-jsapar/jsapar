@@ -46,7 +46,7 @@ In order to parse this type of files you first need to define a schema of the fi
       <cell name="First name" />
       <cell name="Middle name" ignoreread="true"/>
       <cell name="Last name" />
-      <cell name="Have dog"><format type="boolean" pattern="yes;no"/></cell>
+      <cell name="Has dog"><format type="boolean" pattern="yes;no"/></cell>
     </line>
   </csvschema>
 </schema>
@@ -98,7 +98,7 @@ try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
     composer.composeLine(new Line("Person")
             .addCell(new StringCell("First name", "Fredrik"))
             .addCell(new StringCell("Last name", "Larsson"))
-            .addCell(new BooleanCell("Have dog", false)));
+            .addCell(new BooleanCell("Has dog", false)));
 }
 ```
 In this example we
@@ -131,7 +131,7 @@ Alfred  Stark     Nilsson  Y
       <cell name="First name" length="8"/>
       <cell name="Middle name" length="10" ignoreread="true"/>
       <cell name="Last name" length="9"/>
-      <cell name="Have dog" length="1"><format type="boolean" pattern="Y;N"/></cell>
+      <cell name="Has dog" length="1"><format type="boolean" pattern="Y;N"/></cell>
     </line>
   </fixedwidthschema>
 </schema>

@@ -5,7 +5,7 @@
       <cell name="First name" />
       <cell name="Middle name" ignoreread="true"/>
       <cell name="Last name" />
-      <cell name="Have dog"><format type="boolean" pattern="yes;no"/></cell>
+      <cell name="Has dog"><format type="boolean" pattern="yes;no"/></cell>
     </line>
   </csvschema>
 </schema>

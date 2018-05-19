@@ -10,7 +10,7 @@
     While composing, the schema is used as usual but an additional header line with the name of each cell, is written first.-->
     <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;" firstlineasschema="true">
       <cell name="Middle name" ignoreread="true"/>
-      <cell name="Have dog" default="no"><format type="boolean" pattern="yes;no"/></cell>
+      <cell name="Has dog" default="no"><format type="boolean" pattern="yes;no"/></cell>
       <cell name="First name" />
     </line>
   </csvschema>

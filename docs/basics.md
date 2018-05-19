@@ -109,7 +109,7 @@ by supplying a schema and a writer. The schema is used to format the output.
     composer.composeLine(new Line("Person")
             .addCell(new StringCell("First name", "Fredrik"))
             .addCell(new StringCell("Last name", "Larsson"))
-            .addCell(new BooleanCell("Have dog", false)));
+            .addCell(new BooleanCell("Has dog", false)));
 ...
 ```
 Then we feed the composer with lines. There are some options when it comes to feeding data to the composer. You may:
@@ -139,8 +139,11 @@ try (Reader inSchemaReader = new FileReader(inSchemaXmlFile);
      Reader outSchemaReader = new FileReader(outSchemaXmlFile);
      Reader inReader = new FileReader(inFile);
      Writer outWriter = new FileWriter(outFile)) {
-    Text2TextConverter converter = new Text2TextConverter(Schema.ofXml(inSchemaReader),
-            Schema.ofXml(outSchemaReader));
+    
+    Schema inputSchema = Schema.ofXml(inSchemaReader);
+    Schema outputSchema = Schema.ofXml(outSchemaReader);
+    
+    Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
     converter.convert(inReader, outWriter);
 }
 ```

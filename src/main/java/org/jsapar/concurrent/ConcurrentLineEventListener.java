@@ -79,33 +79,30 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
         }
     }
 
-    private class WorkingThread implements Runnable {
-        @Override
-        public void run() {
-            try {
-                onStart.forEach(Runnable::run);
-                running = true;
-                while (!shouldStop) {
-                    LineParsedEvent event = events.take();
-                    if (shouldStop) {
-                        return;
-                    }
-                    // Check if it is just an event to release wait block.
-                    if (event != null && event.getLine() != null) {
-                        listener.lineParsedEvent(event);
-                    }
+    private void run() {
+        try {
+            onStart.forEach(Runnable::run);
+            running = true;
+            while (!shouldStop) {
+                LineParsedEvent event = events.take();
+                if (shouldStop) {
+                    return;
                 }
-            } catch (InterruptedException e) {
-                // Gracefully and silently terminate.
-            } catch (Throwable e) {
-                synchronized (ConcurrentLineEventListener.this) {
-                    exception = e;
-                    shouldStop = true;
+                // Check if it is just an event to release wait block.
+                if (event != null && event.getLine() != null) {
+                    listener.lineParsedEvent(event);
                 }
-            } finally {
-                onStop.forEach(Runnable::run);
-                running = false;
             }
+        } catch (InterruptedException e) {
+            // Gracefully and silently terminate.
+        } catch (Throwable e) {
+            synchronized (this) {
+                exception = e;
+                shouldStop = true;
+            }
+        } finally {
+            onStop.forEach(Runnable::run);
+            running = false;
         }
     }
 
@@ -124,7 +121,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
     public void start() {
         if(isRunning())
             return;
-        thread = new Thread(new WorkingThread(), Thread.currentThread().getName() + "-listener");
+        thread = new Thread(this::run, Thread.currentThread().getName() + "-listener");
         thread.start();
         // Wait for the consumer thread to start before returning.
         while (!isRunning() && !shouldStop)
@@ -132,6 +129,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
                 Thread.sleep(1L);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                break;
             }
 
     }
@@ -159,7 +157,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
      * @throws JSaParException if the working thread has terminated due to an exception.
      */
     @Override
-    public void close() throws IllegalMonitorStateException {
+    public void close() throws JSaParException {
         try {
             if(Thread.currentThread() != this.thread) {
                 while (running && !events.isEmpty()) {
@@ -172,6 +170,7 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
                     Thread.sleep(1L);
                 }
             }
+            checkException();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

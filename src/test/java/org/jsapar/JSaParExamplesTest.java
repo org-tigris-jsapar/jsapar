@@ -50,15 +50,15 @@ public class JSaParExamplesTest {
             assertEquals("Erik", LineUtils.getStringCellValue(firstLine, "First name"));
             assertEquals("Erik", firstLine.getNonEmptyCell("First name").map(Cell::getStringValue).orElse("fail"));
             assertEquals("Svensson", LineUtils.getStringCellValue(firstLine, "Last name"));
-            assertEquals("true", LineUtils.getStringCellValue(firstLine, "Have dog"));
+            assertEquals("true", LineUtils.getStringCellValue(firstLine, "Has dog"));
             assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name"));
             assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name"));
-            assertEquals("false", LineUtils.getStringCellValue(document.getLine(1), "Have dog"));
-            assertEquals(Boolean.FALSE, LineUtils.getBooleanCellValue(document.getLine(1),"Have dog").orElseThrow(AssertionError::new));
+            assertEquals("false", LineUtils.getStringCellValue(document.getLine(1), "Has dog"));
+            assertEquals(Boolean.FALSE, LineUtils.getBooleanCellValue(document.getLine(1),"Has dog").orElseThrow(AssertionError::new));
 
             assertEquals("Alfred", LineUtils.getStringCellValue(document.getLine(2), "First name"));
             assertEquals("Nilsson", LineUtils.getStringCellValue(document.getLine(2), "Last name"));
-            assertEquals("true", LineUtils.getStringCellValue(document.getLine(2), "Have dog"));
+            assertEquals("true", LineUtils.getStringCellValue(document.getLine(2), "Has dog"));
 
             assertEquals("Person", firstLine.getLineType());
             assertEquals("Person", document.getLine(1).getLineType());
@@ -81,7 +81,7 @@ public class JSaParExamplesTest {
             composer.composeLine(new Line("Person")
                     .addCell(new StringCell("First name", "Fredrik"))
                     .addCell(new StringCell("Last name", "Larsson"))
-                    .addCell(new BooleanCell("Have dog", false)));
+                    .addCell(new BooleanCell("Has dog", false)));
 
             String[] lines = writer.toString().split("\n");
             assertEquals(2, lines.length);
@@ -404,15 +404,15 @@ public class JSaParExamplesTest {
             assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name"));
             assertEquals("Erik", document.getLine(0).getNonEmptyCell("First name").map(Cell::getStringValue).orElse("fail"));
             assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name"));
-            assertEquals(true, LineUtils.getBooleanCellValue(document.getLine(0), "Have dog", false));
+            assertEquals(true, LineUtils.getBooleanCellValue(document.getLine(0), "Has dog", false));
             assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name"));
             assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name"));
-            assertEquals("false", LineUtils.getStringCellValue(document.getLine(1), "Have dog"));
-            assertEquals(false, LineUtils.getBooleanCellValue(document.getLine(1),"Have dog").orElseThrow(AssertionError::new));
+            assertEquals("false", LineUtils.getStringCellValue(document.getLine(1), "Has dog"));
+            assertEquals(false, LineUtils.getBooleanCellValue(document.getLine(1),"Has dog").orElseThrow(AssertionError::new));
 
             assertEquals("Alfred", LineUtils.getStringCellValue(document.getLine(2), "First name"));
             assertEquals("Nilsson", LineUtils.getStringCellValue(document.getLine(2), "Last name"));
-            assertEquals(false, LineUtils.getBooleanCellValue(document.getLine(2), "Have dog").orElseThrow(AssertionError::new));
+            assertEquals(false, LineUtils.getBooleanCellValue(document.getLine(2), "Has dog").orElseThrow(AssertionError::new));
 
             assertEquals("Person", document.getLine(0).getLineType());
             assertEquals("Person", document.getLine(1).getLineType());
@@ -433,19 +433,19 @@ public class JSaParExamplesTest {
             line1.putCellValue("First name", "Erik", StringCell::new);
             line1.putCellValue("Middle name", "Jan", StringCell::new);
             line1.putCellValue("Last name", "Svensson", StringCell::new);
-            line1.putCellValue("Have dog", true, BooleanCell::new);
+            line1.putCellValue("Has dog", true, BooleanCell::new);
 
             Line line2 = new Line("Person");
             line2.putCellValue("First name", "Sven", StringCell::new);
             line2.putCellValue("Middle name", "Göran", StringCell::new);
             line2.putCellValue("Last name", "Nilsson", StringCell::new);
-            line2.putCellValue("Have dog", false, BooleanCell::new);
+            line2.putCellValue("Has dog", false, BooleanCell::new);
 
             composer.composeLine(line1);
             composer.composeLine(line2);
             String[] lines = writer.toString().split("\n");
             assertEquals(3, lines.length);
-            assertEquals("Middle name;Have dog;First name", lines[0]);
+            assertEquals("Middle name;Has dog;First name", lines[0]);
             assertEquals("Jan;yes;Erik", lines[1]);
             assertEquals("Göran;no;Sven", lines[2]);
         }

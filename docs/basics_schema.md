@@ -17,7 +17,7 @@ The example below describes a simple schema for a CSV file taken from the first 
       <cell name="First name" />
       <cell name="Middle name" ignoreread="true"/>
       <cell name="Last name" />
-      <cell name="Have dog"><format type="boolean" pattern="yes;no"/></cell>
+      <cell name="Has dog"><format type="boolean" pattern="yes;no"/></cell>
     </line>
   </csvschema>
 </schema>
@@ -127,7 +127,7 @@ For instance, in your `LineEventListener` you should have a check like this:
 ```java
 void lineParsedEvent(LineParsedEvent event){
    Line line = event.getLine();
-   switch(line.getLineType(){
+   switch(line.getLineType()){
       case "Header":
          handleHeader(line);
          break;
@@ -281,7 +281,7 @@ You can change the default quote behavior for a whole line type by specifying th
 ### The first line describes cell layout
 It is quite common in CSV files to have one header row that contains the name of the columns within the file. For instance, the file might look like this:
 ```csv
-First name;Middle name;Last name;Have dog
+First name;Middle name;Last name;Has dog
 Erik;Vidfare;Svensson;yes
 Fredrik;Allvarlig;Larsson;no
 "Alfred";"Stark";Nilsson;yes
@@ -299,7 +299,7 @@ Here is a schema that could be used to parse the file above:
   <csvschema lineseparator="\n">
     <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;" firstlineasschema="true">
       <cell name="Middle name" ignoreread="true"/>
-      <cell name="Have dog"><format type="boolean" pattern="yes;no"/></cell>
+      <cell name="Has dog"><format type="boolean" pattern="yes;no"/></cell>
     </line>
   </csvschema>
 </schema>
@@ -308,7 +308,7 @@ As you can see in this example, not all cells are described in the schema. Only 
 is needed from the schema, needs to be present. By default a string cell is otherwise expected. For instance the values of the 
 `First name` column will still be parsed as if they are string value cells. This means that we could have omitted all the `<cell>` elements
 from the schema above but then the parser would have parsed also the `Middle name` cells which we have no interest in 
-and the `Have dog` cell would have
+and the `Has dog` cell would have
 been parsed as string values `"yes"` and `"no"` instead of true boolean values. 
 
 It is important though that if you provide `<cell>` elements for such a schema, the cell names need to match exactly what 
@@ -342,4 +342,26 @@ and when composing, the value of the cell is padded or truncated to fit this len
 * `padcharacter` - Specifies the pad character to use to pad cells that are not reaching the minimum length. The alignment attribute specifies if padding should be done to the right, to the left or both. Default is space character (ASCII 20) unless there is a default pad character specified on the line level. 
 
 ## Internationalization 
+The representation of the numbers and dates differ between different countries and regions around the world. The JSaPar 
+library can handle different formats depending on the locale. By adding a locale element, you indicate that numbers and 
+dates should be parsed and composed according to that locale.
 
+For instance in the example below, the decimal symbol `,` will be used instead of the British and US `.` character. 
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0">
+  <csvschema lineseparator="\n">
+    <locale language="sv" country="SE"/>
+    <line occurs="*" linetype="City" cellseparator=";">
+      <cell name="Name" />
+      <cell name="Latitude" /><format type="float" pattern="#.#####"/></cell>
+      <cell name="Longitude" /><format type="float" pattern="#.#####"/></cell>
+    </line>
+  </csvschema>
+</schema>
+``` 
+The locale of the schema affects both parsing and composing text. 
+
+You can override the locale with an additional locale element on cell level if one of the cells should be read/written using a different locale compared to the rest of the cells described in the schema.  
+
+The default locale is [US](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html#US).
