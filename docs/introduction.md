@@ -5,7 +5,7 @@ title: JSaPar Introduction
 # Java Schema Parser
 The <a href="api/index.html">javadoc</a> contains more comprehensive documentation regarding the classes mentioned below. <br/><br/>
 The JSaPar is a java library that provides a parser for flat and CSV (Comma Separated Values) files.
-The concept is that a schema denotes the way a file should be parsed or composed. The schema instance to be used can be built by specifying a xml-document or it can be constructed programmatically by using java code.
+The concept is that a schema denotes the way text data should be parsed or composed. The schema instance to be used can be built by specifying a xml-document or it can be constructed programmatically by using java code.
 The parser is event driven, meaning that you need to provide an event handler while parsing. For convenience there are some
 event handlers provided or you may implement your own. For instance, the org.jsapar.parse.DocumentBuilderLineEventHandler
 builds a  a org.jsapar.model.Document object that contains a list of org.jsapar.model.Line objects which contains a list
@@ -22,10 +22,10 @@ If you also use maven, all you need to do is to add dependency JSaPar into your 
 <dependency>
     <groupId>org.tigris.jsapar</groupId>
     <artifactId>jsapar</artifactId>
-    <version>2.0.0.a2</version>
+    <version>2.0.0.a3</version>
 </dependency>
 ```
-On the [maven central page for each version]([maven central repository here](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22) you will find instructions of how to add dependency in all the most common build tools and if you
+On the [maven central page for each version](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22) you will find instructions of how to add dependency in all the most common build tools and if you
 want to download the binaries and install them locally in your project classpath you also find download links there.
 
 ## Simple example of parsing CSV file
@@ -76,11 +76,13 @@ Now, depending on what we want to do
 with the parsed result, we may for example use the LineUtils class that contains a number of convenient methods to get cell
 values of different types from a Line.
 
-That is all you need to parse a CSV file. As you can see with this example the library works with readers so the data source is not actually limited to just files, it can be of any text data source.
+That is all you need to parse a CSV file. As you can see with this example the library works with `java.io.Reader` so the data source is not actually limited to just files, it can be of any text data source.
 
 The example above is a small simple example. For larger data sources you probably want to implement a different event listener
 that handles each line immediately as it is parsed. That way you will never load the whole content of the data source in the memory.
-If you rather work with your own Java class directly instead of getting Line objects, you probably want to look at the Text2BeanConverter class.
+
+If you rather work with your own Java bean class directly instead of getting Line objects, you probably want to look at the 
+Text2BeanConverter class which delivers Java beans directly instead of Line objects. More about that in the [basics](basics) article.
 
 ## Simple example of composing a CSV file
 The code to use the JSaPar library to compose a file, using the same schema as when parsing above, could look like this:

@@ -61,7 +61,7 @@ The JSaPar library contains some convenient implementations of the org.jsapar.pa
     <tr><td><b>org.jsapar.parse. DocumentBuilderLineEventListener</b></td>
         <td>For smaller files you may want to handle all
         the events after the parsing is complete. In that case you may choose to use this implementation.
-        That listener builds a `org.jsapar.model.Document` object containing all the parsed lines that you can iterate afterwards.</td></tr>
+        This listener acts as an [aggregator](http://www.enterpriseintegrationpatterns.com/patterns/messaging/Aggregator.html) and builds a `org.jsapar.model.Document` object containing all the parsed lines that you can iterate afterwards.</td></tr>
     <tr><td><b>org.jsapar.parse. MulticastLineEventListener</b></td>
         <td>If you need to handle the events in multiple event listener implementation, this implementation provides a
             way to register multiple line event listeners which are called one by one for each line event.</td></tr>
@@ -73,8 +73,9 @@ The JSaPar library contains some convenient implementations of the org.jsapar.pa
 These implementations only demonstrates what can be done in a `LineEventListener` implementation. Feel free to create
 your own implementation for instance if you need to feed the result to a database or any other scenario.
 ## Configuration
-The parser behavior can be configured in some cases; for instance what should happen if none of the schema lines can be 
-used or what should happen if there are more or less cells on a line than described by the schema.
+The parser behavior can be configured in some cases, for instance:
+ * What should happen if none of the schema lines can be used?
+ * What should happen if there are more or less cells on a line than described by the schema.
 See [api docs](api) for class `TextParseConfig` for more details.
 ## Error handling
 ### IOErrors and other serious errors
@@ -98,7 +99,8 @@ You can also access all errors that have occurred while parsing a line directly 
 errors together with you parsing code, you can just register an error event listener that does nothing in order to avoid 
 exceptions and handle errors when dealing with the lines instead.  
 # Composing
-When we talk about composing below, we mean composing a text output out of the internal data model described above.
+When we talk about composing below, we mean composing a text output out of the internal data model described above. 
+If you want to compose text output based on your Java bean objects, you should jump the chapter **Converting java objects to text** below.
 
 In order to compose a text output we use the `org.jsapar.TextComposer` class. As in the introduction example we create a `TextComposer` 
 by supplying a schema and a writer. The schema is used to format the output. 

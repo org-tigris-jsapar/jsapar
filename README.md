@@ -8,7 +8,15 @@
 [![Java 9-ea](https://img.shields.io/badge/java-9-brightgreen.svg)](#java-9)
 [![Java 10-ea](https://img.shields.io/badge/java-10-brightgreen.svg)](#java-10)
 # jsapar
-JSaPar is a Java library providing a schema based parser/producer of CSV (Comma Separated Values) and flat files.
+**JSaPar** stands for  **J**ava **S**chem**a** based **Par**ser
+
+JSaPar is a Java library providing a schema based parser and composer of almost all sorts of delimited and fixed 
+width files.
+
+It is an open source java library created with the purpose of
+making it easy to process delimited and fixed width data sources.
+By separating the description of the data format into a schema that can be loaded from XML it makes the code
+easier to maintain and increases flexibility.
 
 <a href="https://org-tigris-jsapar.github.io/jsapar/">Documentation</a>
 
