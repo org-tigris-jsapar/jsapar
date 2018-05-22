@@ -59,12 +59,12 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
 
     @Override
     public void lineParsedEvent(LineParsedEvent event)  {
-        checkException();
         try {
             events.put(event);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+        checkException();
     }
 
     private void checkException() {
@@ -85,11 +85,8 @@ public class ConcurrentLineEventListener implements LineEventListener, AutoClose
             running = true;
             while (!shouldStop) {
                 LineParsedEvent event = events.take();
-                if (shouldStop) {
-                    return;
-                }
                 // Check if it is just an event to release wait block.
-                if (event != null && event.getLine() != null) {
+                if (event.getLine() != null) {
                     listener.lineParsedEvent(event);
                 }
             }
