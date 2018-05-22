@@ -8,6 +8,7 @@ import org.jsapar.parse.bean.BeanMarshaller;
 import org.jsapar.schema.Schema;
 
 import java.beans.IntrospectionException;
+import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
@@ -37,7 +38,7 @@ import java.util.List;
  *
  * @see BeanCollection2TextConverter
  */
-public class Bean2TextConverter<T> {
+public class Bean2TextConverter<T> implements AutoCloseable{
 
     private final BeanMarshaller<T>     beanMarshaller;
     private final TextComposer          textComposer;
@@ -100,4 +101,12 @@ public class Bean2TextConverter<T> {
         manipulators.add(manipulator);
     }
 
+    /**
+     * Closes the attached writer.
+     * @throws IOException In case of failing to close
+     */
+    @Override
+    public void close() throws IOException {
+        this.textComposer.close();
+    }
 }

@@ -5,6 +5,7 @@ import org.jsapar.error.MulticastErrorEventListener;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
@@ -15,7 +16,7 @@ import java.util.stream.Stream;
  * @see org.jsapar.TextComposer
  * @see org.jsapar.compose.bean.BeanComposer
  */
-public interface Composer {
+public interface Composer extends AutoCloseable{
 
     /**
      * This method composes some output based on an entire {@link Document}.
@@ -61,4 +62,9 @@ public interface Composer {
      * @param errorListener The error event listener to add.
      */
     void setErrorEventListener(ErrorEventListener errorListener);
+
+    @Override
+    default void close() throws IOException{
+        // do nothing
+    }
 }

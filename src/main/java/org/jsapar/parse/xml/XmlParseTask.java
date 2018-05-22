@@ -220,4 +220,12 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
 
     }
 
+    /**
+     * Closes attached reader
+     * @throws IOException In case of error while closing reader.
+     */
+    @Override
+    public void close() throws IOException {
+        this.reader.close();
+    }
 }

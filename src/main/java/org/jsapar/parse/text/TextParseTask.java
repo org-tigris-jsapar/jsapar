@@ -22,7 +22,7 @@ import java.io.Reader;
  * @see org.jsapar.TextParser
  * @see ParseTask
  */
-public class TextParseTask extends AbstractParseTask implements ParseTask {
+public class TextParseTask extends AbstractParseTask implements ParseTask, AutoCloseable {
 
     private final Schema          schema;
     private final Reader          reader;
@@ -52,4 +52,12 @@ public class TextParseTask extends AbstractParseTask implements ParseTask {
         return schema.makeSchemaParser(reader, parseConfig).parse(this, this);
     }
 
+    /**
+     * Closes the attached reader
+     * @throws IOException In case of error while closing.
+     */
+    @Override
+    public void close() throws IOException {
+        reader.close();
+    }
 }

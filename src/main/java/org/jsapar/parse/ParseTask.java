@@ -16,7 +16,7 @@ import java.io.IOException;
  * @see TextParseTask
  * @see BeanParseTask
  */
-public interface ParseTask {
+public interface ParseTask extends AutoCloseable{
 
     /**
      * Sets a line event listener to this parser. If you want more than one line event listener registered, use a {@link MulticastLineEventListener}.
@@ -38,4 +38,12 @@ public interface ParseTask {
      */
     long execute() throws IOException;
 
+    /**
+     * Closes attached resources.
+     * @throws IOException In case of error closing io resources.
+     */
+    @Override
+    default void close() throws IOException{
+        // Do nothing
+    }
 }

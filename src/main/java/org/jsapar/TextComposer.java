@@ -19,7 +19,7 @@ import java.io.Writer;
  * call the {@link #compose(Document)} method.
  * 
  */
-public class TextComposer implements Composer {
+public class TextComposer implements Composer, AutoCloseable {
     private final Writer          writer;
     private final Schema          schema;
     private final ComposerFactory composerFactory;
@@ -105,4 +105,12 @@ public class TextComposer implements Composer {
         return schema;
     }
 
+    /**
+     * Closes the attached writer.
+     * @throws IOException In case of failing to close
+     */
+    @Override
+    public void close() throws IOException {
+        this.writer.close();
+    }
 }
