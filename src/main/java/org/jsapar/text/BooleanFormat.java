@@ -136,7 +136,7 @@ public class BooleanFormat extends Format {
             return Boolean.FALSE;
         }
         return matchValue(Arrays.stream(optionalTrue), Boolean.TRUE, toParse, pos, ignoreCase)
-                .orElse(matchValue(Arrays.stream(optionalFalse), Boolean.FALSE, toParse, pos, ignoreCase)
+                .orElseGet(()->matchValue(Arrays.stream(optionalFalse), Boolean.FALSE, toParse, pos, ignoreCase)
                         .orElseGet(() -> {
                             pos.setErrorIndex(pos.getIndex());
                             return null;
