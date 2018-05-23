@@ -1,13 +1,14 @@
 package org.jsapar.compose;
 
-import org.jsapar.model.Cell;
-import org.jsapar.model.CellType;
-import org.jsapar.model.EmptyCell;
-import org.jsapar.model.StringCell;
+import org.jsapar.model.*;
+import org.jsapar.parse.cell.DateCellFactory;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
 import org.junit.Test;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
@@ -145,6 +146,28 @@ public class CellComposerTest {
         String value = composer.format(new EmptyCell("test", CellType.INTEGER), schemaCell);
         assertEquals("", value);
     }
+
+    /**
+     * Test method for
+     * {@link DateCell#getStringValue(java.text.Format)}.
+     *
+     * @throws ParseException
+     */
+    @Test
+    public final void testFormat_date() throws ParseException {
+        TestSchemaCell schemaCell = new TestSchemaCell("test");
+        schemaCell.setCellFormat(CellType.DATE, "yyyy-MM-dd HH:mm");
+        DateCellFactory cellFactory = new DateCellFactory();
+
+        DateCell cell = (DateCell) cellFactory.makeCell("Name", "2007-10-01 14:13", schemaCell.getCellFormat().getFormat());
+
+        CellComposer composer = new CellComposer();
+        String value = composer.format(cell, schemaCell);
+
+
+        assertEquals("2007-10-01 14:13", value);
+    }
+
 
     /**
      * Test method for .

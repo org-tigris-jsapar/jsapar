@@ -42,4 +42,9 @@ public class StringCell extends ComparableCell<String> {
     public boolean isEmpty() {
         return getValue().isEmpty();
     }
+
+    @Override
+    public String getStringValue() {
+        return getValue();
+    }
 }

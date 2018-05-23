@@ -29,19 +29,6 @@ public class DateCellFactoryTest {
         assertEquals(format.parse("2007-10-01 14:13"), cell.getValue());
     }
 
-    /**
-     * Test method for
-     * {@link DateCell#getStringValue(java.text.Format)}.
-     *
-     * @throws ParseException
-     */
-    @Test
-    public final void testGetStringValueFormat() throws ParseException {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        DateCell cell = (DateCell) cellFactory.makeCell("Name", "2007-10-01 14:13", format);
-
-        assertEquals("2007-10-01 14:13", cell.getStringValue(format));
-    }
 
     /**
      * Test method for {@link Cell#getStringValue()}.

@@ -22,11 +22,6 @@ public class EmptyCell extends Cell<String> {
     }
 
     @Override
-    public String getStringValue(Format format) {
-        return STRING_VALUE;
-    }
-
-    @Override
     public String getStringValue() {
         return STRING_VALUE;
     }

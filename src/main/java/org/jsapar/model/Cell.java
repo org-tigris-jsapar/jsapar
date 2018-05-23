@@ -57,27 +57,12 @@ public abstract class Cell<T> implements Serializable {
     }
 
     /**
-     * Gets a string representation of the value formatted by the supplied format.
-     * 
-     * @param format
-     *            A formatter for the specified type or null if default formatting is sufficient.
-     * @return The formatted value.
-     * @throws IllegalArgumentException - if the Format cannot format the given object
-     */
-    public String getStringValue(Format format) throws IllegalArgumentException {
-        if (format != null)
-            return format.format(this.value);
-        else
-            return this.value.toString();
-    }
-
-    /**
-     * Gets a string representation of the value formatted as String.valueOf(...)
+     * Gets a string representation of the value formatted as value.toString()
      * 
      * @return The value.
      */
     public String getStringValue() {
-        return String.valueOf(getValue());
+        return getValue().toString();
     }
 
 
@@ -90,7 +75,8 @@ public abstract class Cell<T> implements Serializable {
 
     /**
      * @return A string representation of the cell, including the name of the cell, suitable for
-     *         debugging. Use the method getValue() to get the real value of the cell.
+     * debugging. Use the method {@link #getValue()} to get the real value of the cell or use {@link #getStringValue()}
+     * to get a string representation of the real value.
      */
     @Override
     public String toString() {

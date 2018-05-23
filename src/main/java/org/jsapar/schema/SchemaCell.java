@@ -5,6 +5,7 @@ import org.jsapar.model.CellType;
 import org.jsapar.model.EmptyCell;
 import org.jsapar.parse.CellParser;
 
+import java.text.Format;
 import java.util.Locale;
 
 /**
@@ -312,7 +313,8 @@ public abstract class SchemaCell implements Cloneable {
      */
     public void setDefaultCell(Cell defaultCell) {
         this.defaultCell = defaultCell;
-        this.defaultValue = defaultCell.getStringValue(getCellFormat().getFormat());
+        Format format = getCellFormat().getFormat();
+        this.defaultValue = format != null && !defaultCell.isEmpty() ? format.format(defaultCell.getValue()) : defaultCell.getStringValue();
     }
 
     /**

@@ -39,7 +39,7 @@ public class NumberCellTest {
     @Test
     public void testGetValue() {
         IntegerCell cell = new IntegerCell("test", 42);
-        Assert.assertEquals(new Integer(42), cell.getValue());
+        Assert.assertEquals(42, cell.getValue());
     }
 
 
@@ -49,19 +49,8 @@ public class NumberCellTest {
     @Test
     public void testGetNumberValue() {
         IntegerCell cell = new IntegerCell("test", 42);
-        Assert.assertEquals(new Integer(42), cell.getValue());
+        Assert.assertEquals(42, cell.getValue());
     }
-
-    /**
-     * Test method for {@link NumberCell#getStringValue(java.text.Format)}.
-     */
-    @Test
-    public void testGetStringValueFormat() {
-        IntegerCell cell = new IntegerCell("test", 42);
-        String result = cell.getStringValue(new DecimalFormat("0000"));
-        Assert.assertEquals("0042", result);
-    }
-
 
 
     @Test

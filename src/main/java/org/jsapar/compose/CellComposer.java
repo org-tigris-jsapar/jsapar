@@ -3,6 +3,8 @@ package org.jsapar.compose;
 import org.jsapar.model.Cell;
 import org.jsapar.schema.SchemaCell;
 
+import java.text.Format;
+
 /**
  * Internal utility class that helps composing a cell.
  */
@@ -27,11 +29,8 @@ public class CellComposer {
         if (cell == null || cell.isEmpty()) {
             return defaultValueOrEmpty(schemaCell);
         }
-        String value = cell.getStringValue(schemaCell.getCellFormat().getFormat());
-        if (value == null || value.isEmpty()) {
-            return defaultValueOrEmpty(schemaCell);
-        }
-        return value;
+        Format format = schemaCell.getCellFormat().getFormat();
+        return format != null ? format.format(cell.getValue()) : cell.getStringValue();
     }
 
     /**
