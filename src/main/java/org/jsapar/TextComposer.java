@@ -28,19 +28,19 @@ public class TextComposer implements Composer, AutoCloseable {
 
     /**
      * Creates an TextComposer with a schema.
-     * 
+     *
      * @param schema The schema to use.
-     * @param writer The writer to write to.
+     * @param writer The writer to write text output to. Caller is responsible for either closing the writer or call the close method of the created instance.
      */
     public TextComposer(Schema schema, Writer writer) {
-        this(schema,  writer, new TextComposerFactory());
+        this(schema, writer, new TextComposerFactory());
     }
 
     /**
      * Creates an TextComposer with a schema allowing to add custom {@link SchemaComposer}.
      *
-     * @param schema The schema to use.
-     * @param writer The writer to write to.
+     * @param schema          The schema to use.
+     * @param writer          The writer to write text output to. Caller is responsible for either closing the writer or call the close method of the created instance.
      * @param composerFactory A factory interface for creating {@link SchemaComposer} based on schema.
      */
     public TextComposer(Schema schema, Writer writer, ComposerFactory composerFactory) {

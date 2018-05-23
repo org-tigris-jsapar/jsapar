@@ -50,7 +50,7 @@ public class Bean2TextConverter<T> implements AutoCloseable{
      * Creates a converter with supplied composer schema.
      *
      * @param composerSchema The schema to use while composing text output.
-     * @param writer         The writer to write text output to. Caller is responsible for closing the writer.
+     * @param writer         The writer to write text output to. Caller is responsible for either closing the writer or call the close method of the created instance.
      * @throws IntrospectionException If string names of properties could not be mapped to actual properties.
      * @throws ClassNotFoundException In case any of the classes described in the schema does not exist in the classpath.
      */
@@ -64,7 +64,7 @@ public class Bean2TextConverter<T> implements AutoCloseable{
      *
      * @param composerSchema The schema to use while composing text output.
      * @param beanMap        The bean map to use to map schema names to bean properties.
-     * @param writer         The writer to write text output to. Caller is responsible for closing the writer.
+     * @param writer         The writer to write text output to. Caller is responsible for either closing the writer or call the close method of the created instance.
      */
     public Bean2TextConverter(Schema composerSchema, BeanMap beanMap, Writer writer) {
         assert composerSchema != null;

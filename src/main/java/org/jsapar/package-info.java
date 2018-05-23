@@ -4,14 +4,12 @@
  * The classes in this package provides the highest level of abstractions and are thus the easiest to use. If you want
  * to solve more complex scenarios you may choose to use the lower level {@link org.jsapar.parse.ParseTask} and
  * {@link org.jsapar.convert.ConvertTask}
- * implementations. For instance, the {@link org.jsapar.concurrent.ConcurrentText2TextConverter} is provided to be able
- * to convert text to text by using different threads for reading and writing, but there are no other
- * concurrent converter implementations. You may however implement your own by using the
- * {@link org.jsapar.concurrent.ConcurrentConvertTask} or {@link org.jsapar.concurrent.ConcurrentLineEventListener}.
+ * implementations.
  * <p>
- * The files for the examples below are provided in the <tt>samples</tt> folder of the project. The JUnit test
- * {@code org.jsapar.JSaParExamplesTest.java}
- * contains a more comprehensive set of examples of how to use the package.
+ * See <a href="https://org-tigris-jsapar.github.io/jsapar">Documentation pages</a> for further examples and documentation.
+ * <p>
+ * The files for the examples below are provided in the <a href="https://github.com/org-tigris-jsapar/jsapar/tree/master/examples">examples</a> folder of the project.
+ *
  * <p>
  * Example of reading <b>CSV file</b> into a {@link org.jsapar.model.Document} object according to an xml-schema:
  * <pre>{@code
@@ -19,9 +17,9 @@
  *    Reader fileReader = new FileReader("examples/01_Names.csv")) {
  *    Schema schema = Schema.ofXml(schemaReader);
  *    TextParser parser = new TextParser(schema);
- *    DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
+ *    Document document = new Document();
+ *    DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener(document);
  *    parser.parse(fileReader, listener);
- *    Document document = listener.getDocument();
  * }
  * }</pre>
  * <p>
