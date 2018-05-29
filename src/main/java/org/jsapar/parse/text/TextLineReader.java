@@ -15,7 +15,8 @@ import java.io.Reader;
  */
 public class TextLineReader implements LineReader {
 
-    static final int MAX_LINE_LENGTH = 10 * 1024;
+    static final int     MAX_LINE_LENGTH       = 10 * 1024;
+    static final int     INITIAL_LINE_CAPACITY = 128;
     private final String lineSeparator;
 
     private Reader  reader;
@@ -47,8 +48,8 @@ public class TextLineReader implements LineReader {
             return null;
         String lineSeparator = getLineSeparator();
         char chLineSeparatorNext = lineSeparator.charAt(0);
-        StringBuilder lineBuilder = new StringBuilder(64);
-        StringBuilder pending = new StringBuilder(lineSeparator.length()+1);
+        StringBuilder lineBuilder = new StringBuilder(INITIAL_LINE_CAPACITY);
+        StringBuilder pending = new StringBuilder(lineSeparator.length());
         char[] buffer = new char[1]; // Re-using same buffer.
         while (true) {
             int nRead = reader.read(buffer, 0, 1);
