@@ -37,7 +37,7 @@ public abstract class NumberCellFactory implements CellFactory{
      * @return A modified value that can be parsed with supplied Format.
      */
     private String adjustValueForOddLocales(String sValue, Format format) {
-        if (format != null && format instanceof DecimalFormat) {
+        if (format instanceof DecimalFormat) {
             // This is necessary because some locales (e.g. swedish)
             // have non breakable space as thousands grouping character. Naturally
             // we want to remove all space characters including the non breakable.

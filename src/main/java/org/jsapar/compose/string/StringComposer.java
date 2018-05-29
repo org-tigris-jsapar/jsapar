@@ -20,7 +20,6 @@ import java.util.stream.Stream;
  */
 public class StringComposer implements Composer {
 
-    private       ErrorEventListener errorEventListener;
     private final Schema             schema;
     private final static CellComposer cellComposer = new CellComposer();
     private final StringComposedEventListener stringComposedEventListener;
@@ -48,7 +47,7 @@ public class StringComposer implements Composer {
 
     @Override
     public void setErrorEventListener(ErrorEventListener errorListener) {
-        this.errorEventListener = errorListener;
+//        this.errorEventListener = errorListener; // Not used.
     }
 
     private boolean stringComposedEvent(StringComposedEvent event) {

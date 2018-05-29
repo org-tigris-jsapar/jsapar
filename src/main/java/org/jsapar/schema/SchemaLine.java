@@ -198,13 +198,9 @@ public abstract class SchemaLine implements Cloneable {
         }
         SchemaLine other = (SchemaLine) obj;
         if (lineType == null) {
-            if (other.lineType != null) {
-                return false;
-            }
-        } else if (!lineType.equals(other.lineType)) {
-            return false;
-        }
-        return true;
+            return other.lineType == null;
+        } else
+            return lineType.equals(other.lineType);
     }
 
 

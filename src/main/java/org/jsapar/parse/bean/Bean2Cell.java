@@ -175,16 +175,16 @@ public class Bean2Cell {
         Cell makeCell(Object o) throws InvocationTargetException, IllegalAccessException;
     }
 
-    private void assignProperty(Object bean, Cell cell) throws InvocationTargetException, IllegalAccessException, BeanComposeException {
+    private void assignProperty(Object bean, Cell<?> cell) throws InvocationTargetException, IllegalAccessException, BeanComposeException {
         Method setter = this.propertyDescriptor.getWriteMethod();
         if (setter == null)
             throw new BeanComposeException("The property " + propertyDescriptor.getName() + " of class " + children.getLineClass().getName() + " has no setter method.");
         Class paramType = setter.getParameterTypes()[0];
-        Object value = cell.getValue();
         setter.invoke(bean, customCast(paramType, cell));
     }
 
-    private Object customCast(Class paramType, Cell cell) throws BeanComposeException {
+    @SuppressWarnings("unchecked")
+    private Object customCast(Class paramType, Cell<?> cell) throws BeanComposeException {
         Class valueType = cell.getValue().getClass();
         Object value = cell.getValue();
         if (paramType.isAssignableFrom(valueType))
