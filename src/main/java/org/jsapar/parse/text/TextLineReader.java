@@ -49,13 +49,14 @@ public class TextLineReader implements LineReader {
         char chLineSeparatorNext = lineSeparator.charAt(0);
         StringBuilder lineBuilder = new StringBuilder();
         StringBuilder pending = new StringBuilder();
+        char[] buffer = new char[1]; // Re-using same buffer.
         while (true) {
-            int nRead = reader.read();
-            if (nRead == -1) {
+            int nRead = reader.read(buffer, 0, 1);
+            if (nRead < 1) {
                 eofReached = true;
                 return lineBuilder.toString();
             }
-            char chRead = (char) nRead;
+            char chRead = buffer[0];
             if (chRead == chLineSeparatorNext) {
                 pending.append(chRead);
                 if (lineSeparator.length() > pending.length())
