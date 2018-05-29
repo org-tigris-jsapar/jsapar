@@ -47,8 +47,8 @@ public class TextLineReader implements LineReader {
             return null;
         String lineSeparator = getLineSeparator();
         char chLineSeparatorNext = lineSeparator.charAt(0);
-        StringBuilder lineBuilder = new StringBuilder();
-        StringBuilder pending = new StringBuilder();
+        StringBuilder lineBuilder = new StringBuilder(64);
+        StringBuilder pending = new StringBuilder(lineSeparator.length()+1);
         char[] buffer = new char[1]; // Re-using same buffer.
         while (true) {
             int nRead = reader.read(buffer, 0, 1);

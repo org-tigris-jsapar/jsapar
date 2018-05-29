@@ -56,7 +56,7 @@ public class TextLineReaderAnyCRLF extends TextLineReader {
     public String readLine() throws IOException {
         if (eofReached())
             return null;
-        StringBuilder lineBuilder = new StringBuilder();
+        StringBuilder lineBuilder = new StringBuilder(64);
         boolean crFound = false;
         char[] buffer = new char[1]; // Re-using same buffer.
         while (true) {
