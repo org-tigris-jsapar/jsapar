@@ -2,6 +2,7 @@ package org.jsapar.schema;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -123,6 +124,7 @@ public abstract class SchemaLine implements Cloneable {
      *            the lineType to set
      */
     public void setLineType(String lineType) {
+        assert lineType != null;
         this.lineType = lineType;
     }
 
@@ -166,44 +168,20 @@ public abstract class SchemaLine implements Cloneable {
      */
     public abstract int size();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof SchemaLine))
+            return false;
+        SchemaLine that = (SchemaLine) o;
+        return Objects.equals(lineType, that.lineType);
+    }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((lineType == null) ? 0 : lineType.hashCode());
-        return result;
+        return Objects.hash(getLineType());
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof SchemaLine)) {
-            return false;
-        }
-        SchemaLine other = (SchemaLine) obj;
-        if (lineType == null) {
-            return other.lineType == null;
-        } else
-            return lineType.equals(other.lineType);
-    }
-
-
 
     @Override
     public SchemaLine clone() {
