@@ -183,14 +183,14 @@ public class FixedWidthSchemaLine extends SchemaLine {
         return this.schemaCells.size();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj) && obj instanceof FixedWidthSchemaLine;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     /**

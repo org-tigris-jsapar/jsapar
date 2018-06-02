@@ -161,5 +161,13 @@ public class SchemaCellFormat implements Cloneable {
         } else
             return pattern.equals(other.pattern);
     }
-    
+
+    @Override
+    protected SchemaCellFormat clone() {
+        try {
+            return (SchemaCellFormat) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Should never happen");
+        }
+    }
 }

@@ -77,7 +77,7 @@ class CsvLineParserMatcher {
     /**
      * Private internal class used to point to a control cell within a schema line.
      */
-    private class CsvControlCell {
+    private static class CsvControlCell {
         final int           pos;
         final CsvSchemaCell schemaCell;
 

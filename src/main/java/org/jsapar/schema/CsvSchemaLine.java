@@ -218,6 +218,11 @@ public class CsvSchemaLine extends SchemaLine {
     }
 
     @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
     public Stream<CsvSchemaCell> stream() {
         return schemaCells.values().stream();
     }

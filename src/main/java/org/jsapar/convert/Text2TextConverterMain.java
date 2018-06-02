@@ -10,6 +10,7 @@ import org.jsapar.schema.Schema;
 import org.jsapar.schema.Xml2SchemaBuilder;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Properties;
 
@@ -18,11 +19,11 @@ import java.util.Properties;
  * <p>
  * Usage:
  * <pre>{@code
-  java -jar jsapar-<version>.jar -in.schema <input schema name> -out.schema <output schema name>
-  -in.file <input file name> [-out.file <output file name>]
-  [-in.file.encoding <input file encoding (or system default is used)>]
-  [-out.file.encoding <output file encoding (or system default is used)>]
-}</pre>
+ * java -jar jsapar-<version>.jar -in.schema <input schema name> -out.schema <output schema name>
+ * -in.file <input file name> [-out.file <output file name>]
+ * [-in.file.encoding <input file encoding (or system default is used)>]
+ * [-out.file.encoding <output file encoding (or system default is used)>]
+ * }</pre>
  */
 public class Text2TextConverterMain {
     private static final String APP_NAME = "jsapar.jar";
@@ -45,27 +46,26 @@ public class Text2TextConverterMain {
 
             String inFileName = properties.getProperty("in.file");
             String inFileEncoding = properties.getProperty("in.file.encoding", null);
-            Reader inputFileReader = inFileEncoding == null ? new java.io.FileReader(inFileName)
-                    : new InputStreamReader(new FileInputStream(inFileName), inFileEncoding);
+
             String outFileEncoding = properties.getProperty("out.file.encoding", null);
             String outFileName = properties.getProperty("out.file", inFileName + ".out");
-            java.io.Writer writer = (outFileEncoding == null) ? new java.io.FileWriter(outFileName)
-                    : new OutputStreamWriter(new FileOutputStream(outFileName), outFileEncoding);
 
-            Text2TextConverter converter = makeConverter(inputSchema, outputSchema);
-            RecordingErrorEventListener errorEventListener = new RecordingErrorEventListener();
-            converter.setErrorEventListener(errorEventListener);
-            converter.convert(inputFileReader, writer);
-            List<JSaParException> parseErrors = errorEventListener.getErrors();
+            try (Reader inputFileReader = new InputStreamReader(
+                    new FileInputStream(inFileName), inFileEncoding != null ? inFileEncoding : Charset.defaultCharset().name());
+                 Writer writer = new OutputStreamWriter(
+                         new FileOutputStream(outFileName), outFileEncoding != null ? outFileEncoding : Charset.defaultCharset().name())) {
+                Text2TextConverter converter = makeConverter(inputSchema, outputSchema);
+                RecordingErrorEventListener errorEventListener = new RecordingErrorEventListener();
+                converter.setErrorEventListener(errorEventListener);
+                converter.convert(inputFileReader, writer);
+                List<JSaParException> parseErrors = errorEventListener.getErrors();
+                if (parseErrors.size() > 0)
+                    System.out.println("===> Found errors while converting file " + inFileName + ": "
+                            + System.getProperty("line.separator") + parseErrors);
+                else
+                    System.out.println("Successfully converted file " + inFileName);
 
-            if (parseErrors.size() > 0)
-                System.out.println("===> Found errors while converting file " + inFileName + ": "
-                        + System.getProperty("line.separator") + parseErrors);
-            else
-                System.out.println("Successfully converted file " + inFileName);
-
-            inputFileReader.close();
-            writer.close();
+            }
         } catch (Throwable t) {
             System.err.println("Failed to convert file.");
             t.printStackTrace(System.err);
@@ -110,7 +110,9 @@ public class Text2TextConverterMain {
     private Properties readConfig(String[] args) throws IOException {
         Properties properties = new Properties();
         if (args.length == 1) {
-            properties.load(new FileReader(args[0]));
+            try (FileReader reader = new FileReader(args[0])) {
+                properties.load(reader);
+            }
         } else if (args.length > 1) {
             readArgs(properties, args);
         } else {
@@ -123,7 +125,6 @@ public class Text2TextConverterMain {
         checkMandatory(properties, "in.file");
         return properties;
     }
-
 
 
     /**

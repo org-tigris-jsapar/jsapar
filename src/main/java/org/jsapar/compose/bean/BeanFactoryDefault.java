@@ -37,10 +37,6 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
                 try {
                     // Continue looping to next object.
                     currentObject = findOrCreateChildBean(currentObject, nameLevels[i]);
-                    if (currentObject == null) {
-                        throw new BeanComposeException("BeanFactory failed to find or create child bean to parent of class " + bean
-                                        .getClass().getName() + ", cell value is omitted.");
-                    }
                 } catch (InstantiationException e) {
                     throw new BeanComposeException("Skipped assigning cell - Failed to execute default constructor for class accessed by "
                                     + nameLevels[i], e);

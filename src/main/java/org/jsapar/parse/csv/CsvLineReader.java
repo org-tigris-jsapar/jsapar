@@ -102,7 +102,7 @@ class CsvLineReader {
     /**
      * Internal private class that represents a raw line where cells have been split into string values.
      */
-    private class RawLine {
+    private static class RawLine {
         private String[]     line;
         private String       cellSeparator;
         private char         quoteChar;

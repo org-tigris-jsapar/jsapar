@@ -65,7 +65,7 @@ public class FWLineParserMatcher {
         return lineParser;
     }
 
-    private class FWControlCell{
+    private static class FWControlCell{
         final int beginPos;
         final FixedWidthSchemaCell schemaCell;
 

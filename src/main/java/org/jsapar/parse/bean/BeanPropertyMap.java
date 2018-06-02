@@ -60,8 +60,9 @@ public class BeanPropertyMap {
         Map<String, PropertyDescriptor> descriptors = Arrays.stream(beanPropertyMap.beanInfo.getPropertyDescriptors())
                 .collect(Collectors.toMap(PropertyDescriptor::getName, pd->pd));
 
-        for(String propertyName : cellNamesOfProperty.keySet()) {
-            String cellName = cellNamesOfProperty.get(propertyName);
+        for(Map.Entry<String, String> propertyEntry : cellNamesOfProperty.entrySet()) {
+            String propertyName = propertyEntry.getKey();
+            String cellName = propertyEntry.getValue();
             if(cellName==null)
                 cellName=propertyName;
 
