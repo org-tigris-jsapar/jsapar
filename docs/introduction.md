@@ -29,6 +29,8 @@ On the [maven central page for each version](http://search.maven.org/#search%7Cg
 want to download the binaries and install them locally in your project classpath you also find download links there.
 
 ## Simple example of parsing CSV file
+*You can find a version of [this example in the jsapar-examples project](https://github.com/org-tigris-jsapar/jsapar-examples/tree/master/src/main/java/org/jsapar/examples/introduction/a1)*
+
 Let us say that we have a CSV (or rather a semi colon separated) file that we need to parse. In this example the file contains lines that all have the same type. They each contain four cells (columns). Here is an example of the content of such a file.
 ```csv
 Erik;Vidfare;Svensson;yes
