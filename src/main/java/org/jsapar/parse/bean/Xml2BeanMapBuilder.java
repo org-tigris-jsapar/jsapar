@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 
 public class Xml2BeanMapBuilder implements XmlTypes {
-    private final String NAMESPACE = "http://jsapar.tigris.org/BeanMapSchema/2.0";
+    private final static String NAMESPACE = "http://jsapar.tigris.org/BeanMapSchema/2.0";
 
     public BeanMap build(Reader reader) throws ClassNotFoundException, IOException {
         String schemaFileName = "/xml/schema/BeanMapSchema.xsd";

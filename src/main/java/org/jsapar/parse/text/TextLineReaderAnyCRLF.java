@@ -56,15 +56,16 @@ public class TextLineReaderAnyCRLF extends TextLineReader {
     public String readLine() throws IOException {
         if (eofReached())
             return null;
-        StringBuilder lineBuilder = new StringBuilder();
+        StringBuilder lineBuilder = new StringBuilder(INITIAL_LINE_CAPACITY);
         boolean crFound = false;
+        char[] buffer = new char[1]; // Re-using same buffer.
         while (true) {
-            int nRead = reader.read();
-            if (nRead == -1) {
+            int nRead = reader.read(buffer, 0, 1);
+            if (nRead < 1) {
                 setEofReached(true);
                 return lineBuilder.toString();
             }
-            char chRead = (char) nRead;
+            char chRead = buffer[0];
             if (chRead == '\n') {
                 lineSeparatorIndex = crFound ? 1 : 0;
                 break; // End of line found.
