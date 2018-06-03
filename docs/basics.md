@@ -135,6 +135,8 @@ mechanism under the hood, thus it reads, converts and writes one line at a time.
 If you are only interesting in converting a file of one format into another, you can use the `org.jsapar.Text2TextConverter` 
 where you specify the input and the output schema for the conversion.
 
+*You can find a version of [this example in the jsapar-examples project](https://github.com/org-tigris-jsapar/jsapar-examples/tree/master/src/main/java/org/jsapar/examples/basics/b1)*
+
 There is not much code that is needed for converting from one text format to another:  
 ```java
 try (Reader inSchemaReader = new FileReader(inSchemaXmlFile);
