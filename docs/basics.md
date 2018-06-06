@@ -236,8 +236,9 @@ There is no limit to the number of levels you can have.
 
 The java code needed for this to work:
 ```java
-    Text2BeanConverter converter = new Text2BeanConverter(Schema.ofXml(inputSchemaXmlReader));
-    converter.convert(fileReader, (beanEvent)->{ 
+    Schema parseSchema = Schema.ofXml(inputSchemaReader);
+    Text2BeanConverter<Employee> converter = new Text2BeanConverter<>(parseSchema);
+    converter.convert(fileReader, (beanEvent)->{
         Emplyee employee = beanEvent.getBean();
         // Handle each emplyee here...
     });
