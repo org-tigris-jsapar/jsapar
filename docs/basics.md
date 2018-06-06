@@ -180,6 +180,8 @@ There is a provided implementation: `org.jsapar.compose.bean.RecordingBeanEventL
 created in an internal list to be retrieved later. Not to be used for large data sets since it will store all beans in memory.   
 
 ### Example
+*You can find a version of [this example in the jsapar-examples project](https://github.com/org-tigris-jsapar/jsapar-examples/tree/master/src/main/java/org/jsapar/examples/basics/b2)*
+
 This example will describe how to convert CSV text into instances of a class `com.example.Employee` defined as:
 ```java
 public class Employee {

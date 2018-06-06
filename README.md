@@ -18,6 +18,14 @@ making it easy to process delimited and fixed width data sources.
 By separating the description of the data format into a schema that can be loaded from XML it makes the code
 easier to maintain and increases flexibility.
 
-<a href="https://org-tigris-jsapar.github.io/jsapar/">Documentation</a>
+* [Documentation](https://org-tigris-jsapar.github.io/jsapar/)
+* [Javadocs API documentation](https://javadoc.io/doc/org.tigris.jsapar/jsapar)
+* [Examples](https://github.com/org-tigris-jsapar/jsapar-examples)
 
+## Quality goals
+* All features fully documented, discussed and demonstrated.
+* Unit tests for (almost) all classes within the library.
+* Examples demonstrating all features.
+
+We are not quite there yet, but we are working on it...
 

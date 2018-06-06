@@ -47,13 +47,6 @@ parsing to be able to deal with them later.
 * Support for consuming or producing an internal xml format which can be used to transform any of the supported formats 
 into any markup language by the use of xslt.
 
-## Quality goals
-* All features fully documented, discussed and demonstrated.
-* Unit tests for (almost) all classes within the library.
-* Examples demonstrating all features.
-
-We are not quite there yet, but we are working on it...
-
 ## Documentation
 * [Introduction](introduction)
 * [Basics](basics)
@@ -63,6 +56,7 @@ We are not quite there yet, but we are working on it...
 
 ## Resources
 * [Source code and issues](https://github.com/org-tigris-jsapar/jsapar)
+* [Examples](https://github.com/org-tigris-jsapar/jsapar-examples)
 * <a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">Maven coordinates and binaries download</a><br/>
 * <a href="http://jsapar.tigris.org/servlets/ProjectDocumentList">Download historical binaries</a><br/>
 * <a href="http://jsapar.tigris.org">The original project web page with historical archive.</a><br/>
