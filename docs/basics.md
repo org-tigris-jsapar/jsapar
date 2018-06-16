@@ -245,6 +245,8 @@ The java code needed for this to work:
     
 ```
 ## Converting java objects to text
+*You can find a full version of [this example in the jsapar-examples project](https://github.com/org-tigris-jsapar/jsapar-examples/tree/master/src/main/java/org/jsapar/examples/basics/b3)*
+
 Use the class `org.jsapar.Bean2TextConverter` in order to convert java objects into an output text according to a schema. Basically
 it works the other way around compared to converting from text to java beans as described above. The same rules apply to both
 how the schema is created and to the java beans. You feed the converter with java beans and the schema will handle the 
@@ -259,10 +261,6 @@ Bean2TextConverter<Employee> converter = new Bean2TextConverter<>(Schema.ofXml(s
 employees.forEach(employee ->converter.convert(employee));
 ```  
 
-If you have a large set of beans that you want to add to the output, you should implement the `java.util.Iterator` interface
-in order to provide beans one-by-one. 
-
-Also the `java.util.stream.Stream` interface is supported and can be used for the same purpose.
 ## Manipulating lines while converting
 Not everything can be converted one-to-one by simple mapping of the format. Sometimes you need to add, remove or filter data for each line while converting.
 The `org.jsapar.convert.LineManipulator` interface can be used to act as both 
