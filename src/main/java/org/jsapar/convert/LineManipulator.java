@@ -23,8 +23,9 @@ import org.jsapar.model.Line;
 public interface LineManipulator {
 
     /**
-     * Gets called every time that a line parsing event is fired within a converter. Changes of the line instance will
-     * be reflected in the output.
+     * Gets called every time that a line parsing event is fired within a converter. Changes of the line instance made
+     * by an implementation of this method will
+     * be reflected in the output. Cells can be added, altered or removed by a manipulator.
      *
      * @param line The line to manipulate
      * @return If this method returns false, the line will be omitted from the output.
