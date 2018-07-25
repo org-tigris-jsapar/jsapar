@@ -286,6 +286,8 @@ You can add multiple line manipulators to a converter and they will be called in
 Returning false from a manipulator indicates that the line should be omitted completely from the output.
 
 You can both add and remove cells in a line manipulator.
+
+*See [this example in the jsapar-examples project](https://github.com/org-tigris-jsapar/jsapar-examples/tree/master/src/main/java/org/jsapar/examples/basics/b4)*
 ## Asynchronous conversion
 The `org.jsapar.concurrent.ConcurrentText2TextConverter` is an asynchronous version of the `Text2TextConverter`.
 Internally it starts a separate thread that handles the composing part and thus can utilize resources more efficiently.
