@@ -1,15 +1,12 @@
 /**
- * The JSaPar package provides a parser for flat and CSV (Comma Separated Values) files.
+ * The JSaPar package provides parser and composer for flat and CSV files (or any type of delimited file). It also provides
+ * converter classes to convert from text source into java beans and from java beans into text output plus some
+ * additional converters that handles xml and java strings.
  * <p>
  * The classes in this package provides the highest level of abstractions and are thus the easiest to use. If you want
  * to solve more complex scenarios you may choose to use the lower level {@link org.jsapar.parse.ParseTask} and
  * {@link org.jsapar.convert.ConvertTask}
  * implementations.
- * <p>
- * See <a href="https://org-tigris-jsapar.github.io/jsapar">Documentation pages</a> for further examples and documentation.
- * <p>
- * The files for the examples below are provided in the <a href="https://github.com/org-tigris-jsapar/jsapar/tree/master/examples">examples</a> folder of the project.
- *
  * <p>
  * Example of reading <b>CSV file</b> into a {@link org.jsapar.model.Document} object according to an xml-schema:
  * <pre>{@code
@@ -46,5 +43,8 @@
  *    List<TstPerson> people = beanEventListener.getLines();
  * }
  * }</pre>
+ *
+ * @see <a href="https://org-tigris-jsapar.github.io/jsapar">Documentation pages</a> for further documentation.
+ * @see <a href="https://github.com/org-tigris-jsapar/jsapar-examples">Examples project</a> for complete examples.
  */
 package org.jsapar;
