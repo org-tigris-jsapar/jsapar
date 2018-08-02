@@ -15,8 +15,15 @@ import java.io.Reader;
  */
 public class XmlParser extends AbstractParser {
 
-    public void parse(Reader reader, LineEventListener lineEventListener) throws IOException {
+    /**
+     * Reads xml from supplied reader and parses each line. Each parsed line generates a call-back to the lineEventListener.
+     * @param reader The reader to read xml from.
+     * @param lineEventListener The call-back interface.
+     * @return Number of parsed lines.
+     * @throws IOException In case of IO error
+     */
+    public long parse(Reader reader, LineEventListener lineEventListener) throws IOException {
         XmlParseTask parseTask = new XmlParseTask(reader);
-        execute(parseTask, lineEventListener);
+        return execute(parseTask, lineEventListener);
     }
 }

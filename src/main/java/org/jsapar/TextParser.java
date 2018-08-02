@@ -44,9 +44,16 @@ public class TextParser extends AbstractParser {
         this.parseConfig = parseConfig;
     }
 
-    public void parse(Reader reader, LineEventListener lineEventListener) throws IOException {
+    /**
+     * Reads text from supplied reader and parses each line. Each parsed line generates a call-back to the lineEventListener.
+     * @param reader The reader to read text from.
+     * @param lineEventListener The call-back interface.
+     * @return Number of parsed lines.
+     * @throws IOException In case of IO error
+     */
+    public long parse(Reader reader, LineEventListener lineEventListener) throws IOException {
         TextParseTask parseTask = new TextParseTask(this.parseSchema, reader, parseConfig);
-        execute(parseTask, lineEventListener);
+        return execute(parseTask, lineEventListener);
     }
 
     public TextParseConfig getParseConfig() {

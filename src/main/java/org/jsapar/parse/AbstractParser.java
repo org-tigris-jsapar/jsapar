@@ -20,10 +20,10 @@ public class AbstractParser {
         this.errorEventListener = errorEventListener;
     }
 
-    protected void execute(ParseTask parseTask, LineEventListener lineEventListener) throws IOException {
+    protected long execute(ParseTask parseTask, LineEventListener lineEventListener) throws IOException {
         parseTask.setLineEventListener(lineEventListener);
         if(errorEventListener != null)
             parseTask.setErrorEventListener(errorEventListener);
-        parseTask.execute();
+        return parseTask.execute();
     }
 }
