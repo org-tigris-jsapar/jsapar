@@ -4,8 +4,8 @@ import org.jsapar.model.Document;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
 
-import java.io.IOException;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
@@ -121,10 +121,10 @@ public abstract class Schema implements Cloneable{
      * @throws SchemaException
      *             if the supplied xml does not comply to the JSaParSchema.xsd or if there is any other error while
      *             loading a schema.
-     * @throws IOException In case there was an error reading from the input.
+     * @throws UncheckedIOException In case there was an error reading from the input.
      */
     public static Schema ofXml(Reader reader)
-            throws SchemaException, IOException{
+            throws SchemaException, UncheckedIOException {
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         return schemaBuilder.build(reader);
     }

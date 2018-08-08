@@ -45,9 +45,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      *            - A reader linked to the xml file.
      * @return The file parser schema.
      * @throws SchemaException When there is an error in the schema
-     * @throws IOException When there is an error reading the input
+     * @throws UncheckedIOException When there is an error reading the input
      */
-    public Schema build(Reader reader) throws IOException, SchemaException {
+    public Schema build(Reader reader) throws UncheckedIOException, SchemaException {
         String schemaFileName = "/xml/schema/JSaParSchema.xsd";
 
         try(InputStream schemaStream = Xml2SchemaBuilder.class.getResourceAsStream(schemaFileName)) {
@@ -110,6 +110,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         }
         catch(ParserConfigurationException|SAXException e){
             throw new SchemaException("Failed to load schema from xml ", e);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to load schema from xml", e);
         }
     }
 
@@ -536,10 +538,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      * @param file The file to load schema from
      * @return A newly created schema from the xml file.
      * @throws SchemaException  When there is an error in the schema
-     * @throws IOException      When there is an error reading from input
+     * @throws UncheckedIOException      When there is an error reading from input
      */
     public static Schema loadSchemaFromXmlFile(File file)
-            throws SchemaException, IOException{
+            throws UncheckedIOException, SchemaException{
         return loadSchemaFromXmlFile(file, Charset.defaultCharset().name());
     }
     
@@ -549,15 +551,18 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      * @param encoding The character encoding to use while reading file.
      * @return A newly created schema from the xml file.
      * @throws SchemaException  When there is an error in the schema
-     * @throws IOException      When there is an error reading from input
+     * @throws UncheckedIOException      When there is an error reading from input
      */
     @SuppressWarnings("WeakerAccess")
     public static Schema loadSchemaFromXmlFile(File file, String encoding)
-            throws SchemaException, IOException {
-        InputStream is = new FileInputStream(file);
-        try (Reader schemaReader = new InputStreamReader(is, encoding)) {
+            throws UncheckedIOException, SchemaException {
+
+        try (InputStream is = new FileInputStream(file);
+                Reader schemaReader = new InputStreamReader(is, encoding)) {
             Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
             return builder.build(schemaReader);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to load schema from file", e);
         }
     }
 
@@ -571,11 +576,11 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      *            The name of the resource to load.
      * @return A newly created schema from the supplied xml resource.
      * @throws SchemaException  When there is an error in the schema
-     * @throws IOException      When there is an error reading from input
+     * @throws UncheckedIOException      When there is an error reading from input
      */
     @SuppressWarnings("unused")
     public static Schema loadSchemaFromXmlResource(Class<?> resourceBaseClass, String resourceName)
-            throws SchemaException, IOException {
+            throws UncheckedIOException, SchemaException{
         return loadSchemaFromXmlResource(resourceBaseClass, resourceName, Charset.defaultCharset().name());
     }    
     
@@ -591,11 +596,11 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      *            The character encoding to use while reading resource.
      * @return A newly created schema from the supplied xml resource.
      * @throws SchemaException  When there is an error in the schema
-     * @throws IOException      When there is an error reading from input
+     * @throws UncheckedIOException      When there is an error reading from input
      */
     @SuppressWarnings("WeakerAccess")
     public static Schema loadSchemaFromXmlResource(Class<?> resourceBaseClass, String resourceName, String encoding)
-            throws SchemaException, IOException {
+            throws UncheckedIOException, SchemaException{
         if (resourceBaseClass == null)
             resourceBaseClass = Xml2SchemaBuilder.class;
         try (InputStream is = resourceBaseClass.getResourceAsStream(resourceName)) {
@@ -605,6 +610,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
             }
             Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
             return schemaBuilder.build(new InputStreamReader(is, encoding));
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to load schema from xml resource", e);
         }
     }
 
