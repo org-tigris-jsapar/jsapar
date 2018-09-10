@@ -150,6 +150,8 @@ of times that a line type is used when parsing.
 When composing, you set the value of the line condition cell as with any other cell so the line condition as no effect 
 when composing. By assigning a default value for the line condition cell as we do above, we make sure that we do not need 
 to explicitly assign any value to that cell while composing.
+
+*See [this example in the jsapar-examples project](https://github.com/org-tigris-jsapar/jsapar-examples/tree/master/src/main/java/org/jsapar/examples/schemabasics/c1)*
 ### Cell
 The `<cell>` element describes the format of a particular cell or column. Each cell needs to have a name. By default the 
 cell type is string so if you do not want the library to do any type conversion, the minimal configuration for a cell is:
@@ -230,9 +232,9 @@ You activate support for quoted values on a line type by specifying a quote char
 ```
 You can specify any character as quote character except the one you are using as line separator and cell separator. If you use a character that is 
 reserved by the markup language (XML), you will need to [escape it](https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references) as in the example above.    
-#### Parsing quoting values
+#### Parsing quoted values
 As long as you have activated quoting as described above, the parser will automatically detect if a cell is quoted or not. Not all cells needs quoting. 
-A cell is considered to be quoted if and only if the first and the last character of the cell is the quote character. The quote characters will always be removed
+*A cell is considered to be quoted if and only if the first and the last character of the cell is the quote character.* The quote characters will always be removed
 from the parsed value. 
 This differs slightly from the CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180)
 which states that:

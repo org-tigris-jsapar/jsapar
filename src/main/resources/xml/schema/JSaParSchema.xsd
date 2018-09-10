@@ -99,6 +99,9 @@
     	</xsd:element>
     	<xsd:element name="linecondition" type="CellValueCondition"
                      minOccurs="0">
+                <xsd:annotation>
+                	<xsd:documentation>A line condition is a condition that needs to be fulfilled in order for the parser to use this line type. You can add line condition on one or multiple cells and all line conditions needs to be fulfilled for a line type to be used.</xsd:documentation>
+                </xsd:annotation>
     	</xsd:element>
         <xsd:element name="emptycondition" type="CellValueCondition" minOccurs="0"/>
     </xsd:sequence>
@@ -402,7 +405,10 @@ Available since 2.0</xsd:documentation>
   </xsd:complexType>
 
   <xsd:complexType name="CellRegex">
-      <xsd:attribute name="pattern" type="xsd:string"/>
+      <xsd:attribute name="pattern" type="xsd:string">
+      	<xsd:annotation>
+      		<xsd:documentation>Regular expression pattern that needs to match the content of the cell.</xsd:documentation>
+      	</xsd:annotation></xsd:attribute>
   </xsd:complexType>
 
   <xsd:simpleType name="QuoteBehaviorType">
