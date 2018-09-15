@@ -389,7 +389,7 @@ http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1
                     </xsd:documentation>
   				</xsd:annotation>
   			</xsd:attribute>
-  			<xsd:attribute name="quotebehavior" type="QuoteBehaviorType" default="AUTOMATIC">
+  			<xsd:attribute name="quotebehavior" type="QuoteBehaviorType" >
   				<xsd:annotation>
   					<xsd:documentation>Quote behavior on cell level. Overrides line behavior.
 Available since 2.0</xsd:documentation>
