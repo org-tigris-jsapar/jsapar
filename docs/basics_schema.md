@@ -219,6 +219,7 @@ you may specify an empty pattern that matches any number of white space characte
 ```xml
 <match pattern="\s*"/>
 ```  
+* See [this example in the jsapar-examples project](https://github.com/org-tigris-jsapar/jsapar-examples/tree/master/src/main/java/org/jsapar/examples/schemabasics/c2)
 ### Quoted values
 The problem with delimited (CSV) data is that the value of a specific cell may also contain the delimiter character or even the line separator. 
 In order to handle this scenario the JSaPar library is capable of handling quoted cells. It does not fully comply to the 
