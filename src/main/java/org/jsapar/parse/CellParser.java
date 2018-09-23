@@ -6,7 +6,8 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.parse.cell.CellFactory;
 import org.jsapar.schema.SchemaCell;
-import org.jsapar.schema.SchemaException;
+import org.jsapar.utils.Cache;
+import org.jsapar.utils.SimpleCache;
 
 import java.text.Format;
 import java.text.ParseException;
@@ -16,11 +17,28 @@ import java.util.Optional;
 /**
  * Internal class for parsing text on cell level.
  */
-public class CellParser {
+public class CellParser<S extends SchemaCell> {
 
+    private S schemaCell;
+    private Cell<?> defaultCell;
+    private Cell<?> emptyCell;
+    private CellFactory cellFactory;
+    private Format format;
+    private Cache<String, Cell> cellCache = new SimpleCache<>(20);
     private static final String EMPTY_STRING = "";
 
-    public CellParser() {
+    protected CellParser(S schemaCell) throws ParseException {
+        this.schemaCell = schemaCell;
+
+        CellType cellType = schemaCell.getCellFormat().getCellType();
+        cellFactory = CellFactory.getInstance(cellType);
+        assert cellFactory != null;
+        format = schemaCell.getCellFormat().getFormat();
+        if(format == null)
+            format  = cellFactory.makeFormat(schemaCell.getLocale());
+
+        this.defaultCell = schemaCell.isDefaultValue() ? makeCell(schemaCell.getDefaultValue()) : null;
+        this.emptyCell = schemaCell.makeEmptyCell();
     }
 
     /**
@@ -28,43 +46,45 @@ public class CellParser {
      * method does not throw exception of mandatory cell does not exist. Instead it reports an error
      * event and continues.
      *
-     * @param cellSchema         The cell schema to use
      * @param sValue             The value of the cell
      * @param errorEventListener Error event listener to deliver errors to.
      * @return A new cell of a type according to the schema specified. Returns null if there is no
      * value.
      */
-    public Optional<Cell> parse(SchemaCell cellSchema, String sValue, ErrorEventListener errorEventListener) {
+    public Optional<Cell> parse(String sValue, ErrorEventListener errorEventListener) {
         if (sValue.isEmpty()) {
-            checkIfMandatory(cellSchema, errorEventListener);
+            checkIfMandatory(errorEventListener);
 
-            if (cellSchema.isDefaultValue()) {
-                return Optional.of(cellSchema.makeDefaultCell());
+            if (isDefaultValue()) {
+                return Optional.of(defaultCell);
             } else {
-                return Optional.of(cellSchema.makeEmptyCell());
+                return Optional.of(emptyCell);
             }
         }
-        return doParse(cellSchema, sValue, errorEventListener);
+        return doParse(sValue, errorEventListener);
+    }
+
+    public boolean isDefaultValue() {
+        return this.defaultCell != null;
     }
 
     /**
      * Creates a cell with a parsed value according to the schema specification for this cell. Does
      * not check if cell is mandatory!! Reports a cell error event if an error occurs.
      *
-     * @param cellSchema         The cell schema to use
      * @param sValue             The value of the cell
      * @param errorEventListener Error event listener to deliver errors to.
      * @return A new cell of a type according to the schema specified. Returns null if an error occurs.
      */
-    private Optional<Cell> doParse(SchemaCell cellSchema, String sValue, ErrorEventListener errorEventListener) {
+    private Optional<Cell> doParse(String sValue, ErrorEventListener errorEventListener) {
 
         try {
-            Cell cell = makeCell(cellSchema, sValue);
-            validateRange(cellSchema, cell);
+            Cell cell = makeCell(sValue);
+            validateRange(schemaCell, cell);
             return Optional.of(cell);
         } catch (java.text.ParseException e) {
             errorEventListener.errorEvent(new ErrorEvent(this,
-                    new CellParseException(cellSchema.getName(), sValue, cellSchema.getCellFormat(), e)));
+                    new CellParseException(schemaCell.getName(), sValue, schemaCell.getCellFormat(), e)));
             return Optional.empty();
         }
 
@@ -74,31 +94,27 @@ public class CellParser {
      * Creates a cell with a parsed value according to the schema specification for this cell. Does
      * not check if cell is mandatory!!
      *
-     * @param schemaCell    The cell schema to use.
      * @param sValue The value to assign to the new cell
      * @return A new cell of a type according to the schema specified. Returns null if there is no
      *         value.
      * @throws ParseException If the value cannot be parsed according to the format of this cell schema.
      */
-    public Cell makeCell(SchemaCell schemaCell, String sValue) throws ParseException {
+    Cell makeCell(String sValue) throws ParseException {
 
-        String name = schemaCell.getName();
         // If the cell is empty, check if default value exists.
         if (sValue.length() <= 0 || (schemaCell.hasEmptyCondition() && schemaCell.getEmptyCondition().satisfies(sValue))) {
             if (schemaCell.isDefaultValue()) {
-                return schemaCell.makeDefaultCell();
+                return defaultCell;
             } else {
-                return schemaCell.makeEmptyCell();
+                return emptyCell;
             }
         }
-
-        CellType cellType = schemaCell.getCellFormat().getCellType();
-        CellFactory cellFactory = CellFactory.getInstance(cellType);
-
-        Format format = schemaCell.getCellFormat().getFormat();
-        if(format == null)
-                format  = cellFactory.makeFormat(schemaCell.getLocale());
-        return cellFactory.makeCell(name, sValue, format);
+        Cell cell = cellCache.get(sValue);
+        if(cell == null) {
+            cell = cellFactory.makeCell(schemaCell.getName(), sValue, format);
+            cellCache.put(sValue, cell);
+        }
+        return cell;
 
     }
 
@@ -128,7 +144,7 @@ public class CellParser {
      * @param cell       The cell to validate
      * @throws ParseException If the value cannot be parsed according to the format of this cell schema.
      */
-    protected void validateRange(SchemaCell cellSchema, Cell cell) throws java.text.ParseException {
+    private void validateRange(SchemaCell cellSchema, Cell cell) throws java.text.ParseException {
 
         if (cellSchema.getMinValue() != null && cell.compareValueTo(cellSchema.getMinValue()) < 0) {
             throw new java.text.ParseException("The value is below minimum range limit ("+cellSchema.getMinValue().getStringValue()+").", 0);
@@ -139,14 +155,25 @@ public class CellParser {
     /**
      * Checks if cell is mandatory and in that case fires an error event.
      *
-     * @param cellSchema         The cell schema to use
      * @param errorEventListener The error event listener to deliver errors to.
      */
-    protected void checkIfMandatory(SchemaCell cellSchema, ErrorEventListener errorEventListener) {
-        if (cellSchema.isMandatory()) {
-            CellParseException e = new CellParseException(cellSchema.getName(), EMPTY_STRING,
-                    cellSchema.getCellFormat(), "Mandatory cell requires a value.");
+    protected void checkIfMandatory(ErrorEventListener errorEventListener) {
+        if (schemaCell.isMandatory()) {
+            CellParseException e = new CellParseException(schemaCell.getName(), EMPTY_STRING,
+                    schemaCell.getCellFormat(), "Mandatory cell requires a value.");
             errorEventListener.errorEvent(new ErrorEvent(this, e));
         }
+    }
+
+    public S getSchemaCell() {
+        return schemaCell;
+    }
+
+    public Cell makeDefaultCell() {
+        return defaultCell;
+    }
+
+    public static <S extends SchemaCell> CellParser<S> ofSchemaCell(S schemaCell) throws ParseException {
+        return new CellParser<>(schemaCell);
     }
 }

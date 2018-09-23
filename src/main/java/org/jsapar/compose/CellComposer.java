@@ -38,7 +38,7 @@ public class CellComposer {
      * @param schemaCell The cell schema to use
      */
     private String defaultValueOrEmpty(SchemaCell schemaCell) {
-        return schemaCell.getDefaultValue() == null ? EMPTY_STRING : schemaCell.getDefaultValue();
+        return schemaCell.isDefaultValue() ? schemaCell.getDefaultValue() : EMPTY_STRING;
     }
 
 }

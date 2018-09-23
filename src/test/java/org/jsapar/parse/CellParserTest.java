@@ -5,6 +5,7 @@ import org.jsapar.model.*;
 import org.jsapar.schema.MatchingCellValueCondition;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -15,8 +16,12 @@ import java.util.Locale;
 import static org.junit.Assert.*;
 
 public class CellParserTest {
-    CellParser cellParser = new CellParser();
+    TestSchemaCell schemaCell;
 
+    @Before
+    public void before() throws ParseException {
+        schemaCell = new TestSchemaCell("test");
+    }
     /**
      * To be able to have a specific SchemaCell to test.
      *
@@ -37,35 +42,35 @@ public class CellParserTest {
 
     @Test
     public void testMakeCell_String() throws java.text.ParseException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
+        CellParser cellParser = new CellParser<>(schemaCell);
 
-        Cell cell = cellParser.makeCell(schemaCell,"the value");
+        Cell cell = cellParser.makeCell("the value");
         assertEquals("the value", cell.getStringValue());
     }
 
     @Test
     public void testMakeCell_DefaultString() throws java.text.ParseException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
-        schemaCell.setDefaultCell(new StringCell("test","TheDefault"));
+        schemaCell.setDefaultValue("TheDefault");
+        CellParser cellParser = new CellParser<>(schemaCell);
 
-        Cell cell = cellParser.makeCell(schemaCell,"");
+        Cell cell = cellParser.makeCell("");
         assertEquals("TheDefault", cell.getStringValue());
     }
 
     @Test
     public void testMakeCell_missing_no_default() throws java.text.ParseException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
+        CellParser cellParser = new CellParser<>(schemaCell);
 
-        Cell cell = cellParser.makeCell(schemaCell,"");
+        Cell cell = cellParser.makeCell("");
         assertEquals("", cell.getStringValue());
     }
 
     @Test
     public void testMakeCell_DefaultValue() throws java.text.ParseException, SchemaException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultValue("TheDefault");
+        CellParser cellParser = new CellParser<>(schemaCell);
 
-        Cell cell = cellParser.makeCell(schemaCell,"");
+        Cell cell = cellParser.makeCell("");
         assertEquals("TheDefault", cell.getStringValue());
     }
 
@@ -73,8 +78,9 @@ public class CellParserTest {
     public void testMakeCell_DefaultValue_float() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test",CellType.FLOAT, "#.00", new Locale("sv","SE"));
         schemaCell.setDefaultValue("123456,78901");
+        CellParser cellParser = new CellParser<>(schemaCell);
 
-        Cell cell = cellParser.makeCell(schemaCell,"");
+        Cell cell = cellParser.makeCell("");
         assertEquals(123456.78901, ((FloatCell)cell).getValue().doubleValue(), 0.0001);
     }
 
@@ -82,11 +88,12 @@ public class CellParserTest {
     public void testMakeCell_empty_pattern() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test",CellType.FLOAT, "#.00", new Locale("sv","SE"));
         schemaCell.setEmptyCondition(new MatchingCellValueCondition("NULL"));
+        CellParser cellParser = new CellParser<>(schemaCell);
 
-        Cell nonEmptyCell = cellParser.makeCell(schemaCell,"1,25");
+        Cell nonEmptyCell = cellParser.makeCell("1,25");
         assertEquals(1.25, ((FloatCell)nonEmptyCell).getValue().doubleValue(), 0.0001);
 
-        Cell emptyCell = cellParser.makeCell(schemaCell,"NULL");
+        Cell emptyCell = cellParser.makeCell("NULL");
         assertTrue(emptyCell instanceof EmptyCell);
 
     }
@@ -96,8 +103,9 @@ public class CellParserTest {
         TestSchemaCell schemaCell = new TestSchemaCell("test", CellType.FLOAT, "#.00", new Locale("sv","SE"));
         schemaCell.setEmptyPattern("NULL");
         schemaCell.setDefaultValue("123456,78901");
+        CellParser cellParser = new CellParser<>(schemaCell);
 
-        Cell cell = cellParser.makeCell(schemaCell,"NULL");
+        Cell cell = cellParser.makeCell("NULL");
         assertEquals(123456.78901, ((FloatCell)cell).getValue().doubleValue(), 0.0001);
     }
 
@@ -106,8 +114,9 @@ public class CellParserTest {
     public void testMakeCell_RegExp() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(CellType.STRING, "[A-Z]{3}[0-9]{0,3}de");
+        CellParser cellParser = new CellParser<>(schemaCell);
 
-        Cell cell = cellParser.makeCell(schemaCell,"ABC123de");
+        Cell cell = cellParser.makeCell("ABC123de");
         assertEquals("ABC123de", cell.getStringValue());
     }
 
@@ -115,8 +124,9 @@ public class CellParserTest {
     public void testMakeCell_RegExp_fail() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(CellType.STRING, "[A-Z]{3}[0-9]{0,3}de");
+        CellParser cellParser = new CellParser<>(schemaCell);
 
-        cellParser.makeCell(schemaCell,"AB1C123de");
+        cellParser.makeCell("AB1C123de");
         fail("Should throw ParseException for invalid RegExp validation.");
     }
 
@@ -148,8 +158,9 @@ public class CellParserTest {
         SchemaCell schemaCell = new TestSchemaCell("A number");
         schemaCell.setCellFormat(CellType.INTEGER);
         schemaCell.setDefaultValue("42");
+        CellParser cellParser = new CellParser<>(schemaCell);
         Cell cell;
-        cell = cellParser.makeCell(schemaCell,"");
+        cell = cellParser.makeCell("");
         assertEquals(IntegerCell.class, cell.getClass());
         assertEquals(42, ((IntegerCell)cell).getValue().intValue());
         assertEquals("A number", cell.getName());
@@ -158,7 +169,8 @@ public class CellParserTest {
     @Test(expected = ParseException.class)
     public void testMakeCell_UnfinishedFloat() throws ParseException {
         Locale locale = Locale.UK;
-        cellParser.makeCell(CellType.FLOAT, "number", "12.3A45", locale);
+        CellParser cellParser = new CellParser<>(schemaCell);
+        CellParser.makeCell(CellType.FLOAT, "number", "12.3A45", locale);
         fail("Method should throw exception.");
     }
 
@@ -166,7 +178,8 @@ public class CellParserTest {
     public void testMakeCell_Float() throws SchemaException, java.text.ParseException {
         Cell cell;
         Locale locale = Locale.UK;
-        cell = cellParser.makeCell(CellType.FLOAT, "number", "12.345", locale);
+        CellParser cellParser = new CellParser<>(schemaCell);
+        cell = CellParser.makeCell(CellType.FLOAT, "number", "12.345", locale);
         assertEquals(12.345, cell.getValue());
     }
 
@@ -197,11 +210,12 @@ public class CellParserTest {
     public void testMakeCell_LocalTime() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test",CellType.LOCAL_TIME, "HH:mm", new Locale("sv","SE"));
         schemaCell.setDefaultValue("00:00");
+        CellParser cellParser = new CellParser<>(schemaCell);
 
-        Cell cell = cellParser.makeCell(schemaCell,"15:45");
+        Cell cell = cellParser.makeCell("15:45");
         assertEquals(LocalTime.of(15, 45), ((LocalTimeCell)cell).getValue());
 
-        cell = cellParser.makeCell(schemaCell,"");
+        cell = cellParser.makeCell("");
         assertEquals(LocalTime.of(0, 0), ((LocalTimeCell)cell).getValue());
     }
 
@@ -210,11 +224,12 @@ public class CellParserTest {
     public void testMakeCell_LocalDateTime() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test",CellType.LOCAL_DATE_TIME, "yyyy-MM-dd HH:mm", new Locale("sv","SE"));
         schemaCell.setDefaultValue("2000-01-01 00:00");
+        CellParser cellParser = new CellParser<>(schemaCell);
 
-        Cell cell = cellParser.makeCell(schemaCell,"2017-03-27 15:45");
+        Cell cell = cellParser.makeCell("2017-03-27 15:45");
         assertEquals(LocalDateTime.of(2017, Month.MARCH, 27, 15, 45), ((LocalDateTimeCell)cell).getValue());
 
-        cell = cellParser.makeCell(schemaCell,"");
+        cell = cellParser.makeCell("");
         assertEquals(LocalDateTime.of(2000, Month.JANUARY, 1, 0, 0), ((LocalDateTimeCell)cell).getValue());
     }
 
@@ -222,11 +237,12 @@ public class CellParserTest {
     public void testMakeCell_LocalDate() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test",CellType.LOCAL_DATE, "yyyy-MM-dd", new Locale("sv","SE"));
         schemaCell.setDefaultValue("2000-01-01");
+        CellParser cellParser = new CellParser<>(schemaCell);
 
-        Cell cell = cellParser.makeCell(schemaCell,"2017-03-27");
+        Cell cell = cellParser.makeCell("2017-03-27");
         assertEquals(LocalDate.of(2017, Month.MARCH, 27), ((LocalDateCell)cell).getValue());
 
-        cell = cellParser.makeCell(schemaCell,"");
+        cell = cellParser.makeCell("");
         assertEquals(LocalDate.of(2000, Month.JANUARY, 1), ((LocalDateCell)cell).getValue());
     }
 
@@ -234,11 +250,12 @@ public class CellParserTest {
     public void testMakeCell_ZonedDateTime() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test",CellType.ZONED_DATE_TIME, "yyyy-MM-dd HH:mmX", new Locale("sv","SE"));
         schemaCell.setDefaultValue("2000-01-01 00:00+00");
+        CellParser cellParser = new CellParser<>(schemaCell);
 
-        Cell cell = cellParser.makeCell(schemaCell,"2017-03-27 15:45+02");
+        Cell cell = cellParser.makeCell("2017-03-27 15:45+02");
         assertEquals(ZonedDateTime.of(2017, 3, 27, 15, 45, 0, 0, ZoneId.of("+02:00")), ((ZonedDateTimeCell)cell).getValue());
 
-        cell = cellParser.makeCell(schemaCell,"");
+        cell = cellParser.makeCell("");
         assertEquals(ZonedDateTime.of(2000, 1, 1, 0, 0, 0, 0, ZoneId.of("+00:00")), ((ZonedDateTimeCell)cell).getValue());
     }
 
@@ -253,7 +270,8 @@ public class CellParserTest {
         schemaCell.setMinValue(new IntegerCell("test",0));
         schemaCell.setMaxValue(new IntegerCell("test",54321));
 
-        Cell cell = cellParser.makeCell(schemaCell,"12345");
+        CellParser cellParser = new CellParser<>(schemaCell);
+        Cell cell = cellParser.makeCell("12345");
         assertEquals(IntegerCell.class, cell.getClass());
         assertEquals(12345, ((IntegerCell)cell).getValue().intValue());
 
@@ -270,8 +288,9 @@ public class CellParserTest {
         schemaCell.setCellFormat(CellType.INTEGER);
         schemaCell.setMinValue(new IntegerCell("test",54321));
         schemaCell.setMaxValue(new IntegerCell("test",54322));
+        CellParser cellParser = new CellParser<>(schemaCell);
         RecordingErrorEventListener errorListener = new RecordingErrorEventListener();
-        cellParser.parse(schemaCell,"12345", errorListener);
+        cellParser.parse("12345", errorListener);
         assertEquals(1, errorListener.getErrors().size());
         assertEquals("Cell='test' Value='12345' Expected: CellType=INTEGER - The value is below minimum range limit (54321).", errorListener.getErrors().get(0).getMessage());
     }
@@ -287,8 +306,9 @@ public class CellParserTest {
         schemaCell.setCellFormat(CellType.INTEGER);
         schemaCell.setMinValue(new IntegerCell("test",0));
         schemaCell.setMaxValue(new IntegerCell("test",100));
+        CellParser cellParser = new CellParser<>(schemaCell);
         RecordingErrorEventListener errorListener = new RecordingErrorEventListener();
-        cellParser.parse(schemaCell,"12345", errorListener);
+        cellParser.parse("12345", errorListener);
         assertEquals(1, errorListener.getErrors().size());
         assertEquals("Cell='test' Value='12345' Expected: CellType=INTEGER - The value is above maximum range limit (100).", errorListener.getErrors().get(0).getMessage());
     }

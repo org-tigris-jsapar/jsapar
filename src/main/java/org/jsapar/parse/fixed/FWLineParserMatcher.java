@@ -16,9 +16,9 @@ public class FWLineParserMatcher {
     private final FixedWidthSchemaLine schemaLine;
     private List<FWControlCell> controlCells =new ArrayList<>();
     private FixedWidthLineParser lineParser;
+    private FWFieldReader fieldReader = new FWFieldReader();
     private int occursLeft;
     private int maxControlEndPos;
-    private FixedWidthCellParser cellParser = new FixedWidthCellParser();
 
     public FWLineParserMatcher(FixedWidthSchemaLine schemaLine, TextParseConfig config) {
         this.schemaLine = schemaLine;
@@ -44,8 +44,7 @@ public class FWLineParserMatcher {
                 int read = 0;
                 for (FWControlCell controlCell : controlCells) {
                     int offset = controlCell.beginPos - read;
-                    String value = cellParser
-                            .parseToString(controlCell.schemaCell, reader, offset);
+                    String value = fieldReader.readToString(controlCell.schemaCell, reader, offset);
                     if (value == null)
                         return LineParserMatcherResult.EOF; // EOF reached
                     if (!controlCell.schemaCell.getLineCondition().satisfies(value))

@@ -1,6 +1,7 @@
 package org.jsapar.parse.csv;
 
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
@@ -10,6 +11,9 @@ import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Responsible for parsing csv lines
@@ -18,9 +22,9 @@ class CsvLineParser {
 
     private static final String EMPTY_STRING = "";
     private CsvSchemaLine   lineSchema;
+    private List<CellParser<CsvSchemaCell>> cellParsers;
     private TextParseConfig config;
     private long              usedCount         = 0L;
-    private CellParser        cellParser        = new CellParser();
     private ValidationHandler validationHandler = new ValidationHandler();
     private LineDecoratorErrorEventListener lineDecoratorErrorEventListener = new LineDecoratorErrorEventListener();
     /**
@@ -41,6 +45,19 @@ class CsvLineParser {
     CsvLineParser(CsvSchemaLine lineSchema, TextParseConfig config) {
         this.lineSchema = lineSchema;
         this.config = config;
+        cellParsers = makeCellParsers(lineSchema);
+    }
+
+    private List<CellParser<CsvSchemaCell>> makeCellParsers(CsvSchemaLine lineSchema) {
+        return lineSchema.stream().map(this::makeCellParser).collect(Collectors.toList());
+    }
+
+    private CellParser<CsvSchemaCell> makeCellParser(CsvSchemaCell schemaCell) {
+        try {
+            return CellParser.ofSchemaCell(schemaCell);
+        } catch (ParseException e) {
+            throw new JSaParException("Failed to create cell parser", e);
+        }
     }
 
     /**
@@ -77,11 +94,10 @@ class CsvLineParser {
         line.setLineNumber(lineReader.currentLineNumber());
         lineDecoratorErrorEventListener.initialize(errorListener, line);
 
-        java.util.Iterator<CsvSchemaCell> itSchemaCell = lineSchema.getSchemaCells().iterator();
+        java.util.Iterator<CellParser<CsvSchemaCell>> itParser = cellParsers.iterator();
         for (String sCell : asCells) {
-            if (itSchemaCell.hasNext()) {
-                CsvSchemaCell schemaCell = itSchemaCell.next();
-                addCellToLineBySchema(line, schemaCell, sCell, lineDecoratorErrorEventListener);
+            if (itParser.hasNext()) {
+                addCellToLineBySchema(line, itParser.next(), sCell, lineDecoratorErrorEventListener);
             } else {
                 if(!addCellToLineWithoutSchema(line, sCell, errorListener))
                     return true;
@@ -91,14 +107,13 @@ class CsvLineParser {
             return false;
 
         // We have to fill all the default values and mandatory items for remaining cells within the schema.
-        while (itSchemaCell.hasNext()) {
+        while (itParser.hasNext()) {
             if (!validationHandler.lineValidation(this, line.getLineNumber(),
                     "Insufficient number of cells could be read from the line", config.getOnLineInsufficient(),
                     errorListener)) {
                 return true;
             }
-            CsvSchemaCell schemaCell = itSchemaCell.next();
-            addCellToLineBySchema(line, schemaCell, EMPTY_STRING, lineDecoratorErrorEventListener);
+            addCellToLineBySchema(line, itParser.next(), EMPTY_STRING, lineDecoratorErrorEventListener);
         }
 
         listener.lineParsedEvent(new LineParsedEvent(this, line));
@@ -112,9 +127,8 @@ class CsvLineParser {
      * @param asCells          An array of cells in the header line to use for building the schema.
      * @return A CsvSchemaLine created from the header line.
      *
-     * @throws IOException if an io-error occur
      */
-    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, String[] asCells) throws IOException {
+    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, String[] asCells) {
 
         CsvSchemaLine schemaLine = masterLineSchema.clone();
         schemaLine.getSchemaCells().clear();
@@ -127,6 +141,7 @@ class CsvLineParser {
                 schemaLine.addSchemaCell(new CsvSchemaCell(sCell));
         }
         addMissingDefaultValuesFromMaster(schemaLine, masterLineSchema);
+        this.cellParsers = this.makeCellParsers(schemaLine);
         return schemaLine;
     }
 
@@ -161,26 +176,26 @@ class CsvLineParser {
 
     /**
      * Adds a cell to the line according to the schema.
-     *
-     * @param line               The line to add a cell to
-     * @param schemaCell         The cell schema
+     *  @param line               The line to add a cell to
+     * @param cellParser         The cell parser
      * @param sCell              The string value of the cell
      * @param errorEventListener The error event listener to report errors to.
      *
      */
     private void addCellToLineBySchema(Line line,
-                                       CsvSchemaCell schemaCell,
+                                       CellParser<CsvSchemaCell> cellParser,
                                        String sCell,
                                        ErrorEventListener errorEventListener) {
 
-        if (schemaCell.isIgnoreRead()) {
-            if (schemaCell.isDefaultValue())
-                line.addCell(schemaCell.makeDefaultCell());
+        CsvSchemaCell cellSchema = cellParser.getSchemaCell();
+        if (cellSchema.isIgnoreRead()) {
+            if (cellSchema.isDefaultValue())
+                line.addCell(cellParser.makeDefaultCell());
             return;
         }
-        if (schemaCell.isMaxLength() && sCell.length() > schemaCell.getMaxLength())
-            sCell = sCell.substring(0, schemaCell.getMaxLength());
-        cellParser.parse(schemaCell, sCell, errorEventListener).ifPresent(line::addCell);
+        if (cellSchema.isMaxLength() && sCell.length() > cellSchema.getMaxLength())
+            sCell = sCell.substring(0, cellSchema.getMaxLength());
+        cellParser.parse(sCell, errorEventListener).ifPresent(line::addCell);
     }
 
     /**

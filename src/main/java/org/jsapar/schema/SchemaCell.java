@@ -25,7 +25,6 @@ public abstract class SchemaCell implements Cloneable {
     private boolean                       mandatory             = false;
     private Cell                          minValue              = null;
     private Cell                          maxValue              = null;
-    private Cell                          defaultCell           = null;
 
     /**
      * If parsing an empty value this cell can be used, avoiding a lot of object creation.
@@ -271,7 +270,7 @@ public abstract class SchemaCell implements Cloneable {
      *
      * @throws SchemaException If validation fails.
      */
-    private void validateDefaultValueRange() throws SchemaException {
+    private void validateDefaultValueRange(Cell defaultCell) throws SchemaException {
         if (this.minValue != null && defaultCell.compareValueTo(this.minValue) < 0) {
             throw new SchemaException("The value is below minimum range limit.");
         } else if (this.maxValue != null && defaultCell.compareValueTo(this.maxValue) > 0) {
@@ -299,25 +298,6 @@ public abstract class SchemaCell implements Cloneable {
     }
 
     /**
-     * @return The default cell. The value of the default cell will be used if input/output is
-     *         missing.
-     */
-    public Cell makeDefaultCell() {
-        return defaultCell;
-    }
-
-    /**
-     * @param defaultCell
-     *            The default cell. The value of the default cell will be used if input/output is
-     *            missing. The name of the cell has no importance, it will not be used.
-     */
-    public void setDefaultCell(Cell defaultCell) {
-        this.defaultCell = defaultCell;
-        Format format = getCellFormat().getFormat();
-        this.defaultValue = format != null && !defaultCell.isEmpty() ? format.format(defaultCell.getValue()) : defaultCell.getStringValue();
-    }
-
-    /**
      * Sets the default value as a string. The default value have to be parsable according to the
      * schema format. As long as it is parsable, it will be used exactly as is even though it might
      * not look the same as if it was formatted from a value.
@@ -329,11 +309,8 @@ public abstract class SchemaCell implements Cloneable {
      * @throws SchemaException If there was a configuration error in the schema.
      */
     public void setDefaultValue(String sDefaultValue) throws java.text.ParseException, SchemaException {
-        CellParser cellParser = new CellParser();
-        this.defaultCell = cellParser.makeCell(this, sDefaultValue);
-        validateDefaultValueRange();
-
         this.defaultValue = sDefaultValue;
+        validateDefaultValueRange(CellParser.ofSchemaCell(this).makeDefaultCell());
     }
 
     /**
@@ -367,7 +344,7 @@ public abstract class SchemaCell implements Cloneable {
      * @return true if there is a default value, false otherwise.
      */
     public boolean isDefaultValue() {
-        return this.defaultCell != null;
+        return this.defaultValue != null;
     }
 
     /**
