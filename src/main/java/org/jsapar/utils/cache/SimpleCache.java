@@ -1,4 +1,4 @@
-package org.jsapar.utils;
+package org.jsapar.utils.cache;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

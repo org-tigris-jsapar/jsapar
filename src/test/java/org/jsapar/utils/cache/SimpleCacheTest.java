@@ -1,5 +1,7 @@
-package org.jsapar.utils;
+package org.jsapar.utils.cache;
 
+import org.jsapar.utils.cache.Cache;
+import org.jsapar.utils.cache.SimpleCache;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

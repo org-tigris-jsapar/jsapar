@@ -54,7 +54,7 @@ class CsvLineParser {
 
     private CellParser<CsvSchemaCell> makeCellParser(CsvSchemaCell schemaCell) {
         try {
-            return CellParser.ofSchemaCell(schemaCell);
+            return CellParser.ofSchemaCell(schemaCell, Math.min(20, lineSchema.getOccurs()-1));
         } catch (ParseException e) {
             throw new JSaParException("Failed to create cell parser", e);
         }

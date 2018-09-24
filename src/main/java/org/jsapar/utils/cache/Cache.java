@@ -1,4 +1,4 @@
-package org.jsapar.utils;
+package org.jsapar.utils.cache;
 
 public interface Cache<K, V> {
     /**

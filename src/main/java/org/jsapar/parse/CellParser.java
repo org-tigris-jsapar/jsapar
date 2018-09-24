@@ -6,8 +6,9 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.parse.cell.CellFactory;
 import org.jsapar.schema.SchemaCell;
-import org.jsapar.utils.Cache;
-import org.jsapar.utils.SimpleCache;
+import org.jsapar.utils.cache.Cache;
+import org.jsapar.utils.cache.DisabledCache;
+import org.jsapar.utils.cache.SimpleCache;
 
 import java.text.Format;
 import java.text.ParseException;
@@ -24,10 +25,18 @@ public class CellParser<S extends SchemaCell> {
     private Cell<?> emptyCell;
     private CellFactory cellFactory;
     private Format format;
-    private Cache<String, Cell> cellCache = new SimpleCache<>(20);
+    private final Cache<String, Cell> cellCache ;
     private static final String EMPTY_STRING = "";
 
-    protected CellParser(S schemaCell) throws ParseException {
+
+    /**
+     * Creates cell parser according to supplied schema and with a maximum cache size.
+     * @param schemaCell The schema to use.
+     * @param maxCacheSize The maximum number of cells to keep in cache while parsing. The value 0 will disable cache.
+     * @throws ParseException In case default value of the schema is invalid.
+     */
+    protected CellParser(S schemaCell, int maxCacheSize) throws ParseException {
+        cellCache = (maxCacheSize >0) ? new SimpleCache<>(maxCacheSize) : new DisabledCache<>();
         this.schemaCell = schemaCell;
 
         CellType cellType = schemaCell.getCellFormat().getCellType();
@@ -144,8 +153,8 @@ public class CellParser<S extends SchemaCell> {
      * @param cell       The cell to validate
      * @throws ParseException If the value cannot be parsed according to the format of this cell schema.
      */
+    @SuppressWarnings("unchecked")
     private void validateRange(SchemaCell cellSchema, Cell cell) throws java.text.ParseException {
-
         if (cellSchema.getMinValue() != null && cell.compareValueTo(cellSchema.getMinValue()) < 0) {
             throw new java.text.ParseException("The value is below minimum range limit ("+cellSchema.getMinValue().getStringValue()+").", 0);
         } else if (cellSchema.getMaxValue() != null && cell.compareValueTo(cellSchema.getMaxValue()) > 0)
@@ -173,7 +182,23 @@ public class CellParser<S extends SchemaCell> {
         return defaultCell;
     }
 
+    /**
+     * Creates cell parser according to supplied schema and with cache disabled.
+     * @param schemaCell The schema to use.
+     * @throws ParseException In case default value of the schema is invalid.
+     */
     public static <S extends SchemaCell> CellParser<S> ofSchemaCell(S schemaCell) throws ParseException {
-        return new CellParser<>(schemaCell);
+        return new CellParser<>(schemaCell, 0);
     }
+
+    /**
+     * Creates cell parser according to supplied schema and with a maximum cache size.
+     * @param schemaCell The schema to use.
+     * @param maxCacheSize The maximum number of cells to keep in cache while parsing. The value 0 will disable cache.
+     * @throws ParseException In case default value of the schema is invalid.
+     */
+    public static <S extends SchemaCell> CellParser<S> ofSchemaCell(S schemaCell, int maxCacheSize) throws ParseException {
+        return new CellParser<>(schemaCell, maxCacheSize);
+    }
+
 }

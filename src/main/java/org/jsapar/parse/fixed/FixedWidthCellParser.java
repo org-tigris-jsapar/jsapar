@@ -4,6 +4,7 @@ import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.parse.CellParser;
 import org.jsapar.schema.FixedWidthSchemaCell;
+import org.jsapar.schema.SchemaCell;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -16,8 +17,8 @@ import java.util.Optional;
 public class FixedWidthCellParser extends CellParser<FixedWidthSchemaCell> {
     private FWFieldReader fieldReader = new FWFieldReader();
 
-    FixedWidthCellParser(FixedWidthSchemaCell fixedWidthSchemaCell) throws ParseException {
-        super(fixedWidthSchemaCell);
+    protected FixedWidthCellParser(FixedWidthSchemaCell fixedWidthSchemaCell, int maxCacheSize) throws ParseException {
+        super(fixedWidthSchemaCell, maxCacheSize);
     }
 
     /**
@@ -36,6 +37,16 @@ public class FixedWidthCellParser extends CellParser<FixedWidthSchemaCell> {
             return Optional.empty();
         }
         return super.parse(sValue, errorEventListener);
+    }
+
+    /**
+     * Creates fixed width cell parser according to supplied schema and with a maximum cache size.
+     * @param schemaCell The schema to use.
+     * @param maxCacheSize The maximum number of cells to keep in cache while parsing. The value 0 will disable cache.
+     * @throws ParseException In case default value of the schema is invalid.
+     */
+    public static FixedWidthCellParser ofSchemaCell(FixedWidthSchemaCell schemaCell, int maxCacheSize) throws ParseException {
+        return new FixedWidthCellParser(schemaCell, maxCacheSize);
     }
 
 }
