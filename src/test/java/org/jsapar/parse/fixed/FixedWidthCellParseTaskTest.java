@@ -30,7 +30,7 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        Cell cell = cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        Cell cell = cellParser.parse(reader, new ExceptionErrorEventListener());
 
         assertEquals("Jonas", cell.getStringValue());
     }
@@ -44,7 +44,7 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        Cell cell = cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        Cell cell = cellParser.parse(reader, new ExceptionErrorEventListener());
 
         assertEquals("   Jonas   ", cell.getStringValue());
     }
@@ -74,7 +74,7 @@ public class FixedWidthCellParseTaskTest {
         Reader reader = new StringReader(toParse);
         Cell cell;
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        cell = cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        cell = cellParser.parse(reader, new ExceptionErrorEventListener());
         assertTrue(cell.isEmpty());
         assertEquals("", cell.getValue());
     }
@@ -88,7 +88,7 @@ public class FixedWidthCellParseTaskTest {
         Reader reader = new StringReader(toParse);
         Cell cell;
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        cell = cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        cell = cellParser.parse(reader, new ExceptionErrorEventListener());
         assertTrue(cell.isEmpty());
         assertEquals("", cell.getValue());
     }
@@ -106,7 +106,7 @@ public class FixedWidthCellParseTaskTest {
         Reader reader = new StringReader(toParse);
         Cell cell;
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        cell = cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        cell = cellParser.parse(reader, new ExceptionErrorEventListener());
         assertEquals("           ", cell.getValue());
     }
 
@@ -117,7 +117,7 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        Cell cell = cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        Cell cell = cellParser.parse(reader, new ExceptionErrorEventListener());
 
         assertEquals("", cell.getValue());
         assertEquals("", cell.getStringValue());
@@ -131,7 +131,7 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        DateCell cell = (DateCell) cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        DateCell cell = (DateCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         java.util.Date date = cell.getValue();
         Calendar calendar = java.util.Calendar.getInstance();
         calendar.setTime(date);
@@ -153,7 +153,7 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         int value = cell.getValue().intValue();
 
         assertEquals(123, value);
@@ -169,7 +169,7 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         int value = cell.getValue().intValue();
 
         assertEquals(0, value);
@@ -184,7 +184,7 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        BigDecimalCell cell = (BigDecimalCell) cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        BigDecimalCell cell = (BigDecimalCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         BigDecimal value = cell.getBigDecimalValue();
 
         assertEquals(new BigDecimal("-123456.78"), value);
@@ -200,7 +200,7 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        BigDecimalCell cell = (BigDecimalCell) cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        BigDecimalCell cell = (BigDecimalCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         BigDecimal value = cell.getBigDecimalValue();
 
         assertEquals(new BigDecimal("-123456.78"), value);
@@ -214,7 +214,7 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         int value = cell.getValue().intValue();
 
         assertEquals(123456, value);
@@ -228,7 +228,7 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         double value = cell.getValue().doubleValue();
 
         assertEquals(1123, 234, value);
@@ -242,7 +242,7 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         double value = cell.getValue().doubleValue();
 
         assertEquals(1.234e6, value, 0.001);
@@ -257,7 +257,7 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         double value = cell.getValue().doubleValue();
 
         assertEquals(1.234e6, value, 0.001);
@@ -271,7 +271,7 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        BooleanCell cell = (BooleanCell) cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        BooleanCell cell = (BooleanCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         boolean value = cell.getValue();
 
         assertEquals(true, value);
@@ -285,7 +285,7 @@ public class FixedWidthCellParseTaskTest {
         Reader reader = new StringReader(toParse);
         Cell cell;
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        cell = cellParser.parse(reader, new ExceptionErrorEventListener()).orElse(null);
+        cell = cellParser.parse(reader, new ExceptionErrorEventListener());
         Assert.assertNotNull(cell);
         Assert.assertTrue(cell.isEmpty());
         Assert.assertEquals("", cell.getStringValue());

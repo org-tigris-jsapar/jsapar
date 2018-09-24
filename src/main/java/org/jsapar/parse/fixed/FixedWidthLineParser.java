@@ -81,13 +81,15 @@ class FixedWidthLineParser {
                 }
             } else {
                 lineDecoratorErrorEventListener.initialize(errorListener, line);
-                Optional<Cell> cell = cellParser.parse(reader, lineDecoratorErrorEventListener);
-                if (!cell.isPresent()) {
+                Cell cell = cellParser.parse(reader, lineDecoratorErrorEventListener);
+                if (cell == null) {
                     if (oneRead) {
                         setDefaultsOnly = true;
-                        if (cellParser.isDefaultValue())
-                            cellParser.parse(EMPTY_STRING, lineDecoratorErrorEventListener)
-                                    .ifPresent(line::addCell) ;
+                        if (cellParser.isDefaultValue()) {
+                            cell = cellParser.parse(EMPTY_STRING, lineDecoratorErrorEventListener);
+                            if(cell != null)
+                                line.addCell(cell);
+                        }
                         //noinspection ConstantConditions
                         if (handleInsufficient) {
                             if (!validationHandler
@@ -102,7 +104,7 @@ class FixedWidthLineParser {
                 }
 
                 oneRead = true;
-                line.addCell(cell.get());
+                line.addCell(cell);
             }
         }
         if (line.size() <= 0 && !oneIgnored)

@@ -29,12 +29,12 @@ public class FixedWidthCellParser extends CellParser<FixedWidthSchemaCell> {
      * @return A Cell filled with the parsed cell value and with the name of this schema cell.
      * @throws IOException In case there is an error reading from the reader.
      */
-    public Optional<Cell> parse(Reader reader, ErrorEventListener errorEventListener) throws IOException {
+    public Cell parse(Reader reader, ErrorEventListener errorEventListener) throws IOException {
 
         String sValue = fieldReader.readToString(getSchemaCell(), reader, 0);
         if(sValue == null) {
             checkIfMandatory(errorEventListener);
-            return Optional.empty();
+            return null;
         }
         return super.parse(sValue, errorEventListener);
     }

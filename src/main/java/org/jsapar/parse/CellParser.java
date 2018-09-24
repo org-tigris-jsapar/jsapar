@@ -53,21 +53,20 @@ public class CellParser<S extends SchemaCell> {
     /**
      * Creates a cell with a parsed value according to the schema specification for this cell. This
      * method does not throw exception of mandatory cell does not exist. Instead it reports an error
-     * event and continues.
+     * event and continues and may then return null.
      *
      * @param sValue             The value of the cell
      * @param errorEventListener Error event listener to deliver errors to.
-     * @return A new cell of a type according to the schema specified. Returns null if there is no
-     * value.
+     * @return A new cell of a type according to the schema specified. Returns null if there was en error while parsing.
      */
-    public Optional<Cell> parse(String sValue, ErrorEventListener errorEventListener) {
+    public Cell parse(String sValue, ErrorEventListener errorEventListener) {
         if (sValue.isEmpty()) {
             checkIfMandatory(errorEventListener);
 
             if (isDefaultValue()) {
-                return Optional.of(defaultCell);
+                return defaultCell;
             } else {
-                return Optional.of(emptyCell);
+                return emptyCell;
             }
         }
         return doParse(sValue, errorEventListener);
@@ -85,16 +84,16 @@ public class CellParser<S extends SchemaCell> {
      * @param errorEventListener Error event listener to deliver errors to.
      * @return A new cell of a type according to the schema specified. Returns null if an error occurs.
      */
-    private Optional<Cell> doParse(String sValue, ErrorEventListener errorEventListener) {
+    private Cell doParse(String sValue, ErrorEventListener errorEventListener) {
 
         try {
             Cell cell = makeCell(sValue);
             validateRange(schemaCell, cell);
-            return Optional.of(cell);
+            return cell;
         } catch (java.text.ParseException e) {
             errorEventListener.errorEvent(new ErrorEvent(this,
                     new CellParseException(schemaCell.getName(), sValue, schemaCell.getCellFormat(), e)));
-            return Optional.empty();
+            return null;
         }
 
     }
