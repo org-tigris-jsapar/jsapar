@@ -272,14 +272,12 @@ public class LineUtils {
      *
      * @param line         The line to get from
      * @param cellName     The name of the cell to get
-     * @return The integer value of the cell with the specified name.
+     * @return The integer value of the cell with the specified name. Optional.empty if the cell does not contain any value.
      * @throws NumberFormatException If the cell could not be converted into an integer value
      * @see #getNumberCellValue(Line, String)
-     * @throws IllegalStateException If the specified cell does not exist or is empty
      */
-    public static int getIntCellValue(Line line, String cellName) throws NumberFormatException, IllegalStateException {
-        Cell cell = line.getNonEmptyCell(cellName).orElseThrow(()->new IllegalStateException("The cell with name " + cellName + " does not have a value."));
-        return intCellValue(cell);
+    public static Optional<Integer> getIntCellValue(Line line, String cellName) throws NumberFormatException {
+        return line.getNonEmptyCell(cellName).map(LineUtils::intCellValue);
     }
 
     private static int intCellValue(Cell cell) {
@@ -305,7 +303,7 @@ public class LineUtils {
      * @param line         The line to get from
      * @param cellName     The name of the cell to get
      * @param defaultValue Default value that will be returned if the cell does not exist or does not have any value.
-     * @return The long integer value of the cell with the specified name.
+     * @return The long integer value of the cell with the specified name. Optional.empty if the cell does not contain any value.
      * @throws NumberFormatException If the cell value could not be converted into a long integer value.
      */
     public static long getLongCellValue(Line line, String cellName, long defaultValue) throws NumberFormatException {
@@ -315,17 +313,15 @@ public class LineUtils {
     /**
      * Utility function that gets the long integer cell value of the specified cell. Tries to parse a long integer value
      * if cell is not of type NumberCell. Throws a NumberFormatException if the value is not a parsable
-     * integer. Can be used for mandatory cells.
+     * integer.
      *
      * @param line         The line to get from
      * @param cellName     The name of the cell to get
      * @return The long integer value of the cell with the specified name.
      * @throws NumberFormatException If the cell value could not be converted into a long integer value.
-     * @throws IllegalStateException If the cell is empty or does not exist.
      */
-    public static long getLongCellValue(Line line, String cellName) throws NumberFormatException, IllegalStateException {
-        Cell cell = line.getNonEmptyCell(cellName).orElseThrow(()->new IllegalStateException("The cell with name " + cellName + " does not have a value."));
-        return longCellValue(cell);
+    public static Optional<Long> getLongCellValue(Line line, String cellName) throws NumberFormatException {
+        return line.getNonEmptyCell(cellName).map(LineUtils::longCellValue);
     }
 
     private static long longCellValue(Cell cell) {
@@ -598,14 +594,12 @@ public class LineUtils {
      *
      * @param line         The line to get from
      * @param cellName     The name of the cell to get
-     * @return The double value of the cell with the specified name.
+     * @return The double value of the cell with the specified name. Optional.empty if the cell does not contain any value.
      * @throws NumberFormatException When value cannot be converted to a double
-     * @throws IllegalStateException If the cell does not exist or does not have a value.
      */
-    public static double getDoubleCellValue(Line line, String cellName)
+    public static Optional<Double> getDoubleCellValue(Line line, String cellName)
             throws NumberFormatException, IllegalStateException{
-        Cell cell = line.getNonEmptyCell(cellName).orElseThrow(()->new IllegalStateException("The cell with name " + cellName + " does not have a value."));
-        return doubleCellValue(cell);
+        return line.getNonEmptyCell(cellName).map(LineUtils::doubleCellValue);
     }
 
     private static double doubleCellValue(Cell cell) {
