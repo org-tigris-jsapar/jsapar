@@ -40,11 +40,7 @@ class FixedWidthLineParser {
     }
 
     private FixedWidthCellParser makeCellParser(FixedWidthSchemaCell fixedWidthSchemaCell) {
-        try {
-            return FixedWidthCellParser.ofSchemaCell(fixedWidthSchemaCell, Math.min(20, lineSchema.getOccurs()-1));
-        } catch (ParseException e) {
-            throw new JSaParException("Failed to create cell parser", e);
-        }
+        return FixedWidthCellParser.ofSchemaCell(fixedWidthSchemaCell, Math.min(20, lineSchema.getOccurs() - 1));
     }
 
     boolean isIgnoreRead(){

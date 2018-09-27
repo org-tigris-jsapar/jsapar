@@ -1,7 +1,6 @@
 package org.jsapar.parse.csv;
 
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
@@ -11,7 +10,6 @@ import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,11 +51,7 @@ class CsvLineParser {
     }
 
     private CellParser<CsvSchemaCell> makeCellParser(CsvSchemaCell schemaCell) {
-        try {
-            return CellParser.ofSchemaCell(schemaCell, Math.min(20, lineSchema.getOccurs()-1));
-        } catch (ParseException e) {
-            throw new JSaParException("Failed to create cell parser", e);
-        }
+        return CellParser.ofSchemaCell(schemaCell, Math.min(20, lineSchema.getOccurs() - 1));
     }
 
     /**

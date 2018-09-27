@@ -2,10 +2,12 @@ package org.jsapar.parse;
 
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.parse.cell.CellFactory;
 import org.jsapar.schema.SchemaCell;
+import org.jsapar.schema.SchemaException;
 import org.jsapar.utils.cache.Cache;
 import org.jsapar.utils.cache.DisabledCache;
 import org.jsapar.utils.cache.SimpleCache;
@@ -13,7 +15,6 @@ import org.jsapar.utils.cache.SimpleCache;
 import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
-import java.util.Optional;
 
 /**
  * Internal class for parsing text on cell level.
@@ -33,9 +34,8 @@ public class CellParser<S extends SchemaCell> {
      * Creates cell parser according to supplied schema and with a maximum cache size.
      * @param schemaCell The schema to use.
      * @param maxCacheSize The maximum number of cells to keep in cache while parsing. The value 0 will disable cache.
-     * @throws ParseException In case default value of the schema is invalid.
      */
-    protected CellParser(S schemaCell, int maxCacheSize) throws ParseException {
+    protected CellParser(S schemaCell, int maxCacheSize) {
         cellCache = (maxCacheSize >0) ? new SimpleCache<>(maxCacheSize) : new DisabledCache<>();
         this.schemaCell = schemaCell;
 
@@ -46,7 +46,11 @@ public class CellParser<S extends SchemaCell> {
         if(format == null)
             format  = cellFactory.makeFormat(schemaCell.getLocale());
 
-        this.defaultCell = schemaCell.isDefaultValue() ? makeCell(schemaCell.getDefaultValue()) : null;
+        try {
+            this.defaultCell = schemaCell.isDefaultValue() ? makeCell(schemaCell.getDefaultValue()) : null;
+        }catch (ParseException e){
+            throw new SchemaException("Failed to set default value of cell " + schemaCell.getName() + " to value [" + schemaCell.getDefaultValue() + "]", e);
+        }
         this.emptyCell = schemaCell.makeEmptyCell();
     }
 
@@ -184,9 +188,8 @@ public class CellParser<S extends SchemaCell> {
     /**
      * Creates cell parser according to supplied schema and with cache disabled.
      * @param schemaCell The schema to use.
-     * @throws ParseException In case default value of the schema is invalid.
      */
-    public static <S extends SchemaCell> CellParser<S> ofSchemaCell(S schemaCell) throws ParseException {
+    public static <S extends SchemaCell> CellParser<S> ofSchemaCell(S schemaCell) {
         return new CellParser<>(schemaCell, 0);
     }
 
@@ -194,9 +197,8 @@ public class CellParser<S extends SchemaCell> {
      * Creates cell parser according to supplied schema and with a maximum cache size.
      * @param schemaCell The schema to use.
      * @param maxCacheSize The maximum number of cells to keep in cache while parsing. The value 0 will disable cache.
-     * @throws ParseException In case default value of the schema is invalid.
      */
-    public static <S extends SchemaCell> CellParser<S> ofSchemaCell(S schemaCell, int maxCacheSize) throws ParseException {
+    public static <S extends SchemaCell> CellParser<S> ofSchemaCell(S schemaCell, int maxCacheSize) {
         return new CellParser<>(schemaCell, maxCacheSize);
     }
 

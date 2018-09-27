@@ -408,10 +408,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
             if (xmlMandatory != null)
                 cell.setMandatory(getBooleanValue(xmlMandatory));
 
-            Node xmlDefault = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_DEFAULT_VALUE);
-            if (xmlDefault != null)
-                cell.setDefaultValue(getStringValue(xmlDefault));
-
             Element xmlLineCondition = getChild(xmlSchemaCell, ELEMENT_LINE_CONDITION);
             if (xmlLineCondition != null)
                 cell.setLineCondition(extractCellValueCondition(xmlLineCondition));
@@ -433,6 +429,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
                 if (maxValue != null)
                     cell.setMaxValue(getStringValue(maxValue));
             }
+
+            Node xmlDefault = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_DEFAULT_VALUE);
+            if (xmlDefault != null)
+                cell.setDefaultValue(getStringValue(xmlDefault));
 
         } catch (ParseException e) {
             throw new SchemaException("Failed to parse value within xml schema. ", e);

@@ -17,7 +17,7 @@ import java.util.Optional;
 public class FixedWidthCellParser extends CellParser<FixedWidthSchemaCell> {
     private FWFieldReader fieldReader = new FWFieldReader();
 
-    protected FixedWidthCellParser(FixedWidthSchemaCell fixedWidthSchemaCell, int maxCacheSize) throws ParseException {
+    protected FixedWidthCellParser(FixedWidthSchemaCell fixedWidthSchemaCell, int maxCacheSize) {
         super(fixedWidthSchemaCell, maxCacheSize);
     }
 
@@ -43,9 +43,8 @@ public class FixedWidthCellParser extends CellParser<FixedWidthSchemaCell> {
      * Creates fixed width cell parser according to supplied schema and with a maximum cache size.
      * @param schemaCell The schema to use.
      * @param maxCacheSize The maximum number of cells to keep in cache while parsing. The value 0 will disable cache.
-     * @throws ParseException In case default value of the schema is invalid.
      */
-    public static FixedWidthCellParser ofSchemaCell(FixedWidthSchemaCell schemaCell, int maxCacheSize) throws ParseException {
+    public static FixedWidthCellParser ofSchemaCell(FixedWidthSchemaCell schemaCell, int maxCacheSize) {
         return new FixedWidthCellParser(schemaCell, maxCacheSize);
     }
 
