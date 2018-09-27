@@ -40,7 +40,7 @@ class FixedWidthLineParser {
     }
 
     private FixedWidthCellParser makeCellParser(FixedWidthSchemaCell fixedWidthSchemaCell) {
-        return FixedWidthCellParser.ofSchemaCell(fixedWidthSchemaCell, Math.min(20, lineSchema.getOccurs() - 1));
+        return FixedWidthCellParser.ofSchemaCell(fixedWidthSchemaCell, Math.min(config.getMaxCellCacheSize(), lineSchema.getOccurs() - 1));
     }
 
     boolean isIgnoreRead(){

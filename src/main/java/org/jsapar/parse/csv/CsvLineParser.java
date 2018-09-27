@@ -51,7 +51,7 @@ class CsvLineParser {
     }
 
     private CellParser<CsvSchemaCell> makeCellParser(CsvSchemaCell schemaCell) {
-        return CellParser.ofSchemaCell(schemaCell, Math.min(20, lineSchema.getOccurs() - 1));
+        return CellParser.ofSchemaCell(schemaCell, Math.min(config.getMaxCellCacheSize(), lineSchema.getOccurs() - 1));
     }
 
     /**
