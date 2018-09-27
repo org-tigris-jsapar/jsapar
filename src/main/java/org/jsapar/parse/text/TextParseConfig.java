@@ -29,7 +29,7 @@ public class TextParseConfig {
     private ValidationAction onLineOverflow = ValidationAction.NONE;
 
     /**
-     * The maximum number of cell values that are cached while parsing. 0 means that caching is disabled. For inputs
+     * The maximum number of cell values that are cached while parsing. 0 or negative value means that caching is disabled. For inputs
      * where each cell on each line contains a unique value, you may gain some speed by disabling the cache.
      * <p>
      * The default max cache size is 10 and the maximum value is 100. Setting a higher value will not have any further
