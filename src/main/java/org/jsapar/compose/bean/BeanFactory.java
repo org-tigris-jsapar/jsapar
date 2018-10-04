@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
  * interface if you need to be able to control how beans are created in more details.
  * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.
  * @see BeanFactoryDefault
+ * @see BeanFactoryByMap
  */
 public interface BeanFactory<T> {
 
