@@ -1,9 +1,9 @@
 package org.jsapar.parse.bean;
 
+import org.jsapar.error.BeanException;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaLine;
 
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Collection;
@@ -52,19 +52,23 @@ public class BeanMap {
     /**
      * Creates a BeanMap based on a schema where each schema line type is the full class name and where each cell name
      * is the bean property name.
+     *
      * @param schema The schema to use to create a BeanMap.
      * @return A BeanMap instance.
-     * @throws ClassNotFoundException If one of the line types describes a class name that does exist in the class path.
-     * @throws IntrospectionException  If one of the cell names describes a bean property that does not exist for the
-     * class.
+     * @throws BeanException If one of the line types describes a class name that does exist in the class path or
+     *                             if one of the cell names describes a bean property that does not exist for the class.
      */
-    public static BeanMap ofSchema(Schema schema) throws ClassNotFoundException, IntrospectionException {
-        BeanMap beanMap = new BeanMap();
+    public static BeanMap ofSchema(Schema schema) throws BeanException {
+        try {
+            BeanMap beanMap = new BeanMap();
 
-        for (SchemaLine schemaLine : schema.getSchemaLines()) {
-            beanMap.putBean2Line(schemaLine.getLineType(), BeanPropertyMap.ofSchemaLine(schemaLine));
+            for (SchemaLine schemaLine : schema.getSchemaLines()) {
+                beanMap.putBean2Line(schemaLine.getLineType(), BeanPropertyMap.ofSchemaLine(schemaLine));
+            }
+            return beanMap;
+        } catch (ClassNotFoundException e) {
+            throw new BeanException("Failed to build bean mapping based on schema", e);
         }
-        return beanMap;
     }
 
     /**
@@ -76,7 +80,7 @@ public class BeanMap {
     public static BeanMap ofBeanPropertyMaps(Collection<BeanPropertyMap> beanPropertyMaps) throws ClassNotFoundException {
         BeanMap beanMap = new BeanMap();
         for (BeanPropertyMap entry : beanPropertyMaps) {
-            beanMap.beanPropertyMap.put(entry.getLineClass(), entry);
+            beanMap.putBean2Line(entry.getLineClass(), entry);
         }
         return beanMap;
     }

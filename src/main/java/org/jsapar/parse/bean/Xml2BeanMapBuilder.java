@@ -1,6 +1,8 @@
 package org.jsapar.parse.bean;
 
+import org.jsapar.error.BeanException;
 import org.jsapar.error.JSaParException;
+import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Element;
@@ -10,10 +12,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.beans.IntrospectionException;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -67,4 +67,55 @@ public class Xml2BeanMapBuilder implements XmlTypes {
             throw new JSaParException("Failed to build property map", e);
         }
     }
+
+    /**
+     * Loads a bean map from specified resource using default character encoding.
+     *
+     * @param resourceBaseClass
+     *            A class that specifies the base for the relative location of the resource. If this parameter is null,
+     *            the resource name has to specify the resource with an absolute path.
+     * @param resourceName
+     *            The name of the resource to load.
+     * @return A newly created bean map from the supplied xml resource.
+     * @throws SchemaException  When there is an error in the bean map
+     * @throws UncheckedIOException      When there is an error reading from input
+     */
+    @SuppressWarnings("unused")
+    public static BeanMap loadBeanMapFromXmlResource(Class<?> resourceBaseClass, String resourceName)
+            throws UncheckedIOException{
+        return loadBeanMapFromXmlResource(resourceBaseClass, resourceName, Charset.defaultCharset().name());
+    }
+
+    /**
+     * Loads a bean map from specified resource using supplied character encoding.
+     *
+     * @param resourceBaseClass
+     *            A class that specifies the base for the relative location of the resource. If this parameter is null,
+     *            the resource name has to specify the resource with an absolute path.
+     * @param resourceName
+     *            The name of the resource to load.
+     * @param encoding
+     *            The character encoding to use while reading resource.
+     * @return A newly created bean map from the supplied xml resource.
+     * @throws UncheckedIOException      When there is an error reading from input
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static BeanMap loadBeanMapFromXmlResource(Class<?> resourceBaseClass, String resourceName, String encoding)
+            throws UncheckedIOException{
+        if (resourceBaseClass == null)
+            resourceBaseClass = Xml2BeanMapBuilder.class;
+        try (InputStream is = resourceBaseClass.getResourceAsStream(resourceName)) {
+            if (is == null) {
+                throw new IOException(
+                        "Failed to load resource [" + resourceName + "] from class " + resourceBaseClass.getName());
+            }
+            Xml2BeanMapBuilder beanMapBuilder = new Xml2BeanMapBuilder();
+            return beanMapBuilder.build(new InputStreamReader(is, encoding));
+        } catch (IOException  e) {
+            throw new UncheckedIOException("Failed to load bean map from xml resource", e);
+        } catch (ClassNotFoundException e) {
+            throw new BeanException("Failed to load bean map", e);
+        }
+    }
+
 }

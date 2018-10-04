@@ -1,6 +1,6 @@
 package org.jsapar.parse.bean;
 
-import org.jsapar.model.Cell;
+import org.jsapar.error.BeanException;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
 
@@ -49,8 +49,12 @@ public class BeanPropertyMap {
         return lineClass.newInstance();
     }
 
-    public static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine) throws ClassNotFoundException, IntrospectionException{
-        return ofPropertyNames(schemaLine.getLineType(), schemaLine.getLineType(), schemaLine.stream().collect(Collectors.toMap(SchemaCell::getName, SchemaCell::getName)));
+    public static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine) throws BeanException {
+        try {
+            return ofPropertyNames(schemaLine.getLineType(), schemaLine.getLineType(), schemaLine.stream().collect(Collectors.toMap(SchemaCell::getName, SchemaCell::getName)));
+        } catch (ClassNotFoundException |IntrospectionException e) {
+            throw new BeanException("Failed to create bean mapping based on schema", e);
+        }
     }
 
     public static BeanPropertyMap ofPropertyNames(String className, String lineType, Map<String, String> cellNamesOfProperty) throws ClassNotFoundException, IntrospectionException{

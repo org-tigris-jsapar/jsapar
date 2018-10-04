@@ -3,12 +3,12 @@ package org.jsapar;
 import org.jsapar.compose.bean.*;
 import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.ConvertTask;
+import org.jsapar.error.BeanException;
 import org.jsapar.parse.bean.BeanMap;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
 
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -46,10 +46,9 @@ public class Text2BeanConverter<T> extends AbstractConverter {
      * The default behavior is to use the schema names where the line type name needs to match the class
      * name of the class to create and the cell names needs to match bean property names.
      * @param parseSchema The schema to use while reading the text input.
-     * @throws IntrospectionException If a referenced property
-     * @throws ClassNotFoundException If a class d
+     * @throws BeanException In case of error when instantiating bean.
      */
-    public Text2BeanConverter(Schema parseSchema) throws IntrospectionException, ClassNotFoundException {
+    public Text2BeanConverter(Schema parseSchema) throws BeanException {
         this(parseSchema, BeanMap.ofSchema(parseSchema));
     }
 

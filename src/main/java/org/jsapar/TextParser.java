@@ -33,7 +33,7 @@ import java.io.Reader;
 public class TextParser extends AbstractParser {
 
     private final Schema          parseSchema;
-    private       TextParseConfig parseConfig = new TextParseConfig();
+    private       TextParseConfig parseConfig;
 
     public TextParser(Schema parseSchema) {
         this(parseSchema, new TextParseConfig());
