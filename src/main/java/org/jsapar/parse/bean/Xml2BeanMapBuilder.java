@@ -18,10 +18,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
+/**
+ * Class for building {@link BeanMap} instances based on xml.
+ */
 public class Xml2BeanMapBuilder implements XmlTypes {
     private final static String NAMESPACE = "http://jsapar.tigris.org/BeanMapSchema/2.0";
 
+    /**
+     * Loads a {@link BeanMap} instance from xml that is read from the supplied reader.
+     * @param reader The reader to read xml from.
+     * @return A newly created {@link BeanMap} instance.
+     * @throws ClassNotFoundException In case one of the classes referenced from the bean map xml could not be created.
+     * @throws IOException In case there was an io error while reading xml.
+     */
     public BeanMap build(Reader reader) throws ClassNotFoundException, IOException {
         String schemaFileName = "/xml/schema/BeanMapSchema.xsd";
 
