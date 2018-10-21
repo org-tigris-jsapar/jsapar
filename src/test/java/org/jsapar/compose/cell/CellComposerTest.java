@@ -1,4 +1,4 @@
-package org.jsapar.compose;
+package org.jsapar.compose.cell;
 
 import org.jsapar.model.*;
 import org.jsapar.parse.cell.DateCellFactory;
@@ -6,9 +6,7 @@ import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
 import org.junit.Test;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
@@ -25,11 +23,11 @@ public class CellComposerTest {
     private class TestSchemaCell extends SchemaCell {
 
 
-        public TestSchemaCell(String name) {
+        TestSchemaCell(String name) {
             super(name);
         }
 
-        public TestSchemaCell(String name, CellType type, String pattern, Locale locale) {
+        TestSchemaCell(String name, CellType type, String pattern, Locale locale) {
             super(name, type, pattern, locale);
         }
     }
@@ -147,12 +145,6 @@ public class CellComposerTest {
         assertEquals("", value);
     }
 
-    /**
-     * Test method for
-     * {@link DateCell#getStringValue(java.text.Format)}.
-     *
-     * @throws ParseException
-     */
     @Test
     public final void testFormat_date() throws ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");

@@ -1,4 +1,4 @@
-package org.jsapar.compose;
+package org.jsapar.compose.line;
 
 import org.jsapar.model.Line;
 

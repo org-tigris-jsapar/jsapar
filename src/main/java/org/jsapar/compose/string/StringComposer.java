@@ -1,9 +1,8 @@
 package org.jsapar.compose.string;
 
-import org.jsapar.compose.CellComposer;
+import org.jsapar.compose.cell.CellComposer;
 import org.jsapar.compose.Composer;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaLine;

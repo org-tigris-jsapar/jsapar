@@ -1,6 +1,6 @@
 package org.jsapar.compose;
 
-import org.jsapar.error.JSaParException;
+import org.jsapar.compose.line.LineComposer;
 import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaLine;

@@ -1,6 +1,6 @@
 package org.jsapar.compose.fixed;
 
-import org.jsapar.compose.CellComposer;
+import org.jsapar.compose.cell.CellComposer;
 import org.jsapar.model.Cell;
 import org.jsapar.schema.FixedWidthSchemaCell;
 

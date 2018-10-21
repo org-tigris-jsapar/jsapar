@@ -1,4 +1,4 @@
-package org.jsapar.compose;
+package org.jsapar.compose.cell;
 
 import org.jsapar.model.Cell;
 import org.jsapar.schema.SchemaCell;
