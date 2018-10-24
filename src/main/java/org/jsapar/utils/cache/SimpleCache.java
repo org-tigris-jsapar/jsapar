@@ -8,9 +8,8 @@ import java.util.Map;
  */
 public class SimpleCache<K, V> implements Cache<K, V>{
     private final LinkedHashMap<K, V> elements;
-    private int maxSize;
 
-    public SimpleCache(int maxSize) {
+    public SimpleCache(final int maxSize) {
         this.elements = new LinkedHashMap<K, V>(maxSize * 2){
             @Override
             protected boolean removeEldestEntry(Map.Entry eldest) {
