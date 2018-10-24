@@ -1,6 +1,6 @@
 package org.jsapar.compose.fixed;
 
-import org.jsapar.compose.LineComposer;
+import org.jsapar.compose.line.LineComposer;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.schema.FixedWidthSchemaCell;

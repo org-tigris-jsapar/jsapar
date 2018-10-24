@@ -1,6 +1,6 @@
 package org.jsapar.schema;
 
-import org.jsapar.compose.CellComposer;
+import org.jsapar.compose.cell.CellComposer;
 import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

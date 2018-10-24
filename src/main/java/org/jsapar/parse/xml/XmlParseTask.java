@@ -8,6 +8,7 @@ import org.jsapar.model.CellType;
 import org.jsapar.model.DateCell;
 import org.jsapar.model.Line;
 import org.jsapar.parse.*;
+import org.jsapar.parse.cell.CellParser;
 import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.xml.sax.Attributes;

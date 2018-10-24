@@ -2,19 +2,16 @@ package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
-import org.jsapar.parse.CellParser;
+import org.jsapar.parse.cell.CellParser;
 import org.jsapar.schema.FixedWidthSchemaCell;
-import org.jsapar.schema.SchemaCell;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.text.ParseException;
-import java.util.Optional;
 
 /**
  * Parses fixed width text source on cell level.
  */
-public class FixedWidthCellParser extends CellParser<FixedWidthSchemaCell> {
+class FixedWidthCellParser extends CellParser<FixedWidthSchemaCell> {
     private FWFieldReader fieldReader = new FWFieldReader();
 
     protected FixedWidthCellParser(FixedWidthSchemaCell fixedWidthSchemaCell, int maxCacheSize) {

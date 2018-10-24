@@ -1,7 +1,8 @@
-package org.jsapar.parse;
+package org.jsapar.parse.cell;
 
 import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.model.*;
+import org.jsapar.parse.cell.CellParser;
 import org.jsapar.schema.MatchingCellValueCondition;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;

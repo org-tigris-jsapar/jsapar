@@ -5,6 +5,7 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.parse.*;
+import org.jsapar.parse.cell.CellParser;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;

@@ -1,6 +1,6 @@
 package org.jsapar.compose.csv;
 
-import org.jsapar.compose.CellComposer;
+import org.jsapar.compose.cell.CellComposer;
 import org.jsapar.compose.csv.quote.Quoter;
 import org.jsapar.model.Cell;
 import org.jsapar.schema.CsvSchemaCell;

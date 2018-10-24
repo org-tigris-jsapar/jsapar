@@ -1,11 +1,10 @@
-package org.jsapar.parse;
+package org.jsapar.parse.cell;
 
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
-import org.jsapar.parse.cell.CellFactory;
+import org.jsapar.parse.CellParseException;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.utils.cache.Cache;
