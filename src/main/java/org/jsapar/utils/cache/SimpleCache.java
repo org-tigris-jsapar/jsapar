@@ -10,7 +10,7 @@ public class SimpleCache<K, V> implements Cache<K, V>{
     private final LinkedHashMap<K, V> elements;
 
     public SimpleCache(final int maxSize) {
-        this.elements = new LinkedHashMap<K, V>(maxSize * 2){
+        this.elements = new LinkedHashMap<K, V>(Math.min(maxSize * 2, 1024)){
             @Override
             protected boolean removeEldestEntry(Map.Entry eldest) {
                 return size()>maxSize;
