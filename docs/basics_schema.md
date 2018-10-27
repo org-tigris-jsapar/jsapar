@@ -281,6 +281,7 @@ You can change the default quote behavior for a whole line type by specifying th
 ...
 ```
 
+* See [this example in the jsapar-examples project](https://github.com/org-tigris-jsapar/jsapar-examples/tree/master/src/main/java/org/jsapar/examples/schemabasics/c3)
 ### The first line describes cell layout
 It is quite common in CSV files to have one header row that contains the name of the columns within the file. For instance, the file might look like this:
 ```csv
