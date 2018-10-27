@@ -9,7 +9,7 @@ import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.utils.cache.Cache;
 import org.jsapar.utils.cache.DisabledCache;
-import org.jsapar.utils.cache.SimpleCache;
+import org.jsapar.utils.cache.LimitedSizeCache;
 
 import java.text.Format;
 import java.text.ParseException;
@@ -35,7 +35,7 @@ public class CellParser<S extends SchemaCell> {
      * @param maxCacheSize The maximum number of cells to keep in cache while parsing. The value 0 will disable cache.
      */
     protected CellParser(S schemaCell, int maxCacheSize) {
-        cellCache = (maxCacheSize >0) ? new SimpleCache<>(maxCacheSize) : new DisabledCache<>();
+        cellCache = (maxCacheSize >0) ? new LimitedSizeCache<>(maxCacheSize) : new DisabledCache<>();
         this.schemaCell = schemaCell;
 
         CellType cellType = schemaCell.getCellFormat().getCellType();

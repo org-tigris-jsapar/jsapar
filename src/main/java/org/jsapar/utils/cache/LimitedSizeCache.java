@@ -6,10 +6,10 @@ import java.util.Map;
 /**
  * This implementation simply removes the oldest element when the max size is exceeded.
  */
-public class SimpleCache<K, V> implements Cache<K, V>{
+public class LimitedSizeCache<K, V> implements Cache<K, V>{
     private final LinkedHashMap<K, V> elements;
 
-    public SimpleCache(final int maxSize) {
+    public LimitedSizeCache(final int maxSize) {
         this.elements = new LinkedHashMap<K, V>(Math.min(maxSize * 2, 1024)){
             @Override
             protected boolean removeEldestEntry(Map.Entry eldest) {

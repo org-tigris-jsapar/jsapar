@@ -1,16 +1,14 @@
 package org.jsapar.utils.cache;
 
-import org.jsapar.utils.cache.Cache;
-import org.jsapar.utils.cache.SimpleCache;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class SimpleCacheTest {
+public class LimitedSizeCacheTest {
 
     @Test
     public void get() {
-        Cache<String, String> cache = new SimpleCache<>(3);
+        Cache<String, String> cache = new LimitedSizeCache<>(3);
         cache.put("one", "1");
         assertEquals("1", cache.get("one"));
         cache.put("two", "2");
