@@ -11,7 +11,7 @@ import java.util.Locale;
 public class CsvSchemaCell extends SchemaCell {
 
     /**
-     * The quote behavior for the cell. Default is AUTOMATIC
+     * The quote behavior for the cell when composing. Default is {@link QuoteBehavior#AUTOMATIC}. Not used while parsing.
      */
     private QuoteBehavior quoteBehavior = QuoteBehavior.AUTOMATIC;
 
@@ -19,6 +19,8 @@ public class CsvSchemaCell extends SchemaCell {
      * The maximum number of characters that are read or written to/from the cell. Input and output
      * value will be silently truncated to this length. If you want to get an error when field is to
      * long, use the format regexp pattern instead.
+     * <p>
+     * A negative value indicates that max length will not be checked.
      */
     private int maxLength = -1;
 
@@ -52,26 +54,9 @@ public class CsvSchemaCell extends SchemaCell {
         return (CsvSchemaCell) super.clone();
     }
 
-    /**
-     * The maximum number of characters that are read or written to/from the cell. Input and output
-     * value will be silently truncated to this length. If you want to get an error when field is to
-     * long, use the format regexp pattern instead.
-     *
-     * @return the maxLength
-     */
     public int getMaxLength() {
         return maxLength;
     }
-
-    /**
-     * The maximum number of characters that are read or written to/from the cell. Input and output
-     * value will be silently truncated to this length. If you want to get an error when field is to
-     * long, use the format regexp pattern instead.
-     * <p>
-     * Set to a positive value if maxLength should be used.
-     *
-     * @param maxLength the maxLength to set
-     */
     public void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
     }
@@ -83,16 +68,9 @@ public class CsvSchemaCell extends SchemaCell {
         return this.maxLength > 0;
     }
 
-    /**
-     * @return The quote behavior for the cell.
-     */
     public QuoteBehavior getQuoteBehavior() {
         return quoteBehavior;
     }
-
-    /**
-     * @param quoteBehavior The quote behavior for the cell.
-     */
     public void setQuoteBehavior(QuoteBehavior quoteBehavior) {
         this.quoteBehavior = quoteBehavior;
     }

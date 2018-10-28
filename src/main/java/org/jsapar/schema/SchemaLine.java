@@ -1,5 +1,7 @@
 package org.jsapar.schema;
 
+import org.jsapar.model.Line;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
@@ -9,28 +11,44 @@ import java.util.stream.Stream;
 /**
  * Abstract base class that describes the schema for a line. For instance if you want to ignore a header line you
  * can add a SchemaLine instance to your schema with occurs==1 and ignoreRead==true;
+ *
+ * @see Schema
+ * @see SchemaCell
  */
-@SuppressWarnings("WeakerAccess")
 public abstract class SchemaLine implements Cloneable {
     /**
      * Constant to be used in occurs attribute and that indicates that lines can occur infinite number of times.
      */
-    private static final int    OCCURS_INFINITE      = Integer.MAX_VALUE;
-    private static final String NOT_SET              = "";
+    private static final int OCCURS_INFINITE = Integer.MAX_VALUE;
+    private static final String NOT_SET = "";
 
-    private int                 occurs               = OCCURS_INFINITE;
-    private String              lineType             = NOT_SET;
+    /**
+     * The number of times this type of line occurs in the corresponding input or output.
+     *
+     * @see #isOccursInfinitely()
+     * @see #setOccursInfinitely()
+     */
+    private int occurs = OCCURS_INFINITE;
+
+    /**
+     * The type of the line. This line type will be part of each of the parsed  {@link Line} instances that was created
+     * by using this instance.
+     * <p>
+     * When composing, the line type of the {@link Line} supplied to the composer will be used by the composer to determine
+     * which {@link SchemaLine} instance to use for composing.
+     */
+    private String lineType = NOT_SET;
 
     /**
      * If set to true, this type of line will be read from the input but then ignored, thus it will not produce any line
      * parsed event.
      */
-    private boolean                       ignoreRead            = false;
+    private boolean ignoreRead = false;
 
     /**
      * If set to true, this type of line will not be written to the output.
      */
-    private boolean                       ignoreWrite           = false;
+    private boolean ignoreWrite = false;
 
     /**
      * Creates a SchemaLine that occurs infinite number of times.
@@ -41,54 +59,43 @@ public abstract class SchemaLine implements Cloneable {
 
     /**
      * Creates a SchemaLine that occurs supplied number of times.
-     * 
-     * @param nOccurs
-     *            The number of times that a line of this type occurs in the input or output text. Use {@link #OCCURS_INFINITE} constant for infinite number of times.
+     *
+     * @param nOccurs The number of times that a line of this type occurs in the input or output text.
      */
     public SchemaLine(int nOccurs) {
         this.occurs = nOccurs;
     }
 
     /**
-     * Creates a SchemaLine with the supplied line type.
-     * 
-     * @param lineType
-     *            The name of the type of the line.
+     * Creates a SchemaLine with the supplied line type and that occurs infinite number of times.
+     *
+     * @param lineType The name of the type of the line.
      */
     public SchemaLine(String lineType) {
         this.setLineType(lineType);
     }
-    
+
     /**
      * Creates a SchemaLine with the supplied line type and occurs supplied number of times.
+     *
      * @param lineType The line type of this schema line.
-     * @param nOccurs The number of times it should occur.
+     * @param nOccurs  The number of times it should occur.
      */
-    public SchemaLine(String lineType, int nOccurs){
-    	this.setLineType(lineType);
-    	this.setOccurs(nOccurs);
+    public SchemaLine(String lineType, int nOccurs) {
+        this.setLineType(lineType);
+        this.setOccurs(nOccurs);
     }
 
-
-    /**
-     * @return The number of times this type of line occurs in the corresponding buffer. Returns {@link #OCCURS_INFINITE} constant value when infinite number.
-     * @see #isOccursInfinitely()
-     */
     public int getOccurs() {
         return occurs;
     }
 
-    /**
-     * @param occurs
-     *            The number of times this type of line occurs in the corresponding buffer. Use {@link #OCCURS_INFINITE} constant for infinite number of times or use the {@link #setOccursInfinitely()} method.
-     * @see #setOccursInfinitely()
-     */
     public void setOccurs(int occurs) {
         this.occurs = occurs;
     }
 
     /**
-     * Setts the occurs attribute so that this type of line occurs until the end of the buffer.
+     * Sets the occurs attribute so that this type of line occurs until the end of the buffer.
      */
     public void setOccursInfinitely() {
         this.occurs = OCCURS_INFINITE;
@@ -102,29 +109,19 @@ public abstract class SchemaLine implements Cloneable {
     }
 
     /**
-     * Finds a schema cell with the specified name. This method probably performs a linear search,
-     * thus the performance is poor if there are many cells on a line.
-     * 
-     * @param cellName
-     *            The name of the schema cell to find.
+     * Finds a schema cell with the specified name.
+     *
+     * @param cellName The name of the schema cell to find.
      * @return The schema cell with the supplied name or null if no such cell was found.
      */
     public abstract SchemaCell getSchemaCell(String cellName);
 
 
-    /**
-     * @return the lineType
-     */
     public String getLineType() {
         return lineType;
     }
 
-    /**
-     * @param lineType
-     *            the lineType to set
-     */
     public void setLineType(String lineType) {
-        assert lineType != null;
         this.lineType = lineType;
     }
 
@@ -145,10 +142,10 @@ public abstract class SchemaLine implements Cloneable {
     }
 
     /*
-         * (non-Javadoc)
-         *
-         * @see java.lang.Object#toString()
-         */
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

@@ -5,12 +5,22 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
- * Describes the schema for a delimiter separated line.
- *
+ * Describes the schema for a delimiter separated line. For instance if you want to ignore a header line you
+ * can add a SchemaLine instance to your schema with occurs==1 and ignoreRead==true;
+ * @see CsvSchema
+ * @see CsvSchemaCell
  */
 public class CsvSchemaLine extends SchemaLine {
 
     private Map<String, CsvSchemaCell> schemaCells       = new LinkedHashMap<>();
+
+    /**
+     * Set this to true when the first line of the input text contains the names and order of the cells in the following
+     * lines, i.e. the first line is a header line that works as a schema for the rest of the file. In that case this
+     * schema line instance will only be used to get
+     * formatting instructions and default values, it will not denote the order of the cells. The order is given by the
+     * first line of the input instead.
+     */
     private boolean                    firstLineAsSchema = false;
 
     /**
@@ -20,6 +30,9 @@ public class CsvSchemaLine extends SchemaLine {
 
     /**
      * Specifies quote characters used to encapsulate cells. Numerical value 0 indicates that quotes are not used.
+     * <p>
+     * If quoted cells contain cell separator or line separator characters, these will be treated as content of the cell
+     * instead.
      */
     private char quoteChar = 0;
 
@@ -132,37 +145,14 @@ public class CsvSchemaLine extends SchemaLine {
         return sb.toString();
     }
 
-    /**
-     * Is set to true when the first line of the input text contains the names and order of the cells in the following
-     * lines, i.e. the first line is a header line. In that case this schema line instance will only be used to get
-     * formatting instructions and default values, it will not denote the order of the cells. The order is given by the
-     * first line of the input instead.
-     *
-     * @return true when the first line of the input text contains the names and order of the cells in the following, false otherwise.
-     */
     public boolean isFirstLineAsSchema() {
         return firstLineAsSchema;
     }
 
-    /**
-     * Set this to true when the first line of the input text contains the names and order of the cells in the following
-     * lines, i.e. the first line is a header line that works as a schema for the rest of the file. In that case this
-     * schema line instance will only be used to get
-     * formatting instructions and default values, it will not denote the order of the cells. The order is given by the
-     * first line of the input instead.
-     *
-     * @param firstLineAsSchema Set to true when the first line of the input text contains the names and order of the cells in the following
-     *                          lines.
-     */
     public void setFirstLineAsSchema(boolean firstLineAsSchema) {
         this.firstLineAsSchema = firstLineAsSchema;
     }
 
-    /**
-     * Quoted cells may contain cell break or line break characters that should be part of the cell.
-     *
-     * @return The character to use to quote cells within a line.
-     */
     public char getQuoteChar() {
         return quoteChar;
     }
@@ -170,16 +160,10 @@ public class CsvSchemaLine extends SchemaLine {
     /**
      * @return true if quote character is used, false otherwise.
      */
-    @SuppressWarnings("WeakerAccess")
     public boolean isQuoteCharUsed() {
         return this.quoteChar != 0;
     }
 
-    /**
-     * Quoted cells may contain cell break or line break characters that should be part of the cell.
-     *
-     * @param quoteChar The character to use to quote cells within a line.
-     */
     public void setQuoteChar(char quoteChar) {
         this.quoteChar = quoteChar;
     }
@@ -196,7 +180,7 @@ public class CsvSchemaLine extends SchemaLine {
 
     /**
      * @param cellName The name of the cell to get.
-     * @return CsvSchemaCell with specified name that is attached to this line or null if no such cell exist.
+     * @return {@link CsvSchemaCell} with specified name that is attached to this line or null if no such {@link CsvSchemaCell} exist.
      */
     public CsvSchemaCell getCsvSchemaCell(String cellName) {
         return schemaCells.get(cellName);

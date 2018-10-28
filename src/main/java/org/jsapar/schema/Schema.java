@@ -25,10 +25,13 @@ import java.util.stream.Stream;
 public abstract class Schema implements Cloneable{
 
 
-    public abstract boolean isEmpty();
     private Locale locale = SchemaCellFormat.defaultLocale;
     private String lineSeparator = System.getProperty("line.separator");
 
+    /**
+     * @return True if this schema does not contain any lines. False otherwise.
+     */
+    public abstract boolean isEmpty();
 
     /**
      * Line separator string. Default value is the system default (Retrieved by
@@ -113,7 +116,7 @@ public abstract class Schema implements Cloneable{
 
     /**
      * Loads a schema instance from an xml that is read from the supplied reader. The xml needs to comply to the
-     * JSaParSchema.xsd otherwise a SchemaException is thrown.
+     * JSaParSchema.xsd otherwise a {@link SchemaException} is thrown.
      *
      * @param reader
      *            The reader to read the xml from. Caller is responsible for closing the reader.

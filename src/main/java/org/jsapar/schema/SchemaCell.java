@@ -269,6 +269,7 @@ public abstract class SchemaCell implements Cloneable {
      *
      * @throws SchemaException If validation fails.
      */
+    @SuppressWarnings("unchecked")
     private void validateDefaultValueRange(Cell defaultCell) throws SchemaException {
         if (this.minValue != null && defaultCell.compareValueTo(this.minValue) < 0) {
             throw new SchemaException("The value is below minimum range limit.");
@@ -282,7 +283,6 @@ public abstract class SchemaCell implements Cloneable {
      * @param value The string representation of the min value as it would be presented in the text input.
      * @throws java.text.ParseException If the string value could not be parsed according to this schema cell
      */
-    @SuppressWarnings("WeakerAccess")
     public void setMinValue(String value) throws java.text.ParseException {
         this.minValue = CellParser.makeCell(this.getCellFormat().getCellType(), this.name, value, this.locale);
     }
@@ -291,7 +291,6 @@ public abstract class SchemaCell implements Cloneable {
      * @param value The string representation of the max value as it would be presented in the text input.
      * @throws java.text.ParseException If the string value could not be parsed according to this schema cell
      */
-    @SuppressWarnings("WeakerAccess")
     public void setMaxValue(String value) throws java.text.ParseException {
         this.maxValue = CellParser.makeCell(this.getCellFormat().getCellType(), this.name, value, this.locale);
     }
@@ -304,10 +303,9 @@ public abstract class SchemaCell implements Cloneable {
      * @param sDefaultValue
      *            The default value formatted according to this schema. Will be used if input/output
      *            is missing for this cell.
-     * @throws java.text.ParseException When the supplied value cannot be parsed according to this cell schema.
      * @throws SchemaException If there was a configuration error in the schema.
      */
-    public void setDefaultValue(String sDefaultValue) throws java.text.ParseException, SchemaException {
+    public void setDefaultValue(String sDefaultValue) throws SchemaException {
         this.defaultValue = sDefaultValue;
         validateDefaultValueRange(CellParser.ofSchemaCell(this).makeDefaultCell());
     }

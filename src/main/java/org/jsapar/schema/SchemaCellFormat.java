@@ -10,8 +10,8 @@ import java.util.Locale;
  * Describes the format of a cell when converted to or from text, including what data type that the cell is expected
  * to have.
  * <p>
- * When creating an instance of this class you may choose to add a {@link Format} or a pattern and optionally a
- * {@link Locale}. The pattern has different meaning depending on the data type:
+ * When creating an instance of this class you may choose to add a {@link java.text.Format} or a pattern and optionally a
+ * {@link java.util.Locale}. The pattern has different meaning depending on the data type:
  * <ul>
  * <li>When the data type is of type String, the pattern is a regular expression as described in {@link java.util.regex.Pattern} to validate against.</li>
  * <li>When the data type is of a numerical type, the pattern is the same as described in {@link java.text.DecimalFormat}</li>
@@ -162,6 +162,7 @@ public class SchemaCellFormat implements Cloneable {
             return pattern.equals(other.pattern);
     }
 
+    @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
     @Override
     protected SchemaCellFormat clone() {
         try {

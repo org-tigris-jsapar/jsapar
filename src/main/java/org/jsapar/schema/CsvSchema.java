@@ -11,7 +11,9 @@ import java.util.stream.Stream;
 /**
  * Defines a schema for a delimited input text. Each cell is delimited by a delimiter character sequence.
  * Lines are separated by the line separator defined by {@link #lineSeparator}.
- *
+ * @see Schema
+ * @see SchemaLine
+ * @see CsvSchemaLine
  */
 public class CsvSchema extends Schema implements Cloneable{
 
@@ -22,7 +24,7 @@ public class CsvSchema extends Schema implements Cloneable{
 
 
     /**
-     * @param schemaLine the schemaLines to set
+     * @param schemaLine the schemaLine to add
      */
     public void addSchemaLine(CsvSchemaLine schemaLine) {
         this.schemaLines.put(schemaLine.getLineType(), schemaLine);
