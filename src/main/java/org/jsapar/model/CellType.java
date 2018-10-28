@@ -55,7 +55,12 @@ public enum CellType {
     /**
      * Cell contains {@link java.time.ZonedDateTime} content.
      */
-    ZONED_DATE_TIME(new ZonedDateTimeCellFactory(), false, false);
+    ZONED_DATE_TIME(new ZonedDateTimeCellFactory(), false, false),
+
+    /**
+     * Cell contains an enumerated set of values.
+     */
+    ENUM(new EnumCellFactory(), true, false);
 
     private CellFactory cellFactory;
     private boolean atomic;
