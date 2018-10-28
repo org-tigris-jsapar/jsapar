@@ -1,13 +1,12 @@
 package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
-import org.jsapar.model.StringCell;
+import org.jsapar.model.EnumCell;
+import org.jsapar.schema.SchemaException;
 import org.jsapar.text.EnumFormat;
-import org.jsapar.text.RegExpFormat;
 
 import java.text.Format;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -15,12 +14,12 @@ import java.util.Locale;
  */
 public class EnumCellFactory implements CellFactory{
 
+    @SuppressWarnings("unchecked")
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
-//        if (format == null)
-//            format = defaultFormat;
-//        return new EnumCell(name, (Enum) format.parseObject(value));
-        return null;
+        if (format == null)
+            throw new ParseException("Format is required while parsing enum cell values.", 0);
+        return new EnumCell(name, (Enum) format.parseObject(value));
     }
 
     @Override
@@ -31,18 +30,21 @@ public class EnumCellFactory implements CellFactory{
     /**
      * Create a {@link Format} instance for the enum cell type given the locale and a specified pattern.
      * @param locale  For enum cell type, the locale is insignificant.
-     * @param pattern A pattern to use for the format object. If null or empty, default format will be returned.
-     *                The pattern should contain the true and false values separated with a ; character.
-     * Example: pattern="Y;N" will imply that Y represents true and N to represents false.
-     * Comparison while parsing is not case sensitive.
-     * Multiple true or false values can be specified, separated with the | character but the first value is always the
-     * one used while composing. Example: pattern="Y|YES;N|NO"
-     * @return A format object to use for the boolean type cells.
+     * @param pattern A pattern to use for the format object.
+     *                The pattern have to contain the class name of the Enum to create a format for.
+     * Example: pattern="org.jsapar.model.CellType" will create a format that can parse and compose enum values for the
+     *                enum class org.jsapar.model.CellType. Full class name, including package names is required.
+     * @return A format object to use for the enum type cells.
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Format makeFormat(Locale locale, String pattern) {
-        String[] values = pattern.trim().split("\\s*;\\s*");
-        return new EnumFormat(null);
+        try {
+            Class<Enum> enumClass = (Class<Enum>) Class.forName(pattern);
+            return new EnumFormat(enumClass);
+        } catch (ClassNotFoundException e) {
+            throw new SchemaException("There is no Enum class with class name: " + pattern);
+        }
     }
 
 }

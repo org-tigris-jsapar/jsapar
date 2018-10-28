@@ -158,6 +158,14 @@ public class Bean2Cell {
             return (bean) -> new BigDecimalCell(cellName, (BigDecimal) f.invoke(bean));
         } else if (returnType.isAssignableFrom(BigInteger.class)) {
             return (bean) -> new BigDecimalCell(cellName, (BigInteger) f.invoke(bean));
+        } else if (Enum.class.isAssignableFrom(returnType)){
+            return (bean) -> {
+                Enum value = (Enum) f.invoke(bean);
+                if (value != null)
+                    return new EnumCell(cellName, value);
+                else
+                    return EnumCell.emptyOf(cellName);
+            };
         }
         return (bean) -> {
             Object value = f.invoke(bean);
