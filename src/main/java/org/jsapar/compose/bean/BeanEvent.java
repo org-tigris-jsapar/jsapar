@@ -14,15 +14,24 @@ public final class BeanEvent<T> extends EventObject {
     private final long   lineNumber;
 
     /**
+     * The line type of the event that was parsed in order to create this event or the bean class name if the event did
+     * not origin from parsing a line.
+     */
+    private final String lineType;
+
+    /**
      * Creates an instance
      * @param source The sending source of this event.
      * @param bean The bean that was composed
      * @param lineNumber The line number from the source, if available or 0 if not available
+     * @param lineType The line type of the event that was parsed in order to create this event or the bean class name
+     *                 if the event did not origin from parsing a line.
      */
-    public BeanEvent(Object source, T bean, long lineNumber) {
+    public BeanEvent(Object source, T bean, long lineNumber, String lineType) {
         super(source);
         this.bean = bean;
         this.lineNumber = lineNumber;
+        this.lineType = lineType;
     }
 
     /**
@@ -37,5 +46,9 @@ public final class BeanEvent<T> extends EventObject {
      */
     public long getLineNumber() {
         return lineNumber;
+    }
+
+    public String getLineType() {
+        return lineType;
     }
 }

@@ -85,7 +85,7 @@ public class BeanComposer<T> implements Composer, BeanEventListener<T>, ErrorEve
                     "Class of the created bean is not inherited from the generic type specified when creating the BeanComposer",
                     e);
         }
-        beanComposedEvent(new BeanEvent<>(this, bean, line.getLineNumber()));
+        beanComposedEvent(new BeanEvent<>(this, bean, line.getLineNumber(), line.getLineType()));
         return true;
     }
 
