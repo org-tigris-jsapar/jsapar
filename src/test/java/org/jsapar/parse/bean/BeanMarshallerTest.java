@@ -99,7 +99,7 @@ public class BeanMarshallerTest {
         return schema;
     }
 
-    public static BeanMap makeBeanMap() throws IntrospectionException, ClassNotFoundException {
+    public static BeanMap makeBeanMap() {
         return BeanMap.ofSchema(makeOutputSchema());
     }
 

@@ -68,9 +68,11 @@ public class BeanComposer<T> implements Composer, BeanEventListener<T>, ErrorEve
         try {
             bean = beanFactory.createBean(line);
             if (bean == null) {
-                validationHandler.lineValidationError(this, line,
-                        "BeanFactory failed to instantiate object. Skipped creating bean",
-                        config.getOnUndefinedLineType(), this);
+                if (!validationHandler.lineValidationError(this, line,
+                        "BeanFactory failed to instantiate object for this line because there was no associated class. You can errors like this by setting config.onUndefinedLineType=OMIT_LINE",
+                        config.getOnUndefinedLineType(), this)) {
+                    return false;
+                }
             } else {
                 assign(line, bean);
             }
@@ -85,7 +87,7 @@ public class BeanComposer<T> implements Composer, BeanEventListener<T>, ErrorEve
                     "Class of the created bean is not inherited from the generic type specified when creating the BeanComposer",
                     e);
         }
-        beanComposedEvent(new BeanEvent<>(this, bean, line.getLineNumber(), line.getLineType()));
+        beanComposedEvent(new BeanEvent<>(this, bean, line));
         return true;
     }
 

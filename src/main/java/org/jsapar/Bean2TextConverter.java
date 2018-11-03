@@ -7,7 +7,6 @@ import org.jsapar.parse.bean.BeanMap;
 import org.jsapar.parse.bean.BeanMarshaller;
 import org.jsapar.schema.Schema;
 
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
@@ -51,11 +50,8 @@ public class Bean2TextConverter<T> implements AutoCloseable{
      *
      * @param composerSchema The schema to use while composing text output.
      * @param writer         The writer to write text output to. Caller is responsible for either closing the writer or call the close method of the created instance.
-     * @throws IntrospectionException If string names of properties could not be mapped to actual properties.
-     * @throws ClassNotFoundException In case any of the classes described in the schema does not exist in the classpath.
      */
-    public Bean2TextConverter(Schema composerSchema, Writer writer)
-            throws IntrospectionException, ClassNotFoundException {
+    public Bean2TextConverter(Schema composerSchema, Writer writer){
         this(composerSchema, BeanMap.ofSchema(composerSchema), writer);
     }
 
@@ -63,9 +59,12 @@ public class Bean2TextConverter<T> implements AutoCloseable{
      * Creates a converter with supplied composer schema.
      *
      * @param composerSchema The schema to use while composing text output.
-     * @param beanMap        The bean map to use to map schema names to bean properties.
+     * @param beanMap        The bean map to use to map schema names to bean properties. This {@link BeanMap} instance will be used as is so it needs to contain
+     *                       mapping for all values that should be converted to text. If you want to use a {@link BeanMap} that is created
+     *                       from a combination of the schema and an additional override {@link BeanMap} you can use the method {@link BeanMap#ofSchema(Schema, BeanMap)} to create such combined instance.
      * @param writer         The writer to write text output to. Caller is responsible for either closing the writer or call the close method of the created instance.
      */
+    @SuppressWarnings("WeakerAccess")
     public Bean2TextConverter(Schema composerSchema, BeanMap beanMap, Writer writer) {
         assert composerSchema != null;
         beanMarshaller = new BeanMarshaller<>(beanMap);

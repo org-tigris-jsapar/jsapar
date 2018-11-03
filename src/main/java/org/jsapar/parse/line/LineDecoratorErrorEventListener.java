@@ -1,8 +1,10 @@
-package org.jsapar.parse;
+package org.jsapar.parse.line;
 
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Line;
+import org.jsapar.parse.CellParseException;
+import org.jsapar.parse.LineParseException;
 
 /**
  * Internal class. Decorates line errors with current line information.

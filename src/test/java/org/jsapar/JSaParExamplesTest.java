@@ -3,6 +3,7 @@ package org.jsapar;
 import org.jsapar.compose.Composer;
 import org.jsapar.compose.bean.RecordingBeanEventListener;
 import org.jsapar.error.JSaParException;
+import org.jsapar.error.ValidationAction;
 import org.jsapar.model.*;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.parse.bean.BeanMap;
@@ -357,21 +358,23 @@ public class JSaParExamplesTest {
      * names.
      */
     @Test
-    public final void testExampleJavaToFixedWidth07()
+    public final void testExampleBeanToCsv06_beanMap()
             throws SchemaException, IOException, ParseException, ClassNotFoundException {
 
         List<TstPerson> people = new LinkedList<>();
         TstPerson testPerson1 = new TstPerson("Nils", "Holgersson", (short) 4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9, 'A');
+        testPerson1.setGender(TstGender.M);
         testPerson1.setAddress(new TstPostAddress("Track", "Village"));
         people.add(testPerson1);
 
         TstPerson testPerson2 = new TstPerson("Jonathan", "Lionheart", (short) 37, 17, dateFormat.parse("1955-03-17 12:33:12"), 123456, 'C');
         testPerson2.setAddress(new TstPostAddress("Path", "City"));
+        testPerson2.setGender(TstGender.M);
         people.add(testPerson2);
 
         BeanCollection2TextConverter<TstPerson> converter;
         try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
-             Reader beanMapReader = new FileReader("examples/07_BeanMap.xml")) {
+             Reader beanMapReader = new FileReader("examples/06_BeanMap.xml")) {
             converter = new BeanCollection2TextConverter<>(Schema.ofXml(schemaReader), BeanMap.ofXml(beanMapReader));
         }
         StringWriter writer = new StringWriter();
@@ -380,8 +383,54 @@ public class JSaParExamplesTest {
         String result = writer.toString();
         String[] resultLines = result.split("\n");
 //        System.out.println(result);
-        assertEquals("B;\"Nils\";;Holgersson", resultLines[0]);
-        assertEquals("B;\"Jonathan\";;Lionheart", resultLines[1]);
+        assertEquals("B;\"Nils\";;Holgersson;M", resultLines[0]);
+        assertEquals("B;\"Jonathan\";;Lionheart;M", resultLines[1]);
+    }
+
+    @Test
+    public final void testExampleCsvToBean06_beanMap()
+            throws IOException, JSaParException, ParseException, IntrospectionException, ClassNotFoundException {
+        try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
+                Reader fileReader = new FileReader("examples/06_NamesControlCell.csv");
+                Reader beanMapReader = new FileReader("examples/06_BeanMap.xml")) {
+            Text2BeanConverter converter = new Text2BeanConverter(Schema.ofXml(schemaReader), BeanMap.ofXml(beanMapReader));
+            converter.getComposeConfig().setOnUndefinedLineType(ValidationAction.OMIT_LINE);
+            RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
+            converter.convert(fileReader, beanEventListener);
+            List<TstPerson> people = beanEventListener.getBeans();
+
+            assertEquals(2, people.size());
+            assertEquals("Erik", people.get(0).getFirstName());
+            assertEquals("Svensson", people.get(0).getLastName());
+
+            assertEquals("Fredrik", people.get(1).getFirstName());
+            assertEquals("Larsson", people.get(1).getLastName());
+        }
+    }
+
+    @Test
+    public final void testExampleCsvToBean06_beanMapOverride()
+            throws IOException, JSaParException, ParseException, IntrospectionException, ClassNotFoundException {
+        try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
+                Reader fileReader = new FileReader("examples/06_NamesControlCell.csv");
+        Reader beanMapReader = new FileReader("examples/06_BeanMapOverride.xml")) {
+            final BeanMap overrideBeanMap = BeanMap.ofXml(beanMapReader);
+            final Schema parseSchema = Schema.ofXml(schemaReader);
+            BeanMap beanMap = BeanMap.ofSchema(parseSchema, overrideBeanMap);
+            Text2BeanConverter converter = new Text2BeanConverter(parseSchema, beanMap);
+            converter.getComposeConfig().setOnUndefinedLineType(ValidationAction.OMIT_LINE);
+            RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
+            converter.convert(fileReader, beanEventListener);
+            List<TstPerson> people = beanEventListener.getBeans();
+
+            assertEquals(2, people.size());
+            assertEquals("Erik", people.get(0).getFirstName());
+            assertEquals("Svensson", people.get(0).getLastName());
+            assertEquals(TstGender.M, people.get(0).getGender());
+
+            assertEquals("Fredrik", people.get(1).getFirstName());
+            assertEquals("Larsson", people.get(1).getLastName());
+        }
     }
 
 

@@ -1,8 +1,9 @@
-package org.jsapar.parse;
+package org.jsapar.parse.line;
 
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ValidationAction;
+import org.jsapar.parse.LineParseException;
 
 /**
  * Internal utility class for handling validation error.

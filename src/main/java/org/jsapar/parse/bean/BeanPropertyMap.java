@@ -22,21 +22,29 @@ public class BeanPropertyMap {
     private BeanInfo beanInfo;
     private Class lineClass;
 
+    private BeanPropertyMap(String lineType) {
+        this.lineType = lineType;
+    }
+
     private BeanPropertyMap(String lineType, Class lineClass) throws IntrospectionException {
         this.lineType = lineType;
         this.beanInfo = Introspector.getBeanInfo(lineClass);
         this.lineClass = lineClass;
     }
 
+    boolean ignoreLine(){
+        return lineClass == null;
+    }
+
     public String getLineType() {
         return lineType;
     }
 
-    public Collection<Bean2Cell> getBean2Cells() {
+    Collection<Bean2Cell> getBean2Cells() {
         return bean2CellByProperty.values();
     }
 
-    public Bean2Cell getBean2CellByProperty(String propertyName){
+    private Bean2Cell getBean2CellByProperty(String propertyName){
         return bean2CellByProperty.get(propertyName);
     }
 
@@ -49,7 +57,23 @@ public class BeanPropertyMap {
         return lineClass.newInstance();
     }
 
-    public static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine) throws BeanException {
+    static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine, BeanPropertyMap overrideValues) {
+        try {
+            if(overrideValues.ignoreLine())
+                return overrideValues;
+
+            Map<String, String> cellNamesOfProperty = new HashMap<>(
+                    schemaLine.stream().collect(Collectors.toMap(SchemaCell::getName, SchemaCell::getName)));
+            overrideValues.bean2CellByCellName
+                    .forEach((key, value) -> cellNamesOfProperty.put(value.getPropertyDescriptor().getName(), key));
+
+            return ofPropertyNames(overrideValues.getLineClass().getName(), schemaLine.getLineType(), cellNamesOfProperty);
+        } catch (ClassNotFoundException |IntrospectionException e) {
+            throw new BeanException("Failed to create bean mapping based on schema", e);
+        }
+    }
+
+    static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine) throws BeanException {
         try {
             return ofPropertyNames(schemaLine.getLineType(), schemaLine.getLineType(), schemaLine.stream().collect(Collectors.toMap(SchemaCell::getName, SchemaCell::getName)));
         } catch (ClassNotFoundException |IntrospectionException e) {
@@ -57,7 +81,11 @@ public class BeanPropertyMap {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static BeanPropertyMap ofPropertyNames(String className, String lineType, Map<String, String> cellNamesOfProperty) throws ClassNotFoundException, IntrospectionException{
+        if(className==null || className.isEmpty()){
+            return new BeanPropertyMap(lineType);
+        }
         Class lineClass = Class.forName(className);
         BeanPropertyMap beanPropertyMap = new BeanPropertyMap(lineType, lineClass);
 
@@ -123,9 +151,8 @@ public class BeanPropertyMap {
         putBean2Cell(propertyName, bean2Cell.getCellName(), bean2Cell);
     }
 
-    public Class getLineClass() {
+    Class getLineClass() {
         return lineClass;
     }
-
 
 }
