@@ -23,8 +23,10 @@ public interface BeanFactory<T> {
      * @throws IllegalAccessException In case a setter method is not publicly accessible.
      * @throws InstantiationException If it was not possible to instantiate a bean.
      * @throws ClassCastException     In case an illegal cast is done while trying to use a setter.
+     * @throws NoSuchMethodException  In case there is no public default constructor
+     * @throws InvocationTargetException In case there was an exception while calling the default constructor.
      */
-    T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException;
+    T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException, NoSuchMethodException, InvocationTargetException;
 
 
     /** Should assign the value of the specified cell to the proper bean property.

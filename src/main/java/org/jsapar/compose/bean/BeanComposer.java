@@ -76,7 +76,7 @@ public class BeanComposer<T> implements Composer, BeanEventListener<T>, ErrorEve
             } else {
                 assign(line, bean);
             }
-        } catch (InstantiationException e) {
+        } catch (InstantiationException|NoSuchMethodException|InvocationTargetException e) {
             generateErrorEvent(line, "Failed to instantiate object. Skipped creating bean", e);
         } catch (IllegalAccessException e) {
             generateErrorEvent(line, "Failed to call set method. Skipped creating bean", e);

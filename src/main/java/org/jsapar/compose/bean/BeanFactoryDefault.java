@@ -22,9 +22,10 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException {
+    public T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException, NoSuchMethodException, InvocationTargetException {
         Class<?> c = Class.forName(line.getLineType());
-        return (T) c.newInstance();
+
+        return (T) c.getConstructor().newInstance();
     }
 
     @Override
