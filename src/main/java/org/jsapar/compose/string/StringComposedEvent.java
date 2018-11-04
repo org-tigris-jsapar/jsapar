@@ -10,7 +10,7 @@ public class StringComposedEvent {
     private final Stream<String> line;
     private final long lineNumber;
 
-    public StringComposedEvent(String lineType, long lineNumber, Stream<String> line) {
+    StringComposedEvent(String lineType, long lineNumber, Stream<String> line) {
         this.lineType = lineType;
         this.lineNumber = lineNumber;
         this.line = line;
