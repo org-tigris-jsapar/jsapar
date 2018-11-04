@@ -6,6 +6,8 @@ import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.parse.*;
 import org.jsapar.parse.cell.CellParser;
+import org.jsapar.parse.line.LineDecoratorErrorEventListener;
+import org.jsapar.parse.line.ValidationHandler;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
@@ -19,13 +21,13 @@ import java.util.stream.Collectors;
  */
 class CsvLineParser {
 
-    private static final String EMPTY_STRING = "";
-    private CsvSchemaLine   lineSchema;
-    private List<CellParser<CsvSchemaCell>> cellParsers;
-    private TextParseConfig config;
-    private long              usedCount         = 0L;
-    private ValidationHandler validationHandler = new ValidationHandler();
-    private LineDecoratorErrorEventListener lineDecoratorErrorEventListener = new LineDecoratorErrorEventListener();
+    private static final String                          EMPTY_STRING                    = "";
+    private              CsvSchemaLine                   lineSchema;
+    private              List<CellParser<CsvSchemaCell>> cellParsers;
+    private              TextParseConfig                 config;
+    private              long                            usedCount                       = 0L;
+    private              ValidationHandler               validationHandler               = new ValidationHandler();
+    private              LineDecoratorErrorEventListener lineDecoratorErrorEventListener = new LineDecoratorErrorEventListener();
     /**
      * Creates a csv line parser with the given line schema.
      *

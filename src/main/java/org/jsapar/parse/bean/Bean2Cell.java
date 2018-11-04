@@ -33,7 +33,7 @@ public class Bean2Cell {
         this.propertyDescriptor = propertyDescriptor;
     }
 
-    public static Bean2Cell ofCellName(String cellName, PropertyDescriptor propertyDescriptor) {
+    static Bean2Cell ofCellName(String cellName, PropertyDescriptor propertyDescriptor) {
         Bean2Cell bean2Cell = new Bean2Cell(cellName, propertyDescriptor);
         // Prepare best way to create cell depending on return type
         bean2Cell.cellCreator = bean2Cell.makeCellCreator();
@@ -52,15 +52,15 @@ public class Bean2Cell {
         return bean2Cell;
     }
 
-    public String getCellName() {
+    String getCellName() {
         return cellName;
     }
 
-    public BeanPropertyMap getChildren() {
+    BeanPropertyMap getChildren() {
         return children;
     }
 
-    public PropertyDescriptor getPropertyDescriptor() {
+    PropertyDescriptor getPropertyDescriptor() {
         return propertyDescriptor;
     }
 

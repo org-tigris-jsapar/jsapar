@@ -1,19 +1,12 @@
 package org.jsapar;
 
 import org.jsapar.compose.ComposeException;
-import org.jsapar.compose.bean.BeanComposeConfig;
-import org.jsapar.compose.bean.BeanComposer;
-import org.jsapar.compose.bean.BeanFactory;
-import org.jsapar.compose.bean.RecordingBeanEventListener;
-import org.jsapar.error.ErrorEventListener;
+import org.jsapar.compose.bean.*;
 import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.model.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.*;
 
@@ -31,6 +24,14 @@ public class BeanComposerTest {
 
     @After
     public void tearDown() {
+    }
+
+    @Test
+    public void testBeanComposerConfig() {
+        BeanComposeConfig config = new BeanComposeConfig();
+        BeanComposer<TstPerson> beanComposer = new BeanComposer<>(config);
+        assertSame(config, beanComposer.getConfig());
+        assertEquals(BeanFactoryDefault.class, beanComposer.getBeanFactory().getClass());
     }
 
     @SuppressWarnings("unchecked")
@@ -120,15 +121,13 @@ public class BeanComposerTest {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new IntegerCell("firstName", 1234));
-        
 
         document.addLine(line1);
 
         BeanComposer<TstPerson> composer = new BeanComposer<>();
-        RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
-        composer.setComposedEventListener(beanEventListener);
+        composer.setComposedEventListener(event -> {});
         composer.compose(document);
-        beanEventListener.getBeans();
+        fail("Should throw exception");
     }
 
     /**

@@ -1,8 +1,5 @@
 package org.jsapar.compose.bean;
 
-import org.jsapar.compose.ComposeException;
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 
@@ -13,6 +10,7 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
     private static final String GET_PREFIX = "get";
     private static final String SET_PREFIX = "set";
 
+    @SuppressWarnings("WeakerAccess")
     public BeanFactoryDefault() {
     }
 
@@ -22,9 +20,9 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException {
+    public T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException, NoSuchMethodException, InvocationTargetException {
         Class<?> c = Class.forName(line.getLineType());
-        return (T) c.newInstance();
+        return (T) c.getConstructor().newInstance();
     }
 
     @Override
@@ -60,15 +58,9 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
 
     /**
      * This implementation uses reflection methods to assign correct object.
-     * @param parentBean
-     * @param childBeanName
-     * @return
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws NoSuchMethodException
-     * @throws SecurityException
-     * @throws IllegalArgumentException
-     * @throws InvocationTargetException
+     * @param parentBean The parent to create child of
+     * @param childBeanName The name of the child property.
+     * @return A newly created instance of the child bean
      */
     private Object findOrCreateChildBean(Object parentBean, String childBeanName) throws InstantiationException,
             IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException,
@@ -79,7 +71,7 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
         if (childBean == null) {
             // If there was no object we have to create it..
             Class<?> nextClass = getterMethod.getReturnType();
-            childBean = nextClass.newInstance();
+            childBean = nextClass.getConstructor().newInstance();
             // And assign it by using the setter.
             String setterMethodName = createSetMethodName(childBeanName);
             parentBean.getClass().getMethod(setterMethodName, nextClass).invoke(parentBean, childBean);
@@ -115,22 +107,11 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
         return prefix + sAttributeName.substring(0, 1).toUpperCase() + sAttributeName.substring(1);
     }
 
-    private void generateErrorEvent(Cell cell, String message, Throwable t, ErrorEventListener errorEventListener) {
-        errorEventListener.errorEvent(new ErrorEvent(this, new ComposeException(message + " while handling cell " + cell, t)));
-    }
-
-    private void generateErrorEvent(Cell cell, String message, ErrorEventListener errorEventListener) {
-        errorEventListener.errorEvent(new ErrorEvent(this, new ComposeException(message + " while handling cell " + cell)));
-    }
-
-
-
     /**
      * Assigns an attribute value to supplied object.
      *  @param cell           The cell to get the value from
      * @param sName          The name of the field
      * @param objectToAssign The object to assign to
-     * @throws BeanComposeException
      */
     private void assignAttribute(Cell cell, String sName, Object objectToAssign) throws BeanComposeException, InvocationTargetException, IllegalAccessException {
         if (cell.isEmpty())
@@ -173,13 +154,13 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
      * Assigns the cells of a line as attributes to an object.
      *
      * @param objectToAssign The object to assign cell attributes to. The object will be modified.
-     * @param sSetMethodName
+     * @param sSetMethodName The name of the setter
      * @param cell           The cell to get the parameter from.
      * @param <B>            The type of the object to assign
      * @throws InvocationTargetException if the underlying method throws an exception.
      * @throws IllegalAccessException if this Method object is enforcing Java language access control and the underlying method is inaccessible.
      * @throws IllegalArgumentException if the method is an instance method and the specified object argument is not an instance of the class or interface declaring the underlying method (or of a subclass or implementor thereof); if the number of actual and formal parameters differ; if an unwrapping conversion for primitive arguments fails; or if, after possible unwrapping, a parameter value cannot be converted to the corresponding formal parameter type by a method invocation conversion.
-     * @throws BeanComposeException
+     * @throws BeanComposeException In case of unable to create or assign bean.
      */
     @SuppressWarnings("unchecked")
     private <B> void assignParameterByName(B objectToAssign, String sSetMethodName, Cell cell)

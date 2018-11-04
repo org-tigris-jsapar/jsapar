@@ -4,7 +4,7 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.parse.ValidationHandler;
+import org.jsapar.parse.line.ValidationHandler;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.schema.FixedWidthSchema;

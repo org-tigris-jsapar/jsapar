@@ -35,7 +35,9 @@ public class Text2BeanConverter<T> extends AbstractConverter {
      * @param parseSchema The schema to use while reading the text input.
      * @param beanMap     The bean map to use to map schema names to bean properties. By supplying a {@link BeanMap} instance to the constructor you can map
      * different line and cell names to property names. {@link BeanMap} instance can be created form an xml input by using
-     * the {@link BeanMap#ofXml(Reader)} method.
+     * the {@link BeanMap#ofXml(Reader)} method. This {@link BeanMap} instance will be used as is so it needs to contain
+     * mapping for all values that should be assigned to the bean instances. If you want to use a {@link BeanMap} that is created
+     *                    from a combination of the schema and an additional override {@link BeanMap} you can use the method {@link BeanMap#ofSchema(Schema, BeanMap)} to create such combined instance.
      */
     public Text2BeanConverter(Schema parseSchema, BeanMap beanMap) {
         this.parseSchema = parseSchema;
