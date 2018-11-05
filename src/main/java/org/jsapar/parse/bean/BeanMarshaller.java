@@ -70,8 +70,9 @@ public class BeanMarshaller<T>  {
                         continue;
                     // Recursively add sub classes.
                     this.marshal(line, subObject, children, errorListener);
-                } else
+                } else {
                     line.addCell(bean2Cell.makeCell(object));
+                }
             } catch (IllegalArgumentException e) {
                 handleCellError(errorListener, bean2Cell.getCellName(), object, line, "Illegal argument in getter method.");
             } catch (IllegalAccessException e) {
