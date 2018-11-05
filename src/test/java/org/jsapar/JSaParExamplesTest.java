@@ -259,6 +259,7 @@ public class JSaParExamplesTest {
             throws IOException, JSaParException {
 
         File outFile = new File("examples/02_Names_out.txt");
+        outFile.delete();
         try (Reader inSchemaReader = new FileReader("examples/01_CsvSchema.xml");
              Reader outSchemaReader = new FileReader("examples/02_FixedWidthSchema.xml");
              Reader inReader = new FileReader("examples/01_Names.csv");
@@ -267,6 +268,20 @@ public class JSaParExamplesTest {
                     Schema.ofXml(outSchemaReader));
             converter.convert(inReader, outWriter);
         }
+
+        Assert.assertTrue(outFile.isFile());
+    }
+
+    @Test
+    public final void testConvert01_02_usingMain()
+            throws IOException, JSaParException {
+
+        final String outFileName = "examples/02_Names_out.txt";
+        File outFile = new File(outFileName);
+        outFile.delete();
+        Text2TextConverter
+                .main(new String[] { "-in.file", "examples/01_Names.csv", "-out.file", outFileName, "-in.schema",
+                        "examples/01_CsvSchema.xml", "-out.schema", "examples/02_FixedWidthSchema.xml" });
 
         Assert.assertTrue(outFile.isFile());
     }

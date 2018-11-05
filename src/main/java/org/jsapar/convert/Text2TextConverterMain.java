@@ -45,15 +45,15 @@ public class Text2TextConverterMain {
                     .loadSchemaFromXmlFile(new File(properties.getProperty("out.schema")));
 
             String inFileName = properties.getProperty("in.file");
-            String inFileEncoding = properties.getProperty("in.file.encoding", null);
+            String inFileEncoding = properties.getProperty("in.file.encoding", Charset.defaultCharset().name());
 
-            String outFileEncoding = properties.getProperty("out.file.encoding", null);
+            String outFileEncoding = properties.getProperty("out.file.encoding", Charset.defaultCharset().name());
             String outFileName = properties.getProperty("out.file", inFileName + ".out");
 
             try (Reader inputFileReader = new InputStreamReader(
-                    new FileInputStream(inFileName), inFileEncoding != null ? inFileEncoding : Charset.defaultCharset().name());
+                    new FileInputStream(inFileName), inFileEncoding );
                  Writer writer = new OutputStreamWriter(
-                         new FileOutputStream(outFileName), outFileEncoding != null ? outFileEncoding : Charset.defaultCharset().name())) {
+                         new FileOutputStream(outFileName), outFileEncoding )) {
                 Text2TextConverter converter = makeConverter(inputSchema, outputSchema);
                 RecordingErrorEventListener errorEventListener = new RecordingErrorEventListener();
                 converter.setErrorEventListener(errorEventListener);
