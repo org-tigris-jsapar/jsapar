@@ -6,23 +6,32 @@ import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 
 public class DocumentTest {
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown()  {
     }
 
     @Test
     public void testDocument() {
         Document d = new Document();
         assertNotNull(d.getLines());
+        assertEquals(0, d.size());
+    }
+
+    @Test
+    public void testDocument_int() {
+        Document d = new Document(8);
+        assertNotNull(d.getLines());
+        assertTrue(d.isEmpty());
         assertEquals(0, d.size());
     }
 
@@ -89,6 +98,26 @@ public class DocumentTest {
         Line line = new Line("");
         d.addLine(line);
         assertFalse(d.isEmpty());
+    }
+
+    @Test
+    public void testStream() {
+        Document d = new Document();
+        d.stream().forEach(l->fail("Should never get here"));
+        Line line = new Line("test line");
+        d.addLine(line);
+        AtomicInteger count = new AtomicInteger(0);
+        d.stream().forEach(l->{assertSame(line, l); count.incrementAndGet();});
+        assertEquals(1, count.get());
+    }
+
+    @Test
+    public void testToString() {
+        Document d = new Document();
+        assertEquals("Document {}", d.toString());
+        Line line = new Line("test line");
+        d.addLine(line);
+        assertEquals("Document {Line type=[test line] {}}", d.toString());
     }
 
     @Test

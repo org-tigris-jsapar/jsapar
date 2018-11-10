@@ -5,6 +5,7 @@ import org.jsapar.parse.CellParseException;
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -200,18 +201,19 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder("Line");
         if (this.lineType != null && this.lineType.length() > 0) {
-            sb.append("Line type=[");
+            sb.append(" type=[");
             sb.append(this.lineType);
             sb.append("]");
         }
         if (this.getLineNumber() > 0) {
-            sb.append(" Line number=");
+            sb.append(" number=");
             sb.append(this.lineNumber);
         }
-        sb.append(" Cells: ");
-        sb.append(this.cells.values());
+        sb.append(" {");
+        sb.append(stream().map(Cell::toString).collect(Collectors.joining(", ")));
+        sb.append("}");
         return sb.toString();
     }
 

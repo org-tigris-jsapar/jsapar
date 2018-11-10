@@ -1,6 +1,3 @@
-/** 
- * Copyright: Jonas Stenberg
- */
 package org.jsapar.model;
 
 /**
@@ -50,8 +47,8 @@ public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
      */
     @Override
     public int compareTo(IntegerCell right){
-    	Long leftValue = this.getValue().longValue();
-    	Long rightValue = right.getValue().longValue();
+    	final Long leftValue = this.getValue().longValue();
+    	final Long rightValue = right.getValue().longValue();
     	return leftValue.compareTo(rightValue);
     }
 
