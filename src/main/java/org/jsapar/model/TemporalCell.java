@@ -4,7 +4,7 @@ import java.time.temporal.Temporal;
 
 /**
  */
-public abstract class TemporalCell<T extends Temporal> extends Cell<T>{
+public abstract class TemporalCell<T extends Temporal> extends AbstractCell<T>{
 
     /**
      * Creates a cell with a name.

@@ -4,7 +4,7 @@ package org.jsapar.model;
  * This class is a special case where an empty value has been parsed from a source. It can be used as a type independent
  * placeholder of an empty value.
  */
-public class EmptyCell extends Cell<String> {
+public class EmptyCell extends AbstractCell<String> {
     /**
      *
      */

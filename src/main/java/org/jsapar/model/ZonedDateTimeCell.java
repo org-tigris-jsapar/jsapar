@@ -4,7 +4,7 @@ import java.time.ZonedDateTime;
 
 /**
  */
-public class ZonedDateTimeCell extends TemporalCell<ZonedDateTime>{
+public class ZonedDateTimeCell extends TemporalCell<ZonedDateTime> {
 
     /**
      * Creates a cell with a name and value.

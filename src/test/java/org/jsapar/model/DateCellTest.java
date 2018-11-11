@@ -6,6 +6,7 @@ package org.jsapar.model;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -46,6 +47,12 @@ public class DateCellTest {
         assertEquals(now, cell.getValue());
     }
 
+    @Test
+    public final void testDateCellIso() throws ParseException {
+        DateCell cell = new DateCell("Name", "2018-11-11 12:53:45.123 +0200");
+        assertEquals("Name", cell.getName());
+        assertEquals(DateCell.ISO_DATE_FORMAT.parse("2018-11-11 12:53:45.123 +0200"), cell.getValue());
+    }
     @Test
     public void testGetSetDateValue() throws Exception {
         Date date = new Date();

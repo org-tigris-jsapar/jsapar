@@ -40,8 +40,8 @@ public class DateCellFactoryTest {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         DateCell cell = (DateCell) cellFactory.makeCell("Name", "2007-10-01 14:13", format);
 
-        assertTrue(cell.getStringValue().startsWith("Mon Oct 01 14:13:00 "));
-        assertTrue(cell.getStringValue().endsWith(" 2007"));
+        // Compare without the zone part
+        assertEquals("2007-10-01 14:13:00.000", cell.getStringValue().substring(0, 23));
     }
 
 }

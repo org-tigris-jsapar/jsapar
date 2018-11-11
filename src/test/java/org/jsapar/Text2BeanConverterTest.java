@@ -63,6 +63,7 @@ public class Text2BeanConverterTest {
 
             @Override
             public void assignCellToBean(String lineType, TstPerson bean, Cell cell) {
+                // Just convert to upper case and assign.
                 switch(cell.getName()){
                     case "firstName":
                         bean.setFirstName(cell.getStringValue().toUpperCase());

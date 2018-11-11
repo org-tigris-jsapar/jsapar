@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 /**
  */
-public class LocalDateTimeCell extends TemporalCell<LocalDateTime>{
+public class LocalDateTimeCell extends TemporalCell<LocalDateTime> {
 
     /**
      * Creates a cell with a name and value.

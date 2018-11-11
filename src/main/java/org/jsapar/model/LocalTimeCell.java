@@ -4,7 +4,7 @@ import java.time.LocalTime;
 
 /**
  */
-public class LocalTimeCell extends TemporalCell<LocalTime>{
+public class LocalTimeCell extends TemporalCell<LocalTime> implements ComparableCell<LocalTime>{
 
     /**
      * Creates a cell with a name and value.
@@ -14,11 +14,6 @@ public class LocalTimeCell extends TemporalCell<LocalTime>{
      */
     public LocalTimeCell(String name, LocalTime value) {
         super(name, value, CellType.LOCAL_TIME);
-    }
-
-    @Override
-    public int compareValueTo(Cell<LocalTime> right) {
-        return this.getValue().compareTo(right.getValue());
     }
 
     public static Cell emptyOf(String name) {

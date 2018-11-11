@@ -4,7 +4,7 @@ package org.jsapar.model;
  * {@link Cell} implementation carrying a character value of a cell.
  *
  */
-public class CharacterCell extends ComparableCell<Character> {
+public class CharacterCell extends AbstractCell<Character> implements ComparableCell<Character> {
 
     /**
      * 

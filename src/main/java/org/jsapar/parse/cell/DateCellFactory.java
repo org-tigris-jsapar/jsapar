@@ -15,7 +15,7 @@ import java.util.Locale;
 public class
 DateCellFactory implements CellFactory {
 
-    private static final SimpleDateFormat ISO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
+    private static final SimpleDateFormat ISO_DATE_FORMAT = DateCell.ISO_DATE_FORMAT;
 
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
