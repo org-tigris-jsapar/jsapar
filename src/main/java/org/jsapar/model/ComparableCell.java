@@ -2,7 +2,7 @@ package org.jsapar.model;
 
 /**
  */
-public interface ComparableCell<T extends Comparable<T>> extends Cell<T>, Comparable<ComparableCell<T> > {
+public interface ComparableCell<T extends Comparable<? super T>> extends Cell<T>, Comparable<ComparableCell<T> > {
 
 
     @Override

@@ -4,7 +4,7 @@ import java.time.temporal.Temporal;
 
 /**
  */
-public abstract class TemporalCell<T extends Temporal> extends AbstractCell<T>{
+abstract class TemporalCell<T extends Temporal> extends AbstractCell<T> {
 
     /**
      * Creates a cell with a name.
@@ -13,7 +13,7 @@ public abstract class TemporalCell<T extends Temporal> extends AbstractCell<T>{
      * @param value    The value of the cell.
      * @param cellType The type of the cell.
      */
-    public TemporalCell(String name, T value, CellType cellType) {
+    TemporalCell(String name, T value, CellType cellType) {
         super(name, value, cellType);
     }
 }
