@@ -187,6 +187,7 @@ public class CellParser<S extends SchemaCell> {
     /**
      * Creates cell parser according to supplied schema and with cache disabled.
      * @param schemaCell The schema to use.
+     * @return A {@link CellParser} instance to use for parsing supplied schemaCell.
      */
     public static <S extends SchemaCell> CellParser<S> ofSchemaCell(S schemaCell) {
         return new CellParser<>(schemaCell, 0);

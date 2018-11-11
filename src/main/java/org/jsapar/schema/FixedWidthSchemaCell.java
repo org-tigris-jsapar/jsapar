@@ -165,20 +165,10 @@ public class FixedWidthSchemaCell extends SchemaCell {
             this.alignment = Alignment.LEFT;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.jsapar.schema.SchemaCell#clone()
-     */
     public FixedWidthSchemaCell clone(){
         return (FixedWidthSchemaCell) super.clone();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.schema.SchemaCell#toString()
-     */
     @Override
     public String toString() {
         return super.toString() +
