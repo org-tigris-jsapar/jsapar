@@ -22,7 +22,7 @@ public class ComparableCell<T extends Comparable<T>> extends Cell<T> implements 
 
     @Override
     public int compareTo(ComparableCell<T> right) {
-        return this.getValue().compareTo(right.getValue());
+        return this.compareValueTo(right);
     }
 
 }

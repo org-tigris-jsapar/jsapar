@@ -52,6 +52,13 @@ public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
     	return leftValue.compareTo(rightValue);
     }
 
+    @Override
+    public int compareValueTo(Cell<Number> right) {
+        if(right instanceof IntegerCell)
+            return Integer.compare(getValue().intValue(), right.getValue().intValue());
+        return super.compareValueTo(right);
+    }
+
     /**
      * @param name The name of the empty cell.
      * @return A new Empty cell of supplied name.

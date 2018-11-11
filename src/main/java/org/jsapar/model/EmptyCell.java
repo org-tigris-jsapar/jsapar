@@ -1,7 +1,5 @@
 package org.jsapar.model;
 
-import java.text.Format;
-
 /**
  * This class is a special case where an empty value has been parsed from a source. It can be used as a type independent
  * placeholder of an empty value.
@@ -28,7 +26,7 @@ public class EmptyCell extends Cell<String> {
 
     @Override
     public int compareValueTo(Cell<String> right) {
-        return 0;
+        return STRING_VALUE.compareTo(right.getValue());
     }
 
     /**

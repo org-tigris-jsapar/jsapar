@@ -154,9 +154,36 @@ public class LineUtilsTest {
         line.addCell(new EmptyCell("empty", CellType.FLOAT));
         assertEquals(3.14159265358979D, LineUtils.getNumberCellValue(line,"Value").orElse( -1.0).doubleValue(), 0.0000000001);
         assertEquals(3.14159265358979D, LineUtils.getDoubleCellValue(line,"Value", 2.71D), 0.0000000001);
+        assertEquals(3.14159265358979D, LineUtils.getDoubleCellValue(line,"Value").orElse(2.71D), 0.0000000001);
         assertEquals(2.718D, LineUtils.getDoubleCellValue(line,"empty", 2.718D), 0.0000000001);
     }
 
+    @Test(expected=NumberFormatException.class)
+    public void testGetDoubleCellValue_not_parsable() {
+        Line line = new Line("TestLine");
+        LineUtils.setStringCellValue(line,"aStringValue", "seventeen");
+
+        LineUtils.getDoubleCellValue(line,"aStringValue");
+        Assert.fail("Should throw exception");
+    }
+
+    @Test(expected=NumberFormatException.class)
+    public void testGetDecimalCellValue_not_parsable() {
+        Line line = new Line("TestLine");
+        LineUtils.setStringCellValue(line,"aStringValue", "seventeen");
+
+        LineUtils.getDecimalCellValue(line,"aStringValue");
+        Assert.fail("Should throw exception");
+    }
+
+    @Test(expected=NumberFormatException.class)
+    public void testGetBigIntegerCellValue_not_parsable() {
+        Line line = new Line("TestLine");
+        LineUtils.setStringCellValue(line,"aStringValue", "seventeen");
+
+        LineUtils.getBigIntegerCellValue(line,"aStringValue");
+        Assert.fail("Should throw exception");
+    }
 
     @Test
     public void testGetSetDecimalCellValue() {

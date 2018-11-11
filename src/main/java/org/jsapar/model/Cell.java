@@ -29,7 +29,7 @@ public abstract class Cell<T> implements Serializable {
     /**
      * Since all members are final, we can cache the hash code when needed.
      */
-    private volatile int hashCode = 0;
+    private volatile int hashCode = Integer.MIN_VALUE;
 
     /**
      * Creates a cell with a name.
@@ -121,7 +121,7 @@ public abstract class Cell<T> implements Serializable {
     @Override
     public int hashCode() {
         // Since all members are final, we can cache the hash code.
-        if(this.hashCode == 0){
+        if(this.hashCode == Integer.MIN_VALUE){
             this.hashCode = Objects.hash(value, name, cellType);
         }
         return this.hashCode;

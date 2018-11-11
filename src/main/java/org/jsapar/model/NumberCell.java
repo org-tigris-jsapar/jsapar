@@ -30,20 +30,8 @@ public abstract class NumberCell extends Cell<Number> {
         if(right instanceof BigDecimalCell){
             return -right.compareValueTo(this);
         }
-        if(right instanceof NumberCell){
-            Number nRight = right.getValue();
-            double dLeft = getValue().doubleValue();
-            double dRight = nRight.doubleValue();
-            if(dLeft < dRight)
-                return -1;
-            else if(dLeft > dRight)
-                return 1;
-            else
-                return 0;
-        }
-        else{
-            throw new IllegalArgumentException("Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType());
-        }
+        assert right instanceof NumberCell : "Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType();
+        return Double.compare(getValue().doubleValue(), right.getValue().doubleValue());
     }
 
 }
