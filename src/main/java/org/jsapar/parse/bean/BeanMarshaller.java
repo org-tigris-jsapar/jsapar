@@ -38,8 +38,8 @@ public class BeanMarshaller<T>  {
      * Builds a {@link Line} object according to the getter fields of the bean. Each cell in the line will
      * be named according to the property name defined in the current {@link BeanMap}. If not stated otherwise this will
      * be the java bean attribute name. This means that if there is a member
-     * method called <tt>getStreetAddress()</tt>, the name of the cell will be
-     * <tt>streetAddress</tt>. Only properties defined in the current {@link BeanMap} will be added to the created line.
+     * method called <code>getStreetAddress()</code>, the name of the cell will be
+     * <code>streetAddress</code>. Only properties defined in the current {@link BeanMap} will be added to the created line.
      *
      * @param bean       The bean.
      * @param errorListener The error listener to which error events are propagated.

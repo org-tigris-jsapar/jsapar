@@ -197,6 +197,7 @@ public class CellParser<S extends SchemaCell> {
      * Creates cell parser according to supplied schema and with a maximum cache size.
      * @param schemaCell The schema to use.
      * @param maxCacheSize The maximum number of cells to keep in cache while parsing. The value 0 will disable cache.
+     * @return A {@link CellParser} instance to use for parsing supplied schemaCell.
      */
     public static <S extends SchemaCell> CellParser<S> ofSchemaCell(S schemaCell, int maxCacheSize) {
         return new CellParser<>(schemaCell, maxCacheSize);

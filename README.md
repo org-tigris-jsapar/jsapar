@@ -7,6 +7,7 @@
 [![Java 8](https://img.shields.io/badge/java-8-brightgreen.svg)](#java-8)
 [![Java 9-ea](https://img.shields.io/badge/java-9-brightgreen.svg)](#java-9)
 [![Java 10-ea](https://img.shields.io/badge/java-10-brightgreen.svg)](#java-10)
+[![Java 10-ea](https://img.shields.io/badge/java-11-brightgreen.svg)](#java-11)
 # jsapar
 **JSaPar** stands for  **J**ava **S**chem**a** based **Par**ser
 
