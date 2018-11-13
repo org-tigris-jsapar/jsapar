@@ -14,6 +14,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Locale;
@@ -603,11 +604,12 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
             throws UncheckedIOException, SchemaException{
         if (resourceBaseClass == null)
             resourceBaseClass = Xml2SchemaBuilder.class;
-        try (InputStream is = resourceBaseClass.getResourceAsStream(resourceName)) {
-            if (is == null) {
-                throw new IOException(
-                        "Failed to load resource [" + resourceName + "] from class " + resourceBaseClass.getName());
-            }
+        URL resource = resourceBaseClass.getResource(resourceName);
+        if (resource == null) {
+            throw new IllegalArgumentException(
+                    "Unable to get resource [" + resourceName + "] in package " + resourceBaseClass.getPackage().getName() + " - failed to load schema.");
+        }
+        try (InputStream is = resource.openStream()) {
             Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
             return schemaBuilder.build(new InputStreamReader(is, encoding));
         } catch (IOException e) {
