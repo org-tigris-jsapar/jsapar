@@ -6,7 +6,6 @@ import org.jsapar.parse.bean.BeanMap;
 import org.jsapar.parse.bean.BeanParseTask;
 import org.jsapar.schema.Schema;
 
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
@@ -41,10 +40,8 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * Creates a converter with supplied composer schema.
      *
      * @param composerSchema The schema to use while composing text output.
-     * @throws IntrospectionException If string names of properties could not be mapped to actual properties.
-     * @throws ClassNotFoundException In case any of the classes described in the schema does not exist in the classpath.
      */
-    public BeanCollection2TextConverter(Schema composerSchema) throws IntrospectionException, ClassNotFoundException {
+    public BeanCollection2TextConverter(Schema composerSchema) {
         this(composerSchema, BeanMap.ofSchema(composerSchema));
     }
 
@@ -78,10 +75,11 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * @param iterator The iterator to get beans from.
      * @param writer   The text writer to write text output to. Caller is responsible for closing the writer.
      * @throws IOException If there is an error writing text output.
+     * @return Number of actually composed lines.
      */
-    public void convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
+    public long convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
         ConvertTask convertTask = new ConvertTask(makeParseTask(iterator), makeComposer(writer));
-        execute(convertTask);
+        return execute(convertTask);
     }
 
     protected TextComposer makeComposer(Writer writer) {
