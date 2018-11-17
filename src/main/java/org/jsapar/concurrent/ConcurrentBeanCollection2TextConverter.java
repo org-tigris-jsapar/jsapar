@@ -33,8 +33,9 @@ public class ConcurrentBeanCollection2TextConverter<T> extends BeanCollection2Te
     }
 
     @Override
-    public void convert(Stream<? extends T> stream, Writer writer) throws IOException {
+    public long convert(Stream<? extends T> stream, Writer writer) throws IOException {
         execute(convertTaskFactory.makeConvertTask(makeParseTask(stream), makeComposer(writer)));
+        return 0;
     }
 
     @Override
