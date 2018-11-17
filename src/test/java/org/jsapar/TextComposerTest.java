@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 public class TextComposerTest {
@@ -53,6 +54,7 @@ public class TextComposerTest {
 
         Writer writer = new StringWriter();
         TextComposer composer = new TextComposer(schema, writer);
+        assertSame(schema, composer.getSchema());
         composer.compose(document);
 
         assertEquals(sExpected, writer.toString());

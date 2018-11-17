@@ -39,11 +39,17 @@ public class BeanCollection2TextConverterTest {
         BeanCollection2TextConverter<TstPerson> converter = new BeanCollection2TextConverter<>(schema);
         converter.convert(people, writer);
 
-        String result=writer.toString();
-        String[] resultLines = result.split(schema.getLineSeparator());
+        String result1=writer.toString();
+        String[] resultLines = result1.split(schema.getLineSeparator());
         //        System.out.println(result);
         assertEquals("Nils;Holgersson", resultLines[0]);
         assertEquals("Jonathan;Lionheart", resultLines[1]);
+
+        writer = new StringWriter();
+        converter.convert(people.iterator(), writer);
+
+        String result2=writer.toString();
+        assertEquals(result1, result2);
     }
 
 
