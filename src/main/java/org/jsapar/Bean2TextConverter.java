@@ -10,6 +10,8 @@ import org.jsapar.schema.Schema;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Converts from beans to text output. This implementation accepts beans pushed one by one to be converted. See
@@ -75,15 +77,17 @@ public class Bean2TextConverter<T> implements AutoCloseable{
      * Converts supplied bean into a text output. To be called once for each bean that should be written to the output.
      *
      * @param bean The bean to convert
+     * @return True if successfully composed an output line. False if no line was composed.
      */
-    public void convert(T bean) {
-        beanMarshaller.marshal(bean, errorEventListener, lineNumber++).ifPresent(line -> {
+    public boolean convert(T bean) {
+        return beanMarshaller.marshal(bean, errorEventListener, lineNumber++).map(line -> {
             for (LineManipulator manipulator : manipulators) {
                 if (!manipulator.manipulate(line))
-                    return;
+                    return false;
             }
             textComposer.composeLine(line);
-        });
+            return true;
+        }).orElse(false);
     }
 
     public void setErrorEventListener(ErrorEventListener errorEventListener) {

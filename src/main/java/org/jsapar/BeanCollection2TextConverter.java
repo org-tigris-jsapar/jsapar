@@ -66,9 +66,10 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * @param stream The stream to get beans from.
      * @param writer The text writer to write text output to. Caller is responsible for closing the writer.
      * @throws IOException If there is an error writing text output.
+     * @return Number of actually composed lines.
      */
-    public void convert(Stream<? extends T> stream, Writer writer) throws IOException {
-        execute(new ConvertTask(makeParseTask(stream), makeComposer(writer)));
+    public long convert(Stream<? extends T> stream, Writer writer) throws IOException {
+        return execute(new ConvertTask(makeParseTask(stream), makeComposer(writer)));
     }
 
     /**
@@ -102,8 +103,8 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * @param writer     The text writer to write text output to.
      * @throws IOException If there is an error writing text output.
      */
-    public void convert(Collection<? extends T> collection, Writer writer) throws IOException {
-        convert(collection.stream(), writer);
+    public long convert(Collection<? extends T> collection, Writer writer) throws IOException {
+        return convert(collection.stream(), writer);
     }
 
 }
