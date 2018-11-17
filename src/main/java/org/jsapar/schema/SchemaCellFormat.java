@@ -5,6 +5,7 @@ import org.jsapar.parse.cell.CellFactory;
 
 import java.text.Format;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Describes the format of a cell when converted to or from text, including what data type that the cell is expected
@@ -110,56 +111,19 @@ public class SchemaCellFormat implements Cloneable {
         return pattern;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((cellType == null) ? 0 : cellType.hashCode());
-        result = prime * result + ((format == null) ? 0 : format.hashCode());
-        result = prime * result + ((pattern == null) ? 0 : pattern.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SchemaCellFormat)) return false;
+        SchemaCellFormat that = (SchemaCellFormat) o;
+        return cellType == that.cellType &&
+                Objects.equals(format, that.format) &&
+                Objects.equals(pattern, that.pattern);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof SchemaCellFormat)) {
-            return false;
-        }
-        SchemaCellFormat other = (SchemaCellFormat) obj;
-        if (cellType == null) {
-            if (other.cellType != null) {
-                return false;
-            }
-        } else if (!cellType.equals(other.cellType)) {
-            return false;
-        }
-        if (format == null) {
-            if (other.format != null) {
-                return false;
-            }
-        } else if (!format.equals(other.format)) {
-            return false;
-        }
-        if (pattern == null) {
-            return other.pattern == null;
-        } else
-            return pattern.equals(other.pattern);
+    public int hashCode() {
+        return Objects.hash(cellType, format, pattern);
     }
 
     @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")

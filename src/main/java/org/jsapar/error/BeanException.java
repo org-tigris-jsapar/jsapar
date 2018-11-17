@@ -8,11 +8,4 @@ public class BeanException extends JSaParException {
         super(message, cause);
     }
 
-    public BeanException(Throwable cause) {
-        super(cause);
-    }
-
-    public BeanException(String message) {
-        super(message);
-    }
 }
