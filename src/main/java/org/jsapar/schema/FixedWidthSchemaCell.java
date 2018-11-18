@@ -53,7 +53,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
          * Fits supplied value to supplied length, cutting in the correct end.
          * @param writer The writer to write to
          * @param length The maximum number of characters to write.
-         * @param sValue The value to write.
+         * @param sValue The value to write. Needs to be longer than or equal to supplied length
          * @throws IOException If there is an error writing characters
          */
         public abstract void fit(Writer writer, int length, String sValue) throws IOException;
