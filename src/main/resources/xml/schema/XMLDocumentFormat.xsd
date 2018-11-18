@@ -13,15 +13,15 @@
             <xsd:element name="cell" type="jsp:Cell" minOccurs="0" maxOccurs="unbounded">
             </xsd:element>
         </xsd:sequence>
-        <xsd:attribute name="linetype" type="xsd:string"/>
+        <xsd:attribute name="linetype" type="xsd:string" use="required"/>
         <xsd:attribute name="number" type="xsd:long"/>
     </xsd:complexType>
 
     <xsd:complexType name="Cell">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
-                <xsd:attribute name="name" type="xsd:string"/>
-                <xsd:attribute name="type">
+                <xsd:attribute name="name" type="xsd:string" use="required"/>
+                <xsd:attribute name="type" default="string">
                     <xsd:simpleType>
                         <xsd:restriction base="xsd:string">
                             <xsd:enumeration value="string"/>

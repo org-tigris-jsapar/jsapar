@@ -75,7 +75,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
 
     private CellType makeCellType(String sXmlCellType) {
         if (sXmlCellType == null)
-            return null;
+            return CellType.STRING;
         return Enum.valueOf(CellType.class, sXmlCellType.toUpperCase());
     }
 
