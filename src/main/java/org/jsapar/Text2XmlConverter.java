@@ -22,7 +22,7 @@ public class Text2XmlConverter {
 
     /**
      * Creates a {@link Text2XmlConverter} that converts a text source into xml. The output xml will be according to
-     * jsapar standard defined in <a href="http://jsapar.tigris.org/XMLDocumentFormat/1.0">http://jsapar.tigris.org/XMLDocumentFormat/1.0</a> unless a {@link Transformer} is applied by calling {@link #setTransformer(Transformer)}. or
+     * jsapar standard defined in <a href="http://jsapar.tigris.org/XMLDocumentFormat/2.0">http://jsapar.tigris.org/XMLDocumentFormat/2.0</a> unless a {@link Transformer} is applied by calling {@link #setTransformer(Transformer)}. or
      * {@link #applyXslt(Reader, String)}
      * @param parseSchema The parsing schema to use.
      */
@@ -31,6 +31,9 @@ public class Text2XmlConverter {
         this.saxReader = new Text2SAXReader(textParser);
         try {
             this.transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
         } catch (TransformerConfigurationException e) {
             throw new JSaParException("Failed to create xml transformer", e);
         }

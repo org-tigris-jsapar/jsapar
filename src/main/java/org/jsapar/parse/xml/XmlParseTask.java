@@ -32,7 +32,7 @@ import java.io.Reader;
 import java.util.GregorianCalendar;
 
 /**
- * Parses xml text that conform to the schema http://jsapar.tigris.org/XMLDocumentFormat/1.0
+ * Parses xml text that conform to the schema http://jsapar.tigris.org/XMLDocumentFormat/2.0
  */
 public class XmlParseTask extends AbstractParseTask implements ParseTask {
     // private final static String SCHEMA_LANGUAGE =
@@ -74,7 +74,9 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
     }
 
     private CellType makeCellType(String sXmlCellType) {
-        return sXmlCellType==null ? null : Enum.valueOf(CellType.class, sXmlCellType.toUpperCase());
+        if (sXmlCellType == null)
+            return null;
+        return Enum.valueOf(CellType.class, sXmlCellType.toUpperCase());
     }
 
     private class JSaParSAXHandler extends org.xml.sax.helpers.DefaultHandler {
@@ -87,7 +89,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
         private ErrorEventListener errorEventListener;
         private long currentLineNumber = 1;
 
-        public JSaParSAXHandler(LineEventListener listener, ErrorEventListener errorEventListener) {
+        JSaParSAXHandler(LineEventListener listener, ErrorEventListener errorEventListener) {
             this.listener = listener;
             this.errorEventListener = errorEventListener;
         }
@@ -122,7 +124,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
          * java.lang.String, java.lang.String, org.xml.sax.Attributes)
          */
         @Override
-        public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
+        public void startElement(String uri, String localName, String name, Attributes attributes) {
 
             switch (localName) {
             case "cell":
@@ -134,7 +136,8 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
                 break;
             case "line":
                 this.currentLine = new Line(attributes.getValue("linetype"));
-                this.currentLine.setLineNumber(currentLineNumber);
+                String sLineNumber = attributes.getValue("number");
+                this.currentLine.setLineNumber(sLineNumber != null ? (Long.valueOf(sLineNumber)) : currentLineNumber);
                 this.currentLineNumber++;
                 break;
             case "document":
@@ -170,7 +173,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
          * Creates a date cell from a date string value.
          *
          * @param value The text value to make a date cell from.
-         * @throws DatatypeConfigurationException
+         * @throws DatatypeConfigurationException in case the string can not be parsed into a date.
          */
         private void makeDateCell(String value) throws DatatypeConfigurationException {
             XMLGregorianCalendar xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(value);
@@ -186,7 +189,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
          * )
          */
         @Override
-        public void error(SAXParseException e) throws SAXException {
+        public void error(SAXParseException e) {
             CellParseException error = new CellParseException(this.currentLineNumber, this.currentCellName, "", null,
                     e.getMessage());
             this.errorEventListener.errorEvent(new ErrorEvent(this, error));
@@ -199,7 +202,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
          * SAXParseException)
          */
         @Override
-        public void fatalError(SAXParseException e) throws SAXException {
+        public void fatalError(SAXParseException e) {
             CellParseException error = new CellParseException(this.currentLineNumber, this.currentCellName, "", null,
                     e.getMessage());
             this.errorEventListener.errorEvent(new ErrorEvent(this, error));
@@ -213,7 +216,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
          * )
          */
         @Override
-        public void warning(SAXParseException e) throws SAXException {
+        public void warning(SAXParseException e) {
             CellParseException error = new CellParseException(this.currentLineNumber, this.currentCellName, "", null,
                     e.getMessage());
             this.errorEventListener.errorEvent(new ErrorEvent(this, error));
