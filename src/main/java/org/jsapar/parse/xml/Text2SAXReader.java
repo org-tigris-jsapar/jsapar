@@ -15,6 +15,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
+ * Parses an input source and generates SAX events for each attribute or element.
  */
 public class Text2SAXReader implements XMLReader {
 
