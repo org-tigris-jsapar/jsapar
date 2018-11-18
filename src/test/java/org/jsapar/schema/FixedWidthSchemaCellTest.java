@@ -37,19 +37,6 @@ public class FixedWidthSchemaCellTest {
         assertTrue(schemaCell.getName() == clone.getName());
     }
 
-    @Test
-    public final void testAlignmentFit() throws IOException {
-        assertEquals("12345", applyFit(FixedWidthSchemaCell.Alignment.LEFT, 5, "123456789"));
-        assertEquals("56789", applyFit(FixedWidthSchemaCell.Alignment.RIGHT, 5, "123456789"));
-        assertEquals("34567", applyFit(FixedWidthSchemaCell.Alignment.CENTER, 5, "123456789"));
-
-    }
-
-    private String applyFit(FixedWidthSchemaCell.Alignment alignment, int length, String value) throws IOException {
-        StringWriter writer = new StringWriter();
-        alignment.fit(writer, length, value);
-        return writer.toString();
-    }
 
     @Test
     public void testSetGetLength() {

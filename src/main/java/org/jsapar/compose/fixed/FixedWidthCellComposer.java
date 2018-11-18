@@ -12,7 +12,7 @@ import java.io.Writer;
  */
 class FixedWidthCellComposer {
 
-    CellComposer cellComposer = new CellComposer();
+    private CellComposer cellComposer = new CellComposer();
     private Writer writer;
 
     FixedWidthCellComposer(Writer writer) {
@@ -25,7 +25,7 @@ class FixedWidthCellComposer {
      * @param cell
      *            The cell to write
      * @param schemaCell The schema of the cell
-     * @throws IOException
+     * @throws IOException If there is an error writing characters
      */
     void compose(Cell cell, FixedWidthSchemaCell schemaCell) throws IOException {
         String sValue = cellComposer.format(cell, schemaCell);
@@ -43,7 +43,7 @@ class FixedWidthCellComposer {
      *            The number of characters to write.
      * @param alignment
      *            The alignment of the cell content if the content is smaller than the cell length.
-     * @throws IOException
+     * @throws IOException If there is an error writing characters
      */
     private void compose(String sValue, char fillCharacter, int length, FixedWidthSchemaCell.Alignment alignment)
             throws IOException{
@@ -51,11 +51,32 @@ class FixedWidthCellComposer {
             writer.write(sValue);
         } else if (sValue.length() > length) {
             // If the cell value is larger than the cell length, we have to cut the value.
-            alignment.fit(writer, length, sValue);
+            fit(alignment, sValue, length);
         } else {
             // Otherwise use the alignment of the schema.
             int nToFill = length - sValue.length();
-            pad(alignment, writer, nToFill, sValue, fillCharacter);
+            pad(alignment, nToFill, sValue, fillCharacter);
+        }
+    }
+
+    /**
+     * Fits supplied value to supplied length, cutting in the correct end.
+     * @param alignment The alignment to use.
+     * @param sValue The value to write. Needs to be longer than or equal to supplied length
+     * @param length The maximum number of characters to write.
+     * @throws IOException If there is an error writing characters
+     */
+    private void fit(FixedWidthSchemaCell.Alignment alignment, String sValue, int length) throws IOException {
+        switch (alignment) {
+            case LEFT:
+                writer.write(sValue, 0, length);
+                break;
+            case CENTER:
+                writer.write(sValue, (sValue.length()-length)/2, length);
+                break;
+            case RIGHT:
+                writer.write(sValue, sValue.length() - length, length);
+                break;
         }
     }
 
@@ -63,14 +84,12 @@ class FixedWidthCellComposer {
      * Padds supplied value in the correct end with the supplied number of characters
      *
      * @param alignment How to allign the value of the cell.
-     * @param writer The writer to write to
      * @param nToFill Number of characters to fill
      * @param sValue The value to write
      * @param fillCharacter The fill character to use.
-     * @throws IOException
+     * @throws IOException If there is an error writing characters
      */
     private void pad(FixedWidthSchemaCell.Alignment alignment,
-                     Writer writer,
                      int nToFill,
                      String sValue,
                      char fillCharacter) throws IOException {
@@ -98,7 +117,7 @@ class FixedWidthCellComposer {
      * @param writer The writer to write to
      * @param ch The character to write
      * @param nSize Number of times to write the character
-     * @throws IOException
+     * @throws IOException If there is an error writing characters
      */
     static void fill(Writer writer, char ch, int nSize) throws IOException {
         for (int i = 0; i < nSize; i++) {
