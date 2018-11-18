@@ -25,7 +25,7 @@ public class Xml2TextConverterTest {
         schema.addSchemaLine(schemaLine);
         Xml2TextConverter converter = new Xml2TextConverter(schema);
         String xml = "<?xml version='1.0' encoding='UTF-8'?>" +
-                "<document xmlns='http://jsapar.tigris.org/XMLDocumentFormat/1.0'>" +
+                "<document xmlns='http://jsapar.tigris.org/XMLDocumentFormat/2.0'>" +
                 "  <line linetype='test-line'>" +
                 "    <cell name='c1' type='string'>Value 1:1</cell>" +
                 "    <cell name='c2' type='string'>Value 1:2</cell>" +

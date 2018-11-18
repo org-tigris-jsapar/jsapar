@@ -19,7 +19,7 @@ public class XMLDocumentParseTaskTest {
     @Test
     public final void testBuild() throws IOException {
         String sXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<document  xmlns=\"http://jsapar.tigris.org/XMLDocumentFormat/1.0\" >" + "<line linetype=\"Person\">"
+                + "<document  xmlns=\"http://jsapar.tigris.org/XMLDocumentFormat/2.0\" >" + "<line linetype=\"Person\">"
                 + "<cell name=\"FirstName\" type=\"string\">Hans</cell>"
                 + "<cell name=\"LastName\" type=\"string\">Hugge</cell>"
                 + "<cell name=\"ShoeSize\" type=\"integer\">48</cell>"

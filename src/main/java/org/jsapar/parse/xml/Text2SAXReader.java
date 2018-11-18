@@ -42,12 +42,13 @@ public class Text2SAXReader implements XMLReader {
         AttributesImpl attributes = new AttributesImpl();
         Line line = event.getLine();
         attributes.addAttribute(URI, "linetype", "linetype", "CDATA", line.getLineType());
+        attributes.addAttribute(URI, "number", "number", "integer", String.valueOf(line.getLineNumber()));
         try {
             contentHandler.startElement(URI, "line", "line", attributes);
             line.forEach( c ->{
                 attributes.clear();
                 attributes.addAttribute(URI, "name", "name", "CDATA", c.getName());
-                attributes.addAttribute(URI, "type", "type", "CDATA", c.getCellType().name().toLowerCase());
+                attributes.addAttribute(URI, "type", "type", "CDATA", cellTypeToXmlType(c));
                 try {
                     contentHandler.startElement(URI, "cell", "cell", attributes);
                     char[] value = makeCellXmlValue(c).toCharArray();
@@ -73,6 +74,10 @@ public class Text2SAXReader implements XMLReader {
         } catch (SAXException e) {
             handleSAXException(e);
         }
+    }
+
+    private String cellTypeToXmlType(Cell c) {
+        return c.getCellType().name().toLowerCase();
     }
 
     private String makeCellXmlValue(Cell c) {

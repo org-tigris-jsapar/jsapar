@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * Parses xml text of the internal xml format and produces parse events. The xml needs to conform to the internal XML schema XMLDocumentFormat.xsd (http://jsapar.tigris.org/XMLDocumentFormat/1.0)
+ * Parses xml text of the internal xml format and produces parse events. The xml needs to conform to the internal XML schema XMLDocumentFormat.xsd (http://jsapar.tigris.org/XMLDocumentFormat/2.0)
  * <p>
  * This class can for instance be used to parse xml text that was created by {@link org.jsapar.Text2XmlConverter}.
  * <p>
