@@ -4,7 +4,7 @@ package org.jsapar.model;
  * Abstract base class for all type of cells that can be represented as a {@link Number}.
  * 
  */
-public abstract class NumberCell extends AbstractCell<Number> {
+abstract class NumberCell extends AbstractCell<Number> {
 
     /**
      * 
