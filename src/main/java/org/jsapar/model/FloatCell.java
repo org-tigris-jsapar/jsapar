@@ -8,7 +8,7 @@ package org.jsapar.model;
  * values are converted into double precision values.
  * 
  */
-public class FloatCell extends NumberCell implements Comparable<FloatCell> {
+public final class FloatCell extends NumberCell implements Comparable<FloatCell> {
 
     private static final long serialVersionUID = 2102712515168714171L;
 

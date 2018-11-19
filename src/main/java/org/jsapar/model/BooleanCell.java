@@ -4,7 +4,7 @@ package org.jsapar.model;
  * {@link Cell} implementation carrying a boolean value of a cell.
  * 
  */
-public class BooleanCell extends AbstractCell<Boolean> implements ComparableCell<Boolean> {
+public final class BooleanCell extends AbstractCell<Boolean> implements ComparableCell<Boolean> {
 
 	/**
      * 

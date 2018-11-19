@@ -4,7 +4,7 @@ package org.jsapar.model;
  * Integer cell that contains integer values of any length; Byte, Short, Integer and Long.
  *
  */
-public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
+public final class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
 
     private static final long serialVersionUID = -6131249480571994885L;
 
