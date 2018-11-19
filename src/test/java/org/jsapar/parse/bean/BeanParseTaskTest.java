@@ -72,7 +72,7 @@ public class BeanParseTaskTest {
 
         line = doc.getLine(1);
         assertEquals("Test2", line.getCell("firstName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
-
+        parser.close();
     }
 
 
