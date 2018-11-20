@@ -75,4 +75,17 @@ public class StringUtils {
         return count;
     }
 
+    /**
+     * Replaces all occurrences of some common control characters into escaped string values.
+     * @param sToReplace The string containing control characters
+     * @return A string containing only escaped character values.
+     */
+    public static String replaceJava2Escapes(String sToReplace) {
+        sToReplace = sToReplace.replace("\r", "\\r");
+        sToReplace = sToReplace.replace("\n", "\\n");
+        sToReplace = sToReplace.replace("\t", "\\t");
+        sToReplace = sToReplace.replace("\f", "\\f");
+        return sToReplace;
+    }
+
 }

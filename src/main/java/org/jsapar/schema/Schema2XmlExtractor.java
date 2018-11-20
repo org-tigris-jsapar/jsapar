@@ -1,6 +1,7 @@
 package org.jsapar.schema;
 
 import org.jsapar.compose.cell.CellComposer;
+import org.jsapar.utils.StringUtils;
 import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -209,7 +210,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
 
         assignSchemaLineBase(xmlSchemaLine, schemaLine);
 
-        xmlSchemaLine.setAttribute(ATTRIB_CSV_SCHEMA_CELL_SEPARATOR, replaceJava2Escapes(schemaLine.getCellSeparator()));
+        xmlSchemaLine.setAttribute(ATTRIB_CSV_SCHEMA_CELL_SEPARATOR, StringUtils.replaceJava2Escapes(schemaLine.getCellSeparator()));
         xmlSchemaLine.setAttribute(ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA, String.valueOf(schemaLine.isFirstLineAsSchema()));
 
         if(schemaLine.isQuoteCharUsed())
@@ -249,7 +250,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
      */
     private void assignSchemaBase(Document xmlDocument, Element xmlSchema, Schema schema) {
         String lineSeparator = schema.getLineSeparator();
-        lineSeparator = replaceJava2Escapes(lineSeparator);
+        lineSeparator = StringUtils.replaceJava2Escapes(lineSeparator);
         xmlSchema.setAttribute(ATTRIB_SCHEMA_LINESEPARATOR, lineSeparator);
 
         Element xmlLocale = extractLocale(xmlDocument, schema.getLocale());
@@ -358,17 +359,5 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
         return xmlFormat;
     }
 
-    /**
-     * Replaces all occurrences of some common control characters into escaped string values.
-     * @param sToReplace The string containing control characters
-     * @return A string containing only escaped character values.
-     */
-    private String replaceJava2Escapes(String sToReplace) {
-        sToReplace = sToReplace.replace("\r", "\\r");
-        sToReplace = sToReplace.replace("\n", "\\n");
-        sToReplace = sToReplace.replace("\t", "\\t");
-        sToReplace = sToReplace.replace("\f", "\\f");
-        return sToReplace;
-    }
-    
+
 }
