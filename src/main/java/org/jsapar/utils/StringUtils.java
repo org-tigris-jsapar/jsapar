@@ -88,4 +88,18 @@ public class StringUtils {
         return sToReplace;
     }
 
+    /**
+     * Replaces escaped string value of \n, \r, \t and \f with their ascii control code values.
+     * @param sToReplace The string to replace escaped strings within.
+     * @return The string with all escaped values replaced with control code values.
+     */
+    public static String replaceEscapes2Java(String sToReplace) {
+        //   Since it is a regex we need 4 \
+        sToReplace = sToReplace.replaceAll("\\\\r", "\r");
+        sToReplace = sToReplace.replaceAll("\\\\n", "\n");
+        sToReplace = sToReplace.replaceAll("\\\\t", "\t");
+        sToReplace = sToReplace.replaceAll("\\\\f", "\f");
+        return sToReplace;
+    }
+
 }

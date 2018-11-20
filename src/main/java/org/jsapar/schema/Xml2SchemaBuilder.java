@@ -1,6 +1,7 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
+import org.jsapar.utils.StringUtils;
 import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -272,7 +273,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         assignSchemaLineBase(schemaLine, xmlSchemaLine);
 
         attributeValue(xmlSchemaLine, ATTRIB_CSV_SCHEMA_CELL_SEPARATOR)
-                .map(Xml2SchemaBuilder::replaceEscapes2Java)
+                .map(StringUtils::replaceEscapes2Java)
                 .ifPresent(schemaLine::setCellSeparator);
 
         Node xmlFirstLineAsSchema = xmlSchemaLine.getAttributeNode(ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA);
@@ -329,7 +330,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      */
     private void assignSchemaBase(Schema schema, Element xmlSchema) throws SchemaException {
         attributeValue(xmlSchema, ATTRIB_SCHEMA_LINESEPARATOR)
-                .map(Xml2SchemaBuilder::replaceEscapes2Java)
+                .map(StringUtils::replaceEscapes2Java)
                 .ifPresent(schema::setLineSeparator);
 
         Element xmlLocale = getChild(xmlSchema, ELEMENT_LOCALE);
@@ -338,19 +339,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
 
     }
 
-    /**
-     * Replaces escaped string value of \n, \r, \t and \f with their ascii control code values.
-     * @param sToReplace The string to replace escaped strings within.
-     * @return The string with all escaped values replaced with control code values.
-     */
-    private static String replaceEscapes2Java(String sToReplace) {
-        //   Since it is a regex we need 4 \
-        sToReplace = sToReplace.replaceAll("\\\\r", "\r");
-        sToReplace = sToReplace.replaceAll("\\\\n", "\n");
-        sToReplace = sToReplace.replaceAll("\\\\t", "\t");
-        sToReplace = sToReplace.replaceAll("\\\\f", "\f");
-        return sToReplace;
-    }
 
     /**
      * Assign common pars for base class.
