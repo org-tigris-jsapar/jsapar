@@ -5,7 +5,6 @@ import org.jsapar.convert.AbstractConverter;
 import org.jsapar.parse.bean.BeanMap;
 import org.jsapar.schema.Schema;
 
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
@@ -24,7 +23,7 @@ import java.util.stream.Stream;
 public class ConcurrentBeanCollection2TextConverter<T> extends BeanCollection2TextConverter<T> implements ConcurrentStartStop{
     private ConcurrentConvertTaskFactory convertTaskFactory = new ConcurrentConvertTaskFactory();
 
-    public ConcurrentBeanCollection2TextConverter(Schema composerSchema) throws IntrospectionException, ClassNotFoundException {
+    public ConcurrentBeanCollection2TextConverter(Schema composerSchema) {
         super(composerSchema);
     }
 
