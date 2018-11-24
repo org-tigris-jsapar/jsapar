@@ -4,7 +4,7 @@ import java.time.LocalTime;
 
 /**
  */
-public class LocalTimeCell extends TemporalCell<LocalTime> implements ComparableCell<LocalTime>{
+public final class LocalTimeCell extends TemporalCell<LocalTime> implements ComparableCell<LocalTime>{
 
     /**
      * Creates a cell with a name and value.

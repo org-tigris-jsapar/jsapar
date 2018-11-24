@@ -4,7 +4,7 @@ package org.jsapar.model;
  * {@link Cell} implementation carrying a string value of a cell.
  *
  */
-public class StringCell extends AbstractCell<String> implements ComparableCell<String> {
+public final class StringCell extends AbstractCell<String> implements ComparableCell<String> {
 
     private static final long serialVersionUID = -2776042954053921679L;
 

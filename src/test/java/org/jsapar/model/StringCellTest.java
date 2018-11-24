@@ -31,13 +31,13 @@ public class StringCellTest {
     @Test
     public void testCompareTo() {
         StringCell c1 = new StringCell("name1", "value");
-        StringCell c2 = new StringCell("name2", "value");
+        StringCell c2 = new StringCell("name1", "value");
         StringCell c3 = new StringCell("name3", "another");
         assertEquals(0, c1.compareTo(c1));
         assertEquals(0, c1.compareTo(c2));
         assertEquals(0, c2.compareTo(c1));
-        assertTrue(c1.compareTo(c3) > 0);
-        assertTrue(c3.compareTo(c1) < 0);
+        assertTrue(c1.compareTo(c3) < 0);
+        assertTrue(c3.compareTo(c1) > 0);
     }
 
     @Test

@@ -8,7 +8,7 @@ import java.util.Date;
  * {@link Cell} implementation carrying a date value of a cell.
  * 
  */
-public class DateCell extends AbstractCell<Date> implements ComparableCell<Date> {
+public final class DateCell extends AbstractCell<Date> implements ComparableCell<Date> {
 
     public static final SimpleDateFormat ISO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS ZZZ");
 

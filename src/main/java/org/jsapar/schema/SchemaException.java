@@ -17,8 +17,4 @@ public class SchemaException extends JSaParException {
         super(s, throwable);
     }
 
-    public SchemaException(Throwable throwable) {
-        super(throwable);
-    }
-
 }

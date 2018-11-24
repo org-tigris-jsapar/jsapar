@@ -74,4 +74,31 @@ public class StringUtils {
         return count;
     }
 
+    /**
+     * Replaces all occurrences of some common control characters into escaped string values.
+     * @param sToReplace The string containing control characters
+     * @return A string containing only escaped character values.
+     */
+    public static String replaceJava2Escapes(String sToReplace) {
+        sToReplace = sToReplace.replace("\r", "\\r");
+        sToReplace = sToReplace.replace("\n", "\\n");
+        sToReplace = sToReplace.replace("\t", "\\t");
+        sToReplace = sToReplace.replace("\f", "\\f");
+        return sToReplace;
+    }
+
+    /**
+     * Replaces escaped string value of \n, \r, \t and \f with their ascii control code values.
+     * @param sToReplace The string to replace escaped strings within.
+     * @return The string with all escaped values replaced with control code values.
+     */
+    public static String replaceEscapes2Java(String sToReplace) {
+        //   Since it is a regex we need 4 \
+        sToReplace = sToReplace.replaceAll("\\\\r", "\r");
+        sToReplace = sToReplace.replaceAll("\\\\n", "\n");
+        sToReplace = sToReplace.replaceAll("\\\\t", "\t");
+        sToReplace = sToReplace.replaceAll("\\\\f", "\f");
+        return sToReplace;
+    }
+
 }

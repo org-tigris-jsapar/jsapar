@@ -27,4 +27,27 @@ public class FixedWidthSchemaTest {
         assertFalse(schema.getSchemaLines().iterator().next() == theClone.getSchemaLines().iterator().next());
     }
 
+
+    @Test
+    public void testIterator(){
+        FixedWidthSchema schema = new FixedWidthSchema();
+        assertTrue(schema.isEmpty());
+        assertEquals(0, schema.size());
+
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
+        schemaLine.setLineType("Joho");
+        schema.addSchemaLine(schemaLine);
+        assertFalse(schema.isEmpty());
+        assertEquals(1, schema.size());
+
+        assertSame(schemaLine, schema.iterator().next());
+
+    }
+
+
+    @Test
+    public void testToString() {
+        FixedWidthSchema schema = new FixedWidthSchema();
+        assertEquals("FixedWidthSchema lineSeparator='\\n' locale=en_US schemaLines={}", schema.toString());
+    }
 }

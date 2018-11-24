@@ -9,7 +9,7 @@ import java.math.BigInteger;
  * 
  *
  */
-public class BigDecimalCell extends NumberCell  {
+public final class BigDecimalCell extends NumberCell  {
 
     /**
      * 

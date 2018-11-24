@@ -4,7 +4,7 @@ package org.jsapar.model;
  * Integer cell that contains integer values of any length; Byte, Short, Integer and Long.
  *
  */
-public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
+public final class IntegerCell extends NumberCell {
 
     private static final long serialVersionUID = -6131249480571994885L;
 
@@ -41,21 +41,10 @@ public class IntegerCell extends NumberCell implements Comparable<IntegerCell>{
     }
 
 
-
-    /* (non-Javadoc)
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
-    @Override
-    public int compareTo(IntegerCell right){
-    	final Long leftValue = this.getValue().longValue();
-    	final Long rightValue = right.getValue().longValue();
-    	return leftValue.compareTo(rightValue);
-    }
-
     @Override
     public int compareValueTo(Cell<Number> right) {
         if(right instanceof IntegerCell)
-            return Integer.compare(getValue().intValue(), right.getValue().intValue());
+            return Long.compare(getValue().longValue(), right.getValue().longValue());
         return super.compareValueTo(right);
     }
 

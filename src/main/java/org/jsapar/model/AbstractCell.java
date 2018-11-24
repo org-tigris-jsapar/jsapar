@@ -8,7 +8,7 @@ import java.util.Objects;
  * the value denotes which sub-class to use.
  * 
  */
-public abstract class AbstractCell<T> implements Cell<T> {
+abstract class AbstractCell<T> implements Cell<T> {
 
     private final T value;
 
