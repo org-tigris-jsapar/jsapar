@@ -7,11 +7,8 @@ import org.junit.Test;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
-import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by stejon0 on 2016-10-23.
@@ -32,8 +29,6 @@ public class DateCellFactoryTest {
 
     /**
      * Test method for {@link Cell#getStringValue()}.
-     *
-     * @throws ParseException
      */
     @Test
     public final void testGetStringValue() throws ParseException {

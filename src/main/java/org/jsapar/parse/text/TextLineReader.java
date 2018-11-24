@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jsapar.parse.text;
 
 import java.io.IOException;

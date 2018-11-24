@@ -4,8 +4,6 @@ import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ExceptionErrorEventListener;
 
-import java.io.IOException;
-
 /**
  * Abstract implementation of {@link ParseTask} interface. Provides possibility to have line event listeners and
  * error event listeners. Override this class to implement a specific parser.

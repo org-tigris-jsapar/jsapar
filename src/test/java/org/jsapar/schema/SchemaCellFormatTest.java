@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
@@ -22,18 +19,12 @@ import static org.junit.Assert.assertEquals;
  */
 public class SchemaCellFormatTest {
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     @Test

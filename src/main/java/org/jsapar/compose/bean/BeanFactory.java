@@ -40,6 +40,6 @@ public interface BeanFactory<T> {
      * @throws IllegalAccessException In case a setter method is not publicly accessible.
      * @throws InstantiationException If it was not possible to instantiate a bean.
      */
-    void assignCellToBean(String lineType, T bean, Cell cell) throws BeanComposeException, InvocationTargetException, InstantiationException, IllegalAccessException;
+    void assignCellToBean(String lineType, T bean, Cell cell) throws BeanComposeException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException;
 
 }

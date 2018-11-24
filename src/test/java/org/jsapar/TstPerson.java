@@ -1,6 +1,3 @@
-/** 
- * Copyright: Jonas Stenberg
- */
 package org.jsapar;
 
 import java.util.Date;

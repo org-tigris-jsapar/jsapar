@@ -1,15 +1,10 @@
-/**
- * 
- */
 package org.jsapar;
 
-import org.jsapar.convert.LineManipulator;
 import org.jsapar.error.JSaParException;
 import org.jsapar.error.MaxErrorsExceededException;
 import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.error.ThresholdRecordingErrorEventListener;
 import org.jsapar.model.CellType;
-import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.*;
@@ -33,18 +28,12 @@ public class Text2TextConverterTest {
 
     public static final String LN = System.getProperty("line.separator");
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     @Test
@@ -110,7 +99,6 @@ public class Text2TextConverterTest {
     @Test
     public void testConvert_error() throws IOException, JSaParException {
         String toParse = "Jonas 41       " + LN + "Frida ERROR    ";
-        ;
         FixedWidthSchema inputSchema = new FixedWidthSchema();
         FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine("Person");
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 6));
@@ -143,7 +131,6 @@ public class Text2TextConverterTest {
     @Test(expected = MaxErrorsExceededException.class)
     public void testConvert_max_error() throws IOException, JSaParException {
         String toParse = "Jonas 41       " + LN + "Frida ERROR    ";
-        ;
         FixedWidthSchema inputSchema = new FixedWidthSchema();
         FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine("Person");
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 6));
@@ -200,7 +187,6 @@ public class Text2TextConverterTest {
     public void testConvert_twoKindOfLines() throws IOException, JSaParException {
         String toParse = "This file contains names" + LN + "Jonas Stenberg "
                 + LN + "Frida Bergsten ";
-        ;
         FixedWidthSchema inputSchema = new FixedWidthSchema();
         FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine("Header");
         inputSchemaLine.setOccurs(1);
@@ -238,7 +224,6 @@ public class Text2TextConverterTest {
     @Test
     public void testConvert_Manipulated() throws IOException, JSaParException {
         String toParse = "Jonas Stenberg " + LN + "Frida Bergsten ";
-        ;
         FixedWidthSchema inputSchema = new FixedWidthSchema();
         FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine();
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 6));
@@ -256,12 +241,9 @@ public class Text2TextConverterTest {
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
         Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
-        converter.addLineManipulator(new LineManipulator() {
-            @Override
-            public boolean manipulate(Line line) {
-                line.addCell(new StringCell("Town", "Stockholm"));
-                return true;
-            }
+        converter.addLineManipulator(line -> {
+            line.addCell(new StringCell("Town", "Stockholm"));
+            return true;
         });
         converter.convert(reader, writer);
         String sResult = writer.getBuffer().toString();
@@ -277,7 +259,6 @@ public class Text2TextConverterTest {
     public void testConvert_twoKindOfLinesIn_OneKindOut() throws IOException, JSaParException {
         String toParse = "This file contains names" + LN + "Jonas Stenberg "
                 + LN + "Frida Bergsten ";
-        ;
         FixedWidthSchema inputSchema = new FixedWidthSchema();
         FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine(1);
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("Header", 100));
@@ -315,7 +296,6 @@ public class Text2TextConverterTest {
         String toParse = "This file contains names" + LN + "Jonas Stenberg "
                 + LN + "Frida Bergsten "
                 + LN + "Tomas Stornos  ";
-        ;
         FixedWidthSchema inputSchema = new FixedWidthSchema();
         FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine(1);
         inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("Header", 100));
@@ -339,15 +319,7 @@ public class Text2TextConverterTest {
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
         Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
-        converter.addLineManipulator(new LineManipulator() {
-            @Override
-            public boolean manipulate(Line line) {
-                if(line.getLineType().equals("Names") && line.getCell("First name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue().equals("Tomas"))
-                    return false;
-                else
-                    return true;
-            }
-        });
+        converter.addLineManipulator(line -> !line.getLineType().equals("Names") || !line.getCell("First name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue().equals("Tomas"));
         converter.convert(reader, writer);
         String sResult = writer.getBuffer().toString();
         String sExpected = "Jonas;Stenberg" + LN + "Frida;Bergsten";

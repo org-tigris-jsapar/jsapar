@@ -10,7 +10,7 @@ import static org.junit.Assert.assertSame;
 public class CellParseExceptionTest {
 
     @Test
-    public void testGetters() throws Exception {
+    public void testGetters() {
         SchemaCellFormat cellFormat = new SchemaCellFormat(CellType.STRING, "\\d+");
         CellParseException e = new CellParseException(42, "A", "a", cellFormat, "Some error");
         assertEquals(42, e.getLineNumber());

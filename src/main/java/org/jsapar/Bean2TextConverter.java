@@ -10,8 +10,6 @@ import org.jsapar.schema.Schema;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Converts from beans to text output. This implementation accepts beans pushed one by one to be converted. See

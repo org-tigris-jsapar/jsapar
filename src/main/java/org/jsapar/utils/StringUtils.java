@@ -1,5 +1,7 @@
 package org.jsapar.utils;
 
+import java.util.function.IntPredicate;
+
 @SuppressWarnings("WeakerAccess")
 public class StringUtils {
 
@@ -39,9 +41,6 @@ public class StringUtils {
         return removeAll(s, Character::isSpaceChar);
     }
 
-    private interface CheckCharacterType{
-        boolean check(int codePoint);
-    }
 
     /**
      * Removes all characters that are regarded as space according to
@@ -51,8 +50,8 @@ public class StringUtils {
      * @param check    Check lambda, if returns true, character will be removed.
      * @return A string without any space characters.
      */
-    private static String removeAll(String s, CheckCharacterType check) {
-        return s.codePoints().filter(it -> !check.check(it))
+    private static String removeAll(String s, IntPredicate check) {
+        return s.codePoints().filter(it -> !check.test(it))
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
     }
 

@@ -4,12 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 
 public class FixedWidthSchemaCellTest {
 
@@ -34,7 +30,7 @@ public class FixedWidthSchemaCellTest {
         assertEquals(schemaCell.getAlignment(), clone.getAlignment());
 
         // Does not clone strings values yet. Might do that in the future.
-        assertTrue(schemaCell.getName() == clone.getName());
+        assertSame(schemaCell.getName(), clone.getName());
     }
 
 

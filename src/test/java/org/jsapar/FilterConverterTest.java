@@ -6,11 +6,11 @@ import org.junit.Before;
 public class FilterConverterTest {
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
 

@@ -25,7 +25,7 @@ class FWLineParserFactory {
      * @param reader A buffered reader to read input from
      * @return A {@link FixedWidthLineParser} that can be used or null if no line parser could be found. When returning
      * null, you can call {@link #getLastResult()} to get the reason for failure to return a line parser.
-     * @throws IOException
+     * @throws IOException In case of error in underlying IO operation
      */
     FixedWidthLineParser makeLineParser(BufferedReader reader) throws IOException {
         if(lineParserMatchers.isEmpty())

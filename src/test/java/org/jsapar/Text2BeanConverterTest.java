@@ -1,9 +1,7 @@
 package org.jsapar;
 
 import org.jsapar.compose.bean.BeanComposeConfig;
-import org.jsapar.compose.bean.BeanComposeException;
 import org.jsapar.compose.bean.BeanFactory;
-import org.jsapar.compose.bean.BeanFactoryDefault;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.parse.text.TextParseConfig;
@@ -16,7 +14,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.*;
 

@@ -1,6 +1,3 @@
-/**
- * Copyrigth: Jonas Stenberg
- */
 package org.jsapar.schema;
 
 import org.jsapar.error.JSaParException;

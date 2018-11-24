@@ -55,7 +55,7 @@ public class BeanCollection2TextConverterTest {
 
 
     @Test
-    public void setParseConfig() throws Exception {
+    public void setParseConfig() {
 
     }
 

@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class ThresholdRecordingErrorEventListenerTest {
 
     @Test
-    public void testErrorEvent() throws Exception {
+    public void testErrorEvent() {
         List<JSaParException> errors = new ArrayList<>();
         ThresholdRecordingErrorEventListener listener = new ThresholdRecordingErrorEventListener(1, errors);
         assertEquals(0, errors.size());
@@ -19,7 +19,7 @@ public class ThresholdRecordingErrorEventListenerTest {
     }
 
     @Test(expected = MaxErrorsExceededException.class)
-    public void testErrorEvent_exceeded() throws Exception {
+    public void testErrorEvent_exceeded() {
         ThresholdRecordingErrorEventListener listener = new ThresholdRecordingErrorEventListener(1);
         listener.errorEvent(new ErrorEvent(this, new JSaParException("testing 1")));
         listener.errorEvent(new ErrorEvent(this, new JSaParException("testing 2")));

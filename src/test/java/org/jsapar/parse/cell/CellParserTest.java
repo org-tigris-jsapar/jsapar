@@ -20,7 +20,7 @@ public class CellParserTest {
     TestSchemaCell schemaCell;
 
     @Before
-    public void before() throws ParseException {
+    public void before() {
         schemaCell = new TestSchemaCell("test");
     }
     /**
@@ -283,7 +283,7 @@ public class CellParserTest {
      *
      */
     @Test
-    public void testParse_Integer_MinRangeNotValid() throws java.text.ParseException {
+    public void testParse_Integer_MinRangeNotValid() {
 
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(CellType.INTEGER);
@@ -301,7 +301,7 @@ public class CellParserTest {
      *
      */
     @Test
-    public void testMakeCell_Integer_MaxRangeNotValid() throws java.text.ParseException {
+    public void testMakeCell_Integer_MaxRangeNotValid() {
 
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(CellType.INTEGER);

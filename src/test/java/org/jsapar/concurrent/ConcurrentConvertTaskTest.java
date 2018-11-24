@@ -8,7 +8,6 @@ import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.FixedWidthSchema;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -17,7 +16,7 @@ import static org.junit.Assert.*;
 public class ConcurrentConvertTaskTest {
 
     @Test
-    public void testConcurrentText2TextConverter() throws IOException, JSaParException {
+    public void testConcurrentText2TextConverter() throws JSaParException {
         TextParseTask p = new TextParseTask(new CsvSchema(), new StringReader(""));
         TextComposer c = new TextComposer(new FixedWidthSchema(), new StringWriter());
         ConvertTask instance = new ConcurrentConvertTask(p, c);

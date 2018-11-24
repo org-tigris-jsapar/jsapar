@@ -20,11 +20,11 @@ import static org.junit.Assert.assertEquals;
 public class FixedWidthParseTaskTest {
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     @Test

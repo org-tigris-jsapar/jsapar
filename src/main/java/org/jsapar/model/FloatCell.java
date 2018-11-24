@@ -1,6 +1,3 @@
-/** 
- * Copyright: Jonas Stenberg
- */
 package org.jsapar.model;
 
 /**

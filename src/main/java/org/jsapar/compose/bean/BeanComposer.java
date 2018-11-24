@@ -145,6 +145,7 @@ public class BeanComposer<T> implements Composer, BeanEventListener<T>, ErrorEve
                     | IllegalArgumentException
                     | IllegalAccessException
                     | InvocationTargetException
+                    | NoSuchMethodException
                     | InstantiationException e) {
                 errorEventListener.errorEvent(new ErrorEvent(this, new ComposeException(e.getMessage() + " while handling cell " + cell, e)));
             }

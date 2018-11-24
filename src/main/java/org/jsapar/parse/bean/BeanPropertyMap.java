@@ -8,6 +8,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -53,8 +54,9 @@ public class BeanPropertyMap {
     }
 
 
-    public Object createBean() throws IllegalAccessException, InstantiationException {
-        return lineClass.newInstance();
+    @SuppressWarnings("unchecked")
+    public Object createBean() throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        return lineClass.getConstructor().newInstance();
     }
 
     static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine, BeanPropertyMap overrideValues) {

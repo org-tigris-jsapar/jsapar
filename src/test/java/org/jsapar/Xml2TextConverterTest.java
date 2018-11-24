@@ -3,7 +3,6 @@ package org.jsapar;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
-import org.jsapar.schema.Schema;
 import org.junit.Test;
 
 import java.io.IOException;

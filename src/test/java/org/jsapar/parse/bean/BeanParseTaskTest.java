@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jsapar.parse.bean;
 
 import org.jsapar.TstPerson;
@@ -12,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.beans.IntrospectionException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,30 +22,24 @@ import static org.junit.Assert.assertEquals;
 public class BeanParseTaskTest {
     static final Date birthTime = new Date();
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     private Schema makeOutputSchema(){
         return BeanMarshallerTest.makeOutputSchema();
     }
 
-    private BeanMap makeBeanMap() throws IntrospectionException, ClassNotFoundException {
+    private BeanMap makeBeanMap() {
         return BeanMarshallerTest.makeBeanMap();
     }
 
     @Test
-    public void testBuild() throws IOException, IntrospectionException, ClassNotFoundException {
+    public void testBuild() throws IntrospectionException, ClassNotFoundException {
         List<TstPerson> people = new ArrayList<>(2);
         TstPerson person = new TstPerson();
         person.setFirstName("Jonas");

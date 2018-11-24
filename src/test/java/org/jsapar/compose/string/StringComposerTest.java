@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 public class StringComposerTest {
 
     @Test
-    public void compose() throws Exception {
+    public void compose() {
         CsvSchema schema = new CsvSchema();
 
         CsvSchemaLine schemaLine = new CsvSchemaLine("person");
@@ -44,7 +44,7 @@ public class StringComposerTest {
     }
 
     @Test
-    public void composeLine() throws Exception {
+    public void composeLine() {
 
     }
 

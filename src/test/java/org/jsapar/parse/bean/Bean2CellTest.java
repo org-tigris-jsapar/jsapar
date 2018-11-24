@@ -44,7 +44,7 @@ public class Bean2CellTest {
     @Test
     public void assign_Boolean()
             throws IntrospectionException, InvocationTargetException, InstantiationException, IllegalAccessException,
-            BeanComposeException {
+            BeanComposeException, NoSuchMethodException {
         Bean2Cell bean2Cell = makeBean2CellOfPropertyName(TstPerson.class, "adult");
         TstPerson tstPerson = new TstPerson();
         assertFalse(tstPerson.isAdult());
@@ -57,7 +57,7 @@ public class Bean2CellTest {
     @Test
     public void assign_String()
             throws IntrospectionException, InvocationTargetException, InstantiationException, IllegalAccessException,
-            BeanComposeException {
+            BeanComposeException, NoSuchMethodException {
         Bean2Cell bean2Cell = makeBean2CellOfPropertyName(TstPerson.class, "lastName");
         TstPerson tstPerson = new TstPerson();
         assertEquals("Nobody", tstPerson.getLastName());
@@ -76,7 +76,7 @@ public class Bean2CellTest {
     @Test
     public void assign_empty()
             throws IntrospectionException, InvocationTargetException, InstantiationException, IllegalAccessException,
-            BeanComposeException {
+            BeanComposeException, NoSuchMethodException {
         Bean2Cell bean2Cell = makeBean2CellOfPropertyName(TstPerson.class, "lastName");
         TstPerson tstPerson = new TstPerson();
         assertEquals("Nobody", tstPerson.getLastName());

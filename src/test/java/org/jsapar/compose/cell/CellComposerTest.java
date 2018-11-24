@@ -33,14 +33,8 @@ public class CellComposerTest {
     }
 
     
-    /**
-     * Test method for .
-     *
-     * @throws java.text.ParseException
-     * @throws SchemaException
-     */
     @Test
-    public void testFormat_emptyString_DefaultValue() throws java.text.ParseException, SchemaException {
+    public void testFormat_emptyString_DefaultValue() throws SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultValue("TheDefault");
 
@@ -49,15 +43,8 @@ public class CellComposerTest {
         assertEquals("TheDefault", composer.format(cell, schemaCell));
     }
 
-    /**
-     * Test method for .
-     *
-     *
-     * @throws java.text.ParseException
-     * @throws SchemaException
-     */
     @Test
-    public void testFormat_empty_DefaultValue() throws java.text.ParseException, SchemaException {
+    public void testFormat_empty_DefaultValue() throws SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultValue("TheDefault");
 
@@ -66,15 +53,8 @@ public class CellComposerTest {
         assertEquals("TheDefault", composer.format(cell, schemaCell));
     }
 
-    /**
-     * Test method for .
-     *
-     *
-     * @throws java.text.ParseException
-     * @throws SchemaException
-     */
     @Test
-    public void testFormat_null_DefaultValue() throws java.text.ParseException, SchemaException {
+    public void testFormat_null_DefaultValue() throws SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setDefaultValue("TheDefault");
 
@@ -82,11 +62,6 @@ public class CellComposerTest {
         assertEquals("TheDefault", composer.format(null, schemaCell));
     }
 
-    /**
-     * Test method for .
-     *
-     * 
-     */
     @Test
     public void testFormat_empty_no_default()  {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
@@ -97,11 +72,6 @@ public class CellComposerTest {
     }
 
 
-    /**
-     * Test method for .
-     *
-     * 
-     */
     @Test
     public void testFormat_null_no_default()  {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
@@ -110,15 +80,8 @@ public class CellComposerTest {
         assertEquals("", composer.format(null, schemaCell));
     }
 
-    /**
-     * Test method for .
-     *
-     * 
-     * @throws SchemaException
-     * @throws java.text.ParseException
-     */
     @Test
-    public void testFormat_DefaultValue_float() throws SchemaException, java.text.ParseException {
+    public void testFormat_DefaultValue_float() throws SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setLocale( new Locale("sv","SE"));
         schemaCell.setCellFormat(CellType.FLOAT, "#.00");
@@ -129,12 +92,6 @@ public class CellComposerTest {
         assertEquals("123456,78901", value);
     }
 
-    /**
-     * Test method for .
-     *
-     * 
-     * @throws SchemaException
-     */
     @Test
     public void testFormat_empty_integer() throws SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
@@ -161,12 +118,6 @@ public class CellComposerTest {
     }
 
 
-    /**
-     * Test method for .
-     *
-     * 
-     * @throws SchemaException
-     */
     @Test
     public void testFormat() throws SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
@@ -176,12 +127,6 @@ public class CellComposerTest {
         assertEquals("A", value);
     }
 
-    /**
-     * Test method for .
-     *
-     * 
-     * @throws SchemaException
-     */
     @Test
     public void testFormat_Regexp() throws SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test", CellType.STRING, "A|B", new Locale("sv","SE"));
@@ -191,12 +136,6 @@ public class CellComposerTest {
         assertEquals("A", value);
     }
 
-    /**
-     * Test method for .
-     *
-     * 
-     * @throws SchemaException
-     */
     @Test(expected=IllegalArgumentException.class)
     public void testFormat_Regexp_fail() throws SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test", CellType.STRING, "A|B", new Locale("sv","SE"));

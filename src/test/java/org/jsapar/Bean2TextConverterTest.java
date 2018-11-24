@@ -8,11 +8,8 @@ import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.Schema;
 import org.junit.Test;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringWriter;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;

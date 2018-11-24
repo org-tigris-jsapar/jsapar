@@ -6,16 +6,18 @@ import org.jsapar.parse.LineParsedEvent;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static org.junit.Assert.*;
 
 public class ConcurrentLineEventListenerTest {
-    private volatile int count = 0;
+    private AtomicInteger count;
     private boolean started = false;
     private boolean stopped = false;
 
     @Before
-    public void setUp() throws Exception {
-        count = 0;
+    public void setUp() {
+        count = new AtomicInteger(0);
         started = false;
         stopped = false;
     }
@@ -43,15 +45,15 @@ public class ConcurrentLineEventListenerTest {
 
     @Test
     public void testAddLineEventListener_run() {
-        try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> count += 1)) {
+        try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> count.getAndIncrement())) {
             assertEquals(0, instance.size());
             instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
             assertEquals(1, instance.size());
-            assertEquals(0, count);
+            assertEquals(0, count.get());
             instance.start();
             assertTrue(instance.isRunning());
         }
-        assertEquals(1, count);
+        assertEquals(1, count.get());
 
     }
 
@@ -60,7 +62,7 @@ public class ConcurrentLineEventListenerTest {
         try (ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> {
             try {
                 Thread.sleep(10L);
-                count += 1;
+                count.getAndIncrement();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -69,22 +71,22 @@ public class ConcurrentLineEventListenerTest {
             assertEquals(0, instance.size());
             instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
             assertEquals(1, instance.size());
-            assertEquals(0, count);
+            assertEquals(0, count.get());
             instance.start();
         }
-        assertEquals(1, count);
+        assertEquals(1, count.get());
 
     }
 
     @Test
     public void testProducerTakesLongTime() throws Exception {
-        ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> count += 1);
+        ConcurrentLineEventListener instance = new ConcurrentLineEventListener(event -> count.getAndIncrement());
         assertEquals(0, instance.size());
         instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
         instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
 
         assertEquals(2, instance.size());
-        assertEquals(0, count);
+        assertEquals(0, count.get());
         instance.start();
 
         instance.lineParsedEvent(new LineParsedEvent(this, new Line("")));
@@ -93,7 +95,7 @@ public class ConcurrentLineEventListenerTest {
         instance.close();
         assertEquals(0, instance.size());
         assertFalse(instance.isRunning());
-        assertEquals(4, count);
+        assertEquals(4, count.get());
     }
 
     @Test(expected = JSaParException.class)

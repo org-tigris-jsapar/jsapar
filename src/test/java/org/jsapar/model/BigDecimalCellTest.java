@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 public class BigDecimalCellTest {
 
     @Test
-    public void testGetSetBigDecimalValue() throws Exception {
+    public void testGetSetBigDecimalValue() {
         BigDecimalCell cell = new BigDecimalCell("test", BigDecimal.ZERO);
         assertEquals("test", cell.getName());
         assertEquals(BigDecimal.ZERO, cell.getBigDecimalValue());
@@ -21,7 +21,7 @@ public class BigDecimalCellTest {
 
 
     @Test
-    public void testGetBigIntegerValue() throws Exception {
+    public void testGetBigIntegerValue() {
         BigDecimalCell cell = new BigDecimalCell("test", BigInteger.ZERO);
         assertEquals("test", cell.getName());
         assertEquals(BigDecimal.ZERO, cell.getBigDecimalValue());
@@ -31,7 +31,7 @@ public class BigDecimalCellTest {
 
 
     @Test
-    public void testCompareValueTo() throws Exception {
+    public void testCompareValueTo() {
         assertTrue( new BigDecimalCell("test", BigDecimal.ZERO).compareValueTo(new BigDecimalCell("test", BigDecimal.ONE)) < 0) ;
         assertTrue( new BigDecimalCell("test", BigDecimal.ONE).compareValueTo(new BigDecimalCell("test", BigDecimal.ZERO)) > 0) ;
         assertTrue( new BigDecimalCell("test", BigDecimal.ONE).compareValueTo(new BigDecimalCell("test", BigDecimal.ONE)) == 0) ;

@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.jsapar.convert;
 
 import org.jsapar.Text2TextConverter;

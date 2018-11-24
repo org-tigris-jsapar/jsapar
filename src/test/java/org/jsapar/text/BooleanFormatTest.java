@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.jsapar.text;
 
 import org.junit.After;
@@ -17,18 +14,12 @@ import static org.junit.Assert.*;
  */
 public class BooleanFormatTest {
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     @Test
@@ -104,8 +95,6 @@ public class BooleanFormatTest {
 
     /**
      * Test method for {@link org.jsapar.text.BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
-     *
-     * @throws ParseException
      */
     @Test
     public void testParseObjectString() throws ParseException {
@@ -118,11 +107,9 @@ public class BooleanFormatTest {
 
     /**
      * Test method for {@link org.jsapar.text.BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
-     *
-     * @throws ParseException
      */
     @Test
-    public void testParseObjectStringParsePosition() throws ParseException {
+    public void testParseObjectStringParsePosition() {
         BooleanFormat f = new BooleanFormat("ja", "nej");
         assertEquals(Boolean.TRUE, f.parseObject("   ja", new ParsePosition(3)));
 

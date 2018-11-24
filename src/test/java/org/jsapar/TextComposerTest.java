@@ -6,10 +6,8 @@ import org.jsapar.schema.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.text.ParseException;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
@@ -18,19 +16,18 @@ import static org.junit.Assert.assertTrue;
 
 public class TextComposerTest {
     private Document       document;
-    private java.util.Date birthTime;
 
     @Before
     public void setUp() throws Exception {
         document = new Document();
         java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        this.birthTime = dateFormat.parse("1971-03-25 23:04:24");
+        java.util.Date birthTime = dateFormat.parse("1971-03-25 23:04:24");
 
         Line line1 = new Line("org.jsapar.TstPerson");
         line1.addCell(new StringCell("FirstName", "Jonas"));
         line1.addCell(new StringCell("LastName", "Stenberg"));
         line1.addCell(new IntegerCell("ShoeSize", 42));
-        line1.addCell(new DateCell("BirthTime", this.birthTime));
+        line1.addCell(new DateCell("BirthTime", birthTime));
         line1.addCell(new IntegerCell("LuckyNumber", 123456787901234567L));
         // line1.addCell(new StringCell("NeverUsed", "Should not be assigned"));
 
@@ -44,7 +41,7 @@ public class TextComposerTest {
     }
 
     @Test
-    public final void testWrite() throws IOException {
+    public final void testWrite() {
         String sExpected = "JonasStenberg" + System.getProperty("line.separator") + "FridaBergsten";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("org.jsapar.TstPerson");
@@ -61,7 +58,7 @@ public class TextComposerTest {
     }
 
     @Test
-    public final void testWriteCsv() throws IOException {
+    public final void testWriteCsv() {
         String sExpected = "Jonas;Stenberg" + System.getProperty("line.separator") + "Frida;Bergsten";
         org.jsapar.schema.CsvSchema schema = new org.jsapar.schema.CsvSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine("org.jsapar.TstPerson");
@@ -78,7 +75,7 @@ public class TextComposerTest {
 
     @Test
     public void testOutputLine_FixedWidthControllCell()
-            throws IOException, JSaParException, ParseException, SchemaException {
+            throws JSaParException, SchemaException {
         FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("");
 
@@ -105,7 +102,7 @@ public class TextComposerTest {
     
     @Test
     public void testWriteLine_FixedWidthControllCell_minLength()
-            throws IOException, JSaParException, ParseException, SchemaException {
+            throws JSaParException, SchemaException {
         FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("");
 
@@ -133,7 +130,7 @@ public class TextComposerTest {
     }
 
     @Test
-    public final void testWriteLine_csv() throws IOException, JSaParException {
+    public final void testWriteLine_csv() throws JSaParException {
         org.jsapar.schema.CsvSchema schema = new org.jsapar.schema.CsvSchema();
         CsvSchemaLine outputSchemaLine = new CsvSchemaLine("Header");
         outputSchemaLine.setOccurs(1);
@@ -160,7 +157,7 @@ public class TextComposerTest {
     }
 
     @Test
-    public final void testWriteLine_csv_first() throws IOException, JSaParException {
+    public final void testWriteLine_csv_first() throws JSaParException {
         org.jsapar.schema.CsvSchema schema = new org.jsapar.schema.CsvSchema();
         CsvSchemaLine outputSchemaLine = new CsvSchemaLine("Header");
         outputSchemaLine.setOccurs(1);
@@ -188,7 +185,7 @@ public class TextComposerTest {
 
     @Test
     public final void testOutputLine_firstLineAsHeader()
-            throws IOException, JSaParException, ParseException, SchemaException {
+            throws JSaParException, SchemaException {
         CsvSchema schema = new CsvSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.addSchemaCell(new CsvSchemaCell("HeaderHeader"));

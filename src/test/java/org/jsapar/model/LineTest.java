@@ -11,11 +11,11 @@ import static org.junit.Assert.*;
 public class LineTest {
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     @Test
@@ -148,7 +148,7 @@ public class LineTest {
     }
 
     @Test
-    public void testAddCellError() throws Exception {
+    public void testAddCellError() {
         Line line = makeTestLine();
         assertFalse(line.hasCellErrors());
         assertEquals(0, line.getCellErrors().size());
@@ -163,7 +163,7 @@ public class LineTest {
 
 
     @Test
-    public void testIsCellOfType() throws Exception {
+    public void testIsCellOfType() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         assertTrue(line.containsNonEmptyCell("FirstName", CellType.STRING));

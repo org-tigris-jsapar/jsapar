@@ -1,6 +1,3 @@
-/**
- * Copyright: Jonas Stenberg
- */
 package org.jsapar.model;
 
 import org.junit.Before;
@@ -21,11 +18,8 @@ public class DateCellTest {
     Date now;
     Date aDate;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         now = new Date();
 
         java.util.Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Sweden"));
@@ -54,7 +48,7 @@ public class DateCellTest {
         assertEquals(DateCell.ISO_DATE_FORMAT.parse("2018-11-11 12:53:45.123 +0200"), cell.getValue());
     }
     @Test
-    public void testGetSetDateValue() throws Exception {
+    public void testGetSetDateValue() {
         Date date = new Date();
         DateCell cell = new DateCell("Name", date);
         assertEquals(date, cell.getValue());

@@ -3,8 +3,6 @@ package org.jsapar.parse;
 import org.jsapar.error.JSaParException;
 import org.jsapar.parse.text.LineReader;
 
-import java.io.IOException;
-
 public class SingleLineReader implements LineReader {
     private String line;
 
@@ -14,7 +12,7 @@ public class SingleLineReader implements LineReader {
     }
 
     @Override
-    public String readLine() throws IOException, JSaParException {
+    public String readLine() throws JSaParException {
         try {
             return line;
         } finally {

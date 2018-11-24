@@ -226,8 +226,9 @@ public class Bean2Cell {
                         + " could not be used to assign cell");
     }
 
+    @SuppressWarnings("unchecked")
     public void assign(Object bean, Cell cell)
-            throws BeanComposeException, InvocationTargetException, IllegalAccessException, InstantiationException {
+            throws BeanComposeException, InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
         if(cell.isEmpty()) {
             return;
         }
@@ -244,7 +245,7 @@ public class Bean2Cell {
                                 .getName() + " has no getter method.");
             Object child = getter.invoke(bean);
             if (child == null) {
-                child = children.getLineClass().newInstance();
+                child = children.getLineClass().getConstructor().newInstance();
                 Method setter = this.propertyDescriptor.getWriteMethod();
                 if (setter == null)
                     throw new BeanComposeException(

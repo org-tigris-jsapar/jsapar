@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 public class RecordingErrorEventListenerTest {
 
     @Test
-    public void testErrorEvent() throws Exception {
+    public void testErrorEvent() {
         RecordingErrorEventListener instance = new RecordingErrorEventListener();
         assertTrue(instance.getErrors().isEmpty());
         JSaParException anError = new JSaParException("testing");

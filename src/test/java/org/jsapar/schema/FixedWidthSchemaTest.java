@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 public class FixedWidthSchemaTest {
 
     @Test
-    public final void testClone() throws CloneNotSupportedException {
+    public final void testClone() {
         FixedWidthSchema schema = new FixedWidthSchema();
         schema.setLineSeparator("");
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
@@ -20,7 +20,7 @@ public class FixedWidthSchemaTest {
         assertEquals(schema.getLineSeparator(), theClone.getLineSeparator());
 
         // Does not clone strings values yet. Might do that in the future.
-        assertTrue(schema.getLineSeparator() == theClone.getLineSeparator());
+        assertSame(schema.getLineSeparator(), theClone.getLineSeparator());
 
         assertEquals(schema.getSchemaLines().iterator().next().getLineType(), theClone.getSchemaLines().iterator().next()
                 .getLineType());

@@ -2,8 +2,6 @@ package org.jsapar.compose.line;
 
 import org.jsapar.model.Line;
 
-import java.io.IOException;
-
 /**
  * Composes output of a line
  */

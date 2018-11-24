@@ -2,7 +2,6 @@ package org.jsapar.parse.csv;
 
 import org.jsapar.error.JSaParException;
 
-import java.io.IOException;
 import java.util.regex.Pattern;
 
 /**
@@ -18,7 +17,7 @@ class SimpleCellSplitter implements CellSplitter {
     }
 
     @Override
-    public String[] split(String sLine) throws IOException, JSaParException {
+    public String[] split(String sLine) throws JSaParException {
         if(sLine.isEmpty())
             return EMPTY_LINE;
         String[] aLine = sLine.split(splitPattern, -1);

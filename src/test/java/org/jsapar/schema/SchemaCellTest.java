@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jsapar.schema;
 
 import org.jsapar.model.BigDecimalCell;
@@ -21,18 +18,12 @@ import static org.junit.Assert.assertNotNull;
  */
 public class SchemaCellTest {
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
 
@@ -50,10 +41,9 @@ public class SchemaCellTest {
     /**
      * Test method for {@link org.jsapar.schema.SchemaCell#clone()}.
      * 
-     * @throws CloneNotSupportedException
      */
     @Test
-    public void testClone() throws CloneNotSupportedException {
+    public void testClone() {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         TestSchemaCell clone = (TestSchemaCell) schemaCell.clone();
         assertNotNull(clone);
@@ -86,9 +76,7 @@ public class SchemaCellTest {
      * 
      */
     private class TestSchemaCell extends SchemaCell {
-
-
-        public TestSchemaCell(String name) {
+        TestSchemaCell(String name) {
             super(name);
         }
 

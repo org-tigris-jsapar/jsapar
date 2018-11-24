@@ -24,9 +24,9 @@ class CsvCellComposer {
 
     /**
      * Writes the cell to the supplied writer, including quote character if necessary.
-     * @param writer
+     * @param writer The writer to write result to.
      * @param cell The cell to compose output for.
-     * @throws IOException
+     * @throws IOException In case of error in underlying IO operation
      */
     void compose(Writer writer, Cell cell) throws IOException {
         quoter.writeValue(writer, cellComposer.format(cell, schemaCell));

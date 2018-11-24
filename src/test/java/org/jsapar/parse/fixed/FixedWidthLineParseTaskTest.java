@@ -27,12 +27,12 @@ public class FixedWidthLineParseTaskTest {
     boolean foundError = false;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         foundError = false;
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     @Test
@@ -58,7 +58,7 @@ public class FixedWidthLineParseTaskTest {
     }
 
     @Test
-    public void testParse_defaultLast() throws IOException, JSaParException, java.text.ParseException, SchemaException {
+    public void testParse_defaultLast() throws IOException, JSaParException, SchemaException {
         String toParse = "JonasStenberg";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
@@ -80,7 +80,7 @@ public class FixedWidthLineParseTaskTest {
     }
 
     @Test(expected = LineParseException.class)
-    public void testParse_insufficient() throws IOException, JSaParException, java.text.ParseException {
+    public void testParse_insufficient() throws IOException, JSaParException {
         String toParse = "JonasStenberg";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
@@ -99,7 +99,7 @@ public class FixedWidthLineParseTaskTest {
 
     @Test
     public void testParse_default_and_mandatory()
-            throws IOException, JSaParException, java.text.ParseException, SchemaException {
+            throws IOException, JSaParException, SchemaException {
         String toParse = "JonasStenberg";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);

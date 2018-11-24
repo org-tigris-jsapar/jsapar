@@ -1,6 +1,5 @@
 package org.jsapar.parse.bean;
 
-import org.jsapar.compose.bean.BeanEvent;
 import org.jsapar.error.BeanException;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaLine;
@@ -111,9 +110,8 @@ public class BeanMap {
      * Creates a BeanMap based on a supplied map defining which BeanPropertyMap to use for each full class name.
      * @param beanPropertyMaps A list of BeanPropertyMap to use for each class.
      * @return a BeanMap based on a supplied map defining which BeanPropertyMap to use for each full class name
-     * @throws ClassNotFoundException If one of the full class names does not exist in the class path.
      */
-    static BeanMap ofBeanPropertyMaps(Collection<BeanPropertyMap> beanPropertyMaps) throws ClassNotFoundException {
+    static BeanMap ofBeanPropertyMaps(Collection<BeanPropertyMap> beanPropertyMaps) {
         BeanMap beanMap = new BeanMap();
         for (BeanPropertyMap entry : beanPropertyMaps) {
             beanMap.putBean2Line(entry.getLineClass(), entry);

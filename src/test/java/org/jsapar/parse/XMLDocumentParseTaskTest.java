@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class XMLDocumentParseTaskTest {
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     @Test

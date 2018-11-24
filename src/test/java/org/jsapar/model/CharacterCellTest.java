@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 public class CharacterCellTest {
 
     @Test
-    public void testCompareValueTo() throws Exception {
+    public void testCompareValueTo() {
         CharacterCell cell1 = new CharacterCell("test-a", 'a');
         CharacterCell cell2 = new CharacterCell("test-b", 'b');
         assertEquals(0, cell1.compareValueTo(cell1));
@@ -18,13 +18,13 @@ public class CharacterCellTest {
     }
 
     @Test
-    public void testGetSetCharacterValue() throws Exception {
+    public void testGetSetCharacterValue() {
         CharacterCell cell = new CharacterCell("test", 'a');
-        assertEquals(new Character('a'), cell.getValue());
+        assertEquals(Character.valueOf('a'), cell.getValue());
     }
 
     @Test
-    public void testGetStringValue() throws Exception {
+    public void testGetStringValue() {
         CharacterCell cell = new CharacterCell("test", 'a');
         assertEquals("a", cell.getStringValue());
     }

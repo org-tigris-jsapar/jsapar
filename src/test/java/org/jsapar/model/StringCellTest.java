@@ -12,24 +12,24 @@ import static org.junit.Assert.assertTrue;
 public class StringCellTest {
 
     @Test
-    public void testGetSetStringValue() throws Exception {
+    public void testGetSetStringValue() {
         StringCell cell = new StringCell("name", "value");
         assertEquals("value", cell.getStringValue());
     }
 
     @Test
-    public void testGetStringValue() throws Exception {
+    public void testGetStringValue() {
 
     }
 
     @Test
-    public void testIsEmpty() throws Exception {
+    public void testIsEmpty() {
         StringCell c = new StringCell("empty", "");
         assertTrue(c.isEmpty());
     }
 
     @Test
-    public void testCompareTo() throws Exception {
+    public void testCompareTo() {
         StringCell c1 = new StringCell("name1", "value");
         StringCell c2 = new StringCell("name2", "value");
         StringCell c3 = new StringCell("name3", "another");
@@ -41,7 +41,7 @@ public class StringCellTest {
     }
 
     @Test
-    public void testHash() throws Exception {
+    public void testHash() {
         StringCell c1 = new StringCell("name", "value");
         StringCell c2 = new StringCell("name", "value");
         StringCell c3 = new StringCell("name3", "value");
