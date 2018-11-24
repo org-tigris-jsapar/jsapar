@@ -19,14 +19,6 @@ import static org.junit.Assert.assertEquals;
  */
 public class SchemaCellFormatTest {
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     @Test
     public void testSetFormat_intPattern() throws SchemaException {
         SchemaCellFormat format = new SchemaCellFormat(CellType.INTEGER, "0000", Locale.FRANCE);

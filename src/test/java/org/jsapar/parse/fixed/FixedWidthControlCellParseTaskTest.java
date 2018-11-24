@@ -22,14 +22,6 @@ import static org.junit.Assert.assertEquals;
 
 public class FixedWidthControlCellParseTaskTest {
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     @Test
     public void testParse() throws IOException {
         String toParse = "NJonasStenbergAStorgatan 123 45NFred Bergsten";

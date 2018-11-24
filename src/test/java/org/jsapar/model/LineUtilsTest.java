@@ -13,11 +13,6 @@ import static org.junit.Assert.*;
 
 public class LineUtilsTest {
 
-    @Before
-    public void setUp() {
-
-    }
-
 
     @Test
     public void testSetStringCellValue()  {

@@ -14,14 +14,6 @@ import java.math.BigDecimal;
  */
 public class NumberCellTest {
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
 
     /**
      * Test method for {@link NumberCell#getValue()}.

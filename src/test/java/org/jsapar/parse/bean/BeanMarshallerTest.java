@@ -19,10 +19,6 @@ public class BeanMarshallerTest {
     static final Date birthTime = new Date();
 
     @Test
-    public void parseBean() {
-    }
-
-    @Test
     public void testBuildLine() {
         TstPerson person = new TstPerson();
         person.setBirthTime(birthTime);

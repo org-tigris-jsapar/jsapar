@@ -6,9 +6,7 @@ import org.jsapar.error.ValidationAction;
 import org.jsapar.model.Line;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.CellParseException;
-import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParseException;
-import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
@@ -30,10 +28,6 @@ public class CsvLineParseTaskTest {
     @Before
     public void setUp() {
         foundError = false;
-    }
-
-    @After
-    public void tearDown() {
     }
 
     @Test

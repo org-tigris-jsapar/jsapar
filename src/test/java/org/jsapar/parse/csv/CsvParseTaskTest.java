@@ -19,14 +19,6 @@ import static org.junit.Assert.assertEquals;
 
 public class CsvParseTaskTest {
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     @Test
     public final void testParse_oneLine() throws IOException, JSaParException {
         CsvSchema schema = new CsvSchema();
@@ -128,7 +120,7 @@ public class CsvParseTaskTest {
 
     @Test
     public final void testParse_firstLineAsHeader()
-            throws IOException, JSaParException, SchemaException {
+            throws IOException, JSaParException {
         CsvSchema schema = new CsvSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine();
         CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe Size", CellType.INTEGER);

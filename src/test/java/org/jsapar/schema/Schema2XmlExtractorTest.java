@@ -14,14 +14,6 @@ import static org.junit.Assert.assertNotNull;
  */
 public class Schema2XmlExtractorTest {
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
 
     /**
      * Test method for {@link org.jsapar.schema.Schema2XmlExtractor#extractXml(java.io.Writer, org.jsapar.schema.Schema)}.

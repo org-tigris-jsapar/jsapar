@@ -18,11 +18,6 @@ public class StringCellTest {
     }
 
     @Test
-    public void testGetStringValue() {
-
-    }
-
-    @Test
     public void testIsEmpty() {
         StringCell c = new StringCell("empty", "");
         assertTrue(c.isEmpty());

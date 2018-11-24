@@ -41,10 +41,6 @@ public class Bean2TextConverterTest {
     }
 
     @Test
-    public void setErrorEventListener() {
-    }
-
-    @Test
     public void addLineManipulator() throws IOException {
         Collection<TstPerson> people = makePeople();
         Schema composeSchema = makeOutputSchema();

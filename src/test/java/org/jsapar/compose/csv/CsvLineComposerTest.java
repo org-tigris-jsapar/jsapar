@@ -143,7 +143,7 @@ public class CsvLineComposerTest {
     }
 
     @Test
-    public void testOutput_default() throws JSaParException, SchemaException {
+    public void testOutput_default() throws JSaParException {
 
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");

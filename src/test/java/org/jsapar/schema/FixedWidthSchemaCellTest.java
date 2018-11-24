@@ -9,15 +9,6 @@ import static org.junit.Assert.assertSame;
 
 public class FixedWidthSchemaCellTest {
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
-
 
     @Test
     public final void testClone() {

@@ -20,10 +20,6 @@ import static org.junit.Assert.*;
 public class Text2BeanConverterTest {
 
     @Test
-    public void setBeanFactory() {
-    }
-
-    @Test
     public void convert() throws IOException {
         CsvSchema schema = makeTestCsvSchema();
 

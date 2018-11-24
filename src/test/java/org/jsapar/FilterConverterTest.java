@@ -5,13 +5,5 @@ import org.junit.Before;
 
 public class FilterConverterTest {
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
 
 }

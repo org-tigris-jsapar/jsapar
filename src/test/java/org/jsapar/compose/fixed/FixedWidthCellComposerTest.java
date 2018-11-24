@@ -115,7 +115,7 @@ public class FixedWidthCellComposerTest {
     }
 
     @Test
-    public final void testOutput_Default() throws IOException, JSaParException, SchemaException {
+    public final void testOutput_Default() throws IOException, JSaParException {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Size", 11);
         schemaCell.setDefaultValue("10");
 

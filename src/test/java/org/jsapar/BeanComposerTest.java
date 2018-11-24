@@ -22,10 +22,6 @@ public class BeanComposerTest {
 	
     }
 
-    @After
-    public void tearDown() {
-    }
-
     @Test
     public void testBeanComposerConfig() {
         BeanComposeConfig config = new BeanComposeConfig();

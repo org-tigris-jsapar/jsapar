@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.beans.IntrospectionException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,14 +23,6 @@ import static org.junit.Assert.assertEquals;
 public class BeanParseTaskTest {
     static final Date birthTime = new Date();
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     private Schema makeOutputSchema(){
         return BeanMarshallerTest.makeOutputSchema();
     }
@@ -39,7 +32,7 @@ public class BeanParseTaskTest {
     }
 
     @Test
-    public void testBuild() throws IntrospectionException, ClassNotFoundException {
+    public void testBuild() throws IntrospectionException, ClassNotFoundException, IOException {
         List<TstPerson> people = new ArrayList<>(2);
         TstPerson person = new TstPerson();
         person.setFirstName("Jonas");

@@ -10,22 +10,6 @@ import static org.junit.Assert.assertEquals;
  */
 public class FixedWidthCellPositionsTest {
 
-    @BeforeClass
-    public static void setUpBeforeClass() {
-    }
-
-    @AfterClass
-    public static void tearDownAfterClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test method for {@link org.jsapar.schema.FixedWidthCellPositions#increment(org.jsapar.schema.FixedWidthSchemaCell)}.
      */

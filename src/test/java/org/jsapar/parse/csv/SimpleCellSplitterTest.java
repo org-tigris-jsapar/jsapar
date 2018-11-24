@@ -13,14 +13,6 @@ import static org.junit.Assert.assertArrayEquals;
 
 public class SimpleCellSplitterTest {
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     @Test
     public void testSplit() throws IOException, JSaParException {
         CellSplitter s = new SimpleCellSplitter(";");

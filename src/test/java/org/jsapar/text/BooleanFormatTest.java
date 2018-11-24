@@ -14,13 +14,6 @@ import static org.junit.Assert.*;
  */
 public class BooleanFormatTest {
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     @Test
     public void testJavadocSample() {

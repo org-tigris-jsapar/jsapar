@@ -43,9 +43,4 @@ public class StringComposerTest {
         assertEquals("Nilsson", listener.getLines().get(1).get(1));
     }
 
-    @Test
-    public void composeLine() {
-
-    }
-
 }

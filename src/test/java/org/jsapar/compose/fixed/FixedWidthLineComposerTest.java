@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 public class FixedWidthLineComposerTest {
 
     @Test
-    public void testOutput() throws JSaParException, SchemaException {
+    public void testOutput() throws JSaParException {
         Line line = new Line("");
         line.addCell(new StringCell("First name","Jonas"));
         line.addCell(new StringCell("Last name","Stenberg"));
@@ -45,7 +45,7 @@ public class FixedWidthLineComposerTest {
     }
 
     @Test
-    public void testOutput_minLength() throws JSaParException, SchemaException {
+    public void testOutput_minLength() throws JSaParException {
         Line line = new Line("");
         line.addCell(new StringCell("First name","Jonas"));
         line.addCell(new StringCell("Last name","Stenberg"));

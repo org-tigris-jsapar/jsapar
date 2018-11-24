@@ -12,14 +12,6 @@ import static org.junit.Assert.*;
 
 public class DocumentTest {
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown()  {
-    }
-
     @Test
     public void testDocument() {
         Document d = new Document();

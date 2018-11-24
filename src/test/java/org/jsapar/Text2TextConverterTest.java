@@ -28,14 +28,6 @@ public class Text2TextConverterTest {
 
     public static final String LN = System.getProperty("line.separator");
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     @Test
     public void testGetSetConfig(){
         TextParseConfig config = new TextParseConfig();

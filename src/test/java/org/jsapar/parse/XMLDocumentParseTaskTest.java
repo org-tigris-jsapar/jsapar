@@ -12,10 +12,6 @@ import static org.junit.Assert.assertEquals;
 
 public class XMLDocumentParseTaskTest {
 
-    @Before
-    public void setUp() {
-    }
-
     @Test
     public final void testBuild() throws IOException {
         String sXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"

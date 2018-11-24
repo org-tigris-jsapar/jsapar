@@ -18,14 +18,6 @@ import static org.junit.Assert.assertNotNull;
  */
 public class SchemaCellTest {
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
 
     /**
      * Test method for {@link org.jsapar.schema.SchemaCell#SchemaCell(java.lang.String)} .

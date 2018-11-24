@@ -13,14 +13,6 @@ import static org.junit.Assert.*;
 
 public class TextLineReaderTest {
 
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     @Test
     public void testReaderLineReader() {
         String lineSeparator = "|";
