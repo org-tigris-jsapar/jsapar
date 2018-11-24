@@ -23,6 +23,11 @@ easier to maintain and increases flexibility.
 * [Javadocs API documentation](https://javadoc.io/doc/org.tigris.jsapar/jsapar)
 * [Examples](https://github.com/org-tigris-jsapar/jsapar-examples)
 
+## News
+### Version 2.0.0 is now officially released 
+*2018-11-24*
+
+Version 2.0.0 is now officially released and is available in <a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">maven repository</a>.
 ## Mission
 The goal of this project is a java library that removes the burden of parsing and composing flat files and CSV files from the developer.
 
