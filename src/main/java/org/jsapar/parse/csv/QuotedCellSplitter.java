@@ -44,7 +44,7 @@ class QuotedCellSplitter implements CellSplitter {
         this.cellSeparator = cellSeparator;
         this.quoteChar = quoteChar;
         this.lineReader = lineReader;
-        this.cellSplitter = new FastCellSplitter(cellSeparator);
+        this.cellSplitter = new UnquotedCellSplitter(cellSeparator);
         this.maxLinesWithinCell = maxLinesWithinCell;
         this.separatorAndQuote = cellSeparator + quoteChar;
         this.quoteAndSeparator = quoteChar + cellSeparator;

@@ -5,13 +5,13 @@ import org.jsapar.error.JSaParException;
 import java.util.List;
 
 /**
- * Fast cell splitter that can be used when we don't have to consider quotes.
+ * Cell splitter that can be used when we don't have to consider quotes.
  */
-class FastCellSplitter implements CellSplitter {
+class UnquotedCellSplitter implements CellSplitter {
 
     private final String cellSeparator;
 
-    FastCellSplitter(String cellSeparator) {
+    UnquotedCellSplitter(String cellSeparator) {
         this.cellSeparator = cellSeparator;
     }
 
