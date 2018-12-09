@@ -58,9 +58,6 @@ class QuotedCellSplitter implements CellSplitter {
      */
     @Override
     public List<String> split(String sLine, List<String> toAddTo) throws IOException, JSaParException {
-        if(sLine.isEmpty()) {
-            return toAddTo;
-        }
         splitQuoted(sLine, 0, toAddTo);
         return toAddTo;
     }
@@ -74,8 +71,10 @@ class QuotedCellSplitter implements CellSplitter {
      * @throws IOException In case there is an error reading the source.
      */
     private void splitQuoted(String sToSplit, int nIndex, List<String> cells) throws IOException {
-        if (nIndex>=sToSplit.length())
+        if (nIndex>=sToSplit.length()) {
+            cells.add("");
             return;
+        }
 
         if (sToSplit.charAt(nIndex) == quoteChar) {
             if(sToSplit.length()==1) {
