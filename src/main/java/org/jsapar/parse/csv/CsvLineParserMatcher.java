@@ -48,17 +48,17 @@ class CsvLineParserMatcher {
             return null;
 
         if (!controlCells.isEmpty()) {
-            String[] cells = lineReader.readLine(schemaLine.getCellSeparator(), schemaLine.getQuoteChar());
-            if(null == cells || cells.length == 0)
+            List<String> cells = lineReader.readLine(schemaLine.getCellSeparator(), schemaLine.getQuoteChar());
+            if(null == cells || cells.isEmpty())
                 return null; // Empty line
             // We only peek into the line to follow.
             try {
-                if (cells.length <= maxControlPos)
+                if (cells.size() <= maxControlPos)
                     return null;
 
                 for (CsvControlCell controlCell : controlCells) {
 
-                    String value = cells[controlCell.pos];
+                    String value = cells.get(controlCell.pos);
                     if (value == null)
                         return null;
                     if (!controlCell.schemaCell.getLineCondition().satisfies(value))

@@ -2,6 +2,8 @@ package org.jsapar.parse.csv;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Reads a line from a {@link BufferedLineReader} and splits it into an array of Strings, one for each cell depending on cell
@@ -11,14 +13,14 @@ import java.io.Reader;
  * Also makes it possible to handle the fact that a quoted cell can contain line-breaks.
  * <p>
  */
-class CsvLineReader {
+public class CsvLineReader {
 
     private boolean reset               = false;
 
     private BufferedLineReader lineReader;
     private RawLine            currentLine;
 
-    CsvLineReader(String lineSeparator, Reader reader) {
+    public CsvLineReader(String lineSeparator, Reader reader) {
         this.lineReader = new BufferedLineReader(lineSeparator, reader);
     }
 
@@ -47,7 +49,7 @@ class CsvLineReader {
      * @throws IOException In case of an error in underlying IO.
      *
      */
-    String[] readLine(String cellSeparator, char quoteChar) throws IOException {
+    public List<String> readLine(String cellSeparator, char quoteChar) throws IOException {
         if (currentLine != null) {
             if (reset) {
                 reset = false;
@@ -73,7 +75,7 @@ class CsvLineReader {
 
     private CellSplitter makeCellSplitter(String cellSeparator, char quoteChar, BufferedLineReader lineReader2) {
         return quoteChar == 0 ?
-                new SimpleCellSplitter(cellSeparator) :
+                new FastCellSplitter(cellSeparator) :
                 new QuotedCellSplitter(cellSeparator, quoteChar, lineReader2, 25);
     }
 
@@ -103,7 +105,7 @@ class CsvLineReader {
      * Internal private class that represents a raw line where cells have been split into string values.
      */
     private static class RawLine {
-        private String[]     line;
+        private List<String> line = new ArrayList<>(32);
         private String       cellSeparator;
         private char         quoteChar;
         private CellSplitter cellSplitter;
@@ -118,24 +120,27 @@ class CsvLineReader {
             return this.cellSeparator.equals(cellSeparator) && this.quoteChar == quoteChar;
         }
 
-        String[] makeLine(BufferedLineReader lineReader2) throws IOException {
+        List<String> makeLine(BufferedLineReader lineReader2) throws IOException {
             String sLine = lineReader2.readLine();
             if (null == sLine)
                 return null;
-            line = cellSplitter.split(sLine);
+            line.clear();
+            cellSplitter.split(sLine, line);
+            if(line.size() == 1 && line.get(0).trim().isEmpty())
+                line.clear();
             return line;
         }
 
         boolean isEmpty() {
-            return line.length <= 0;
+            return line.isEmpty();
         }
 
-        String[] getLine() {
+        List<String> getLine() {
             return line;
         }
 
         void clear() {
-            line = null;
+            line.clear();
         }
     }
 

@@ -72,15 +72,15 @@ class CsvLineParser {
     boolean parse(CsvLineReader lineReader, LineEventListener listener, ErrorEventListener errorListener)
             throws IOException {
 
-        String[] asCells = lineReader.readLine(lineSchema.getCellSeparator(), lineSchema.getQuoteChar());
-        if (null == asCells)
+        List<String> rawCells = lineReader.readLine(lineSchema.getCellSeparator(), lineSchema.getQuoteChar());
+        if (null == rawCells)
             return false; // eof
 
         if (lineReader.lastLineWasEmpty())
             return handleEmptyLine(lineReader.currentLineNumber(), errorListener);
 
         if (usedCount == 0 && lineSchema.isFirstLineAsSchema()) {
-            lineSchema = buildSchemaFromHeader(lineSchema, asCells, errorListener);
+            lineSchema = buildSchemaFromHeader(lineSchema, rawCells, errorListener);
             usedCount++;
             return true;
         }
@@ -95,7 +95,7 @@ class CsvLineParser {
         lineDecoratorErrorEventListener.initialize(errorListener, line);
 
         java.util.Iterator<CellParser<CsvSchemaCell>> itParser = cellParsers.iterator();
-        for (String sCell : asCells) {
+        for (String sCell : rawCells) {
             if (itParser.hasNext()) {
                 addCellToLineBySchema(line, itParser.next(), sCell, lineDecoratorErrorEventListener);
             } else {
@@ -128,7 +128,7 @@ class CsvLineParser {
      * @return A CsvSchemaLine created from the header line.
      *
      */
-    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, String[] asCells, ErrorEventListener errorListener) {
+    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, List<String> asCells, ErrorEventListener errorListener) {
 
         CsvSchemaLine schemaLine = masterLineSchema.clone();
         schemaLine.getSchemaCells().clear();

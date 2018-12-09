@@ -3,7 +3,6 @@ package org.jsapar.parse.csv;
 import org.jsapar.error.JSaParException;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -11,8 +10,6 @@ import java.util.List;
  *
  */
 class QuotedCellSplitter implements CellSplitter {
-    private static final String[] EMPTY_LINE = new String[0];
-
     private final BufferedLineReader lineReader;
     private final String       cellSeparator;
     private final char         quoteChar;
@@ -47,7 +44,7 @@ class QuotedCellSplitter implements CellSplitter {
         this.cellSeparator = cellSeparator;
         this.quoteChar = quoteChar;
         this.lineReader = lineReader;
-        this.cellSplitter = new SimpleCellSplitter(cellSeparator);
+        this.cellSplitter = new FastCellSplitter(cellSeparator);
         this.maxLinesWithinCell = maxLinesWithinCell;
         this.separatorAndQuote = cellSeparator + quoteChar;
         this.quoteAndSeparator = quoteChar + cellSeparator;
@@ -60,32 +57,27 @@ class QuotedCellSplitter implements CellSplitter {
      * @see org.jsapar.input.parse.CellSplitter#split(java.lang.String)
      */
     @Override
-    public String[] split(String sLine) throws IOException, JSaParException {
+    public List<String> split(String sLine, List<String> toAddTo) throws IOException, JSaParException {
         if(sLine.isEmpty()) {
-            return EMPTY_LINE;
+            return toAddTo;
         }
-        java.util.List<String> cells = new java.util.ArrayList<>(sLine.length() / 8);
-        splitQuoted(cells, sLine);
-        if(cells.size() == 1 && cells.get(0).trim().isEmpty())
-            return EMPTY_LINE;
-
-        return cells.toArray(new String[cells.size()]);
+        splitQuoted(sLine, 0, toAddTo);
+        return toAddTo;
     }
 
     /**
      * Recursively find all quoted cells. A quoted cell is where the quote character is the first and last character in
      * the cell. Any other quote characters within the cells are ignored.
      * 
-     * @param cells Resulting list of split cells built by this method.
      * @param sToSplit String to split.
+     * @param cells Resulting list of split cells built by this method.
      * @throws IOException In case there is an error reading the source.
      */
-    private void splitQuoted(List<String> cells, String sToSplit) throws IOException {
-        int nIndex = 0;
-        if (sToSplit.length() <= 0)
+    private void splitQuoted(String sToSplit, int nIndex, List<String> cells) throws IOException {
+        if (nIndex>=sToSplit.length())
             return;
 
-        if (sToSplit.charAt(0) == quoteChar) {
+        if (sToSplit.charAt(nIndex) == quoteChar) {
             if(sToSplit.length()==1) {
                 // Quote is the only character in the string.
                 cells.add(sToSplit);
@@ -94,15 +86,17 @@ class QuotedCellSplitter implements CellSplitter {
             // Quote is the first character in the string.
         } else {
             // Search for quote character at first position after a cell separator. Otherwise ignore quotes.
-            int nFoundQuoteIndex = sToSplit.indexOf(separatorAndQuote);
+            int nFoundQuoteIndex = sToSplit.indexOf(separatorAndQuote, nIndex);
 
             if (nFoundQuoteIndex < 0) {
-                cells.addAll(Arrays.asList(cellSplitter.split(sToSplit)));
+                if(nIndex == 0)
+                    cellSplitter.split(sToSplit, cells);
+                else
+                    cellSplitter.split(sToSplit.substring(nIndex), cells);
                 return;
             } else if (nFoundQuoteIndex > 0) {
-                String sUnquoted = sToSplit.substring(0, nFoundQuoteIndex);
-                String[] asCells = cellSplitter.split(sUnquoted);
-                cells.addAll(Arrays.asList(asCells));
+                String sUnquoted = sToSplit.substring(nIndex, nFoundQuoteIndex);
+                cellSplitter.split(sUnquoted, cells);
             } else {
                 cells.add("");
             }
@@ -173,7 +167,7 @@ class QuotedCellSplitter implements CellSplitter {
 
         // Next cell is not quoted
         // Now handle the rest of the string with a recursive call.
-        splitQuoted(cells, sToSplit.substring(nIndex));
+        splitQuoted(sToSplit, nIndex, cells);
     }
 
 }

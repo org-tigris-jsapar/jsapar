@@ -1,16 +1,17 @@
 package org.jsapar.parse.csv;
 
 import java.io.IOException;
+import java.util.List;
 
 interface CellSplitter {
     
     /**
      * @param sLine The line to split
-     * @return An array of all cells found on the line. An empty line should return an empty array. A line containing
-     * only white-space characters is considered to be empty.
+     * @param toAddTo The list of strings to add found cells to
+     * @return The same instance as provided in toAddTo.
      * @throws IOException In case of error in underlying io operation
      */
-    String[] split(String sLine) throws IOException;
+    List<String> split(String sLine, List<String> toAddTo) throws IOException;
     
     
 
