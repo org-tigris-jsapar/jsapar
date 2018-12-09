@@ -13,14 +13,14 @@ import java.util.List;
  * Also makes it possible to handle the fact that a quoted cell can contain line-breaks.
  * <p>
  */
-public class CsvLineReader {
+class CsvLineReader {
 
     private boolean reset               = false;
 
     private BufferedLineReader lineReader;
     private RawLine            currentLine;
 
-    public CsvLineReader(String lineSeparator, Reader reader) {
+    CsvLineReader(String lineSeparator, Reader reader) {
         this.lineReader = new BufferedLineReader(lineSeparator, reader);
     }
 
@@ -43,13 +43,13 @@ public class CsvLineReader {
      * @param cellSeparator A sequence of characters that determines separation between cell elements in the input text.
      * @param quoteChar     The character that can be used to quote a cell if the cell contains cell separators or line
      *                      separators that should be part of the cell value. The value 0 indicates that quotes are not used.
-     * @return An array of String cell values fetched from the input reader. Handles the fact that a quoted cell can
-     * contain line-breaks and cell separator that should be part of the cell value. Returns en empty array if line was
+     * @return A list of String cell values fetched from the input reader. Handles the fact that a quoted cell can
+     * contain line-breaks and cell separator that should be part of the cell value. Returns an empty list if line was
      * empty and null if end of input was reached.
      * @throws IOException In case of an error in underlying IO.
      *
      */
-    public List<String> readLine(String cellSeparator, char quoteChar) throws IOException {
+    List<String> readLine(String cellSeparator, char quoteChar) throws IOException {
         if (currentLine != null) {
             if (reset) {
                 reset = false;
