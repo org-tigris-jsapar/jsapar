@@ -20,6 +20,7 @@ By separating the description of the data format into a schema that can be loade
 easier to maintain and increases flexibility.
 
 * [Documentation](https://org-tigris-jsapar.github.io/jsapar/)
+* [Release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes)
 * [Javadocs API documentation](https://javadoc.io/doc/org.tigris.jsapar/jsapar)
 * [Examples](https://github.com/org-tigris-jsapar/jsapar-examples)
 
