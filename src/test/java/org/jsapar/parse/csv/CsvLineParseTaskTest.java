@@ -7,6 +7,7 @@ import org.jsapar.model.Line;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.LineParseException;
+import org.jsapar.parse.csv.states.CsvLineReaderStates;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
@@ -33,7 +34,7 @@ public class CsvLineParseTaskTest {
     public void testParse() throws IOException {
         CsvSchemaLine schemaLine = makeCsvSchemaLine();
         String sLine = "Jonas;Stenberg;Hemvägen 19;111 22;Stockholm";
-        CsvLineReaderBuffered csvLineReader = makeCsvLineReaderForString(sLine);
+        CsvLineReader csvLineReader = makeCsvLineReaderForString(sLine);
         boolean rc = new CsvLineParser(schemaLine).parse(csvLineReader, event -> {
             Line line = event.getLine();
             assertEquals(7, line.size());
@@ -51,8 +52,8 @@ public class CsvLineParseTaskTest {
         return schemaLine;
     }
 
-    private CsvLineReaderBuffered makeCsvLineReaderForString(String sLine) {
-        return new CsvLineReaderBuffered("\n", new StringReader(sLine));
+    private CsvLineReader makeCsvLineReaderForString(String sLine) {
+        return new CsvLineReaderStates("\n", new StringReader(sLine), true);
     }
 
     @Test
@@ -171,14 +172,14 @@ public class CsvLineParseTaskTest {
         assertEquals(true, rc);
     }
 
-    @Test(expected = JSaParException.class)
+    @Test
     public void testParse_quoted_missing_end() throws IOException {
         CsvSchemaLine schemaLine = makeCsvSchemaLine();
         schemaLine.setQuoteChar('\"');
         String sLine = "Jonas;Stenberg;\"Hemvägen ;19;111 22;Stockholm";
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), event -> {
             Line line = event.getLine();
-            assertEquals(6, line.size());
+            assertEquals(7, line.size());
             assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
             assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1"));
             assertEquals("\"Hemvägen ", LineUtils.getStringCellValue(line, "2"));
@@ -193,9 +194,11 @@ public class CsvLineParseTaskTest {
         CsvSchemaLine schemaLine = makeCsvSchemaLine();
         schemaLine.setQuoteChar('\"');
         String sLine = "Jonas;Stenberg;\"";
-        boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), event -> {
+        TextParseConfig config = new TextParseConfig();
+        config.setOnLineInsufficient(ValidationAction.EXCEPTION);
+        boolean rc = new CsvLineParser(schemaLine, config).parse(makeCsvLineReaderForString(sLine), event -> {
             Line line = event.getLine();
-            assertEquals(3, line.size());
+            assertEquals(7, line.size());
             assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
             assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1"));
             assertEquals("\"", LineUtils.getStringCellValue(line, "2"));
