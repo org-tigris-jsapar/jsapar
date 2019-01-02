@@ -72,9 +72,9 @@ class CsvLineParser {
     boolean parse(CsvLineReader lineReader, LineEventListener listener, ErrorEventListener errorListener)
             throws IOException {
 
+        if(lineReader.eofReached())
+            return false;
         List<String> rawCells = lineReader.readLine(lineSchema.getCellSeparator(), lineSchema.getQuoteChar());
-        if (null == rawCells)
-            return false; // eof
 
         if (lineReader.lastLineWasEmpty())
             return handleEmptyLine(lineReader.currentLineNumber(), errorListener);

@@ -12,12 +12,12 @@ import static org.junit.Assert.*;
 /**
  * Created by stejon0 on 2016-05-01.
  */
-public class CsvLineReaderTest {
+public class CsvLineReaderBufferedTest {
 
     @Test
     public void testReset() throws Exception {
         Reader reader = new StringReader("First;line|second,'line'|third,line||fifth;one");
-        CsvLineReader item = new CsvLineReader("|", reader);
+        CsvLineReaderBuffered item = new CsvLineReaderBuffered("|", reader);
         assertArrayEquals( new String[]{"First", "line"}, item.readLine(";", (char) 0).toArray());
         assertArrayEquals( new String[]{"second,'line'"}, item.readLine(";", (char) 0).toArray());
         item.reset();
@@ -39,7 +39,7 @@ public class CsvLineReaderTest {
     @Test
     public void testReadLine() throws Exception {
         Reader reader = new StringReader("First;line|second,'line'|third,line||fifth;one");
-        CsvLineReader item = new CsvLineReader("|", reader);
+        CsvLineReaderBuffered item = new CsvLineReaderBuffered("|", reader);
         assertArrayEquals( new String[]{"First", "line"}, item.readLine(";", (char) 0).toArray());
         assertArrayEquals( new String[]{"second", "line"}, item.readLine(",", '\'').toArray());
         assertArrayEquals( new String[]{"third", "line"}, item.readLine(",", '\'').toArray());
@@ -51,7 +51,7 @@ public class CsvLineReaderTest {
     @Test
     public  void testLastLineWasEmpty() throws IOException, JSaParException {
         Reader reader = new StringReader("First;line||third,line|");
-        CsvLineReader item = new CsvLineReader("|", reader);
+        CsvLineReaderBuffered item = new CsvLineReaderBuffered("|", reader);
         assertArrayEquals( new String[]{"First", "line"}, item.readLine(";", (char) 0).toArray());
         assertFalse(item.lastLineWasEmpty());
         assertArrayEquals( new String[0], item.readLine(";", (char) 0).toArray());

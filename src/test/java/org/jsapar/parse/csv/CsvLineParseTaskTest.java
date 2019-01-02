@@ -11,7 +11,6 @@ import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.SchemaException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +33,7 @@ public class CsvLineParseTaskTest {
     public void testParse() throws IOException {
         CsvSchemaLine schemaLine = makeCsvSchemaLine();
         String sLine = "Jonas;Stenberg;Hemvägen 19;111 22;Stockholm";
-        CsvLineReader csvLineReader = makeCsvLineReaderForString(sLine);
+        CsvLineReaderBuffered csvLineReader = makeCsvLineReaderForString(sLine);
         boolean rc = new CsvLineParser(schemaLine).parse(csvLineReader, event -> {
             Line line = event.getLine();
             assertEquals(7, line.size());
@@ -52,8 +51,8 @@ public class CsvLineParseTaskTest {
         return schemaLine;
     }
 
-    private CsvLineReader makeCsvLineReaderForString(String sLine) {
-        return new CsvLineReader("\n", new StringReader(sLine));
+    private CsvLineReaderBuffered makeCsvLineReaderForString(String sLine) {
+        return new CsvLineReaderBuffered("\n", new StringReader(sLine));
     }
 
     @Test
