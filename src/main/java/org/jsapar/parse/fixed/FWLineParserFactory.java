@@ -3,8 +3,8 @@ package org.jsapar.parse.fixed;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,12 +22,12 @@ class FWLineParserFactory {
     }
 
     /**
-     * @param reader A buffered reader to read input from
+     * @param reader A reader to read input from
      * @return A {@link FixedWidthLineParser} that can be used or null if no line parser could be found. When returning
      * null, you can call {@link #getLastResult()} to get the reason for failure to return a line parser.
      * @throws IOException In case of error in underlying IO operation
      */
-    FixedWidthLineParser makeLineParser(BufferedReader reader) throws IOException {
+    FixedWidthLineParser makeLineParser(Reader reader) throws IOException {
         if(lineParserMatchers.isEmpty())
             return null;
         Iterator<FWLineParserMatcher> iter = lineParserMatchers.iterator();

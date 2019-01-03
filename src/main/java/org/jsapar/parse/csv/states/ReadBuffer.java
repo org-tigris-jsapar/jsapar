@@ -65,6 +65,17 @@ class ReadBuffer {
         return count;
     }
 
+    boolean nextCharacterNotLoaded(){
+        return cursor >= bufferSize;
+    }
+
+    /**
+     * Returns the character that the cursor points to and increments the cursor to next position.
+     * @return The character that the cursor points to.
+     */
+    char nextCharacter(){
+        return buffer[cursor++];
+    }
     /**
      * Place a line mark.
      */

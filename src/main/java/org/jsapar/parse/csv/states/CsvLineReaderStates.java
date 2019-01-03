@@ -124,8 +124,7 @@ public class CsvLineReaderStates implements CsvLineReader {
                     return lineComplete();
                 }
             }
-            final char c = buffer.buffer[buffer.cursor++];
-            if(state.processChar(c))
+            if(state.processChar(buffer.nextCharacter()))
                 return lineComplete();
         }
     }
@@ -190,14 +189,8 @@ public class CsvLineReaderStates implements CsvLineReader {
         currentCellOffset = 0;
     }
 
-
-    private boolean endOfCell(){
-        return buffer.buffer[buffer.cursor-1] == lastCellSeparatorChar && tailOfCellMatches(this.cellSeparator);
-    }
-
     /**
-     * Checks tail of current cell matches supplied string if the supplied character were to be added.
-     * It never adds the character though.
+     * Checks tail of current cell matches supplied string. Assumes that the current character is already checked.
      * @param toMatch The string to match
      * @return True if tail of current cell matches supplied string if the supplied character were to be added.
      */
@@ -206,7 +199,7 @@ public class CsvLineReaderStates implements CsvLineReader {
         if(cellOffset < buffer.cellMark) {
             return false;
         }
-        // Scan backwards to see if characters before matches.
+        // Scan backwards to see if characters before matches. Start at character before current.
         for(int i = toMatch.length()-2; i>=0; i--){
             if(toMatch.charAt(i) !=  buffer.buffer[cellOffset + i])
                 return false;
@@ -317,7 +310,7 @@ public class CsvLineReaderStates implements CsvLineReader {
                 offsetFromEndQuote=1;
                 return false;
             }
-            if (endOfCell()) {
+            if (c == lastCellSeparatorChar && tailOfCellMatches(cellSeparator)) {
                 if(cellSeparator.length() == offsetFromEndQuote)
                     addToLineExcept(cellSeparator.length()+1);
                 else
