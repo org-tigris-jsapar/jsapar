@@ -45,7 +45,7 @@ class FixedWidthLineParser {
     }
 
     @SuppressWarnings("UnnecessaryContinue")
-    public Line parse(Reader reader, long lineNumber, ErrorEventListener errorListener) throws IOException {
+    public Line parse(ReadBuffer lineReader, long lineNumber, ErrorEventListener errorListener) throws IOException {
         Line line = new Line(lineSchema.getLineType(), lineSchema.getSchemaCells().size());
         line.setLineNumber(lineNumber);
         boolean setDefaultsOnly = false;
@@ -63,7 +63,7 @@ class FixedWidthLineParser {
                 if (cellParser.isDefaultValue())
                     line.addCell(cellParser.makeDefaultCell());
 
-                long nSkipped = reader.skip(schemaCell.getLength());
+                int nSkipped = lineReader.skip(schemaCell.getLength());
                 if (nSkipped > 0 || schemaCell.getLength() == 0)
                     oneIgnored = true;
 
@@ -74,7 +74,7 @@ class FixedWidthLineParser {
                 }
             } else {
                 lineDecoratorErrorEventListener.initialize(errorListener, line);
-                Cell cell = cellParser.parse(reader, lineDecoratorErrorEventListener);
+                Cell cell = cellParser.parse(lineReader, lineDecoratorErrorEventListener);
                 if (cell == null) {
                     if (oneRead) {
                         setDefaultsOnly = true;

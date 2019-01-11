@@ -34,17 +34,17 @@ class FWLineParserMatcher {
         }
     }
     
-    LineParserMatcherResult testLineParserIfMatching(Reader reader) throws IOException {
+    LineParserMatcherResult testLineParserIfMatching(ReadBuffer lineReader) throws IOException {
         if(occursLeft <= 0)
             return LineParserMatcherResult.NO_OCCURS;
         if(!controlCells.isEmpty()) {
             // We only peek into the line to follow.
-            reader.mark(maxControlEndPos);
+            lineReader.markLine(maxControlEndPos);
             try {
                 int read = 0;
                 for (FWControlCell controlCell : controlCells) {
                     int offset = controlCell.beginPos - read;
-                    String value = fieldReader.readToString(controlCell.schemaCell, reader, offset);
+                    String value = lineReader.readToString(controlCell.schemaCell, offset);
                     if (value == null)
                         return LineParserMatcherResult.EOF; // EOF reached
                     if (!controlCell.schemaCell.getLineCondition().satisfies(value))
@@ -52,7 +52,7 @@ class FWLineParserMatcher {
                     read = controlCell.beginPos + controlCell.schemaCell.getLength();
                 }
             } finally {
-                reader.reset();
+                lineReader.resetLine();
             }
         }
         if (!schemaLine.isOccursInfinitely())
