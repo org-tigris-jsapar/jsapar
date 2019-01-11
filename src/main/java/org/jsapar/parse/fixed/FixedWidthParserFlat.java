@@ -16,7 +16,7 @@ import java.io.Reader;
  */
 public class FixedWidthParserFlat extends FixedWidthParser{
 
-    private BufferedReader reader;
+    private ReadBuffer lineReader;
 
     /**
      * Mainly for testing, using default parse config.
@@ -35,7 +35,7 @@ public class FixedWidthParserFlat extends FixedWidthParser{
      */
     public FixedWidthParserFlat(Reader reader, FixedWidthSchema schema, TextParseConfig config) {
         super(schema, config);
-        this.reader = new BufferedReader(reader);
+        this.lineReader = new ReadBuffer(schema.getLineSeparator(), reader, MAX_LINE_LENGTH, (allowReadAhead ? MAX_LINE_LENGTH : 1));
     }
 
     @Override
