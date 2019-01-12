@@ -78,7 +78,7 @@ class ReadBuffer {
             }
             toLoad = maxLoad;
         }
-        final int count = reader.read(buffer, cursor, toLoad);
+        final int count = reader.read(buffer, bufferSize, toLoad);
         if(count >= 0) {
             bufferSize += count;
         }
@@ -230,7 +230,7 @@ class ReadBuffer {
                     else{
                         lineEnd = i;
                     }
-                    return i-cursor;
+                    return lineEnd-cursor;
                 }
                 i++;
             }
@@ -254,27 +254,25 @@ class ReadBuffer {
         @Override
         public int nextLine(int allocate) throws IOException {
             cursor = nextLineBegin;
-            int i = cursor;
+            int index = cursor;
             while (true) {
-                if (i >= bufferSize) {
+                if(index>=bufferSize){
                     int loaded = load(1);
                     if(loaded<0) {
-                        lineEnd = i;
-                        return i == cursor ? loaded : i - cursor;
+                        lineEnd = index;
+                        nextLineBegin = lineEnd;
+                        return index == cursor ? loaded : index - cursor;
                     }
                 }
-                final char c = buffer[i];
+                final char c = buffer[index++];
                 if (c == lastCharOfSeparator) {
-                    nextLineBegin = i + 1;
-                    // TODO fix this
-                    if (i > 1 + cursor && buffer[i - 1] == '\r') {
-                        lineEnd = i - 1;
-                    } else {
-                        lineEnd = i;
+                    if(tailOfCellMatches(index, lineSeparator)){
+                        nextLineBegin = index;
+                        lineEnd = index-lineSeparator.length();
+                        return lineEnd - index;
                     }
-                    return i;
+
                 }
-                i++;
             }
         }
 
@@ -283,4 +281,23 @@ class ReadBuffer {
             return lineEnd-cursor;
         }
     }
+
+    /**
+     * Checks tail of current cell matches supplied string. Assumes that the current character is already checked.
+     * @param toMatch The string to match
+     * @return True if tail of current cell matches supplied string if the supplied character were to be added.
+     */
+    private boolean tailOfCellMatches(int index, String toMatch){
+        int cellOffset = index -toMatch.length();
+        if(cellOffset < lineMark) {
+            return false;
+        }
+        // Scan backwards to see if characters before matches. Start at character before current.
+        for(int i = toMatch.length()-2; i>=0; i--){
+            if(toMatch.charAt(i) !=  buffer[cellOffset + i])
+                return false;
+        }
+        return true;
+    }
+
 }
