@@ -1,5 +1,6 @@
 package org.jsapar.parse.fixed;
 
+import org.jsapar.parse.LineParseException;
 import org.jsapar.schema.FixedWidthSchemaCell;
 
 import java.io.IOException;
@@ -7,7 +8,7 @@ import java.io.Reader;
 import java.util.Arrays;
 
 /**
- * Internal class that acts as a read buffer while parsing csv.
+ * Internal class that acts as a read buffer while parsing fixed width.
  */
 @SuppressWarnings("Duplicates")
 class ReadBuffer {
@@ -16,13 +17,14 @@ class ReadBuffer {
     private final LineLoader lineLoader;
     private int maxLoadSize;
     private int lineMark=0;
-    private int lineEnd=0;
+    private int lineEnd;
     private int nextLineBegin=0;
 
-    final char[] buffer;
-    int cursor=0;
-    int bufferSize=0;
-
+    private final char[] buffer;
+    private int cursor=0;
+    private int bufferSize=0;
+    private long lineNumber=0;
+    private boolean eof=false;
     /**
      * @param reader The reader to read from
      * @param bufferSize The buffer size to use.
@@ -33,6 +35,7 @@ class ReadBuffer {
         this.buffer = new char[bufferSize];
         this.maxLoadSize = Math.min(maxLoadSize, bufferSize);
         this.lineLoader = makeLineLoader(lineSeparator);
+        this.lineEnd = bufferSize;
     }
 
     private LineLoader makeLineLoader(String lineSeparator) {
@@ -44,9 +47,6 @@ class ReadBuffer {
         return new LineLoaderCustom(lineSeparator);
     }
 
-    public int loadLine(int lineSize) throws IOException {
-        return lineLoader.loadLine(lineSize);
-    }
     /**
      * Loads new characters to the buffer.
      * @return The number of new characters added to the buffer. 0 if there was no room in the buffer to load. -1 if end of file was reached.
@@ -60,7 +60,7 @@ class ReadBuffer {
         if(toLoad < maxLoad) {
             if (toLoad==0){
                 // Max line size reached. No more space to load.
-                return 0;
+                throw new LineParseException(lineNumber, "Line length exceeds maximum line length of " + buffer.length + " characters");
             }
             // Shift remaining to the left
             System.arraycopy(buffer, lineMark, buffer, 0, remaining);
@@ -79,24 +79,17 @@ class ReadBuffer {
             toLoad = maxLoad;
         }
         final int count = reader.read(buffer, cursor, toLoad);
-        if(count > 0) {
+        if(count >= 0) {
             bufferSize += count;
         }
+        else{
+            lineEnd = bufferSize; // EOF
+        }
+
 
         return count;
     }
 
-    boolean nextCharacterNotLoaded(){
-        return cursor >= bufferSize;
-    }
-
-    /**
-     * Returns the character that the cursor points to and increments the cursor to next position.
-     * @return The character that the cursor points to.
-     */
-    char nextCharacter(){
-        return buffer[cursor++];
-    }
     /**
      * Place a line mark.
      */
@@ -108,11 +101,19 @@ class ReadBuffer {
      * Reset cursor to last line mark.
      */
     void resetLine(){
+        eof=(cursor==lineMark);
         cursor = lineMark;
     }
 
-    void skip(int toSkipp){
+    /**
+     * @param toSkipp
+     * @return The number of characters skipped within line.
+     */
+    int skipWithinLine(int toSkipp){
+        final int availableWithinLine = lineEnd - cursor;
+        toSkipp = Math.min(toSkipp, availableWithinLine);
         cursor+=toSkipp;
+        return toSkipp;
     }
     /**
      * @return The string value of the cell read from the reader at the position pointed to by the offset. Null if end
@@ -124,13 +125,20 @@ class ReadBuffer {
         if(length == 0)
             return EMPTY_STRING;
 
-        int required = cursor+offset+length - bufferSize;
+        int readOffset = cursor + offset;
+        int required = readOffset + length - bufferSize;
         if(required > 0){
             int loaded = load(required);
-            if(loaded < 0)
+            if(loaded < 0) {
+                this.eof = true;
                 return null; // EOF
+            }
         }
-        int readOffset = lineMark+offset;
+        final int availableWithinLine = lineEnd - cursor;
+        length = Math.min(length, availableWithinLine);
+        if(length<0)
+            return null; //EOL
+
         char padCharacter = schemaCell.getPadCharacter();
         if(schemaCell.getAlignment() != FixedWidthSchemaCell.Alignment.LEFT) {
             while (readOffset < length && buffer[readOffset] == padCharacter) {
@@ -151,9 +159,20 @@ class ReadBuffer {
         return new String(buffer, readOffset, length);
     }
 
+    int nextLine(int allocate) throws IOException {
+        lineNumber++;
+        return lineLoader.nextLine(allocate);
+    }
+
+    public int remainsForLine() {
+        return lineLoader.remainsForLine();
+    }
+
 
     interface LineLoader{
-        int loadLine(int lineSize) throws IOException;
+        int nextLine(int allocate) throws IOException;
+
+        int remainsForLine();
     }
 
     /**
@@ -161,35 +180,94 @@ class ReadBuffer {
      */
     class LineLoaderFlat implements LineLoader{
         @Override
-        public int loadLine(int lineSize) throws IOException {
-            int spaceRequired = lineMark+lineSize-bufferSize;
+        public int nextLine(int allocate) throws IOException {
+            int spaceRequired = lineMark+ allocate -bufferSize;
+            lineEnd = buffer.length;
             if(spaceRequired>0) {
-                int loaded = load(spaceRequired);
-                lineSize = loaded > lineSize ? lineSize : loaded;
+                return load(spaceRequired);
             }
-            lineEnd = lineMark + lineSize;
-            nextLineBegin = lineEnd;
-            return lineSize;
+            return allocate;
+        }
+
+        @Override
+        public int remainsForLine() {
+            return 0;
         }
     }
 
     private class LineLoaderCRLF implements LineLoader {
         @Override
-        public int loadLine(int lineSize) throws IOException {
-            return 0;
+        public int nextLine(int allocate) throws IOException {
+            cursor=nextLineBegin;
+            int i=cursor;
+            while(true){
+                if(i>=bufferSize){
+                    int loaded = load(1);
+                    if(loaded<0) {
+                        lineEnd = i;
+                        return i == cursor ? loaded : i - cursor;
+                    }
+                }
+                final char c = buffer[i];
+                if(c=='\n'){
+                    nextLineBegin=i+1;
+                    if(i>1+cursor && buffer[i-1]=='\r'){
+                        lineEnd = i-1;
+                    }
+                    else{
+                        lineEnd = i;
+                    }
+                    return i-cursor;
+                }
+                i++;
+            }
+        }
+
+        @Override
+        public int remainsForLine() {
+            return lineEnd-cursor;
         }
     }
 
     private class LineLoaderCustom implements LineLoader {
         private String lineSeparator;
+        private final char lastCharOfSeparator;
 
         public LineLoaderCustom(String lineSeparator) {
             this.lineSeparator = lineSeparator;
+            this.lastCharOfSeparator = lineSeparator.charAt(lineSeparator.length()-1);
         }
 
         @Override
-        public int loadLine(int lineSize) throws IOException {
-            return 0;
+        public int nextLine(int allocate) throws IOException {
+            cursor = nextLineBegin;
+            int i = cursor;
+            while (true) {
+                if (i >= bufferSize) {
+                    int loaded = load(1);
+                    if(loaded<0) {
+                        lineEnd = i;
+                        return i == cursor ? loaded : i - cursor;
+                    }
+                }
+                final char c = buffer[i];
+                if (c == lastCharOfSeparator) {
+                    nextLineBegin = i + 1;
+                    // TODO fix this
+                    if (i > 1 + cursor && buffer[i - 1] == '\r') {
+                        lineEnd = i - 1;
+                    } else {
+                        lineEnd = i;
+                    }
+                    return i;
+                }
+                i++;
+            }
+        }
+
+        @Override
+        public int remainsForLine() {
+            return lineEnd-cursor;
         }
     }
 }

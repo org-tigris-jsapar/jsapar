@@ -3,11 +3,13 @@ package org.jsapar.parse.fixed;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineEventListener;
+import org.jsapar.parse.LineParseException;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.line.ValidationHandler;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.schema.FixedWidthSchema;
+import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.SchemaLine;
 
 import java.io.IOException;
@@ -22,6 +24,7 @@ public class FixedWidthParser implements TextSchemaParser {
     private TextParseConfig  config;
     private ValidationHandler validationHandler = new ValidationHandler();
     private final ReadBuffer lineReader;
+    private final int minLineLength;
 
 
     public FixedWidthParser(Reader reader, FixedWidthSchema schema, TextParseConfig config) {
@@ -29,6 +32,7 @@ public class FixedWidthParser implements TextSchemaParser {
         this.config = config;
         boolean allowReadAhead = schema.stream().anyMatch(SchemaLine::isOccursInfinitely);
         this.lineReader = new ReadBuffer(schema.getLineSeparator(), reader, MAX_LINE_LENGTH, (allowReadAhead ? MAX_LINE_LENGTH : 1));
+        minLineLength = schema.stream().mapToInt(sl->sl.stream().mapToInt(FixedWidthSchemaCell::getLength).sum()).min().orElse(1);
     }
 
     protected void handleNoParser(long lineNumber, LineParserMatcherResult result, ErrorEventListener errorEventListener) {
@@ -64,6 +68,8 @@ public class FixedWidthParser implements TextSchemaParser {
             if(lineParserFactory.isEmpty())
                 return lineNumber;
             lineNumber++;
+            if( lineReader.nextLine(minLineLength) < 0)
+                return lineNumber-1; // End of stream.
             FixedWidthLineParser lineParser = lineParserFactory.makeLineParser(lineReader);
             if (lineParser == null) {
                 handleNoParser(lineNumber, lineParserFactory.getLastResult(), errorListener);

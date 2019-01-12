@@ -12,23 +12,22 @@ import java.io.Reader;
  * Parses fixed width text source on cell level.
  */
 class FixedWidthCellParser extends CellParser<FixedWidthSchemaCell> {
-    private FWFieldReader fieldReader = new FWFieldReader();
 
-    protected FixedWidthCellParser(FixedWidthSchemaCell fixedWidthSchemaCell, int maxCacheSize) {
+    FixedWidthCellParser(FixedWidthSchemaCell fixedWidthSchemaCell, int maxCacheSize) {
         super(fixedWidthSchemaCell, maxCacheSize);
     }
 
     /**
      * Builds a Cell from a reader input.
      *
-     * @param reader             The input reader
+     * @param lineReader             The input reader
      * @param errorEventListener The error event listener to deliver errors to while parsing.
      * @return A Cell filled with the parsed cell value and with the name of this schema cell.
      * @throws IOException In case there is an error reading from the reader.
      */
-    public Cell parse(Reader reader, ErrorEventListener errorEventListener) throws IOException {
+    Cell parse(ReadBuffer lineReader, ErrorEventListener errorEventListener) throws IOException {
 
-        String sValue = fieldReader.readToString(getSchemaCell(), reader, 0);
+        String sValue = lineReader.readToString(getSchemaCell(),  0);
         if(sValue == null) {
             checkIfMandatory(errorEventListener);
             return null;
@@ -41,7 +40,7 @@ class FixedWidthCellParser extends CellParser<FixedWidthSchemaCell> {
      * @param schemaCell The schema to use.
      * @param maxCacheSize The maximum number of cells to keep in cache while parsing. The value 0 will disable cache.
      */
-    public static FixedWidthCellParser ofSchemaCell(FixedWidthSchemaCell schemaCell, int maxCacheSize) {
+    static FixedWidthCellParser ofSchemaCell(FixedWidthSchemaCell schemaCell, int maxCacheSize) {
         return new FixedWidthCellParser(schemaCell, maxCacheSize);
     }
 

@@ -39,7 +39,7 @@ class FWLineParserMatcher {
             return LineParserMatcherResult.NO_OCCURS;
         if(!controlCells.isEmpty()) {
             // We only peek into the line to follow.
-            lineReader.markLine(maxControlEndPos);
+            lineReader.markLine();
             try {
                 int read = 0;
                 for (FWControlCell controlCell : controlCells) {

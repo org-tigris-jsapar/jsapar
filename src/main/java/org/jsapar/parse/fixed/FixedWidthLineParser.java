@@ -10,7 +10,6 @@ import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,7 +62,7 @@ class FixedWidthLineParser {
                 if (cellParser.isDefaultValue())
                     line.addCell(cellParser.makeDefaultCell());
 
-                int nSkipped = lineReader.skip(schemaCell.getLength());
+                int nSkipped = lineReader.skipWithinLine(schemaCell.getLength());
                 if (nSkipped > 0 || schemaCell.getLength() == 0)
                     oneIgnored = true;
 
@@ -102,6 +101,13 @@ class FixedWidthLineParser {
         }
         if (line.size() <= 0 && !oneIgnored)
             return null;
+
+        int remaining = lineReader.remainsForLine();
+        if(remaining != null && ! remaining.isEmpty()) {
+            if(!getValidationHandler().lineValidation(this, lineNumber, "Trailing characters found on line",
+                    getConfig().getOnLineOverflow(), errorListener))
+                continue; // Ignore the line.
+        }
 
         return line;
     }
