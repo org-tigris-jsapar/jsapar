@@ -10,8 +10,6 @@ import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 import org.jsapar.schema.MatchingCellValueCondition;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -31,7 +29,7 @@ public class FixedWidthControlCellParseTaskTest {
         addSchemaLinesOneCharControl(schema);
 
         Reader reader = new StringReader(toParse);
-        FixedWidthParser parser = new FixedWidthParserFlat(reader, schema);
+        FixedWidthParser parser = new FixedWidthParser(reader, schema, new TextParseConfig());
         DocumentBuilderLineEventListener builder = new DocumentBuilderLineEventListener();
         parser.parse(builder, new ExceptionErrorEventListener());
         Document doc = builder.getDocument();
@@ -154,7 +152,7 @@ public class FixedWidthControlCellParseTaskTest {
     }
 
     private Document build(Reader reader, FixedWidthSchema schema, TextParseConfig config) throws IOException {
-        FixedWidthParser parser = new FixedWidthParserLinesSeparated(reader, schema, config);
+        FixedWidthParser parser = new FixedWidthParser(reader, schema, config);
         DocumentBuilderLineEventListener builder = new DocumentBuilderLineEventListener();
         parser.parse(builder, new ExceptionErrorEventListener());
         return builder.getDocument();

@@ -82,11 +82,9 @@ class ReadBuffer {
         if(count >= 0) {
             bufferSize += count;
         }
-        else{
+        if(count < toLoad){
             lineEnd = bufferSize; // EOF
         }
-
-
         return count;
     }
 
@@ -125,8 +123,8 @@ class ReadBuffer {
         if(length == 0)
             return EMPTY_STRING;
 
-        int readOffset = cursor + offset;
-        int required = readOffset + length - bufferSize;
+        cursor += offset;
+        int required = cursor + length - bufferSize;
         if(required > 0){
             int loaded = load(required);
             if(loaded < 0) {
@@ -138,25 +136,29 @@ class ReadBuffer {
         length = Math.min(length, availableWithinLine);
         if(length<0)
             return null; //EOL
-
+        if(length == 0)
+            return EMPTY_STRING;
+        final int fieldEnd = cursor + length;
+        int cellEnd = fieldEnd;
         char padCharacter = schemaCell.getPadCharacter();
         if(schemaCell.getAlignment() != FixedWidthSchemaCell.Alignment.LEFT) {
-            while (readOffset < length && buffer[readOffset] == padCharacter) {
-                readOffset++;
+            while (cursor < cellEnd && buffer[cursor] == padCharacter) {
+                cursor++;
             }
         }
         if(schemaCell.getAlignment() != FixedWidthSchemaCell.Alignment.RIGHT) {
-            while (length > readOffset && buffer[length - 1] == padCharacter) {
-                length--;
+            while (cellEnd > cursor && buffer[cellEnd - 1] == padCharacter) {
+                cellEnd--;
             }
         }
-        length -= readOffset;
-        if(length == 0){
+        final int cellBegin = cursor;
+        cursor = fieldEnd;
+        if(cellEnd<=cellBegin){
             if(padCharacter == '0' && schemaCell.getCellFormat().getCellType().isNumber())
                 return String.valueOf(padCharacter);
             return EMPTY_STRING;
         }
-        return new String(buffer, readOffset, length);
+        return new String(buffer, cellBegin, cellEnd-cellBegin);
     }
 
     int nextLine(int allocate) throws IOException {
@@ -168,6 +170,13 @@ class ReadBuffer {
         return lineLoader.remainsForLine();
     }
 
+    public boolean eofReached() {
+        return eof;
+    }
+
+    public long getLineNumber() {
+        return lineNumber;
+    }
 
     interface LineLoader{
         int nextLine(int allocate) throws IOException;

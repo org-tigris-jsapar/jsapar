@@ -44,9 +44,9 @@ class FixedWidthLineParser {
     }
 
     @SuppressWarnings("UnnecessaryContinue")
-    public Line parse(ReadBuffer lineReader, long lineNumber, ErrorEventListener errorListener) throws IOException {
+    public Line parse(ReadBuffer lineReader, ErrorEventListener errorListener) throws IOException {
         Line line = new Line(lineSchema.getLineType(), lineSchema.getSchemaCells().size());
-        line.setLineNumber(lineNumber);
+        line.setLineNumber(lineReader.getLineNumber());
         boolean setDefaultsOnly = false;
         boolean oneRead = false;
         boolean oneIgnored = false;
@@ -85,7 +85,7 @@ class FixedWidthLineParser {
                         //noinspection ConstantConditions
                         if (handleInsufficient) {
                             if (!validationHandler
-                                    .lineValidation(this, lineNumber, "Insufficient number of characters for line",
+                                    .lineValidation(this, lineReader.getLineNumber(), "Insufficient number of characters for line",
                                             config.getOnLineInsufficient(), errorListener)) {
                                 return null;
                             }
@@ -103,10 +103,10 @@ class FixedWidthLineParser {
             return null;
 
         int remaining = lineReader.remainsForLine();
-        if(remaining != null && ! remaining.isEmpty()) {
-            if(!getValidationHandler().lineValidation(this, lineNumber, "Trailing characters found on line",
-                    getConfig().getOnLineOverflow(), errorListener))
-                continue; // Ignore the line.
+        if(remaining > 0) {
+            if(!validationHandler.lineValidation(this, lineReader.getLineNumber(), "Trailing characters found on line",
+                    config.getOnLineOverflow(), errorListener))
+                return null; // Ignore the line.
         }
 
         return line;

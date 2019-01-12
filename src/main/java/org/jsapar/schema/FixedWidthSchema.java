@@ -1,7 +1,6 @@
 package org.jsapar.schema;
 
 import org.jsapar.parse.fixed.FixedWidthParser;
-import org.jsapar.parse.fixed.FixedWidthParserLinesSeparated;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
 

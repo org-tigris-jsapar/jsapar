@@ -26,7 +26,6 @@ class FixedWidthCellParser extends CellParser<FixedWidthSchemaCell> {
      * @throws IOException In case there is an error reading from the reader.
      */
     Cell parse(ReadBuffer lineReader, ErrorEventListener errorEventListener) throws IOException {
-
         String sValue = lineReader.readToString(getSchemaCell(),  0);
         if(sValue == null) {
             checkIfMandatory(errorEventListener);

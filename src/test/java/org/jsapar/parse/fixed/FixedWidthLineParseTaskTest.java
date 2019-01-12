@@ -11,13 +11,10 @@ import org.jsapar.parse.LineParseException;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
-import org.jsapar.schema.SchemaException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
 
 import static org.junit.Assert.*;
@@ -29,6 +26,10 @@ public class FixedWidthLineParseTaskTest {
     @Before
     public void setUp() {
         foundError = false;
+    }
+
+    private ReadBuffer makeReadBuffer(String toParse){
+        return new ReadBuffer("", new StringReader(toParse), 100, 100);
     }
 
     @Test
@@ -43,15 +44,15 @@ public class FixedWidthLineParseTaskTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("City", 8));
         schema.addSchemaLine(schemaLine);
 
-        Reader reader = new StringReader(toParse);
         TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
-        Line line = parser.parse(reader, 1, new ExceptionErrorEventListener() );
+        Line line = parser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener() );
         assertNotNull(line);
         assertEquals("Jonas", LineUtils.getStringCellValue(line, "First name"));
         assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last name"));
         assertEquals("Huddinge", LineUtils.getStringCellValue(line,"City"));
     }
+
 
     @Test
     public void testParse_defaultLast() throws IOException, JSaParException {
@@ -65,10 +66,9 @@ public class FixedWidthLineParseTaskTest {
         schemaLine.addSchemaCell(cityCell);
         schema.addSchemaLine(schemaLine);
 
-        Reader reader = new StringReader(toParse);
         TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
-        Line line = parser.parse(reader, 1, new ExceptionErrorEventListener() );
+        Line line = parser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener() );
         assertNotNull(line);
         assertEquals("Jonas", LineUtils.getStringCellValue(line, "First name"));
         assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last name"));
@@ -85,11 +85,10 @@ public class FixedWidthLineParseTaskTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("City", 8));
         schema.addSchemaLine(schemaLine);
 
-        Reader reader = new StringReader(toParse);
         TextParseConfig config = new TextParseConfig();
         config.setOnLineInsufficient(ValidationAction.EXCEPTION);
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
-        parser.parse(reader, 1, new ExceptionErrorEventListener() );
+        parser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener() );
         fail("Exception is expected");
     }
 
@@ -107,10 +106,9 @@ public class FixedWidthLineParseTaskTest {
         schemaLine.addSchemaCell(cityCell);
         schema.addSchemaLine(schemaLine);
 
-        Reader reader = new StringReader(toParse);
         TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
-        Line line = parser.parse(reader, 1, event -> {
+        Line line = parser.parse(makeReadBuffer(toParse), event -> {
             CellParseException e = (CellParseException) event.getError();
             assertEquals("City", e.getCellName());
             foundError=true;
@@ -134,10 +132,9 @@ public class FixedWidthLineParseTaskTest {
 
         schema.addSchemaLine(schemaLine);
 
-        Reader reader = new StringReader(toParse);
         TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
-        Line line = parser.parse(reader, 1, new ExceptionErrorEventListener() );
+        Line line = parser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener() );
         assertNotNull(line);
     }
     
