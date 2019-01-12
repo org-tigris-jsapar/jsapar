@@ -52,6 +52,7 @@ class FixedWidthLineParser {
         boolean oneIgnored = false;
         boolean handleInsufficient = true;
 
+        lineDecoratorErrorEventListener.initialize(errorListener, line);
         for (FixedWidthCellParser cellParser : cellParsers) {
             FixedWidthSchemaCell schemaCell = cellParser.getSchemaCell();
             if (setDefaultsOnly) {
@@ -72,7 +73,6 @@ class FixedWidthLineParser {
                     continue;
                 }
             } else {
-                lineDecoratorErrorEventListener.initialize(errorListener, line);
                 Cell cell = cellParser.parse(lineReader, lineDecoratorErrorEventListener);
                 if (cell == null) {
                     if (oneRead) {

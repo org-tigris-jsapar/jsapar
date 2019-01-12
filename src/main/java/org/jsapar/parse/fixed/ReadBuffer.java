@@ -66,8 +66,8 @@ class ReadBuffer {
             System.arraycopy(buffer, lineMark, buffer, 0, remaining);
             cursor -= lineMark;
             bufferSize -= lineMark;
-            lineEnd -= lineEnd;
-            nextLineBegin -= nextLineBegin;
+            lineEnd -= lineMark;
+            nextLineBegin -= lineMark;
             lineMark = 0;
         }
         else {
@@ -83,7 +83,7 @@ class ReadBuffer {
             bufferSize += count;
         }
         if(count < toLoad){
-            lineEnd = bufferSize; // EOF
+            lineEnd = Math.min(bufferSize, lineEnd); // EOF
         }
         return count;
     }
@@ -128,8 +128,11 @@ class ReadBuffer {
         if(required > 0){
             int loaded = load(required);
             if(loaded < 0) {
-                this.eof = true;
-                return null; // EOF
+                if(cursor >= bufferSize) {
+                    this.eof = true;
+                    return null; // EOF
+                }
+                length = bufferSize-cursor; // What remains in buffer.
             }
         }
         final int availableWithinLine = lineEnd - cursor;
@@ -214,6 +217,7 @@ class ReadBuffer {
                     int loaded = load(1);
                     if(loaded<0) {
                         lineEnd = i;
+                        nextLineBegin = lineEnd;
                         return i == cursor ? loaded : i - cursor;
                     }
                 }
