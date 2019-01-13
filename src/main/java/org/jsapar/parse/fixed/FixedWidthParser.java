@@ -18,9 +18,9 @@ import java.io.Reader;
  * Abstract base class for fixed width text parser based on schema.
  */
 public class FixedWidthParser implements TextSchemaParser {
-    private FixedWidthSchema schema;
-    private TextParseConfig  config;
-    private ValidationHandler validationHandler = new ValidationHandler();
+    private final FixedWidthSchema schema;
+    private final TextParseConfig  config;
+    private final ValidationHandler validationHandler = new ValidationHandler();
     private final ReadBuffer lineReader;
     private final int minLineLength;
 
@@ -33,7 +33,7 @@ public class FixedWidthParser implements TextSchemaParser {
         minLineLength = schema.stream().mapToInt(sl->sl.stream().mapToInt(FixedWidthSchemaCell::getLength).sum()).min().orElse(1);
     }
 
-    protected void handleNoParser(long lineNumber, LineParserMatcherResult result, ErrorEventListener errorEventListener) {
+    private void handleNoParser(long lineNumber, LineParserMatcherResult result, ErrorEventListener errorEventListener) {
 
         // Check if EOF
         if (result == LineParserMatcherResult.NOT_MATCHING)
@@ -46,21 +46,9 @@ public class FixedWidthParser implements TextSchemaParser {
     }
 
 
-    public TextParseConfig getConfig() {
-        return config;
-    }
-
-    public void setConfig(TextParseConfig config) {
-        this.config = config;
-    }
-
-    protected ValidationHandler getValidationHandler() {
-        return validationHandler;
-    }
-
     @Override
     public long parse(LineEventListener lineEventListener, ErrorEventListener errorListener) throws IOException {
-        FWLineParserFactory lineParserFactory = new FWLineParserFactory(getSchema(), getConfig());
+        FWLineParserFactory lineParserFactory = new FWLineParserFactory(getSchema(), config);
         while(true){
             if(lineParserFactory.isEmpty())
                 return lineReader.getLineNumber();

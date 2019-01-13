@@ -21,7 +21,7 @@ public class CsvParser implements TextSchemaParser {
     private CsvSchema            schema;
     private CsvLineParserFactory lineParserFactory;
     private TextParseConfig      parseConfig;
-    private ValidationHandler validationHandler = new ValidationHandler();
+    private final ValidationHandler validationHandler = new ValidationHandler();
 
     CsvParser(Reader reader, CsvSchema schema) {
         this(reader, schema, new TextParseConfig());

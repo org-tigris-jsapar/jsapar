@@ -16,7 +16,6 @@ class FWLineParserMatcher {
     private final FixedWidthSchemaLine schemaLine;
     private List<FWControlCell> controlCells =new ArrayList<>();
     private FixedWidthLineParser lineParser;
-    private FWFieldReader fieldReader = new FWFieldReader();
     private int occursLeft;
     private int maxControlEndPos;
 

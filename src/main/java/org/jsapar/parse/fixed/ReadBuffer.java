@@ -8,7 +8,7 @@ import java.io.Reader;
 import java.util.Arrays;
 
 /**
- * Internal class that acts as a read buffer while parsing fixed width.
+ * Internal class that acts as a read buffer while parsing fixed width from a reader.
  */
 @SuppressWarnings("Duplicates")
 class ReadBuffer {
@@ -51,12 +51,12 @@ class ReadBuffer {
      * Loads new characters to the buffer.
      * @return The number of new characters added to the buffer. 0 if there was no room in the buffer to load. -1 if end of file was reached.
      * @throws IOException In case of underlying io error.
-     * @param required
+     * @param requested The size requested to load. Overrides the maxLoadSize.
      */
-    int load(int required) throws IOException {
+    private int load(int requested) throws IOException {
         final int remaining = bufferSize - lineMark;
         int toLoad=buffer.length - remaining;
-        int maxLoad = Math.max(maxLoadSize, required);
+        int maxLoad = Math.max(maxLoadSize, requested);
         if(toLoad < maxLoad) {
             if (toLoad==0){
                 // Max line size reached. No more space to load.
@@ -104,14 +104,14 @@ class ReadBuffer {
     }
 
     /**
-     * @param toSkipp
+     * @param toSkip The number of characters to skip
      * @return The number of characters skipped within line.
      */
-    int skipWithinLine(int toSkipp){
+    int skipWithinLine(int toSkip){
         final int availableWithinLine = lineEnd - cursor;
-        toSkipp = Math.min(toSkipp, availableWithinLine);
-        cursor+=toSkipp;
-        return toSkipp;
+        toSkip = Math.min(toSkip, availableWithinLine);
+        cursor+=toSkip;
+        return toSkip;
     }
     /**
      * @return The string value of the cell read from the reader at the position pointed to by the offset. Null if end
@@ -174,11 +174,11 @@ class ReadBuffer {
         return lineLoader.nextLine(allocate);
     }
 
-    public int remainsForLine() {
+    int remainsForLine() {
         return lineLoader.remainsForLine();
     }
 
-    public boolean eofReached() {
+    boolean eofReached() {
         return eof;
     }
 
@@ -259,7 +259,7 @@ class ReadBuffer {
         private String lineSeparator;
         private final char lastCharOfSeparator;
 
-        public LineLoaderCustom(String lineSeparator) {
+        LineLoaderCustom(String lineSeparator) {
             this.lineSeparator = lineSeparator;
             this.lastCharOfSeparator = lineSeparator.charAt(lineSeparator.length()-1);
         }

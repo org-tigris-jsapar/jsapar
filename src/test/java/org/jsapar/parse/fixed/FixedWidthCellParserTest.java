@@ -17,7 +17,7 @@ import java.util.Locale;
 import static org.junit.Assert.*;
 
 @SuppressWarnings("ThrowablePrintedToSystemOut")
-public class FixedWidthCellParseTaskTest {
+public class FixedWidthCellParserTest {
 
     private int maxCacheSize=0;
 

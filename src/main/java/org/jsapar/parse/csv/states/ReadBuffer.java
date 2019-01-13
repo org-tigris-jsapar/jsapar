@@ -33,6 +33,7 @@ class ReadBuffer {
      * @return The number of new characters added to the buffer. 0 if there was no room in the buffer to load. -1 if end of file was reached.
      * @throws IOException In case of underlying io error.
      */
+    @SuppressWarnings("Duplicates")
     int load() throws IOException {
         final int remaining = bufferSize - lineMark;
         int toLoad=buffer.length - remaining;
@@ -57,16 +58,12 @@ class ReadBuffer {
             }
             toLoad = maxLoadSize;
         }
-        final int count = reader.read(buffer, cursor, toLoad);
+        final int count = reader.read(buffer, bufferSize, toLoad);
         if(count > 0) {
             bufferSize += count;
         }
 
         return count;
-    }
-
-    boolean nextCharacterNotLoaded(){
-        return cursor >= bufferSize;
     }
 
     /**

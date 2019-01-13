@@ -18,7 +18,7 @@ import java.io.StringReader;
 
 import static org.junit.Assert.assertEquals;
 
-public class FixedWidthParseTaskTest {
+public class FixedWidthParserTest {
 
     @Test
     public final void testParse_Flat() throws IOException {
