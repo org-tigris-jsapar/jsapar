@@ -164,6 +164,11 @@ class ReadBuffer {
         return new String(buffer, cellBegin, cellEnd-cellBegin);
     }
 
+    /**
+     * @param allocate The number of characters to allocate for the next line. Used for performance optimization.
+     * @return The length of the next line or -1 if end of file was reached.
+     * @throws IOException In case of underlying io error.
+     */
     int nextLine(int allocate) throws IOException {
         lineNumber++;
         return lineLoader.nextLine(allocate);
