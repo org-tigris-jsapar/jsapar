@@ -18,7 +18,6 @@ import java.io.Reader;
  * Abstract base class for fixed width text parser based on schema.
  */
 public class FixedWidthParser implements TextSchemaParser {
-    private static final int MAX_LINE_LENGTH = 1024 * 8;
     private FixedWidthSchema schema;
     private TextParseConfig  config;
     private ValidationHandler validationHandler = new ValidationHandler();
@@ -30,7 +29,7 @@ public class FixedWidthParser implements TextSchemaParser {
         this.schema = schema;
         this.config = config;
         boolean allowReadAhead = schema.stream().anyMatch(SchemaLine::isOccursInfinitely);
-        this.lineReader = new ReadBuffer(schema.getLineSeparator(), reader, MAX_LINE_LENGTH, (allowReadAhead ? MAX_LINE_LENGTH : 1));
+        this.lineReader = new ReadBuffer(schema.getLineSeparator(), reader, config.getMaxLineLength(), (allowReadAhead ? config.getMaxLineLength(): 1));
         minLineLength = schema.stream().mapToInt(sl->sl.stream().mapToInt(FixedWidthSchemaCell::getLength).sum()).min().orElse(1);
     }
 

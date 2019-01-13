@@ -15,8 +15,8 @@ import java.util.List;
  * buffer.
  */
 public class CsvLineReaderStates implements CsvLineReader {
-    private static final int MAX_LINE_LENGTH = 8 * 1024;
     private static final String EMPTY_CELL = "";
+    private final int maxLineLength;
 
     private State beginCellState;
     private State foundEndQuoteState;
@@ -44,10 +44,10 @@ public class CsvLineReaderStates implements CsvLineReader {
      * @param lineSeparator  The line separator to use
      * @param reader The reader to read characters from.
      * @param allowReadAhead If true, reading from the reader can be optimized by reading larger chunks of data into a
-     *                       buffer but that can only be utilized if it is ok to read until the end of the file or if it
-     *                       is ok consume more characters from the reader than is actually needed for parsing.
+ *                       buffer but that can only be utilized if it is ok to read until the end of the file or if it
+     * @param maxLineLength
      */
-    public CsvLineReaderStates(String lineSeparator, Reader reader, boolean allowReadAhead) {
+    public CsvLineReaderStates(String lineSeparator, Reader reader, boolean allowReadAhead, int maxLineLength) {
         eolCheck = Arrays.asList("\n", "\r\n").contains(lineSeparator) ? new EolCheckCRLF() : new EolCheckCustom(lineSeparator);
         lastEolChar = eolCheck.getLastEolChar();
 
@@ -58,7 +58,8 @@ public class CsvLineReaderStates implements CsvLineReader {
         unquotedCellState = new UnquotedCellState();
 
         currentLine = new ArrayList<>();
-        buffer = new ReadBuffer(reader, MAX_LINE_LENGTH, (allowReadAhead ? MAX_LINE_LENGTH : 1));
+        this.maxLineLength = maxLineLength;
+        buffer = new ReadBuffer(reader, maxLineLength, (allowReadAhead ? maxLineLength : 1));
 
         beginCellState();
     }
@@ -116,7 +117,7 @@ public class CsvLineReaderStates implements CsvLineReader {
                     }
                     else if (count == 0){
                         throw new LineParseException( lineNumber,
-                                "Maximum line size exceeded. More than " + MAX_LINE_LENGTH + " bytes were read without finding a line separator or maybe there is a miss-placed start quote without matching end quote.");
+                                "Maximum line size exceeded. More than " + maxLineLength + " bytes were read without finding a line separator or maybe there is a miss-placed start quote without matching end quote.");
 
                     }
                     this.eof = true;

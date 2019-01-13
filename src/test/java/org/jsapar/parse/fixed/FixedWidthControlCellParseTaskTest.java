@@ -29,7 +29,9 @@ public class FixedWidthControlCellParseTaskTest {
         addSchemaLinesOneCharControl(schema);
 
         Reader reader = new StringReader(toParse);
-        FixedWidthParser parser = new FixedWidthParser(reader, schema, new TextParseConfig());
+        TextParseConfig config = new TextParseConfig();
+        config.setMaxLineLength(20);
+        FixedWidthParser parser = new FixedWidthParser(reader, schema, config);
         DocumentBuilderLineEventListener builder = new DocumentBuilderLineEventListener();
         parser.parse(builder, new ExceptionErrorEventListener());
         Document doc = builder.getDocument();
@@ -87,6 +89,19 @@ public class FixedWidthControlCellParseTaskTest {
         checkResult(doc);
     }
 
+    @Test
+    public void testParse_separatedLines_custom() throws IOException {
+        String toParse = "NJonasStenberg   $^AStorgatan 123 45          $^NFred Bergsten$^";
+        org.jsapar.schema.FixedWidthSchema schema = new FixedWidthSchema();
+        schema.setLineSeparator("$^");
+
+        addSchemaLinesOneCharControl(schema);
+
+        Reader reader = new StringReader(toParse);
+        Document doc = build(reader, schema);
+
+        checkResult(doc);
+    }
     private void checkResult(Document doc) {
         assertEquals("Jonas", doc.getLine(0).getCell("First name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
         assertEquals("Stenberg", doc.getLine(0).getCell("Last name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
@@ -148,7 +163,9 @@ public class FixedWidthControlCellParseTaskTest {
     }
 
     private Document build(Reader reader, FixedWidthSchema schema) throws IOException {
-        return build(reader, schema, new TextParseConfig());
+        TextParseConfig config = new TextParseConfig();
+        config.setMaxLineLength(32);
+        return build(reader, schema, config);
     }
 
     private Document build(Reader reader, FixedWidthSchema schema, TextParseConfig config) throws IOException {

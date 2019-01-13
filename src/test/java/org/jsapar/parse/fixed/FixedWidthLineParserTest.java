@@ -19,7 +19,7 @@ import java.io.StringReader;
 
 import static org.junit.Assert.*;
 
-public class FixedWidthLineParseTaskTest {
+public class FixedWidthLineParserTest {
     
     boolean foundError = false;
 

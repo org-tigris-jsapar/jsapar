@@ -193,10 +193,14 @@ class ReadBuffer {
     class LineLoaderFlat implements LineLoader{
         @Override
         public int nextLine(int allocate) throws IOException {
-            int spaceRequired = lineMark+ allocate -bufferSize;
-            lineEnd = buffer.length;
+            int spaceRequired = cursor+ allocate -bufferSize;
+            lineMark = cursor;
+            lineEnd = Integer.MAX_VALUE;
             if(spaceRequired>0) {
-                return load(spaceRequired);
+                final int loaded = load(spaceRequired);
+                if(loaded < 0 && bufferSize==cursor)
+                    return loaded;
+                return bufferSize-lineMark;
             }
             return allocate;
         }
@@ -210,29 +214,33 @@ class ReadBuffer {
     private class LineLoaderCRLF implements LineLoader {
         @Override
         public int nextLine(int allocate) throws IOException {
-            cursor=nextLineBegin;
-            int i=cursor;
+            cursor = nextLineBegin;
+            lineMark = nextLineBegin;
             while(true){
-                if(i>=bufferSize){
+                if(cursor>=bufferSize){
                     int loaded = load(1);
                     if(loaded<0) {
-                        lineEnd = i;
+                        lineEnd = cursor;
                         nextLineBegin = lineEnd;
-                        return i == cursor ? loaded : i - cursor;
+                        final int lineSize = lineMark==cursor ? loaded : cursor-lineMark;
+                        cursor = lineMark;
+                        return lineSize;
                     }
                 }
-                final char c = buffer[i];
+                final char c = buffer[cursor];
                 if(c=='\n'){
-                    nextLineBegin=i+1;
-                    if(i>1+cursor && buffer[i-1]=='\r'){
-                        lineEnd = i-1;
+                    if(cursor>nextLineBegin && buffer[cursor-1]=='\r'){
+                        lineEnd = cursor-1;
                     }
                     else{
-                        lineEnd = i;
+                        lineEnd = cursor;
                     }
-                    return lineEnd-cursor;
+                    int lineSize = lineEnd - lineMark;
+                    nextLineBegin=cursor+1;
+                    cursor = lineMark;
+                    return lineSize;
                 }
-                i++;
+                cursor++;
             }
         }
 
@@ -254,22 +262,26 @@ class ReadBuffer {
         @Override
         public int nextLine(int allocate) throws IOException {
             cursor = nextLineBegin;
-            int index = cursor;
-            while (true) {
-                if(index>=bufferSize){
+            lineMark = nextLineBegin;
+            while(true){
+                if(cursor>=bufferSize){
                     int loaded = load(1);
                     if(loaded<0) {
-                        lineEnd = index;
+                        lineEnd = cursor;
                         nextLineBegin = lineEnd;
-                        return index == cursor ? loaded : index - cursor;
+                        final int lineSize = lineMark==cursor ? loaded : cursor-lineMark;
+                        cursor = lineMark;
+                        return lineSize;
                     }
                 }
-                final char c = buffer[index++];
+                final char c = buffer[cursor++];
                 if (c == lastCharOfSeparator) {
-                    if(tailOfCellMatches(index, lineSeparator)){
-                        nextLineBegin = index;
-                        lineEnd = index-lineSeparator.length();
-                        return lineEnd - index;
+                    if(tailOfCellMatches(cursor, lineSeparator)){
+                        lineEnd = cursor-lineSeparator.length();
+                        nextLineBegin = cursor;
+                        int lineSize = lineEnd - lineMark;
+                        cursor=lineMark;
+                        return lineSize;
                     }
 
                 }
