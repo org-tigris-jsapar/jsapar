@@ -17,19 +17,22 @@ import java.util.Locale;
 import static org.junit.Assert.*;
 
 @SuppressWarnings("ThrowablePrintedToSystemOut")
-public class FixedWidthCellParseTaskTest {
+public class FixedWidthCellParserTest {
 
     private int maxCacheSize=0;
 
+    private ReadBuffer makeReadBuffer(String toParse){
+        return new ReadBuffer("", new StringReader(toParse), 40, 40);
+    }
+    
     @Test
     public final void testBuild() throws IOException, JSaParException {
         String toParse = "   Jonas   ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
         schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
 
-        Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        Cell cell = cellParser.parse(reader, new ExceptionErrorEventListener());
+        Cell cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
 
         assertEquals("Jonas", cell.getStringValue());
     }
@@ -41,9 +44,8 @@ public class FixedWidthCellParseTaskTest {
         schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
         schemaCell.setPadCharacter('!');
 
-        Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        Cell cell = cellParser.parse(reader, new ExceptionErrorEventListener());
+        Cell cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
 
         assertEquals("   Jonas   ", cell.getStringValue());
     }
@@ -54,10 +56,9 @@ public class FixedWidthCellParseTaskTest {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
         schemaCell.setMandatory(true);
 
-        Reader reader = new StringReader(toParse);
         try {
             FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-            cellParser.parse(reader, new ExceptionErrorEventListener());
+            cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
             fail("Should throw exception");
 
         } catch (JSaParException ex) {
@@ -70,10 +71,9 @@ public class FixedWidthCellParseTaskTest {
         String toParse = "           ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
 
-        Reader reader = new StringReader(toParse);
         Cell cell;
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        cell = cellParser.parse(reader, new ExceptionErrorEventListener());
+        cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
         assertTrue(cell.isEmpty());
         assertEquals("", cell.getValue());
     }
@@ -84,10 +84,9 @@ public class FixedWidthCellParseTaskTest {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("ShoeSize", 11);
         schemaCell.setCellFormat(CellType.INTEGER);
 
-        Reader reader = new StringReader(toParse);
         Cell cell;
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        cell = cellParser.parse(reader, new ExceptionErrorEventListener());
+        cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
         assertTrue(cell.isEmpty());
         assertEquals("", cell.getValue());
     }
@@ -102,10 +101,9 @@ public class FixedWidthCellParseTaskTest {
         schemaCell.setMandatory(true);
         schemaCell.setPadCharacter('!');
 
-        Reader reader = new StringReader(toParse);
         Cell cell;
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        cell = cellParser.parse(reader, new ExceptionErrorEventListener());
+        cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
         assertEquals("           ", cell.getValue());
     }
 
@@ -114,9 +112,8 @@ public class FixedWidthCellParseTaskTest {
         String toParse = "           ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
 
-        Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        Cell cell = cellParser.parse(reader, new ExceptionErrorEventListener());
+        Cell cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
 
         assertEquals("", cell.getValue());
         assertEquals("", cell.getStringValue());
@@ -128,9 +125,8 @@ public class FixedWidthCellParseTaskTest {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Date", 16);
         schemaCell.setCellFormat(CellType.DATE, "yyyy-MM-dd HH:mm");
 
-        Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        DateCell cell = (DateCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        DateCell cell = (DateCell) cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
         java.util.Date date = cell.getValue();
         Calendar calendar = java.util.Calendar.getInstance();
         calendar.setTime(date);
@@ -150,9 +146,8 @@ public class FixedWidthCellParseTaskTest {
         schemaCell.setPadCharacter('0');
         schemaCell.setCellFormat(CellType.INTEGER);
 
-        Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        IntegerCell cell = (IntegerCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        IntegerCell cell = (IntegerCell) cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
         int value = cell.getValue().intValue();
 
         assertEquals(123, value);
@@ -166,9 +161,8 @@ public class FixedWidthCellParseTaskTest {
         schemaCell.setPadCharacter('0');
         schemaCell.setCellFormat(CellType.INTEGER);
 
-        Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        IntegerCell cell = (IntegerCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        IntegerCell cell = (IntegerCell) cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
         int value = cell.getValue().intValue();
 
         assertEquals(0, value);
@@ -181,9 +175,8 @@ public class FixedWidthCellParseTaskTest {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Decimal", 11);
         schemaCell.setCellFormat(CellType.DECIMAL, "#,###.#", new Locale("sv", "SE"));
 
-        Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        BigDecimalCell cell = (BigDecimalCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        BigDecimalCell cell = (BigDecimalCell) cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
         BigDecimal value = cell.getBigDecimalValue();
 
         assertEquals(new BigDecimal("-123456.78"), value);
@@ -197,9 +190,8 @@ public class FixedWidthCellParseTaskTest {
         schemaCell.setCellFormat(CellType.DECIMAL, "#,###.#", Locale.UK);
         // schemaCell.setCellFormat(new SchemaCellFormat(CellType.DECIMAL));
 
-        Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        BigDecimalCell cell = (BigDecimalCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        BigDecimalCell cell = (BigDecimalCell) cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
         BigDecimal value = cell.getBigDecimalValue();
 
         assertEquals(new BigDecimal("-123456.78"), value);
@@ -211,9 +203,8 @@ public class FixedWidthCellParseTaskTest {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Integer", 6);
         schemaCell.setCellFormat(CellType.INTEGER);
 
-        Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        IntegerCell cell = (IntegerCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        IntegerCell cell = (IntegerCell) cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
         int value = cell.getValue().intValue();
 
         assertEquals(123456, value);
@@ -225,9 +216,8 @@ public class FixedWidthCellParseTaskTest {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Float", 6);
         schemaCell.setCellFormat(CellType.FLOAT);
 
-        Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        FloatCell cell = (FloatCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        FloatCell cell = (FloatCell) cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
         double value = cell.getValue().doubleValue();
 
         assertEquals(1123, 234, value);
@@ -239,9 +229,8 @@ public class FixedWidthCellParseTaskTest {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Float", 8);
         schemaCell.setCellFormat(CellType.FLOAT, "#.###E0", schemaCell.getLocale());
 
-        Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        FloatCell cell = (FloatCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        FloatCell cell = (FloatCell) cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
         double value = cell.getValue().doubleValue();
 
         assertEquals(1.234e6, value, 0.001);
@@ -254,9 +243,8 @@ public class FixedWidthCellParseTaskTest {
         schemaCell.setLocale(new Locale("sv", "SE"));
         schemaCell.setCellFormat(CellType.FLOAT, "#.###E0", schemaCell.getLocale());
 
-        Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        FloatCell cell = (FloatCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        FloatCell cell = (FloatCell) cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
         double value = cell.getValue().doubleValue();
 
         assertEquals(1.234e6, value, 0.001);
@@ -268,9 +256,8 @@ public class FixedWidthCellParseTaskTest {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("True", 5);
         schemaCell.setCellFormat(CellType.BOOLEAN);
 
-        Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        BooleanCell cell = (BooleanCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        BooleanCell cell = (BooleanCell) cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
         boolean value = cell.getValue();
 
         assertEquals(true, value);
@@ -281,10 +268,9 @@ public class FixedWidthCellParseTaskTest {
         String toParse = "Next";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("DontRead", 0);
 
-        Reader reader = new StringReader(toParse);
         Cell cell;
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        cell = cellParser.parse(reader, new ExceptionErrorEventListener());
+        cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
         Assert.assertNotNull(cell);
         Assert.assertTrue(cell.isEmpty());
         Assert.assertEquals("", cell.getStringValue());

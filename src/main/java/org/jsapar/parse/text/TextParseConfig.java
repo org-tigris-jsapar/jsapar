@@ -54,6 +54,14 @@ public class TextParseConfig {
      */
     private int maxCellCacheSize = 1;
 
+    /**
+     * The maximum number of characters that can occur on one line. Default is 8k. Since this size is used to allocate
+     * buffer needed while parsing, setting a smaller number will have positive impact on memory usage and speed while
+     * parsing a large number of small files. While parsing a few files of larger size, it can be an advantage to use a
+     * larger number here since this allows the parser to allocate a larger buffer.
+     */
+    private int maxLineLength = 1024*8;
+
     public ValidationAction getOnUndefinedLineType() {
         return onUndefinedLineType;
     }
@@ -84,5 +92,13 @@ public class TextParseConfig {
 
     public void setMaxCellCacheSize(int maxCellCacheSize) {
         this.maxCellCacheSize = Math.max(maxCellCacheSize, 100);
+    }
+
+    public int getMaxLineLength() {
+        return maxLineLength;
+    }
+
+    public void setMaxLineLength(int maxLineLength) {
+        this.maxLineLength = maxLineLength;
     }
 }

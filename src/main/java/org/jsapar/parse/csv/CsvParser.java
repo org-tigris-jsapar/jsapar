@@ -21,7 +21,7 @@ public class CsvParser implements TextSchemaParser {
     private CsvSchema            schema;
     private CsvLineParserFactory lineParserFactory;
     private TextParseConfig      parseConfig;
-    private ValidationHandler validationHandler = new ValidationHandler();
+    private final ValidationHandler validationHandler = new ValidationHandler();
 
     CsvParser(Reader reader, CsvSchema schema) {
         this(reader, schema, new TextParseConfig());
@@ -30,7 +30,7 @@ public class CsvParser implements TextSchemaParser {
 
     public CsvParser(Reader reader, CsvSchema schema, TextParseConfig parseConfig) {
         this.parseConfig = parseConfig;
-        lineReader = new CsvLineReaderStates(schema.getLineSeparator(), reader, schema.stream().anyMatch(SchemaLine::isOccursInfinitely));
+        lineReader = new CsvLineReaderStates(schema.getLineSeparator(), reader, schema.stream().anyMatch(SchemaLine::isOccursInfinitely), parseConfig.getMaxLineLength());
         this.schema = schema;
         this.lineParserFactory = new CsvLineParserFactory(schema, parseConfig);
     }

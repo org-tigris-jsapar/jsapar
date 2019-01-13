@@ -76,7 +76,7 @@ class CsvLineParser {
             return false;
         List<String> rawCells = lineReader.readLine(lineSchema.getCellSeparator(), lineSchema.getQuoteChar());
 
-        if (lineReader.lastLineWasEmpty())
+        if (rawCells.isEmpty())
             return handleEmptyLine(lineReader.currentLineNumber(), errorListener);
 
         if (usedCount == 0 && lineSchema.isFirstLineAsSchema()) {

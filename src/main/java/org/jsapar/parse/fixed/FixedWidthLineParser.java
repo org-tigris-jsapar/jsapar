@@ -10,7 +10,6 @@ import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,14 +44,15 @@ class FixedWidthLineParser {
     }
 
     @SuppressWarnings("UnnecessaryContinue")
-    public Line parse(Reader reader, long lineNumber, ErrorEventListener errorListener) throws IOException {
+    public Line parse(ReadBuffer lineReader, ErrorEventListener errorListener) throws IOException {
         Line line = new Line(lineSchema.getLineType(), lineSchema.getSchemaCells().size());
-        line.setLineNumber(lineNumber);
+        line.setLineNumber(lineReader.getLineNumber());
         boolean setDefaultsOnly = false;
         boolean oneRead = false;
         boolean oneIgnored = false;
         boolean handleInsufficient = true;
 
+        lineDecoratorErrorEventListener.initialize(errorListener, line);
         for (FixedWidthCellParser cellParser : cellParsers) {
             FixedWidthSchemaCell schemaCell = cellParser.getSchemaCell();
             if (setDefaultsOnly) {
@@ -63,7 +63,7 @@ class FixedWidthLineParser {
                 if (cellParser.isDefaultValue())
                     line.addCell(cellParser.makeDefaultCell());
 
-                long nSkipped = reader.skip(schemaCell.getLength());
+                int nSkipped = lineReader.skipWithinLine(schemaCell.getLength());
                 if (nSkipped > 0 || schemaCell.getLength() == 0)
                     oneIgnored = true;
 
@@ -73,8 +73,7 @@ class FixedWidthLineParser {
                     continue;
                 }
             } else {
-                lineDecoratorErrorEventListener.initialize(errorListener, line);
-                Cell cell = cellParser.parse(reader, lineDecoratorErrorEventListener);
+                Cell cell = cellParser.parse(lineReader, lineDecoratorErrorEventListener);
                 if (cell == null) {
                     if (oneRead) {
                         setDefaultsOnly = true;
@@ -86,7 +85,7 @@ class FixedWidthLineParser {
                         //noinspection ConstantConditions
                         if (handleInsufficient) {
                             if (!validationHandler
-                                    .lineValidation(this, lineNumber, "Insufficient number of characters for line",
+                                    .lineValidation(this, lineReader.getLineNumber(), "Insufficient number of characters for line",
                                             config.getOnLineInsufficient(), errorListener)) {
                                 return null;
                             }
@@ -102,6 +101,13 @@ class FixedWidthLineParser {
         }
         if (line.size() <= 0 && !oneIgnored)
             return null;
+
+        int remaining = lineReader.remainsForLine();
+        if(remaining > 0) {
+            if(!validationHandler.lineValidation(this, lineReader.getLineNumber(), "Trailing characters found on line",
+                    config.getOnLineOverflow(), errorListener))
+                return null; // Ignore the line.
+        }
 
         return line;
     }

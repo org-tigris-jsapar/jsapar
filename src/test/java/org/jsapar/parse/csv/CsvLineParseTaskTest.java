@@ -53,7 +53,7 @@ public class CsvLineParseTaskTest {
     }
 
     private CsvLineReader makeCsvLineReaderForString(String sLine) {
-        return new CsvLineReaderStates("\n", new StringReader(sLine), true);
+        return new CsvLineReaderStates("\n", new StringReader(sLine), true, 8 * 1024);
     }
 
     @Test

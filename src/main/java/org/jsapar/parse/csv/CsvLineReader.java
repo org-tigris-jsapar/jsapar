@@ -31,7 +31,7 @@ public interface CsvLineReader {
      *                      separators that should be part of the cell value. The value 0 indicates that quotes are not used.
      * @return A list of String cell values fetched from the input reader. Handles the fact that a quoted cell can
      * contain line-breaks and cell separator that should be part of the cell value. Returns an empty list if line was
-     * empty and null if end of input was reached. The caller should regard the returned list as unmutable. Alterations
+     * empty or if end of input was reached. The caller should regard the returned list as unmutable. Alterations
      * to the returned
      * list may result in unexpected behavior.
      * @throws IOException In case of an error in underlying IO.
