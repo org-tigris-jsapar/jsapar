@@ -7,7 +7,6 @@ import org.jsapar.model.Line;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.LineParseException;
-import org.jsapar.parse.csv.states.CsvLineReaderStates;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
@@ -18,12 +17,11 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringReader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class CsvLineParseTaskTest {
 
-    boolean foundError = false;
+    private boolean foundError = false;
 
     @Before
     public void setUp() {
@@ -41,10 +39,10 @@ public class CsvLineParseTaskTest {
             assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
             assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1"));
         }, new ExceptionErrorEventListener());
-        assertEquals(true, rc);
+        assertTrue(rc);
     }
 
-    public static CsvSchemaLine makeCsvSchemaLine() {
+    static CsvSchemaLine makeCsvSchemaLine() {
         CsvSchemaLine schemaLine = new CsvSchemaLine();
         for (int i = 0; i < 7; i++) {
             schemaLine.addSchemaCell(new CsvSchemaCell(String.valueOf(i)));
@@ -67,7 +65,7 @@ public class CsvLineParseTaskTest {
             assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1"));
         }, new ExceptionErrorEventListener());
 
-        assertEquals(true, rc);
+        assertTrue(rc);
     }
 
     @Test
@@ -86,7 +84,7 @@ public class CsvLineParseTaskTest {
             assertEquals("Stockholm", LineUtils.getStringCellValue(line, "5"));
         }, new ExceptionErrorEventListener());
 
-        assertEquals(true, rc);
+        assertTrue(rc);
     }
 
     @Test
@@ -102,7 +100,7 @@ public class CsvLineParseTaskTest {
             assertEquals("Hemvägen ;19", LineUtils.getStringCellValue(line, "2"));
         }, new ExceptionErrorEventListener());
 
-        assertEquals(true, rc);
+        assertTrue(rc);
     }
 
     @Test
@@ -119,7 +117,7 @@ public class CsvLineParseTaskTest {
             assertEquals("Hemvägen ;19", LineUtils.getStringCellValue(line, "3"));
         }, new ExceptionErrorEventListener());
 
-        assertEquals(true, rc);
+        assertTrue(rc);
     }
 
     @Test
@@ -136,7 +134,7 @@ public class CsvLineParseTaskTest {
             assertEquals("Hemvägen ;19", LineUtils.getStringCellValue(line, "3"));
         }, new ExceptionErrorEventListener());
 
-        assertEquals(true, rc);
+        assertTrue(rc);
     }
 
     @Test
@@ -153,7 +151,7 @@ public class CsvLineParseTaskTest {
             assertEquals("Hemvägen ;19", LineUtils.getStringCellValue(line, "3"));
         }, new ExceptionErrorEventListener());
 
-        assertEquals(true, rc);
+        assertTrue(rc);
     }
 
     @Test
@@ -169,7 +167,7 @@ public class CsvLineParseTaskTest {
             assertEquals("Hemvägen ;19", LineUtils.getStringCellValue(line, "2"));
         }, new ExceptionErrorEventListener());
 
-        assertEquals(true, rc);
+        assertTrue(rc);
     }
 
     @Test
@@ -186,7 +184,7 @@ public class CsvLineParseTaskTest {
             assertEquals("19", LineUtils.getStringCellValue(line, "3"));
         }, new ExceptionErrorEventListener());
 
-        assertEquals(true, rc);
+        assertTrue(rc);
     }
 
     @Test(expected = JSaParException.class)
@@ -204,7 +202,7 @@ public class CsvLineParseTaskTest {
             assertEquals("\"", LineUtils.getStringCellValue(line, "2"));
         }, new ExceptionErrorEventListener());
 
-        assertEquals(true, rc);
+        assertTrue(rc);
     }
 
     @Test
@@ -223,7 +221,7 @@ public class CsvLineParseTaskTest {
             assertEquals("Stoc\"kholm", LineUtils.getStringCellValue(line, "5"));
         }, new ExceptionErrorEventListener());
 
-        assertEquals(true, rc);
+        assertTrue(rc);
     }
 
     @Test
@@ -240,7 +238,7 @@ public class CsvLineParseTaskTest {
             assertEquals("111 22", LineUtils.getStringCellValue(line, "3"));
         }, new ExceptionErrorEventListener());
 
-        assertEquals(true, rc);
+        assertTrue(rc);
     }
 
     @Test
@@ -256,7 +254,7 @@ public class CsvLineParseTaskTest {
             assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
             assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1"));
         }, new ExceptionErrorEventListener());
-        assertEquals(true, rc);
+        assertTrue(rc);
 
     }
 
@@ -277,7 +275,7 @@ public class CsvLineParseTaskTest {
             assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
             assertEquals("Stenb", LineUtils.getStringCellValue(line, "1"));
         }, new ExceptionErrorEventListener());
-        assertEquals(true, rc);
+        assertTrue(rc);
 
     }
 
@@ -298,7 +296,7 @@ public class CsvLineParseTaskTest {
             assertEquals("Stenberg", LineUtils.getStringCellValue(line, "2"));
             assertEquals("yes", LineUtils.getStringCellValue(line, "Happy"));
         }, new ExceptionErrorEventListener());
-        assertEquals(true, rc);
+        assertTrue(rc);
 
     }
 
@@ -323,8 +321,8 @@ public class CsvLineParseTaskTest {
             assertEquals("Happy", ((CellParseException) event.getError()).getCellName());
             foundError = true;
         });
-        assertEquals(true, rc);
-        assertEquals(true, foundError);
+        assertTrue(rc);
+        assertTrue(foundError);
     }
 
     @Test
@@ -344,7 +342,7 @@ public class CsvLineParseTaskTest {
             assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last Name"));
             assertEquals("yes", LineUtils.getStringCellValue(line, "Happy"));
         }, new ExceptionErrorEventListener());
-        assertEquals(true, rc);
+        assertTrue(rc);
 
     }
 
@@ -393,7 +391,7 @@ public class CsvLineParseTaskTest {
         schemaLine.addSchemaCell(happyCell);
 
         String sLine = "Jonas;-)Stenberg";
-        boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), event -> fail("Expects an error"), new ExceptionErrorEventListener());
+        new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), event -> fail("Expects an error"), new ExceptionErrorEventListener());
         fail("Expects an error");
 
     }

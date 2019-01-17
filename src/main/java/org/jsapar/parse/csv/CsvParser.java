@@ -2,7 +2,6 @@ package org.jsapar.parse.csv;
 
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.csv.states.CsvLineReaderStates;
 import org.jsapar.parse.line.ValidationHandler;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;

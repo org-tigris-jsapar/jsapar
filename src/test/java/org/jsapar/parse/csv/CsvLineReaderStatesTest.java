@@ -1,4 +1,4 @@
-package org.jsapar.parse.csv.states;
+package org.jsapar.parse.csv;
 
 import org.junit.Test;
 

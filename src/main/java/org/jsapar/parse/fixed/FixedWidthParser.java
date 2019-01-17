@@ -54,7 +54,7 @@ public class FixedWidthParser implements TextSchemaParser {
                 return lineReader.getLineNumber();
             int lineLength = lineReader.nextLine(minLineLength);
             if (lineLength < 0)
-                return lineReader.getLineNumber() - 1; // End of stream.
+                return lineReader.getLineNumber(); // End of stream.
             if (lineLength == 0)
                 continue; // Just ignore empty lines
             FixedWidthLineParser lineParser = lineParserFactory.makeLineParser(lineReader);

@@ -1,7 +1,6 @@
-package org.jsapar.parse.csv.states;
+package org.jsapar.parse.csv;
 
 import org.jsapar.parse.LineParseException;
-import org.jsapar.parse.csv.CsvLineReader;
 
 import java.io.IOException;
 import java.io.Reader;
