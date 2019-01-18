@@ -39,6 +39,7 @@ public interface BeanFactory<T> {
      * @throws InvocationTargetException If not possible to invoke method.
      * @throws IllegalAccessException In case a setter method is not publicly accessible.
      * @throws InstantiationException If it was not possible to instantiate a bean.
+     * @throws NoSuchMethodException In case the setter method does not exist.
      */
     void assignCellToBean(String lineType, T bean, Cell cell) throws BeanComposeException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException;
 

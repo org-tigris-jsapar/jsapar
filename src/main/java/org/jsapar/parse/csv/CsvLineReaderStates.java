@@ -44,7 +44,7 @@ public class CsvLineReaderStates implements CsvLineReader {
      * @param reader The reader to read characters from.
      * @param allowReadAhead If true, reading from the reader can be optimized by reading larger chunks of data into a
  *                       buffer but that can only be utilized if it is ok to read until the end of the file or if it
-     * @param maxLineLength
+     * @param maxLineLength The maximum number of characters in a line. Make sure that all lines fits within this size.
      */
     public CsvLineReaderStates(String lineSeparator, Reader reader, boolean allowReadAhead, int maxLineLength) {
         eolCheck = Arrays.asList("\n", "\r\n").contains(lineSeparator) ? new EolCheckCRLF() : new EolCheckCustom(lineSeparator);
