@@ -1,5 +1,11 @@
 package org.jsapar.utils.cache;
 
+/**
+ * Saves the value related to a number of keys. There is no expiration time but if max size is reached old items are
+ * discarded as old values are entered.
+ * @param <K> The key type
+ * @param <V> The value type
+ */
 public interface Cache<K, V> {
     /**
      * @param key The key

@@ -1,5 +1,10 @@
 package org.jsapar.utils.cache;
 
+/**
+ * This implementation takes at most two items in the cache.
+ * @param <K> The key type
+ * @param <V> The value type
+ */
 public class TwoItemsCache<K, V> implements Cache<K, V> {
     private K newKey;
     private V newValue;
