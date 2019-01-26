@@ -10,24 +10,31 @@ public interface Cache<K, V> {
 
     /**
      * Put a new value to the cache
-     * @param key The key
+     *
+     * @param key   The key
      * @param value The value
      */
     void put(K key, V value);
 
     /**
      * Creates a new cache optimized according to supplied max size.
+     *
      * @param maxSize The max cache size to optimize for.
-     * @param <K> The key type
-     * @param <V> The value type
+     * @param <K>     The key type
+     * @param <V>     The value type
      * @return A new cache optimized according to supplied max size.
      */
-    static <K, V> Cache<K, V> ofMaxSize(int maxSize){
-        if(maxSize == 0)
-            return new DisabledCache<>();
-        if(maxSize == 1)
-            return new SingleItemCache<>();
-        else
-            return new LimitedSizeCache<>(maxSize);
+    static <K, V> Cache<K, V> ofMaxSize(int maxSize) {
+
+        switch (maxSize) {
+            case 0:
+                return new DisabledCache<>();
+            case 1:
+                return new SingleItemCache<>();
+            case 2:
+                return new TwoItemsCache<>();
+            default:
+                return new LimitedSizeCache<>(maxSize);
+        }
     }
 }
