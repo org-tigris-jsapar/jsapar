@@ -32,11 +32,11 @@ public class QuoteIfNeededTest {
 
         w = new StringWriter();
         instance.writeValue(w, "@hej@");
-        assertEquals("@hej@", w.toString());
+        assertEquals("@@hej@@", w.toString());
 
         w = new StringWriter();
         instance.writeValue(w, "@@");
-        assertEquals("@@", w.toString());
+        assertEquals("@@@@", w.toString());
 
         w = new StringWriter();
         instance.writeValue(w, "");
