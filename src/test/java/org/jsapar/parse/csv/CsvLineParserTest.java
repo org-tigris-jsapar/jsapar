@@ -19,7 +19,7 @@ import java.io.StringReader;
 
 import static org.junit.Assert.*;
 
-public class CsvLineParseTaskTest {
+public class CsvLineParserTest {
 
     private boolean foundError = false;
 

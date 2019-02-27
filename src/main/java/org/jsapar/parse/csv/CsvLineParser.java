@@ -132,13 +132,19 @@ class CsvLineParser {
 
         CsvSchemaLine schemaLine = masterLineSchema.clone();
         schemaLine.getSchemaCells().clear();
-
+        int ignoreCellCount=1;
         for (String sCell : asCells) {
-            CsvSchemaCell masterCell = masterLineSchema.getCsvSchemaCell(sCell);
-            if (masterCell != null)
-                schemaLine.addSchemaCell(masterCell);
-            else
-                schemaLine.addSchemaCell(new CsvSchemaCell(sCell));
+            CsvSchemaCell schemaCell = masterLineSchema.getCsvSchemaCell(sCell);
+            if (schemaCell == null) {
+                if(sCell.isEmpty()){
+                    schemaCell = new CsvSchemaCell("@@"+ ignoreCellCount++ + "@@");
+                    schemaCell.setIgnoreRead(true);
+                }
+                else {
+                    schemaCell = new CsvSchemaCell(sCell);
+                }
+            }
+            schemaLine.addSchemaCell(schemaCell);
         }
         addMissingDefaultValuesFromMaster(schemaLine, masterLineSchema);
         checkMissingMandatoryValues(schemaLine, masterLineSchema, errorListener);
