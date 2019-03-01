@@ -12,3 +12,6 @@ by at least 50%. Both CPU and memory impact has been significantly improved.
 1. Changed behaviour when parsing quoted delimited sources. When a start quote is found but no end quote within 8k of data, the parser now
 tries again to parse the source but considers that particular cell as not being quoted.
 1. It is now possible to configure maximum line length while parsing. 
+1. When using first line as schema while parsing CSV and the header line 
+contains an empty cell, the cells of the body at that position will now 
+be ignored while reading. Previously this generated an exception and parsing was aborted.
