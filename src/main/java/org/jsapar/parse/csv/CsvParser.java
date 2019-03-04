@@ -2,10 +2,12 @@ package org.jsapar.parse.csv;
 
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.LineEventListener;
+import org.jsapar.parse.csv.states.CsvLineReaderStates;
 import org.jsapar.parse.line.ValidationHandler;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.schema.CsvSchema;
+import org.jsapar.schema.SchemaLine;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -15,7 +17,7 @@ import java.io.Reader;
  */
 public class CsvParser implements TextSchemaParser {
     
-    private CsvLineReader        lineReader;
+    private CsvLineReader lineReader;
     private CsvSchema            schema;
     private CsvLineParserFactory lineParserFactory;
     private TextParseConfig      parseConfig;
@@ -28,7 +30,7 @@ public class CsvParser implements TextSchemaParser {
 
     public CsvParser(Reader reader, CsvSchema schema, TextParseConfig parseConfig) {
         this.parseConfig = parseConfig;
-        lineReader = new CsvLineReader(schema.getLineSeparator(), reader);
+        lineReader = new CsvLineReaderStates(schema.getLineSeparator(), reader, schema.stream().anyMatch(SchemaLine::isOccursInfinitely));
         this.schema = schema;
         this.lineParserFactory = new CsvLineParserFactory(schema, parseConfig);
     }
@@ -58,7 +60,7 @@ public class CsvParser implements TextSchemaParser {
 
     }
 
-    private void handleNoParser(CsvLineReader lineReader, ErrorEventListener errorEventListener) throws IOException {
+    private void handleNoParser(CsvLineReader lineReader, ErrorEventListener errorEventListener) {
         if (lineReader.lastLineWasEmpty())
             return;
         validationHandler.lineValidation(this, lineReader.currentLineNumber(), "No schema line could be used to parse line number " + lineReader.currentLineNumber(), parseConfig.getOnUndefinedLineType(), errorEventListener);

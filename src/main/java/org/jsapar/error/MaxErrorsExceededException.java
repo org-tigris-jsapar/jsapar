@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jsapar.error;
 
 import java.util.List;
@@ -23,7 +20,7 @@ public class MaxErrorsExceededException extends JSaParException {
      * @param cause the error that caused the threshold to be exceeded
      * @param allErrors All errors that has occured before the limit was reached.
      */
-    public MaxErrorsExceededException(JSaParException cause, List<JSaParException> allErrors) {
+    MaxErrorsExceededException(JSaParException cause, List<JSaParException> allErrors) {
         super("Maximum number of errors exceeded.", cause);
         this.errors = allErrors;
     }

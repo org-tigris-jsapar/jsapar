@@ -22,22 +22,6 @@ import static org.junit.Assert.assertEquals;
 
 public class FixedWidthControlCellParseTaskTest {
 
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    /**
-     * Test method for
-     *
-     * .
-     * 
-     * @throws IOException
-     *
-     */
     @Test
     public void testParse() throws IOException {
         String toParse = "NJonasStenbergAStorgatan 123 45NFred Bergsten";
@@ -90,14 +74,7 @@ public class FixedWidthControlCellParseTaskTest {
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
         schema.addSchemaLine(schemaLine);
     }
-    /**
-     * Test method for
-     *
-     * .
-     * 
-     * @throws IOException
-     *
-     */
+
     @Test
     public void testParse_separatedLines() throws IOException {
         String toParse = "NJonasStenberg   \r\nAStorgatan 123 45          \r\nNFred Bergsten\r\n";
@@ -123,14 +100,6 @@ public class FixedWidthControlCellParseTaskTest {
         assertEquals("Bergsten", doc.getLine(2).getCell("Last name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
     }
 
-    /**
-     * Test method for
-     *
-     * .
-     * 
-     * @throws IOException
-     *
-     */
     @Test
     public void testParse_spaceInLineType() throws IOException {
         String toParse = "N JonasStenberg   \r\nAAStorgatan 123 45          \r\nN Fred Bergsten";
@@ -145,14 +114,6 @@ public class FixedWidthControlCellParseTaskTest {
         checkResult(doc);
     }
 
-    /**
-     * Test method for
-     *
-     * .
-     * 
-     * @throws IOException
-     *
-     */
     @Test(expected = LineParseException.class)
     public void testParse_errorOnUndefinedLineType() throws IOException {
         String toParse = "X JonasStenberg   ";
@@ -164,17 +125,9 @@ public class FixedWidthControlCellParseTaskTest {
         Reader reader = new StringReader(toParse);
         TextParseConfig config = new TextParseConfig();
         config.setOnUndefinedLineType(ValidationAction.EXCEPTION);
-        Document doc = build(reader, schema, config);
+        build(reader, schema, config);
     }
 
-    /**
-     * Test method for
-     *
-     * .
-     * 
-     * @throws IOException
-     *
-     */
     @Test
     public void testParse_noErrorIfUndefinedLineType() throws IOException {
         String toParse = "N JonasStenberg   \r\nXXStorgatan 123 45          \r\n\r\nN Fred Bergsten";

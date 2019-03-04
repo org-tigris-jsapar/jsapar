@@ -66,7 +66,7 @@ public class FixedWidthSchema extends Schema {
      */
     @Override
     public String toString() {
-        return super.toString() + " schemaLines=" + this.schemaLines;
+        return "FixedWidthSchema" + super.toString() + " schemaLines=" + this.schemaLines;
     }
 
     @Override

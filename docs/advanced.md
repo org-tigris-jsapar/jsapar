@@ -16,7 +16,7 @@ If you want to download the XSD as a file, you will probably need to right click
 
 #Advanced parsing
 ## Using XML as input
-It is possible to parse an xml document that conforms to the XMLDocumentFormat.xsd (http://jsapar.tigris.org/XMLDocumentFormat/1.0).
+It is possible to parse an xml document that conforms to the XMLDocumentFormat.xsd (http://jsapar.tigris.org/XMLDocumentFormat/2.0).
 Use the class org.jsapar.XmlParser in order to parse an xml file and produce line parsed events.
 
 #Advanced converting

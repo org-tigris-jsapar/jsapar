@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.jsapar.parse;
 
 import org.jsapar.model.Line;

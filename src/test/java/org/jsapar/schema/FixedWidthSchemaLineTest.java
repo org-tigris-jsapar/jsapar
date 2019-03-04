@@ -4,8 +4,6 @@ import org.jsapar.error.JSaParException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-
 import static org.junit.Assert.*;
 
 public class FixedWidthSchemaLineTest {
@@ -19,7 +17,7 @@ public class FixedWidthSchemaLineTest {
 
 
     @Test
-    public final void testClone() throws CloneNotSupportedException {
+    public final void testClone() {
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine();
         schemaLine.setLineType("Nisse");
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
@@ -36,7 +34,7 @@ public class FixedWidthSchemaLineTest {
     }
 
     @Test
-    public void testGetCellPositions() throws IOException, JSaParException {
+    public void testGetCellPositions() throws JSaParException {
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
@@ -59,7 +57,7 @@ public class FixedWidthSchemaLineTest {
     }
 
     @Test
-    public void testGetCellFirstPositions() throws IOException, JSaParException {
+    public void testGetCellFirstPositions() throws JSaParException {
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));

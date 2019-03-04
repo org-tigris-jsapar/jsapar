@@ -1,6 +1,3 @@
-/** 
- * Copyright: Jonas Stenberg
- */
 package org.jsapar.model;
 
 /**
@@ -8,7 +5,7 @@ package org.jsapar.model;
  * values are converted into double precision values.
  * 
  */
-public class FloatCell extends NumberCell implements Comparable<FloatCell> {
+public final class FloatCell extends NumberCell {
 
     private static final long serialVersionUID = 2102712515168714171L;
 
@@ -35,8 +32,9 @@ public class FloatCell extends NumberCell implements Comparable<FloatCell> {
 
 
     @Override
-    public int compareTo(FloatCell right) {
-	return Double.compare(this.getValue().doubleValue(), right
-		.getValue().doubleValue());
+    public int compareValueTo(Cell<Number> right) {
+        if(right instanceof FloatCell)
+            return Double.compare(getValue().doubleValue(), right.getValue().doubleValue());
+        return super.compareValueTo(right);
     }
 }

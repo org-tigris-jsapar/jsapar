@@ -1,10 +1,13 @@
 package org.jsapar.parse.csv;
 
+import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
-import org.jsapar.parse.*;
+import org.jsapar.parse.LineEventListener;
+import org.jsapar.parse.LineParseException;
+import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.cell.CellParser;
 import org.jsapar.parse.line.LineDecoratorErrorEventListener;
 import org.jsapar.parse.line.ValidationHandler;
@@ -69,15 +72,15 @@ class CsvLineParser {
     boolean parse(CsvLineReader lineReader, LineEventListener listener, ErrorEventListener errorListener)
             throws IOException {
 
-        String[] asCells = lineReader.readLine(lineSchema.getCellSeparator(), lineSchema.getQuoteChar());
-        if (null == asCells)
-            return false; // eof
+        if(lineReader.eofReached())
+            return false;
+        List<String> rawCells = lineReader.readLine(lineSchema.getCellSeparator(), lineSchema.getQuoteChar());
 
         if (lineReader.lastLineWasEmpty())
             return handleEmptyLine(lineReader.currentLineNumber(), errorListener);
 
         if (usedCount == 0 && lineSchema.isFirstLineAsSchema()) {
-            lineSchema = buildSchemaFromHeader(lineSchema, asCells);
+            lineSchema = buildSchemaFromHeader(lineSchema, rawCells, errorListener);
             usedCount++;
             return true;
         }
@@ -92,7 +95,7 @@ class CsvLineParser {
         lineDecoratorErrorEventListener.initialize(errorListener, line);
 
         java.util.Iterator<CellParser<CsvSchemaCell>> itParser = cellParsers.iterator();
-        for (String sCell : asCells) {
+        for (String sCell : rawCells) {
             if (itParser.hasNext()) {
                 addCellToLineBySchema(line, itParser.next(), sCell, lineDecoratorErrorEventListener);
             } else {
@@ -125,7 +128,7 @@ class CsvLineParser {
      * @return A CsvSchemaLine created from the header line.
      *
      */
-    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, String[] asCells) {
+    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, List<String> asCells, ErrorEventListener errorListener) {
 
         CsvSchemaLine schemaLine = masterLineSchema.clone();
         schemaLine.getSchemaCells().clear();
@@ -138,8 +141,18 @@ class CsvLineParser {
                 schemaLine.addSchemaCell(new CsvSchemaCell(sCell));
         }
         addMissingDefaultValuesFromMaster(schemaLine, masterLineSchema);
+        checkMissingMandatoryValues(schemaLine, masterLineSchema, errorListener);
         this.cellParsers = this.makeCellParsers(schemaLine);
         return schemaLine;
+    }
+
+    private void checkMissingMandatoryValues(CsvSchemaLine schemaLine, CsvSchemaLine masterLineSchema, ErrorEventListener errorListener) {
+        masterLineSchema.getSchemaCells().stream().filter(schemaCell -> schemaCell.isMandatory()
+                && schemaLine.getCsvSchemaCell(schemaCell.getName()) == null).forEach(schemaCell -> errorListener
+                .errorEvent(new ErrorEvent(this, new LineParseException(0, "Mandatory cell " + schemaCell.getName()
+                        + " is missing in the header line that is used as schema for lines of type [" + schemaLine
+                        .getLineType() + "]."))));
+
     }
 
     /**

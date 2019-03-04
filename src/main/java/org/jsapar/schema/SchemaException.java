@@ -1,6 +1,3 @@
-/**
- * Copyrigth: Jonas Stenberg
- */
 package org.jsapar.schema;
 
 import org.jsapar.error.JSaParException;
@@ -18,10 +15,6 @@ public class SchemaException extends JSaParException {
 
     public SchemaException(String s, Throwable throwable) {
         super(s, throwable);
-    }
-
-    public SchemaException(Throwable throwable) {
-        super(throwable);
     }
 
 }

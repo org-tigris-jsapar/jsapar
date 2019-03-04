@@ -7,19 +7,19 @@ import static org.junit.Assert.*;
 public class BooleanCellTest {
 
     @Test
-    public void testGetSetBooleanValue() throws Exception {
+    public void testGetSetBooleanValue() {
         BooleanCell cell = new BooleanCell("test", false);
         assertFalse(cell.getValue());
     }
 
     @Test
-    public void testGetStringValue() throws Exception {
+    public void testGetStringValue() {
         BooleanCell cell = new BooleanCell("test", false);
         assertEquals("false", cell.getStringValue());
     }
 
     @Test
-    public void testCompareValueTo() throws Exception {
+    public void testCompareValueTo() {
         BooleanCell cell1 = new BooleanCell("test", false);
         BooleanCell cell2 = new BooleanCell("test", false);
         BooleanCell cell3 = new BooleanCell("test", true);

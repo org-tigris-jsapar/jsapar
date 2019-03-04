@@ -355,11 +355,7 @@ public class LineUtils {
                 return chCell.getValue();
             }
 
-            String s = cell.getStringValue();
-            if (s.isEmpty())
-                throw new NumberFormatException(
-                        "Could not convert string cell [" + cell + "] to a character since string is empty.");
-            return s.charAt(0);
+            return cell.getStringValue().charAt(0);
         });
     }
 
@@ -383,10 +379,7 @@ public class LineUtils {
             return chCell.getValue();
         }
 
-        String s = cell.get().getStringValue();
-        if (s.isEmpty())
-            throw new NumberFormatException(
-                    "Could not convert string cell [" + cell + "] to a character since cell value is empty.");
+        final String s = cell.get().getStringValue();
         return s.charAt(0);
     }
 
@@ -491,9 +484,9 @@ public class LineUtils {
      * @throws IllegalStateException If the cell is not of type {@link TemporalCell}.
      * @throws java.time.DateTimeException If the value cannot be converted to a {@link ZonedDateTime}.
      */
-    public static Optional<ZonedDateTime> getLocalTimeCellValue(Line line, String cellName)
+    public static Optional<LocalTime> getLocalTimeCellValue(Line line, String cellName)
             throws IllegalStateException{
-        return line.getNonEmptyCell(cellName).map(LineUtils::temporalOfCell).map(ZonedDateTime::from);
+        return line.getNonEmptyCell(cellName).map(LineUtils::temporalOfCell).map(LocalTime::from);
     }
 
     /**
@@ -505,9 +498,9 @@ public class LineUtils {
      * @throws IllegalStateException If the cell is not of type {@link TemporalCell}.
      * @throws java.time.DateTimeException If the value cannot be converted to a zoned date time.
      */
-    public static Optional<LocalDateTime> getZonedDateTimeCellValue(Line line, String cellName)
+    public static Optional<ZonedDateTime> getZonedDateTimeCellValue(Line line, String cellName)
             throws IllegalStateException{
-        return line.getNonEmptyCell(cellName).map(LineUtils::temporalOfCell).map(LocalDateTime::from);
+        return line.getNonEmptyCell(cellName).map(LineUtils::temporalOfCell).map(ZonedDateTime::from);
     }
 
     @SuppressWarnings("unchecked")
@@ -531,7 +524,6 @@ public class LineUtils {
      * @return The enum cell value if the cell or empty if cell does not have any value or does not exist.
      * @throws IllegalArgumentException If the enum type of the defaultValue does not have an enum constant with the name equal to the value
      *                                  of the specified cell.
-     * @throws IllegalStateException If there is no cell with specified value within the line.
      */
     public static <E extends Enum<E>> Optional<E> getEnumCellValue(Line line, String cellName, Class<E> enumClass)
             throws IllegalArgumentException, IllegalStateException {

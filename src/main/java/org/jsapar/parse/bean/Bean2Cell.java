@@ -3,7 +3,6 @@ package org.jsapar.parse.bean;
 import org.jsapar.compose.bean.BeanComposeException;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.*;
-import org.jsapar.schema.SchemaCell;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -19,10 +18,10 @@ import java.util.Date;
 
 public class Bean2Cell {
 
-    private String cellName;
-    private BeanPropertyMap children;
+    private String             cellName;
+    private BeanPropertyMap    children;
     private PropertyDescriptor propertyDescriptor;
-    private CellCreator cellCreator;
+    private CellCreator        cellCreator;
 
     private Bean2Cell(String cellName) {
         this.cellName = cellName;
@@ -38,10 +37,6 @@ public class Bean2Cell {
         // Prepare best way to create cell depending on return type
         bean2Cell.cellCreator = bean2Cell.makeCellCreator();
         return bean2Cell;
-    }
-
-    public static Bean2Cell ofSchemaCell(SchemaCell schemaCell, PropertyDescriptor propertyDescriptor) {
-        return ofCellName(schemaCell.getName(), propertyDescriptor);
     }
 
     static Bean2Cell ofBaseProperty(PropertyDescriptor propertyDescriptor, BeanPropertyMap children) {
@@ -89,8 +84,7 @@ public class Bean2Cell {
                 else
                     return StringCell.emptyOf(cellName);
             };
-        } else if (returnType.isAssignableFrom(Character.TYPE)
-                || returnType.isAssignableFrom(Character.class)) {
+        } else if (returnType.isAssignableFrom(Character.TYPE) || returnType.isAssignableFrom(Character.class)) {
             return (bean) -> new StringCell(cellName, (Character) f.invoke(bean));
         } else if (returnType.isAssignableFrom(LocalDate.class)) {
             return (bean) -> {
@@ -183,10 +177,13 @@ public class Bean2Cell {
         Cell makeCell(Object o) throws InvocationTargetException, IllegalAccessException;
     }
 
-    private void assignProperty(Object bean, Cell<?> cell) throws InvocationTargetException, IllegalAccessException, BeanComposeException {
+    private void assignProperty(Object bean, Cell<?> cell)
+            throws InvocationTargetException, IllegalAccessException, BeanComposeException {
         Method setter = this.propertyDescriptor.getWriteMethod();
         if (setter == null)
-            throw new BeanComposeException("The property " + propertyDescriptor.getName() + " of class " + children.getLineClass().getName() + " has no setter method.");
+            throw new BeanComposeException(
+                    "The property " + propertyDescriptor.getName() + " of class " + children.getLineClass().getName()
+                            + " has no setter method.");
         Class paramType = setter.getParameterTypes()[0];
         setter.invoke(bean, customCast(paramType, cell));
     }
@@ -197,39 +194,52 @@ public class Bean2Cell {
         Object value = cell.getValue();
         if (paramType.isAssignableFrom(valueType))
             return value;
-        else if (paramType == String.class) {
+        if (paramType == String.class) {
             return cell.getStringValue();
-        } else {
-            if (value instanceof Number) {
-                Number number = (Number) value;
-                if (paramType == Integer.TYPE)
-                    return number.intValue();
-                else if (paramType == Long.TYPE)
-                    return number.longValue();
-                else if (paramType == Double.TYPE)
-                    return number.doubleValue();
-                else if (paramType == Float.TYPE)
-                    return number.floatValue();
-                else if (paramType == Short.TYPE)
-                    return number.shortValue();
-                else if (paramType == Byte.TYPE)
-                    return number.byteValue();
+        }
+        if (value instanceof Number) {
+            Number number = (Number) value;
+            if (paramType == Integer.TYPE)
+                return number.intValue();
+            else if (paramType == Long.TYPE)
+                return number.longValue();
+            else if (paramType == Double.TYPE)
+                return number.doubleValue();
+            else if (paramType == Float.TYPE)
+                return number.floatValue();
+            else if (paramType == Short.TYPE)
+                return number.shortValue();
+            else if (paramType == Byte.TYPE)
+                return number.byteValue();
+            else if (paramType == Boolean.TYPE)
+                return number.intValue() != 0;
+            else if (paramType == Character.TYPE)
+                return number.intValue();
+
+        }
+        // Will squeeze in first character of any datatype's string representation.
+        else if (paramType == Character.TYPE) {
+            if (value instanceof Character)
+                return value;
+            return cell.getStringValue().charAt(0);
+        } else if (paramType == Boolean.TYPE) {
+            if (value instanceof Boolean) {
+                return value;
             }
-            // Will squeeze in first character of any datatype's string representation.
-            else if (paramType == Character.TYPE) {
-                if(value instanceof Character)
-                        return value;
-                return cell.getStringValue().charAt(0);
-            } else if (Enum.class.isAssignableFrom(paramType)) {
-                return Enum.valueOf((Class<Enum>) paramType, cell.getStringValue());
-            }
+        } else if (Enum.class.isAssignableFrom(paramType)) {
+            return Enum.valueOf((Class<Enum>) paramType, cell.getStringValue());
         }
         throw new BeanComposeException(
-                "Skipped assigning cell - The setter for property " + this.propertyDescriptor.getName() + " could not be used to assign cell"
-        );
+                "Skipped assigning cell - The setter for property " + this.propertyDescriptor.getName()
+                        + " could not be used to assign cell");
     }
 
-    public void assign(Object bean, Cell cell) throws BeanComposeException, InvocationTargetException, IllegalAccessException, InstantiationException {
+    @SuppressWarnings("unchecked")
+    public void assign(Object bean, Cell cell)
+            throws BeanComposeException, InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+        if(cell.isEmpty()) {
+            return;
+        }
         if (isLeaf()) {
             assignProperty(bean, cell);
             return;
@@ -238,23 +248,25 @@ public class Bean2Cell {
         if (childBean2Cell != null) {
             Method getter = this.propertyDescriptor.getReadMethod();
             if (getter == null)
-                throw new BeanComposeException("The property " + propertyDescriptor.getName() + " of class " + children.getLineClass().getName() + " has no getter method.");
+                throw new BeanComposeException(
+                        "The property " + propertyDescriptor.getName() + " of class " + children.getLineClass()
+                                .getName() + " has no getter method.");
             Object child = getter.invoke(bean);
             if (child == null) {
-                child = children.getLineClass().newInstance();
+                child = children.getLineClass().getConstructor().newInstance();
                 Method setter = this.propertyDescriptor.getWriteMethod();
                 if (setter == null)
-                    throw new BeanComposeException("The property " + propertyDescriptor.getName() + " of class " + children.getLineClass().getName() + " has no setter method.");
+                    throw new BeanComposeException(
+                            "The property " + propertyDescriptor.getName() + " of class " + children.getLineClass()
+                                    .getName() + " has no setter method.");
                 setter.invoke(bean, child);
             }
             childBean2Cell.assign(child, cell);
         }
     }
 
-
     private boolean isLeaf() {
         return this.children == null;
     }
-
 
 }

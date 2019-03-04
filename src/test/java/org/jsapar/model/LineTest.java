@@ -10,14 +10,6 @@ import static org.junit.Assert.*;
 
 public class LineTest {
 
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public void testLine() {
         Line line = new Line("");
@@ -46,12 +38,28 @@ public class LineTest {
         assertEquals("Shoe", line.getLineType());
     }
 
+
     @Test
     public void testGetCells() {
         Line line = makeTestLine();
         java.util.List<Cell> cells = line.getCells();
         assertEquals(2, cells.size());
         assertEquals("Svensson", cells.get(1).getStringValue());
+    }
+
+    @Test
+    public void testClone() {
+        Line line = makeTestLine();
+        Line clone = line.clone();
+        assertEquals(2, clone.size());
+        assertNotSame(line.getCells(), clone.getCells());
+        assertEquals(line.getCells(), clone.getCells());
+    }
+
+    @Test
+    public void testGetProperty() {
+        Line line = makeTestLine();
+        assertEquals("Svensson", line.getProperty("LastName"));
     }
 
     @Test
@@ -108,9 +116,6 @@ public class LineTest {
         assertEquals("TestLine", line.getLineType());
     }
 
-    /**
-     *
-     */
     @Test
     public void testRemoveCell() {
         Line line = makeTestLine();
@@ -120,15 +125,22 @@ public class LineTest {
         assertEquals("Svensson", LineUtils.getStringCellValue(line, "LastName"));
     }
 
+    @Test
+    public void testToString() {
+        Line line = makeTestLine();
+        assertEquals("Line type=[TestLine] number=1 {FirstName=Nils, LastName=Svensson}", line.toString());
+    }
+
     private Line makeTestLine() {
         Line line = new Line("TestLine");
+        line.setLineNumber(1);
         line.addCell(new StringCell("FirstName", "Nils"));
         line.addCell(new StringCell("LastName", "Svensson"));
         return line;
     }
 
     @Test
-    public void testAddCellError() throws Exception {
+    public void testAddCellError() {
         Line line = makeTestLine();
         assertFalse(line.hasCellErrors());
         assertEquals(0, line.getCellErrors().size());
@@ -143,7 +155,7 @@ public class LineTest {
 
 
     @Test
-    public void testIsCellOfType() throws Exception {
+    public void testIsCellOfType() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
         assertTrue(line.containsNonEmptyCell("FirstName", CellType.STRING));

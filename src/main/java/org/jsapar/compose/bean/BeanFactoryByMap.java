@@ -22,7 +22,7 @@ public class BeanFactoryByMap<T> implements BeanFactory<T>{
 
     @SuppressWarnings("unchecked")
     @Override
-    public T createBean(Line line) throws InstantiationException, IllegalAccessException, ClassCastException {
+    public T createBean(Line line) throws InstantiationException, IllegalAccessException, ClassCastException, NoSuchMethodException, InvocationTargetException {
         BeanPropertyMap optionalBeanPropertyMap = beanMap.getBeanPropertyMap(line.getLineType());
         if(optionalBeanPropertyMap != null){
             return (T) optionalBeanPropertyMap.createBean();
@@ -31,7 +31,7 @@ public class BeanFactoryByMap<T> implements BeanFactory<T>{
     }
 
     @Override
-    public void assignCellToBean(String lineType, T bean, Cell cell) throws InvocationTargetException, InstantiationException, IllegalAccessException, BeanComposeException {
+    public void assignCellToBean(String lineType, T bean, Cell cell) throws InvocationTargetException, InstantiationException, IllegalAccessException, BeanComposeException, NoSuchMethodException {
         BeanPropertyMap beanPropertyMap = beanMap.getBeanPropertyMap(lineType);
         Bean2Cell bean2Cell = beanPropertyMap.getBean2CellByName(cell.getName());
         if(bean2Cell != null)

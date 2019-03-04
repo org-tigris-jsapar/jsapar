@@ -52,7 +52,7 @@ public class CsvSchema extends Schema implements Cloneable{
      */
     @Override
     public String toString() {
-        return super.toString() +
+        return "CsvSchema" + super.toString() +
                 " schemaLines=" +
                 this.schemaLines;
     }

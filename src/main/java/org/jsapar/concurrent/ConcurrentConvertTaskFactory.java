@@ -1,12 +1,9 @@
 package org.jsapar.concurrent;
 
 import org.jsapar.compose.Composer;
-import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.ConvertTask;
 import org.jsapar.parse.ParseTask;
-import org.jsapar.schema.Schema;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 

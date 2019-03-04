@@ -98,16 +98,9 @@ public class Document implements Serializable, Iterable<Line> {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        int i=1;
-        for(Line line : this.lines){
-            sb.append("{Line ");
-            sb.append(i++);
-            sb.append(": ");
-            sb.append(line);
-            sb.append("}, ");
-        }
-        return sb.toString();
+        return "Document " + "{" +
+                stream().map(Line::toString).collect(Collectors.joining(", ")) +
+                "}";
     }
     
     /**

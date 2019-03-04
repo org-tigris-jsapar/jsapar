@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jsapar.parse.bean;
 
 import org.jsapar.TstPerson;
@@ -26,30 +23,16 @@ import static org.junit.Assert.assertEquals;
 public class BeanParseTaskTest {
     static final Date birthTime = new Date();
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
-
     private Schema makeOutputSchema(){
         return BeanMarshallerTest.makeOutputSchema();
     }
 
-    private BeanMap makeBeanMap() throws IntrospectionException, ClassNotFoundException {
+    private BeanMap makeBeanMap() {
         return BeanMarshallerTest.makeBeanMap();
     }
 
     @Test
-    public void testBuild() throws IOException, IntrospectionException, ClassNotFoundException {
+    public void testBuild() throws IntrospectionException, ClassNotFoundException, IOException {
         List<TstPerson> people = new ArrayList<>(2);
         TstPerson person = new TstPerson();
         person.setFirstName("Jonas");
@@ -72,7 +55,7 @@ public class BeanParseTaskTest {
 
         line = doc.getLine(1);
         assertEquals("Test2", line.getCell("firstName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
-
+        parser.close();
     }
 
 

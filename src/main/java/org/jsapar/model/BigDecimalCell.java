@@ -9,7 +9,7 @@ import java.math.BigInteger;
  * 
  *
  */
-public class BigDecimalCell extends NumberCell  {
+public final class BigDecimalCell extends NumberCell  {
 
     /**
      * 
@@ -59,13 +59,9 @@ public class BigDecimalCell extends NumberCell  {
             BigDecimal bdRight = (((BigDecimalCell)right).getBigDecimalValue());
             return getBigDecimalValue().compareTo(bdRight);
         }
-        else if(right instanceof NumberCell){
-            BigDecimal bdRight = new BigDecimal(right.getValue().doubleValue());
-            return getBigDecimalValue().compareTo(bdRight);
-        }
-        else{
-            throw new IllegalArgumentException("Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType());
-        }
+        assert right instanceof NumberCell : "Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType();
+        BigDecimal bdRight = new BigDecimal(right.getValue().doubleValue());
+        return getBigDecimalValue().compareTo(bdRight);
     }
 
     /**

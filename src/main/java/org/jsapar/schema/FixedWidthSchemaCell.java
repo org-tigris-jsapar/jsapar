@@ -2,9 +2,6 @@ package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
 
-import java.io.IOException;
-import java.io.Writer;
-
 /**
  * Describes how a cell is represented for a fixed width schema.
  */
@@ -20,44 +17,17 @@ public class FixedWidthSchemaCell extends SchemaCell {
         /**
          * Content of the cell is left aligned and filled/truncated to the right to reach correct size.
          */
-        LEFT{
-            @Override
-            public void fit(Writer writer, int length, String sValue) throws IOException {
-                writer.write(sValue, 0, length);
-            }
-
-        },
+        LEFT,
         /**
          * Content of the cell is center aligned and filled/truncated to both left and right to reach correct size.
          */
-        CENTER {
-            @Override
-            public void fit(Writer writer, int length, String sValue) throws IOException {
-                writer.write(sValue, (sValue.length()-length)/2, length);
-            }
-
-        },
+        CENTER,
         /**
          * Content of the cell is right aligned and filled/truncated to the left to reach correct size.
          */
-        RIGHT{
-            @Override
-            public void fit(Writer writer, int length, String sValue) throws IOException {
-                writer.write(sValue, sValue.length() - length, length);
-            }
-
-        };
+        RIGHT
 
 
-        /**
-         * Fits supplied value to supplied length, cutting in the correct end.
-         * @param writer The writer to write to
-         * @param length The maximum number of characters to write.
-         * @param sValue The value to write.
-         * @throws IOException If there is an error writing characters
-         */
-        public abstract void fit(Writer writer, int length, String sValue) throws IOException;
-        
     }
 
     /**
@@ -165,20 +135,10 @@ public class FixedWidthSchemaCell extends SchemaCell {
             this.alignment = Alignment.LEFT;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.jsapar.schema.SchemaCell#clone()
-     */
     public FixedWidthSchemaCell clone(){
         return (FixedWidthSchemaCell) super.clone();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.schema.SchemaCell#toString()
-     */
     @Override
     public String toString() {
         return super.toString() +

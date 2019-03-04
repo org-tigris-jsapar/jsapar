@@ -1,9 +1,5 @@
-/**
- * 
- */
 package org.jsapar.parse;
 
-import java.io.IOException;
 import java.util.EventListener;
 
 /**

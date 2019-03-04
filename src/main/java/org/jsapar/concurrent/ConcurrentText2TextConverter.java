@@ -1,10 +1,8 @@
 package org.jsapar.concurrent;
 
 import org.jsapar.Text2TextConverter;
-import org.jsapar.TextComposer;
 import org.jsapar.convert.AbstractConverter;
 import org.jsapar.parse.text.TextParseConfig;
-import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
 
 import java.io.IOException;
@@ -18,7 +16,7 @@ import java.io.Writer;
  * <p>
  * As a rule of thumb while working with normal files on disc, don't use this concurrent version unless your input
  * normally exceeds at least 1MB of data, as the overhead of starting
- * a new thread and synchronizing threads are otherwise greater than the gain by the concurrency.
+ * a new thread and synchronizing threads is otherwise greater than the gain by the concurrency.
  *
  * @see ConcurrentConvertTask
  * @see org.jsapar.Text2TextConverter
@@ -26,10 +24,21 @@ import java.io.Writer;
 public class ConcurrentText2TextConverter extends Text2TextConverter implements ConcurrentStartStop{
     private ConcurrentConvertTaskFactory convertTaskFactory = new ConcurrentConvertTaskFactory();
 
+    /**
+     * Creates a concurrent text to text converter that can be used to convert between different text based formats.
+     * @param parseSchema The schema to use while parsing
+     * @param composeSchema The schema to use wile composing.
+     */
     public ConcurrentText2TextConverter(Schema parseSchema, Schema composeSchema) {
         super(parseSchema, composeSchema);
     }
 
+    /**
+     * Creates a concurrent text to text converter that can be used to convert between different text based formats.
+     * @param parseSchema The schema to use while parsing
+     * @param composeSchema The schema to use wile composing.
+     * @param parseConfig   Configuration about parsing behavior.
+     */
     public ConcurrentText2TextConverter(Schema parseSchema, Schema composeSchema, TextParseConfig parseConfig) {
         super(parseSchema, composeSchema, parseConfig);
     }

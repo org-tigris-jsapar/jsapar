@@ -3,6 +3,7 @@ package org.jsapar.schema;
 import org.jsapar.model.Document;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
+import org.jsapar.utils.StringUtils;
 
 import java.io.Reader;
 import java.io.UncheckedIOException;
@@ -93,10 +94,7 @@ public abstract class Schema implements Cloneable{
      */
     @Override
     public String toString() {
-        return " lineSeparator=" +
-                this.lineSeparator +
-                " locale=" +
-                this.locale;
+        return " lineSeparator='" + StringUtils.replaceJava2Escapes(this.lineSeparator) + "' locale=" + this.locale;
     }
 
 

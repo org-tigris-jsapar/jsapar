@@ -19,14 +19,6 @@ import static org.junit.Assert.assertEquals;
 
 public class FixedWidthParseTaskTest {
 
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public final void testParse_Flat() throws IOException {
         String toParse = "JonasStenbergFridaStenberg";

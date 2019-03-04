@@ -6,7 +6,7 @@ import static org.junit.Assert.assertEquals;
 
 public class StringUtilsTest {
     @Test
-    public void countMatches() throws Exception {
+    public void countMatches() {
         assertEquals(0, StringUtils.countMatches(null, ""));
         assertEquals(0, StringUtils.countMatches("", ""));
         assertEquals(2, StringUtils.countMatches("abABabc", "ab"));

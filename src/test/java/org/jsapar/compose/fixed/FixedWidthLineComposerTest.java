@@ -8,10 +8,8 @@ import org.jsapar.schema.FixedWidthSchemaLine;
 import org.jsapar.schema.SchemaException;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.text.ParseException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -21,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 public class FixedWidthLineComposerTest {
 
     @Test
-    public void testOutput() throws IOException, JSaParException, ParseException, SchemaException {
+    public void testOutput() throws JSaParException {
         Line line = new Line("");
         line.addCell(new StringCell("First name","Jonas"));
         line.addCell(new StringCell("Last name","Stenberg"));
@@ -47,7 +45,7 @@ public class FixedWidthLineComposerTest {
     }
 
     @Test
-    public void testOutput_minLength() throws IOException, JSaParException, ParseException, SchemaException {
+    public void testOutput_minLength() throws JSaParException {
         Line line = new Line("");
         line.addCell(new StringCell("First name","Jonas"));
         line.addCell(new StringCell("Last name","Stenberg"));
@@ -74,7 +72,7 @@ public class FixedWidthLineComposerTest {
     }
 
     @Test
-    public void testOutput_ignorewrite() throws IOException, JSaParException {
+    public void testOutput_ignorewrite() throws JSaParException {
         Line line = new Line("");
         line.addCell(new StringCell("First name","Jonas"));
         line.addCell(new StringCell("Last name","Stenberg"));

@@ -8,8 +8,6 @@ import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 import org.junit.Test;
 
-import java.io.IOException;
-
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -18,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class FixedWidthComposerTest {
 
     @Test
-    public final void testOutput_Flat() throws IOException, JSaParException {
+    public final void testOutput_Flat() throws JSaParException {
         String sExpected = "JonasStenbergFridaBergsten";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);

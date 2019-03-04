@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jsapar.error;
 
 import java.util.EventListener;

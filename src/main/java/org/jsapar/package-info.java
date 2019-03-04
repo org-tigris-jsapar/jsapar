@@ -44,7 +44,7 @@
  * }
  * }</pre>
  *
- * @see <a href="https://org-tigris-jsapar.github.io/jsapar">Documentation pages</a> for further documentation.
- * @see <a href="https://github.com/org-tigris-jsapar/jsapar-examples">Examples project</a> for complete examples.
+ * @see <a href="https://org-tigris-jsapar.github.io/jsapar">Documentation pages for further documentation</a>
+ * @see <a href="https://github.com/org-tigris-jsapar/jsapar-examples">Examples project for complete examples</a>
  */
 package org.jsapar;

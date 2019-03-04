@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * Builds {@link Line} objects from single bean instances. The {@link Line#lineType} of each line will be
  * the name of the class denoted by {@link Class#getName()}. Each bean property that have a getter method will result in
- * a cell with the bean property name The {@link Cell#name} of each cell will be the name of the bean property, e.g. if
+ * a cell with the bean property name The {@link Cell#getName()} of each cell will be the name of the bean property, e.g. if
  * the bean has a method declared as {@code public int getNumber()}, it will result in a cell with the name "number" of
  * type {@link CellType}.INTEGER.
  * <p>
@@ -38,8 +38,8 @@ public class BeanMarshaller<T>  {
      * Builds a {@link Line} object according to the getter fields of the bean. Each cell in the line will
      * be named according to the property name defined in the current {@link BeanMap}. If not stated otherwise this will
      * be the java bean attribute name. This means that if there is a member
-     * method called <tt>getStreetAddress()</tt>, the name of the cell will be
-     * <tt>streetAddress</tt>. Only properties defined in the current {@link BeanMap} will be added to the created line.
+     * method called <code>getStreetAddress()</code>, the name of the cell will be
+     * <code>streetAddress</code>. Only properties defined in the current {@link BeanMap} will be added to the created line.
      *
      * @param bean       The bean.
      * @param errorListener The error listener to which error events are propagated.
@@ -70,8 +70,9 @@ public class BeanMarshaller<T>  {
                         continue;
                     // Recursively add sub classes.
                     this.marshal(line, subObject, children, errorListener);
-                } else
+                } else {
                     line.addCell(bean2Cell.makeCell(object));
+                }
             } catch (IllegalArgumentException e) {
                 handleCellError(errorListener, bean2Cell.getCellName(), object, line, "Illegal argument in getter method.");
             } catch (IllegalAccessException e) {

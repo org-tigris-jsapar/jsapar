@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jsapar.model;
 
 import org.jsapar.schema.SchemaException;
@@ -10,27 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 
 /**
  * @author stejon0
  *
  */
 public class NumberCellTest {
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
 
 
     /**

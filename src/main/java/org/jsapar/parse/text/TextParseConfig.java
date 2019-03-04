@@ -32,7 +32,7 @@ public class TextParseConfig {
      * The maximum number of cell values that are cached while parsing. 0 or negative value means that caching is disabled. For inputs
      * where each cell on each line contains a unique value, you may gain some speed by disabling the cache.
      * <p>
-     * The default max cache size is 10 and the maximum value is 100. Setting a higher value will not have any further
+     * The default max cache size is 1 and the maximum value is 100. Setting a higher value will not have any further
      * effect.
      * <p>
      * For each column or schema-cell the library knows that a distinct string value will always result in exactly the same cell value.
@@ -46,13 +46,13 @@ public class TextParseConfig {
      * created and re-use that instance. The cell is immutable so it cannot be altered after creation.
      * <p>
      * In a normal scenario when parsing fixed width or CSV-files, many columns contain only a fix number of values. For
-     * those scenarios the library only have to create one new cell instance every occurring value as long as it hits
+     * those scenarios the library only have to create one distinct cell instance for every occurring value as long as it hits
      * the cache. It reduces a lot of calls to new.
      * <p>
      * As usual when caching; some will gain and some will lose. In this case we gain a lot for columns where value does
      * not change a lot but loose some for columns where each value is unique.
      */
-    private int maxCellCacheSize = 10;
+    private int maxCellCacheSize = 1;
 
     public ValidationAction getOnUndefinedLineType() {
         return onUndefinedLineType;

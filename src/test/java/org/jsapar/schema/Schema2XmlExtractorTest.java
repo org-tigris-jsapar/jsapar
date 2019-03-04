@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.jsapar.schema;
 
 import org.junit.After;
@@ -17,24 +14,9 @@ import static org.junit.Assert.assertNotNull;
  */
 public class Schema2XmlExtractorTest {
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
-
 
     /**
      * Test method for {@link org.jsapar.schema.Schema2XmlExtractor#extractXml(java.io.Writer, org.jsapar.schema.Schema)}.
-     * @throws SchemaException 
      */
     @Test
     public void testExtractXml_FixedWidth() throws SchemaException {
@@ -61,7 +43,6 @@ public class Schema2XmlExtractorTest {
 
     /**
      * Test method for {@link org.jsapar.schema.Schema2XmlExtractor#extractXml(java.io.Writer, org.jsapar.schema.Schema)}.
-     * @throws SchemaException 
      */
     @Test
     public void testExtractXml_Csv() throws SchemaException {

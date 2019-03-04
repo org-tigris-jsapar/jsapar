@@ -14,7 +14,6 @@ import org.jsapar.schema.Xml2SchemaBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.beans.IntrospectionException;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -32,6 +31,7 @@ import static org.junit.Assert.assertEquals;
  * @author stejon0
  * 
  */
+@SuppressWarnings("unchecked")
 public class JSaParExamplesTest {
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -259,6 +259,7 @@ public class JSaParExamplesTest {
             throws IOException, JSaParException {
 
         File outFile = new File("examples/02_Names_out.txt");
+        outFile.delete();
         try (Reader inSchemaReader = new FileReader("examples/01_CsvSchema.xml");
              Reader outSchemaReader = new FileReader("examples/02_FixedWidthSchema.xml");
              Reader inReader = new FileReader("examples/01_Names.csv");
@@ -271,10 +272,24 @@ public class JSaParExamplesTest {
         Assert.assertTrue(outFile.isFile());
     }
 
+    @Test
+    public final void testConvert01_02_usingMain()
+            throws JSaParException {
+
+        final String outFileName = "examples/02_Names_out.txt";
+        File outFile = new File(outFileName);
+        outFile.delete();
+        Text2TextConverter
+                .main(new String[] { "-in.file", "examples/01_Names.csv", "-out.file", outFileName, "-in.schema",
+                        "examples/01_CsvSchema.xml", "-out.schema", "examples/02_FixedWidthSchema.xml" });
+
+        Assert.assertTrue(outFile.isFile());
+    }
+
     @SuppressWarnings("unchecked")
     @Test
     public final void testExampleCsvToJava07()
-            throws IOException, JSaParException, ParseException, IntrospectionException, ClassNotFoundException {
+            throws IOException, JSaParException, ParseException {
         try (Reader schemaReader = new FileReader("examples/07_CsvSchemaToJava.xml");
              Reader fileReader = new FileReader("examples/07_Names.csv")) {
             Text2BeanConverter converter = new Text2BeanConverter(Schema.ofXml(schemaReader));
@@ -303,7 +318,7 @@ public class JSaParExamplesTest {
     
     @Test
     public final void testExampleBeanCollectionToCsv07()
-            throws SchemaException, IOException, ParseException, IntrospectionException, ClassNotFoundException {
+            throws SchemaException, IOException, ParseException {
 
         List<TstPerson> people = new LinkedList<>();
         TstPerson testPerson1 = new TstPerson("Nils", "Holgersson", (short)4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9, 'A');
@@ -330,7 +345,7 @@ public class JSaParExamplesTest {
 
     @Test
     public final void testExampleBeanToCsv07()
-            throws SchemaException, IOException, ParseException, IntrospectionException, ClassNotFoundException {
+            throws SchemaException, IOException, ParseException {
 
         TstPerson testPerson1 = new TstPerson("Nils", "Holgersson", (short)4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9, 'A');
         testPerson1.setAddress(new TstPostAddress("Track", "Village"));
@@ -389,7 +404,7 @@ public class JSaParExamplesTest {
 
     @Test
     public final void testExampleCsvToBean06_beanMap()
-            throws IOException, JSaParException, ParseException, IntrospectionException, ClassNotFoundException {
+            throws IOException, JSaParException, ClassNotFoundException {
         try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
                 Reader fileReader = new FileReader("examples/06_NamesControlCell.csv");
                 Reader beanMapReader = new FileReader("examples/06_BeanMap.xml")) {
@@ -410,7 +425,7 @@ public class JSaParExamplesTest {
 
     @Test
     public final void testExampleCsvToBean06_beanMapOverride()
-            throws IOException, JSaParException, ParseException, IntrospectionException, ClassNotFoundException {
+            throws IOException, JSaParException, ClassNotFoundException {
         try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
                 Reader fileReader = new FileReader("examples/06_NamesControlCell.csv");
         Reader beanMapReader = new FileReader("examples/06_BeanMapOverride.xml")) {

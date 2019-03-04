@@ -6,7 +6,6 @@ import org.jsapar.parse.bean.BeanMap;
 import org.jsapar.parse.bean.BeanParseTask;
 import org.jsapar.schema.Schema;
 
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
@@ -41,10 +40,8 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * Creates a converter with supplied composer schema.
      *
      * @param composerSchema The schema to use while composing text output.
-     * @throws IntrospectionException If string names of properties could not be mapped to actual properties.
-     * @throws ClassNotFoundException In case any of the classes described in the schema does not exist in the classpath.
      */
-    public BeanCollection2TextConverter(Schema composerSchema) throws IntrospectionException, ClassNotFoundException {
+    public BeanCollection2TextConverter(Schema composerSchema) {
         this(composerSchema, BeanMap.ofSchema(composerSchema));
     }
 
@@ -66,9 +63,10 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * @param stream The stream to get beans from.
      * @param writer The text writer to write text output to. Caller is responsible for closing the writer.
      * @throws IOException If there is an error writing text output.
+     * @return Number of actually composed lines.
      */
-    public void convert(Stream<? extends T> stream, Writer writer) throws IOException {
-        execute(new ConvertTask(makeParseTask(stream), makeComposer(writer)));
+    public long convert(Stream<? extends T> stream, Writer writer) throws IOException {
+        return execute(new ConvertTask(makeParseTask(stream), makeComposer(writer)));
     }
 
     /**
@@ -77,20 +75,39 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * @param iterator The iterator to get beans from.
      * @param writer   The text writer to write text output to. Caller is responsible for closing the writer.
      * @throws IOException If there is an error writing text output.
+     * @return Number of actually composed lines.
      */
-    public void convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
+    public long convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
         ConvertTask convertTask = new ConvertTask(makeParseTask(iterator), makeComposer(writer));
-        execute(convertTask);
+        return execute(convertTask);
     }
 
+    /**
+     * This implementation creates a new instance of {@link TextComposer}. Override if you have a different composer
+     * that you want to use.
+     * @param writer The writer that should be used by the composer
+     * @return A newly created composer.
+     */
     protected TextComposer makeComposer(Writer writer) {
         return new TextComposer(this.composerSchema, writer);
     }
 
+    /**
+     * This implementation creates a new instance of {@link BeanParseTask}. Override if you have a different parser that
+     * you want to use.
+     * @param stream The stream to use while parsing.
+     * @return A newly created parser.
+     */
     protected BeanParseTask<T> makeParseTask(Stream<? extends T> stream) {
         return new BeanParseTask<>(stream, beanMap);
     }
 
+    /**
+     * This implementation creates a new instance of {@link BeanParseTask}. Override if you have a different parser that
+     * you want to use.
+     * @param iterator The iterator to use while parsing.
+     * @return A newly created parser.
+     */
     protected BeanParseTask<T> makeParseTask(Iterator<? extends T> iterator) {
         return new BeanParseTask<>(iterator, beanMap);
     }
@@ -102,8 +119,8 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * @param writer     The text writer to write text output to.
      * @throws IOException If there is an error writing text output.
      */
-    public void convert(Collection<? extends T> collection, Writer writer) throws IOException {
-        convert(collection.stream(), writer);
+    public long convert(Collection<? extends T> collection, Writer writer) throws IOException {
+        return convert(collection.stream(), writer);
     }
 
 }

@@ -8,9 +8,7 @@ import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.SchemaException;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.io.StringWriter;
-import java.text.ParseException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 public class CsvLineComposerTest {
 
     @Test
-    public void testOutput() throws IOException, JSaParException {
+    public void testOutput() throws JSaParException {
 
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
@@ -40,7 +38,7 @@ public class CsvLineComposerTest {
     }
 
     @Test
-    public void testOutput_ignoreWrite() throws IOException, JSaParException {
+    public void testOutput_ignoreWrite() throws JSaParException {
 
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
@@ -62,7 +60,7 @@ public class CsvLineComposerTest {
     }
 
     @Test
-    public void testOutput_2byte_unicode() throws IOException, JSaParException {
+    public void testOutput_2byte_unicode() throws JSaParException {
 
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator("\uFFD0");
@@ -82,7 +80,7 @@ public class CsvLineComposerTest {
 
 
     @Test
-    public void testOutput_not_found_in_line() throws IOException, JSaParException {
+    public void testOutput_not_found_in_line() throws JSaParException {
 
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
@@ -103,7 +101,7 @@ public class CsvLineComposerTest {
     }
 
     @Test
-    public void testOutput_null_value() throws IOException, JSaParException {
+    public void testOutput_null_value() throws JSaParException {
 
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");
@@ -126,7 +124,7 @@ public class CsvLineComposerTest {
     }
 
     @Test
-    public void testOutput_reorder() throws IOException, JSaParException {
+    public void testOutput_reorder() throws JSaParException {
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
         schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
@@ -145,7 +143,7 @@ public class CsvLineComposerTest {
     }
 
     @Test
-    public void testOutput_default() throws IOException, JSaParException, ParseException, SchemaException {
+    public void testOutput_default() throws JSaParException {
 
         CsvSchemaLine schemaLine = new CsvSchemaLine(1);
         schemaLine.setCellSeparator(";-)");

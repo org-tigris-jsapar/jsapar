@@ -8,13 +8,9 @@ public class SplitErrorEventListenerTest {
 
 
     @Test
-    public void testRemoveEventListener() throws Exception {
+    public void testRemoveEventListener() {
         MulticastErrorEventListener instance = new MulticastErrorEventListener();
-        ErrorEventListener eventListener = new ErrorEventListener() {
-            @Override
-            public void errorEvent(ErrorEvent event) {
-            }
-        };
+        ErrorEventListener eventListener = event -> {        };
         assertEquals(0, instance.size());
         instance.addEventListener(eventListener);
         assertEquals(1, instance.size());
@@ -23,19 +19,15 @@ public class SplitErrorEventListenerTest {
     }
 
     @Test(expected = JSaParException.class)
-    public void testErrorEvent_default() throws Exception {
+    public void testErrorEvent_default() {
         MulticastErrorEventListener instance = new MulticastErrorEventListener();
         instance.errorEvent(new ErrorEvent(this, new JSaParException("test")));
     }
 
     @Test
-    public void testErrorEvent_one() throws Exception {
+    public void testErrorEvent_one() {
         MulticastErrorEventListener instance = new MulticastErrorEventListener();
-        instance.addEventListener(new ErrorEventListener() {
-            @Override
-            public void errorEvent(ErrorEvent event) {
-            }
-        });
+        instance.addEventListener(event -> {        });
         instance.errorEvent(new ErrorEvent(this, new JSaParException("test")));
     }
 

@@ -5,7 +5,6 @@ import org.jsapar.convert.AbstractConverter;
 import org.jsapar.parse.bean.BeanMap;
 import org.jsapar.schema.Schema;
 
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
@@ -24,7 +23,7 @@ import java.util.stream.Stream;
 public class ConcurrentBeanCollection2TextConverter<T> extends BeanCollection2TextConverter<T> implements ConcurrentStartStop{
     private ConcurrentConvertTaskFactory convertTaskFactory = new ConcurrentConvertTaskFactory();
 
-    public ConcurrentBeanCollection2TextConverter(Schema composerSchema) throws IntrospectionException, ClassNotFoundException {
+    public ConcurrentBeanCollection2TextConverter(Schema composerSchema) {
         super(composerSchema);
     }
 
@@ -33,13 +32,15 @@ public class ConcurrentBeanCollection2TextConverter<T> extends BeanCollection2Te
     }
 
     @Override
-    public void convert(Stream<? extends T> stream, Writer writer) throws IOException {
+    public long convert(Stream<? extends T> stream, Writer writer) throws IOException {
         execute(convertTaskFactory.makeConvertTask(makeParseTask(stream), makeComposer(writer)));
+        return 0;
     }
 
     @Override
-    public void convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
+    public long convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
         execute(convertTaskFactory.makeConvertTask(makeParseTask(iterator), makeComposer(writer)));
+        return 0;
     }
 
     public void registerOnStart(Runnable onStart) {

@@ -55,11 +55,12 @@ public class Text2StringConverter extends AbstractConverter {
     }
 
     /**
-     * Creates the composer
+     * Creates the composer. Makes it possible to override with custom made implementation of {@link StringComposer}
      * @param schema                The output schema to use while composing.
      * @param composedEventListener The string composed event listener that get notification of each line.
      * @return The composer to use in this converter
      */
+    @SuppressWarnings("WeakerAccess")
     protected Composer makeComposer(Schema schema, StringComposedEventListener composedEventListener) {
         return new StringComposer(schema, composedEventListener);
     }

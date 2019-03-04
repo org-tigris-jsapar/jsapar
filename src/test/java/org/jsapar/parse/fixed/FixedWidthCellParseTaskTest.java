@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -23,7 +22,7 @@ public class FixedWidthCellParseTaskTest {
     private int maxCacheSize=0;
 
     @Test
-    public final void testBuild() throws IOException, JSaParException, ParseException {
+    public final void testBuild() throws IOException, JSaParException {
         String toParse = "   Jonas   ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
         schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
@@ -36,7 +35,7 @@ public class FixedWidthCellParseTaskTest {
     }
 
     @Test
-    public final void testBuild_dont_trim() throws IOException, JSaParException, ParseException {
+    public final void testBuild_dont_trim() throws IOException, JSaParException {
         String toParse = "   Jonas   ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
         schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
@@ -50,7 +49,7 @@ public class FixedWidthCellParseTaskTest {
     }
 
     @Test
-    public final void testBuildEmptyMandatory() throws IOException, ParseException {
+    public final void testBuildEmptyMandatory() throws IOException {
         String toParse = "           ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
         schemaCell.setMandatory(true);
@@ -67,7 +66,7 @@ public class FixedWidthCellParseTaskTest {
     }
 
     @Test
-    public final void testBuildEmptyOptional() throws IOException, ParseException {
+    public final void testBuildEmptyOptional() throws IOException {
         String toParse = "           ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
 
@@ -80,7 +79,7 @@ public class FixedWidthCellParseTaskTest {
     }
 
     @Test
-    public final void testBuildEmptyOptionalInteger() throws IOException, ParseException {
+    public final void testBuildEmptyOptionalInteger() throws IOException {
         String toParse = "           ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("ShoeSize", 11);
         schemaCell.setCellFormat(CellType.INTEGER);
@@ -111,7 +110,7 @@ public class FixedWidthCellParseTaskTest {
     }
 
     @Test
-    public final void testBuild_empty() throws IOException, ParseException {
+    public final void testBuild_empty() throws IOException {
         String toParse = "           ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
 
@@ -124,7 +123,7 @@ public class FixedWidthCellParseTaskTest {
     }
 
     @Test
-    public final void testBuild_date() throws IOException, ParseException {
+    public final void testBuild_date() throws IOException {
         String toParse = "2007-04-10 16:15";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Date", 16);
         schemaCell.setCellFormat(CellType.DATE, "yyyy-MM-dd HH:mm");
@@ -144,7 +143,7 @@ public class FixedWidthCellParseTaskTest {
     }
 
     @Test
-    public final void testParse_integer_pad_zero() throws IOException, ParseException {
+    public final void testParse_integer_pad_zero() throws IOException {
         String toParse = "000000123";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Integer", 11);
         schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
@@ -153,14 +152,14 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        IntegerCell cell = (IntegerCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         int value = cell.getValue().intValue();
 
         assertEquals(123, value);
     }
 
     @Test
-    public final void testParse_integer_pad_zero_zero() throws IOException, ParseException {
+    public final void testParse_integer_pad_zero_zero() throws IOException {
         String toParse = "000000000";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Integer", 11);
         schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
@@ -169,7 +168,7 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        IntegerCell cell = (IntegerCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         int value = cell.getValue().intValue();
 
         assertEquals(0, value);
@@ -177,7 +176,7 @@ public class FixedWidthCellParseTaskTest {
 
 
     @Test
-    public final void testBuild_decimal_sv() throws IOException, ParseException {
+    public final void testBuild_decimal_sv() throws IOException {
         String toParse = "-123 456,78  ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Decimal", 11);
         schemaCell.setCellFormat(CellType.DECIMAL, "#,###.#", new Locale("sv", "SE"));
@@ -192,7 +191,7 @@ public class FixedWidthCellParseTaskTest {
 
 
     @Test
-    public final void testBuild_decimal_uk() throws IOException, JSaParException, ParseException {
+    public final void testBuild_decimal_uk() throws IOException, JSaParException {
         String toParse = "-123,456.78  ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Decimal", 11);
         schemaCell.setCellFormat(CellType.DECIMAL, "#,###.#", Locale.UK);
@@ -207,49 +206,49 @@ public class FixedWidthCellParseTaskTest {
     }
 
     @Test
-    public final void testBuild_int() throws IOException, JSaParException, ParseException {
+    public final void testBuild_int() throws IOException, JSaParException {
         String toParse = "123456";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Integer", 6);
         schemaCell.setCellFormat(CellType.INTEGER);
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        IntegerCell cell = (IntegerCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         int value = cell.getValue().intValue();
 
         assertEquals(123456, value);
     }
 
     @Test
-    public final void testBuild_float() throws IOException, JSaParException, ParseException {
+    public final void testBuild_float() throws IOException, JSaParException {
         String toParse = "1123,234";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Float", 6);
         schemaCell.setCellFormat(CellType.FLOAT);
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        FloatCell cell = (FloatCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         double value = cell.getValue().doubleValue();
 
         assertEquals(1123, 234, value);
     }
 
     @Test
-    public final void testBuild_floatExp() throws IOException, JSaParException, ParseException {
+    public final void testBuild_floatExp() throws IOException, JSaParException {
         String toParse = "1.234E6 ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Float", 8);
         schemaCell.setCellFormat(CellType.FLOAT, "#.###E0", schemaCell.getLocale());
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        FloatCell cell = (FloatCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         double value = cell.getValue().doubleValue();
 
         assertEquals(1.234e6, value, 0.001);
     }
 
     @Test
-    public final void testBuild_floatExp_SE() throws IOException, JSaParException, ParseException {
+    public final void testBuild_floatExp_SE() throws IOException, JSaParException {
         String toParse = "1,234E6 ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Float", 8);
         schemaCell.setLocale(new Locale("sv", "SE"));
@@ -257,14 +256,14 @@ public class FixedWidthCellParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
-        NumberCell cell = (NumberCell) cellParser.parse(reader, new ExceptionErrorEventListener());
+        FloatCell cell = (FloatCell) cellParser.parse(reader, new ExceptionErrorEventListener());
         double value = cell.getValue().doubleValue();
 
         assertEquals(1.234e6, value, 0.001);
     }
 
     @Test
-    public final void testBuild_boolean() throws IOException, JSaParException, ParseException {
+    public final void testBuild_boolean() throws IOException, JSaParException {
         String toParse = "true ";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("True", 5);
         schemaCell.setCellFormat(CellType.BOOLEAN);
@@ -278,7 +277,7 @@ public class FixedWidthCellParseTaskTest {
     }
 
     @Test
-    public final void testBuildZeroLength() throws IOException, ParseException {
+    public final void testBuildZeroLength() throws IOException {
         String toParse = "Next";
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("DontRead", 0);
 

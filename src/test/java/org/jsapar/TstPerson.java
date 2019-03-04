@@ -1,6 +1,3 @@
-/** 
- * Copyright: Jonas Stenberg
- */
 package org.jsapar;
 
 import java.util.Date;
@@ -19,6 +16,7 @@ public class TstPerson {
     private long           luckyNumber;
     private int            streetNumber;
     private char           door;
+    private boolean        adult;
     private TstPostAddress    address;
     private TstPostAddress    workAddress;
     private double         length;
@@ -188,5 +186,13 @@ public class TstPerson {
 
     public void setGender(TstGender gender) {
         this.gender = gender;
+    }
+
+    public boolean isAdult() {
+        return adult;
+    }
+
+    public void setAdult(boolean adult) {
+        this.adult = adult;
     }
 }

@@ -183,16 +183,6 @@ public class FixedWidthSchemaLine extends SchemaLine {
         return this.schemaCells.size();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj) && obj instanceof FixedWidthSchemaLine;
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
     /**
      * @return the minimal length of a line to generate. If the sum of all cells' length do not reach the length of a
      *         line, the line will be filled with the fill character.

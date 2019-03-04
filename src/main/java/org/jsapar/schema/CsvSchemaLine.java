@@ -191,21 +191,6 @@ public class CsvSchemaLine extends SchemaLine {
         return this.schemaCells.size();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj) && obj instanceof CsvSchemaLine;
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
     @Override
     public Stream<CsvSchemaCell> stream() {
         return schemaCells.values().stream();

@@ -12,7 +12,6 @@ import org.jsapar.schema.Schema;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.beans.IntrospectionException;
 import java.util.Date;
 import java.util.Locale;
 
@@ -22,11 +21,7 @@ public class BeanMarshallerTest {
     static final Date birthTime = new Date();
 
     @Test
-    public void parseBean() {
-    }
-
-    @Test
-    public void testBuildLine() throws IntrospectionException, ClassNotFoundException {
+    public void testBuildLine() {
         TstPerson person = new TstPerson();
         person.setBirthTime(birthTime);
         person.setFirstName("Jonas");
@@ -51,7 +46,7 @@ public class BeanMarshallerTest {
     }
 
     @Test
-    public void testBuildLine_subClass() throws IntrospectionException, ClassNotFoundException {
+    public void testBuildLine_subClass() {
         TstPerson person = new TstPerson();
         person.setFirstName("Jonas");
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
@@ -66,7 +61,7 @@ public class BeanMarshallerTest {
     }
 
     @Test
-    public void testBuildLine_subClass_multiplePaths() throws IntrospectionException, ClassNotFoundException {
+    public void testBuildLine_subClass_multiplePaths() {
         TstPerson person = new TstPerson();
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
         person.getAddress().setSubAddress(new TstPostAddress("Road", "Town"));
