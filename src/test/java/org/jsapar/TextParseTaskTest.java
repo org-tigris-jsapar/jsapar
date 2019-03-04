@@ -99,7 +99,7 @@ public class TextParseTaskTest {
     
     @Test
     public void testBuild_fixed_twoLines() throws IOException {
-        String toParse = "JonasStenberg" + System.getProperty("line.separator") + "FridaStenberg";
+        String toParse = "JonasStenberg" + System.getProperty("line.separator") + "LinusStenberg";
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
@@ -112,7 +112,7 @@ public class TextParseTaskTest {
         assertEquals("Jonas", LineUtils.getStringCellValue(doc.getLine(0), "First name"));
         assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(0), "Last name"));
 
-        assertEquals("Frida", LineUtils.getStringCellValue(doc.getLine(1), "First name"));
+        assertEquals("Linus", LineUtils.getStringCellValue(doc.getLine(1), "First name"));
         assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(1), "Last name"));
     }
 

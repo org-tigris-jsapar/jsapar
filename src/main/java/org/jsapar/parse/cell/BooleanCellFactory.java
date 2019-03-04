@@ -45,4 +45,16 @@ public class BooleanCellFactory implements CellFactory {
                     "Boolean format pattern should only contain two fields separated with ; character");
         return new BooleanFormat(aTrueFalse[0].split("\\s*\\|\\s*"), aTrueFalse.length == 2 ? aTrueFalse[1].split("\\s*\\|\\s*") : new String[]{""});
     }
+
+    /**
+     * Boolean cells most likely only contain two different values so cache size can always be 2. In cases where
+     * boolean cells may contain more than two different values, we will suffer some cache misses but that is an
+     * acceptable trade of.
+     * @param configuredCacheMaxSize The cache max size in configuration.
+     * @return Always returns 2.
+     */
+    @Override
+    public int actualCacheMaxSize(int configuredCacheMaxSize) {
+        return 2;
+    }
 }

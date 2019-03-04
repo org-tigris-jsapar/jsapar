@@ -6,6 +6,7 @@ import org.jsapar.parse.line.ValidationHandler;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.schema.CsvSchema;
+import org.jsapar.schema.SchemaLine;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -15,11 +16,11 @@ import java.io.Reader;
  */
 public class CsvParser implements TextSchemaParser {
     
-    private CsvLineReader        lineReader;
+    private CsvLineReader lineReader;
     private CsvSchema            schema;
     private CsvLineParserFactory lineParserFactory;
     private TextParseConfig      parseConfig;
-    private ValidationHandler validationHandler = new ValidationHandler();
+    private final ValidationHandler validationHandler = new ValidationHandler();
 
     CsvParser(Reader reader, CsvSchema schema) {
         this(reader, schema, new TextParseConfig());
@@ -28,7 +29,7 @@ public class CsvParser implements TextSchemaParser {
 
     public CsvParser(Reader reader, CsvSchema schema, TextParseConfig parseConfig) {
         this.parseConfig = parseConfig;
-        lineReader = new CsvLineReader(schema.getLineSeparator(), reader);
+        lineReader = new CsvLineReaderStates(schema.getLineSeparator(), reader, schema.stream().anyMatch(SchemaLine::isOccursInfinitely), parseConfig.getMaxLineLength());
         this.schema = schema;
         this.lineParserFactory = new CsvLineParserFactory(schema, parseConfig);
     }

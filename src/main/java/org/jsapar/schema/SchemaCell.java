@@ -18,7 +18,7 @@ public abstract class SchemaCell implements Cloneable {
     private final static SchemaCellFormat CELL_FORMAT_PROTOTYPE = new SchemaCellFormat(CellType.STRING);
 
     private final String                  name;
-    private SchemaCellFormat              cellFormat            = CELL_FORMAT_PROTOTYPE;
+    private SchemaCellFormat              cellFormat;
     private boolean                       ignoreRead            = false;
     private boolean                       ignoreWrite           = false;
     private boolean                       mandatory             = false;
@@ -28,7 +28,7 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * If parsing an empty value this cell can be used, avoiding a lot of object creation.
      */
-    private Cell               emptyCell      = null;
+    private Cell               emptyCell;
     private String             defaultValue   = null;
     private Locale             locale         = Locale.US;
     private CellValueCondition emptyCondition = null;

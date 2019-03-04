@@ -8,8 +8,6 @@ import org.jsapar.model.Line;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.schema.*;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -22,7 +20,7 @@ public class CsvParseTaskTest {
     @Test
     public final void testParse_oneLine() throws IOException, JSaParException {
         CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = CsvLineParseTaskTest.makeCsvSchemaLine();
+        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg;Hemgatan 19;111 22;Stockholm";
         java.io.Reader reader = new java.io.StringReader(sToParse);
@@ -41,7 +39,7 @@ public class CsvParseTaskTest {
     @Test
     public final void testParse_endingNewLine() throws IOException, JSaParException {
         CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = CsvLineParseTaskTest.makeCsvSchemaLine();
+        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg;Hemgatan 19;111 22;Stockholm" + System.getProperty("line.separator");
         java.io.Reader reader = new java.io.StringReader(sToParse);
@@ -60,7 +58,7 @@ public class CsvParseTaskTest {
     @Test
     public final void testParse_twoLines() throws IOException, JSaParException {
         CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = CsvLineParseTaskTest.makeCsvSchemaLine();
+        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator") + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
@@ -78,7 +76,7 @@ public class CsvParseTaskTest {
     @Test
     public final void testParse_emptyLine_ignore() throws IOException, JSaParException {
         CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = CsvLineParseTaskTest.makeCsvSchemaLine();
+        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator")
                 + System.getProperty("line.separator") + "Nils;Nilsson";
@@ -99,7 +97,7 @@ public class CsvParseTaskTest {
     @Test
     public final void testParse_emptyLine_ignore_space() throws IOException, JSaParException {
         CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = CsvLineParseTaskTest.makeCsvSchemaLine();
+        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
         schema.addSchemaLine(schemaLine);
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator") + " \t \t  "
                 + System.getProperty("line.separator") + "Nils;Nilsson";

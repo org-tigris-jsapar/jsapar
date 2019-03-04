@@ -20,10 +20,15 @@ By separating the description of the data format into a schema that can be loade
 easier to maintain and increases flexibility.
 
 * [Documentation](https://org-tigris-jsapar.github.io/jsapar/)
+* [Release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes)
 * [Javadocs API documentation](https://javadoc.io/doc/org.tigris.jsapar/jsapar)
 * [Examples](https://github.com/org-tigris-jsapar/jsapar-examples)
 
 ## News
+### Version 2.0.1 is released 
+*2018-03-04*
+
+The focus of this fix-release has been to improve performance while parsing. See [release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes) for details
 ### Version 2.0.0 is now officially released 
 *2018-11-24*
 

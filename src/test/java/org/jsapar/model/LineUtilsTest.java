@@ -307,11 +307,11 @@ public class LineUtilsTest {
 
 
     @Test
-    public void testIsCellSet() {
+    public void testContainsNonEmptyCell() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
-        assertTrue(line.isCellSet("FirstName"));
-        assertFalse(line.isCellSet("LastName"));
+        assertTrue(line.containsNonEmptyCell("FirstName"));
+        assertFalse(line.containsNonEmptyCell("LastName"));
     }
 
 }

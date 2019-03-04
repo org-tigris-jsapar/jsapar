@@ -46,4 +46,13 @@ public interface CellFactory {
      */
     Format makeFormat(Locale locale, String pattern);
 
+    /**
+     * For some types of cells, the actual cache max size can be different than configured, for instance boolean can
+     * cell factories can return 2 since there will most likely be only two different values.
+     * @param configuredCacheMaxSize The cache max size in configuration.
+     * @return The actual cache max size.
+     */
+    default int actualCacheMaxSize(int configuredCacheMaxSize){
+        return configuredCacheMaxSize;
+    }
 }
