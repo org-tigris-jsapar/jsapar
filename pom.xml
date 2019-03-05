@@ -1,4 +1,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<!--
+		Deploying artifacts
+
+		SNAPSHOT
+		========
+		mvn clean deploy
+
+		RELEASE
+		=======
+		https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
+		mvn release:prepare release:perform
+		To release your artifacts, open your favorite browser and go to https://oss.sonatype.org/.
+		Log in!
+		Close staging bundle.
+		Release closed staging bundle.
+
+		In order to deploy artifacts you will need to configure login to sonatype ossrh in settings.xml:
+			<server>
+			  <id>ossrh</id>
+			  <username>user</username>
+			  <password>*****</password>
+			</server>
+	 -->
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.tigris.jsapar</groupId>
 	<artifactId>jsapar</artifactId>
