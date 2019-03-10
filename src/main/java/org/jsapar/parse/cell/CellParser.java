@@ -35,12 +35,12 @@ public class CellParser<S extends SchemaCell> {
      * @param maxCacheSize The maximum number of cells to keep in cache while parsing. The value 0 will disable cache.
      */
     protected CellParser(S schemaCell, int maxCacheSize) {
-        cellCache = Cache.ofMaxSize(maxCacheSize);
         this.schemaCell = schemaCell;
 
         CellType cellType = schemaCell.getCellFormat().getCellType();
         cellFactory = CellFactory.getInstance(cellType);
         assert cellFactory != null;
+        cellCache = Cache.ofMaxSize(cellFactory.actualCacheMaxSize(maxCacheSize));
         format = schemaCell.getCellFormat().getFormat();
         if(format == null)
             format  = cellFactory.makeFormat(schemaCell.getLocale());
@@ -188,6 +188,7 @@ public class CellParser<S extends SchemaCell> {
      * Creates cell parser according to supplied schema and with cache disabled.
      * @param schemaCell The schema to use.
      * @return A {@link CellParser} instance to use for parsing supplied schemaCell.
+     * @param <S> The type of the schema cell.
      */
     public static <S extends SchemaCell> CellParser<S> ofSchemaCell(S schemaCell) {
         return new CellParser<>(schemaCell, 0);
@@ -198,6 +199,7 @@ public class CellParser<S extends SchemaCell> {
      * @param schemaCell The schema to use.
      * @param maxCacheSize The maximum number of cells to keep in cache while parsing. The value 0 will disable cache.
      * @return A {@link CellParser} instance to use for parsing supplied schemaCell.
+     * @param <S> The type of the schema cell.
      */
     public static <S extends SchemaCell> CellParser<S> ofSchemaCell(S schemaCell, int maxCacheSize) {
         return new CellParser<>(schemaCell, maxCacheSize);

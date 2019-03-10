@@ -1,7 +1,6 @@
-package org.jsapar.parse.csv.states;
+package org.jsapar.parse.csv;
 
 import org.jsapar.parse.LineParseException;
-import org.jsapar.parse.csv.CsvLineReader;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -15,8 +14,8 @@ import java.util.List;
  * buffer.
  */
 public class CsvLineReaderStates implements CsvLineReader {
-    private static final int MAX_LINE_LENGTH = 8 * 1024;
     private static final String EMPTY_CELL = "";
+    private final int maxLineLength;
 
     private State beginCellState;
     private State foundEndQuoteState;
@@ -44,10 +43,10 @@ public class CsvLineReaderStates implements CsvLineReader {
      * @param lineSeparator  The line separator to use
      * @param reader The reader to read characters from.
      * @param allowReadAhead If true, reading from the reader can be optimized by reading larger chunks of data into a
-     *                       buffer but that can only be utilized if it is ok to read until the end of the file or if it
-     *                       is ok consume more characters from the reader than is actually needed for parsing.
+ *                       buffer but that can only be utilized if it is ok to read until the end of the file or if it
+     * @param maxLineLength The maximum number of characters in a line. Make sure that all lines fits within this size.
      */
-    public CsvLineReaderStates(String lineSeparator, Reader reader, boolean allowReadAhead) {
+    public CsvLineReaderStates(String lineSeparator, Reader reader, boolean allowReadAhead, int maxLineLength) {
         eolCheck = Arrays.asList("\n", "\r\n").contains(lineSeparator) ? new EolCheckCRLF() : new EolCheckCustom(lineSeparator);
         lastEolChar = eolCheck.getLastEolChar();
 
@@ -58,7 +57,8 @@ public class CsvLineReaderStates implements CsvLineReader {
         unquotedCellState = new UnquotedCellState();
 
         currentLine = new ArrayList<>();
-        buffer = new ReadBuffer(reader, MAX_LINE_LENGTH, (allowReadAhead ? MAX_LINE_LENGTH : 1));
+        this.maxLineLength = maxLineLength;
+        buffer = new ReadBuffer(reader, maxLineLength, (allowReadAhead ? maxLineLength : 1));
 
         beginCellState();
     }
@@ -116,7 +116,7 @@ public class CsvLineReaderStates implements CsvLineReader {
                     }
                     else if (count == 0){
                         throw new LineParseException( lineNumber,
-                                "Maximum line size exceeded. More than " + MAX_LINE_LENGTH + " bytes were read without finding a line separator or maybe there is a miss-placed start quote without matching end quote.");
+                                "Maximum line size exceeded. More than " + maxLineLength + " bytes were read without finding a line separator or maybe there is a miss-placed start quote without matching end quote.");
 
                     }
                     this.eof = true;
@@ -124,8 +124,7 @@ public class CsvLineReaderStates implements CsvLineReader {
                     return lineComplete();
                 }
             }
-            final char c = buffer.buffer[buffer.cursor++];
-            if(state.processChar(c))
+            if(state.processChar(buffer.nextCharacter()))
                 return lineComplete();
         }
     }
@@ -190,14 +189,8 @@ public class CsvLineReaderStates implements CsvLineReader {
         currentCellOffset = 0;
     }
 
-
-    private boolean endOfCell(){
-        return buffer.buffer[buffer.cursor-1] == lastCellSeparatorChar && tailOfCellMatches(this.cellSeparator);
-    }
-
     /**
-     * Checks tail of current cell matches supplied string if the supplied character were to be added.
-     * It never adds the character though.
+     * Checks tail of current cell matches supplied string. Assumes that the current character is already checked.
      * @param toMatch The string to match
      * @return True if tail of current cell matches supplied string if the supplied character were to be added.
      */
@@ -206,7 +199,7 @@ public class CsvLineReaderStates implements CsvLineReader {
         if(cellOffset < buffer.cellMark) {
             return false;
         }
-        // Scan backwards to see if characters before matches.
+        // Scan backwards to see if characters before matches. Start at character before current.
         for(int i = toMatch.length()-2; i>=0; i--){
             if(toMatch.charAt(i) !=  buffer.buffer[cellOffset + i])
                 return false;
@@ -317,7 +310,7 @@ public class CsvLineReaderStates implements CsvLineReader {
                 offsetFromEndQuote=1;
                 return false;
             }
-            if (endOfCell()) {
+            if (c == lastCellSeparatorChar && tailOfCellMatches(cellSeparator)) {
                 if(cellSeparator.length() == offsetFromEndQuote)
                     addToLineExcept(cellSeparator.length()+1);
                 else

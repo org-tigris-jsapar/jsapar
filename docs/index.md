@@ -48,6 +48,7 @@ parsing to be able to deal with them later.
 into any markup language by the use of xslt.
 
 ## Documentation
+* [Release notes](release_notes)
 * [Introduction](introduction)
 * [Basics](basics)
 * [Basics of Schema](basics_schema)

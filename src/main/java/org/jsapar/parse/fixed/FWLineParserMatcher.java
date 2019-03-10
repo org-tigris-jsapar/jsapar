@@ -4,23 +4,22 @@ import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Tests if next line to parse can be used for the schemaLine of this instance.
  */
-public class FWLineParserMatcher {
+class FWLineParserMatcher {
     private final FixedWidthSchemaLine schemaLine;
     private List<FWControlCell> controlCells =new ArrayList<>();
     private FixedWidthLineParser lineParser;
-    private FWFieldReader fieldReader = new FWFieldReader();
     private int occursLeft;
     private int maxControlEndPos;
 
-    public FWLineParserMatcher(FixedWidthSchemaLine schemaLine, TextParseConfig config) {
+    FWLineParserMatcher(FixedWidthSchemaLine schemaLine, TextParseConfig config) {
         this.schemaLine = schemaLine;
         this.lineParser = new FixedWidthLineParser(schemaLine, config);
         occursLeft = schemaLine.getOccurs();
@@ -34,17 +33,17 @@ public class FWLineParserMatcher {
         }
     }
     
-    public LineParserMatcherResult testLineParserIfMatching(BufferedReader reader) throws IOException {
+    LineParserMatcherResult testLineParserIfMatching(ReadBuffer lineReader) throws IOException {
         if(occursLeft <= 0)
             return LineParserMatcherResult.NO_OCCURS;
         if(!controlCells.isEmpty()) {
             // We only peek into the line to follow.
-            reader.mark(maxControlEndPos);
+            lineReader.markLine();
             try {
                 int read = 0;
                 for (FWControlCell controlCell : controlCells) {
                     int offset = controlCell.beginPos - read;
-                    String value = fieldReader.readToString(controlCell.schemaCell, reader, offset);
+                    String value = lineReader.readToString(controlCell.schemaCell, offset);
                     if (value == null)
                         return LineParserMatcherResult.EOF; // EOF reached
                     if (!controlCell.schemaCell.getLineCondition().satisfies(value))
@@ -52,7 +51,7 @@ public class FWLineParserMatcher {
                     read = controlCell.beginPos + controlCell.schemaCell.getLength();
                 }
             } finally {
-                reader.reset();
+                lineReader.resetLine();
             }
         }
         if (!schemaLine.isOccursInfinitely())
@@ -60,7 +59,7 @@ public class FWLineParserMatcher {
         return LineParserMatcherResult.SUCCESS;
     }
 
-    public FixedWidthLineParser getLineParser() {
+    FixedWidthLineParser getLineParser() {
         return lineParser;
     }
 
@@ -68,13 +67,13 @@ public class FWLineParserMatcher {
         final int beginPos;
         final FixedWidthSchemaCell schemaCell;
 
-        public FWControlCell(int beginPos, FixedWidthSchemaCell schemaCell) {
+        FWControlCell(int beginPos, FixedWidthSchemaCell schemaCell) {
             this.beginPos = beginPos;
             this.schemaCell = schemaCell;
         }
     }
 
-    public boolean isOccursLeft() {
+    boolean isOccursLeft() {
         return schemaLine.isOccursInfinitely() || occursLeft > 0;
     }
 

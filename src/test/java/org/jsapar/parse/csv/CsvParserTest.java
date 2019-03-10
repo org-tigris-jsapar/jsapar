@@ -37,4 +37,29 @@ public class CsvParserTest {
                 errorEvent -> errorCount.incrementAndGet());
         assertEquals(1, errorCount.get());
     }
+
+    @Test
+    public void parse_firstLineAsSchema_empty_cell_name() throws IOException {
+        CsvSchema schema = new CsvSchema();
+        CsvSchemaLine schemaLine = new CsvSchemaLine("Person");
+        schema.addSchemaLine(schemaLine);
+        schemaLine.setFirstLineAsSchema(true);
+        schemaLine.addSchemaCell(new CsvSchemaCell("firstName", CellType.STRING));
+        final CsvSchemaCell lastNameCell = new CsvSchemaCell("lastName", CellType.STRING);
+        lastNameCell.setMandatory(true);
+        schemaLine.addSchemaCell(lastNameCell);
+
+        String text = "firstName;;lastName\njohn;L;doe";
+        CsvParser parser = new CsvParser(new StringReader(text), schema);
+        AtomicInteger errorCount = new AtomicInteger(0);
+        parser.parse(event -> {
+                    assertEquals(0, errorCount.get()); // "Should report an error before first line is parsed.
+                    assertEquals(2, event.getLine().size());
+                    assertEquals("john", event.getLine().getCell("firstName").map(Cell::getStringValue).orElse(null));
+                    assertEquals("doe", event.getLine().getCell("lastName").map(Cell::getStringValue).orElse(null));
+                },
+                errorEvent -> errorCount.incrementAndGet());
+        assertEquals(0, errorCount.get());
+    }
+
 }

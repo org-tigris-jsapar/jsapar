@@ -4,6 +4,7 @@ import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.Document;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
+import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
@@ -17,7 +18,7 @@ import java.io.StringReader;
 
 import static org.junit.Assert.assertEquals;
 
-public class FixedWidthParseTaskTest {
+public class FixedWidthParserTest {
 
     @Test
     public final void testParse_Flat() throws IOException {
@@ -42,7 +43,7 @@ public class FixedWidthParseTaskTest {
     }
 
     private Document build(Reader reader, FixedWidthSchema schema) throws IOException {
-        FixedWidthParser parser = new FixedWidthParserFlat(reader, schema);
+        FixedWidthParser parser = new FixedWidthParser(reader, schema, new TextParseConfig());
         DocumentBuilderLineEventListener builder = new DocumentBuilderLineEventListener();
         parser.parse(builder, new ExceptionErrorEventListener());
         return builder.getDocument();

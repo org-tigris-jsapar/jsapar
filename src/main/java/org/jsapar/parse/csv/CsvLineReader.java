@@ -10,7 +10,6 @@ import java.util.List;
  * again. This makes it possible to read the line once first to match against cell conditions and then again to do
  * the actual parsing.
  * Also makes it possible to handle the fact that a quoted cell can contain line-breaks.
- * <p>
  */
 public interface CsvLineReader {
 
@@ -31,7 +30,7 @@ public interface CsvLineReader {
      *                      separators that should be part of the cell value. The value 0 indicates that quotes are not used.
      * @return A list of String cell values fetched from the input reader. Handles the fact that a quoted cell can
      * contain line-breaks and cell separator that should be part of the cell value. Returns an empty list if line was
-     * empty and null if end of input was reached. The caller should regard the returned list as unmutable. Alterations
+     * empty or if end of input was reached. The caller should regard the returned list as unmutable. Alterations
      * to the returned
      * list may result in unexpected behavior.
      * @throws IOException In case of an error in underlying IO.

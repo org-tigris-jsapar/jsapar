@@ -27,7 +27,7 @@ public class QuoteIfNeeded implements Quoter {
         if(value.isEmpty())
             neverQuote.writeValue(writer, value);
         else if (value.contains(cellSeparator)
-                || value.charAt(0) ==quoteChar && (value.length()==1 || value.charAt(value.length()-1) != quoteChar)
+                || value.charAt(0) ==quoteChar
                 || value.contains(lineSeparator)){
             alwaysQuote.writeValue(writer, value);
         }

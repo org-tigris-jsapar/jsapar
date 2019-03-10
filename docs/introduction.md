@@ -22,7 +22,7 @@ If you also use maven, all you need to do is to add dependency JSaPar into your 
 <dependency>
     <groupId>org.tigris.jsapar</groupId>
     <artifactId>jsapar</artifactId>
-    <version>2.0.0.a3</version>
+    <version>2.0.1</version>
 </dependency>
 ```
 On the [maven central page for each version](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22) you will find instructions of how to add dependency in all the most common build tools and if you

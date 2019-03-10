@@ -57,7 +57,7 @@ public class BeanMarshallerTest {
         assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
 
         // Make sure that loops are avoided.
-        Assert.assertFalse(line.isCellSet("address.owner.firstName"));
+        Assert.assertFalse(line.containsNonEmptyCell("address.owner.firstName"));
     }
 
     @Test
