@@ -10,4 +10,4 @@ jdk:
 #  - oraclejdk11
 
 sudo: false
-script: mvn clean verify
+script: mvn clean verify -Dgpg.skip
