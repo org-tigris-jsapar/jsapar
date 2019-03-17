@@ -1,6 +1,6 @@
 package org.jsapar.model;
 
-public class EnumCell<E extends Enum> extends Cell<E> {
+public class EnumCell<E extends Enum> extends AbstractCell<E> {
 
     /**
      * Creates a cell with a name and value.

@@ -19,7 +19,8 @@ public class EnumCellFactory implements CellFactory{
     public Cell makeCell(String name, String value, Format format) throws ParseException {
         if (format == null)
             throw new ParseException("Format is required while parsing enum cell values.", 0);
-        return new EnumCell(name, (Enum) format.parseObject(value));
+        Enum enumValue = (Enum) format.parseObject(value);
+        return new EnumCell(name, enumValue);
     }
 
     @Override
@@ -41,7 +42,7 @@ public class EnumCellFactory implements CellFactory{
     public Format makeFormat(Locale locale, String pattern) {
         try {
             Class<Enum> enumClass = (Class<Enum>) Class.forName(pattern);
-            return new EnumFormat(enumClass);
+            return new EnumFormat(enumClass, false);
         } catch (ClassNotFoundException e) {
             throw new SchemaException("There is no Enum class with class name: " + pattern);
         }

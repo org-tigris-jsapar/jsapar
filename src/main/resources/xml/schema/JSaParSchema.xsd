@@ -179,6 +179,7 @@
       		<xsd:enumeration value="float" />
       		<xsd:enumeration value="boolean" />
             <xsd:enumeration value="character"/>
+            <xsd:enumeration value="enum"/>
       	</xsd:restriction>
       </xsd:simpleType>
     </xsd:attribute>
@@ -187,10 +188,28 @@
          <xsd:documentation>* If the type is string then the pattern should contain a regular expression to which the value is validated against. This only works while parsing.
 * If the type is any of the numerical types, then the pattern should be described according to the java.text.DecimalFormat (http://java.sun.com/javase/6/docs/api/java/text/DecimalFormat.html).
 * If the type is date, then the pattern should be described according to java.text.SimpleDateFormat (http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html).
-* If the type is boolean, the pattern should contain the true and false values separated with a ; character. Example: pattern="Y;N" will imply that Y represents true and N to represents false. Comparison while parsing is not case sensitive. Multiple true or false values can be specified, separated with the | character but the first value is always the one used while composing. Example: pattern="Y|YES;N|NO"</xsd:documentation>
+* If the type is boolean, the pattern should contain the true and false values separated with a ; character. Example: pattern="Y;N" will imply that Y represents true and N to represents false. Comparison while parsing is not case sensitive. Multiple true or false values can be specified, separated with the | character but the first value is always the one used while composing. Example: pattern="Y|YES;N|NO"
+* If the type is enum, the pattern should contain the fully qualified class name of the enum class to use.</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
   </xsd:complexType>
+
+    <xsd:complexType name="EnumCellFormat">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="value" type="EnumValueFormat"/>
+        </xsd:sequence>
+        <xsd:attribute name="class" use="required" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>The fully qualified enum class to use.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="ignorecase"  type="xsd:boolean" default="false">
+            <xsd:annotation>
+                <xsd:documentation>If true, the character upper or lower case is not considered while parsing. Default is false</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+
   <xsd:complexType name="FixedWidthSchema">
     <xsd:complexContent mixed="false">
       <xsd:extension base="Schema">
@@ -427,4 +446,13 @@ Available since 2.0</xsd:documentation>
             <xsd:enumeration value="ALWAYS"/>
   	</xsd:restriction>
   </xsd:simpleType>
+
+    <xsd:complexType name="EnumValueFormat">
+        <xsd:attribute name="name" type="xsd:string" use="required">
+            <xsd:annotation><xsd:documentation>The enum constant name. Needs to match exactly the enum value name of the enum class. Always case sensitive.</xsd:documentation></xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="text" type="xsd:string" use="required">
+            <xsd:annotation><xsd:documentation>The textual representation of the enum. In case multiple text values are matched to the same enum constant, the first one is used while composing.</xsd:documentation></xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
 </xsd:schema>

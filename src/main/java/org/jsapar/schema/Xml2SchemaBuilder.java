@@ -484,6 +484,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
                 return CellType.BOOLEAN;
             case "character":
                 return CellType.CHARACTER;
+            case "enum":
+                return CellType.ENUM;
             default:
                 throw new SchemaException("Unknown cell format type: " + sType);
         }

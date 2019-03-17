@@ -4,6 +4,7 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.EmptyCell;
 import org.jsapar.parse.cell.CellParser;
+import org.jsapar.text.EnumFormat;
 
 import java.util.Locale;
 
@@ -49,6 +50,15 @@ public abstract class SchemaCell implements Cloneable {
      */
     public SchemaCell(String sName, CellType type) {
         this(sName, new SchemaCellFormat(type));
+    }
+
+    /**
+     * Creates a enum schema cell with specified name and enum format.
+     * @param sName The name of the cell.
+     * @param enumFormat The enum format to use for this cell.
+     */
+    public SchemaCell(String sName, EnumFormat enumFormat) {
+        this(sName, new SchemaCellFormat(CellType.ENUM, enumFormat));
     }
 
     /**
@@ -267,6 +277,7 @@ public abstract class SchemaCell implements Cloneable {
      * Validates that the default value is within the valid range. Throws a SchemaException if value is
      * not within borders.
      *
+     * @param defaultCell The default cell to use.
      * @throws SchemaException If validation fails.
      */
     @SuppressWarnings("unchecked")
