@@ -78,8 +78,10 @@
   </xsd:complexType>
   <xsd:complexType name="SchemaCell">
     <xsd:sequence>
-    	<xsd:element minOccurs="0" name="format"
-                     type="CellFormat" />
+        <xsd:choice minOccurs="0">
+            <xsd:element name="format" type="CellFormat" />
+            <xsd:element name="enumformat" type="EnumCellFormat" />
+        </xsd:choice>
     	<xsd:element minOccurs="0" name="range"
                      type="CellValueRange">
     		<xsd:annotation>
@@ -210,7 +212,16 @@
         </xsd:attribute>
     </xsd:complexType>
 
-  <xsd:complexType name="FixedWidthSchema">
+    <xsd:complexType name="EnumValueFormat">
+        <xsd:attribute name="name" type="xsd:string" use="required">
+            <xsd:annotation><xsd:documentation>The enum constant name. Needs to match exactly the enum value name of the enum class. Always case sensitive.</xsd:documentation></xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="text" type="xsd:string" use="required">
+            <xsd:annotation><xsd:documentation>The textual representation of the enum. In case multiple text values are matched to the same enum constant, the first one is used while composing.</xsd:documentation></xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="FixedWidthSchema">
     <xsd:complexContent mixed="false">
       <xsd:extension base="Schema">
         <xsd:sequence maxOccurs="unbounded">
@@ -447,12 +458,4 @@ Available since 2.0</xsd:documentation>
   	</xsd:restriction>
   </xsd:simpleType>
 
-    <xsd:complexType name="EnumValueFormat">
-        <xsd:attribute name="name" type="xsd:string" use="required">
-            <xsd:annotation><xsd:documentation>The enum constant name. Needs to match exactly the enum value name of the enum class. Always case sensitive.</xsd:documentation></xsd:annotation>
-        </xsd:attribute>
-        <xsd:attribute name="text" type="xsd:string" use="required">
-            <xsd:annotation><xsd:documentation>The textual representation of the enum. In case multiple text values are matched to the same enum constant, the first one is used while composing.</xsd:documentation></xsd:annotation>
-        </xsd:attribute>
-    </xsd:complexType>
 </xsd:schema>

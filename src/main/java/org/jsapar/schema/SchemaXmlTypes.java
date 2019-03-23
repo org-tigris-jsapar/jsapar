@@ -9,6 +9,7 @@ interface SchemaXmlTypes {
     String ELEMENT_FIXED_WIDTH_SCHEMA               = "fixedwidthschema";
     String ELEMENT_LOCALE                           = "locale";
     String ELEMENT_FORMAT                           = "format";
+    String ELEMENT_ENUM_FORMAT                      = "enumformat";
     String ELEMENT_LINE_CONDITION                   = "linecondition";
     String ELEMENT_EMPTY_CONDITION                  = "emptycondition";
     String ELEMENT_MATCH                            = "match";

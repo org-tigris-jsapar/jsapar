@@ -35,6 +35,7 @@ public abstract class SchemaCell implements Cloneable {
     private CellValueCondition emptyCondition = null;
     private CellValueCondition lineCondition  = null;
 
+
     /**
      * Creates a string cell with specified name. The format can be added after creation by using the {@link #setCellFormat(CellType, String)} method.
      * @param sName The name of the cell.
@@ -164,7 +165,7 @@ public abstract class SchemaCell implements Cloneable {
      * @param cellFormat
      *            the cellFormat to set
      */
-    private void setCellFormat(SchemaCellFormat cellFormat) {
+    void setCellFormat(SchemaCellFormat cellFormat) {
         if(cellFormat == null)
             throw new IllegalArgumentException("cellFormat argument cannot be null");
         this.cellFormat = cellFormat;

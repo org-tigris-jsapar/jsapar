@@ -12,8 +12,13 @@
       <cell name="Type" default="B" ><linecondition><match pattern="B"/></linecondition></cell>
       <cell name="First name" quotebehavior="ALWAYS"/>
       <cell name="Middle name" ignoreread="true"/>
-      <cell name="Last name" />
-      <cell name="gender" ><format type="enum" pattern="org.jsapar.TstGender"/></cell>
+      <cell name="Last name"/>
+      <cell name="gender">
+        <enumformat class="org.jsapar.TstGender" ignorecase="true">
+          <value name="M" text="male"/>
+          <value name="F" text="female"/>
+        </enumformat>
+      </cell>
     </line>
     <line linetype="Footer" cellseparator=";">
       <cell name="Type" default="F"><linecondition><match pattern="F"/></linecondition></cell>

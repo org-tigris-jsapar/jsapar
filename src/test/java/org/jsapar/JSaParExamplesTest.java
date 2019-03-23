@@ -452,7 +452,7 @@ public class JSaParExamplesTest {
     public final void testExampleCsvToBean06_beanMapOverrideEnum()
             throws IOException, JSaParException, ClassNotFoundException {
         try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCellEnum.xml");
-             Reader fileReader = new FileReader("examples/06_NamesControlCell.csv");
+             Reader fileReader = new FileReader("examples/06_NamesControlCellEnum.csv");
              Reader beanMapReader = new FileReader("examples/06_BeanMapOverride.xml")) {
             final BeanMap overrideBeanMap = BeanMap.ofXml(beanMapReader);
             final Schema parseSchema = Schema.ofXml(schemaReader);
@@ -463,13 +463,10 @@ public class JSaParExamplesTest {
             converter.convert(fileReader, beanEventListener);
             List<TstPerson> people = beanEventListener.getBeans();
 
-            assertEquals(2, people.size());
-            assertEquals("Erik", people.get(0).getFirstName());
-            assertEquals("Svensson", people.get(0).getLastName());
+            assertEquals(3, people.size());
             assertEquals(TstGender.M, people.get(0).getGender());
-
-            assertEquals("Fredrik", people.get(1).getFirstName());
-            assertEquals("Larsson", people.get(1).getLastName());
+            assertEquals(TstGender.M, people.get(1).getGender());
+            assertEquals(TstGender.F, people.get(2).getGender());
         }
     }
 

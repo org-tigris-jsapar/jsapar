@@ -38,6 +38,13 @@ public class EnumFormat extends Format {
                 .forEach(v -> valueByEnum.put(v, v.name()));
     }
 
+    public void putEnumValueIfAbsent(String value, String enumConstantName){
+        Enum enumConstant = enumByValue.get(enumConstantName);
+        if(enumConstant == null)
+            throw new IllegalArgumentException("The enum constant name " + enumConstantName + " is not a valid value of the enum " + enumClass.getName());
+        putEnumValueIfAbsent(value, enumConstant);
+    }
+
     /**
      * Associates a new string value with supplied enum constant, both from text to enum and from enum to text. If a
      * value already exists in either direction, the new value is ignored for that direction.
