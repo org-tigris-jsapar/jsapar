@@ -23,6 +23,10 @@ class FixedWidthLineComposer implements LineComposer {
     private final FixedWidthCellComposer cellComposer;
 
     FixedWidthLineComposer(Writer writer, FixedWidthSchemaLine lineSchema) {
+        if(writer == null)
+            throw new IllegalArgumentException("Writer of line composer cannot be null");
+        if(lineSchema == null)
+            throw new IllegalArgumentException("Line schema of line composer cannot be null");
         this.writer = writer;
         this.lineSchema = lineSchema;
         this.cellComposer = new FixedWidthCellComposer(writer);

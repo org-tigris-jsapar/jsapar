@@ -16,6 +16,8 @@ class FixedWidthCellComposer {
     private Writer writer;
 
     FixedWidthCellComposer(Writer writer) {
+        if(writer == null)
+            throw new IllegalArgumentException("Writer of cell composer cannot be null");
         this.writer = writer;
     }
 

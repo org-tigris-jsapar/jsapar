@@ -44,6 +44,10 @@ public class TextComposer implements Composer, AutoCloseable {
      * @param composerFactory A factory interface for creating {@link SchemaComposer} based on schema.
      */
     public TextComposer(Schema schema, Writer writer, ComposerFactory composerFactory) {
+        if(writer == null)
+            throw new IllegalArgumentException("Writer of text composer cannot be null");
+        if(schema == null)
+            throw new IllegalArgumentException("Schema of text composer cannot be null");
         this.schema = schema;
         this.writer = writer;
         this.composerFactory = composerFactory;
