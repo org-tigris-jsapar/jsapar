@@ -2,7 +2,7 @@
 layout: page
 title: Release notes
 ---
-#Release notes
+# Release notes
 ## 2.0
 ### 2.0.1
 1. Performance improvements while parsing delimited (CSV) sources and fixed width sources where lines are separated. 

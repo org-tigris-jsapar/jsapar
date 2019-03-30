@@ -10,4 +10,5 @@ jdk:
 #  - oraclejdk11
 
 sudo: false
-script: mvn clean verify
+install: mvn install -Dgpg.skip -DskipTests -Dmaven.javadoc.skip=true -B -V
+script: mvn test

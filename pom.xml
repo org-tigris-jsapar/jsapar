@@ -1,4 +1,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<!--
+		Deploying artifacts
+
+		SNAPSHOT
+		========
+		mvn clean deploy
+
+		RELEASE
+		=======
+		https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
+		mvn release:prepare release:perform
+		To release your artifacts, open your favorite browser and go to https://oss.sonatype.org/.
+		Log in!
+		Close staging bundle.
+		Release closed staging bundle.
+
+		In order to deploy artifacts you will need to configure login to sonatype ossrh in settings.xml:
+			<server>
+			  <id>ossrh</id>
+			  <username>user</username>
+			  <password>*****</password>
+			</server>
+	 -->
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.tigris.jsapar</groupId>
 	<artifactId>jsapar</artifactId>
@@ -9,16 +32,11 @@
 	<description>JSaPar is a Java library providing a schema based parser and composer of almost all sorts of delimited and fixed
 		width files.</description>
   
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
-  
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<project.scm.id>github.com</project.scm.id>
+		<gpg.skip>false</gpg.skip>
 	</properties>
 
 	<developers>
@@ -47,6 +65,17 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 	<build>
 		<resources>
@@ -79,6 +108,34 @@
 		</testResources>
 
 		<plugins>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<configuration>
+					<skip>${gpg.skip}</skip>
+				</configuration>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<!-- Java compiler configuration -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
