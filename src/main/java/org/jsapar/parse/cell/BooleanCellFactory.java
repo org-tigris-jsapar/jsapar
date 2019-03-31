@@ -2,6 +2,7 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.BooleanCell;
 import org.jsapar.model.Cell;
+import org.jsapar.schema.SchemaCell;
 import org.jsapar.text.BooleanFormat;
 
 import java.text.Format;
@@ -54,7 +55,7 @@ public class BooleanCellFactory implements CellFactory {
      * @return Always returns 2.
      */
     @Override
-    public int actualCacheMaxSize(int configuredCacheMaxSize) {
+    public int actualCacheMaxSize(SchemaCell schemaCell, int configuredCacheMaxSize) {
         return 2;
     }
 }

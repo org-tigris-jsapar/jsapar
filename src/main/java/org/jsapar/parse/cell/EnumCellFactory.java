@@ -2,6 +2,7 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
 import org.jsapar.model.EnumCell;
+import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.text.EnumFormat;
 
@@ -48,4 +49,13 @@ public class EnumCellFactory implements CellFactory{
         }
     }
 
+    @Override
+    public int actualCacheMaxSize(SchemaCell schemaCell, int configuredCacheMaxSize) {
+        Format format = schemaCell.getCellFormat().getFormat();
+        if(format instanceof EnumFormat){
+            EnumFormat enumFormat = (EnumFormat) format;
+            return enumFormat.numberOfTextValues();
+        }
+        return configuredCacheMaxSize;
+    }
 }

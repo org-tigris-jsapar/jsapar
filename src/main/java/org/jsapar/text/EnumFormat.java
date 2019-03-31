@@ -7,6 +7,7 @@ import java.text.ParsePosition;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Format class that can be used to parse or format enum values based on the value.
@@ -100,7 +101,7 @@ public class EnumFormat extends Format {
             pos.setErrorIndex(pos.getIndex());
             return null;
         }
-        return enumByValue.entrySet().stream().filter(e->toParse.regionMatches(ignoreCase, pos.getIndex(), e.getKey(), 0, e.getKey().length()))
+        return enumByValueEntries().filter(e->toParse.regionMatches(ignoreCase, pos.getIndex(), e.getKey(), 0, e.getKey().length()))
                 .peek(e->pos.setIndex(pos.getIndex() + e.getKey().length()))
                 .map(Map.Entry::getValue)
                 .findFirst()
@@ -119,12 +120,16 @@ public class EnumFormat extends Format {
         if(!ignoreCase)
             throw new ParseException("There is no enum constant matching the value '" + toParse + "' for  enum class " + enumClass.getName(), 0 );
 
-        return enumByValue.entrySet().stream().filter(e->toParse.regionMatches(true, 0, e.getKey(), 0, e.getKey().length()))
+        return enumByValueEntries().filter(e->toParse.regionMatches(true, 0, e.getKey(), 0, e.getKey().length()))
                 .map(Map.Entry::getValue)
                 .findFirst()
                 .orElseThrow(() ->
                     new ParseException("There is no enum constant matching the value '" + toParse + "' for  enum class " + enumClass.getName(), 0 )
                 );
+    }
+
+    public Stream<Map.Entry<String, Enum>> enumByValueEntries() {
+        return enumByValue.entrySet().stream();
     }
 
     /**
@@ -136,4 +141,18 @@ public class EnumFormat extends Format {
         return (E)parseObject(toParse);
     }
 
+    /**
+     * @return Number of allowed possibilities.
+     */
+    public int numberOfTextValues() {
+        return enumByValue.size();
+    }
+
+    public Class<? extends Enum> getEnumClass() {
+        return enumClass;
+    }
+
+    public boolean isIgnoreCase() {
+        return ignoreCase;
+    }
 }

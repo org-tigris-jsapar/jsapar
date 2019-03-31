@@ -1,6 +1,8 @@
 package org.jsapar.schema;
 
 import org.jsapar.compose.cell.CellComposer;
+import org.jsapar.model.CellType;
+import org.jsapar.text.EnumFormat;
 import org.jsapar.utils.StringUtils;
 import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Document;
@@ -43,6 +45,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
             Transformer t  = TransformerFactory.newInstance().newTransformer();
             t.setOutputProperty(OutputKeys.INDENT, "yes");
             t.setOutputProperty(OutputKeys.METHOD, "xml");
+            t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             t.transform(new DOMSource(xmlDocument), new StreamResult(writer));
             
         } catch (TransformerException e) {
@@ -352,11 +355,26 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
      * @return The format xml element
      */
     private Element extractCellFormat(Document xmlDocument, SchemaCellFormat format) {
-        Element xmlFormat = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_FORMAT);
-        xmlFormat.setAttribute("type", format.getCellType().toString().toLowerCase());
-        if (format.getPattern() != null && format.getPattern().length() > 0)
-            xmlFormat.setAttribute("pattern", format.getPattern());
-        return xmlFormat;
+        if(format.getCellType() == CellType.ENUM){
+            EnumFormat enumFormat = (EnumFormat) format.getFormat();
+            Element xmlFormat = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_ENUM_FORMAT);
+            xmlFormat.setAttribute("class", enumFormat.getEnumClass().getName());
+            xmlFormat.setAttribute("ignorecase", String.valueOf(enumFormat.isIgnoreCase()));
+            enumFormat.enumByValueEntries().forEach(e->{
+                Element xmlValue = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, "value");
+                xmlValue.setAttribute("name", e.getValue().name());
+                xmlValue.setAttribute("text", e.getKey());
+                xmlFormat.appendChild(xmlValue);
+            });
+            return xmlFormat;
+        }
+        else {
+            Element xmlFormat = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_FORMAT);
+            xmlFormat.setAttribute("type", format.getCellType().toString().toLowerCase());
+            if (format.getPattern() != null && format.getPattern().length() > 0)
+                xmlFormat.setAttribute("pattern", format.getPattern());
+            return xmlFormat;
+        }
     }
 
 

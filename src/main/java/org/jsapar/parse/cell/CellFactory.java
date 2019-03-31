@@ -2,6 +2,7 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
+import org.jsapar.schema.SchemaCell;
 
 import java.text.Format;
 import java.text.ParseException;
@@ -49,10 +50,11 @@ public interface CellFactory {
     /**
      * For some types of cells, the actual cache max size can be different than configured, for instance boolean can
      * cell factories can return 2 since there will most likely be only two different values.
+     * @param schemaCell             The schema cell to use.
      * @param configuredCacheMaxSize The cache max size in configuration.
      * @return The actual cache max size.
      */
-    default int actualCacheMaxSize(int configuredCacheMaxSize){
+    default int actualCacheMaxSize(SchemaCell schemaCell, int configuredCacheMaxSize){
         return configuredCacheMaxSize;
     }
 }
