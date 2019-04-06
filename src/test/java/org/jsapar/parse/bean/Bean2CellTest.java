@@ -4,6 +4,7 @@ import org.jsapar.TstPerson;
 import org.jsapar.compose.bean.BeanComposeException;
 import org.jsapar.model.BooleanCell;
 import org.jsapar.model.Cell;
+import org.jsapar.model.LocalDateTimeCell;
 import org.jsapar.model.StringCell;
 import org.junit.Test;
 
@@ -12,6 +13,8 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
@@ -39,6 +42,30 @@ public class Bean2CellTest {
         assertEquals(BooleanCell.class, cell.getClass());
         BooleanCell booleanCell = (BooleanCell) cell;
         assertEquals(Boolean.TRUE, booleanCell.getValue());
+    }
+
+    private class LocalDateTimeHolder{
+         private LocalDateTime dateTime;
+
+        public LocalDateTime getDateTime() {
+            return dateTime;
+        }
+
+        public void setDateTime(LocalDateTime dateTime) {
+            this.dateTime = dateTime;
+        }
+    }
+    @Test
+    public void makeCell_LocalDateTime() throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+        Bean2Cell bean2Cell = makeBean2CellOfPropertyName(LocalDateTimeHolder.class, "dateTime");
+        LocalDateTimeHolder bean = new LocalDateTimeHolder();
+        Cell cell = bean2Cell.makeCell(bean);
+        assertTrue(cell.isEmpty());
+        bean.setDateTime(LocalDateTime.of(2019, Month.APRIL, 1 , 12, 32));
+        cell = bean2Cell.makeCell(bean);
+        assertEquals("dateTime", cell.getName());
+        assertEquals(LocalDateTimeCell.class, cell.getClass());
+        assertEquals(LocalDateTime.of(2019, Month.APRIL, 1 , 12, 32), cell.getValue());
     }
 
     @Test
