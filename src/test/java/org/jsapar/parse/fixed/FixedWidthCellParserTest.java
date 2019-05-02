@@ -91,6 +91,20 @@ public class FixedWidthCellParserTest {
         assertEquals("", cell.getValue());
     }
 
+    @Test
+    public final void testBuildEmptyOptionalInteger_padZero() throws IOException {
+        String toParse = "           ";
+        FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("ShoeSize", 11);
+        schemaCell.setCellFormat(CellType.INTEGER);
+        schemaCell.setPadCharacter('0');
+        schemaCell.setDefaultValue("42");
+
+        Cell cell;
+        FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
+        cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
+        assertEquals(42L, cell.getValue());
+    }
+
     /**
      * A cell should not be considerede empty if blanks are not removed by trimming.
      */

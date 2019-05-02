@@ -27,9 +27,16 @@ class FixedWidthCellParser extends CellParser<FixedWidthSchemaCell> {
      */
     Cell parse(ReadBuffer lineReader, ErrorEventListener errorEventListener) throws IOException {
         String sValue = lineReader.readToString(getSchemaCell(),  0);
+        // If EOF
         if(sValue == null) {
             checkIfMandatory(errorEventListener);
             return null;
+        }
+        // The expected behaviour when facing an empty numeric field is to use the default value also when the field is
+        // filled with space, regardless of pad character.
+        if(!getSchemaCell().isMandatory() && getSchemaCell().getPadCharacter() != ' ' && isDefaultValue()){
+            if(!sValue.isEmpty() && sValue.trim().isEmpty())
+                sValue = "";
         }
         return super.parse(sValue, errorEventListener);
     }
