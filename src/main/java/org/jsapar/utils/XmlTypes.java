@@ -60,6 +60,10 @@ public interface XmlTypes {
      */
     default boolean getBooleanValue(Node node) {
         final String value = node.getNodeValue().trim().toLowerCase();
+        return parseBoolean(value);
+    }
+
+    default boolean parseBoolean(String value) {
         switch (value) {
         case "true":
         case "1":
@@ -68,7 +72,7 @@ public interface XmlTypes {
         case "0":
             return false;
         default:
-            throw new NumberFormatException("Failed to parse boolean node: " + node);
+            throw new NumberFormatException("Failed to parse boolean value: " + value);
         }
     }
 
@@ -82,6 +86,10 @@ public interface XmlTypes {
             return Optional.empty();
         else
             return Optional.of(child.getNodeValue());
+    }
+
+    default Optional<Boolean> booleanAttributeValue(Element parent, String name){
+        return attributeValue(parent, name).map(this::parseBoolean);
     }
 
     default int getIntValue(Node node) {

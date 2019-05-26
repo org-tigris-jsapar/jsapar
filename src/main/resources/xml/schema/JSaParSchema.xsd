@@ -263,6 +263,22 @@ If the sum of the length of the cells is less than this minlength then the line 
   					</xsd:restriction>
   				</xsd:simpleType>
   			</xsd:attribute>
+            <xsd:attribute name="trimpadcharacter">
+                <xsd:annotation>
+                    <xsd:documentation>If set to false, pad characters are not removed while parsing. Default is true.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:boolean"/>
+                </xsd:simpleType>
+            </xsd:attribute>
+            <xsd:attribute name="trimleadingspaces">
+                <xsd:annotation>
+                    <xsd:documentation>If set to false, leading space characters not removed while parsing in case pad character is something other than space. Default is true.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:boolean"/>
+                </xsd:simpleType>
+            </xsd:attribute>
   		</xsd:extension>
   	</xsd:complexContent>
   </xsd:complexType>

@@ -121,8 +121,7 @@ class ReadBuffer {
      * of input stream was reached.
      * @throws IOException If there is a problem while reading the input reader.
      */
-    String readToString(FixedWidthSchemaCell schemaCell, int offset) throws IOException {
-        int length = schemaCell.getLength(); // The actual length
+    String readToString(Trimmer trimmer, int offset, int length) throws IOException {
         if (length == 0)
             return EMPTY_STRING;
 
@@ -145,26 +144,135 @@ class ReadBuffer {
         if (length == 0)
             return EMPTY_STRING;
         final int fieldEnd = cursor + length;
-        int cellEnd = fieldEnd;
-        char padCharacter = schemaCell.getPadCharacter();
-        if (schemaCell.getAlignment() != FixedWidthSchemaCell.Alignment.LEFT) {
-            while (cursor < cellEnd && buffer[cursor] == padCharacter) {
-                cursor++;
-            }
-        }
-        if (schemaCell.getAlignment() != FixedWidthSchemaCell.Alignment.RIGHT) {
-            while (cellEnd > cursor && buffer[cellEnd - 1] == padCharacter) {
-                cellEnd--;
-            }
-        }
-        final int cellBegin = cursor;
+        int cellBegin = trimmer.findBegin(buffer, cursor, fieldEnd);
+        int cellEnd = trimmer.findEnd(buffer, cellBegin, fieldEnd);
         cursor = fieldEnd;
-        if (cellEnd <= cellBegin) {
-            if (padCharacter == '0' && schemaCell.getCellFormat().getCellType().isNumber())
-                return String.valueOf(padCharacter);
-            return EMPTY_STRING;
-        }
         return new String(buffer, cellBegin, cellEnd - cellBegin);
+    }
+
+
+    static Trimmer makeTrimmer(FixedWidthSchemaCell schemaCell) {
+        final Trimmer trimmer = schemaCell.isTrimPadCharacter() ? makeTrimmerByAlignment(schemaCell) : new NothingTrimmer();
+        if (schemaCell.isTrimLeadingSpaces() && schemaCell.getPadCharacter()!=' ')
+            return new LeadingSpacesTrimmer(trimmer);
+        return trimmer;
+    }
+
+    private static Trimmer makeTrimmerByAlignment(FixedWidthSchemaCell schemaCell) {
+        char padCharacter = schemaCell.getPadCharacter();
+        switch (schemaCell.getAlignment()) {
+            case LEFT:
+                return new AlignLeftTrimmer(padCharacter);
+            case RIGHT:
+                if(padCharacter== '0' && schemaCell.getCellFormat().getCellType().isNumber())
+                    return new NumericAlignRightTrimmer();
+                else
+                    return new AlignRightTrimmer(padCharacter);
+            case CENTER:
+                return new AlignCenterTrimmer(padCharacter);
+            default:
+                throw new IllegalArgumentException("Unsupported alignment type: " + schemaCell.getAlignment());
+        }
+    }
+
+    public interface Trimmer {
+        default int findBegin(char[] buffer, int beginIndex, int endIndex) {
+            return beginIndex;
+        }
+
+        default int findEnd(char[] buffer, int beginIndex, int endIndex) {
+            return endIndex;
+        }
+
+    }
+
+    private static class NothingTrimmer implements Trimmer{
+    }
+
+    private static class LeadingSpacesTrimmer implements Trimmer{
+        private final Trimmer padTrimmer;
+        private final Trimmer spaceTrimmer = new AlignRightTrimmer(' ');
+
+        private LeadingSpacesTrimmer(Trimmer padTrimmer) {
+            this.padTrimmer = padTrimmer;
+        }
+
+        @Override
+        public int findBegin(char[] buffer, int beginIndex, int endIndex) {
+            return padTrimmer.findBegin(buffer, spaceTrimmer.findBegin(buffer, beginIndex, endIndex), endIndex);
+        }
+
+        @Override
+        public int findEnd(char[] buffer, int beginIndex, int endIndex) {
+            return padTrimmer.findEnd(buffer, beginIndex, endIndex);
+        }
+
+    }
+
+    private static class AlignRightTrimmer implements Trimmer{
+        private final char padCharacter;
+
+        private AlignRightTrimmer(char padCharacter) {
+            this.padCharacter = padCharacter;
+        }
+
+        @Override
+        public int findBegin(char[] buffer, int beginIndex, int endIndex) {
+            while (beginIndex < endIndex && buffer[beginIndex] == padCharacter) {
+                beginIndex++;
+            }
+            return beginIndex;
+        }
+    }
+
+    /**
+     * Always keeps last 0.
+     */
+    private static class NumericAlignRightTrimmer implements Trimmer{
+
+        @Override
+        public int findBegin(char[] buffer, int beginIndex, int endIndex) {
+            while ((1+beginIndex) < endIndex && buffer[beginIndex] == '0') {
+                beginIndex++;
+            }
+            return beginIndex;
+        }
+    }
+
+    private static class AlignLeftTrimmer implements Trimmer{
+        private final char padCharacter;
+
+        private AlignLeftTrimmer(char padCharacter) {
+            this.padCharacter = padCharacter;
+        }
+
+        @Override
+        public int findEnd(char[] buffer, int beginIndex, int endIndex) {
+            while (endIndex > beginIndex && buffer[endIndex - 1] == padCharacter) {
+                endIndex--;
+            }
+            return endIndex;
+        }
+    }
+
+    private static class AlignCenterTrimmer implements Trimmer{
+        private final Trimmer alignRightTrimmer;
+        private final Trimmer alignLeftTrimmer;
+
+        private AlignCenterTrimmer(char padCharacter) {
+            alignLeftTrimmer = new AlignLeftTrimmer(padCharacter);
+            alignRightTrimmer = new AlignRightTrimmer(padCharacter);
+        }
+
+        @Override
+        public int findBegin(char[] buffer, int beginIndex, int endIndex) {
+            return alignRightTrimmer.findBegin(buffer, beginIndex, endIndex);
+        }
+
+        @Override
+        public int findEnd(char[] buffer, int beginIndex, int endIndex) {
+            return alignLeftTrimmer.findEnd(buffer, beginIndex, endIndex);
+        }
     }
 
     /**

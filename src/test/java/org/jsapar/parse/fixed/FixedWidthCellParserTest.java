@@ -43,6 +43,7 @@ public class FixedWidthCellParserTest {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
         schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
         schemaCell.setPadCharacter('!');
+        schemaCell.setTrimLeadingSpaces(false);
 
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
         Cell cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener());
@@ -114,6 +115,7 @@ public class FixedWidthCellParserTest {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
         schemaCell.setMandatory(true);
         schemaCell.setPadCharacter('!');
+        schemaCell.setTrimLeadingSpaces(false);
 
         Cell cell;
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
