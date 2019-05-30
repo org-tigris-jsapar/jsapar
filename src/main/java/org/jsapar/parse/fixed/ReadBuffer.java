@@ -151,6 +151,11 @@ class ReadBuffer {
     }
 
 
+    /**
+     * Creates a trimmer best suited for the supplied schema cell.
+     * @param schemaCell  The schema cell to create trimmer for.
+     * @return A newly created trimmer.
+     */
     static Trimmer makeTrimmer(FixedWidthSchemaCell schemaCell) {
         final Trimmer trimmer = schemaCell.isTrimPadCharacter() ? makeTrimmerByAlignment(schemaCell) : new NothingTrimmer();
         if (schemaCell.isTrimLeadingSpaces() && schemaCell.getPadCharacter()!=' ')
@@ -175,20 +180,45 @@ class ReadBuffer {
         }
     }
 
+    /**
+     * Finds begin and end of the actual content within a supplied buffer.
+     * End index is always exclusive i.e. one beyond the last character.
+     */
     public interface Trimmer {
+
+        /**
+         * Find the actual begin of the content, trimming leading pad characters
+         * @param buffer  The buffer to search within.
+         * @param beginIndex The index to start searching
+         * @param endIndex The index of the first char that is beyond the available characters.
+         * @return The begin index of the actual content, pad character removed.
+         */
         default int findBegin(char[] buffer, int beginIndex, int endIndex) {
             return beginIndex;
         }
 
+        /**
+         * Find, from the end, the actual end of the content, trimming trailing pad characters
+         * @param buffer  The buffer to search within.
+         * @param beginIndex The begin index of the content. Do not search ahead of this index.
+         * @param endIndex The index of the first char that is beyond the content to search within.
+         * @return The index of the character that is beyond the last character that should be part of the actual value.
+         */
         default int findEnd(char[] buffer, int beginIndex, int endIndex) {
             return endIndex;
         }
 
     }
 
+    /**
+     * Does not trim anything. Leave content as is.
+     */
     private static class NothingTrimmer implements Trimmer{
     }
 
+    /**
+     * Trims leading spaces first, then apply the supplied trimmer.
+     */
     private static class LeadingSpacesTrimmer implements Trimmer{
         private final Trimmer padTrimmer;
         private final Trimmer spaceTrimmer = new AlignRightTrimmer(' ');
@@ -209,6 +239,9 @@ class ReadBuffer {
 
     }
 
+    /**
+     * Trims leading pad character.
+     */
     private static class AlignRightTrimmer implements Trimmer{
         private final char padCharacter;
 
@@ -226,19 +259,22 @@ class ReadBuffer {
     }
 
     /**
-     * Always keeps last 0.
+     * Trims leading zeros but always keep last 0.
      */
     private static class NumericAlignRightTrimmer implements Trimmer{
 
         @Override
-        public int findBegin(char[] buffer, int beginIndex, int endIndex) {
-            while ((1+beginIndex) < endIndex && buffer[beginIndex] == '0') {
+        public int findBegin(char[] buffer, int beginIndex, final int endIndex) {
+            while (beginIndex < (endIndex-1) && buffer[beginIndex] == '0') {
                 beginIndex++;
             }
             return beginIndex;
         }
     }
 
+    /**
+     * Trims trailing pad character
+     */
     private static class AlignLeftTrimmer implements Trimmer{
         private final char padCharacter;
 
@@ -255,6 +291,9 @@ class ReadBuffer {
         }
     }
 
+    /**
+     * Trims both leading and trailing pad character
+     */
     private static class AlignCenterTrimmer implements Trimmer{
         private final Trimmer alignRightTrimmer;
         private final Trimmer alignLeftTrimmer;

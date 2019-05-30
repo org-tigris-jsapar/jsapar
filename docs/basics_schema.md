@@ -346,6 +346,8 @@ and when composing, the value of the cell is padded or truncated to fit this len
   
   Default is `right` when cell type is any kind of number type and `left` for all other type of cells. 
 * `padcharacter` - Specifies the pad character to use to pad cells that are not reaching the minimum length. The alignment attribute specifies if padding should be done to the right, to the left or both. Default is space character (ASCII 20) unless there is a default pad character specified on the line level. 
+* `trimpadcharacter` - Boolean value that controls if pad character should be removed according to alignment while parsing. Default is true. *New since version 2.0.2* 
+* `trimleadingspaces` - Boolean value that controls if leading spaces should be removed when parsing cells where pad character is something other than space. Default is true. *New since version 2.0.2* 
 
 ## Internationalization 
 The representation of the numbers and dates differ between different countries and regions around the world. The JSaPar 
