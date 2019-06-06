@@ -221,11 +221,15 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
             cell.setDefaultAlignmentForType();
         }
 
-        String sFillChar = getAttributeValue(xmlSchemaCell, ATTRIB_FW_SCHEMA_PAD_CHARACTER);
-        if (sFillChar != null)
-            cell.setPadCharacter(sFillChar.charAt(0));
-        else
-            cell.setPadCharacter(schemaLine.getPadCharacter());
+        cell.setPadCharacter(parseAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_PAD_CHARACTER)
+                .map(s -> s.charAt(0))
+                .orElseGet(schemaLine::getPadCharacter));
+
+        parseBooleanAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_TRIM_PAD_CHARACTER)
+                .ifPresent(cell::setTrimPadCharacter);
+
+        parseBooleanAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_TRIM_LEADING_SPACES)
+                .ifPresent(cell::setTrimLeadingSpaces);
 
         return cell;
     }

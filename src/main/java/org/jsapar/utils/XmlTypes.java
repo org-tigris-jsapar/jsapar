@@ -73,7 +73,7 @@ public interface XmlTypes {
         case "0":
             return false;
         default:
-            throw new NumberFormatException("Failed to parse boolean value " + value);
+            throw new NumberFormatException("Failed to parse boolean value: " + value);
         }
     }
 

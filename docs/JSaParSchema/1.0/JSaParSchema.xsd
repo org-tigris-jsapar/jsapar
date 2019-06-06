@@ -242,15 +242,15 @@ Please note that for a schema where the lines are not separated by any line sepa
           <xsd:annotation>
             <xsd:documentation>
               Default value is true. If true, all leading and trailing fill-characters are discarded. If false, value is
-              left as is.
+              always left as is while parsing.
             </xsd:documentation>
           </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute name="fillcharacter" use="optional">
           <xsd:annotation>
             <xsd:documentation>
-              Specifies the character space character that is used to fill the cells. Default is space character ' '
-              (ASCII 20)
+              Specifies the pad character that is used to fill the cell positions if the value content does not fill all positions. Padding is done either to the left, to the right or both depending on the cell alignment.
+              Default is space character ' '   (ASCII 20)
             </xsd:documentation>
           </xsd:annotation>
           <xsd:simpleType>

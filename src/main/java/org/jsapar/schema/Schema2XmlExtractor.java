@@ -137,7 +137,6 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
 
         assignSchemaLineBase(xmlSchemaLine, schemaLine);
 
-        xmlSchemaLine.setAttribute(ATTRIB_FW_SCHEMA_PAD_CHARACTER, String.valueOf(schemaLine.getPadCharacter()));
         if(schemaLine.getMinLength()>0)
             xmlSchemaLine.setAttribute(ATTRIB_FW_SCHEMA_MIN_LENGTH, String.valueOf(schemaLine.getMinLength()));
 
@@ -162,6 +161,10 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
         xmlSchemaCell.setAttribute(ATTRIB_FW_SCHEMA_CELL_LENGTH, String.valueOf(schemaCell.getLength()));
         xmlSchemaCell
                 .setAttribute(ATTRIB_FW_SCHEMA_CELL_ALIGNMENT, schemaCell.getAlignment().toString().toLowerCase());
+
+        xmlSchemaCell.setAttribute(ATTRIB_FW_SCHEMA_PAD_CHARACTER, String.valueOf(schemaCell.getPadCharacter()));
+        xmlSchemaCell.setAttribute(ATTRIB_FW_SCHEMA_TRIM_PAD_CHARACTER, String.valueOf(Boolean.valueOf(schemaCell.isTrimPadCharacter())));
+        xmlSchemaCell.setAttribute(ATTRIB_FW_SCHEMA_TRIM_LEADING_SPACES, String.valueOf(Boolean.valueOf(schemaCell.isTrimLeadingSpaces())));
 
         assignSchemaCellBase(xmlDocument, xmlSchemaCell, schemaCell);
         return xmlSchemaCell;

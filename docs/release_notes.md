@@ -4,6 +4,11 @@ title: Release notes
 ---
 # Release notes
 ## 2.0
+### 2.0.2
+1. Introduced schema cell properties that controls whether pad characters and leading spaces should be trimmed or not while parsing.
+1. For cells where pad character is something other than space, the default behavior is now to trim leading spaces. The behavior from previous version can be obtained by setting the schema cell property to not trim leading spaces. See documentation page [Basics of Schema](basics_schema). 
+1. Added some checks for null values in constructors thus finding errors during initialization instead of while parsing/composing.
+1. The interfaces LineEventListener and ErrorEventListener are now marked with annotation @FunctionalInterface. 
 ### 2.0.1
 1. Performance improvements while parsing delimited (CSV) sources and fixed width sources where lines are separated. 
 Performance of the parsing part should be improved by at least 50% in a normal scenario. Both CPU and memory impact has been significantly improved.
