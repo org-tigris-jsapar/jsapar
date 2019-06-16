@@ -39,6 +39,13 @@ public class EnumFormat extends Format {
                 .forEach(v -> valueByEnum.put(v, v.name()));
     }
 
+    @Override
+    public String toString() {
+        return
+                "Enum class=" + enumClass + (ignoreCase ? ", IGNORE CASE, " : "") +
+                        ", valid values=" + valueByEnum.keySet();
+    }
+
     public void putEnumValueIfAbsent(String value, String enumConstantName){
         Enum enumConstant = enumByValue.get(enumConstantName);
         if(enumConstant == null)

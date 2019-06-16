@@ -186,6 +186,7 @@ The following types are supported:
 * integer
 * float
 * boolean
+* enum
 * date
 * local_date
 * local_time
@@ -197,8 +198,36 @@ The `pattern` attribute behaves differently depending on the type:
 * If the type is any of the numerical types, then the pattern should be described according to the [java.text.DecimalFormat](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html). See chapter Internationalization below to be able to handle locale specific formatting of numerical values.
 * If the type is date, then the pattern should be described according to [java.text.SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
 * If the type is boolean, the pattern should contain the true and false values separated with a `;` character. Example: `pattern="Y;N"` will imply that `Y` represents true and `N` to represents false. Comparison while parsing is not case sensitive. Multiple true or false values can be specified, separated with the `|` character but the first value is always the one used while composing. Example: `pattern="Y|YES;N|NO"`
+* If the type is enum, the pattern should contain the full class name of the enum class. See chapter below about how to handle different cases while parsing and composing enums.   
 
 If the `pattern` attribute is omitted, the default system pattern is used.
+##### Enum format
+If the property that you want to parse or compose is of type enum, you have the following options:
+1. Use the cell type string and handle conversion to enum values programmatically. If the text that you are parsing contains exactly 
+the same values as the name of the enum values in your enum, conversion is done automatically while parsing and composing. 
+The disadvantage of this alternative is that since the parser does not know the set of valid values, errors are not found until you are 
+fetching the parsed value and the parser is unable to optimize parsing based on a fixed set of valid values.  
+1. Use the `<format>` element as described above with the type enum and specify the full class name as the pattern. 
+The valid values in the source still needs to match exactly the enum value names but now the parser is aware of the set of valid values and is able to cache values while parsing.
+1. Instead of the `<format>`, you may use the `<enumformat>` element instead.  This gives you the option to 
+map different values in your text source to the enum values of your enum class. For example, if your enum class `org.jsapar.TstGender` has the enum values `M` for male and `F` for female, 
+but you want to parse a text source that contains the text values `male` or `man` and `female` or `woman`, you can configure the cell like this in the schema:    
+```xml
+<cell name="gender">
+    <enumformat class="org.jsapar.TstGender" ignorecase="true">
+        <value name="M" text="male"/>
+        <value name="M" text="man"/>
+        <value name="F" text="female"/>
+        <value name="F" text="woman"/>
+    </enumformat>
+</cell>
+``` 
+* By setting `ignorecase` to true, the case of the text value becomes insignificant while parsing but it also has negative impact on performance. While 
+composing, this attribute has no impact.
+* You don't have to specify mapping for values that has the same text value as the enum value name.   
+* You can add any number of different text representation for the same value but you can only have one enum name for each text representation.
+* While composing, the first text representation for each enum name will be used. In this case `"male"` and `"female"` will be used. 
+
 #### Empty cell values while parsing
 Sometimes empty cells in the input data are not really empty. They may contain a text like `NULL` or something like that. 
 In that case you can still make the parser consider this to be an empty cell by specifying an `<emptypattern>` element within the cell.

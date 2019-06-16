@@ -13,7 +13,8 @@
       <cell name="First name" quotebehavior="ALWAYS"/>
       <cell name="Middle name" ignoreread="true"/>
       <cell name="Last name" />
-      <cell name="gender" ><format type="string" pattern="M|F"/> </cell>
+<!--      <cell name="gender" ><format type="string" pattern="M|F"/> </cell>-->
+      <cell name="gender" ><format type="enum" pattern="org.jsapar.TstGender"/> </cell>
     </line>
     <line linetype="Footer" cellseparator=";">
       <cell name="Type" default="F"><linecondition><match pattern="F"/></linecondition></cell>
