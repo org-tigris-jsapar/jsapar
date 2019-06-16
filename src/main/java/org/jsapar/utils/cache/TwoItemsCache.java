@@ -13,10 +13,7 @@ public class TwoItemsCache<K, V> implements Cache<K, V> {
 
     @Override
     public V get(K key) {
-        if(newKey != null){
-            return newKey.equals(key) ? newValue : (oldKey != null && oldKey.equals(key)? oldValue : null );
-        }
-        return null;
+        return key.equals(newKey) ? newValue : ( key.equals(oldKey)? oldValue : null );
     }
 
     @Override
