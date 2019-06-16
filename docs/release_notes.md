@@ -2,7 +2,7 @@
 layout: page
 title: Release notes
 ---
-#Release notes
+# Release notes
 ## 2.0
 ### 2.0.2
 1. Introduced schema cell properties that controls whether pad characters and leading spaces should be trimmed or not while parsing.
