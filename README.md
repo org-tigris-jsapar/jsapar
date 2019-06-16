@@ -73,4 +73,6 @@ into any markup language by the use of xslt.
 * Examples demonstrating all features.
 
 We are not quite there yet, but we are working on it...
-
+## Community
+* Bugs and suggestions can be submitted [here on Github](https://github.com/org-tigris-jsapar/jsapar/issues). 
+* For other type of questions, use the [`[jsapar]` tag in Stack exchange](https://stackoverflow.com/questions/tagged/jsapar). Remember to add the tag to new questions.
