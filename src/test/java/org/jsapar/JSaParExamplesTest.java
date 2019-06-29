@@ -279,7 +279,7 @@ public class JSaParExamplesTest {
         final String outFileName = "examples/02_Names_out.txt";
         File outFile = new File(outFileName);
         outFile.delete();
-        Text2TextConverter
+        ConverterMain
                 .main(new String[] { "-in.file", "examples/01_Names.csv", "-out.file", outFileName, "-in.schema",
                         "examples/01_CsvSchema.xml", "-out.schema", "examples/02_FixedWidthSchema.xml" });
 

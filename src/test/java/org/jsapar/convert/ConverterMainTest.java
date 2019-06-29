@@ -1,5 +1,6 @@
 package org.jsapar.convert;
 
+import org.jsapar.ConverterMain;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +10,7 @@ import java.io.PrintStream;
 
 import static org.junit.Assert.*;
 
-public class Text2TextConverterMainTest {
+public class ConverterMainTest {
     private final ByteArrayOutputStream outContent  = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errContent  = new ByteArrayOutputStream();
     private final PrintStream           originalOut = System.out;
@@ -29,7 +30,7 @@ public class Text2TextConverterMainTest {
     @Test
     public void run_noArgs() {
 
-        Text2TextConverterMain instance = new Text2TextConverterMain();
+        ConverterMain instance = new ConverterMain();
         instance.run(new String[]{});
         String out = outContent.toString();
         assertTrue(out.contains("Usage"));

@@ -2,7 +2,6 @@ package org.jsapar;
 
 import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.ConvertTask;
-import org.jsapar.convert.Text2TextConverterMain;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
@@ -68,15 +67,6 @@ public class Text2TextConverter extends AbstractConverter {
 
     public Schema getComposeSchema() {
         return composeSchema;
-    }
-
-    /**
-     * Starts stand alone text to text converter.
-     * @param args The main program arguments
-     */
-    public static void main(String[] args) {
-        Text2TextConverterMain main = new Text2TextConverterMain();
-        main.run(args);
     }
 
 }

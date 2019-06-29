@@ -1,6 +1,8 @@
 package org.jsapar;
 
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.JSaParException;
+import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.parse.xml.Text2SAXReader;
 import org.jsapar.schema.Schema;
 import org.xml.sax.InputSource;
@@ -101,4 +103,11 @@ public class Text2XmlConverter {
         transformer.transform(new SAXSource(saxReader, new InputSource(reader)), new StreamResult(writer));
     }
 
+    /**
+     * Replaces existing error event listener.
+     * @param errorEventListener The new error event listener to use.
+     */
+    public void setErrorEventListener(ErrorEventListener errorEventListener) {
+        this.saxReader.setErrorEventListener(errorEventListener);
+    }
 }

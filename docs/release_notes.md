@@ -6,6 +6,7 @@ title: Release notes
 ## 2.1
 ### 2.1.0
 * Support for enum cell type and mapping between enum values and text representation. See chapter about [enum format](basics_schema#enum_format) in the article [Basics of Schema](basics_schema).
+* The command line utility is now capable of also transforming the output according to a XSLT file. 
 ## 2.0
 ### 2.0.2
 1. Introduced schema cell properties that controls whether pad characters and leading spaces should be trimmed or not while parsing.
