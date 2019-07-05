@@ -13,7 +13,7 @@ import java.util.List;
  * This implementation uses state pattern. It loads characters into a buffer and creates cell value strings from that
  * buffer.
  */
-public class CsvLineReaderStates implements CsvLineReader {
+final class CsvLineReaderStates implements CsvLineReader {
     private static final String EMPTY_CELL = "";
     private final int maxLineLength;
 
@@ -46,7 +46,7 @@ public class CsvLineReaderStates implements CsvLineReader {
  *                       buffer but that can only be utilized if it is ok to read until the end of the file or if it
      * @param maxLineLength The maximum number of characters in a line. Make sure that all lines fits within this size.
      */
-    public CsvLineReaderStates(String lineSeparator, Reader reader, boolean allowReadAhead, int maxLineLength) {
+    CsvLineReaderStates(String lineSeparator, Reader reader, boolean allowReadAhead, int maxLineLength) {
         eolCheck = Arrays.asList("\n", "\r\n").contains(lineSeparator) ? new EolCheckCRLF() : new EolCheckCustom(lineSeparator);
         lastEolChar = eolCheck.getLastEolChar();
 
@@ -225,7 +225,7 @@ public class CsvLineReaderStates implements CsvLineReader {
     /**
      *
      */
-    private class BeginCellState implements State {
+    private final class BeginCellState implements State {
         @Override
         public boolean processChar(final char c) {
             if (c == quoteChar) {
@@ -248,7 +248,7 @@ public class CsvLineReaderStates implements CsvLineReader {
     /**
      * Unquoted cell content expected.
      */
-    private class UnquotedCellState implements State {
+    private final class UnquotedCellState implements State {
         @Override
         public boolean processChar(final char c) {
             if( c==lastCellSeparatorChar && tailOfCellMatches(cellSeparator)){
@@ -263,7 +263,7 @@ public class CsvLineReaderStates implements CsvLineReader {
     /**
      * Quoted cell content expected.
      */
-    private class QuotedCellState implements State {
+    private final class QuotedCellState implements State {
         @Override
         public boolean processChar(final char c) {
             if (c == quoteChar) {
@@ -277,7 +277,7 @@ public class CsvLineReaderStates implements CsvLineReader {
     /**
      * End quote was found.
      */
-    private class FoundEndQuoteState implements State {
+    private final class FoundEndQuoteState implements State {
         @Override
         public boolean processChar(final char c) {
             if (c==lastCellSeparatorChar && cellSeparator.length()==1) {
@@ -302,7 +302,7 @@ public class CsvLineReaderStates implements CsvLineReader {
     /**
      * A second quote was found but some other character was found afterwards that was not a single character cell separator or line separator.
      */
-    private class FoundEndQuoteWithinState implements State {
+    private final class FoundEndQuoteWithinState implements State {
         @Override
         public boolean processChar(final char c) {
             if (c == quoteChar) {
@@ -347,7 +347,7 @@ public class CsvLineReaderStates implements CsvLineReader {
     /**
      * Checking end of line with either LF or CR+LF.
      */
-    class EolCheckCRLF implements EolCheck {
+    final class EolCheckCRLF implements EolCheck {
         @Override
         public int eolMatchSize(final char c) {
             if(buffer.cursor > 2 && buffer.buffer[buffer.cursor-2] == '\r')
@@ -364,7 +364,7 @@ public class CsvLineReaderStates implements CsvLineReader {
     /**
      * Checking end of line with custom arbitrary character sequence.
      */
-    class EolCheckCustom implements EolCheck {
+    final class EolCheckCustom implements EolCheck {
         private String lineSeparator;
         private char lastLineSeparatorChar;
 
