@@ -6,7 +6,7 @@ import java.io.Reader;
 /**
  * Internal class that acts as a read buffer while parsing csv.
  */
-class ReadBuffer {
+final class ReadBuffer {
     private Reader reader;
     private int maxLoadSize;
     private int lineMark=0;
