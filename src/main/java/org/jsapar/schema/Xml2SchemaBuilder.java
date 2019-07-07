@@ -8,19 +8,14 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Locale;
-import java.util.Optional;
 
 /**
  * Builds a {@link Schema} instance from xml that conforms to the JSaPar xsd.
@@ -62,43 +57,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
             // File("resources/xml/schema/JSaParSchema.xsd");
 
             // javax.xml.validation.Schema xmlSchema;
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setIgnoringElementContentWhitespace(true);
-            factory.setIgnoringComments(true);
-            factory.setCoalescing(true);
-            factory.setNamespaceAware(true);
-            factory.setValidating(true);
-            factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
-            factory.setAttribute(JAXP_SCHEMA_SOURCE, schemaStream);
 
-            // factory.setSchema(xmlSchema);
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            builder.setErrorHandler(new ErrorHandler() {
-                @Override
-                public void error(SAXParseException e) throws SAXException {
-                    if (e != null)
-                        throw e;
-                    throw new SAXException("Unknown error while parsing xml");
-                }
-
-                @Override
-                public void fatalError(SAXParseException e) throws SAXException {
-                    if (e != null)
-                        throw e;
-                    throw new SAXException("Unknown error while parsing xml");
-                }
-
-                @Override
-                public void warning(SAXParseException e)  {
-                    // System.out.println("Warning while validating schema" +
-                    // e);
-                }
-            });
-
-            org.xml.sax.InputSource is = new org.xml.sax.InputSource(reader);
-            org.w3c.dom.Document xmlDocument = builder.parse(is);
-
-            Element xmlRoot = xmlDocument.getDocumentElement();
+            Element xmlRoot = parseXmlDocument(reader, schemaStream);
             // Element xmlRoot = (Element) xmlDocument.getFirstChild();
 
             Element xmlSchema = getChild(xmlRoot, ELEMENT_CSV_SCHEMA);

@@ -21,8 +21,9 @@ public class FixedWidthCellComposerTest {
 
     @Test
     public final void testOutput_Center() throws IOException, JSaParException {
-        FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
-        schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
+        FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("First name", 11)
+                .withAlignment(FixedWidthSchemaCell.Alignment.CENTER)
+                .build();
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","Jonas");
@@ -88,9 +89,10 @@ public class FixedWidthCellComposerTest {
 
     @Test
     public final void testOutput_Rigth() throws IOException, JSaParException {
-        FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
-        schemaCell.setPadCharacter('*');
-        schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
+        FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("First name", 11)
+                .withPadCharacter('*')
+                .withAlignment(FixedWidthSchemaCell.Alignment.RIGHT)
+                .build();
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","Jonas");

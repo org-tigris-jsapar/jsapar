@@ -7,6 +7,12 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -126,4 +132,29 @@ public interface XmlTypes {
         };
 
     }
+
+    default DocumentBuilderFactory makeDocumentBuilderFactory(InputStream schemaStream) {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setIgnoringElementContentWhitespace(true);
+        factory.setIgnoringComments(true);
+        factory.setCoalescing(true);
+        factory.setNamespaceAware(true);
+        factory.setValidating(true);
+        factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
+        factory.setAttribute(JAXP_SCHEMA_SOURCE, schemaStream);
+        return factory;
+    }
+
+    default Element parseXmlDocument(Reader reader, InputStream schemaStream) throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilderFactory factory = makeDocumentBuilderFactory(schemaStream);
+
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        builder.setErrorHandler(makeDefaultErrorHandler());
+        org.xml.sax.InputSource is = new org.xml.sax.InputSource(reader);
+        org.w3c.dom.Document xmlDocument = builder.parse(is);
+
+        return xmlDocument.getDocumentElement();
+    }
+
+
 }
