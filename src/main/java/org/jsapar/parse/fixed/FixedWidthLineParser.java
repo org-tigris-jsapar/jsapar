@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Parses fixed width text source on line level.
  */
-class FixedWidthLineParser {
+final class FixedWidthLineParser {
 
     private static final String EMPTY_STRING = "";
     private FixedWidthSchemaLine lineSchema;
