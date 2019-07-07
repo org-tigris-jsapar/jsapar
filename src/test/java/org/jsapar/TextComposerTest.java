@@ -198,8 +198,7 @@ public class TextComposerTest {
         CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe size",CellType.INTEGER);
         shoeSizeCell.setDefaultValue("41");
         schemaLine.addSchemaCell(shoeSizeCell);
-
-        schemaLine.addSchemaCell(new CsvSchemaCell("Birth date", CellType.DATE, "yyyy-MM-dd", Locale.US));
+        schemaLine.addSchemaCell(CsvSchemaCell.builder("Birth date").withCellFormat(CellType.DATE, "yyyy-MM-dd").build());
 
         schemaLine.setFirstLineAsSchema(true);
         schema.addSchemaLine(schemaLine);

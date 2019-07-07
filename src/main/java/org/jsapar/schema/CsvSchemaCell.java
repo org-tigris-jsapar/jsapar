@@ -49,6 +49,46 @@ public class CsvSchemaCell extends SchemaCell {
         super(name, type);
     }
 
+    public CsvSchemaCell(String sName, SchemaCellFormat cellFormat) {
+        super(sName, cellFormat);
+    }
+
+    public static Builder builder(String name){
+        return new Builder(name);
+    }
+
+    public static class Builder extends SchemaCell.Builder<CsvSchemaCell, Builder>{
+        private QuoteBehavior quoteBehavior = QuoteBehavior.AUTOMATIC;
+        private int maxLength = -1;
+
+        public Builder withQuoteBehavior(QuoteBehavior quoteBehavior) {
+            this.quoteBehavior = quoteBehavior;
+            return this;
+        }
+
+        public Builder withMaxLength(int maxLength){
+            this.maxLength = maxLength;
+            return this;
+        }
+
+        private Builder(String name) {
+            super(name);
+        }
+
+        @Override
+        protected CsvSchemaCell newInstance(String name, SchemaCellFormat cellFormat) {
+            return new CsvSchemaCell(name, cellFormat);
+        }
+
+        @Override
+        public CsvSchemaCell build() {
+            CsvSchemaCell schemaCell = super.build();
+            schemaCell.setQuoteBehavior(quoteBehavior);
+            schemaCell.setMaxLength(maxLength);
+            return schemaCell;
+        }
+    }
+
     @Override
     public CsvSchemaCell clone() {
         return (CsvSchemaCell) super.clone();

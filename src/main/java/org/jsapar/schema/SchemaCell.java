@@ -82,6 +82,109 @@ public abstract class SchemaCell implements Cloneable {
         this.emptyCell = new EmptyCell(sName, cellFormat.getCellType());
     }
 
+    @SuppressWarnings("unchecked")
+    public static abstract class Builder<C extends SchemaCell, B extends Builder<C,B> > {
+        private String name;
+        private SchemaCellFormat cellFormat;
+        private Locale locale = Locale.US;
+        private boolean ignoreRead;
+        private boolean ignoreWrite;
+        private boolean mandatory;
+        private Cell minValue;
+        private Cell maxValue;
+        private String defaultValue;
+        private CellValueCondition emptyCondition;
+        private CellValueCondition lineCondition;
+
+        Builder(String name) {
+            this.name = name;
+        }
+
+        public B withCellFormat(SchemaCellFormat cellFormat) {
+            if(this.cellFormat != null)
+                throw new IllegalStateException("Call to builder method withCellFormat() is only allowed once per builder.");
+            this.cellFormat = cellFormat;
+            return (B) this;
+        }
+
+        public B withCellFormat(CellType type, String pattern, Locale locale) {
+            withCellFormat(new SchemaCellFormat(type, pattern, locale));
+            return withLocale(locale);
+        }
+
+        public B withCellFormat(CellType type, String pattern) {
+            return withCellFormat(new SchemaCellFormat(type, pattern, locale));
+        }
+
+        public B withCellFormat(CellType type) {
+            return withCellFormat(new SchemaCellFormat(type));
+        }
+
+        public B withCellFormat(EnumFormat enumFormat) {
+            return withCellFormat(new SchemaCellFormat(CellType.ENUM, enumFormat));
+        }
+
+        public B withLocale(Locale locale) {
+            this.locale = locale;
+            return (B) this;
+        }
+
+        public B withIgnoreRead(boolean ignoreRead) {
+            this.ignoreRead = ignoreRead;
+            return (B) this;
+        }
+
+        public B withIgnoreWrite(boolean ignoreWrite) {
+            this.ignoreWrite = ignoreWrite;
+            return (B) this;
+        }
+
+        public B withMandatory(boolean mandatory) {
+            this.mandatory = mandatory;
+            return (B) this;
+        }
+
+        public B withMinValue(Cell minValue) {
+            this.minValue = minValue;
+            return (B) this;
+        }
+
+        public B withMaxValue(Cell maxValue) {
+            this.maxValue = maxValue;
+            return (B) this;
+        }
+
+        public B withDefaultValue(String defaultValue) {
+            this.defaultValue = defaultValue;
+            return (B) this;
+        }
+
+        public B withEmptyCondition(CellValueCondition emptyCondition) {
+            this.emptyCondition = emptyCondition;
+            return (B) this;
+        }
+
+        public B withLineCondition(CellValueCondition lineCondition) {
+            this.lineCondition = lineCondition;
+            return (B) this;
+        }
+
+        public C build() {
+            C instance = newInstance(this.name, this.cellFormat != null ? this.cellFormat : CELL_FORMAT_PROTOTYPE);
+            instance.setDefaultValue(this.defaultValue);
+            instance.setEmptyCondition(this.emptyCondition);
+            instance.setIgnoreRead(this.ignoreRead);
+            instance.setIgnoreWrite(this.ignoreWrite);
+            instance.setLineCondition(this.lineCondition);
+            instance.setLocale(this.locale);
+            instance.setMinValue(this.minValue);
+            instance.setMaxValue(this.maxValue);
+            instance.setMandatory(this.mandatory);
+            return instance;
+        }
+
+        protected abstract C newInstance(String name, SchemaCellFormat cellFormat);
+    }
     /**
      * Indicates if this cell should be ignored after reading it from the buffer. If ignoreRead is
      * true the cell will not be stored to the current Line object.

@@ -132,8 +132,7 @@ public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_maxLength() throws IOException {
-        CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
-        schemaElement.setMaxLength(4);
+        CsvSchemaCell schemaElement = CsvSchemaCell.builder("First name").withMaxLength(4).build();
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "Jonas");
         CsvCellComposer composer = new CsvCellComposer(schemaElement, new NeverQuote(4));
@@ -144,8 +143,7 @@ public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_maxLength_quoted() throws IOException {
-        CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
-        schemaElement.setMaxLength(4);
+        CsvSchemaCell schemaElement = CsvSchemaCell.builder("First name").withMaxLength(4).build();
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "J;onas");
         CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('"', 4, ";", "\n"));
