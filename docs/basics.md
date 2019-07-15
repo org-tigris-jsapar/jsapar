@@ -62,6 +62,8 @@ The JSaPar library contains some convenient implementations of the org.jsapar.pa
         <td>For smaller files you may want to handle all
         the events after the parsing is complete. In that case you may choose to use this implementation.
         This listener acts as an [aggregator](http://www.enterpriseintegrationpatterns.com/patterns/messaging/Aggregator.html) and builds a `org.jsapar.model.Document` object containing all the parsed lines that you can iterate afterwards.</td></tr>
+    <tr><td><b>org.jsapar.parse. ByLineTypeLineEventListener</b></td>
+        <td>Acts as a subscription hub for line parsed events to which you may register other listeners by line type.</td></tr>
     <tr><td><b>org.jsapar.parse. MulticastLineEventListener</b></td>
         <td>If you need to handle the events in multiple event listener implementation, this implementation provides a
             way to register multiple line event listeners which are called one by one for each line event.</td></tr>

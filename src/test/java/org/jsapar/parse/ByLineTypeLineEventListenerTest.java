@@ -14,10 +14,10 @@ public class ByLineTypeLineEventListenerTest {
     }
 
     @Test
-    public void registerLineEventListener() {
+    public void subscribe() {
         ByLineTypeLineEventListener lineEventListener = new ByLineTypeLineEventListener();
         AtomicBoolean called = new AtomicBoolean(false);
-        lineEventListener.register("test1", e -> {
+        lineEventListener.subscribe("test1", e -> {
             assertEquals("test1", e.getLine().getLineType());
             called.set(true);
         });
@@ -40,7 +40,7 @@ public class ByLineTypeLineEventListenerTest {
             assertEquals("test1", e.getLine().getLineType());
             called.set(true);
         };
-        lineEventListener.register("test1", test1Listener);
+        lineEventListener.subscribe("test1", test1Listener);
 
         lineEventListener.lineParsedEvent(new LineParsedEvent(this, new Line("test1")));
         assertTrue(called.get());
@@ -55,7 +55,7 @@ public class ByLineTypeLineEventListenerTest {
         ByLineTypeLineEventListener lineEventListener = new ByLineTypeLineEventListener();
         AtomicBoolean called = new AtomicBoolean(false);
         AtomicBoolean defaultCalled = new AtomicBoolean(false);
-        lineEventListener.register("test1", e -> {
+        lineEventListener.subscribe("test1", e -> {
             assertEquals("test1", e.getLine().getLineType());
             called.set(true);
         });
@@ -69,7 +69,7 @@ public class ByLineTypeLineEventListenerTest {
     public void removeAllLineEventListeners() {
         ByLineTypeLineEventListener lineEventListener = new ByLineTypeLineEventListener();
         AtomicBoolean called = new AtomicBoolean(false);
-        lineEventListener.register("test1", e -> {
+        lineEventListener.subscribe("test1", e -> {
             assertEquals("test1", e.getLine().getLineType());
             called.set(true);
         });

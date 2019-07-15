@@ -44,7 +44,7 @@ public class ByLineTypeLineEventListener implements LineEventListener {
      * @param lineType The line type to match for this listener. Test is done by equals match.
      * @param lineEventListener  The line event listener to register.
      */
-    public void register(String lineType, LineEventListener lineEventListener) {
+    public void subscribe(String lineType, LineEventListener lineEventListener) {
         this.listeners.computeIfAbsent(lineType, k -> new ArrayList<>()).add(lineEventListener);
     }
 
