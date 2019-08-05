@@ -1,16 +1,13 @@
 package org.jsapar.parse;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Optional;
 
 /**
- * This line event listener implementation works as a subscription hub where you can register line event listeners for
- * different line types. You may register any number of listeners for the same line type. Each listener with the matching
- * line type will be called in the same order as they were registered.
+ * This line event listener allows you to register different listeners for
+ * different line types. You may only register one listener for each line type. If you need to have multiple listeners
+ * for a particular line type, register an instance of {@link MulticastLineEventListener} for that line type.
  * <p>
  * The default listener will be called if no other listener was registered for the line type.
  */
@@ -20,7 +17,7 @@ public class ByLineTypeLineEventListener implements LineEventListener {
     /**
      * Current listeners
      */
-    private final Map<String, List<LineEventListener>> listeners = new HashMap<>();
+    private final Map<String, LineEventListener> listeners = new HashMap<>();
 
     /**
      * The default listener that gets called if no other listener was registered for the line type. If no default
@@ -31,51 +28,35 @@ public class ByLineTypeLineEventListener implements LineEventListener {
 
     @Override
     public void lineParsedEvent(LineParsedEvent event) {
-        List<LineEventListener> registeredListeners = listeners.get(event.getLine().getLineType());
-        if (registeredListeners != null) {
-            registeredListeners.forEach(l -> l.lineParsedEvent(event));
+        LineEventListener listener = listeners.get(event.getLine().getLineType());
+        if (listener != null) {
+            listener.lineParsedEvent(event);
         } else {
             defaultListener.lineParsedEvent(event);
         }
     }
 
     /**
-     * Adds a line event listener for the specified line type.
-     * @param lineType The line type to match for this listener. Test is done by equals match.
-     * @param lineEventListener  The line event listener to register.
+     * Puts a line event listener for the specified line type, replacing any existing listener.
+     *
+     * @param lineType          The line type to match for this listener. Test is done by equals match.
+     * @param lineEventListener The line event listener to put.
+     * @return Optional with previously registered event listener for this line type. Optional.empty if no previous
+     * listener was registered for this line type.
      */
-    public void subscribe(String lineType, LineEventListener lineEventListener) {
-        this.listeners.computeIfAbsent(lineType, k -> new ArrayList<>()).add(lineEventListener);
+    public Optional<LineEventListener> put(String lineType, LineEventListener lineEventListener) {
+        return Optional.ofNullable(listeners.put(lineType, lineEventListener));
     }
 
-    /**
-     * Removes one specific listener matching the supplied line type and equals to the supplied line event listener.
-     * @param lineType The line type to remove listener for.
-     * @param lineEventListener The line event listener to remove. Test is done by equals match.
-     * @return true if item was found and removed, false if there was no listener registered that matches.
-     */
-    public boolean remove(String lineType, LineEventListener lineEventListener) {
-        AtomicBoolean removed = new AtomicBoolean(false);
-        this.listeners.computeIfPresent(lineType, (k, v) -> {
-            removed.set(v.remove(lineEventListener));
-            return v;
-        });
-        return removed.get();
-    }
 
     /**
-     * Removes all line event listeners for specified line type
+     * Removes line event listener for specified line type
      * @param lineType  The line type to remove listeners for.
-     * @return The number of removed listeners.
+     * @return Optional with previously registered event listener for this line type. Optional.empty if no previous
+     * listener was registered for this line type.
      */
-    public int removeAll(String lineType){
-        AtomicInteger count = new AtomicInteger(0);
-        this.listeners.computeIfPresent(lineType, (k, v) -> {
-            count.set(v.size());
-            v.clear();
-            return v;
-        });
-        return count.get();
+    public Optional<LineEventListener> remove(String lineType){
+        return Optional.ofNullable(listeners.remove(lineType));
     }
 
     /**
