@@ -11,7 +11,7 @@ import java.util.Arrays;
  * Internal class that acts as a read buffer while parsing fixed width from a reader.
  */
 @SuppressWarnings("Duplicates")
-class ReadBuffer {
+final class ReadBuffer {
     private static final String     EMPTY_STRING  = "";
     private final        Reader     reader;
     private final        LineLoader lineLoader;
@@ -213,13 +213,13 @@ class ReadBuffer {
     /**
      * Does not trim anything. Leave content as is.
      */
-    private static class NothingTrimmer implements Trimmer{
+    private static final class NothingTrimmer implements Trimmer{
     }
 
     /**
      * Trims leading spaces first, then apply the supplied trimmer.
      */
-    private static class LeadingSpacesTrimmer implements Trimmer{
+    private static final class LeadingSpacesTrimmer implements Trimmer{
         private final Trimmer padTrimmer;
         private final Trimmer spaceTrimmer = new AlignRightTrimmer(' ');
 
@@ -242,7 +242,7 @@ class ReadBuffer {
     /**
      * Trims leading pad character.
      */
-    private static class AlignRightTrimmer implements Trimmer{
+    private static final class AlignRightTrimmer implements Trimmer{
         private final char padCharacter;
 
         private AlignRightTrimmer(char padCharacter) {
@@ -261,7 +261,7 @@ class ReadBuffer {
     /**
      * Trims leading zeros but always keep last 0.
      */
-    private static class NumericAlignRightTrimmer implements Trimmer{
+    private static final class NumericAlignRightTrimmer implements Trimmer{
 
         @Override
         public int findBegin(char[] buffer, int beginIndex, final int endIndex) {
@@ -275,7 +275,7 @@ class ReadBuffer {
     /**
      * Trims trailing pad character
      */
-    private static class AlignLeftTrimmer implements Trimmer{
+    private static final class AlignLeftTrimmer implements Trimmer{
         private final char padCharacter;
 
         private AlignLeftTrimmer(char padCharacter) {
@@ -294,7 +294,7 @@ class ReadBuffer {
     /**
      * Trims both leading and trailing pad character
      */
-    private static class AlignCenterTrimmer implements Trimmer{
+    private static final class AlignCenterTrimmer implements Trimmer{
         private final Trimmer alignRightTrimmer;
         private final Trimmer alignLeftTrimmer;
 
@@ -345,7 +345,7 @@ class ReadBuffer {
         return lineNumber;
     }
 
-    interface LineLoader {
+    private interface LineLoader {
         int nextLine(int allocate) throws IOException;
 
         int remainsForLine();
@@ -354,7 +354,7 @@ class ReadBuffer {
     /**
      *
      */
-    class LineLoaderFlat implements LineLoader {
+    private final class LineLoaderFlat implements LineLoader {
         @Override
         public int nextLine(int allocate) throws IOException {
             int spaceRequired = cursor + allocate - bufferSize;
@@ -375,7 +375,7 @@ class ReadBuffer {
         }
     }
 
-    private class LineLoaderCRLF implements LineLoader {
+    private final class LineLoaderCRLF implements LineLoader {
         @Override
         public int nextLine(int allocate) throws IOException {
             cursor = nextLineBegin;
@@ -413,7 +413,7 @@ class ReadBuffer {
         }
     }
 
-    private class LineLoaderCustom implements LineLoader {
+    private final class LineLoaderCustom implements LineLoader {
         private       String lineSeparator;
         private final char   lastCharOfSeparator;
 
