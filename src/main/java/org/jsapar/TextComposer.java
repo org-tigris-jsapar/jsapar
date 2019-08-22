@@ -83,6 +83,16 @@ public class TextComposer implements Composer, AutoCloseable {
     }
 
     @Override
+    public boolean composeEmptyLine() {
+        try {
+            this.writer.write(schema.getLineSeparator());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return true;
+    }
+
+    @Override
     public void setErrorEventListener(ErrorEventListener errorListener) {
        // TODO: Add error handling when composing.
     }

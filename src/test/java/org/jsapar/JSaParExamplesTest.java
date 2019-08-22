@@ -84,10 +84,13 @@ public class JSaParExamplesTest {
                     .addCell(new StringCell("Last name", "Larsson"))
                     .addCell(new BooleanCell("Has dog", false)));
 
-            String[] lines = writer.toString().split("\n");
-            assertEquals(2, lines.length);
+            composer.composeEmptyLine();
+
+            String[] lines = writer.toString().split("\n", -1);
+            assertEquals(3, lines.length);
             assertEquals("Erik;Vidfare;Svensson;", lines[0]);
             assertEquals("Fredrik;;Larsson;no", lines[1]);
+            assertEquals("", lines[2]);
         }
     }
 
