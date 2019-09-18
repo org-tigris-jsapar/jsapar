@@ -126,6 +126,15 @@ public class CsvLineReaderStatesTest {
     }
 
     @Test
+    public void testParse_escaped_quote_rfc4180() throws IOException {
+        Reader reader = new StringReader("/aaa/;/b//bb/;/ccc//;c/;//ddd//;/ee/");
+        CsvLineReaderStates lineReader = new CsvLineReaderStates("\n", reader, true, 64);
+        assertArrayEquals(new String[]{"aaa", "b//bb", "ccc//;c", "/ddd/", "ee"}, lineReader.readLine(";", '/').toArray());
+        assertArrayEquals(new String[0], lineReader.readLine(";", '/').toArray());
+        assertTrue(lineReader.eofReached());
+    }
+
+    @Test
     public void testSplit_quoted_multi_line_separator() throws IOException {
         Reader reader = new StringReader("A;/B/;;C|+A;/B/;//;/C/C|+/A/;/B/;;/C/|+/A/;B;//;/C/|+/A/;/B/;//;C|+/A/;./B/;.//;.C");
         CsvLineReaderStates lineReader = new CsvLineReaderStates("|+", reader, true, 64);

@@ -171,6 +171,10 @@ final class CsvLineReaderStates implements CsvLineReader {
         addToLine(cellStart, buffer.cursor-except-cellStart);
     }
 
+    private int currentCellSize(){
+        return buffer.cursor-(buffer.cellMark+currentCellOffset);
+    }
+
     /**
      * Adds a completed cell to a line.
      * @param offset Begin index
@@ -289,6 +293,31 @@ final class CsvLineReaderStates implements CsvLineReader {
                 return true;
             }
             if (c == quoteChar) {
+                offsetFromEndQuote=1;
+                return false;
+            }
+
+            offsetFromEndQuote++;
+            state = foundEndQuoteWithinState;
+            return false;
+        }
+    }
+
+    /**
+     * End quote was found.
+     */
+    private final class FoundEndQuoteStateRfc implements State {
+        @Override
+        public boolean processChar(final char c) {
+            if (c==lastCellSeparatorChar && cellSeparator.length()==1) {
+                addToLineExcept(2);
+                beginCellState();
+                return false;
+            }
+            if(c == lastEolChar && endOfLineAddPending(c, 1)){
+                return true;
+            }
+            if (c == quoteChar && currentCellSize()<=1) {
                 offsetFromEndQuote=1;
                 return false;
             }
