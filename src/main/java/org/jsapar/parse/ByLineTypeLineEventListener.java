@@ -9,7 +9,7 @@ import java.util.Optional;
  * different line types. You may only register one listener for each line type. If you need to have multiple listeners
  * for a particular line type, register an instance of {@link MulticastLineEventListener} for that line type.
  * <p>
- * The default listener will be called if no other listener was registered for the line type.
+ * The default listener will be called if no listener was registered for the line type.
  */
 @SuppressWarnings("WeakerAccess")
 public class ByLineTypeLineEventListener implements LineEventListener {
