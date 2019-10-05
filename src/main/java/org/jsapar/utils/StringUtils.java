@@ -94,10 +94,10 @@ public class StringUtils {
      */
     public static String replaceEscapes2Java(String sToReplace) {
         //   Since it is a regex we need 4 \
-        sToReplace = sToReplace.replaceAll("\\\\r", "\r");
-        sToReplace = sToReplace.replaceAll("\\\\n", "\n");
-        sToReplace = sToReplace.replaceAll("\\\\t", "\t");
-        sToReplace = sToReplace.replaceAll("\\\\f", "\f");
+        sToReplace = sToReplace.replace("\\r", "\r");
+        sToReplace = sToReplace.replace("\\n", "\n");
+        sToReplace = sToReplace.replace("\\t", "\t");
+        sToReplace = sToReplace.replace("\\f", "\f");
         return sToReplace;
     }
 
