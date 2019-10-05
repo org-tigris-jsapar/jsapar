@@ -198,7 +198,7 @@ final class CsvLineReaderStates implements CsvLineReader {
         private int currentCellOffset =0;
         private int offsetFromEndQuote =0;
         private int ignoresCount = 0;
-        private int[] ignoresAt = new int[1024];
+        private int[] ignoresAt = new int[128];
         private StringBuilder stringBuilder = new StringBuilder();
 
         private void addToLine(){
