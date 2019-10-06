@@ -4,19 +4,22 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Quotes cell only if needed because it contains either cellSeparator or lineSeparator. Also, if first character
- * is the quote character, the cell is quoted because it will otherwise trigger quoted parsing while parsing.
+ * Quotes cell only if needed because it contains either cellSeparator, quote character or lineSeparator.
  */
 public class QuoteIfNeeded implements Quoter {
     private char quoteChar;
-    private AlwaysQuote alwaysQuote;
-    private NeverQuote neverQuote;
+    private Quoter alwaysQuote;
+    private Quoter neverQuote;
     private String cellSeparator;
     private String lineSeparator;
 
     public QuoteIfNeeded(char quoteChar, int maxLength, String cellSeparator, String lineSeparator) {
+        this(quoteChar, maxLength, cellSeparator, lineSeparator, new AlwaysQuote(quoteChar, maxLength, false));
+    }
+
+    private QuoteIfNeeded(char quoteChar, int maxLength, String cellSeparator, String lineSeparator, Quoter alwaysQuoter) {
         this.quoteChar = quoteChar;
-        this.alwaysQuote = new AlwaysQuote(quoteChar, maxLength);
+        this.alwaysQuote = alwaysQuoter;
         this.neverQuote = new NeverQuote(maxLength);
         this.cellSeparator = cellSeparator;
         this.lineSeparator = lineSeparator;
@@ -27,7 +30,7 @@ public class QuoteIfNeeded implements Quoter {
         if(value.isEmpty())
             neverQuote.writeValue(writer, value);
         else if (value.contains(cellSeparator)
-                || value.charAt(0) ==quoteChar
+                || value.indexOf(quoteChar) >=0
                 || value.contains(lineSeparator)){
             alwaysQuote.writeValue(writer, value);
         }

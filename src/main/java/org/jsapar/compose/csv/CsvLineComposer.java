@@ -62,7 +62,7 @@ class CsvLineComposer implements LineComposer {
             case REPLACE:
                 return makeReplaceQuoter(schemaLine, schemaCell, lineSeparator);
             case ALWAYS:
-                return new AlwaysQuote(quoteChar, schemaCell.getMaxLength());
+                return new AlwaysQuote(quoteChar, schemaCell.getMaxLength(), false);
             default:
                 throw new IllegalStateException("Unsupported quote behavior: " + quoteBehavior);
         }
