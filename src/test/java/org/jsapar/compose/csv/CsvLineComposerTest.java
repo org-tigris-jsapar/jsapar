@@ -5,7 +5,6 @@ import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
-import org.jsapar.schema.SchemaException;
 import org.junit.Test;
 
 import java.io.StringWriter;
@@ -30,7 +29,7 @@ public class CsvLineComposerTest {
         line.addCell(new StringCell("Last Name", "Stenberg"));
         StringWriter writer = new StringWriter();
 
-        CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n");
+        CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n", false);
         lineComposer.compose(line);
 
         assertEquals("Jonas;-)Stenberg", writer.toString());
@@ -52,7 +51,7 @@ public class CsvLineComposerTest {
         line.addCell(new StringCell("Last Name", "Stenberg"));
         StringWriter writer = new StringWriter();
 
-        CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n");
+        CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n", false);
         lineComposer.compose(line);
 
         assertEquals(";-)Stenberg", writer.toString());
@@ -72,7 +71,7 @@ public class CsvLineComposerTest {
         line.addCell(new StringCell("Last Name", "Stenberg"));
         StringWriter writer = new StringWriter();
 
-        CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n");
+        CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n", false);
         lineComposer.compose(line);
 
         assertEquals("Jonas\uFFD0Stenberg", writer.toString());
@@ -93,7 +92,7 @@ public class CsvLineComposerTest {
         line.addCell(new StringCell("Last Name", "Stenberg"));
         StringWriter writer = new StringWriter();
 
-        CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n");
+        CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n", false);
         lineComposer.compose(line);
 
         assertEquals("Jonas;-)Stenberg;-)", writer.toString());
@@ -116,7 +115,7 @@ public class CsvLineComposerTest {
         line.addCell(shoeSchema.makeEmptyCell());
         StringWriter writer = new StringWriter();
 
-        CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n");
+        CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n", false);
         lineComposer.compose(line);
 
         assertEquals("Jonas;-)Stenberg;-)", writer.toString());
@@ -135,7 +134,7 @@ public class CsvLineComposerTest {
         line.addCell(new StringCell("First Name", "Jonas"));
         StringWriter writer = new StringWriter();
 
-        CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n");
+        CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n", false);
         lineComposer.compose(line);
 
         assertEquals("Jonas;Stenberg", writer.toString());
@@ -156,7 +155,7 @@ public class CsvLineComposerTest {
         line.addCell(new StringCell("First Name", "Jonas"));
         StringWriter writer = new StringWriter();
 
-        CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n");
+        CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n", false);
         lineComposer.compose(line);
 
         assertEquals("Jonas;-)Svensson", writer.toString());

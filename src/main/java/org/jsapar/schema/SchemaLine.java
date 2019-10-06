@@ -54,7 +54,6 @@ public abstract class SchemaLine implements Cloneable {
      * Creates a SchemaLine that occurs infinite number of times.
      */
     public SchemaLine() {
-        this.occurs = OCCURS_INFINITE;
     }
 
     /**

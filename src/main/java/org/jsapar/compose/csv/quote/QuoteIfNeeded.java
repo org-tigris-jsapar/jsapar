@@ -13,8 +13,8 @@ public class QuoteIfNeeded implements Quoter {
     private String cellSeparator;
     private String lineSeparator;
 
-    public QuoteIfNeeded(char quoteChar, int maxLength, String cellSeparator, String lineSeparator) {
-        this(quoteChar, maxLength, cellSeparator, lineSeparator, new AlwaysQuote(quoteChar, maxLength, false));
+    public QuoteIfNeeded(char quoteChar, int maxLength, String cellSeparator, String lineSeparator, boolean complyRfc4180) {
+        this(quoteChar, maxLength, cellSeparator, lineSeparator, new AlwaysQuote(quoteChar, maxLength, complyRfc4180));
     }
 
     private QuoteIfNeeded(char quoteChar, int maxLength, String cellSeparator, String lineSeparator, Quoter alwaysQuoter) {

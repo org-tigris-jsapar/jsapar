@@ -50,7 +50,7 @@ public class CsvCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "Here; we come");
-        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n"));
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n", false));
         composer.compose(writer, cell);
 
         assertEquals("'Here; we come'", writer.toString());
@@ -62,7 +62,7 @@ public class CsvCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "'Here we come");
-        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n"));
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n", false));
         composer.compose(writer, cell);
 
         assertEquals("''Here we come'", writer.toString());
@@ -74,7 +74,7 @@ public class CsvCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "Joho");
-        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n"));
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n", false));
         composer.compose(writer, cell);
 
         assertEquals("Joho", writer.toString());
@@ -148,7 +148,7 @@ public class CsvCellComposerTest {
         schemaElement.setMaxLength(4);
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "J;onas");
-        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('"', 4, ";", "\n"));
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('"', 4, ";", "\n", false));
         composer.compose(writer, cell);
 
         assertEquals("\"J;\"", writer.toString());

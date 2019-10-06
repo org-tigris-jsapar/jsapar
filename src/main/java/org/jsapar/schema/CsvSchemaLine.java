@@ -53,7 +53,7 @@ public class CsvSchemaLine extends SchemaLine {
     }
 
     /**
-     * The type of the line. You could say that this is the class of the line.
+     * Creates a CsvSchemaLine with the supplied line type and occurs infinite number of times.
      *
      * @param lineType The type of the line
      */
@@ -64,7 +64,7 @@ public class CsvSchemaLine extends SchemaLine {
     /**
      * Creates a CsvSchemaLine with the supplied line type and occurs supplied number of times.
      * @param lineType The type of the line
-     * @param nOccurs The number of times this type of line occurs in the input/output. Use {@link #OCCURS_INFINITE} constant for infinite number of times.
+     * @param nOccurs The number of times this type of line occurs in the input/output.
      */
     public CsvSchemaLine(String lineType, int nOccurs) {
         super(lineType, nOccurs);
@@ -203,7 +203,6 @@ public class CsvSchemaLine extends SchemaLine {
     public void forEach(Consumer<? super SchemaCell> consumer) {
         schemaCells.values().forEach(consumer);
     }
-
 
 
 }

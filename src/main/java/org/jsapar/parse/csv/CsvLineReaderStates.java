@@ -44,14 +44,15 @@ final class CsvLineReaderStates implements CsvLineReader {
      * @param allowReadAhead If true, reading from the reader can be optimized by reading larger chunks of data into a
 *                       buffer but that can only be utilized if it is ok to read until the end of the file or if it
      * @param maxLineLength The maximum number of characters in a line. Make sure that all lines fits within this size.
-     * @param rfc4180 If true, the parser will be compliant to RFC 4180 regarding quotes.
+     * @param complyRfc4180 If true, the parser will be compliant to RFC 4180 regarding quotes, i.e. all double occurrences of
+     *               quotes will be treated as one that is part of the cell.
      */
-    CsvLineReaderStates(String lineSeparator, Reader reader, boolean allowReadAhead, int maxLineLength, boolean rfc4180) {
+    CsvLineReaderStates(String lineSeparator, Reader reader, boolean allowReadAhead, int maxLineLength, boolean complyRfc4180) {
         eolCheck = Arrays.asList("\n", "\r\n").contains(lineSeparator) ? new EolCheckCRLF() : new EolCheckCustom(lineSeparator);
         lastEolChar = eolCheck.getLastEolChar();
 
         beginCellState = new BeginCellState();
-        foundEndQuoteState = rfc4180 ? new FoundEndQuoteStateRfc() : new FoundEndQuoteState();
+        foundEndQuoteState = complyRfc4180 ? new FoundEndQuoteStateRfc() : new FoundEndQuoteState();
         foundEndQuoteWithinState = new FoundEndQuoteWithinState();
         quotedCellState = new QuotedCellState();
         unquotedCellState = new UnquotedCellState();

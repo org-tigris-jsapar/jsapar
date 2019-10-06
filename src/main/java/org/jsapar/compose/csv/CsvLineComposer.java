@@ -26,13 +26,15 @@ class CsvLineComposer implements LineComposer {
     private Writer        writer;
     private CsvSchemaLine schemaLine;
     private String lineSeparator;
+    private boolean complyRfc4180;
     private Map<String, CsvCellComposer> cellComposers;
     private boolean firstRow=true;
 
-    CsvLineComposer(Writer writer, CsvSchemaLine schemaLine, String lineSeparator) {
+    CsvLineComposer(Writer writer, CsvSchemaLine schemaLine, String lineSeparator, boolean complyRfc4180) {
         this.writer = writer;
         this.schemaLine = schemaLine;
         this.lineSeparator = lineSeparator;
+        this.complyRfc4180 = complyRfc4180;
         cellComposers = makeCellComposers(schemaLine, lineSeparator);
     }
 
@@ -54,7 +56,7 @@ class CsvLineComposer implements LineComposer {
                     if (schemaCell.getCellFormat().getCellType().isAtomic())
                         return new NeverQuote(schemaCell.getMaxLength());
                     else
-                        return new QuoteIfNeeded(quoteChar, schemaCell.getMaxLength(), schemaLine.getCellSeparator(), lineSeparator);
+                        return new QuoteIfNeeded(quoteChar, schemaCell.getMaxLength(), schemaLine.getCellSeparator(), lineSeparator, complyRfc4180);
                 else
                     return makeReplaceQuoter(schemaLine, schemaCell, lineSeparator);
             case NEVER:
@@ -62,7 +64,7 @@ class CsvLineComposer implements LineComposer {
             case REPLACE:
                 return makeReplaceQuoter(schemaLine, schemaCell, lineSeparator);
             case ALWAYS:
-                return new AlwaysQuote(quoteChar, schemaCell.getMaxLength(), false);
+                return new AlwaysQuote(quoteChar, schemaCell.getMaxLength(), complyRfc4180);
             default:
                 throw new IllegalStateException("Unsupported quote behavior: " + quoteBehavior);
         }
@@ -121,7 +123,7 @@ class CsvLineComposer implements LineComposer {
         for (CsvSchemaCell schemaCell : unformattedSchemaLine.getSchemaCells()) {
             schemaCell.setCellFormat(CellType.STRING);
         }
-        CsvLineComposer headerLineComposer = new CsvLineComposer(writer, unformattedSchemaLine, lineSeparator);
+        CsvLineComposer headerLineComposer = new CsvLineComposer(writer, unformattedSchemaLine, lineSeparator, firstRow);
         headerLineComposer.compose(this.buildHeaderLineFromSchema(unformattedSchemaLine));
     }
 

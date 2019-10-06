@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class QuoteIfNeededTest {
     @Test
     public void writeQuoted() throws Exception {
-        QuoteIfNeeded instance = new QuoteIfNeeded('@', 10, ";", "\n");
+        QuoteIfNeeded instance = new QuoteIfNeeded('@', 10, ";", "\n", false);
 
         StringWriter w = new StringWriter();
         instance.writeValue(w, "hej");
