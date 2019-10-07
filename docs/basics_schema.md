@@ -252,8 +252,7 @@ you may specify an empty pattern that matches any number of white space characte
 
 ### Quoted values
 The problem with delimited (CSV) data is that the value of a specific cell may also contain the delimiter character or even the line separator. 
-In order to handle this scenario the JSaPar library is capable of handling quoted cells. It does not fully comply to the 
-CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180) but we will get back to that in a moment.
+In order to handle this scenario the JSaPar library is capable of handling quoted cells. 
 
 You activate support for quoted values on a line type by specifying a quote character with the `quotechar` attribute:
 ```xml
@@ -262,12 +261,33 @@ You activate support for quoted values on a line type by specifying a quote char
 ...
 ```
 You can specify any character as quote character except the one you are using as line separator and cell separator. If you use a character that is 
-reserved by the markup language (XML), you will need to [escape it](https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references) as in the example above.    
+reserved by the markup language (XML), you will need to [escape it](https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references) 
+as in the example above.
+
+The CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180) defines how quoting should be done within a CSV file but the problem is that 
+most delimited files in the real world does not comply to that standard. 
+In order to overcome this obstacle, you can choose between two different flavors of quoting syntax in the csv schema of JSaPar:
+1. FIRST_LAST (default)
+1. RFC4180
+
+This is how you configure quote syntax RFC4180:
+```xml
+...
+    <csvschema quotesyntax="RFC4180">
+...
+```
+
+The different syntaxes are described in more details below.
+    
 #### Parsing quoted values
 As long as you have activated quoting as described above, the parser will automatically detect if a cell is quoted or not. Not all cells needs quoting. 
-*A cell is considered to be quoted if and only if the first and the last character of the cell is the quote character.* The quote characters will always be removed
-from the parsed value. 
-This differs slightly from the CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180)
+
+If the line separator or cell separator appears within the quotes of a cell it will be regarded as the content of the cell.
+A maximum of 25 line separators are allowed within the same cell. If that value is exceeded a JSaParException is thrown 
+since the input is probably invalid in some sense. This means that if a start quote is found but no end quote within the 
+following 25 lines or until the end of input data, it is considered an irreparable error.
+##### Quote syntax RFC4180
+This mode complies to the CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180)
 which states that:
 ```text
    7.  If double-quotes are used to enclose fields, then a double-quote
@@ -276,16 +296,23 @@ which states that:
 
        "aaa","b""bb","ccc"
 ```
+The standard also specifies that a single quote character may not appear within a quoted cell. 
+JSaPar will however allow single quote characters while parsing and consider it as part of the cell value as long as it is not followed by either line or cell separator.
+##### Quote syntax FIRST_LAST (default)
+This is the default syntax since it applies 
+better to the majority of the real life delimited files since most of them do not really comply to [RFC-4180](https://tools.ietf.org/html/rfc4180).
+
+*A cell is considered to be quoted if and only if the first and the last character of the cell is the quote character.* 
+
+The quote characters will always be removed
+from the parsed value. 
+This differs slightly from the CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180)
 JSaPar will instead only strip the first and the last quote of a cell regardless of if the cell content contains one or
-more additional quote characters. In the example above JSaPar would parse the value `b""bb` for the second cell. This applies 
-better to the majority of the real life delimited files since most of them do not really comply to [RFC-4180](https://tools.ietf.org/html/rfc4180). 
+more additional quote characters. In the example above (`"aaa","b""bb","ccc"`) JSaPar would parse the value `b""bb` for the second cell.  
 This also means that if you have a correctly placed start quote and the end quote is not the last character of the cell, the cell is not 
 considered to be quoted and the quote characters will instead be part of the cell value. 
 
-If the line separator or cell separator appears within the quotes of a cell it will be regarded as the content of the cell.
-A maximum of 25 line separators are allowed within the same cell. If that value is exceeded a JSaParException is thrown 
-since the input is probably invalid in some sense. This means that if a start quote is found but no end quote within the 
-following 25 lines or until the end of input data, it is considered an irreparable error.
+
 #### Composing quoted values
 If your data might contain characters like the line separator or the cell separator you will need to quote the output when 
 composing a delimited file. You activate quoting by specifying the quote character as described above. Now you have the option
@@ -310,6 +337,8 @@ You can change the default quote behavior for a whole line type by specifying th
     <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;" quotebehavior="ALWAYS">
 ...
 ```
+
+If the quote syntax is RFC4180, all quote characters in a cell value will be escaped with an additional quote character while composing in order to comply to the RFC 4180 standard.
 
 * See [this example in the jsapar-examples project](https://github.com/org-tigris-jsapar/jsapar-examples/tree/master/src/main/java/org/jsapar/examples/schemabasics/c3)
 
