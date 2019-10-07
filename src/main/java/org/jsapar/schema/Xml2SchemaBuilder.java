@@ -258,6 +258,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
 
         assignSchemaBase(schema, xmlSchema);
 
+        parseAttribute(xmlSchema, ATTRIB_CSV_SCHEMA_QUOTE_SYNTAX)
+                .map(QuoteSyntax::valueOf)
+                .ifPresent(schema::setQuoteSyntax);
+
         NodeList nodes = xmlSchema.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE);
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node child = nodes.item(i);

@@ -21,6 +21,7 @@ interface SchemaXmlTypes {
     String ATTRIB_FW_SCHEMA_CELL_LENGTH             = "length";
     String ATTRIB_SCHEMA_LINE_LINETYPE              = "linetype";
     String ATTRIB_SCHEMA_LINE_OCCURS                = "occurs";
+    String ATTRIB_CSV_SCHEMA_QUOTE_SYNTAX           = "quotesyntax";
     String ATTRIB_CSV_SCHEMA_CELL_SEPARATOR         = "cellseparator";
     String ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA = "firstlineasschema";
     String ATTRIB_CSV_QUOTE_BEHAVIOR = "quotebehavior";

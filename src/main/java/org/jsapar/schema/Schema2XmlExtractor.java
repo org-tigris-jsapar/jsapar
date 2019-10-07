@@ -180,6 +180,8 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
      */
     private Element extractCsvSchema(Document xmlDocument, CsvSchema schema) throws SchemaException {
         Element xmlSchema = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_CSV_SCHEMA);
+        if(schema.getQuoteSyntax() != QuoteSyntax.FIRST_LAST)
+            xmlSchema.setAttribute(ATTRIB_CSV_SCHEMA_QUOTE_SYNTAX, schema.getQuoteSyntax().name());
 
         assignCsvSchema(xmlDocument, xmlSchema, schema);
 

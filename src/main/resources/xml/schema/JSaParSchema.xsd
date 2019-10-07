@@ -318,6 +318,30 @@ If the sum of the length of the cells is less than this minlength then the line 
         <xsd:sequence minOccurs="0" maxOccurs="unbounded">
           <xsd:element name="line" type="CsvSchemaLine" />
         </xsd:sequence>
+        <xsd:attribute name="quotesyntax" default="FIRST_LAST">
+                    <xsd:annotation>
+                      <xsd:documentation>Specifies the syntax while parsing and composing of quoted cells.
+
+FIRST_LAST
+Quoted cells are considered quoted if and only if it begins and ends with a quote character and all the intermediate characters are treated as is.
+This is the most common scenario in delimited files since most sources that generates delimited files only adds quotes first and last of the cell without inspecting the content.
+"aaa","b""bb","ccc" will be treated as three cells with the values `aaa`, `b""bb` and `ccc`. No characters will be replaced or removed between the enclosing quotes. Be aware that this mode will treat the input "aaa","b"","ccc" as three cells with the values `aaa`, `b"` and `ccc`.
+While composing, the content of a cell is always written as is and enclosing quotes are just added.
+
+RFC4180
+Parsing and composing will consider the RFC 4180  regarding quotes. Any double occurrences of quote characters will be treated as if one quote character is an escape character and the other will become part of the cell value.
+For instance "aaa","b""bb","ccc" will still be treated as three cells but with the values `aaa`, `b"bb` and `ccc`. This mode will treat the input "aaa","b"",bbb" as two cells with the values `aaa` and , `b",bbb`.
+When composing quoted cells, all quotes within cell value will be escaped with an additional quote character in order to make the output compliant.
+According to RFC 4180, single quotes may not occur inside a quoted cell. This parser will however allow it and treat it as part of the cell value as long as it is not followed by a cell or line separator.
+</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="FIRST_LAST"></xsd:enumeration>
+              <xsd:enumeration value="RFC4180"></xsd:enumeration>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
