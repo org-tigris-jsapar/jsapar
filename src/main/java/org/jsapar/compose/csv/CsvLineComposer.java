@@ -9,6 +9,7 @@ import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.QuoteBehavior;
+import org.jsapar.schema.QuoteSyntax;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -26,15 +27,15 @@ class CsvLineComposer implements LineComposer {
     private Writer        writer;
     private CsvSchemaLine schemaLine;
     private String lineSeparator;
-    private boolean complyRfc4180;
+    private QuoteSyntax quoteSyntax;
     private Map<String, CsvCellComposer> cellComposers;
     private boolean firstRow=true;
 
-    CsvLineComposer(Writer writer, CsvSchemaLine schemaLine, String lineSeparator, boolean complyRfc4180) {
+    CsvLineComposer(Writer writer, CsvSchemaLine schemaLine, String lineSeparator, QuoteSyntax quoteSyntax) {
         this.writer = writer;
         this.schemaLine = schemaLine;
         this.lineSeparator = lineSeparator;
-        this.complyRfc4180 = complyRfc4180;
+        this.quoteSyntax = quoteSyntax;
         cellComposers = makeCellComposers(schemaLine, lineSeparator);
     }
 
@@ -56,7 +57,7 @@ class CsvLineComposer implements LineComposer {
                     if (schemaCell.getCellFormat().getCellType().isAtomic())
                         return new NeverQuote(schemaCell.getMaxLength());
                     else
-                        return new QuoteIfNeeded(quoteChar, schemaCell.getMaxLength(), schemaLine.getCellSeparator(), lineSeparator, complyRfc4180);
+                        return new QuoteIfNeeded(quoteChar, schemaCell.getMaxLength(), schemaLine.getCellSeparator(), lineSeparator, quoteSyntax);
                 else
                     return makeReplaceQuoter(schemaLine, schemaCell, lineSeparator);
             case NEVER:
@@ -64,7 +65,7 @@ class CsvLineComposer implements LineComposer {
             case REPLACE:
                 return makeReplaceQuoter(schemaLine, schemaCell, lineSeparator);
             case ALWAYS:
-                return new AlwaysQuote(quoteChar, schemaCell.getMaxLength(), complyRfc4180);
+                return new AlwaysQuote(quoteChar, schemaCell.getMaxLength(), quoteSyntax);
             default:
                 throw new IllegalStateException("Unsupported quote behavior: " + quoteBehavior);
         }
@@ -123,7 +124,7 @@ class CsvLineComposer implements LineComposer {
         for (CsvSchemaCell schemaCell : unformattedSchemaLine.getSchemaCells()) {
             schemaCell.setCellFormat(CellType.STRING);
         }
-        CsvLineComposer headerLineComposer = new CsvLineComposer(writer, unformattedSchemaLine, lineSeparator, firstRow);
+        CsvLineComposer headerLineComposer = new CsvLineComposer(writer, unformattedSchemaLine, lineSeparator, quoteSyntax);
         headerLineComposer.compose(this.buildHeaderLineFromSchema(unformattedSchemaLine));
     }
 

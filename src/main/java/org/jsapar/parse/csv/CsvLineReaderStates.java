@@ -1,6 +1,7 @@
 package org.jsapar.parse.csv;
 
 import org.jsapar.parse.LineParseException;
+import org.jsapar.schema.QuoteSyntax;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -44,15 +45,23 @@ final class CsvLineReaderStates implements CsvLineReader {
      * @param allowReadAhead If true, reading from the reader can be optimized by reading larger chunks of data into a
 *                       buffer but that can only be utilized if it is ok to read until the end of the file or if it
      * @param maxLineLength The maximum number of characters in a line. Make sure that all lines fits within this size.
-     * @param complyRfc4180 If true, the parser will be compliant to RFC 4180 regarding quotes, i.e. all double occurrences of
-     *               quotes will be treated as one that is part of the cell.
+     * @param quoteSyntax Determines the syntax of how quoted cells are parsed.
      */
-    CsvLineReaderStates(String lineSeparator, Reader reader, boolean allowReadAhead, int maxLineLength, boolean complyRfc4180) {
+    CsvLineReaderStates(String lineSeparator, Reader reader, boolean allowReadAhead, int maxLineLength, QuoteSyntax quoteSyntax) {
         eolCheck = Arrays.asList("\n", "\r\n").contains(lineSeparator) ? new EolCheckCRLF() : new EolCheckCustom(lineSeparator);
         lastEolChar = eolCheck.getLastEolChar();
 
         beginCellState = new BeginCellState();
-        foundEndQuoteState = complyRfc4180 ? new FoundEndQuoteStateRfc() : new FoundEndQuoteState();
+        switch (quoteSyntax) {
+        case FIRST_LAST:
+            foundEndQuoteState = new FoundEndQuoteStateFirstLast();
+            break;
+        case RFC4180:
+            foundEndQuoteState = new FoundEndQuoteStateRfc();
+            break;
+        default:
+            throw new AssertionError("Unsupported quote syntax while parsing: " + quoteSyntax);
+        }
         foundEndQuoteWithinState = new FoundEndQuoteWithinState();
         quotedCellState = new QuotedCellState();
         unquotedCellState = new UnquotedCellState();
@@ -314,7 +323,7 @@ final class CsvLineReaderStates implements CsvLineReader {
     /**
      * End quote was found.
      */
-    private final class FoundEndQuoteState implements State {
+    private final class FoundEndQuoteStateFirstLast implements State {
         @Override
         public boolean processChar(final char c) {
             if (c==lastCellSeparatorChar && cellSeparator.length()==1) {

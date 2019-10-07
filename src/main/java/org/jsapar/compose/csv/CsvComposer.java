@@ -14,7 +14,7 @@ import java.io.Writer;
 public class CsvComposer extends AbstractSchemaComposer implements SchemaComposer {
 
     public CsvComposer(Writer writer, CsvSchema schema) {
-        super(writer, schema, schemaLine -> new CsvLineComposer(writer, (CsvSchemaLine) schemaLine, schema.getLineSeparator(), schema.isComplyRfc4180()));
+        super(writer, schema, schemaLine -> new CsvLineComposer(writer, (CsvSchemaLine) schemaLine, schema.getLineSeparator(), schema.getQuoteSyntax()));
     }
 
 }

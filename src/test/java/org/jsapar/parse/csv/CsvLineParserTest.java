@@ -10,6 +10,7 @@ import org.jsapar.parse.LineParseException;
 import org.jsapar.parse.text.TextParseConfig;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
+import org.jsapar.schema.QuoteSyntax;
 import org.jsapar.schema.SchemaException;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class CsvLineParserTest {
     }
 
     private CsvLineReader makeCsvLineReaderForString(String sLine) {
-        return new CsvLineReaderStates("\n", new StringReader(sLine), true, 8 * 1024, false);
+        return new CsvLineReaderStates("\n", new StringReader(sLine), true, 8 * 1024, QuoteSyntax.FIRST_LAST);
     }
 
     @Test

@@ -1,5 +1,7 @@
 package org.jsapar.compose.csv.quote;
 
+import org.jsapar.schema.QuoteSyntax;
+
 import java.io.IOException;
 import java.io.Writer;
 
@@ -10,12 +12,18 @@ public class AlwaysQuote implements Quoter {
     private ValueComposer valueComposer;
     private char quoteChar;
 
-    public AlwaysQuote(char quoteChar, int maxLength, boolean complyRfc4180) {
-        if(maxLength >=0){
-            valueComposer = complyRfc4180 ? new MaxLengthValueComposerRfc(maxLength-2, quoteChar) : new MaxLengthComposer(maxLength-2);
-        }
-        else{
-            valueComposer = complyRfc4180 ? new ValueComposerRfc(quoteChar) : new AtomicValueComposer();
+    public AlwaysQuote(char quoteChar, int maxLength, QuoteSyntax quoteSyntax) {
+        switch (quoteSyntax) {
+        case FIRST_LAST:
+            valueComposer = (maxLength >= 0) ? new MaxLengthComposer(maxLength - 2) : new AtomicValueComposer();
+            break;
+        case RFC4180:
+            valueComposer = (maxLength >= 0) ?
+                    new MaxLengthValueComposerRfc(maxLength - 2, quoteChar) :
+                    new ValueComposerRfc(quoteChar);
+            break;
+        default:
+            throw new AssertionError("Unsupported quote syntax while composing: " + quoteSyntax);
         }
         this.quoteChar = (quoteChar == 0 ? '"' : quoteChar);
     }

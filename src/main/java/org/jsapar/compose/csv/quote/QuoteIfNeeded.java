@@ -1,5 +1,7 @@
 package org.jsapar.compose.csv.quote;
 
+import org.jsapar.schema.QuoteSyntax;
+
 import java.io.IOException;
 import java.io.Writer;
 
@@ -13,8 +15,8 @@ public class QuoteIfNeeded implements Quoter {
     private String cellSeparator;
     private String lineSeparator;
 
-    public QuoteIfNeeded(char quoteChar, int maxLength, String cellSeparator, String lineSeparator, boolean complyRfc4180) {
-        this(quoteChar, maxLength, cellSeparator, lineSeparator, new AlwaysQuote(quoteChar, maxLength, complyRfc4180));
+    public QuoteIfNeeded(char quoteChar, int maxLength, String cellSeparator, String lineSeparator, QuoteSyntax quoteSyntax) {
+        this(quoteChar, maxLength, cellSeparator, lineSeparator, new AlwaysQuote(quoteChar, maxLength, quoteSyntax));
     }
 
     private QuoteIfNeeded(char quoteChar, int maxLength, String cellSeparator, String lineSeparator, Quoter alwaysQuoter) {
