@@ -27,7 +27,7 @@ easier to maintain and increases flexibility.
 ### Version 2.0.1 is released 
 *2019-03-04*
 
-The focus of this fix-release has been to improve performance while parsing. See [release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes) for details
+The focus of this fix-release has been to improve performance while parsing. See [release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes#2.0.1) for details
 ### Version 2.0.0 is now officially released 
 *2018-11-24*
 
