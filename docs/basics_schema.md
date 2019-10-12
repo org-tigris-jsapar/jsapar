@@ -254,16 +254,24 @@ you may specify an empty pattern that matches any number of white space characte
 The problem with delimited (CSV) data is that the value of a specific cell may also contain the delimiter character or even the line separator. 
 In order to handle this scenario the JSaPar library is capable of handling quoted cells. 
 
-You activate support for quoted values on a line type by specifying a quote character with the `quotechar` attribute:
+The support for quoted quoted values is activated by default and the default quote character is the standard quote character("). 
+You can specify a different quote character with the `quotechar` attribute:
 ```xml
 ...
-    <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;">
+    <line occurs="*" linetype="Person" cellseparator=";" quotechar="&apos;">
 ...
 ```
-You can specify any character as quote character except the one you are using as line separator and cell separator. If you use a character that is 
+You can specify any character as quote character except the one you are using as line separator and cell separator. 
+If you use a character that is 
 reserved by the markup language (XML), you will need to [escape it](https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references) 
 as in the example above.
 
+You can disable the quote character support by with the value "NONE" for the attribute:
+```xml
+...
+    <line occurs="*" linetype="Person" cellseparator=";" quotechar="NONE">
+...
+```
 The CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180) defines how quoting should be done within a CSV file but the problem is that 
 most delimited files in the real world does not comply to that standard. 
 In order to overcome this obstacle, you can choose between two different flavors of quoting syntax in the csv schema of JSaPar:
@@ -297,16 +305,18 @@ which states that:
        "aaa","b""bb","ccc"
 ```
 The standard also specifies that a single quote character may not appear within a quoted cell. 
-JSaPar will however allow single quote characters while parsing and consider it as part of the cell value as long as it is not followed by either line or cell separator.
+JSaPar will however allow single quote characters while parsing and consider 
+it as part of the cell value as long as it is not followed by either line or cell separator.
 ##### Quote syntax FIRST_LAST (default)
 This is the default syntax since it applies 
-better to the majority of the real life delimited files since most of them do not really comply to [RFC-4180](https://tools.ietf.org/html/rfc4180).
+better to the majority of the real life delimited files since most of them 
+do not really comply to [RFC-4180](https://tools.ietf.org/html/rfc4180).
 
 *A cell is considered to be quoted if and only if the first and the last character of the cell is the quote character.* 
 
 The quote characters will always be removed
 from the parsed value. 
-This differs slightly from the CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180)
+This differs slightly from the CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180).
 JSaPar will instead only strip the first and the last quote of a cell regardless of if the cell content contains one or
 more additional quote characters. In the example above (`"aaa","b""bb","ccc"`) JSaPar would parse the value `b""bb` for the second cell.  
 This also means that if you have a correctly placed start quote and the end quote is not the last character of the cell, the cell is not 
@@ -315,8 +325,8 @@ considered to be quoted and the quote characters will instead be part of the cel
 
 #### Composing quoted values
 If your data might contain characters like the line separator or the cell separator you will need to quote the output when 
-composing a delimited file. You activate quoting by specifying the quote character as described above. Now you have the option
-to specify the quoting behavior on each cell by adding the `quotebehavior` attribute like this:
+composing a delimited file. You have the option
+to specify the quoting behavior on each cell while composing by adding the `quotebehavior` attribute like this:
 ```xml
 ...
       <cell name="First name" quotebehavior="ALWAYS"/>
@@ -324,9 +334,11 @@ to specify the quoting behavior on each cell by adding the `quotebehavior` attri
 ``` 
 There are several options:
 1. **ALWAYS** - Always quote this cell in the output.
-1. **AUTOMATIC** - Quotes the cell only if needed, i.e. only if there is a cell separator, a line separator or a quote character 
+1. **AUTOMATIC** (default) - Quotes the cell only if needed, i.e. only if there is a cell separator, a line separator or a quote character 
 present in the data. This is the default. 
-1. **NEVER** - Never quote this cell. This may lead to invalid delimited output if the cell or line separator is present in the cell value.
+1. **NEVER** - Never quote this cell. This may lead to invalid delimited 
+output if the cell or line separator is present in the cell value but you could benefit from slightly faster execution 
+time if you are 100% sure that there can be no illegal characters in the content. This is the default for atomic types such as integer, boolean and enum.
 1. **REPLACE** - No quoting is done, instead it replaces all illegal characters with non breakable space in order to always 
 guarantee consistency of the delimited output. Can be used if the consumer of the output does not support quoted cells. 
 This is the default if no quote character is specified on the line. 

@@ -20,7 +20,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Locale;
-import java.util.Optional;
 
 /**
  * Builds a {@link Schema} instance from xml that conforms to the JSaPar xsd.
@@ -291,9 +290,12 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         if (xmlFirstLineAsSchema != null)
             schemaLine.setFirstLineAsSchema(getBooleanValue(xmlFirstLineAsSchema));
 
-        String sQuoteChar = getAttributeValue(xmlSchemaLine, ATTRIB_CSV_QUOTE_CHAR);
-        if (sQuoteChar != null)
-            schemaLine.setQuoteChar(sQuoteChar.charAt(0));
+        parseAttribute(xmlSchemaLine, ATTRIB_CSV_QUOTE_CHAR).ifPresent(s->{
+            if(s.equals(QUOTE_CHAR_NONE))
+                schemaLine.disableQuoteChar();
+            else
+                schemaLine.setQuoteChar(s.charAt(0));
+        });
 
         QuoteBehavior quoteBehavior = parseAttribute(xmlSchemaLine, ATTRIB_CSV_QUOTE_BEHAVIOR)
                 .map(QuoteBehavior::valueOf)

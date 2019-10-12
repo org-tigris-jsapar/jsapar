@@ -221,8 +221,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
         xmlSchemaLine.setAttribute(ATTRIB_CSV_SCHEMA_CELL_SEPARATOR, StringUtils.replaceJava2Escapes(schemaLine.getCellSeparator()));
         xmlSchemaLine.setAttribute(ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA, String.valueOf(schemaLine.isFirstLineAsSchema()));
 
-        if(schemaLine.isQuoteCharUsed())
-            xmlSchemaLine.setAttribute(ATTRIB_CSV_QUOTE_CHAR, String.valueOf(schemaLine.getQuoteChar()));
+        xmlSchemaLine.setAttribute(ATTRIB_CSV_QUOTE_CHAR, schemaLine.isQuoteCharUsed() ? String.valueOf(schemaLine.getQuoteChar()): QUOTE_CHAR_NONE);
 
         for (CsvSchemaCell schemaCell : schemaLine.getSchemaCells()) {
             Element xmlCell = extractCsvSchemaCell(xmlDocument, schemaCell);

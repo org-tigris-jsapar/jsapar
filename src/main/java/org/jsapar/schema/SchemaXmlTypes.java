@@ -42,6 +42,8 @@ interface SchemaXmlTypes {
     String ATTRIB_SCHEMA_CELL_DEFAULT_VALUE = "default";
     String ATTRIB_PATTERN = "pattern";
 
+    String QUOTE_CHAR_NONE = "NONE";
+
     String JSAPAR_XML_SCHEMA = "http://jsapar.tigris.org/JSaParSchema/2.0";
 
 }

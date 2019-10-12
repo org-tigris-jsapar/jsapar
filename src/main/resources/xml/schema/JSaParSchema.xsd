@@ -372,26 +372,22 @@ According to RFC 4180, single quotes may not occur inside a quoted cell. This pa
 
                         While composing, the schema is used as usual but an additional header line with the name of each
                         cell, is written first.
-
                     </xsd:documentation>
                 </xsd:annotation>
   			</xsd:attribute>
-  			<xsd:attribute name="quotechar">
+  			<xsd:attribute name="quotechar" default="&quot;">
   				<xsd:annotation>
   					<xsd:documentation>
-  						Specifies if there is a quote character used
-  						to encapsulate cells. Between the quotes, also the cell
+  						Specifies which quote character that should be used
+  						to encapsulate cells. Default is the standard double quote character (").
+                        The value "NONE" disables quoting entirely. Between the quotes, also the cell
   						separator and line separator will be regarded as content of the cell.
-  						A cell is considered to be quoted if and only
-  						if the first and the last character within the
-  						cell is the quote character. Any other quote
-  						characters are considered to be normal
-  						characters and thus becomes part of the cell.
+                        The quoting syntax can be specified on schema level.
   					</xsd:documentation>
   				</xsd:annotation>
   				<xsd:simpleType>
   					<xsd:restriction base="xsd:string">
-  						<xsd:maxLength value="1" />
+  						<xsd:maxLength value="4" />
   						<xsd:minLength value="1" />
   					</xsd:restriction>
   				</xsd:simpleType>

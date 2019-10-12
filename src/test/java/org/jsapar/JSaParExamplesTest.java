@@ -254,6 +254,7 @@ public class JSaParExamplesTest {
         assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(1), "Last name"));
         assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(2), "First name"));
         assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(2), "Last name"));
+        assertEquals("Freddie the \";-) fantastic\"", LineUtils.getStringCellValue(document.getLine(2), "Middle name"));
         assertEquals("2", LineUtils.getStringCellValue(document.getLine(3), "Rowcount"));
     }
 
