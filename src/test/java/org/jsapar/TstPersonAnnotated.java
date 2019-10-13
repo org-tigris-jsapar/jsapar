@@ -1,5 +1,9 @@
 package org.jsapar;
 
+import org.jsapar.parse.bean.JSaParCell;
+import org.jsapar.parse.bean.JSaParContainsCells;
+import org.jsapar.parse.bean.JSaParLine;
+
 import java.util.Date;
 
 /**
@@ -8,23 +12,28 @@ import java.util.Date;
  * @author Jonas Stenberg
  * 
  */
-public class TstPerson {
+@JSaParLine(lineType = "Person")
+public class TstPersonAnnotated {
 
+    @JSaParCell(name = "First name")
     private String         firstName;
+    @JSaParCell(name = "Last name")
     private String         lastName = "Nobody";
     private short          shoeSize;
     private long           luckyNumber;
     private int            streetNumber;
     private char           door;
     private boolean        adult;
+    @JSaParContainsCells
     private TstPostAddress    address;
     private TstPostAddress    workAddress;
     private double         length;
+    @JSaParCell(name = "gender")
     private TstGender      gender;
-    
-    private java.util.Date birthTime;
 
-    public TstPerson(String firstName, String lastName, short shoeSize, long luckyNumber, Date birthTime, int streetNumber, char door) {
+    private Date birthTime;
+
+    public TstPersonAnnotated(String firstName, String lastName, short shoeSize, long luckyNumber, Date birthTime, int streetNumber, char door) {
         super();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -36,9 +45,9 @@ public class TstPerson {
     }
 
     /**
-     * 
+     *
      */
-    public TstPerson() {
+    public TstPersonAnnotated() {
     }
 
     /**
@@ -108,7 +117,7 @@ public class TstPerson {
     /**
      * @return the birthTime
      */
-    public java.util.Date getBirthTime() {
+    public Date getBirthTime() {
         return birthTime;
     }
 
@@ -116,7 +125,7 @@ public class TstPerson {
      * @param birthTime
      *            the birthTime to set
      */
-    public void setBirthTime(java.util.Date birthTime) {
+    public void setBirthTime(Date birthTime) {
         this.birthTime = birthTime;
     }
 

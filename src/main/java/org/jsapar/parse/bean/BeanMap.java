@@ -4,12 +4,10 @@ import org.jsapar.error.BeanException;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaLine;
 
+import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * A class that defines the mapping
@@ -70,6 +68,40 @@ public class BeanMap {
         } catch (ClassNotFoundException e) {
             throw new BeanException("Failed to build bean mapping based on schema", e);
         }
+    }
+
+    /**
+     * Creates a BeanMap instance based on a list of annotated classes. All classes provided need to have the
+     * annotation {@link JSaParLine} and only attributes annotated with {@link JSaParCell} will be mapped to the schema
+     * values.
+     * @param classes A list of annotated classes.
+     * @return A newly created BeanMap instance.
+     */
+    public static BeanMap ofClasses(List<Class> classes) {
+        try {
+            BeanMap beanMap = new BeanMap();
+
+            for (Class c : classes) {
+                if (!c.isAnnotationPresent(JSaParLine.class))
+                    throw new BeanException("The class " + c.getName() + " needs to have the annotation " + JSaParLine.class.getSimpleName() + ". Unable to create bean map.");
+                JSaParLine lineAnnotation = (JSaParLine) c.getAnnotation(JSaParLine.class);
+                beanMap.putBean2Line(c, BeanPropertyMap.ofClass(c, lineAnnotation.lineType()));
+            }
+            return beanMap;
+        } catch (IntrospectionException e) {
+            throw new BeanException("Failed to build bean mapping based on schema", e);
+        }
+    }
+
+    /**
+     * Creates a BeanMap instance based on an annotated class. The provided class needs to have the
+     * annotation {@link JSaParLine} and only attributes annotated with {@link JSaParCell} will be mapped to the schema
+     * values.
+     * @param lineClass The annotated class.
+     * @return A newly created BeanMap instance.
+     */
+    public static BeanMap ofClass(Class lineClass) {
+        return ofClasses(Collections.singletonList(lineClass));
     }
 
     /**

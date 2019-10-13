@@ -8,12 +8,11 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BeanPropertyMap {
     private String lineType;
@@ -88,7 +87,25 @@ public class BeanPropertyMap {
         if(className==null || className.isEmpty()){
             return new BeanPropertyMap(lineType);
         }
-        Class lineClass = Class.forName(className);
+        return ofClass(Class.forName(className), lineType, cellNamesOfProperty);
+    }
+
+    public static BeanPropertyMap ofClass(Class lineClass, String lineType) throws IntrospectionException {
+        return ofClass(lineClass,
+                lineType,
+                makeFieldEntryStream(lineClass, "")
+                .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue)));
+    }
+
+    private static Stream< Map.Entry<String, String> > makeFieldEntryStream(Class c, String prefix) {
+        return Arrays.stream(c.getDeclaredFields())
+                .filter(f->f.isAnnotationPresent(JSaParCell.class) || (f.isAnnotationPresent(JSaParContainsCells.class) && !f.getType().isPrimitive()))
+                .flatMap(f-> f.isAnnotationPresent(JSaParCell.class)
+                        ? Stream.of(new AbstractMap.SimpleEntry<>(prefix + f.getName(), f.getAnnotation(JSaParCell.class).name()))
+                        : makeFieldEntryStream(f.getType(), prefix + f.getName() + '.'));
+    }
+
+    private static BeanPropertyMap ofClass(Class lineClass, String lineType, Map<String, String> cellNamesOfProperty) throws IntrospectionException {
         BeanPropertyMap beanPropertyMap = new BeanPropertyMap(lineType, lineClass);
 
         Map<String, PropertyDescriptor> descriptors = Arrays.stream(beanPropertyMap.beanInfo.getPropertyDescriptors())
@@ -109,6 +126,7 @@ public class BeanPropertyMap {
         }
         return beanPropertyMap;
     }
+
 
     private static void cellOfChildObject(String cellName, String propertyName, BeanPropertyMap beanPropertyMap, Map<String, PropertyDescriptor> descriptors) throws IntrospectionException {
         if(propertyName.contains(".")){

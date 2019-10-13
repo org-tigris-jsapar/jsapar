@@ -18,6 +18,7 @@ import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -417,6 +418,60 @@ public class JSaParExamplesTest {
             RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
             converter.convert(fileReader, beanEventListener);
             List<TstPerson> people = beanEventListener.getBeans();
+
+            assertEquals(2, people.size());
+            assertEquals("Erik", people.get(0).getFirstName());
+            assertEquals("Svensson", people.get(0).getLastName());
+
+            assertEquals("Fredrik", people.get(1).getFirstName());
+            assertEquals("Larsson", people.get(1).getLastName());
+        }
+    }
+
+    /**
+     * Example that displays how to use an existing schema that does not use bean property names and still use it to
+     * compose a csv based on a list of beans by using a bean map that maps between the bean property names and the schema
+     * names.
+     */
+    @Test
+    public final void testExampleBeanToCsv06_annotated()
+            throws SchemaException, IOException, ParseException {
+
+        List<TstPersonAnnotated> people = new LinkedList<>();
+        TstPersonAnnotated testPerson1 = new TstPersonAnnotated("Nils", "Holgersson", (short) 4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9, 'A');
+        testPerson1.setGender(TstGender.M);
+        testPerson1.setAddress(new TstPostAddress("Track", "Village"));
+        people.add(testPerson1);
+
+        TstPersonAnnotated testPerson2 = new TstPersonAnnotated("Jonathan", "Lionheart", (short) 37, 17, dateFormat.parse("1955-03-17 12:33:12"), 123456, 'C');
+        testPerson2.setAddress(new TstPostAddress("Path", "City"));
+        testPerson2.setGender(TstGender.M);
+        people.add(testPerson2);
+
+        BeanCollection2TextConverter<TstPersonAnnotated> converter;
+        try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml")) {
+            converter = new BeanCollection2TextConverter<>(Schema.ofXml(schemaReader), BeanMap.ofClasses(Collections.singletonList(TstPersonAnnotated.class)));
+        }
+        StringWriter writer = new StringWriter();
+        converter.convert(people, writer);
+
+        String result = writer.toString();
+        String[] resultLines = result.split("\n");
+//        System.out.println(result);
+        assertEquals("B;\"Nils\";;Holgersson;M", resultLines[0]);
+        assertEquals("B;\"Jonathan\";;Lionheart;M", resultLines[1]);
+    }
+
+    @Test
+    public final void testExampleCsvToBean06_annotated()
+            throws IOException, JSaParException {
+        try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
+             Reader fileReader = new FileReader("examples/06_NamesControlCell.csv")) {
+            Text2BeanConverter converter = new Text2BeanConverter(Schema.ofXml(schemaReader), BeanMap.ofClasses(Collections.singletonList(TstPersonAnnotated.class)));
+            converter.getComposeConfig().setOnUndefinedLineType(ValidationAction.OMIT_LINE);
+            RecordingBeanEventListener<TstPersonAnnotated> beanEventListener = new RecordingBeanEventListener<>();
+            converter.convert(fileReader, beanEventListener);
+            List<TstPersonAnnotated> people = beanEventListener.getBeans();
 
             assertEquals(2, people.size());
             assertEquals("Erik", people.get(0).getFirstName());
