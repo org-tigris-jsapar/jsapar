@@ -10,7 +10,7 @@ title: Release notes
 * Support for quote syntax RFC4180 which makes both the CSV parser and composer compliant to the RFC 4180 standard regarding quoting.
 * Support for enum cell type and mapping between enum values and text representation. See chapter about [enum format](basics_schema#enum_format) in the article [Basics of Schema](basics_schema).
 * The command line utility is now capable of also transforming the output by using a XSLT file.
-* Added class ByLineTypeLineEventListener. A convenience class that acts as a subscription hub for line parsed events.
+* Added class **ByLineTypeLineEventListener**. A convenience class that acts as a subscription hub for line parsed events.
 * When converting to and from java beans, it is now possible to map schema line types and 
  cell names by using annotations in the target class instead of providing a bean map as an xml. 
 ## 2.0

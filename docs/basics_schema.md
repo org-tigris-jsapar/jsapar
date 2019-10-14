@@ -254,7 +254,7 @@ you may specify an empty pattern that matches any number of white space characte
 The problem with delimited (CSV) data is that the value of a specific cell may also contain the delimiter character or even the line separator. 
 In order to handle this scenario the JSaPar library is capable of handling quoted cells. 
 
-The support for quoted quoted values is activated by default and the default quote character is the standard quote character("). 
+The support for quoted quoted values is activated by default and the default quote character is the standard double quote character("). 
 You can specify a different quote character with the `quotechar` attribute:
 ```xml
 ...

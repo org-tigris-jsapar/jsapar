@@ -31,7 +31,7 @@ public class CsvSchemaLine extends SchemaLine {
     private String cellSeparator = ";";
 
     /**
-     * Specifies quote characters used to encapsulate cells. Default is the standard quote character (").
+     * Specifies quote characters used to encapsulate cells. Default is the standard double quote character (").
      * Disable quoting by calling {@link #disableQuoteChar()}.
      * <p>
      * If quoted cells contain cell separator or line separator characters, these will be treated as content of the cell
