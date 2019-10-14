@@ -486,16 +486,15 @@ public class JSaParExamplesTest {
     public final void testExampleCsvToBean06_beanMapOverride()
             throws IOException, JSaParException, ClassNotFoundException {
         try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
-                Reader fileReader = new FileReader("examples/06_NamesControlCell.csv");
-        Reader beanMapReader = new FileReader("examples/06_BeanMapOverride.xml")) {
-            final BeanMap overrideBeanMap = BeanMap.ofXml(beanMapReader);
+                Reader fileReader = new FileReader("examples/06_NamesControlCell.csv")) {
+            final BeanMap overrideBeanMap = BeanMap.ofClass(TstPersonAnnotated.class);
             final Schema parseSchema = Schema.ofXml(schemaReader);
             BeanMap beanMap = BeanMap.ofSchema(parseSchema, overrideBeanMap);
             Text2BeanConverter converter = new Text2BeanConverter(parseSchema, beanMap);
             converter.getComposeConfig().setOnUndefinedLineType(ValidationAction.OMIT_LINE);
-            RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
+            RecordingBeanEventListener<TstPersonAnnotated> beanEventListener = new RecordingBeanEventListener<>();
             converter.convert(fileReader, beanEventListener);
-            List<TstPerson> people = beanEventListener.getBeans();
+            List<TstPersonAnnotated> people = beanEventListener.getBeans();
 
             assertEquals(2, people.size());
             assertEquals("Erik", people.get(0).getFirstName());

@@ -1,15 +1,17 @@
 package org.jsapar.parse.bean;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Annotation that maps a java bean to a line type in a schema.
  */
+@Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface JSaParLine {
-    public String lineType();
+
+    /**
+     * @return The type of the line, as described in the schema, that this class should be mapped to.
+     */
+    String lineType();
 }
