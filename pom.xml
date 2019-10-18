@@ -34,9 +34,9 @@
   
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.release>8</maven.compiler.release>
 		<project.scm.id>github.com</project.scm.id>
 		<gpg.skip>false</gpg.skip>
+		<java.version>8</java.version>
 	</properties>
 
 	<developers>
@@ -141,8 +141,33 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
+				<!-- These extra executions are just a way to verify that module-info.java is correct but ignored for
+				java 8. Remove this section when release is higher than 8.
+				 -->
+				<executions>
+					<execution>
+						<id>default-compile</id>
+						<configuration>
+							<!-- compile everything to ensure module-info contains right entries -->
+							<release>9</release>
+						</configuration>
+					</execution>
+					<execution>
+						<id>base-compile</id>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<!-- recompile everything for target VM except the module-info.java -->
+						<configuration>
+							<excludes>
+								<exclude>module-info.java</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+				<!-- defaults for compile and testCompile -->
 				<configuration>
-					<release>${maven.compiler.release}</release>
+					<release>${java.version}</release>
 				</configuration>
 			</plugin>
       
@@ -152,7 +177,6 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>3.1.1</version>
 			<configuration>
-				<source>8</source>
 				<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
 			</configuration>
             <executions>
