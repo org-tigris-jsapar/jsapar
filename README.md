@@ -6,7 +6,9 @@
 [![Java 8](https://img.shields.io/badge/java-8-brightgreen.svg)](#java-8)
 [![Java 9-ea](https://img.shields.io/badge/java-9-brightgreen.svg)](#java-9)
 [![Java 10-ea](https://img.shields.io/badge/java-10-brightgreen.svg)](#java-10)
-[![Java 10-ea](https://img.shields.io/badge/java-11-brightgreen.svg)](#java-11)
+[![Java 11-ea](https://img.shields.io/badge/java-11-brightgreen.svg)](#java-11)
+[![Java 12-ea](https://img.shields.io/badge/java-12-brightgreen.svg)](#java-12)
+[![Java 13-ea](https://img.shields.io/badge/java-13-brightgreen.svg)](#java-13)
 # jsapar
 **JSaPar** stands for  **J**ava **S**chem**a** based **Par**ser
 
