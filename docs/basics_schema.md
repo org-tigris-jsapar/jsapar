@@ -11,7 +11,7 @@ The example below describes a simple schema for a CSV file taken from the first 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 http://jsapar.tigris.org/JSaParSchema/2.0/JSaParSchema.xsd">
+   xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd">
    <csvschema lineseparator="\n">
     <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;">
       <cell name="First name" />
@@ -28,7 +28,7 @@ In the schema above, I have added the xsi:schemaLocation which helps intelligent
 a lot of documentation about the details of each allowed element and attribute within the schema xml. A published version
 of the schema is located at. 
 
-[http://jsapar.tigris.org/JSaParSchema/2.0/JSaParSchema.xsd](http://jsapar.tigris.org/JSaParSchema/2.0/JSaParSchema.xsd)
+[http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd](http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd)
 
 If you want to download the XSD as a file, you will probably need to right click on the link above and choose *"Save link as..."* depending on your browser.
 
