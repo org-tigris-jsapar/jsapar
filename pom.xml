@@ -34,7 +34,6 @@
   
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>8</java.version>
 		<project.scm.id>github.com</project.scm.id>
 		<gpg.skip>false</gpg.skip>
 	</properties>
@@ -167,7 +166,7 @@
 				</executions>
 				<!-- defaults for compile and testCompile -->
 				<configuration>
-					<release>${java.version}</release>
+					<release>8</release>
 				</configuration>
 			</plugin>
       
