@@ -73,7 +73,7 @@ public class Xml2BeanMapBuilder implements XmlTypes {
                 .collect(Collectors.toMap(e -> e.getAttribute("name"), e -> e.getAttribute("cellname")));
         try {
             return BeanPropertyMap.ofPropertyNames(className, lineType, cellNamesOfProperty);
-        } catch (ClassNotFoundException | IntrospectionException e) {
+        } catch (ClassNotFoundException e) {
             throw new JSaParException("Failed to build property map", e);
         }
     }

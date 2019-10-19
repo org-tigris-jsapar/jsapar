@@ -8,8 +8,8 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
 import org.jsapar.parse.CellParseException;
+import org.jsapar.parse.bean.reflect.PropertyDescriptor;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
