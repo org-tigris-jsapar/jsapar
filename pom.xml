@@ -34,9 +34,9 @@
   
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>8</java.version>
 		<project.scm.id>github.com</project.scm.id>
 		<gpg.skip>false</gpg.skip>
-		<java.version>8</java.version>
 	</properties>
 
 	<developers>
