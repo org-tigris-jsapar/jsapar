@@ -1,13 +1,9 @@
 language: java
 
 jdk:
-  - openjdk9
-  - openjdk10
   - openjdk11
   - openjdk12
   - openjdk13
-#  - oraclejdk9
-#  - oraclejdk11
 
 sudo: false
 install: mvn install -Dgpg.skip -DskipTests -Dmaven.javadoc.skip=true -B -V
