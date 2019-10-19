@@ -1,9 +1,11 @@
-package org.jsapar.parse.bean;
+package org.jsapar.bean;
 
 import java.lang.annotation.*;
 
 /**
  * Annotation that maps a java bean to a line type in a schema.
+ * @see JSaParCell
+ * @see JSaParContainsCells
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

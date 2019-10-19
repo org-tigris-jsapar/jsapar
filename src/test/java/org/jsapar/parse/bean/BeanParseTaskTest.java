@@ -1,11 +1,10 @@
 package org.jsapar.parse.bean;
 
 import org.jsapar.TstPerson;
+import org.jsapar.bean.BeanMap;
 import org.jsapar.model.*;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.schema.Schema;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.beans.IntrospectionException;

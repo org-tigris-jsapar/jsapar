@@ -1,10 +1,10 @@
-package org.jsapar.parse.bean;
+package org.jsapar.bean;
 
 import org.jsapar.error.BeanException;
+import org.jsapar.parse.bean.BeanPropertyMap;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaLine;
 
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
@@ -13,10 +13,14 @@ import java.util.*;
  * A class that defines the mapping
  * <ol><li>Between the bean class and the line type</li>
  * <li>Between each bean property and the cell name</li></ol>
+ * Instances can be created either from a schema, from an xml file or from one or several annotated classes.
+ * @see JSaParLine
+ * @see JSaParCell
+ * @see JSaParContainsCells
  */
 public class BeanMap {
 
-    private Map<Class, BeanPropertyMap> beanPropertyMap = new HashMap<>();
+    private Map<Class, BeanPropertyMap>  beanPropertyMap           = new HashMap<>();
     private Map<String, BeanPropertyMap> beanPropertyMapByLineType = new HashMap<>();
 
     /**
@@ -24,7 +28,7 @@ public class BeanMap {
      * @return An optional {@link BeanPropertyMap} that can be used for supplied class or any of its super classes. Empty if
      * no {@link BeanPropertyMap} was mapped that can be used for supplied class.
      */
-    Optional<BeanPropertyMap> getBeanPropertyMap(Class<?> aClass) {
+    public Optional<BeanPropertyMap> getBeanPropertyMap(Class<?> aClass) {
         BeanPropertyMap beanPropertyMap = this.beanPropertyMap.get(aClass);
         if (beanPropertyMap != null)
             return Optional.of(beanPropertyMap);
@@ -78,19 +82,17 @@ public class BeanMap {
      * @return A newly created BeanMap instance.
      */
     public static <C> BeanMap ofClasses(List<Class<C> > classes) {
-        try {
-            BeanMap beanMap = new BeanMap();
+        BeanMap beanMap = new BeanMap();
 
-            for (Class c : classes) {
-                if (!c.isAnnotationPresent(JSaParLine.class))
-                    throw new BeanException("The class " + c.getName() + " needs to have the annotation " + JSaParLine.class.getSimpleName() + ". Unable to create bean map.");
-                JSaParLine lineAnnotation = (JSaParLine) c.getAnnotation(JSaParLine.class);
-                beanMap.putBean2Line(c, BeanPropertyMap.ofClass(c, lineAnnotation.lineType()));
-            }
-            return beanMap;
-        } catch (IntrospectionException e) {
-            throw new BeanException("Failed to build bean mapping based on schema", e);
+        for (Class c : classes) {
+            if (!c.isAnnotationPresent(JSaParLine.class))
+                throw new BeanException(
+                        "The class " + c.getName() + " needs to have the annotation " + JSaParLine.class.getSimpleName()
+                                + ". Unable to create bean map.");
+            JSaParLine lineAnnotation = (JSaParLine) c.getAnnotation(JSaParLine.class);
+            beanMap.putBean2Line(c, BeanPropertyMap.ofClass(c, lineAnnotation.lineType()));
         }
+        return beanMap;
     }
 
     /**
@@ -166,6 +168,13 @@ public class BeanMap {
         return beanMap;
     }
 
+    /**
+     * Creates an instance based on xml that is read from the supplied reader.
+     * @param reader The reader to read xml from.
+     * @return A newly created instance
+     * @throws IOException In case of io error
+     * @throws ClassNotFoundException If one of the classes specified in the xml does not exist in the classpath.
+     */
     public static BeanMap ofXml(Reader reader) throws IOException, ClassNotFoundException {
         Xml2BeanMapBuilder builder = new Xml2BeanMapBuilder();
         return builder.build(reader);

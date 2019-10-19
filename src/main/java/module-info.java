@@ -1,6 +1,7 @@
 module org.jsapar {
     requires java.desktop;
     exports org.jsapar;
+    exports org.jsapar.bean;
     exports org.jsapar.compose;
     exports org.jsapar.compose.bean;
     exports org.jsapar.concurrent;

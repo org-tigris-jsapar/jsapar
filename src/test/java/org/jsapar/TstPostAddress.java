@@ -1,6 +1,6 @@
 package org.jsapar;
 
-import org.jsapar.parse.bean.JSaParCell;
+import org.jsapar.bean.JSaParCell;
 
 public class TstPostAddress {
     @JSaParCell(name = "Street")

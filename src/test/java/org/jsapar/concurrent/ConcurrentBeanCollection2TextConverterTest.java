@@ -4,7 +4,7 @@ import org.jsapar.BeanCollection2TextConverter;
 import org.jsapar.TstPerson;
 import org.jsapar.TstPostAddress;
 import org.jsapar.model.CellType;
-import org.jsapar.parse.bean.BeanMap;
+import org.jsapar.bean.BeanMap;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;

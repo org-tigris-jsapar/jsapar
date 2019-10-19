@@ -1,7 +1,8 @@
-package org.jsapar.parse.bean;
+package org.jsapar.bean;
 
 import org.jsapar.error.BeanException;
 import org.jsapar.error.JSaParException;
+import org.jsapar.parse.bean.BeanPropertyMap;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.jsapar.utils.XmlTypes;

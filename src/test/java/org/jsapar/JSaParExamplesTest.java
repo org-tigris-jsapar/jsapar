@@ -6,7 +6,7 @@ import org.jsapar.error.JSaParException;
 import org.jsapar.error.ValidationAction;
 import org.jsapar.model.*;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
-import org.jsapar.parse.bean.BeanMap;
+import org.jsapar.bean.BeanMap;
 import org.jsapar.parse.xml.XmlParser;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaException;

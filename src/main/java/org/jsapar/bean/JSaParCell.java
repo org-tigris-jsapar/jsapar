@@ -1,10 +1,11 @@
-package org.jsapar.parse.bean;
+package org.jsapar.bean;
 
 import java.lang.annotation.*;
 
 /**
  * Maps a bean attribute to a schema cell. If the bean contains complex attributes that by themselves can contain cell
  * declaration, these complex attributes needs to be annotated with {@link JSaParContainsCells}
+ * @see JSaParContainsCells
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

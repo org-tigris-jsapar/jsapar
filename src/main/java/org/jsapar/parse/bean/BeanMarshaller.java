@@ -1,6 +1,7 @@
 package org.jsapar.parse.bean;
 
 import org.jsapar.BeanCollection2TextConverter;
+import org.jsapar.bean.BeanMap;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
@@ -13,7 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 /**
- * Builds {@link Line} objects from single bean instances. The {@link Line#lineType} of each line will be
+ * Builds {@link Line} objects from single bean instances. The {@link Line#getLineType()} of each line will be
  * the name of the class denoted by {@link Class#getName()}. Each bean property that have a getter method will result in
  * a cell with the bean property name The {@link Cell#getName()} of each cell will be the name of the bean property, e.g. if
  * the bean has a method declared as {@code public int getNumber()}, it will result in a cell with the name "number" of
@@ -56,7 +57,6 @@ public class BeanMarshaller<T>  {
     }
 
 
-    @SuppressWarnings("unchecked")
     private void marshal(Line line, Object object, BeanPropertyMap beanPropertyMap, ErrorEventListener errorListener) {
 
         for (Bean2Cell bean2Cell : beanPropertyMap.getBean2Cells()) {

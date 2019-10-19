@@ -1,5 +1,7 @@
 package org.jsapar.parse.bean;
 
+import org.jsapar.bean.JSaParCell;
+import org.jsapar.bean.JSaParContainsCells;
 import org.jsapar.error.BeanException;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
@@ -8,7 +10,6 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public class BeanPropertyMap {
         this.lineClass = lineClass;
     }
 
-    boolean ignoreLine(){
+    public boolean ignoreLine(){
         return lineClass == null;
     }
 
@@ -58,7 +59,7 @@ public class BeanPropertyMap {
         return lineClass.getConstructor().newInstance();
     }
 
-    static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine, BeanPropertyMap overrideValues) {
+    public static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine, BeanPropertyMap overrideValues) {
         try {
             if(overrideValues.ignoreLine())
                 return overrideValues;
@@ -74,7 +75,7 @@ public class BeanPropertyMap {
         }
     }
 
-    static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine) throws BeanException {
+    public static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine) throws BeanException {
         try {
             return ofPropertyNames(schemaLine.getLineType(), schemaLine.getLineType(), schemaLine.stream().collect(Collectors.toMap(SchemaCell::getName, SchemaCell::getName)));
         } catch (ClassNotFoundException |IntrospectionException e) {
@@ -90,11 +91,15 @@ public class BeanPropertyMap {
         return ofClass(Class.forName(className), lineType, cellNamesOfProperty);
     }
 
-    public static BeanPropertyMap ofClass(Class lineClass, String lineType) throws IntrospectionException {
-        return ofClass(lineClass,
-                lineType,
-                makeFieldEntryStream(lineClass, "")
-                .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue)));
+    public static BeanPropertyMap ofClass(Class lineClass, String lineType)  {
+        try {
+            return ofClass(lineClass,
+                    lineType,
+                    makeFieldEntryStream(lineClass, "")
+                    .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue)));
+        } catch (IntrospectionException e) {
+            throw new BeanException("Failed to mapp line type " + lineType + " to class " + lineClass.getName(), e);
+        }
     }
 
     private static Stream< Map.Entry<String, String> > makeFieldEntryStream(Class c, String prefix) {
@@ -171,7 +176,7 @@ public class BeanPropertyMap {
         putBean2Cell(propertyName, bean2Cell.getCellName(), bean2Cell);
     }
 
-    Class getLineClass() {
+    public Class getLineClass() {
         return lineClass;
     }
 

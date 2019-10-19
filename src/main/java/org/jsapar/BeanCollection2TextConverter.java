@@ -2,7 +2,7 @@ package org.jsapar;
 
 import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.ConvertTask;
-import org.jsapar.parse.bean.BeanMap;
+import org.jsapar.bean.BeanMap;
 import org.jsapar.parse.bean.BeanParseTask;
 import org.jsapar.schema.Schema;
 

@@ -13,7 +13,10 @@ title: Release notes
 * Added class **ByLineTypeLineEventListener**. A convenience class that acts as a subscription hub for line parsed events.
 * When converting to and from java beans, it is now possible to map schema line types and 
  cell names by using annotations in the target class instead of providing a bean map as an xml. 
-* This version of the library requires at least Java 9 to build but the binaries are still built for release 8.
+* This version of the library requires at least Java 11 to build but the official binaries are still built for Java release 8.
+* The following classes has moved to package `org.jsapar.bean` in order to make them visible externally when introducing modules: 
+  * org.jsapar.parse.bean.BeanMap
+  * org.jsapar.parse.bean.Xml2BeanMapBuilder
 ## 2.0
 ### 2.0.2
 1. Introduced schema cell properties that controls whether pad characters and leading spaces should be trimmed or not while parsing.

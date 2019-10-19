@@ -1,4 +1,4 @@
-package org.jsapar.parse.bean;
+package org.jsapar.bean;
 
 import java.lang.annotation.*;
 

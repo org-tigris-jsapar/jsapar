@@ -1,8 +1,8 @@
 package org.jsapar;
 
-import org.jsapar.parse.bean.JSaParCell;
-import org.jsapar.parse.bean.JSaParContainsCells;
-import org.jsapar.parse.bean.JSaParLine;
+import org.jsapar.bean.JSaParCell;
+import org.jsapar.bean.JSaParContainsCells;
+import org.jsapar.bean.JSaParLine;
 
 import java.util.Date;
 
