@@ -17,6 +17,7 @@ title: Release notes
 * The following classes has moved to package `org.jsapar.bean` in order to make them visible externally when introducing modules: 
   * org.jsapar.parse.bean.BeanMap
   * org.jsapar.parse.bean.Xml2BeanMapBuilder
+* Removed dependency to `java.beans` package since that imposed dependency to `java.desktop` module.
 ## 2.0
 ### 2.0.2
 1. Introduced schema cell properties that controls whether pad characters and leading spaces should be trimmed or not while parsing.
