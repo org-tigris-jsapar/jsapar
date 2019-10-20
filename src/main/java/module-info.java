@@ -1,5 +1,5 @@
 module org.jsapar {
-    requires java.desktop;
+    requires java.xml;
     exports org.jsapar;
     exports org.jsapar.bean;
     exports org.jsapar.compose;
