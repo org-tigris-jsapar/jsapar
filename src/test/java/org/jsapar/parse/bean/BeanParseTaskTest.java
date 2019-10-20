@@ -7,7 +7,6 @@ import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.schema.Schema;
 import org.junit.Test;
 
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,7 +30,7 @@ public class BeanParseTaskTest {
     }
 
     @Test
-    public void testBuild() throws IntrospectionException, ClassNotFoundException, IOException {
+    public void testBuild() throws ClassNotFoundException, IOException {
         List<TstPerson> people = new ArrayList<>(2);
         TstPerson person = new TstPerson();
         person.setFirstName("Jonas");
