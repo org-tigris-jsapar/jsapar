@@ -111,7 +111,7 @@ public final class BeanInfoReflection implements BeanInfo {
                 Character.isUpperCase(methodName.charAt(prefixLength))){
             return methodName.substring(prefixLength);
         }
-        char chars[] = methodName.toCharArray();
+        char[] chars = methodName.toCharArray();
         chars[prefixLength] = Character.toLowerCase(chars[prefixLength]);
         return new String(chars, prefixLength, methodName.length()-prefixLength);
     }
