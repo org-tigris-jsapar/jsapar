@@ -77,7 +77,7 @@ public class BeanMap {
      * @param classes A list of annotated classes.
      * @return A newly created BeanMap instance.
      */
-    public static BeanMap ofClasses(List<Class> classes) {
+    public static <C> BeanMap ofClasses(List<Class<C> > classes) {
         try {
             BeanMap beanMap = new BeanMap();
 
@@ -100,7 +100,7 @@ public class BeanMap {
      * @param lineClass The annotated class.
      * @return A newly created BeanMap instance.
      */
-    public static BeanMap ofClass(Class lineClass) {
+    public static <C> BeanMap ofClass(Class<C> lineClass) {
         return ofClasses(Collections.singletonList(lineClass));
     }
 
@@ -124,7 +124,8 @@ public class BeanMap {
                 BeanPropertyMap overridePropertyMap = overrideValues.beanPropertyMapByLineType
                         .get(schemaLine.getLineType());
                 if (overridePropertyMap == null) {
-                    beanMap.putBean2Line(schemaLine.getLineType(), BeanPropertyMap.ofSchemaLine(schemaLine));
+                    if(schemaLine.getLineType().contains(".") || classExists(schemaLine.getLineType()))
+                        beanMap.putBean2Line(schemaLine.getLineType(), BeanPropertyMap.ofSchemaLine(schemaLine));
                 } else {
                     final BeanPropertyMap beanPropertyMap = BeanPropertyMap
                             .ofSchemaLine(schemaLine, overridePropertyMap);
@@ -135,6 +136,20 @@ public class BeanMap {
             return beanMap;
         } catch (ClassNotFoundException e) {
             throw new BeanException("Failed to build bean mapping based on schema", e);
+        }
+    }
+
+    /**
+     * Please refactor if there is a better way of doing this.
+     * @param className  The full name of the class
+     * @return true if class exists, false otherwise.
+     */
+    private static boolean classExists(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
         }
     }
 
