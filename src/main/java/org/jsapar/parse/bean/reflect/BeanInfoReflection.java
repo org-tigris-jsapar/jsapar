@@ -30,7 +30,7 @@ public final class BeanInfoReflection implements BeanInfo {
         Map<String, PropertyDescriptor> descriptors = new HashMap<>();
 
         Map<String, Method> getters = propertyMethodsStream(c, GET_PREFIX)
-                .filter(m->m.getParameterCount()==0 )
+                .filter(m->m.getParameterCount()==0 && !m.getReturnType().equals(Void.TYPE))
                 .collect(Collectors.toMap(m->propertyName(m.getName(), GET_PREFIX.length()), m->m));
 
         Map<String, Method> isers = propertyMethodsStream(c, IS_PREFIX)

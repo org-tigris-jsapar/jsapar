@@ -55,6 +55,19 @@ public class BeanInfoReflectionTest {
         public String getoutofhere(){
             return "now";
         }
+
+        public String get(){
+            return "that thing";
+        }
+
+        public void set(String s){
+        }
+
+        public String getWithArgs(String key){
+            return "value";
+        }
+
+        public void getVoid(){}
     }
 
     @Test
@@ -76,6 +89,10 @@ public class BeanInfoReflectionTest {
         assertFalse(properties.containsKey("private"));
         // Ignore when first letter after get is not capital.
         assertFalse(properties.containsKey("outofhere"));
+        // Ignore getters with arguments
+        assertFalse(properties.containsKey("withArgs"));
+        // Ignore getters with void as return type
+        assertFalse(properties.containsKey("void"));
 
         assertEquals("isThat", properties.get("that").getReadMethod().getName());
         assertNull(properties.get("that").getWriteMethod());
