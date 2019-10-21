@@ -4,6 +4,7 @@ module org.jsapar {
     exports org.jsapar.bean;
     exports org.jsapar.compose;
     exports org.jsapar.compose.bean;
+    exports org.jsapar.compose.string;
     exports org.jsapar.concurrent;
     exports org.jsapar.convert;
     exports org.jsapar.error;
