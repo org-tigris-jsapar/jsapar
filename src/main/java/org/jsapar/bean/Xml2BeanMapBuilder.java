@@ -12,7 +12,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.beans.IntrospectionException;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.List;
