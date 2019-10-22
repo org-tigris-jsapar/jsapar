@@ -1,6 +1,6 @@
 package org.jsapar.parse.fixed;
 
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
 
 import java.io.IOException;

@@ -5,7 +5,7 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.parse.line.LineDecoratorErrorEventListener;
 import org.jsapar.parse.line.ValidationHandler;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 

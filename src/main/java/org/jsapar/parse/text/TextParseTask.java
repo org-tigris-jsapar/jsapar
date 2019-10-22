@@ -4,6 +4,7 @@ import org.jsapar.parse.AbstractParseTask;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.ParseTask;
 import org.jsapar.schema.Schema;
+import org.jsapar.text.TextParseConfig;
 
 import java.io.IOException;
 import java.io.Reader;

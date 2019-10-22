@@ -1,9 +1,7 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
-import org.jsapar.text.BooleanFormat;
-import org.junit.After;
-import org.junit.Before;
+import org.jsapar.utils.text.BooleanFormat;
 import org.junit.Test;
 
 import java.time.LocalDate;

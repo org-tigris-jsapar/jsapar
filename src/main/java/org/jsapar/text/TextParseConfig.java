@@ -1,4 +1,4 @@
-package org.jsapar.parse.text;
+package org.jsapar.text;
 
 import org.jsapar.error.ValidationAction;
 

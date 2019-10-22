@@ -6,7 +6,7 @@ import org.jsapar.compose.string.StringComposedEventListener;
 import org.jsapar.compose.string.StringComposer;
 import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.ConvertTask;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
 

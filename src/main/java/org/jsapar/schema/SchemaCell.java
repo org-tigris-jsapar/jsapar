@@ -4,7 +4,7 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.EmptyCell;
 import org.jsapar.parse.cell.CellParser;
-import org.jsapar.text.EnumFormat;
+import org.jsapar.utils.text.EnumFormat;
 
 import java.util.Locale;
 

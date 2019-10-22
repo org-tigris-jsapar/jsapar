@@ -2,7 +2,7 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
 import org.jsapar.model.StringCell;
-import org.jsapar.text.RegExpFormat;
+import org.jsapar.utils.text.RegExpFormat;
 
 import java.text.Format;
 import java.text.ParseException;

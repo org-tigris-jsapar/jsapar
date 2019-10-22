@@ -2,7 +2,7 @@ package org.jsapar;
 
 import org.jsapar.parse.AbstractParser;
 import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
 

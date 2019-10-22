@@ -1,4 +1,4 @@
-package org.jsapar.text;
+package org.jsapar.utils.text;
 
 import java.text.FieldPosition;
 import java.text.Format;

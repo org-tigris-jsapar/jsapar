@@ -4,7 +4,7 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.EnumCell;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
-import org.jsapar.text.EnumFormat;
+import org.jsapar.utils.text.EnumFormat;
 
 import java.text.Format;
 import java.text.ParseException;

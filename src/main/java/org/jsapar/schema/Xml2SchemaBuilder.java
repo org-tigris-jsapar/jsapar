@@ -1,7 +1,7 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
-import org.jsapar.text.EnumFormat;
+import org.jsapar.utils.text.EnumFormat;
 import org.jsapar.utils.StringUtils;
 import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Attr;

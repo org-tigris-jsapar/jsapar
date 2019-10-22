@@ -6,10 +6,8 @@ import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.error.ThresholdRecordingErrorEventListener;
 import org.jsapar.model.CellType;
 import org.jsapar.model.StringCell;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.*;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;

@@ -5,7 +5,7 @@ import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.ConvertTask;
 import org.jsapar.error.BeanException;
 import org.jsapar.bean.BeanMap;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
 

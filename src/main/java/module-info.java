@@ -11,4 +11,5 @@ module org.jsapar {
     exports org.jsapar.model;
     exports org.jsapar.parse;
     exports org.jsapar.schema;
+    exports org.jsapar.text;
 }
