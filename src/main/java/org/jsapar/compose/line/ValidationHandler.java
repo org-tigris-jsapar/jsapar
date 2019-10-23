@@ -1,5 +1,6 @@
-package org.jsapar.compose;
+package org.jsapar.compose.line;
 
+import org.jsapar.compose.ComposeException;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ValidationAction;

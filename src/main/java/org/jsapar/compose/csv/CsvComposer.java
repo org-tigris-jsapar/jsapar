@@ -1,7 +1,7 @@
 package org.jsapar.compose.csv;
 
-import org.jsapar.compose.AbstractSchemaComposer;
-import org.jsapar.compose.SchemaComposer;
+import org.jsapar.compose.internal.AbstractSchemaComposer;
+import org.jsapar.compose.internal.SchemaComposer;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaLine;
 
