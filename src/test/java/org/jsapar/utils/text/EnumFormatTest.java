@@ -1,4 +1,4 @@
-package org.jsapar.text;
+package org.jsapar.utils.text;
 
 import org.jsapar.utils.text.EnumFormat;
 import org.junit.Test;
