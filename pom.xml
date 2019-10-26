@@ -36,6 +36,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.scm.id>github.com</project.scm.id>
 		<gpg.skip>false</gpg.skip>
+		<java.release>11</java.release>
 	</properties>
 
 	<developers>
@@ -77,34 +78,6 @@
 	</distributionManagement>
 
 	<build>
-		<resources>
-			<resource>
-				<filtering>false</filtering>
-				<directory>src/main/resources</directory>
-			</resource>
-			<resource>
-				<filtering>false</filtering>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**</include>
-				</includes>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<filtering>false</filtering>
-				<directory>src/test/java</directory>
-				<includes>
-					<include>**/*Test.java</include>
-				</includes>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</testResource>
-		</testResources>
 
 		<plugins>
 			<plugin>
@@ -140,33 +113,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
-				<!-- These extra executions are just a way to verify that module-info.java is correct but ignored for
-				java 8. Remove this section when release is higher than 8.
-				 -->
-				<executions>
-					<execution>
-						<id>default-compile</id>
-						<configuration>
-							<!-- compile everything to ensure module-info contains right entries -->
-							<release>11</release>
-						</configuration>
-					</execution>
-					<execution>
-						<id>base-compile</id>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-						<!-- recompile everything for target VM except the module-info.java -->
-						<configuration>
-							<excludes>
-								<exclude>module-info.java</exclude>
-							</excludes>
-						</configuration>
-					</execution>
-				</executions>
-				<!-- defaults for compile and testCompile -->
 				<configuration>
-					<release>8</release>
+					<release>${java.release}</release>
 				</configuration>
 			</plugin>
       
@@ -289,6 +237,50 @@
 		</pluginManagement>
 	</build>
 
+	<profiles>
+		<profile>
+			<id>release-profile</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<!-- These extra executions are just a way to verify that module-info.java is correct but ignored for
+                        java 8. Remove this section when release is higher than 8.
+                         -->
+						<executions>
+							<execution>
+								<id>default-compile</id>
+								<configuration>
+									<!-- compile everything to ensure module-info contains right entries -->
+									<release>11</release>
+								</configuration>
+							</execution>
+							<execution>
+								<id>base-compile</id>
+								<goals>
+									<goal>compile</goal>
+								</goals>
+								<!-- recompile everything for target VM except the module-info.java -->
+								<configuration>
+									<excludes>
+										<exclude>module-info.java</exclude>
+									</excludes>
+								</configuration>
+							</execution>
+						</executions>
+						<!-- defaults for compile and testCompile -->
+						<configuration>
+							<release>8</release>
+							<debug>false</debug>
+							<optimize>true</optimize>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+	</profiles>
 
   <scm>
     <developerConnection>scm:git:git@github.com:org-tigris-jsapar/jsapar.git</developerConnection>
