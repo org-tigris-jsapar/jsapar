@@ -271,7 +271,9 @@
 						</executions>
 						<!-- defaults for compile and testCompile -->
 						<configuration>
-							<release>8</release>
+<!--							<release>8</release>-->
+							<target>8</target>
+							<source>11</source>
 							<debug>false</debug>
 							<optimize>true</optimize>
 						</configuration>
