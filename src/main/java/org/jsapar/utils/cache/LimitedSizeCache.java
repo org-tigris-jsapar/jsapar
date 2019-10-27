@@ -6,14 +6,14 @@ import java.util.Map;
 /**
  * This implementation simply removes the oldest element when the max size is exceeded.
  */
-public class LimitedSizeCache<K, V> implements Cache<K, V>{
+public class LimitedSizeCache<K, V> implements Cache<K, V> {
     private final LinkedHashMap<K, V> elements;
 
     public LimitedSizeCache(final int maxSize) {
-        this.elements = new LinkedHashMap<K, V>(Math.min(maxSize * 2, 1024)){
+        this.elements = new LinkedHashMap<>(Math.min(maxSize * 2, 1024)) {
             @Override
             protected boolean removeEldestEntry(Map.Entry eldest) {
-                return size()>maxSize;
+                return size() > maxSize;
             }
         };
     }
@@ -27,6 +27,5 @@ public class LimitedSizeCache<K, V> implements Cache<K, V>{
     public void put(K key, V value) {
         elements.put(key, value);
     }
-
 
 }
