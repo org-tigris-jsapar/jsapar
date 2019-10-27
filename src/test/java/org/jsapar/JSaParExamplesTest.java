@@ -29,8 +29,6 @@ import static org.junit.Assert.assertEquals;
  * The tests in this class uses the sample files provided in the folder resources/samples. The tests
  * below show how JSaPar can be used to parse files.
  * 
- * @author stejon0
- * 
  */
 @SuppressWarnings("unchecked")
 public class JSaParExamplesTest {

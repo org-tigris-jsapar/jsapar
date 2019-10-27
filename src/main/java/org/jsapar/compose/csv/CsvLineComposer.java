@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 /**
  * Composes csv line output based on schema and provided line.
- * Created by stejon0 on 2016-01-30.
  */
 class CsvLineComposer implements LineComposer {
 

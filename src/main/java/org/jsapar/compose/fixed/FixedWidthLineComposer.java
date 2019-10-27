@@ -14,7 +14,6 @@ import java.util.Optional;
 
 /**
  * Composes line to a fixed width format based on line schema.
- * Created by stejon0 on 2016-01-31.
  */
 class FixedWidthLineComposer implements LineComposer {
 

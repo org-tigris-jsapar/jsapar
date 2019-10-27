@@ -14,9 +14,6 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringWriter;
 
-/**
- * Created by stejon0 on 2017-04-01.
- */
 public class Text2SAXReaderTest {
 
     @Test

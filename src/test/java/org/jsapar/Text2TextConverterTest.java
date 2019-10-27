@@ -18,10 +18,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
-/**
- * @author stejon0
- * 
- */
 public class Text2TextConverterTest {
 
     public static final String LN = System.getProperty("line.separator");

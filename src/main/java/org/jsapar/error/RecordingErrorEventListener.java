@@ -5,7 +5,6 @@ import java.util.List;
 
 /**
  * Records all errors into a list of errors that can be retrieved with the method {@link #getErrors()} later.
- * Created by stejon0 on 2016-10-02.
  */
 public class RecordingErrorEventListener implements ErrorEventListener{
     private final List<JSaParException> errors;

@@ -12,9 +12,6 @@ import java.io.StringWriter;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by stejon0 on 2016-01-30.
- */
 public class CsvLineComposerTest {
 
     @Test

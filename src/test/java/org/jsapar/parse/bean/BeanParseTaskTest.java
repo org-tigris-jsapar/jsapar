@@ -14,10 +14,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * @author stejon0
- * 
- */
 public class BeanParseTaskTest {
     static final Date birthTime = new Date();
 

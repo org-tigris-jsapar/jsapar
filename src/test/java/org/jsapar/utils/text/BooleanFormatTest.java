@@ -7,9 +7,6 @@ import java.text.ParsePosition;
 
 import static org.junit.Assert.*;
 
-/**
- * @author stejon0
- */
 public class BooleanFormatTest {
 
 

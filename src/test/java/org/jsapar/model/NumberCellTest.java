@@ -8,10 +8,6 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-/**
- * @author stejon0
- *
- */
 public class NumberCellTest {
 
 

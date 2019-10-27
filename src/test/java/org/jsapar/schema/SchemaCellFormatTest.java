@@ -11,10 +11,6 @@ import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * @author stejon0
- *
- */
 public class SchemaCellFormatTest {
 
     @Test

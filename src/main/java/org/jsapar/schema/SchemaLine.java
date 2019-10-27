@@ -85,10 +85,18 @@ public abstract class SchemaLine implements Cloneable {
         this.setOccurs(nOccurs);
     }
 
+    /**
+     * @return The number of times this type of line occurs in the corresponding input or output.
+     */
     public int getOccurs() {
         return occurs;
     }
 
+    /**
+     * @see #isOccursInfinitely()
+     * @see #setOccursInfinitely()
+     * @param occurs The number of times this type of line occurs in the corresponding input or output.
+     */
     public void setOccurs(int occurs) {
         this.occurs = occurs;
     }
@@ -116,26 +124,54 @@ public abstract class SchemaLine implements Cloneable {
     public abstract SchemaCell getSchemaCell(String cellName);
 
 
+    /**
+     * @return The type of the line. This line type will be part of each of the parsed  {@link Line} instances that was created
+     * by using this instance.
+     * <p>
+     * When composing, the line type of the {@link Line} supplied to the composer will be used by the composer to determine
+     * which {@link SchemaLine} instance to use for composing.
+     */
     public String getLineType() {
         return lineType;
     }
 
+    /**
+     * @param lineType The type of the line. This line type will be part of each of the parsed  {@link Line} instances that was created
+     *       by using this instance.
+     *       <p>
+     *       When composing, the line type of the {@link Line} supplied to the composer will be used by the composer to determine
+     *       which {@link SchemaLine} instance to use for composing.
+     */
     public void setLineType(String lineType) {
         this.lineType = lineType;
     }
 
+    /**
+     * @return If true, this type of line will be read from the input but then ignored, thus it will not produce any line
+     *       parsed event.
+     */
     public boolean isIgnoreRead() {
         return ignoreRead;
     }
 
+    /**
+     * @param ignoreRead If set to true, this type of line will be read from the input but then ignored, thus it will not produce any line
+     *       parsed event.
+     */
     public void setIgnoreRead(boolean ignoreRead) {
         this.ignoreRead = ignoreRead;
     }
 
+    /**
+     * @return If true, this type of line will not be written to the output.
+     */
     public boolean isIgnoreWrite() {
         return ignoreWrite;
     }
 
+    /**
+     * @param ignoreWrite If set to true, this type of line will not be written to the output.
+     */
     public void setIgnoreWrite(boolean ignoreWrite) {
         this.ignoreWrite = ignoreWrite;
     }

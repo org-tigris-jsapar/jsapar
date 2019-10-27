@@ -17,8 +17,6 @@ public class CellComposerTest {
     /**
      * To be able to have a specific SchemaCell to test.
      *
-     * @author stejon0
-     *
      */
     private class TestSchemaCell extends SchemaCell {
 

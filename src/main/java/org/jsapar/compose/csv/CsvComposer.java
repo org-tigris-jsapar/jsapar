@@ -9,7 +9,6 @@ import java.io.Writer;
 
 /**
  * Composes csv output based on schema.
- * Created by stejon0 on 2016-01-24.
  */
 public class CsvComposer extends AbstractSchemaComposer implements SchemaComposer {
 

@@ -5,7 +5,6 @@ import org.jsapar.error.ValidationAction;
 /**
  * Configuration that controls behavior while composing beans.
  *
- * Created by stejon0 on 2016-10-16.
  */
 @SuppressWarnings("WeakerAccess")
 public class BeanComposeConfig {

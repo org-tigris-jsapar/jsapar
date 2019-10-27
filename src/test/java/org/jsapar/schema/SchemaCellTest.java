@@ -12,10 +12,6 @@ import java.util.Locale;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * @author stejon0
- * 
- */
 public class SchemaCellTest {
 
 
@@ -63,8 +59,6 @@ public class SchemaCellTest {
 
     /**
      * To be able to have a specific SchemaCell to test.
-     * 
-     * @author stejon0
      * 
      */
     private class TestSchemaCell extends SchemaCell {

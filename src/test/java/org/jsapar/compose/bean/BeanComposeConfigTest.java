@@ -7,7 +7,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Unit test for BeanComposeConfig
- * Created by stejon0 on 2016-10-16.
  */
 public class BeanComposeConfigTest {
 
