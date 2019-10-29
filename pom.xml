@@ -263,6 +263,7 @@
 								</goals>
 								<!-- recompile everything for target VM except the module-info.java -->
 								<configuration>
+									<target>8</target>
 									<excludes>
 										<exclude>module-info.java</exclude>
 									</excludes>
@@ -272,7 +273,6 @@
 						<!-- defaults for compile and testCompile -->
 						<configuration>
 <!--							<release>8</release>-->
-							<target>8</target>
 							<source>11</source>
 							<debug>false</debug>
 							<optimize>true</optimize>

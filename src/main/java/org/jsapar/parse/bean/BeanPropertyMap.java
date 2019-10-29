@@ -172,4 +172,7 @@ public class BeanPropertyMap {
         return lineClass;
     }
 
+    public int size() {
+        return this.bean2CellByCellName.size();
+    }
 }
