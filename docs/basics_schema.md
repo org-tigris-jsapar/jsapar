@@ -228,6 +228,18 @@ composing, this attribute has no impact.
 * You can add any number of different text representation for the same value but you can only have one enum name for each text representation.
 * While composing, the first text representation for each enum name will be used. In this case `"male"` and `"female"` will be used. 
 
+##### Implied decimal
+In fixed width files with its origin in COBOL it is quite common that decimals are implied instead of explicitly specified. The decimal point is omitted in the file and it is assumed that you should add a decimal point at a specific position while parsing. For instance the number 123 in the file should be interpreted as 1.23 if there are 2 implied decimals.   
+This is called [implied decimal](https://www.ibm.com/support/knowledgecenter/en/SSLVMB_24.0.0/spss/base/syn_data_list_implied_decimal_positions.html) format.
+You can specify a cell to be of type implied decimal by adding `<implieddecimal>` element instead of the `<format>`. For example:
+```xml
+<cell name="weight" length="6" padcharacter="0" alignment="right">
+    <implieddecimal decimals="2"/>
+</cell>
+```
+The resulting cell while parsing a cell of implied decimal is always a DecimalCell but when converting to bean it is perfectly fine to assign it to a
+float or double property.
+
 #### Empty cell values while parsing
 Sometimes empty cells in the input data are not really empty. They may contain a text like `NULL` or something like that. 
 In that case you can still make the parser consider this to be an empty cell by specifying an `<emptypattern>` element within the cell.
