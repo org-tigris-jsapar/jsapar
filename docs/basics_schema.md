@@ -209,17 +209,17 @@ The disadvantage of this alternative is that since the parser does not know the 
 fetching the parsed value and the parser is unable to optimize parsing based on a fixed set of valid values.  
 1. Use the `<format>` element as described above with the type enum and specify the full class name as the pattern. 
 The valid values in the source still needs to match exactly the enum value names but now the parser is aware of the set of valid values and is able to cache values while parsing.
-1. Instead of the `<format>`, you may use the `<enumformat>` element instead.  This gives you the option to 
+1. Instead of the `<format>`, you may use the `<enum>` element instead.  This gives you the option to 
 map different values in your text source to the enum values of your enum class. For example, if your enum class `org.jsapar.TstGender` has the enum values `M` for male and `F` for female, 
 but you want to parse a text source that contains the text values `male` or `man` and `female` or `woman`, you can configure the cell like this in the schema:    
 ```xml
 <cell name="gender">
-    <enumformat class="org.jsapar.TstGender" ignorecase="true">
+    <enum class="org.jsapar.TstGender" ignorecase="true">
         <value name="M" text="male"/>
         <value name="M" text="man"/>
         <value name="F" text="female"/>
         <value name="F" text="woman"/>
-    </enumformat>
+    </enum>
 </cell>
 ``` 
 * By setting `ignorecase` to true, the case of the text value becomes insignificant while parsing but it also has negative impact on performance. While 

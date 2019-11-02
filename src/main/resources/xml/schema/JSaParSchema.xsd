@@ -81,8 +81,8 @@
     <xsd:sequence>
         <xsd:choice minOccurs="0">
             <xsd:element name="format" type="CellFormat" />
-            <xsd:element name="enumformat" type="EnumCellFormat" />
-            <xsd:element name="implieddecimalformat" type="ImpliedDecimalFormat" />
+            <xsd:element name="enum" type="EnumCellFormat" />
+            <xsd:element name="implieddecimal" type="ImpliedDecimalFormat" />
         </xsd:choice>
     	<xsd:element minOccurs="0" name="range"
                      type="CellValueRange">

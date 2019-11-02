@@ -14,10 +14,10 @@
       <cell name="Middle name" ignoreread="true"/>
       <cell name="Last name"/>
       <cell name="gender">
-        <enumformat class="org.jsapar.TstGender" ignorecase="true">
+        <enum class="org.jsapar.TstGender" ignorecase="true">
           <value name="M" text="male"/>
           <value name="F" text="female"/>
-        </enumformat>
+        </enum>
       </cell>
     </line>
     <line linetype="Footer" cellseparator=";">
