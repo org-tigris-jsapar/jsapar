@@ -82,6 +82,7 @@
         <xsd:choice minOccurs="0">
             <xsd:element name="format" type="CellFormat" />
             <xsd:element name="enumformat" type="EnumCellFormat" />
+            <xsd:element name="implieddecimalformat" type="ImpliedDecimalFormat" />
         </xsd:choice>
     	<xsd:element minOccurs="0" name="range"
                      type="CellValueRange">
@@ -209,6 +210,14 @@
         <xsd:attribute name="ignorecase"  type="xsd:boolean" default="false">
             <xsd:annotation>
                 <xsd:documentation>If true, the character upper or lower case is not considered while parsing. Default is false</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="ImpliedDecimalFormat">
+        <xsd:attribute name="decimals"  type="xsd:integer" use="required">
+            <xsd:annotation>
+                <xsd:documentation>The number of decimals to imply.</xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
     </xsd:complexType>

@@ -10,6 +10,7 @@ interface SchemaXmlTypes {
     String ELEMENT_LOCALE                           = "locale";
     String ELEMENT_FORMAT                           = "format";
     String ELEMENT_ENUM_FORMAT                      = "enumformat";
+    String ELEMENT_IMPLIED_DECIMALFORMAT            = "implieddecimalformat";
     String ELEMENT_LINE_CONDITION                   = "linecondition";
     String ELEMENT_EMPTY_CONDITION                  = "emptycondition";
     String ELEMENT_MATCH                            = "match";
@@ -24,12 +25,12 @@ interface SchemaXmlTypes {
     String ATTRIB_CSV_SCHEMA_QUOTE_SYNTAX           = "quotesyntax";
     String ATTRIB_CSV_SCHEMA_CELL_SEPARATOR         = "cellseparator";
     String ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA = "firstlineasschema";
-    String ATTRIB_CSV_QUOTE_BEHAVIOR = "quotebehavior";
+    String ATTRIB_CSV_QUOTE_BEHAVIOR                = "quotebehavior";
     String ATTRIB_LOCALE_LANGUAGE                   = "language";
     String ATTRIB_LOCALE_COUNTRY                    = "country";
     String ATTRIB_SCHEMA_LINESEPARATOR              = "lineseparator";
-    String ATTRIB_SCHEMA_IGNOREREAD = "ignoreread";
-    String ATTRIB_SCHEMA_IGNOREWRITE = "ignorewrite";
+    String ATTRIB_SCHEMA_IGNOREREAD                 = "ignoreread";
+    String ATTRIB_SCHEMA_IGNOREWRITE                = "ignorewrite";
     String ATTRIB_FW_SCHEMA_CELL_ALIGNMENT          = "alignment";
     String ELEMENT_SCHEMA_LINE                      = "line";
     String ELEMENT_SCHEMA_LINE_CELL                 = "cell";

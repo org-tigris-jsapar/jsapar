@@ -15,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -105,8 +106,10 @@ public class JSaParExamplesTest {
 
             assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name"));
             assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name"));
+            assertEquals(new BigDecimal("68.45"), LineUtils.getDecimalCellValue(document.getLine(0), "weight").orElse(null));
             assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name"));
             assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name"));
+            assertEquals(new BigDecimal("92.75"), LineUtils.getDecimalCellValue(document.getLine(1), "weight").orElse(null));
         }
     }
 

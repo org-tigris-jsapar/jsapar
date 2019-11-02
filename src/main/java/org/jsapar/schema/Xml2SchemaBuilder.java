@@ -2,6 +2,7 @@ package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
 import org.jsapar.text.EnumFormat;
+import org.jsapar.text.ImpliedDecimalFormat;
 import org.jsapar.utils.StringUtils;
 import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Attr;
@@ -424,6 +425,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
             getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_ENUM_FORMAT).ifPresent(
                     xmlFormat -> assignCellEnumFormat(cell, xmlFormat));
 
+            getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_IMPLIED_DECIMALFORMAT).ifPresent(
+                    xmlFormat -> assignImpliedDecimalFormat(cell, xmlFormat));
+
             Element xmlRange = getChild(xmlSchemaCell, ELEMENT_RANGE);
             if (xmlRange != null) {
                 Node minValue = xmlRange.getAttributeNode(ATTRIB_SCHEMA_CELL_MIN);
@@ -443,6 +447,12 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         }
 
     }
+
+    private void assignImpliedDecimalFormat(SchemaCell cell, Element xmlFormat) {
+        int decimals = parseAttribute(xmlFormat, "decimals").map(Integer::parseInt).orElse(0);
+        cell.setCellFormat(new SchemaCellFormat(CellType.DECIMAL, new ImpliedDecimalFormat(decimals)));
+    }
+
 
     private MatchingCellValueCondition extractCellValueCondition(Element xmlCellValueCondition) throws SchemaException {
         Element xmlMatch = getChild(xmlCellValueCondition, ELEMENT_MATCH);

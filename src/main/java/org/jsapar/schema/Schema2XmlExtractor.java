@@ -3,6 +3,7 @@ package org.jsapar.schema;
 import org.jsapar.compose.cell.CellComposer;
 import org.jsapar.model.CellType;
 import org.jsapar.text.EnumFormat;
+import org.jsapar.text.ImpliedDecimalFormat;
 import org.jsapar.utils.StringUtils;
 import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Document;
@@ -372,7 +373,13 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
             });
             return xmlFormat;
         }
-        else {
+        else if(format.getCellType() == CellType.DECIMAL && format.getFormat() instanceof ImpliedDecimalFormat){
+            ImpliedDecimalFormat f = (ImpliedDecimalFormat) format.getFormat();
+            Element xmlFormat = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_IMPLIED_DECIMALFORMAT);
+            xmlFormat.setAttribute("decimals", String.valueOf(f.getDecimals()));
+            return xmlFormat;
+        }
+        else{
             Element xmlFormat = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_FORMAT);
             xmlFormat.setAttribute("type", format.getCellType().toString().toLowerCase());
             if (format.getPattern() != null && format.getPattern().length() > 0)

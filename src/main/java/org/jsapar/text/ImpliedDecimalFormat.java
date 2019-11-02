@@ -20,6 +20,10 @@ public class ImpliedDecimalFormat extends Format {
         this.decimals = decimals;
     }
 
+    public int getDecimals() {
+        return decimals;
+    }
+
     @Override
     public StringBuffer format(Object o, StringBuffer stringBuffer, FieldPosition fieldPosition) {
         BigDecimal value;
