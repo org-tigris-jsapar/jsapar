@@ -12,6 +12,8 @@ making it easy to process delimited and fixed width data sources.
 By separating the description of the data format into a schema that can be loaded from XML it makes the code
 easier to maintain and increases flexibility.
 
+{% include toc.html html=content %}
+
 ## Mission
 The goal of this project is a java library that removes the burden of parsing and composing flat files and csv files from the developer.
 

@@ -2,6 +2,14 @@
 layout: default
 title: Upgrading from JSaPar 1.x
 ---
+{% include toc.html html=content %}
+## Upgrading from version 2.0
+The following classes has moved to package `org.jsapar.bean` in order to make them visible externally when introducing modules: 
+  * org.jsapar.parse.bean.BeanMap
+  * org.jsapar.parse.bean.Xml2BeanMapBuilder
+
+The following classes has moved to package `org.jsapar.text` in order to make them visible externally when introducing modules: 
+  * org.jsapar.parse.text.TextParseConfig
 
 ## Upgrading from version 1.x
 The 2.0 version of the library differs fundamentally from the 1.x versions so there is no easy way to upgrade. This

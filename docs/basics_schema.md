@@ -2,6 +2,7 @@
 layout: page
 title: Basics of JSaPar Schemas
 ---
+{% include toc.html html=content %}
 
 # The schema
 The schema is what describes the structure of the input or output data. The same schema can be used for both parsing and composing.

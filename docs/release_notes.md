@@ -2,6 +2,8 @@
 layout: page
 title: Release notes
 ---
+{% include toc.html html=content %}
+
 # Release notes
 ## 2.1
 ### 2.1.0

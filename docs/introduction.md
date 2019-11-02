@@ -2,6 +2,8 @@
 layout: page
 title: JSaPar Introduction
 --- 
+{% include toc.html html=content %}
+
 # Java Schema Parser
 The <a href="api/index.html">javadoc</a> contains more comprehensive documentation regarding the classes mentioned below. <br/><br/>
 The JSaPar is a java library that provides a parser for flat and CSV (Comma Separated Values) files.
