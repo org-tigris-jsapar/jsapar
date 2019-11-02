@@ -28,7 +28,7 @@ public class EnumFormat extends Format {
     /**
      * Creates a default enum format where values are the same as the Enum constants.
      * @param enumClass The enum class to use.
-     * @param ignoreCase
+     * @param ignoreCase If true, the case is ignored while parsing.
      */
     @SuppressWarnings("WeakerAccess")
     public EnumFormat(Class<? extends Enum> enumClass, boolean ignoreCase) {
@@ -59,7 +59,7 @@ public class EnumFormat extends Format {
      * @param value  The string value
      * @param enumConstant The enum constant
      */
-    public void putEnumValueIfAbsent(String value, Enum enumConstant){
+    private void putEnumValueIfAbsent(String value, Enum enumConstant){
         this.enumByValue.putIfAbsent(value, enumConstant);
         this.valueByEnum.putIfAbsent(enumConstant, value);
     }
