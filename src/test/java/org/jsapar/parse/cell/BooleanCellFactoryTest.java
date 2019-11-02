@@ -1,7 +1,7 @@
 package org.jsapar.parse.cell;
 
 import org.jsapar.model.BooleanCell;
-import org.jsapar.utils.text.BooleanFormat;
+import org.jsapar.text.BooleanFormat;
 import org.junit.Test;
 
 import java.text.Format;

@@ -4,8 +4,8 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.EmptyCell;
 import org.jsapar.parse.cell.CellParser;
-import org.jsapar.utils.text.EnumFormat;
 
+import java.text.Format;
 import java.util.Locale;
 
 /**
@@ -54,13 +54,15 @@ public abstract class SchemaCell implements Cloneable {
     }
 
     /**
-     * Creates a enum schema cell with specified name and enum format.
+     * Creates a schema cell with the specified name and format parameters.
      * @param sName The name of the cell.
-     * @param enumFormat The enum format to use for this cell.
+     * @param type The type of the cell.
+     * @param format The format to use
      */
-    public SchemaCell(String sName, EnumFormat enumFormat) {
-        this(sName, new SchemaCellFormat(CellType.ENUM, enumFormat));
+    public SchemaCell(String sName, CellType type, Format format) {
+        this(sName, new SchemaCellFormat(type, format));
     }
+
 
     /**
      * Creates a schema cell with the specified name and format parameters.

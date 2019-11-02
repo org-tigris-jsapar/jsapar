@@ -1,4 +1,4 @@
 /**
- * Common public classes for parsing and composing text.
+ * Common public classes for parsing and formatting text.
  */
 package org.jsapar.text;

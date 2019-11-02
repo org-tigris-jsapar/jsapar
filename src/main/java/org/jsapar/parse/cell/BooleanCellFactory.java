@@ -3,7 +3,7 @@ package org.jsapar.parse.cell;
 import org.jsapar.model.BooleanCell;
 import org.jsapar.model.Cell;
 import org.jsapar.schema.SchemaCell;
-import org.jsapar.utils.text.BooleanFormat;
+import org.jsapar.text.BooleanFormat;
 
 import java.text.Format;
 import java.text.ParseException;

@@ -1,7 +1,7 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
-import org.jsapar.utils.text.EnumFormat;
+import org.jsapar.text.EnumFormat;
 import org.jsapar.utils.StringUtils;
 import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Attr;
@@ -467,6 +467,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         cell.setCellFormat(makeCellType(sType), sPattern);
     }
 
+    @SuppressWarnings("unchecked")
     private void assignCellEnumFormat(SchemaCell cell, Element xmlFormat) throws SchemaException {
         String sEnumClass = getAttributeValue(xmlFormat, "class");
         boolean ignoreCase = parseBooleanAttribute(xmlFormat, "ignorecase").orElse(false);
