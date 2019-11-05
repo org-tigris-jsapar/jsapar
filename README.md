@@ -26,6 +26,10 @@ easier to maintain and increases flexibility.
 * [Examples](https://github.com/org-tigris-jsapar/jsapar-examples)
 
 ## News
+### Version 2.1.0 is released 
+*2019-11-05*
+
+The focus of this fix-release has been to add some missing functionality such as enums and to build using Java 11. See [release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes#2.1.0) for details
 ### Version 2.0.1 is released 
 *2019-03-04*
 
