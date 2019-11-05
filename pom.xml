@@ -9,11 +9,9 @@
 		RELEASE
 		=======
 		https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
-		mvn release:prepare release:perform
-		To release your artifacts, open your favorite browser and go to https://oss.sonatype.org/.
-		Log in!
-		Close staging bundle.
-		Release closed staging bundle.
+		mvn release:prepare release:perform -P release-profile
+
+		No longer necessary to close staging bundle at  https://oss.sonatype.org/. This is now handled automatically.
 
 		In order to deploy artifacts you will need to configure login to sonatype ossrh in settings.xml:
 			<server>
