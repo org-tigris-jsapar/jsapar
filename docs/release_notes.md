@@ -11,6 +11,7 @@ title: Release notes
  If you don't want quoting support, you need to actively switch it off. See [Quoted values](basics_schema#Quoted_values) in documentation.
 * Support for quote syntax RFC4180 which makes both the CSV parser and composer compliant to the RFC 4180 standard regarding quoting.
 * Support for enum cell type and mapping between enum values and text representation. See chapter about [enum format](basics_schema#enum_format) in the article [Basics of Schema](basics_schema).
+* Support for implied decimal format. See chapter about [implied decimal](basics_schema#implied_decimal) in the article [Basics of Schema](basics_schema).
 * The command line utility is now capable of also transforming the output by using a XSLT file.
 * Added class **ByLineTypeLineEventListener**. A convenience class that acts as a subscription hub for line parsed events.
 * When converting to and from java beans, it is now possible to map schema line types and 
