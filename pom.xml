@@ -25,7 +25,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.tigris.jsapar</groupId>
 	<artifactId>jsapar</artifactId>
-	<version>2.1.0-SNAPSHOT</version>
+	<version>2.1.0</version>
 	<packaging>jar</packaging>
 	<name>jsapar</name>
 	<url>https://org-tigris-jsapar.github.io/jsapar/</url>
@@ -267,7 +267,7 @@
     <url>https://github.com/org-tigris-jsapar/jsapar.git</url>
     <developerConnection>scm:git:git@github.com:org-tigris-jsapar/jsapar.git</developerConnection>
     <connection>scm:git:git@github.com:org-tigris-jsapar/jsapar.git</connection>
-    <tag>HEAD</tag>
+    <tag>2.1.0</tag>
   </scm>
   <organization>
     <url>https://org-tigris-jsapar.github.io/jsapar/</url>
