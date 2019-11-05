@@ -214,6 +214,7 @@ The valid values in the source still needs to match exactly the enum value names
 1. Instead of the `<format>`, you may use the `<enum>` element instead.  This gives you the option to 
 map different values in your text source to the enum values of your enum class. For example, if your enum class `org.jsapar.TstGender` has the enum values `M` for male and `F` for female, 
 but you want to parse a text source that contains the text values `male` or `man` and `female` or `woman`, you can configure the cell like this in the schema:    
+
 ```xml
 <cell name="gender">
     <enum class="org.jsapar.TstGender" ignorecase="true">
@@ -224,6 +225,7 @@ but you want to parse a text source that contains the text values `male` or `man
     </enum>
 </cell>
 ``` 
+
 * By setting `ignorecase` to true, the case of the text value becomes insignificant while parsing but it also has negative impact on performance. While 
 composing, this attribute has no impact.
 * You don't have to specify mapping for values that has the same text value as the enum value name.   
@@ -234,11 +236,13 @@ composing, this attribute has no impact.
 In fixed width files with its origin in COBOL it is quite common that decimals are implied instead of explicitly specified. The decimal point is omitted in the file and it is assumed that you should add a decimal point at a specific position while parsing. For instance the number 123 in the file should be interpreted as 1.23 if there are 2 implied decimals.   
 This is called [implied decimal](https://www.ibm.com/support/knowledgecenter/en/SSLVMB_24.0.0/spss/base/syn_data_list_implied_decimal_positions.html) format.
 You can specify a cell to be of type implied decimal by adding `<implieddecimal>` element instead of the `<format>`. For example:
+
 ```xml
 <cell name="weight" length="6" padcharacter="0" alignment="right">
     <implieddecimal decimals="2"/>
 </cell>
 ```
+
 The resulting cell while parsing a cell of implied decimal is always a DecimalCell but when converting to bean it is perfectly fine to assign it to a
 float or double property.
 

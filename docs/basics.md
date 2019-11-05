@@ -2,11 +2,10 @@
 layout: page
 title: Basics
 ---
+This article will describe the basics of using the library. Since schemas are a large part of the library, [basics of schemas](basics_chema)  are described in this separate article.
 
 * TOC
 {:toc}
-
-This article will describe the basics of using the library. Since schemas are a large part of the library, [basics of schemas](basics_chema)  are described in this separate article.
 
 There are three different tasks that the JSaPar library can be used for:
 1. **Parsing** - Parsing a text source into the internal data model and handle the result in code. 
