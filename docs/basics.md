@@ -2,7 +2,10 @@
 layout: page
 title: Basics
 ---
-{% include toc.html html=content %}
+
+* TOC
+{:toc}
+
 This article will describe the basics of using the library. Since schemas are a large part of the library, [basics of schemas](basics_chema)  are described in this separate article.
 
 There are three different tasks that the JSaPar library can be used for:

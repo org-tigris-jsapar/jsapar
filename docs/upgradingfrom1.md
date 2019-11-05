@@ -2,7 +2,9 @@
 layout: default
 title: Upgrading from JSaPar 1.x
 ---
-{% include toc.html html=content %}
+* TOC
+{:toc}
+
 ## Upgrading from version 2.0
 The following classes has moved to package `org.jsapar.bean` in order to make them visible externally when introducing modules: 
   * org.jsapar.parse.bean.BeanMap
