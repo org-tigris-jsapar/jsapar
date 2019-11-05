@@ -2,7 +2,8 @@
 layout: page
 title: Advanced
 ---
-{% include toc.html html=content %}
+* TOC
+{:toc}
 *This page is under construction*
 
 Please see the [API javadocs](api) for more advanced documentation.
