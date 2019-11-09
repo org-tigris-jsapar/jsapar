@@ -306,17 +306,28 @@ This means that you can run the converter without any coding at all.
 
 If you run it without any arguments you will get a help text with further instructions:
 ```bash
-$ java -jar jsapar-2.0.0.jar
+$ java -jar jsapar-2.1.0.jar 
 IllegalArgumentException: Too few arguments
 
 Usage:
- 1. jsapar.jar <property file name>
- 2. jsapar.jar -in.schema <input schem name> -out.schema <output schema name>
-               -in.file <input file name> [-out.file <output file name>]
-               [-in.file.encoding <input file encoding (or system default is used)>]
-               [-out.file.encoding <output file encoding (or system default is used)>]
+ 1. Read all properties from a file:
+jsapar.jar <property file name> 
 
-Alternative 1. above reads the arguments from a property file.
+ 2. Convert from one text file to another using different input and output
+    schemas:
+jsapar.jar -in.schema <input schema path> -out.schema <output schema path>
+           -in.file <input file name> [-out.file <output file name>]
+           [-in.file.encoding  <input file encoding (or system default is used)>]
+           [-out.file.encoding <output file encoding (or system default is used)>]
 
+ 3. Transform a text file into xml, html or any other format using XSLT:
+jsapar.jar -in.schema <input schema path> -xslt.file <xslt file path>
+           -in.file <input file name> [-out.file <output file name>]
+           [-in.file.encoding  <input file encoding (or system default is used)>]
+           [-out.file.encoding <output file encoding (or system default is used)>]
+           [-out.file.encoding <output file encoding (or system default is used)>]
+           [-xslt.encoding     <xslt file encoding (or system default is used)>]
+           [-xslt.method       <xslt method to use. (xml is default)
+                                Probably one of xml, html or text>]
 ```
 
