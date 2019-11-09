@@ -1,9 +1,9 @@
 package org.jsapar;
 
 import org.jsapar.compose.Composer;
-import org.jsapar.compose.ComposerFactory;
-import org.jsapar.compose.SchemaComposer;
-import org.jsapar.compose.TextComposerFactory;
+import org.jsapar.compose.internal.ComposerFactory;
+import org.jsapar.compose.internal.SchemaComposer;
+import org.jsapar.compose.internal.TextComposerFactory;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
@@ -44,6 +44,10 @@ public class TextComposer implements Composer, AutoCloseable {
      * @param composerFactory A factory interface for creating {@link SchemaComposer} based on schema.
      */
     public TextComposer(Schema schema, Writer writer, ComposerFactory composerFactory) {
+        if(writer == null)
+            throw new IllegalArgumentException("Writer of text composer cannot be null");
+        if(schema == null)
+            throw new IllegalArgumentException("Schema of text composer cannot be null");
         this.schema = schema;
         this.writer = writer;
         this.composerFactory = composerFactory;
@@ -76,6 +80,16 @@ public class TextComposer implements Composer, AutoCloseable {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    @Override
+    public boolean composeEmptyLine() {
+        try {
+            this.writer.write(schema.getLineSeparator());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return true;
     }
 
     @Override

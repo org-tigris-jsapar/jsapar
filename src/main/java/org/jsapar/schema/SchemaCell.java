@@ -5,6 +5,7 @@ import org.jsapar.model.CellType;
 import org.jsapar.model.EmptyCell;
 import org.jsapar.parse.cell.CellParser;
 
+import java.text.Format;
 import java.util.Locale;
 
 /**
@@ -18,7 +19,7 @@ public abstract class SchemaCell implements Cloneable {
     private final static SchemaCellFormat CELL_FORMAT_PROTOTYPE = new SchemaCellFormat(CellType.STRING);
 
     private final String                  name;
-    private SchemaCellFormat              cellFormat            = CELL_FORMAT_PROTOTYPE;
+    private SchemaCellFormat              cellFormat;
     private boolean                       ignoreRead            = false;
     private boolean                       ignoreWrite           = false;
     private boolean                       mandatory             = false;
@@ -28,11 +29,12 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * If parsing an empty value this cell can be used, avoiding a lot of object creation.
      */
-    private Cell               emptyCell      = null;
+    private Cell               emptyCell;
     private String             defaultValue   = null;
     private Locale             locale         = Locale.US;
     private CellValueCondition emptyCondition = null;
     private CellValueCondition lineCondition  = null;
+
 
     /**
      * Creates a string cell with specified name. The format can be added after creation by using the {@link #setCellFormat(CellType, String)} method.
@@ -50,6 +52,17 @@ public abstract class SchemaCell implements Cloneable {
     public SchemaCell(String sName, CellType type) {
         this(sName, new SchemaCellFormat(type));
     }
+
+    /**
+     * Creates a schema cell with the specified name and format parameters.
+     * @param sName The name of the cell.
+     * @param type The type of the cell.
+     * @param format The format to use
+     */
+    public SchemaCell(String sName, CellType type, Format format) {
+        this(sName, new SchemaCellFormat(type, format));
+    }
+
 
     /**
      * Creates a schema cell with the specified name and format parameters.
@@ -154,7 +167,7 @@ public abstract class SchemaCell implements Cloneable {
      * @param cellFormat
      *            the cellFormat to set
      */
-    private void setCellFormat(SchemaCellFormat cellFormat) {
+    void setCellFormat(SchemaCellFormat cellFormat) {
         if(cellFormat == null)
             throw new IllegalArgumentException("cellFormat argument cannot be null");
         this.cellFormat = cellFormat;
@@ -267,6 +280,7 @@ public abstract class SchemaCell implements Cloneable {
      * Validates that the default value is within the valid range. Throws a SchemaException if value is
      * not within borders.
      *
+     * @param defaultCell The default cell to use.
      * @throws SchemaException If validation fails.
      */
     @SuppressWarnings("unchecked")

@@ -45,7 +45,7 @@ public class RegExpFormat extends Format {
      */
     @Override
     public Object parseObject(String source, ParsePosition pos) {
-        String sToParse = source.substring(pos.getIndex(), source.length());
+        String sToParse = source.substring(pos.getIndex());
         if (!this.pattern.matcher(source).matches()) {
             pos.setErrorIndex(pos.getIndex());
         } else

@@ -10,9 +10,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by stejon0 on 2016-01-31.
- */
 public class FixedWidthComposerTest {
 
     @Test

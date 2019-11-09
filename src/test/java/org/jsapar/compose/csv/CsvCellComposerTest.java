@@ -5,6 +5,7 @@ import org.jsapar.compose.csv.quote.NeverQuoteButReplace;
 import org.jsapar.compose.csv.quote.QuoteIfNeeded;
 import org.jsapar.model.*;
 import org.jsapar.schema.CsvSchemaCell;
+import org.jsapar.schema.QuoteSyntax;
 import org.jsapar.schema.SchemaException;
 import org.junit.Test;
 
@@ -50,7 +51,8 @@ public class CsvCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "Here; we come");
-        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n"));
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n",
+                QuoteSyntax.FIRST_LAST));
         composer.compose(writer, cell);
 
         assertEquals("'Here; we come'", writer.toString());
@@ -62,7 +64,7 @@ public class CsvCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "'Here we come");
-        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n"));
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n", QuoteSyntax.FIRST_LAST));
         composer.compose(writer, cell);
 
         assertEquals("''Here we come'", writer.toString());
@@ -74,7 +76,7 @@ public class CsvCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "Joho");
-        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n"));
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('\'', 33, ";", "\n", QuoteSyntax.FIRST_LAST));
         composer.compose(writer, cell);
 
         assertEquals("Joho", writer.toString());
@@ -148,7 +150,7 @@ public class CsvCellComposerTest {
         schemaElement.setMaxLength(4);
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "J;onas");
-        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('"', 4, ";", "\n"));
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new QuoteIfNeeded('"', 4, ";", "\n", QuoteSyntax.FIRST_LAST));
         composer.compose(writer, cell);
 
         assertEquals("\"J;\"", writer.toString());

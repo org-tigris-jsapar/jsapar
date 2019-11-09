@@ -1,6 +1,7 @@
 package org.jsapar.parse.bean;
 
 import org.jsapar.BeanCollection2TextConverter;
+import org.jsapar.bean.BeanMap;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;

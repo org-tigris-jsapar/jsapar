@@ -2,7 +2,7 @@ package org.jsapar;
 
 import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.ConvertTask;
-import org.jsapar.parse.bean.BeanMap;
+import org.jsapar.bean.BeanMap;
 import org.jsapar.parse.bean.BeanParseTask;
 import org.jsapar.schema.Schema;
 
@@ -118,6 +118,7 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * @param collection The collection of beans to convert
      * @param writer     The text writer to write text output to.
      * @throws IOException If there is an error writing text output.
+     * @return Number of actually composed lines.
      */
     public long convert(Collection<? extends T> collection, Writer writer) throws IOException {
         return convert(collection.stream(), writer);

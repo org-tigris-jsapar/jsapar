@@ -4,6 +4,9 @@ title: Basics
 ---
 This article will describe the basics of using the library. Since schemas are a large part of the library, [basics of schemas](basics_chema)  are described in this separate article.
 
+* TOC
+{:toc}
+
 There are three different tasks that the JSaPar library can be used for:
 1. **Parsing** - Parsing a text source into the internal data model and handle the result in code. 
 2. **Composing** - Compose text output by feeding data of the internal data model in java code. 
@@ -62,6 +65,8 @@ The JSaPar library contains some convenient implementations of the org.jsapar.pa
         <td>For smaller files you may want to handle all
         the events after the parsing is complete. In that case you may choose to use this implementation.
         This listener acts as an [aggregator](http://www.enterpriseintegrationpatterns.com/patterns/messaging/Aggregator.html) and builds a `org.jsapar.model.Document` object containing all the parsed lines that you can iterate afterwards.</td></tr>
+    <tr><td><b>org.jsapar.parse. ByLineTypeLineEventListener</b></td>
+        <td>Allows you to register different listeners for different line types. Use MulticastLineEventListener if you want to have multiple handlers for each line type.</td></tr>
     <tr><td><b>org.jsapar.parse. MulticastLineEventListener</b></td>
         <td>If you need to handle the events in multiple event listener implementation, this implementation provides a
             way to register multiple line event listeners which are called one by one for each line event.</td></tr>

@@ -46,7 +46,7 @@ public class LineUtils {
      * @param <E>          The enum type.
      */
     public static <E extends Enum<E>> void setEnumCellValue(Line line, String cellName, E value) {
-        line.putCellValue(cellName, value, (n, v) -> new StringCell(n, String.valueOf(v)));
+        line.putCellValue(cellName, value, EnumCell::new);
     }
 
     /**
@@ -421,7 +421,7 @@ public class LineUtils {
             return booleanCell.getValue();
         }
 
-        return Boolean.valueOf(cell.get().getStringValue());
+        return Boolean.parseBoolean(cell.get().getStringValue());
     }
 
     /**
@@ -530,7 +530,10 @@ public class LineUtils {
         return line.getNonEmptyCell(cellName).map( it -> enumOfCell(it, enumClass));
     }
 
+    @SuppressWarnings("unchecked")
     private static <E extends Enum<E>> E enumOfCell(Cell cell, Class<E> enumClass) {
+        if(cell instanceof EnumCell)
+            return (E) cell.getValue();
         String s = cell.getStringValue();
 
         try {

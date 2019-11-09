@@ -1,7 +1,9 @@
 package org.jsapar.parse.xml;
 
 import org.jsapar.TextParser;
+import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.JSaParException;
+import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.model.DateCell;
 import org.jsapar.model.Line;
@@ -19,10 +21,10 @@ import java.util.Date;
  */
 public class Text2SAXReader implements XMLReader {
 
-    private static final String         URI = "";
-    private              ContentHandler contentHandler;
-    private              TextParser     textParser;
-    private              ErrorHandler   errorHandler;
+    private static final String URI = "";
+    private ContentHandler contentHandler;
+    private TextParser textParser;
+    private ErrorHandler errorHandler;
 
     public Text2SAXReader(TextParser textParser) {
         this.textParser = textParser;
@@ -45,7 +47,7 @@ public class Text2SAXReader implements XMLReader {
         attributes.addAttribute(URI, "number", "number", "integer", String.valueOf(line.getLineNumber()));
         try {
             contentHandler.startElement(URI, "line", "line", attributes);
-            line.forEach( c ->{
+            line.forEach(c -> {
                 attributes.clear();
                 attributes.addAttribute(URI, "name", "name", "CDATA", c.getName());
                 attributes.addAttribute(URI, "type", "type", "CDATA", cellTypeToXmlType(c));
@@ -82,12 +84,12 @@ public class Text2SAXReader implements XMLReader {
 
     private String makeCellXmlValue(Cell c) {
         switch (c.getCellType()) {
-        case DATE:
-            Date value = ((DateCell) c).getValue();
-            ZonedDateTime zDate = ZonedDateTime.ofInstant(value.toInstant(), ZoneId.systemDefault());
-            return zDate.toString();
-        default:
-            return c.getStringValue();
+            case DATE:
+                Date value = ((DateCell) c).getValue();
+                ZonedDateTime zDate = ZonedDateTime.ofInstant(value.toInstant(), ZoneId.systemDefault());
+                return zDate.toString();
+            default:
+                return c.getStringValue();
         }
     }
 
@@ -161,4 +163,11 @@ public class Text2SAXReader implements XMLReader {
         return null;
     }
 
+    /**
+     * Replaces existing error event listener.
+     * @param errorEventListener The new error event listener to use.
+     */
+    public void setErrorEventListener(ErrorEventListener errorEventListener) {
+        this.textParser.setErrorEventListener(errorEventListener);
+    }
 }

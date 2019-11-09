@@ -7,12 +7,14 @@ import java.util.stream.Stream;
 /**
  * Describes the schema for a delimiter separated line. For instance if you want to ignore a header line you
  * can add a SchemaLine instance to your schema with occurs==1 and ignoreRead==true;
+ *
  * @see CsvSchema
  * @see CsvSchemaCell
  */
 public class CsvSchemaLine extends SchemaLine {
+    private static final char NO_QUOTING = 0;
 
-    private Map<String, CsvSchemaCell> schemaCells       = new LinkedHashMap<>();
+    private Map<String, CsvSchemaCell> schemaCells = new LinkedHashMap<>();
 
     /**
      * Set this to true when the first line of the input text contains the names and order of the cells in the following
@@ -21,7 +23,7 @@ public class CsvSchemaLine extends SchemaLine {
      * formatting instructions and default values, it will not denote the order of the cells. The order is given by the
      * first line of the input instead.
      */
-    private boolean                    firstLineAsSchema = false;
+    private boolean firstLineAsSchema = false;
 
     /**
      * The character sequence that separates each cell. Default is the ';' (semicolon) character.
@@ -29,12 +31,17 @@ public class CsvSchemaLine extends SchemaLine {
     private String cellSeparator = ";";
 
     /**
-     * Specifies quote characters used to encapsulate cells. Numerical value 0 indicates that quotes are not used.
+     * Specifies quote characters used to encapsulate cells. Default is the standard double quote character (").
+     * Disable quoting by calling {@link #disableQuoteChar()}.
      * <p>
      * If quoted cells contain cell separator or line separator characters, these will be treated as content of the cell
      * instead.
+     * <p>
+     * Specify quoting syntax at schema level by calling {@link CsvSchema#setQuoteSyntax(QuoteSyntax)}.
+     * <p>
+     * Specify the quote behavior for each cell at cell level by calling {@link CsvSchemaCell#setQuoteBehavior(QuoteBehavior)}
      */
-    private char quoteChar = 0;
+    private char quoteChar = '"';
 
     /**
      * Creates an empty schema line.
@@ -53,7 +60,7 @@ public class CsvSchemaLine extends SchemaLine {
     }
 
     /**
-     * The type of the line. You could say that this is the class of the line.
+     * Creates a CsvSchemaLine with the supplied line type and occurs infinite number of times.
      *
      * @param lineType The type of the line
      */
@@ -63,8 +70,9 @@ public class CsvSchemaLine extends SchemaLine {
 
     /**
      * Creates a CsvSchemaLine with the supplied line type and occurs supplied number of times.
+     *
      * @param lineType The type of the line
-     * @param nOccurs The number of times this type of line occurs in the input/output. Use {@link #OCCURS_INFINITE} constant for infinite number of times.
+     * @param nOccurs  The number of times this type of line occurs in the input/output.
      */
     public CsvSchemaLine(String lineType, int nOccurs) {
         super(lineType, nOccurs);
@@ -106,7 +114,7 @@ public class CsvSchemaLine extends SchemaLine {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#clone()
      */
     @Override
@@ -124,7 +132,7 @@ public class CsvSchemaLine extends SchemaLine {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -161,7 +169,11 @@ public class CsvSchemaLine extends SchemaLine {
      * @return true if quote character is used, false otherwise.
      */
     public boolean isQuoteCharUsed() {
-        return this.quoteChar != 0;
+        return this.quoteChar != NO_QUOTING;
+    }
+
+    public void disableQuoteChar() {
+        this.quoteChar = NO_QUOTING;
     }
 
     public void setQuoteChar(char quoteChar) {
@@ -170,7 +182,7 @@ public class CsvSchemaLine extends SchemaLine {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jsapar.schema.SchemaLine#getSchemaCell(java.lang.String)
      */
     @Override
@@ -203,7 +215,6 @@ public class CsvSchemaLine extends SchemaLine {
     public void forEach(Consumer<? super SchemaCell> consumer) {
         schemaCells.values().forEach(consumer);
     }
-
 
 
 }

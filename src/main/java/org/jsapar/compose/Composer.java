@@ -57,6 +57,14 @@ public interface Composer extends AutoCloseable{
     boolean composeLine(Line line);
 
     /**
+     * Composes an empty line, i.e. writing an additional line separator.
+     * @return True if empty line was composed.
+     */
+    default boolean composeEmptyLine() {
+        return false;
+    }
+
+    /**
      * Sets an error event listener to this composer. If you want to add more than one error event listeners, use the {@link MulticastErrorEventListener}
      *
      * @param errorListener The error event listener to add.

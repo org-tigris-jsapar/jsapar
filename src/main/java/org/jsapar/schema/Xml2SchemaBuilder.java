@@ -1,6 +1,8 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
+import org.jsapar.text.EnumFormat;
+import org.jsapar.text.ImpliedDecimalFormat;
 import org.jsapar.utils.StringUtils;
 import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Attr;
@@ -37,8 +39,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
     }
 
     private String getAttributeValue(Element parent, String name) {
-        return attributeValue(parent, name).orElse(null);
+        return parseAttribute(parent, name).orElse(null);
     }
+
 
     /**
      * Generates a schema from a xml file.
@@ -161,11 +164,11 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
 
         assignSchemaLineBase(schemaLine, xmlSchemaLine);
 
-        attributeValue(xmlSchemaLine, ATTRIB_FW_SCHEMA_PAD_CHARACTER)
+        parseAttribute(xmlSchemaLine, ATTRIB_FW_SCHEMA_PAD_CHARACTER)
                 .map(s->s.charAt(0))
                 .ifPresent(schemaLine::setPadCharacter);
 
-        attributeValue(xmlSchemaLine, ATTRIB_FW_SCHEMA_MIN_LENGTH)
+        parseAttribute(xmlSchemaLine, ATTRIB_FW_SCHEMA_MIN_LENGTH)
                 .filter(s->!s.isEmpty())
                 .map(Integer::valueOf)
                 .ifPresent(schemaLine::setMinLength);
@@ -218,11 +221,15 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
             cell.setDefaultAlignmentForType();
         }
 
-        String sFillChar = getAttributeValue(xmlSchemaCell, ATTRIB_FW_SCHEMA_PAD_CHARACTER);
-        if (sFillChar != null)
-            cell.setPadCharacter(sFillChar.charAt(0));
-        else
-            cell.setPadCharacter(schemaLine.getPadCharacter());
+        cell.setPadCharacter(parseAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_PAD_CHARACTER)
+                .map(s -> s.charAt(0))
+                .orElseGet(schemaLine::getPadCharacter));
+
+        parseBooleanAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_TRIM_PAD_CHARACTER)
+                .ifPresent(cell::setTrimPadCharacter);
+
+        parseBooleanAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_TRIM_LEADING_SPACES)
+                .ifPresent(cell::setTrimLeadingSpaces);
 
         return cell;
     }
@@ -251,6 +258,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
 
         assignSchemaBase(schema, xmlSchema);
 
+        parseAttribute(xmlSchema, ATTRIB_CSV_SCHEMA_QUOTE_SYNTAX)
+                .map(QuoteSyntax::valueOf)
+                .ifPresent(schema::setQuoteSyntax);
+
         NodeList nodes = xmlSchema.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE);
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node child = nodes.item(i);
@@ -272,7 +283,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         CsvSchemaLine schemaLine = new CsvSchemaLine();
         assignSchemaLineBase(schemaLine, xmlSchemaLine);
 
-        attributeValue(xmlSchemaLine, ATTRIB_CSV_SCHEMA_CELL_SEPARATOR)
+        parseAttribute(xmlSchemaLine, ATTRIB_CSV_SCHEMA_CELL_SEPARATOR)
                 .map(StringUtils::replaceEscapes2Java)
                 .ifPresent(schemaLine::setCellSeparator);
 
@@ -280,11 +291,14 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         if (xmlFirstLineAsSchema != null)
             schemaLine.setFirstLineAsSchema(getBooleanValue(xmlFirstLineAsSchema));
 
-        String sQuoteChar = getAttributeValue(xmlSchemaLine, ATTRIB_CSV_QUOTE_CHAR);
-        if (sQuoteChar != null)
-            schemaLine.setQuoteChar(sQuoteChar.charAt(0));
+        parseAttribute(xmlSchemaLine, ATTRIB_CSV_QUOTE_CHAR).ifPresent(s->{
+            if(s.equals(QUOTE_CHAR_NONE))
+                schemaLine.disableQuoteChar();
+            else
+                schemaLine.setQuoteChar(s.charAt(0));
+        });
 
-        QuoteBehavior quoteBehavior = attributeValue(xmlSchemaLine, ATTRIB_CSV_QUOTE_BEHAVIOR)
+        QuoteBehavior quoteBehavior = parseAttribute(xmlSchemaLine, ATTRIB_CSV_QUOTE_BEHAVIOR)
                 .map(QuoteBehavior::valueOf)
                 .orElse(QuoteBehavior.AUTOMATIC);
 
@@ -312,7 +326,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         Node xmlMaxLength = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_MAX_LENGTH);
         if (xmlMaxLength != null)
             cell.setMaxLength(getIntValue(xmlMaxLength));
-        cell.setQuoteBehavior( attributeValue(xmlSchemaCell, ATTRIB_CSV_QUOTE_BEHAVIOR)
+        cell.setQuoteBehavior( parseAttribute(xmlSchemaCell, ATTRIB_CSV_QUOTE_BEHAVIOR)
                 .map(QuoteBehavior::valueOf)
                 .orElse(quoteBehavior));
 
@@ -329,7 +343,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      * @throws SchemaException  When there is an error in the schema
      */
     private void assignSchemaBase(Schema schema, Element xmlSchema) throws SchemaException {
-        attributeValue(xmlSchema, ATTRIB_SCHEMA_LINESEPARATOR)
+        parseAttribute(xmlSchema, ATTRIB_SCHEMA_LINESEPARATOR)
                 .map(StringUtils::replaceEscapes2Java)
                 .ifPresent(schema::setLineSeparator);
 
@@ -405,9 +419,14 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
             if (xmlEmptyCondition != null)
                 cell.setEmptyCondition(extractCellValueCondition(xmlEmptyCondition));
 
-            Element xmlFormat = getChild(xmlSchemaCell, ELEMENT_FORMAT);
-            if (xmlFormat != null)
-                assignCellFormat(cell, xmlFormat);
+            getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_FORMAT).ifPresent(
+                    xmlFormat -> assignCellFormat(cell, xmlFormat));
+
+            getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_ENUM_FORMAT).ifPresent(
+                    xmlFormat -> assignCellEnumFormat(cell, xmlFormat));
+
+            getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_IMPLIED_DECIMALFORMAT).ifPresent(
+                    xmlFormat -> assignImpliedDecimalFormat(cell, xmlFormat));
 
             Element xmlRange = getChild(xmlSchemaCell, ELEMENT_RANGE);
             if (xmlRange != null) {
@@ -428,6 +447,12 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         }
 
     }
+
+    private void assignImpliedDecimalFormat(SchemaCell cell, Element xmlFormat) {
+        int decimals = parseAttribute(xmlFormat, "decimals").map(Integer::parseInt).orElse(0);
+        cell.setCellFormat(new SchemaCellFormat(CellType.DECIMAL, new ImpliedDecimalFormat(decimals)));
+    }
+
 
     private MatchingCellValueCondition extractCellValueCondition(Element xmlCellValueCondition) throws SchemaException {
         Element xmlMatch = getChild(xmlCellValueCondition, ELEMENT_MATCH);
@@ -451,6 +476,24 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
 
         cell.setCellFormat(makeCellType(sType), sPattern);
     }
+
+    @SuppressWarnings("unchecked")
+    private void assignCellEnumFormat(SchemaCell cell, Element xmlFormat) throws SchemaException {
+        String sEnumClass = getAttributeValue(xmlFormat, "class");
+        boolean ignoreCase = parseBooleanAttribute(xmlFormat, "ignorecase").orElse(false);
+        try {
+            EnumFormat format = new EnumFormat((Class<? extends Enum>) Class.forName(sEnumClass), ignoreCase);
+            getChildrenStream(JSAPAR_XML_SCHEMA, xmlFormat, "value").forEach(xmlValue->{
+                format.putEnumValueIfAbsent(getAttributeValue(xmlValue, "text"), getAttributeValue(xmlValue, "name"));
+            });
+
+            cell.setCellFormat(new SchemaCellFormat(CellType.ENUM, format));
+        } catch (ClassNotFoundException e) {
+            throw new SchemaException("Unable to find enum class " + sEnumClass + " within classpath. Make sure that the class is fully qualified.");
+        }
+
+    }
+
 
     /**
      * Transforms from xml schema type to CellType enum.
@@ -484,6 +527,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
                 return CellType.BOOLEAN;
             case "character":
                 return CellType.CHARACTER;
+            case "enum":
+                return CellType.ENUM;
             default:
                 throw new SchemaException("Unknown cell format type: " + sType);
         }

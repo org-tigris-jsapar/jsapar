@@ -11,7 +11,7 @@ import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.cell.CellParser;
 import org.jsapar.parse.line.LineDecoratorErrorEventListener;
 import org.jsapar.parse.line.ValidationHandler;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 
@@ -132,13 +132,19 @@ class CsvLineParser {
 
         CsvSchemaLine schemaLine = masterLineSchema.clone();
         schemaLine.getSchemaCells().clear();
-
+        int ignoreCellCount=1;
         for (String sCell : asCells) {
-            CsvSchemaCell masterCell = masterLineSchema.getCsvSchemaCell(sCell);
-            if (masterCell != null)
-                schemaLine.addSchemaCell(masterCell);
-            else
-                schemaLine.addSchemaCell(new CsvSchemaCell(sCell));
+            CsvSchemaCell schemaCell = masterLineSchema.getCsvSchemaCell(sCell);
+            if (schemaCell == null) {
+                if(sCell.isEmpty()){
+                    schemaCell = new CsvSchemaCell("@@"+ ignoreCellCount++ + "@@");
+                    schemaCell.setIgnoreRead(true);
+                }
+                else {
+                    schemaCell = new CsvSchemaCell(sCell);
+                }
+            }
+            schemaLine.addSchemaCell(schemaCell);
         }
         addMissingDefaultValuesFromMaster(schemaLine, masterLineSchema);
         checkMissingMandatoryValues(schemaLine, masterLineSchema, errorListener);

@@ -1,5 +1,6 @@
 package org.jsapar.compose.csv.quote;
 
+import org.jsapar.schema.QuoteSyntax;
 import org.junit.Test;
 
 import java.io.StringWriter;
@@ -12,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class QuoteIfNeededTest {
     @Test
     public void writeQuoted() throws Exception {
-        QuoteIfNeeded instance = new QuoteIfNeeded('@', 10, ";", "\n");
+        QuoteIfNeeded instance = new QuoteIfNeeded('@', 10, ";", "\n", QuoteSyntax.FIRST_LAST);
 
         StringWriter w = new StringWriter();
         instance.writeValue(w, "hej");
@@ -32,11 +33,11 @@ public class QuoteIfNeededTest {
 
         w = new StringWriter();
         instance.writeValue(w, "@hej@");
-        assertEquals("@hej@", w.toString());
+        assertEquals("@@hej@@", w.toString());
 
         w = new StringWriter();
         instance.writeValue(w, "@@");
-        assertEquals("@@", w.toString());
+        assertEquals("@@@@", w.toString());
 
         w = new StringWriter();
         instance.writeValue(w, "");
@@ -48,7 +49,7 @@ public class QuoteIfNeededTest {
 
         w = new StringWriter();
         instance.writeValue(w, "hej@");
-        assertEquals("hej@", w.toString());
+        assertEquals("@hej@@", w.toString());
 
 
         w = new StringWriter();

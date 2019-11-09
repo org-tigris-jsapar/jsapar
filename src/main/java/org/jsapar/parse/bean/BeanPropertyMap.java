@@ -1,39 +1,37 @@
 package org.jsapar.parse.bean;
 
+import org.jsapar.bean.JSaParCell;
+import org.jsapar.bean.JSaParContainsCells;
 import org.jsapar.error.BeanException;
+import org.jsapar.parse.bean.reflect.BeanInfo;
+import org.jsapar.parse.bean.reflect.PropertyDescriptor;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BeanPropertyMap {
     private String lineType;
 
     private Map<String, Bean2Cell> bean2CellByProperty = new HashMap<>();
     private Map<String, Bean2Cell> bean2CellByCellName = new HashMap<>();
-    private BeanInfo beanInfo;
-    private Class lineClass;
+    private BeanInfo               beanInfo;
+    private Class                  lineClass;
 
     private BeanPropertyMap(String lineType) {
         this.lineType = lineType;
     }
 
-    private BeanPropertyMap(String lineType, Class lineClass) throws IntrospectionException {
+    private BeanPropertyMap(String lineType, Class lineClass) {
         this.lineType = lineType;
-        this.beanInfo = Introspector.getBeanInfo(lineClass);
+        this.beanInfo = BeanInfo.ofClass(lineClass);
         this.lineClass = lineClass;
     }
 
-    boolean ignoreLine(){
+    public boolean ignoreLine(){
         return lineClass == null;
     }
 
@@ -59,7 +57,7 @@ public class BeanPropertyMap {
         return lineClass.getConstructor().newInstance();
     }
 
-    static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine, BeanPropertyMap overrideValues) {
+    public static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine, BeanPropertyMap overrideValues) {
         try {
             if(overrideValues.ignoreLine())
                 return overrideValues;
@@ -70,29 +68,46 @@ public class BeanPropertyMap {
                     .forEach((key, value) -> cellNamesOfProperty.put(value.getPropertyDescriptor().getName(), key));
 
             return ofPropertyNames(overrideValues.getLineClass().getName(), schemaLine.getLineType(), cellNamesOfProperty);
-        } catch (ClassNotFoundException |IntrospectionException e) {
+        } catch (ClassNotFoundException e) {
             throw new BeanException("Failed to create bean mapping based on schema", e);
         }
     }
 
-    static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine) throws BeanException {
+    public static BeanPropertyMap ofSchemaLine(SchemaLine schemaLine) throws BeanException {
         try {
             return ofPropertyNames(schemaLine.getLineType(), schemaLine.getLineType(), schemaLine.stream().collect(Collectors.toMap(SchemaCell::getName, SchemaCell::getName)));
-        } catch (ClassNotFoundException |IntrospectionException e) {
+        } catch (ClassNotFoundException  e) {
             throw new BeanException("Failed to create bean mapping based on schema", e);
         }
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static BeanPropertyMap ofPropertyNames(String className, String lineType, Map<String, String> cellNamesOfProperty) throws ClassNotFoundException, IntrospectionException{
+    public static BeanPropertyMap ofPropertyNames(String className, String lineType, Map<String, String> cellNamesOfProperty) throws ClassNotFoundException{
         if(className==null || className.isEmpty()){
             return new BeanPropertyMap(lineType);
         }
-        Class lineClass = Class.forName(className);
+        return ofClass(Class.forName(className), lineType, cellNamesOfProperty);
+    }
+
+    public static BeanPropertyMap ofClass(Class lineClass, String lineType)  {
+            return ofClass(lineClass,
+                    lineType,
+                    makeFieldEntryStream(lineClass, "")
+                    .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue)));
+    }
+
+    private static Stream< Map.Entry<String, String> > makeFieldEntryStream(Class c, String prefix) {
+        return Arrays.stream(c.getDeclaredFields())
+                .filter(f->f.isAnnotationPresent(JSaParCell.class) || (f.isAnnotationPresent(JSaParContainsCells.class) && !f.getType().isPrimitive()))
+                .flatMap(f-> f.isAnnotationPresent(JSaParCell.class)
+                        ? Stream.of(new AbstractMap.SimpleEntry<>(prefix + f.getName(), f.getAnnotation(JSaParCell.class).name()))
+                        : makeFieldEntryStream(f.getType(), prefix + f.getName() + '.'));
+    }
+
+    private static BeanPropertyMap ofClass(Class lineClass, String lineType, Map<String, String> cellNamesOfProperty)  {
         BeanPropertyMap beanPropertyMap = new BeanPropertyMap(lineType, lineClass);
 
-        Map<String, PropertyDescriptor> descriptors = Arrays.stream(beanPropertyMap.beanInfo.getPropertyDescriptors())
-                .collect(Collectors.toMap(PropertyDescriptor::getName, pd->pd));
+        Map<String, PropertyDescriptor> descriptors = beanPropertyMap.beanInfo.getPropertyDescriptorsByName();
 
         for(Map.Entry<String, String> propertyEntry : cellNamesOfProperty.entrySet()) {
             String propertyName = propertyEntry.getKey();
@@ -110,7 +125,8 @@ public class BeanPropertyMap {
         return beanPropertyMap;
     }
 
-    private static void cellOfChildObject(String cellName, String propertyName, BeanPropertyMap beanPropertyMap, Map<String, PropertyDescriptor> descriptors) throws IntrospectionException {
+
+    private static void cellOfChildObject(String cellName, String propertyName, BeanPropertyMap beanPropertyMap, Map<String, PropertyDescriptor> descriptors)  {
         if(propertyName.contains(".")){
             String[] propertyNames = propertyName.split("\\.", 2);
             PropertyDescriptor propertyDescriptor = descriptors.get(propertyNames[0]);
@@ -125,14 +141,13 @@ public class BeanPropertyMap {
         }
     }
 
-    private static Bean2Cell cellOfChildObject(String cellName, String propertyName, PropertyDescriptor basePropertyDescriptor, Bean2Cell baseBean2Cell) throws IntrospectionException {
+    private static Bean2Cell cellOfChildObject(String cellName, String propertyName, PropertyDescriptor basePropertyDescriptor, Bean2Cell baseBean2Cell)  {
         if(baseBean2Cell == null) {
             Class childClass = basePropertyDescriptor.getReadMethod().getReturnType();
             baseBean2Cell = Bean2Cell.ofBaseProperty(basePropertyDescriptor, new BeanPropertyMap(basePropertyDescriptor.getName(), childClass));
         }
         BeanPropertyMap beanPropertyMap = baseBean2Cell.getChildren();
-        Map<String, PropertyDescriptor> descriptors = Arrays.stream(beanPropertyMap.beanInfo.getPropertyDescriptors())
-                .collect(Collectors.toMap(PropertyDescriptor::getName, pd->pd));
+        Map<String, PropertyDescriptor> descriptors = beanPropertyMap.beanInfo.getPropertyDescriptorsByName();
 
         PropertyDescriptor propertyDescriptor = descriptors.get(propertyName);
         if(propertyDescriptor != null){
@@ -153,8 +168,11 @@ public class BeanPropertyMap {
         putBean2Cell(propertyName, bean2Cell.getCellName(), bean2Cell);
     }
 
-    Class getLineClass() {
+    public Class getLineClass() {
         return lineClass;
     }
 
+    public int size() {
+        return this.bean2CellByCellName.size();
+    }
 }

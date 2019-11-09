@@ -8,6 +8,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -60,6 +61,10 @@ public interface XmlTypes {
      */
     default boolean getBooleanValue(Node node) {
         final String value = node.getNodeValue().trim().toLowerCase();
+        return parseBoolean(value);
+    }
+
+    default boolean parseBoolean(String value) {
         switch (value) {
         case "true":
         case "1":
@@ -68,7 +73,7 @@ public interface XmlTypes {
         case "0":
             return false;
         default:
-            throw new NumberFormatException("Failed to parse boolean node: " + node);
+            throw new NumberFormatException("Failed to parse boolean value: " + value);
         }
     }
 
@@ -76,12 +81,20 @@ public interface XmlTypes {
         return node.getNodeValue().trim();
     }
 
-    default Optional<String> attributeValue(Element parent, String name) {
+    default Optional<String> parseAttribute(Element parent, String name) {
         Node child = parent.getAttributeNode(name);
         if (child == null)
             return Optional.empty();
         else
             return Optional.of(child.getNodeValue());
+    }
+
+    default <T> Optional<T> parseAttribute(Element parent, String name, Function<String, T> convertValue) {
+        return parseAttribute(parent, name).map(convertValue);
+    }
+
+    default Optional<Boolean> parseBooleanAttribute(Element parent, String name){
+        return parseAttribute(parent, name, this::parseBoolean);
     }
 
     default int getIntValue(Node node) {

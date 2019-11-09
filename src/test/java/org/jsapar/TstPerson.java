@@ -150,7 +150,6 @@ public class TstPerson {
 
     public void setAddress(TstPostAddress address) {
         this.address = address;
-        address.setOwner(this);
     }
 
     public TstPostAddress getAddress() {
@@ -159,7 +158,6 @@ public class TstPerson {
 
     public void setWorkAddress(TstPostAddress workAddress) {
         this.workAddress = workAddress;
-        address.setOwner(this);
     }
 
     public TstPostAddress getWorkAddress() {

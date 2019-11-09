@@ -13,9 +13,6 @@ import java.io.Writer;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by stejon0 on 2016-02-13.
- */
 public class FixedWidthLineComposerTest {
 
     @Test

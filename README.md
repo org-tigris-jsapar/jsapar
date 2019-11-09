@@ -2,12 +2,13 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.tigris.jsapar/jsapar/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.tigris.jsapar/jsapar)
 [![Javadocs](https://javadoc.io/badge/org.tigris.jsapar/jsapar.svg)](https://javadoc.io/doc/org.tigris.jsapar/jsapar)
 [![Build Status](https://travis-ci.org/org-tigris-jsapar/jsapar.png?branch=master)](https://travis-ci.org/org-tigris-jsapar/jsapar)
-[![HitCount](http://hits.dwyl.io/stenix71/github.com/org-tigris-jsapar/jsapar.svg)](http://hits.dwyl.io/stenix71/github.com/org-tigris-jsapar/jsapar)
 
 [![Java 8](https://img.shields.io/badge/java-8-brightgreen.svg)](#java-8)
 [![Java 9-ea](https://img.shields.io/badge/java-9-brightgreen.svg)](#java-9)
 [![Java 10-ea](https://img.shields.io/badge/java-10-brightgreen.svg)](#java-10)
-[![Java 10-ea](https://img.shields.io/badge/java-11-brightgreen.svg)](#java-11)
+[![Java 11-ea](https://img.shields.io/badge/java-11-brightgreen.svg)](#java-11)
+[![Java 12-ea](https://img.shields.io/badge/java-12-brightgreen.svg)](#java-12)
+[![Java 13-ea](https://img.shields.io/badge/java-13-brightgreen.svg)](#java-13)
 # jsapar
 **JSaPar** stands for  **J**ava **S**chem**a** based **Par**ser
 
@@ -25,6 +26,14 @@ easier to maintain and increases flexibility.
 * [Examples](https://github.com/org-tigris-jsapar/jsapar-examples)
 
 ## News
+### Version 2.1.0 is released 
+*2019-11-05*
+
+The focus of this fix-release has been to add some missing functionality such as enums and to build using Java 11. See [release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes#2.1.0) for details
+### Version 2.0.1 is released 
+*2019-03-04*
+
+The focus of this fix-release has been to improve performance while parsing. See [release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes#2.0.1) for details
 ### Version 2.0.0 is now officially released 
 *2018-11-24*
 
@@ -70,4 +79,6 @@ into any markup language by the use of xslt.
 * Examples demonstrating all features.
 
 We are not quite there yet, but we are working on it...
-
+## Community
+* Bugs and suggestions can be submitted [here on Github](https://github.com/org-tigris-jsapar/jsapar/issues). 
+* For other type of questions, use the [`[jsapar]` tag in Stack exchange](https://stackoverflow.com/questions/tagged/jsapar). Remember to add the tag to new questions.

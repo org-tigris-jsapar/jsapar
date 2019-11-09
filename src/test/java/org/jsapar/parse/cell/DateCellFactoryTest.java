@@ -10,9 +10,6 @@ import java.text.SimpleDateFormat;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by stejon0 on 2016-10-23.
- */
 public class DateCellFactoryTest {
 
     DateCellFactory cellFactory = new DateCellFactory();

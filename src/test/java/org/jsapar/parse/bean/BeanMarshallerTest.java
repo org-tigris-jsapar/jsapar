@@ -1,7 +1,9 @@
 package org.jsapar.parse.bean;
 
+import org.jsapar.TstGender;
 import org.jsapar.TstPerson;
 import org.jsapar.TstPostAddress;
+import org.jsapar.bean.BeanMap;
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.*;
 import org.jsapar.schema.CsvSchema;
@@ -12,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.Locale;
 
 import static org.junit.Assert.*;
 
@@ -28,7 +31,7 @@ public class BeanMarshallerTest {
         person.setShoeSize((short)42);
         person.setStreetNumber(4711);
         person.setDoor('A');
-
+        person.setGender(TstGender.M);
 
         BeanMarshaller<TstPerson> beanMarshaller = new BeanMarshaller<>(makeBeanMap());
         Line line = beanMarshaller.marshal(person, new ExceptionErrorEventListener(), 1).orElse(null);
@@ -40,6 +43,7 @@ public class BeanMarshallerTest {
         assertEquals(birthTime, ((DateCell) line.getCell("birthTime").orElseThrow(() -> new AssertionError("Should be set"))).getValue());
         assertEquals(123456787901234567L, ((IntegerCell) line.getCell("luckyNumber").orElseThrow(() -> new AssertionError("Should be set"))).getValue().longValue());
         assertEquals("A", LineUtils.getStringCellValue(line,"door"));
+        assertEquals(EnumCell.class, line.getCell("gender").orElse(null).getClass());
     }
 
     @Test
@@ -54,7 +58,7 @@ public class BeanMarshallerTest {
         assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
 
         // Make sure that loops are avoided.
-        Assert.assertFalse(line.isCellSet("address.owner.firstName"));
+        Assert.assertFalse(line.containsNonEmptyCell("address.owner.firstName"));
     }
 
     @Test
@@ -84,6 +88,7 @@ public class BeanMarshallerTest {
         schemaLine.addSchemaCell(new CsvSchemaCell("luckyNumber", CellType.DECIMAL));
         schemaLine.addSchemaCell(new CsvSchemaCell("birthTime", CellType.DATE));
         schemaLine.addSchemaCell(new CsvSchemaCell("door", CellType.CHARACTER));
+        schemaLine.addSchemaCell(new CsvSchemaCell("gender", CellType.ENUM, "org.jsapar.TstGender", Locale.getDefault()));
         schemaLine.addSchemaCell(new CsvSchemaCell("address.street", CellType.STRING));
         schemaLine.addSchemaCell(new CsvSchemaCell("address.town", CellType.STRING));
         schemaLine.addSchemaCell(new CsvSchemaCell("workAddress.street", CellType.STRING));

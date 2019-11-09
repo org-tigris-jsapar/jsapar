@@ -14,7 +14,6 @@ import java.util.Optional;
 
 /**
  * Composes line to a fixed width format based on line schema.
- * Created by stejon0 on 2016-01-31.
  */
 class FixedWidthLineComposer implements LineComposer {
 
@@ -23,6 +22,10 @@ class FixedWidthLineComposer implements LineComposer {
     private final FixedWidthCellComposer cellComposer;
 
     FixedWidthLineComposer(Writer writer, FixedWidthSchemaLine lineSchema) {
+        if(writer == null)
+            throw new IllegalArgumentException("Writer of line composer cannot be null");
+        if(lineSchema == null)
+            throw new IllegalArgumentException("Line schema of line composer cannot be null");
         this.writer = writer;
         this.lineSchema = lineSchema;
         this.cellComposer = new FixedWidthCellComposer(writer);

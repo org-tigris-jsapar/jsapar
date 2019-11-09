@@ -6,10 +6,8 @@ import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.error.ThresholdRecordingErrorEventListener;
 import org.jsapar.model.CellType;
 import org.jsapar.model.StringCell;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.*;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,10 +18,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
-/**
- * @author stejon0
- * 
- */
 public class Text2TextConverterTest {
 
     public static final String LN = System.getProperty("line.separator");

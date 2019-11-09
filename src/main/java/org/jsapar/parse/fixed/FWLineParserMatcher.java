@@ -1,11 +1,10 @@
 package org.jsapar.parse.fixed;
 
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,6 @@ class FWLineParserMatcher {
     private List<FWControlCell> controlCells =new ArrayList<>();
     private FixedWidthLineParser lineParser;
     private int occursLeft;
-    private int maxControlEndPos;
 
     FWLineParserMatcher(FixedWidthSchemaLine schemaLine, TextParseConfig config) {
         this.schemaLine = schemaLine;
@@ -26,10 +24,9 @@ class FWLineParserMatcher {
         int beginPos=0;
         for (FixedWidthSchemaCell schemaCell : schemaLine.getSchemaCells()) {
             if(schemaCell.hasLineCondition()){
-                controlCells.add(new FWControlCell(beginPos, schemaCell));
+                controlCells.add(new FWControlCell(beginPos, schemaCell, ReadBuffer.makeTrimmer(schemaCell)));
             }
             beginPos += schemaCell.getLength();
-            maxControlEndPos = beginPos;
         }
     }
     
@@ -43,7 +40,7 @@ class FWLineParserMatcher {
                 int read = 0;
                 for (FWControlCell controlCell : controlCells) {
                     int offset = controlCell.beginPos - read;
-                    String value = lineReader.readToString(controlCell.schemaCell, offset);
+                    String value = lineReader.readToString(controlCell.trimmer, offset, controlCell.schemaCell.getLength());
                     if (value == null)
                         return LineParserMatcherResult.EOF; // EOF reached
                     if (!controlCell.schemaCell.getLineCondition().satisfies(value))
@@ -66,10 +63,12 @@ class FWLineParserMatcher {
     private static class FWControlCell{
         final int beginPos;
         final FixedWidthSchemaCell schemaCell;
+        final ReadBuffer.Trimmer trimmer;
 
-        FWControlCell(int beginPos, FixedWidthSchemaCell schemaCell) {
+        FWControlCell(int beginPos, FixedWidthSchemaCell schemaCell, ReadBuffer.Trimmer trimmer) {
             this.beginPos = beginPos;
             this.schemaCell = schemaCell;
+            this.trimmer = trimmer;
         }
     }
 

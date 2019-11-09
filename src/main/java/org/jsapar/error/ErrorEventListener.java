@@ -6,6 +6,7 @@ import java.util.EventListener;
  * Interface for receiving event call-backs while parsing or composing.
  * 
  */
+@FunctionalInterface
 public interface ErrorEventListener extends EventListener {
 
     /**

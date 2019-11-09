@@ -2,6 +2,7 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.BooleanCell;
 import org.jsapar.model.Cell;
+import org.jsapar.schema.SchemaCell;
 import org.jsapar.text.BooleanFormat;
 
 import java.text.Format;
@@ -12,7 +13,7 @@ import java.util.Locale;
  * Parses boolean values into {@link Cell} objects
  */
 public class BooleanCellFactory implements CellFactory {
-    private final static BooleanFormat defaultFormat = new BooleanFormat();
+    private final static BooleanFormat defaultFormat = new BooleanFormat(true);
 
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
@@ -43,6 +44,18 @@ public class BooleanCellFactory implements CellFactory {
         if (aTrueFalse.length < 1 || aTrueFalse.length > 2)
             throw new IllegalArgumentException(
                     "Boolean format pattern should only contain two fields separated with ; character");
-        return new BooleanFormat(aTrueFalse[0].split("\\s*\\|\\s*"), aTrueFalse.length == 2 ? aTrueFalse[1].split("\\s*\\|\\s*") : new String[]{""});
+        return new BooleanFormat(aTrueFalse[0].split("\\s*\\|\\s*"), aTrueFalse.length == 2 ? aTrueFalse[1].split("\\s*\\|\\s*") : new String[]{""}, true);
+    }
+
+    /**
+     * Boolean cells most likely only contain two different values so cache size can always be 2. In cases where
+     * boolean cells may contain more than two different values, we will suffer some cache misses but that is an
+     * acceptable trade of.
+     * @param configuredCacheMaxSize The cache max size in configuration.
+     * @return Always returns 2.
+     */
+    @Override
+    public int actualCacheMaxSize(SchemaCell schemaCell, int configuredCacheMaxSize) {
+        return 2;
     }
 }

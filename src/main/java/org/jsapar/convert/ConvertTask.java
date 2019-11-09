@@ -77,7 +77,7 @@ public class ConvertTask {
      * Internal class for handling output of one line at a time while receiving parsing events.
      *
      */
-    protected class LineForwardListener implements LineEventListener {
+    public class LineForwardListener implements LineEventListener {
 
         public LineForwardListener() {
         }

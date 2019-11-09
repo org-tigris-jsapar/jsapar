@@ -2,9 +2,8 @@ package org.jsapar.parse.csv;
 
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.csv.states.CsvLineReaderStates;
 import org.jsapar.parse.line.ValidationHandler;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.SchemaLine;
@@ -30,7 +29,7 @@ public class CsvParser implements TextSchemaParser {
 
     public CsvParser(Reader reader, CsvSchema schema, TextParseConfig parseConfig) {
         this.parseConfig = parseConfig;
-        lineReader = new CsvLineReaderStates(schema.getLineSeparator(), reader, schema.stream().anyMatch(SchemaLine::isOccursInfinitely), parseConfig.getMaxLineLength());
+        lineReader = new CsvLineReaderStates(schema.getLineSeparator(), reader, schema.stream().anyMatch(SchemaLine::isOccursInfinitely), parseConfig.getMaxLineLength(), schema.getQuoteSyntax());
         this.schema = schema;
         this.lineParserFactory = new CsvLineParserFactory(schema, parseConfig);
     }

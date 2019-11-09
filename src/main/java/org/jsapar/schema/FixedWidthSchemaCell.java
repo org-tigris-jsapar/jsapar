@@ -7,7 +7,6 @@ import org.jsapar.model.CellType;
  */
 public class FixedWidthSchemaCell extends SchemaCell {
 
-
     /**
      * Describes how a cell is aligned within its allocated space.
      * 
@@ -40,7 +39,24 @@ public class FixedWidthSchemaCell extends SchemaCell {
      */
     private Alignment alignment = Alignment.LEFT;
 
+    /**
+     * The pad character to use to fill cell according to alignment to its defined fix size.
+     */
     private char padCharacter = ' ';
+
+    /**
+     * If set to true, pad characters are trimmed according to alignment while parsing. Default is true.
+     */
+    private boolean trimPadCharacter = true;
+
+    /**
+     * If pad character is not space and this attribute is true then trim leading spaces before trimming pad character.
+     * Can be used for numeric cells that may contain space character before any leading zeros or that may contain
+     * only spaces as indication of absent value.
+     * <p>
+     * Default is true.
+     */
+    private boolean trimLeadingSpaces = true;
 
     /**
      * Creates a fixed with schema cell with specified name, length and alignment.
@@ -156,5 +172,20 @@ public class FixedWidthSchemaCell extends SchemaCell {
         this.padCharacter = padCharacter;
     }
 
+    public boolean isTrimPadCharacter() {
+        return trimPadCharacter;
+    }
+
+    public void setTrimPadCharacter(boolean trimPadCharacter) {
+        this.trimPadCharacter = trimPadCharacter;
+    }
+
+    public boolean isTrimLeadingSpaces() {
+        return trimLeadingSpaces;
+    }
+
+    public void setTrimLeadingSpaces(boolean trimLeadingSpaces) {
+        this.trimLeadingSpaces = trimLeadingSpaces;
+    }
 
 }

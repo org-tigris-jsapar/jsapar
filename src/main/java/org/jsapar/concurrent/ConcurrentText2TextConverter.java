@@ -2,7 +2,7 @@ package org.jsapar.concurrent;
 
 import org.jsapar.Text2TextConverter;
 import org.jsapar.convert.AbstractConverter;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.Schema;
 
 import java.io.IOException;

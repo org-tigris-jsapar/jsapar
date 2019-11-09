@@ -14,9 +14,9 @@ public class BooleanCellFactoryTest {
     public void makeCell() throws Exception {
         BooleanCellFactory instance = new BooleanCellFactory();
         assertEquals(new BooleanCell("nnn", Boolean.TRUE), instance.makeCell("nnn", "true", null));
-        assertEquals(new BooleanCell("nnn", Boolean.TRUE), instance.makeCell("nnn", "J", new BooleanFormat("J", "N")));
+        assertEquals(new BooleanCell("nnn", Boolean.TRUE), instance.makeCell("nnn", "J", new BooleanFormat("J", "N", true)));
         assertEquals(new BooleanCell("nnn", Boolean.FALSE), instance.makeCell("nnn", "false", null));
-        assertEquals(new BooleanCell("nnn", Boolean.FALSE), instance.makeCell("nnn", "N", new BooleanFormat("J", "N")));
+        assertEquals(new BooleanCell("nnn", Boolean.FALSE), instance.makeCell("nnn", "N", new BooleanFormat("J", "N", true)));
     }
 
     @Test

@@ -3,7 +3,7 @@ package org.jsapar;
 import org.jsapar.convert.LineManipulator;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ExceptionErrorEventListener;
-import org.jsapar.parse.bean.BeanMap;
+import org.jsapar.bean.BeanMap;
 import org.jsapar.parse.bean.BeanMarshaller;
 import org.jsapar.schema.Schema;
 

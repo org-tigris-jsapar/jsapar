@@ -1,17 +1,18 @@
 package org.jsapar.schema;
 
+import org.jsapar.TstGender;
+import org.jsapar.model.CellType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Locale;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * @author stejon0
- *
- */
 public class Schema2XmlExtractorTest {
 
 
@@ -37,7 +38,10 @@ public class Schema2XmlExtractorTest {
 //        System.out.println(sXml);
         
         assertNotNull(sXml);
-        // TODO Add more accurate tests.
+        Xml2SchemaBuilder xml2SchemaBuilder = new Xml2SchemaBuilder();
+        // Validating while building
+        Schema builtSchema = xml2SchemaBuilder.build(new StringReader(sXml));
+        assertEquals(FixedWidthSchema.class, builtSchema.getClass());
     }
 
 
@@ -52,6 +56,9 @@ public class Schema2XmlExtractorTest {
 
         schemaLine.addSchemaCell(new CsvSchemaCell("First name"));
         schemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
+        CsvSchemaCell schemaCell = new CsvSchemaCell("Gender", CellType.ENUM, TstGender.class.getName(), Locale.getDefault());
+
+        schemaLine.addSchemaCell(schemaCell);
         schema.addSchemaLine(schemaLine);
         
         Schema2XmlExtractor extractor = new Schema2XmlExtractor();
@@ -61,7 +68,10 @@ public class Schema2XmlExtractorTest {
 //        System.out.println(sXml);
         
         assertNotNull(sXml);
-        // TODO Add more accurate tests.
+        Xml2SchemaBuilder xml2SchemaBuilder = new Xml2SchemaBuilder();
+        // Validating while building
+        Schema builtSchema = xml2SchemaBuilder.build(new StringReader(sXml));
+        assertEquals(CsvSchema.class, builtSchema.getClass());
     }
 
 

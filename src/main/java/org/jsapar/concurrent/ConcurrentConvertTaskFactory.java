@@ -14,7 +14,7 @@ import java.util.List;
  * @see ConcurrentConvertTask
  *
  */
-public class ConcurrentConvertTaskFactory implements ConcurrentStartStop{
+class ConcurrentConvertTaskFactory implements ConcurrentStartStop{
     private final List<Runnable>  onStart     = new LinkedList<>();
     private final List<Runnable>  onStop      = new LinkedList<>();
 
@@ -24,7 +24,7 @@ public class ConcurrentConvertTaskFactory implements ConcurrentStartStop{
      * @param composer The composer to use
      * @return Number of converted lines.
      */
-    protected ConvertTask makeConvertTask(ParseTask parseTask, Composer composer)  {
+    ConvertTask makeConvertTask(ParseTask parseTask, Composer composer)  {
         ConcurrentConvertTask convertTask = new ConcurrentConvertTask(parseTask, composer);
         onStart.forEach(convertTask::registerOnStart);
         onStop.forEach(convertTask::registerOnStop);

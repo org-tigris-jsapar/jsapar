@@ -4,12 +4,10 @@ import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.Document;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;

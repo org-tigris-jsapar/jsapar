@@ -2,7 +2,7 @@ package org.jsapar.concurrent;
 
 import org.jsapar.BeanCollection2TextConverter;
 import org.jsapar.convert.AbstractConverter;
-import org.jsapar.parse.bean.BeanMap;
+import org.jsapar.bean.BeanMap;
 import org.jsapar.schema.Schema;
 
 import java.io.IOException;

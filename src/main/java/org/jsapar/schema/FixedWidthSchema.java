@@ -1,7 +1,7 @@
 package org.jsapar.schema;
 
 import org.jsapar.parse.fixed.FixedWidthParser;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
 
 import java.io.Reader;

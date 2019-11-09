@@ -2,6 +2,7 @@ package org.jsapar.text;
 
 import java.text.FieldPosition;
 import java.text.Format;
+import java.text.ParseException;
 import java.text.ParsePosition;
 import java.util.Arrays;
 import java.util.Optional;
@@ -30,6 +31,7 @@ public class BooleanFormat extends Format {
     private String falseValue;
     private String[] optionalTrue;
     private String[] optionalFalse;
+    private boolean ignoreCase = true;
 
     /**
      *
@@ -42,21 +44,24 @@ public class BooleanFormat extends Format {
      * <li>Optional true values while parsing are: "on", "1", "yes", "y"</li>
      * <li>Optional false values while parsing are: "off", "0", "no", "n"</li>
      * </ul>
+     * @param ignoreCase
      */
     @SuppressWarnings("WeakerAccess")
-    public BooleanFormat() {
-        this(new String[]{"true", "on", "1", "yes", "y"}, new String[]{"false", "off", "0", "no", "n"});
+    public BooleanFormat(boolean ignoreCase) {
+        this(new String[]{"true", "on", "1", "yes", "y"}, new String[]{"false", "off", "0", "no", "n"}, true);
+        this.ignoreCase = ignoreCase;
     }
 
     /**
      * Creates a formatter for boolean values.
-     *
-     * @param trueValue  The string that represents the true value.
+     *  @param trueValue  The string that represents the true value.
      * @param falseValue The string that represents the false value.
+     * @param ignoreCase
      */
-    public BooleanFormat(String trueValue, String falseValue) {
+    public BooleanFormat(String trueValue, String falseValue, boolean ignoreCase) {
         this.trueValue = trueValue;
         this.falseValue = falseValue;
+        this.ignoreCase = ignoreCase;
         this.optionalTrue = new String[0];
         this.optionalFalse = new String[0];
         if (trueValue.equals(falseValue))
@@ -73,17 +78,18 @@ public class BooleanFormat extends Format {
      *     <li>The rest of the true values are tested in supplied order.</li>
      *     <li>The rest of the false values are tested in supplied order.</li>
      * </ol>
-     *
-     * @param trueValues  An array of all of the strings that represents the true value. The first item in the array is used when formatting.
+     *  @param trueValues  An array of all of the strings that represents the true value. The first item in the array is used when formatting.
      * @param falseValues An array of all of the strings that represents the false value. The first item in the array is used when formatting.
+     * @param ignoreCase
      */
-    public BooleanFormat(String[] trueValues, String[] falseValues) {
+    public BooleanFormat(String[] trueValues, String[] falseValues, boolean ignoreCase) {
         assert trueValues != null: "trueValues parameter cannot be null";
         assert falseValues != null: "falseValues parameter cannot be null";
         assert trueValues.length > 0: "trueValues needs to contain at least one value";
         assert falseValues.length > 0: "falseValues needs to contain at least one value";
         this.trueValue = trueValues[0];
         this.falseValue = falseValues[0];
+        this.ignoreCase = ignoreCase;
         this.optionalTrue = Arrays.copyOfRange(trueValues, 1, trueValues.length);
         this.optionalFalse = Arrays.copyOfRange(falseValues, 1, falseValues.length);
         if (trueValue.equals(falseValue))
@@ -126,7 +132,6 @@ public class BooleanFormat extends Format {
      */
     @Override
     public Object parseObject(String toParse, ParsePosition pos) {
-        final boolean ignoreCase = true;
         if (toParse.regionMatches(ignoreCase, pos.getIndex(), trueValue, 0, trueValue.length())) {
             pos.setIndex(pos.getIndex() + trueValue.length());
             return Boolean.TRUE;
@@ -143,6 +148,15 @@ public class BooleanFormat extends Format {
                         }));
     }
 
+    @Override
+    public Object parseObject(String source) throws ParseException {
+        if(source.equals(trueValue))
+            return Boolean.TRUE;
+        if(source.equals(falseValue))
+            return Boolean.FALSE;
+        return super.parseObject(source);
+    }
+
     private Optional<Boolean> matchValue(Stream<String> values, Boolean result, String toParse, ParsePosition pos, boolean ignoreCase) {
         return values
                 .filter(v->toParse.regionMatches(ignoreCase, pos.getIndex(), v, 0, v.length()))
@@ -156,14 +170,19 @@ public class BooleanFormat extends Format {
      * @return true or false depending on value to parse.
      */
     public boolean parse(String toParse) {
-        if (toParse.equalsIgnoreCase(trueValue))
+        if (toParse.equals(trueValue))
             return true;
-        else if (toParse.equalsIgnoreCase(falseValue))
+        else if (toParse.equals(falseValue))
             return false;
-        else
+
+        try {
+            return (Boolean)super.parseObject(toParse);
+        } catch (ParseException e) {
             throw new NumberFormatException(
                     "Faled to parse [" + toParse + "] to boolean value only [" + trueValue + "] or [" + falseValue
                             + "] is allowed.");
+        }
+
     }
 
     /* (non-Javadoc)

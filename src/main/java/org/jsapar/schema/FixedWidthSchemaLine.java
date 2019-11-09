@@ -8,8 +8,7 @@ import java.util.stream.Stream;
  * This class represents the schema for a line of a fixed with file. Each cell within the line has a
  * specified size. There are no delimiter characters.
  * 
- * @author stejon0
- * 
+ *
  */
 public class FixedWidthSchemaLine extends SchemaLine {
 

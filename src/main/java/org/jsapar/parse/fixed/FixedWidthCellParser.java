@@ -12,9 +12,11 @@ import java.io.Reader;
  * Parses fixed width text source on cell level.
  */
 class FixedWidthCellParser extends CellParser<FixedWidthSchemaCell> {
+    private final ReadBuffer.Trimmer trimmer;
 
     FixedWidthCellParser(FixedWidthSchemaCell fixedWidthSchemaCell, int maxCacheSize) {
         super(fixedWidthSchemaCell, maxCacheSize);
+        this.trimmer = ReadBuffer.makeTrimmer(fixedWidthSchemaCell);
     }
 
     /**
@@ -26,7 +28,8 @@ class FixedWidthCellParser extends CellParser<FixedWidthSchemaCell> {
      * @throws IOException In case there is an error reading from the reader.
      */
     Cell parse(ReadBuffer lineReader, ErrorEventListener errorEventListener) throws IOException {
-        String sValue = lineReader.readToString(getSchemaCell(),  0);
+        String sValue = lineReader.readToString(trimmer,  0, getSchemaCell().getLength());
+        // If EOF
         if(sValue == null) {
             checkIfMandatory(errorEventListener);
             return null;

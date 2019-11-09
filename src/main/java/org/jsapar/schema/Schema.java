@@ -1,7 +1,7 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.Document;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.utils.StringUtils;
 

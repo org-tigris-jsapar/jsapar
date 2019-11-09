@@ -4,13 +4,14 @@ import org.jsapar.compose.bean.*;
 import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.ConvertTask;
 import org.jsapar.error.BeanException;
-import org.jsapar.parse.bean.BeanMap;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.bean.BeanMap;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
 
 /**
  * Converts text input to Java bean objects. You can choose to use the standard behavior or you may customize assigning
@@ -34,7 +35,8 @@ public class Text2BeanConverter<T> extends AbstractConverter {
      * Creates a converter with supplied composer schema.
      * @param parseSchema The schema to use while reading the text input.
      * @param beanMap     The bean map to use to map schema names to bean properties. By supplying a {@link BeanMap} instance to the constructor you can map
-     * different line and cell names to property names. {@link BeanMap} instance can be created form an xml input by using
+     *                    different line and cell names to property names. {@link BeanMap} instance can be created either from a list of
+     *                    annotated classes by using the {@link BeanMap#ofClasses(List)} or form an xml input by using
      * the {@link BeanMap#ofXml(Reader)} method. This {@link BeanMap} instance will be used as is so it needs to contain
      * mapping for all values that should be assigned to the bean instances. If you want to use a {@link BeanMap} that is created
      *                    from a combination of the schema and an additional override {@link BeanMap} you can use the method {@link BeanMap#ofSchema(Schema, BeanMap)} to create such combined instance.

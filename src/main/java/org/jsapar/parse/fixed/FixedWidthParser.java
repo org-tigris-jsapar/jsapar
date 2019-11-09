@@ -5,7 +5,7 @@ import org.jsapar.model.Line;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.line.ValidationHandler;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
@@ -54,7 +54,7 @@ public class FixedWidthParser implements TextSchemaParser {
                 return lineReader.getLineNumber();
             int lineLength = lineReader.nextLine(minLineLength);
             if (lineLength < 0)
-                return lineReader.getLineNumber() - 1; // End of stream.
+                return lineReader.getLineNumber(); // End of stream.
             if (lineLength == 0)
                 continue; // Just ignore empty lines
             FixedWidthLineParser lineParser = lineParserFactory.makeLineParser(lineReader);
