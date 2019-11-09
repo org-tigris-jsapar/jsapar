@@ -301,7 +301,7 @@ Tests have shown though that unless the data source is really large, the gain of
 than the overhead of starting a new thread and synchronizing threads. As a rule of thumb while working with normal
 files on disc, don't use this concurrent version unless your input normally exceeds at least 1MB.
 ## Running text to text conversion from command line
-The class `org.jsapar.Text2TextConverter` has a main method that is also registered as the default main method for the jar file.
+The class `org.jsapar.ConverterMain` has a main method that is also registered as the default main method for the jar file.
 This means that you can run the converter without any coding at all.
 
 If you run it without any arguments you will get a help text with further instructions:
