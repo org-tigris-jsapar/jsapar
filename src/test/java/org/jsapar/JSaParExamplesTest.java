@@ -468,7 +468,7 @@ public class JSaParExamplesTest {
             throws IOException, JSaParException {
         try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
              Reader fileReader = new FileReader("examples/06_NamesControlCell.csv")) {
-            Text2BeanConverter converter = new Text2BeanConverter(Schema.ofXml(schemaReader), BeanMap.ofClasses(Collections.singletonList(TstPersonAnnotated.class)));
+            Text2BeanConverter converter = new Text2BeanConverter(Schema.ofXml(schemaReader), BeanMap.ofClass(TstPersonAnnotated.class));
             converter.getComposeConfig().setOnUndefinedLineType(ValidationAction.OMIT_LINE);
             RecordingBeanEventListener<TstPersonAnnotated> beanEventListener = new RecordingBeanEventListener<>();
             converter.convert(fileReader, beanEventListener);
