@@ -38,7 +38,6 @@ jsapar.jar -in.schema <input schema path> -xslt.file <xslt file path>
 -in.file <input file name> [-out.file <output file name>]
 [-in.file.encoding  <input file encoding (or system default is used)>]
 [-out.file.encoding <output file encoding (or system default is used)>]
-[-out.file.encoding <output file encoding (or system default is used)>]
 [-xslt.encoding     <xslt file encoding (or system default is used)>]
 [-xslt.method       <xslt method to use. (xml is default)
 Probably one of xml, html or text>]
@@ -140,16 +139,19 @@ public class ConverterMain {
         out.println();
         out.println(" 2. Convert from one text file to another using different input and output");
         out.println("    schemas:");
-        out.println(getApplicationName() + " -in.schema <input schema path> -out.schema <output schema path>");
-        out.println("           -in.file <input file name> [-out.file <output file name>]");
+        out.println(getApplicationName() + " -in.schema <input schema path>");
+        out.println("           -out.schema <output schema path>");
+        out.println("           -in.file <input file name>");
+        out.println("           [-out.file <output file name>]");
         out.println("           [-in.file.encoding  <input file encoding (or system default is used)>]");
         out.println("           [-out.file.encoding <output file encoding (or system default is used)>]");
         out.println();
         out.println(" 3. Transform a text file into xml, html or any other format using XSLT:");
-        out.println(getApplicationName() + " -in.schema <input schema path> -xslt.file <xslt file path>");
-        out.println("           -in.file <input file name> [-out.file <output file name>]");
+        out.println(getApplicationName() + " -in.schema <input schema path>");
+        out.println("           -xslt.file <xslt file path>");
+        out.println("           -in.file <input file name>");
+        out.println("           [-out.file <output file name>]");
         out.println("           [-in.file.encoding  <input file encoding (or system default is used)>]");
-        out.println("           [-out.file.encoding <output file encoding (or system default is used)>]");
         out.println("           [-out.file.encoding <output file encoding (or system default is used)>]");
         out.println("           [-xslt.encoding     <xslt file encoding (or system default is used)>]");
         out.println("           [-xslt.method       <xslt method to use. (xml is default)");
@@ -166,7 +168,7 @@ public class ConverterMain {
             String arg = args[i];
             if (arg.length() > 1 && arg.charAt(0) == '-') {
                 if (args.length > i + 1) {
-                    properties.setProperty(arg.substring(1, arg.length()), args[i + 1]);
+                    properties.setProperty(arg.substring(1), args[i + 1]);
                     i++; // Skip next.
                 }
             }
