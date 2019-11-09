@@ -315,16 +315,19 @@ jsapar.jar <property file name>
 
  2. Convert from one text file to another using different input and output
     schemas:
-jsapar.jar -in.schema <input schema path> -out.schema <output schema path>
-           -in.file <input file name> [-out.file <output file name>]
+jsapar.jar -in.schema <input schema path> 
+           -out.schema <output schema path>
+           -in.file <input file name> 
+           [-out.file <output file name>]
            [-in.file.encoding  <input file encoding (or system default is used)>]
            [-out.file.encoding <output file encoding (or system default is used)>]
 
  3. Transform a text file into xml, html or any other format using XSLT:
-jsapar.jar -in.schema <input schema path> -xslt.file <xslt file path>
-           -in.file <input file name> [-out.file <output file name>]
+jsapar.jar -in.schema <input schema path> 
+           -xslt.file <xslt file path>
+           -in.file <input file name> 
+           [-out.file <output file name>]
            [-in.file.encoding  <input file encoding (or system default is used)>]
-           [-out.file.encoding <output file encoding (or system default is used)>]
            [-out.file.encoding <output file encoding (or system default is used)>]
            [-xslt.encoding     <xslt file encoding (or system default is used)>]
            [-xslt.method       <xslt method to use. (xml is default)
