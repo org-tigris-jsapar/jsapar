@@ -8,7 +8,7 @@ import java.text.*;
  * Class that can be used to parse and format <a href="https://www.ibm.com/support/knowledgecenter/en/SSLVMB_24.0.0/spss/base/syn_data_list_implied_decimal_positions.html">implied decimals</a>.
  * The text representation is always an integer but when parsing the decimal point is shifted left and when composing it is shifted right.
  */
-public class ImpliedDecimalFormat extends Format {
+public class ImpliedDecimalFormat implements Format<BigDecimal> {
 
     private final int decimals;
     private final DecimalFormat integerFormat = new DecimalFormat("0");
@@ -25,7 +25,7 @@ public class ImpliedDecimalFormat extends Format {
     }
 
     @Override
-    public StringBuffer format(Object o, StringBuffer stringBuffer, FieldPosition fieldPosition) {
+    public String format(Object o) {
         BigDecimal value;
         if(o instanceof BigDecimal){
             value = (BigDecimal) o;
@@ -43,25 +43,14 @@ public class ImpliedDecimalFormat extends Format {
             throw new IllegalArgumentException("Unable to format an implied decimal value from " + o + ". Unsupported type.");
         }
         value = value.movePointRight(decimals);
-        return integerFormat.format(value, stringBuffer, fieldPosition);
+        return integerFormat.format(value);
     }
 
 
 
     @Override
-    public Object parseObject(String s, ParsePosition parsePosition) {
-        Number v = integerFormat.parse(s, parsePosition);
-        return BigDecimal.valueOf(v.longValue()).movePointLeft(decimals);
+    public BigDecimal parse(String s) {
+        return new BigDecimal(s).movePointLeft(decimals);
     }
-
-    @Override
-    public Object parseObject(String source) {
-        return parse(source);
-    }
-
-    public BigDecimal parse(String source){
-        return new BigDecimal(source).movePointLeft(decimals);
-    }
-
 
 }

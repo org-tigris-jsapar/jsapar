@@ -39,7 +39,7 @@ public class BooleanCellFactory implements CellFactory {
      * @return A format object to use for the boolean type cells.
      */
     @Override
-    public Format makeFormat(Locale locale, String pattern) {
+    public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
         String[] aTrueFalse = pattern.trim().split("\\s*;\\s*");
         if (aTrueFalse.length < 1 || aTrueFalse.length > 2)
             throw new IllegalArgumentException(

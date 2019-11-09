@@ -1,7 +1,6 @@
 package org.jsapar.text;
 
 import java.text.FieldPosition;
-import java.text.Format;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.util.Arrays;
@@ -25,18 +24,13 @@ import java.util.stream.Stream;
  * are used when formatting.
  *
  */
-public class BooleanFormat extends Format {
+public class BooleanFormat implements Format<Boolean> {
 
     private String trueValue;
     private String falseValue;
     private String[] optionalTrue;
     private String[] optionalFalse;
     private boolean ignoreCase = true;
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = -281569113302316449L;
 
     /**
      * Creates a default instance where the text "true" is the true value and "false" is the false value.
@@ -100,21 +94,16 @@ public class BooleanFormat extends Format {
      * @see java.text.Format#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)
      */
     @Override
-    public StringBuffer format(Object toFormat, StringBuffer appendToBuffer, FieldPosition pos) {
-        int startPos = appendToBuffer.length();
-        String value;
+    public String format(Object toFormat) {
         if (toFormat.equals(Boolean.TRUE))
-            value = trueValue;
+            return trueValue;
         else if (toFormat.equals(Boolean.FALSE))
-            value = falseValue;
+            return falseValue;
+        else if(toFormat instanceof Number){
+            return ((Number) toFormat).longValue() == 0L ? falseValue : trueValue;
+        }
         else
             throw new IllegalArgumentException("Only boolean objects can be formatted with this formatter.");
-
-        appendToBuffer.append(value);
-        int endPos = appendToBuffer.length();
-        pos.setBeginIndex(startPos);
-        pos.setEndIndex(endPos);
-        return appendToBuffer;
     }
 
     /**
@@ -131,59 +120,33 @@ public class BooleanFormat extends Format {
      * @see java.text.Format#parseObject(java.lang.String, java.text.ParsePosition)
      */
     @Override
-    public Object parseObject(String toParse, ParsePosition pos) {
-        if (toParse.regionMatches(ignoreCase, pos.getIndex(), trueValue, 0, trueValue.length())) {
-            pos.setIndex(pos.getIndex() + trueValue.length());
+    public Boolean parse(String toParse) {
+        if(toParse.equals(trueValue))
             return Boolean.TRUE;
-        }
-        if (toParse.regionMatches(ignoreCase, pos.getIndex(), falseValue, 0, falseValue.length())) {
-            pos.setIndex(pos.getIndex() + falseValue.length());
+        if(toParse.equals(falseValue))
             return Boolean.FALSE;
+
+        if(ignoreCase) {
+            if (toParse.regionMatches(true, 0, trueValue, 0, trueValue.length())) {
+                return Boolean.TRUE;
+            }
+            if (toParse.regionMatches(true, 0, falseValue, 0, falseValue.length())) {
+                return Boolean.FALSE;
+            }
         }
-        return matchValue(Arrays.stream(optionalTrue), Boolean.TRUE, toParse, pos, ignoreCase)
-                .orElseGet(()->matchValue(Arrays.stream(optionalFalse), Boolean.FALSE, toParse, pos, ignoreCase)
-                        .orElseGet(() -> {
-                            pos.setErrorIndex(pos.getIndex());
-                            return null;
-                        }));
+        return matchValue(Arrays.stream(optionalTrue), Boolean.TRUE, toParse, ignoreCase)
+                .orElseGet(()->matchValue(Arrays.stream(optionalFalse), Boolean.FALSE, toParse, ignoreCase)
+                        .orElse( null));
     }
 
-    @Override
-    public Object parseObject(String source) throws ParseException {
-        if(source.equals(trueValue))
-            return Boolean.TRUE;
-        if(source.equals(falseValue))
-            return Boolean.FALSE;
-        return super.parseObject(source);
-    }
 
-    private Optional<Boolean> matchValue(Stream<String> values, Boolean result, String toParse, ParsePosition pos, boolean ignoreCase) {
+    private Optional<Boolean> matchValue(Stream<String> values, Boolean result, String toParse, boolean ignoreCase) {
         return values
-                .filter(v->toParse.regionMatches(ignoreCase, pos.getIndex(), v, 0, v.length()))
-                .peek(v->pos.setIndex(pos.getIndex() + v.length()))
+                .filter(v->toParse.regionMatches(ignoreCase, 0, v, 0, v.length()))
                 .map(v->result)
                 .findFirst();
     }
 
-    /**
-     * @param toParse The value to parse
-     * @return true or false depending on value to parse.
-     */
-    public boolean parse(String toParse) {
-        if (toParse.equals(trueValue))
-            return true;
-        else if (toParse.equals(falseValue))
-            return false;
-
-        try {
-            return (Boolean)super.parseObject(toParse);
-        } catch (ParseException e) {
-            throw new NumberFormatException(
-                    "Faled to parse [" + toParse + "] to boolean value only [" + trueValue + "] or [" + falseValue
-                            + "] is allowed.");
-        }
-
-    }
 
     /* (non-Javadoc)
      * @see java.lang.Object#toString()

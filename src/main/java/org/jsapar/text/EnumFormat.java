@@ -1,9 +1,6 @@
 package org.jsapar.text;
 
-import java.text.FieldPosition;
-import java.text.Format;
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,17 +10,14 @@ import java.util.stream.Stream;
  * Format class that can be used to parse or format enum values based on the value.
  *
  */
-public class EnumFormat extends Format {
+public class EnumFormat<E extends Enum<E> > implements Format<E> {
     private final boolean ignoreCase;
-    private Map<String, Enum> enumByValue=new HashMap<>();
-    private Map<Object, String> valueByEnum=new HashMap<>();
-    private final Class<? extends Enum> enumClass;
+    private Map<String, E> enumByValue=new HashMap<>();
+    private Map<String, E> enumByUValue=new HashMap<>();
+    private Map<E, String> valueByEnum=new HashMap<>();
+    private final Class<E> enumClass;
 
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = -281569113302316449L;
 
     /**
      * Creates a default enum format where values are the same as the Enum constants.
@@ -31,7 +25,7 @@ public class EnumFormat extends Format {
      * @param ignoreCase If true, the case is ignored while parsing.
      */
     @SuppressWarnings("WeakerAccess")
-    public EnumFormat(Class<? extends Enum> enumClass, boolean ignoreCase) {
+    public EnumFormat(Class<E> enumClass, boolean ignoreCase) {
         this.enumClass = enumClass;
         this.ignoreCase = ignoreCase;
         Arrays.stream(enumClass.getEnumConstants())
@@ -47,7 +41,7 @@ public class EnumFormat extends Format {
     }
 
     public void putEnumValueIfAbsent(String value, String enumConstantName){
-        Enum enumConstant = enumByValue.get(enumConstantName);
+        E enumConstant = enumByValue.get(enumConstantName);
         if(enumConstant == null)
             throw new IllegalArgumentException("The enum constant name " + enumConstantName + " is not a valid value of the enum " + enumClass.getName());
         putEnumValueIfAbsent(value, enumConstant);
@@ -59,25 +53,10 @@ public class EnumFormat extends Format {
      * @param value  The string value
      * @param enumConstant The enum constant
      */
-    private void putEnumValueIfAbsent(String value, Enum enumConstant){
+    private void putEnumValueIfAbsent(String value, E enumConstant){
         this.enumByValue.putIfAbsent(value, enumConstant);
+        this.enumByUValue.putIfAbsent(value.toUpperCase(), enumConstant);
         this.valueByEnum.putIfAbsent(enumConstant, value);
-    }
-
-
-    /* (non-Javadoc)
-     * @see java.text.Format#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)
-     */
-    @Override
-    public StringBuffer format(Object toFormat, StringBuffer appendToBuffer, FieldPosition pos) {
-        if(!enumClass.isAssignableFrom(toFormat.getClass()))
-            throw new ClassCastException("Unable to cast object to enum class " + enumClass.getName());
-        int startPos = appendToBuffer.length();
-        appendToBuffer.append(valueByEnum.get(toFormat));
-        int endPos = appendToBuffer.length();
-        pos.setBeginIndex(startPos);
-        pos.setEndIndex(endPos);
-        return appendToBuffer;
     }
 
 
@@ -87,66 +66,42 @@ public class EnumFormat extends Format {
      * @param value The value to format
      * @return the string value that represents the supplied enum value.
      */
-    public String format(Enum value) {
-        return valueByEnum.get(value);
-    }
-
-    /* (non-Javadoc)
-     * @see java.text.Format#parseObject(java.lang.String, java.text.ParsePosition)
-     */
     @Override
-    public Object parseObject(String toParse, ParsePosition pos) {
-        int endIndex = toParse.indexOf(' ', pos.getIndex());
-        endIndex = endIndex > 0 ? endIndex : toParse.length();
-        String value = toParse.substring(pos.getIndex(), endIndex);
-        Enum enumValue = enumByValue.get(value);
-        if(enumValue != null) {
-            pos.setIndex(endIndex);
-            return enumValue;
+    public String format(Object value) {
+        if(value instanceof Enum){
+            return valueByEnum.get(value);
         }
-        if(!ignoreCase){
-            pos.setErrorIndex(pos.getIndex());
-            return null;
+        if(value instanceof String && enumByValue.containsKey(value)) {
+            return (String) value;
         }
-        return enumByValueEntries().filter(e->toParse.regionMatches(ignoreCase, pos.getIndex(), e.getKey(), 0, e.getKey().length()))
-                .peek(e->pos.setIndex(pos.getIndex() + e.getKey().length()))
-                .map(Map.Entry::getValue)
-                .findFirst()
-                .orElseGet(() -> {
-                            pos.setErrorIndex(pos.getIndex());
-                            return null;
-                        });
+        throw new IllegalArgumentException("Unable to format enum value from " + value + " of type " + value.getClass());
     }
 
-    @Override
-    public Object parseObject(String toParse) throws ParseException {
-        Enum enumValue = enumByValue.get(toParse);
-        if(enumValue != null)
-            return enumValue;
 
-        if(!ignoreCase)
-            throw new ParseException("There is no enum constant matching the value '" + toParse + "' for  enum class " + enumClass.getName(), 0 );
-
-        return enumByValueEntries().filter(e->toParse.regionMatches(true, 0, e.getKey(), 0, e.getKey().length()))
-                .map(Map.Entry::getValue)
-                .findFirst()
-                .orElseThrow(() ->
-                    new ParseException("There is no enum constant matching the value '" + toParse + "' for  enum class " + enumClass.getName(), 0 )
-                );
-    }
-
-    public Stream<Map.Entry<String, Enum>> enumByValueEntries() {
-        return enumByValue.entrySet().stream();
-    }
 
     /**
      * @param toParse The value to parse
      * @return true or false depending on value to parse.
      */
-    @SuppressWarnings("unchecked")
-    public <E extends Enum> E parse(String toParse) throws ParseException {
-        return (E)parseObject(toParse);
+    @Override
+    public E parse(String toParse) throws ParseException {
+        E enumValue = enumByValue.get(toParse);
+        if(enumValue != null)
+            return enumValue;
+
+        if(ignoreCase){
+            enumValue = enumByUValue.get(toParse.toUpperCase());
+            if(enumValue != null)
+                return enumValue;
+        }
+
+        throw new ParseException("There is no enum constant matching the value '" + toParse + "' for  enum class " + enumClass.getName(), 0 );
     }
+
+    public Stream<Map.Entry<String, E>> enumByValueEntries() {
+        return enumByValue.entrySet().stream();
+    }
+
 
     /**
      * @return Number of allowed possibilities.
@@ -155,7 +110,7 @@ public class EnumFormat extends Format {
         return enumByValue.size();
     }
 
-    public Class<? extends Enum> getEnumClass() {
+    public Class<? extends E> getEnumClass() {
         return enumClass;
     }
 

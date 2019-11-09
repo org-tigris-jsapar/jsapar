@@ -482,7 +482,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         String sEnumClass = getAttributeValue(xmlFormat, "class");
         boolean ignoreCase = parseBooleanAttribute(xmlFormat, "ignorecase").orElse(false);
         try {
-            EnumFormat format = new EnumFormat((Class<? extends Enum>) Class.forName(sEnumClass), ignoreCase);
+            EnumFormat format = new EnumFormat(Class.forName(sEnumClass), ignoreCase);
             getChildrenStream(JSAPAR_XML_SCHEMA, xmlFormat, "value").forEach(xmlValue->{
                 format.putEnumValueIfAbsent(getAttributeValue(xmlValue, "text"), getAttributeValue(xmlValue, "name"));
             });

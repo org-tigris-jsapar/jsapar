@@ -39,7 +39,7 @@ public class CharacterCellFactory implements CellFactory {
     }
 
     @Override
-    public Format makeFormat(Locale locale, String pattern) {
+    public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
         return null;
     }
 }

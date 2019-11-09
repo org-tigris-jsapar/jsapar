@@ -25,7 +25,7 @@ public class StringCellFactory implements CellFactory{
     }
 
     @Override
-    public Format makeFormat(Locale locale, String pattern) {
+    public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
         return pattern != null ? new RegExpFormat(pattern) : null;
     }
 

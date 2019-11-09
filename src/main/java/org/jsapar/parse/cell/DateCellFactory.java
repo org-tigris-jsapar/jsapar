@@ -3,7 +3,6 @@ package org.jsapar.parse.cell;
 import org.jsapar.model.Cell;
 import org.jsapar.model.DateCell;
 
-import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,7 +31,7 @@ DateCellFactory implements CellFactory {
     }
 
     @Override
-    public Format makeFormat(Locale locale, String pattern) {
+    public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
         if(pattern == null || pattern.isEmpty())
             return makeFormat(locale);
         return new SimpleDateFormat(pattern);

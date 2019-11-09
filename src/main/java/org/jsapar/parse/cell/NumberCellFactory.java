@@ -63,7 +63,7 @@ public abstract class NumberCellFactory implements CellFactory{
     }
 
     @Override
-    public Format makeFormat(Locale locale, String pattern) {
+    public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
         if (locale == null)
             locale = SchemaCellFormat.defaultLocale;
         if (pattern != null && !pattern.isEmpty())
