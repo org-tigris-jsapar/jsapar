@@ -9,6 +9,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
+/**
+ * As of JDK 9 some locales have got new decimal symbols. This is implementation has a work around to also still be
+ * able to parse the
+ * old format since they are still widely used.
+ * @param <T>
+ */
 public class DecimalFormat<T extends Number> extends JavaTextFormat<T> {
     private List<Function<String, String>> mappers = new ArrayList<>();
 

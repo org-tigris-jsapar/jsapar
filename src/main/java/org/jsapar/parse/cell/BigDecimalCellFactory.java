@@ -58,6 +58,6 @@ public class BigDecimalCellFactory extends NumberCellFactory implements CellFact
             return makeFormat(locale);
         DecimalFormat decFormat = new java.text.DecimalFormat(pattern, new DecimalFormatSymbols(locale));
         decFormat.setParseBigDecimal(true);
-        return decFormat;
+        return new org.jsapar.text.DecimalFormat(decFormat, locale);
     }
 }
