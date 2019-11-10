@@ -3,11 +3,11 @@ package org.jsapar.parse.cell;
 import org.jsapar.model.BigDecimalCell;
 import org.jsapar.model.Cell;
 import org.jsapar.schema.SchemaCellFormat;
+import org.jsapar.text.Format;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
 

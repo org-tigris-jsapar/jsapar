@@ -2,9 +2,14 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
 import org.jsapar.schema.SchemaCellFormat;
+import org.jsapar.text.Format;
+import org.jsapar.text.JavaTextFormat;
 import org.jsapar.utils.StringUtils;
 
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Locale;
 
 /**
@@ -14,19 +19,12 @@ public abstract class NumberCellFactory implements CellFactory{
 
     @Override
     public Format makeFormat(Locale locale) {
-        return NumberFormat.getInstance(locale);
+        return new JavaTextFormat<Number>(NumberFormat.getInstance(locale));
     }
 
     protected Number parseObject(Format format, String value) throws ParseException {
-        ParsePosition pos = new ParsePosition(0);
         value = adjustValueForOddLocales(value, format);
-        Number number= (Number) format.parseObject(value, pos);
-
-        if (pos.getIndex() < value.length())
-            // It is not acceptable to parse only a part of the string. That can happen for instance if there is a space
-            // in an integer value.
-            throw new java.text.ParseException("Invalid characters found while parsing number.", pos.getIndex());
-        return number;
+        return  (Number) format.parse(value);
     }
 
     /**
