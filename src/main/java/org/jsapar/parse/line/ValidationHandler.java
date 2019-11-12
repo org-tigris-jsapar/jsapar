@@ -5,6 +5,8 @@ import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ValidationAction;
 import org.jsapar.parse.LineParseException;
 
+import java.util.function.Supplier;
+
 /**
  * Internal utility class for handling validation error.
  */
@@ -18,7 +20,7 @@ public class ValidationHandler {
      *
      * @param source        The class where the error
      * @param lineNumber    The line number if present, 0 otherwise.
-     * @param message       A message to provide as error message in case it is considered an error.
+     * @param messageSupplier    Should create a message to provide as error message in case it is considered an error.
      * @param action        How to tread this validation.
      *                      ERROR will generate an error event but return true.
      *                      EXCEPTION will throw a LineParseException immediately.
@@ -29,18 +31,18 @@ public class ValidationHandler {
      */
     public boolean lineValidation(Object source,
                                   long lineNumber,
-                                  String message,
+                                  Supplier<String> messageSupplier,
                                   ValidationAction action,
                                   ErrorEventListener eventListener) {
         switch (action) {
         case ERROR: {
-            LineParseException error = new LineParseException(lineNumber, message);
+            LineParseException error = new LineParseException(lineNumber, messageSupplier.get());
             ErrorEvent event = new ErrorEvent(source, error);
             eventListener.errorEvent(event);
             return true;
         }
         case EXCEPTION: {
-            throw new LineParseException(lineNumber, message);
+            throw new LineParseException(lineNumber, messageSupplier.get());
         }
         case NONE:
             return true;

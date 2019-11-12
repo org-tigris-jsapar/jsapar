@@ -109,7 +109,7 @@ class CsvLineParser {
         // We have to fill all the default values and mandatory items for remaining cells within the schema.
         while (itParser.hasNext()) {
             if (!validationHandler.lineValidation(this, line.getLineNumber(),
-                    "Insufficient number of cells could be read from the line", config.getOnLineInsufficient(),
+                    ()->"Insufficient number of cells could be read from the line of type " + lineSchema.getLineType(), config.getOnLineInsufficient(),
                     errorListener)) {
                 return true;
             }
@@ -229,7 +229,7 @@ class CsvLineParser {
             {
 
         if (!validationHandler.lineValidation(this, line.getLineNumber(),
-                "Found additional cell on the line that is not described in the line schema.",
+                ()->"Found additional cell on the line that is not described in the line schema.",
                 config.getOnLineOverflow(), errorListener)) {
             return false;
         }

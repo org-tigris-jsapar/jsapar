@@ -85,7 +85,7 @@ final class FixedWidthLineParser {
                         //noinspection ConstantConditions
                         if (handleInsufficient) {
                             if (!validationHandler
-                                    .lineValidation(this, lineReader.getLineNumber(), "Insufficient number of characters for line",
+                                    .lineValidation(this, lineReader.getLineNumber(), ()->"Insufficient number of characters for line of type "+lineSchema.getLineType()+". Expected at least " + lineSchema.getTotalCellLength(),
                                             config.getOnLineInsufficient(), errorListener)) {
                                 return null;
                             }
@@ -104,7 +104,7 @@ final class FixedWidthLineParser {
 
         int remaining = lineReader.remainsForLine();
         if(remaining > 0) {
-            if(!validationHandler.lineValidation(this, lineReader.getLineNumber(), "Trailing characters found on line",
+            if(!validationHandler.lineValidation(this, lineReader.getLineNumber(), ()-> remaining + " trailing characters found on line",
                     config.getOnLineOverflow(), errorListener))
                 return null; // Ignore the line.
         }
