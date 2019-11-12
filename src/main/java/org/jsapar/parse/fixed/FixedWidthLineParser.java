@@ -70,9 +70,9 @@ final class FixedWidthLineParser {
                 if (nSkipped != schemaCell.getLength()) {
                     if (oneRead) {
                         setDefaultsOnly = true;
+                        if(!lineValidationInsufficient(lineReader, errorListener))
+                            return null;
                     }
-                    if(!lineValidationInsufficient(lineReader, errorListener))
-                        return null;
                     continue;
                 }
             } else {
