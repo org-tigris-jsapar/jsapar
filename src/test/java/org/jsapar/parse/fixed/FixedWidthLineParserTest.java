@@ -118,6 +118,31 @@ public class FixedWidthLineParserTest {
         assertEquals(true, foundError);
     }
 
+    @Test
+    public void testParse_mandatory()
+            throws IOException, JSaParException {
+        String toParse = "JonasStenberg";
+        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        FixedWidthSchemaCell cityCell = new FixedWidthSchemaCell("City", 8);
+        cityCell.setMandatory(true);
+        schemaLine.addSchemaCell(cityCell);
+        schema.addSchemaLine(schemaLine);
+
+        TextParseConfig config = new TextParseConfig();
+        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
+        Line line = parser.parse(makeReadBuffer(toParse), event -> {
+            CellParseException e = (CellParseException) event.getError();
+            assertEquals("City", e.getCellName());
+            foundError=true;
+        });
+
+        assertNotNull(line);
+        assertEquals(true, foundError);
+    }
+
     @Test(expected = CellParseException.class)
     public void testParse_parseError() throws IOException, JSaParException {
         String toParse = "JonasStenbergFortyone";

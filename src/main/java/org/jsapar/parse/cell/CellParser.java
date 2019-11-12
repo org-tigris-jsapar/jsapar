@@ -168,7 +168,7 @@ public class CellParser<S extends SchemaCell> {
      *
      * @param errorEventListener The error event listener to deliver errors to.
      */
-    protected void checkIfMandatory(ErrorEventListener errorEventListener) {
+    public void checkIfMandatory(ErrorEventListener errorEventListener) {
         if (schemaCell.isMandatory()) {
             CellParseException e = new CellParseException(schemaCell.getName(), EMPTY_STRING,
                     schemaCell.getCellFormat(), "Mandatory cell requires a value.");
