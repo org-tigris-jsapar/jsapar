@@ -16,16 +16,15 @@ import java.util.function.Function;
  * able to parse the
  * old format since they are still widely used.
  */
-public class NumberFormat implements Format<Number> {
+public class NumberFormat extends JavaTextFormat<Number> implements Format<Number> {
     private final List<Function<String, String>> mappers = new ArrayList<>(3);
-    private final java.text.NumberFormat textFormat;
 
     public NumberFormat(String pattern, Locale locale) {
         this(new java.text.DecimalFormat(pattern, new DecimalFormatSymbols(locale)));
     }
 
     public NumberFormat(java.text.NumberFormat numberFormat) {
-        textFormat = numberFormat;
+        super(numberFormat);
         if(numberFormat instanceof java.text.DecimalFormat) {
             DecimalFormat decimalFormat = (DecimalFormat) numberFormat;
 
@@ -70,11 +69,7 @@ public class NumberFormat implements Format<Number> {
         for (Function<String, String> mapper : mappers) {
             stringValue = mapper.apply(stringValue);
         }
-        return (Number) textFormat.parse(stringValue);
+        return super.parse(stringValue);
     }
 
-    @Override
-    public String format(Object value) {
-        return textFormat.format(value);
-    }
 }

@@ -12,7 +12,7 @@ public class BooleanFormatTest {
 
 
     @Test
-    public void testJavadocSample() {
+    public void testJavadocSample() throws ParseException {
         BooleanFormat format = new BooleanFormat("Y", "N", true);
         assert format.format(true).equals("Y");
         assert format.format(false).equals("N");
@@ -99,7 +99,7 @@ public class BooleanFormatTest {
      * Test method for {@link BooleanFormat#parse(java.lang.String)}.
      */
     @Test
-    public void testParse() {
+    public void testParse() throws ParseException {
         BooleanFormat f = new BooleanFormat("ja", "nej", true);
         assertTrue(f.parse("ja"));
         assertTrue(f.parse("JA"));

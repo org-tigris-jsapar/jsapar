@@ -120,7 +120,7 @@ public class BooleanFormat implements Format<Boolean> {
      * @see java.text.Format#parseNumber(java.lang.String, java.text.ParsePosition)
      */
     @Override
-    public Boolean parse(String toParse) {
+    public Boolean parse(String toParse) throws ParseException {
         if(toParse.equals(trueValue))
             return Boolean.TRUE;
         if(toParse.equals(falseValue))
@@ -134,9 +134,12 @@ public class BooleanFormat implements Format<Boolean> {
                 return Boolean.FALSE;
             }
         }
-        return matchValue(Arrays.stream(optionalTrue), Boolean.TRUE, toParse, ignoreCase)
-                .orElseGet(()->matchValue(Arrays.stream(optionalFalse), Boolean.FALSE, toParse, ignoreCase)
-                        .orElse( null));
+        Boolean theValue = matchValue(Arrays.stream(optionalTrue), Boolean.TRUE, toParse, ignoreCase)
+                .orElseGet(() -> matchValue(Arrays.stream(optionalFalse), Boolean.FALSE, toParse, ignoreCase)
+                        .orElse(null));
+        if(theValue == null)
+            throw new ParseException("The value " + toParse + " could not be parsed into a boolean value.", 0);
+        return theValue;
     }
 
 

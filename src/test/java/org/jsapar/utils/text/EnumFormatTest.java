@@ -31,7 +31,7 @@ public class EnumFormatTest {
         assertEquals("DDDD", enumFormat.format(TestEnum.DDDD));
     }
 
-    @Test(expected = ClassCastException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void format_object_invalid_class() {
         EnumFormat<TestEnum> enumFormat = new EnumFormat<>(TestEnum.class, false);
         enumFormat.format(this);
