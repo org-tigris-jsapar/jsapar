@@ -100,6 +100,7 @@ public class JSaParExamplesTest {
         try (Reader schemaReader = new FileReader("examples/02_FixedWidthSchema.xml");
              Reader fileReader = new FileReader("examples/02_Names.txt")) {
             TextParser parser = new TextParser(Schema.ofXml(schemaReader));
+            parser.getParseConfig().setOnLineInsufficient(ValidationAction.ERROR);
             DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
             parser.parse(fileReader, listener);
             Document document = listener.getDocument();

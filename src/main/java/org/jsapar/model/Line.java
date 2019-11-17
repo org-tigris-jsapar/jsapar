@@ -163,7 +163,9 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @throws IllegalStateException if there is no cell with the specified name.
      */
     public Cell getExistingCell(String name) {
-        return getCell(name).orElseThrow(()->new IllegalStateException("The line does not contain any cell with name " + name + " This happens when the parsing schema does not contain any cell with that name."));
+        return getCell(name).orElseThrow(() -> new IllegalStateException(
+                "The line " + lineNumber + " of type " + lineType + " does not contain any cell with name " + name
+                        + " This could happen when: A. The line was prematurely truncated. B. The parsing schema does not contain any cell with that name."));
     }
 
     /**

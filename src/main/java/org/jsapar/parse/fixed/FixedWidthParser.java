@@ -38,7 +38,7 @@ public class FixedWidthParser implements TextSchemaParser {
         // Check if EOF
         if (result == LineParserMatcherResult.NOT_MATCHING)
             this.validationHandler
-                    .lineValidation(this, lineNumber, "No schema line could be used to parse line number " + lineNumber,config.getOnUndefinedLineType(), errorEventListener);
+                    .lineValidation(this, lineNumber, ()->"No schema line could be used to parse line number " + lineNumber,config.getOnUndefinedLineType(), errorEventListener);
     }
 
     protected FixedWidthSchema getSchema() {
