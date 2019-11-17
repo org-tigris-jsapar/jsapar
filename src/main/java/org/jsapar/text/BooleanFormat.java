@@ -117,7 +117,7 @@ public class BooleanFormat implements Format<Boolean> {
     }
 
     /* (non-Javadoc)
-     * @see java.text.Format#parseObject(java.lang.String, java.text.ParsePosition)
+     * @see java.text.Format#parseNumber(java.lang.String, java.text.ParsePosition)
      */
     @Override
     public Boolean parse(String toParse) {

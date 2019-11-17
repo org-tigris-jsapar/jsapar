@@ -2,11 +2,9 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
 import org.jsapar.schema.SchemaCellFormat;
-import org.jsapar.text.DecimalFormat;
 import org.jsapar.text.Format;
-import org.jsapar.text.JavaTextFormat;
+import org.jsapar.text.NumberFormat;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -17,10 +15,10 @@ public abstract class NumberCellFactory implements CellFactory{
 
     @Override
     public Format makeFormat(Locale locale) {
-        return new NumberFormat(NumberFormat.getInstance(locale));
+        return new NumberFormat(locale);
     }
 
-    protected Number parseObject(Format format, String value) throws ParseException {
+    protected Number parseNumber(Format format, String value) throws ParseException {
         return  (Number) format.parse(value);
     }
 

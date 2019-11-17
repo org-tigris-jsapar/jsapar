@@ -20,6 +20,10 @@ public class NumberFormat implements Format<Number> {
     private final List<Function<String, String>> mappers = new ArrayList<>(3);
     private final java.text.NumberFormat textFormat;
 
+    public NumberFormat(String pattern, Locale locale) {
+        this(new java.text.DecimalFormat(pattern, new DecimalFormatSymbols(locale)));
+    }
+
     public NumberFormat(java.text.NumberFormat numberFormat) {
         textFormat = numberFormat;
         if(numberFormat instanceof java.text.DecimalFormat) {
@@ -42,6 +46,10 @@ public class NumberFormat implements Format<Number> {
                 mappers.add(s -> replaceExponent(s, exp));
             }
         }
+    }
+
+    public NumberFormat(Locale locale) {
+        this(java.text.NumberFormat.getInstance(locale));
     }
 
     private static String replaceNegativePrefix(String value, String minusPrefix) {

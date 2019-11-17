@@ -15,7 +15,7 @@ public class FloatCellFactory extends NumberCellFactory {
     public Cell makeCell(String name, String value, Format format) throws ParseException {
         if(format == null)
             return new FloatCell(name, Double.valueOf(value));
-        Number number = super.parseObject(format, value);
-        return new FloatCell(name, number.doubleValue());
+        final Number number = super.parseNumber(format, value);
+        return new FloatCell(name, number instanceof Double ? (Double) number : number.doubleValue());
     }
 }

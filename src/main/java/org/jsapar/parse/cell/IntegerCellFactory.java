@@ -16,7 +16,7 @@ public class IntegerCellFactory extends NumberCellFactory {
     public Cell makeCell(String name, String value, Format format) throws ParseException {
         if(format == null)
             return new IntegerCell(name, Long.valueOf(value));
-        Number number = super.parseObject(format, value);
+        Number number = super.parseNumber(format, value);
         return new IntegerCell(name, number.longValue());
     }
 
