@@ -2,9 +2,9 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.BooleanCell;
 import org.jsapar.text.BooleanFormat;
+import org.jsapar.text.Format;
 import org.junit.Test;
 
-import java.text.Format;
 import java.util.Locale;
 
 import static org.junit.Assert.*;
@@ -27,10 +27,10 @@ public class BooleanCellFactoryTest {
         assertEquals(f.getClass(), BooleanFormat.class);
         assertEquals("true", f.format(true));
         assertEquals("false", f.format(false));
-        assertEquals(true, f.parseObject("yes"));
-        assertEquals(true, f.parseObject("Y"));
-        assertEquals(false, f.parseObject("0"));
-        assertEquals(false, f.parseObject("false"));
+        assertEquals(true, f.parse("yes"));
+        assertEquals(true, f.parse("Y"));
+        assertEquals(false, f.parse("0"));
+        assertEquals(false, f.parse("false"));
     }
 
     @Test
@@ -41,10 +41,10 @@ public class BooleanCellFactoryTest {
         assertEquals(f.getClass(), BooleanFormat.class);
         assertEquals("J", f.format(true));
         assertEquals("N", f.format(false));
-        assertEquals(true, f.parseObject("ja"));
-        assertEquals(true, f.parseObject("J"));
-        assertEquals(false, f.parseObject("NEJ"));
-        assertEquals(false, f.parseObject("n"));
+        assertEquals(true, f.parse("ja"));
+        assertEquals(true, f.parse("J"));
+        assertEquals(false, f.parse("NEJ"));
+        assertEquals(false, f.parse("n"));
     }
 
 }

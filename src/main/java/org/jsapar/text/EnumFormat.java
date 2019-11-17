@@ -2,6 +2,7 @@ package org.jsapar.text;
 
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -98,10 +99,13 @@ public class EnumFormat<E extends Enum<E> > implements Format<E> {
         throw new ParseException("There is no enum constant matching the value '" + toParse + "' for  enum class " + enumClass.getName(), 0 );
     }
 
-    public Stream<Map.Entry<String, E>> enumByValueEntries() {
-        return enumByValue.entrySet().stream();
+    public Collection<String> textValues(){
+        return enumByValue.keySet();
     }
 
+    public E enumByTextValue(String value){
+        return enumByValue.get(value);
+    }
 
     /**
      * @return Number of allowed possibilities.

@@ -17,7 +17,7 @@ public abstract class NumberCellFactory implements CellFactory{
 
     @Override
     public Format makeFormat(Locale locale) {
-        return new JavaTextFormat<Number>(NumberFormat.getInstance(locale));
+        return new NumberFormat(NumberFormat.getInstance(locale));
     }
 
     protected Number parseObject(Format format, String value) throws ParseException {
@@ -29,7 +29,7 @@ public abstract class NumberCellFactory implements CellFactory{
         if (locale == null)
             locale = SchemaCellFormat.defaultLocale;
         if (pattern != null && !pattern.isEmpty())
-            return new DecimalFormat(pattern, locale);
+            return new NumberFormat(pattern, locale);
         else
             return makeFormat(locale);
     }

@@ -19,6 +19,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.Writer;
+import java.util.Collection;
 import java.util.Locale;
 
 /**
@@ -359,16 +360,18 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
      * @param format The format to extract
      * @return The format xml element
      */
+    @SuppressWarnings("unchecked")
     private Element extractCellFormat(Document xmlDocument, SchemaCellFormat format) {
         if(format.getCellType() == CellType.ENUM){
             EnumFormat enumFormat = (EnumFormat) format.getFormat();
             Element xmlFormat = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_ENUM_FORMAT);
             xmlFormat.setAttribute("class", enumFormat.getEnumClass().getName());
             xmlFormat.setAttribute("ignorecase", String.valueOf(enumFormat.isIgnoreCase()));
-            enumFormat.enumByValueEntries().forEach(e->{
+            Collection<String> textValues = enumFormat.textValues();
+            textValues.forEach(v->{
                 Element xmlValue = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, "value");
-                xmlValue.setAttribute("name", e.getValue().name());
-                xmlValue.setAttribute("text", e.getKey());
+                xmlValue.setAttribute("name", enumFormat.enumByTextValue(v).name());
+                xmlValue.setAttribute("text", v);
                 xmlFormat.appendChild(xmlValue);
             });
             return xmlFormat;

@@ -21,7 +21,7 @@ public class BooleanFormatTest {
     }
 
     /**
-     * Test method for {@link BooleanFormat#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)}.
+     * Test method for {@link BooleanFormat#format(java.lang.Object)}.
      */
     @Test
     public void testFormatObjectStringBufferFieldPosition() {
@@ -38,7 +38,7 @@ public class BooleanFormatTest {
     }
 
     /**
-     * Test method for {@link BooleanFormat#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)}.
+     * Test method for {@link BooleanFormat#format(java.lang.Object)}.
      */
     @Test
     public void testFormatObjectStringBufferFieldPosition_empty() {
@@ -60,55 +60,40 @@ public class BooleanFormatTest {
     @Test
     public void testParseDefault() throws ParseException {
         BooleanFormat f = new BooleanFormat(true);
-        assertEquals(Boolean.TRUE, f.parseObject("true"));
-        assertEquals(Boolean.TRUE, f.parseObject("on"));
-        assertEquals(Boolean.TRUE, f.parseObject("1"));
-        assertEquals(Boolean.TRUE, f.parseObject("ON"));
-        assertEquals(Boolean.TRUE, f.parseObject("yes"));
-        assertEquals(Boolean.TRUE, f.parseObject("y"));
-        assertEquals(Boolean.TRUE, f.parseObject("Y"));
-        assertEquals(Boolean.FALSE, f.parseObject("false"));
-        assertEquals(Boolean.FALSE, f.parseObject("off"));
-        assertEquals(Boolean.FALSE, f.parseObject("0"));
-        assertEquals(Boolean.FALSE, f.parseObject("OFF"));
-        assertEquals(Boolean.FALSE, f.parseObject("NO"));
-        assertEquals(Boolean.FALSE, f.parseObject("N"));
-        assertEquals(Boolean.FALSE, f.parseObject("n"));
+        assertEquals(Boolean.TRUE, f.parse("true"));
+        assertEquals(Boolean.TRUE, f.parse("on"));
+        assertEquals(Boolean.TRUE, f.parse("1"));
+        assertEquals(Boolean.TRUE, f.parse("ON"));
+        assertEquals(Boolean.TRUE, f.parse("yes"));
+        assertEquals(Boolean.TRUE, f.parse("y"));
+        assertEquals(Boolean.TRUE, f.parse("Y"));
+        assertEquals(Boolean.FALSE, f.parse("false"));
+        assertEquals(Boolean.FALSE, f.parse("off"));
+        assertEquals(Boolean.FALSE, f.parse("0"));
+        assertEquals(Boolean.FALSE, f.parse("OFF"));
+        assertEquals(Boolean.FALSE, f.parse("NO"));
+        assertEquals(Boolean.FALSE, f.parse("N"));
+        assertEquals(Boolean.FALSE, f.parse("n"));
     }
 
     @Test(expected = ParseException.class)
     public void testParseFailed() throws ParseException {
         BooleanFormat f = new BooleanFormat("true", "false", true);
-        assertEquals(null, f.parseObject("something different"));
+        assertEquals(null, f.parse("something different"));
     }
 
     /**
-     * Test method for {@link BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
+     * Test method for {@link BooleanFormat#parse(java.lang.String)}.
      */
     @Test
     public void testParseObjectString() throws ParseException {
         BooleanFormat f = new BooleanFormat("ja", "nej", true);
-        assertEquals(Boolean.TRUE, f.parseObject("ja"));
-        assertEquals(Boolean.TRUE, f.parseObject("JA"));
-        assertEquals(Boolean.FALSE, f.parseObject("nej"));
-        assertEquals(Boolean.FALSE, f.parseObject("NEJ"));
+        assertEquals(Boolean.TRUE, f.parse("ja"));
+        assertEquals(Boolean.TRUE, f.parse("JA"));
+        assertEquals(Boolean.FALSE, f.parse("nej"));
+        assertEquals(Boolean.FALSE, f.parse("NEJ"));
     }
 
-    /**
-     * Test method for {@link BooleanFormat#parseObject(java.lang.String, java.text.ParsePosition)}.
-     */
-    @Test
-    public void testParseObjectStringParsePosition() {
-        BooleanFormat f = new BooleanFormat("ja", "nej", true);
-        assertEquals(Boolean.TRUE, f.parseObject("   ja", new ParsePosition(3)));
-
-        ParsePosition pos = new ParsePosition(3);
-        assertEquals(Boolean.TRUE, f.parseObject("   JA  ", pos));
-        assertEquals(5, pos.getIndex());
-
-        assertEquals(Boolean.FALSE, f.parseObject("   nej ", new ParsePosition(3)));
-        assertEquals(Boolean.FALSE, f.parseObject("   NEJ", new ParsePosition(3)));
-    }
 
     /**
      * Test method for {@link BooleanFormat#parse(java.lang.String)}.
