@@ -5,8 +5,8 @@ import org.jsapar.model.EnumCell;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.text.EnumFormat;
+import org.jsapar.text.Format;
 
-import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -20,7 +20,7 @@ public class EnumCellFactory implements CellFactory{
     public Cell makeCell(String name, String value, Format format) throws ParseException {
         if (format == null)
             throw new ParseException("Format is required while parsing enum cell values.", 0);
-        Enum enumValue = (Enum) format.parseObject(value);
+        Enum enumValue = (Enum) format.parse(value);
         return new EnumCell(name, enumValue);
     }
 

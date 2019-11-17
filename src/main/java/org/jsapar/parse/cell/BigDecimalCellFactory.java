@@ -3,18 +3,17 @@ package org.jsapar.parse.cell;
 import org.jsapar.model.BigDecimalCell;
 import org.jsapar.model.Cell;
 import org.jsapar.schema.SchemaCellFormat;
+import org.jsapar.text.DecimalFormat;
 import org.jsapar.text.Format;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.Locale;
 
 /**
  * Parses decimal values into {@link Cell} objects
  */
-public class BigDecimalCellFactory extends NumberCellFactory implements CellFactory {
+public class BigDecimalCellFactory implements CellFactory {
 
     /**
      * @param name   The name to give the newly created cell.
@@ -28,9 +27,7 @@ public class BigDecimalCellFactory extends NumberCellFactory implements CellFact
         if (format == null)
             return new BigDecimalCell(name, new BigDecimal(value));
 
-        if (format instanceof DecimalFormat)
-            ((DecimalFormat) format).setParseBigDecimal(true);
-        return new BigDecimalCell(name, (BigDecimal) parseObject(format, value));
+        return new BigDecimalCell(name, (BigDecimal) format.parse(value));
     }
 
     /**
@@ -39,10 +36,7 @@ public class BigDecimalCellFactory extends NumberCellFactory implements CellFact
      */
     @Override
     public Format makeFormat(Locale locale) {
-        Format format = super.makeFormat(locale);
-        if (format instanceof DecimalFormat)
-            ((DecimalFormat) format).setParseBigDecimal(true);
-        return format;
+        return new DecimalFormat(locale);
     }
 
     /**
@@ -56,8 +50,6 @@ public class BigDecimalCellFactory extends NumberCellFactory implements CellFact
             locale = SchemaCellFormat.defaultLocale;
         if (pattern == null || pattern.isEmpty())
             return makeFormat(locale);
-        DecimalFormat decFormat = new java.text.DecimalFormat(pattern, new DecimalFormatSymbols(locale));
-        decFormat.setParseBigDecimal(true);
-        return new org.jsapar.text.DecimalFormat(decFormat, locale);
+        return new DecimalFormat(pattern, locale);
     }
 }

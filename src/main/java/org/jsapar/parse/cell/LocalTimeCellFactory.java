@@ -15,7 +15,7 @@ import java.time.temporal.TemporalAccessor;
 public class LocalTimeCellFactory extends AbstractDateTimeCellFactory {
 
     public LocalTimeCellFactory() {
-        super(DateTimeFormatter.ISO_TIME.toFormat());
+        super(DateTimeFormatter.ISO_TIME);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class LocalTimeCellFactory extends AbstractDateTimeCellFactory {
         if (format == null)
             format = getDefaultFormat();
 
-        return new LocalTimeCell(name, LocalTime.from((TemporalAccessor) format.parseObject(value)));
+        return new LocalTimeCell(name, LocalTime.from((TemporalAccessor) format.parse(value)));
     }
 
 }

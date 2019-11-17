@@ -2,7 +2,6 @@ package org.jsapar.text;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.*;
 
 /**
  * Class that can be used to parse and format <a href="https://www.ibm.com/support/knowledgecenter/en/SSLVMB_24.0.0/spss/base/syn_data_list_implied_decimal_positions.html">implied decimals</a>.
@@ -11,7 +10,7 @@ import java.text.*;
 public class ImpliedDecimalFormat implements Format<BigDecimal> {
 
     private final int decimals;
-    private final DecimalFormat integerFormat = new DecimalFormat("0");
+    private final java.text.DecimalFormat integerFormat = new java.text.DecimalFormat("0");
 
     /**
      * @param decimals Number of decimals to imply

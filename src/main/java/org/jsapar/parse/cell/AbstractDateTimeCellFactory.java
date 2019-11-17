@@ -10,10 +10,14 @@ import java.util.Locale;
  */
 public abstract class AbstractDateTimeCellFactory implements CellFactory {
 
-    private final Format defaultFormat;
+    private final DateTimeFormat defaultFormat;
 
-    protected AbstractDateTimeCellFactory(Format defaultFormat) {
+    private AbstractDateTimeCellFactory(DateTimeFormat defaultFormat) {
         this.defaultFormat = defaultFormat;
+    }
+
+    AbstractDateTimeCellFactory(DateTimeFormatter defaultFormatter) {
+        this(new DateTimeFormat(defaultFormatter));
     }
 
     protected Format getDefaultFormat() {

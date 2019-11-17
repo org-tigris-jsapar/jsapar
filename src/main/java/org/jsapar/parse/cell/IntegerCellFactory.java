@@ -2,8 +2,9 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
 import org.jsapar.model.IntegerCell;
+import org.jsapar.text.Format;
+import org.jsapar.text.JavaTextFormat;
 
-import java.text.Format;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -22,6 +23,6 @@ public class IntegerCellFactory extends NumberCellFactory {
 
     @Override
     public Format makeFormat(Locale locale) {
-        return NumberFormat.getIntegerInstance(locale);
+        return new JavaTextFormat( NumberFormat.getIntegerInstance(locale));
     }
 }

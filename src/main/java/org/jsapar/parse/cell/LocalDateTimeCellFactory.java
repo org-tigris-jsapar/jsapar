@@ -2,8 +2,8 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
 import org.jsapar.model.LocalDateTimeCell;
+import org.jsapar.text.Format;
 
-import java.text.Format;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,7 +15,7 @@ import java.time.temporal.TemporalAccessor;
 public class LocalDateTimeCellFactory extends AbstractDateTimeCellFactory{
 
     public LocalDateTimeCellFactory() {
-        super(DateTimeFormatter.ISO_DATE_TIME.toFormat());
+        super(DateTimeFormatter.ISO_DATE_TIME);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class LocalDateTimeCellFactory extends AbstractDateTimeCellFactory{
         if (format == null)
             format = getDefaultFormat();
 
-        return new LocalDateTimeCell(name, LocalDateTime.from((TemporalAccessor) format.parseObject(value)));
+        return new LocalDateTimeCell(name, LocalDateTime.from((TemporalAccessor) format.parse(value)));
     }
 
 }

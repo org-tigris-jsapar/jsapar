@@ -4,8 +4,8 @@ import org.jsapar.model.BooleanCell;
 import org.jsapar.model.Cell;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.text.BooleanFormat;
+import org.jsapar.text.Format;
 
-import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -19,7 +19,7 @@ public class BooleanCellFactory implements CellFactory {
     public Cell makeCell(String name, String value, Format format) throws ParseException {
         if (format == null)
             format = defaultFormat;
-        return new BooleanCell(name, (Boolean) format.parseObject(value));
+        return new BooleanCell(name, (Boolean) format.parse(value));
     }
 
     @Override

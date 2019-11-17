@@ -2,10 +2,9 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
 import org.jsapar.model.CharacterCell;
+import org.jsapar.text.Format;
 
-import java.text.Format;
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.util.Locale;
 
 /**
@@ -22,14 +21,7 @@ public class CharacterCellFactory implements CellFactory {
                 return new CharacterCell(name, value.charAt(0));
             throw new java.text.ParseException("Empty value found while parsing single character.", 0);
         }
-        ParsePosition pos = new ParsePosition(0);
-        Character characterValue;
-        characterValue = (Character) format.parseObject(value, pos);
-
-        if (pos.getIndex() < value.length())
-            // It is not acceptable to parse only a part of the string.
-            throw new java.text.ParseException("Invalid characters found while parsing single character.",
-                    pos.getIndex());
+        final Character characterValue = (Character) format.parse(value);
         return new CharacterCell(name, characterValue);
     }
 
