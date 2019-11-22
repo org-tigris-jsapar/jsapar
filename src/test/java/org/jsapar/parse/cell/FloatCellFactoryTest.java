@@ -1,17 +1,14 @@
 package org.jsapar.parse.cell;
 
 import org.jsapar.model.FloatCell;
+import org.jsapar.text.DecimalFormat;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.Locale;
 
-/**
- * Created by stejon0 on 2016-10-23.
- */
 public class FloatCellFactoryTest {
     FloatCellFactory cellFactory = new FloatCellFactory();
 

@@ -2,8 +2,8 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
 import org.jsapar.model.ZonedDateTimeCell;
+import org.jsapar.text.Format;
 
-import java.text.Format;
 import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,7 +15,7 @@ import java.time.temporal.TemporalAccessor;
 public class ZonedDateTimeCellFactory extends AbstractDateTimeCellFactory {
 
     public ZonedDateTimeCellFactory() {
-        super(DateTimeFormatter.ISO_OFFSET_DATE_TIME.toFormat());
+        super(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class ZonedDateTimeCellFactory extends AbstractDateTimeCellFactory {
         if (format == null)
             format = getDefaultFormat();
 
-        return new ZonedDateTimeCell(name, ZonedDateTime.from((TemporalAccessor) format.parseObject(value)));
+        return new ZonedDateTimeCell(name, ZonedDateTime.from((TemporalAccessor) format.parse(value)));
     }
 
 }

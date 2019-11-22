@@ -5,7 +5,6 @@ import java.util.List;
 /**
  * This error event listener records errors until it reaches a maximum number. Any errors that occurs after maximum
  * number has been reached will cause a {@link MaxErrorsExceededException} instead.
- * Created by stejon0 on 2016-10-15.
  */
 public class ThresholdRecordingErrorEventListener extends RecordingErrorEventListener {
     private int maxNumberOfErrors;

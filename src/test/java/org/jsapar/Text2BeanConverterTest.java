@@ -4,7 +4,7 @@ import org.jsapar.compose.bean.BeanComposeConfig;
 import org.jsapar.compose.bean.BeanFactory;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;

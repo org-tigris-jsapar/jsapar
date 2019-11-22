@@ -3,6 +3,7 @@ package org.jsapar.parse.bean;
 import org.jsapar.TstGender;
 import org.jsapar.TstPerson;
 import org.jsapar.TstPostAddress;
+import org.jsapar.bean.BeanMap;
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.*;
 import org.jsapar.schema.CsvSchema;

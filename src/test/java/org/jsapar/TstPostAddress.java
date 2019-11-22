@@ -1,9 +1,11 @@
 package org.jsapar;
 
+import org.jsapar.bean.JSaParCell;
+
 public class TstPostAddress {
+    @JSaParCell(name = "Street")
     private String street;
     private String town;
-    private TstPerson owner;
     private TstPostAddress subAddress;
 
     public TstPostAddress() {
@@ -30,14 +32,6 @@ public class TstPostAddress {
 
     public void setTown(String town) {
         this.town = town;
-    }
-
-    public void setOwner(TstPerson owner) {
-        this.owner = owner;
-    }
-
-    public TstPerson getOwner() {
-        return owner;
     }
 
     public void setSubAddress(TstPostAddress subAddress) {

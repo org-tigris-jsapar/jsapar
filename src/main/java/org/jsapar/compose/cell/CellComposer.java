@@ -2,8 +2,8 @@ package org.jsapar.compose.cell;
 
 import org.jsapar.model.Cell;
 import org.jsapar.schema.SchemaCell;
+import org.jsapar.text.Format;
 
-import java.text.Format;
 
 /**
  * Internal utility class that helps composing a cell.

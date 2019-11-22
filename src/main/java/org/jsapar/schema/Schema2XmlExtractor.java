@@ -3,6 +3,7 @@ package org.jsapar.schema;
 import org.jsapar.compose.cell.CellComposer;
 import org.jsapar.model.CellType;
 import org.jsapar.text.EnumFormat;
+import org.jsapar.text.ImpliedDecimalFormat;
 import org.jsapar.utils.StringUtils;
 import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Document;
@@ -18,6 +19,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.Writer;
+import java.util.Collection;
 import java.util.Locale;
 
 /**
@@ -180,6 +182,8 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
      */
     private Element extractCsvSchema(Document xmlDocument, CsvSchema schema) throws SchemaException {
         Element xmlSchema = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_CSV_SCHEMA);
+        if(schema.getQuoteSyntax() != QuoteSyntax.FIRST_LAST)
+            xmlSchema.setAttribute(ATTRIB_CSV_SCHEMA_QUOTE_SYNTAX, schema.getQuoteSyntax().name());
 
         assignCsvSchema(xmlDocument, xmlSchema, schema);
 
@@ -219,8 +223,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
         xmlSchemaLine.setAttribute(ATTRIB_CSV_SCHEMA_CELL_SEPARATOR, StringUtils.replaceJava2Escapes(schemaLine.getCellSeparator()));
         xmlSchemaLine.setAttribute(ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA, String.valueOf(schemaLine.isFirstLineAsSchema()));
 
-        if(schemaLine.isQuoteCharUsed())
-            xmlSchemaLine.setAttribute(ATTRIB_CSV_QUOTE_CHAR, String.valueOf(schemaLine.getQuoteChar()));
+        xmlSchemaLine.setAttribute(ATTRIB_CSV_QUOTE_CHAR, schemaLine.isQuoteCharUsed() ? String.valueOf(schemaLine.getQuoteChar()): QUOTE_CHAR_NONE);
 
         for (CsvSchemaCell schemaCell : schemaLine.getSchemaCells()) {
             Element xmlCell = extractCsvSchemaCell(xmlDocument, schemaCell);
@@ -357,21 +360,29 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
      * @param format The format to extract
      * @return The format xml element
      */
+    @SuppressWarnings("unchecked")
     private Element extractCellFormat(Document xmlDocument, SchemaCellFormat format) {
         if(format.getCellType() == CellType.ENUM){
             EnumFormat enumFormat = (EnumFormat) format.getFormat();
             Element xmlFormat = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_ENUM_FORMAT);
             xmlFormat.setAttribute("class", enumFormat.getEnumClass().getName());
             xmlFormat.setAttribute("ignorecase", String.valueOf(enumFormat.isIgnoreCase()));
-            enumFormat.enumByValueEntries().forEach(e->{
+            Collection<String> textValues = enumFormat.textValues();
+            textValues.forEach(v->{
                 Element xmlValue = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, "value");
-                xmlValue.setAttribute("name", e.getValue().name());
-                xmlValue.setAttribute("text", e.getKey());
+                xmlValue.setAttribute("name", enumFormat.enumByTextValue(v).name());
+                xmlValue.setAttribute("text", v);
                 xmlFormat.appendChild(xmlValue);
             });
             return xmlFormat;
         }
-        else {
+        else if(format.getCellType() == CellType.DECIMAL && format.getFormat() instanceof ImpliedDecimalFormat){
+            ImpliedDecimalFormat f = (ImpliedDecimalFormat) format.getFormat();
+            Element xmlFormat = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_IMPLIED_DECIMALFORMAT);
+            xmlFormat.setAttribute("decimals", String.valueOf(f.getDecimals()));
+            return xmlFormat;
+        }
+        else{
             Element xmlFormat = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_FORMAT);
             xmlFormat.setAttribute("type", format.getCellType().toString().toLowerCase());
             if (format.getPattern() != null && format.getPattern().length() > 0)

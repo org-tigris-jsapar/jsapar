@@ -6,9 +6,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by stejon0 on 2016-10-29.
- */
 public class StringCellTest {
 
     @Test

@@ -1,6 +1,8 @@
 package org.jsapar.parse.cell;
 
-import java.text.Format;
+import org.jsapar.text.DateTimeFormat;
+import org.jsapar.text.Format;
+
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -8,10 +10,14 @@ import java.util.Locale;
  */
 public abstract class AbstractDateTimeCellFactory implements CellFactory {
 
-    private final Format defaultFormat;
+    private final DateTimeFormat defaultFormat;
 
-    protected AbstractDateTimeCellFactory(Format defaultFormat) {
+    private AbstractDateTimeCellFactory(DateTimeFormat defaultFormat) {
         this.defaultFormat = defaultFormat;
+    }
+
+    AbstractDateTimeCellFactory(DateTimeFormatter defaultFormatter) {
+        this(new DateTimeFormat(defaultFormatter));
     }
 
     protected Format getDefaultFormat() {
@@ -24,10 +30,10 @@ public abstract class AbstractDateTimeCellFactory implements CellFactory {
     }
 
     @Override
-    public Format makeFormat(Locale locale, String pattern) {
+    public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
         if (pattern == null || pattern.isEmpty())
             return makeFormat(locale);
-        return DateTimeFormatter.ofPattern(pattern, locale).toFormat();
+        return new DateTimeFormat(DateTimeFormatter.ofPattern(pattern, locale));
     }
 
 

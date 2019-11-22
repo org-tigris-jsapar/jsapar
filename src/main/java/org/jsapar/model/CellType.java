@@ -77,7 +77,7 @@ public enum CellType {
     }
 
     /**
-     * @return True if this type is atomic in a sense that it cannot contain cell or line separator character.
+     * @return True if this type is atomic in a sense that it cannot contain quote character, cell- or line separator character.
      */
     public boolean isAtomic() {
         return atomic;

@@ -4,10 +4,6 @@ import org.junit.*;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * @author stejon0
- *
- */
 public class FixedWidthCellPositionsTest {
 
     /**

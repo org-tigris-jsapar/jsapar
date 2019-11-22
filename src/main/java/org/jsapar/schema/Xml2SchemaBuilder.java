@@ -2,6 +2,7 @@ package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
 import org.jsapar.text.EnumFormat;
+import org.jsapar.text.ImpliedDecimalFormat;
 import org.jsapar.utils.StringUtils;
 import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Attr;
@@ -218,6 +219,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
 
         assignSchemaBase(schema, xmlSchema);
 
+        parseAttribute(xmlSchema, ATTRIB_CSV_SCHEMA_QUOTE_SYNTAX)
+                .map(QuoteSyntax::valueOf)
+                .ifPresent(schema::setQuoteSyntax);
+
         NodeList nodes = xmlSchema.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE);
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node child = nodes.item(i);
@@ -247,9 +252,12 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         if (xmlFirstLineAsSchema != null)
             schemaLine.setFirstLineAsSchema(getBooleanValue(xmlFirstLineAsSchema));
 
-        String sQuoteChar = getAttributeValue(xmlSchemaLine, ATTRIB_CSV_QUOTE_CHAR);
-        if (sQuoteChar != null)
-            schemaLine.setQuoteChar(sQuoteChar.charAt(0));
+        parseAttribute(xmlSchemaLine, ATTRIB_CSV_QUOTE_CHAR).ifPresent(s->{
+            if(s.equals(QUOTE_CHAR_NONE))
+                schemaLine.disableQuoteChar();
+            else
+                schemaLine.setQuoteChar(s.charAt(0));
+        });
 
         QuoteBehavior quoteBehavior = parseAttribute(xmlSchemaLine, ATTRIB_CSV_QUOTE_BEHAVIOR)
                 .map(QuoteBehavior::valueOf)
@@ -378,6 +386,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
             getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_ENUM_FORMAT).ifPresent(
                     xmlFormat -> assignCellEnumFormat(cell, xmlFormat));
 
+            getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_IMPLIED_DECIMALFORMAT).ifPresent(
+                    xmlFormat -> assignImpliedDecimalFormat(cell, xmlFormat));
+
             Element xmlRange = getChild(xmlSchemaCell, ELEMENT_RANGE);
             if (xmlRange != null) {
                 Node minValue = xmlRange.getAttributeNode(ATTRIB_SCHEMA_CELL_MIN);
@@ -397,6 +408,12 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         }
 
     }
+
+    private void assignImpliedDecimalFormat(SchemaCell cell, Element xmlFormat) {
+        int decimals = parseAttribute(xmlFormat, "decimals").map(Integer::parseInt).orElse(0);
+        cell.setCellFormat(new SchemaCellFormat(CellType.DECIMAL, new ImpliedDecimalFormat(decimals)));
+    }
+
 
     private MatchingCellValueCondition extractCellValueCondition(Element xmlCellValueCondition) throws SchemaException {
         Element xmlMatch = getChild(xmlCellValueCondition, ELEMENT_MATCH);
@@ -421,11 +438,12 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         cell.setCellFormat(makeCellType(sType), sPattern);
     }
 
+    @SuppressWarnings("unchecked")
     private void assignCellEnumFormat(SchemaCell cell, Element xmlFormat) throws SchemaException {
         String sEnumClass = getAttributeValue(xmlFormat, "class");
         boolean ignoreCase = parseBooleanAttribute(xmlFormat, "ignorecase").orElse(false);
         try {
-            EnumFormat format = new EnumFormat((Class<? extends Enum>) Class.forName(sEnumClass), ignoreCase);
+            EnumFormat format = new EnumFormat(Class.forName(sEnumClass), ignoreCase);
             getChildrenStream(JSAPAR_XML_SCHEMA, xmlFormat, "value").forEach(xmlValue->{
                 format.putEnumValueIfAbsent(getAttributeValue(xmlValue, "text"), getAttributeValue(xmlValue, "name"));
             });

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 http://jsapar.tigris.org/JSaParSchema/2.0/JSaParSchema.xsd">
+        xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd">
   <csvschema lineseparator="\n">
     <line linetype="Header" cellseparator=";">
       <cell name="Type" default="H"><linecondition><match pattern="H"/></linecondition></cell>
@@ -14,10 +14,10 @@
       <cell name="Middle name" ignoreread="true"/>
       <cell name="Last name"/>
       <cell name="gender">
-        <enumformat class="org.jsapar.TstGender" ignorecase="true">
+        <enum class="org.jsapar.TstGender" ignorecase="true">
           <value name="M" text="male"/>
           <value name="F" text="female"/>
-        </enumformat>
+        </enum>
       </cell>
     </line>
     <line linetype="Footer" cellseparator=";">

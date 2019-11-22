@@ -60,7 +60,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      */
     public Line(String sLineType, int initialCapacity) {
         lineType = sLineType;
-        cells = new LinkedHashMap<>(initialCapacity);
+        cells = new LinkedHashMap<>((initialCapacity * 4/3)+1);
     }
 
     /**

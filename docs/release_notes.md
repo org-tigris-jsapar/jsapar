@@ -2,18 +2,34 @@
 layout: page
 title: Release notes
 ---
+* TOC
+{:toc}
+
 # Release notes
 ## 2.1
 ### 2.1.0
-* Support for enum cell type and mapping between enum values and text representation. See chapter about [enum format](basics_schema#enum_format) in the article [Basics of Schema](basics_schema).
-* The command line utility is now capable of also transforming the output by using a XSLT file. 
-## 2.0
-### 2.0.2
-1. Introduced schema cell properties that controls whether pad characters and leading spaces should be trimmed or not while parsing.
-1. For cells where pad character is something other than space, the default behavior is now to trim leading spaces. The behavior from previous version can be 
+* The default quote character for delimited files is now the double quote character (") and quoting is enabled by default.
+ If you don't want quoting support, you need to actively switch it off. See [Quoted values](basics_schema#quoted-values) in documentation.
+* Support for quote syntax RFC4180 which makes both the CSV parser and composer compliant to the RFC 4180 standard regarding quoting.
+* Support for enum cell type and mapping between enum values and text representation. See chapter about [enum format](basics_schema#enum-format) in the article [Basics of Schema](basics_schema).
+* Support for implied decimal format. See chapter about [implied decimal](basics_schema#implied-decimal) in the article [Basics of Schema](basics_schema).
+* The command line utility is now capable of also transforming the output by using a XSLT file.
+* Added class **ByLineTypeLineEventListener**. A convenience class that acts as a subscription hub for line parsed events.
+* When converting to and from java beans, it is now possible to map schema line types and 
+ cell names by using annotations in the target class instead of providing a bean map as an xml. 
+* This version of the library requires at least Java 11 to build but the official binaries are still built for Java release 8.
+* The following classes has moved to package `org.jsapar.bean` in order to make them visible externally when introducing modules: 
+  * org.jsapar.parse.bean.BeanMap
+  * org.jsapar.parse.bean.Xml2BeanMapBuilder
+* The following classes has moved to package `org.jsapar.text` in order to make them visible externally when introducing modules: 
+  * org.jsapar.parse.text.TextParseConfig
+* Removed dependency to `java.beans` package since that imposed dependency to `java.desktop` module.
+* Introduced schema cell properties that controls whether pad characters and leading spaces should be trimmed or not while parsing.
+* For cells where pad character is something other than space, the default behavior is now to trim leading spaces. The behavior from previous version can be 
 obtained by setting the schema cell property to not trim leading spaces. See documentation page [Basics of Schema](basics_schema). 
-1. Added some checks for null values in constructors thus finding errors during initialization instead of while parsing/composing.
-1. The interfaces LineEventListener and ErrorEventListener are now marked with annotation @FunctionalInterface. 
+* Added some checks for null values in constructors thus finding errors during initialization instead of while parsing/composing.
+* The interfaces LineEventListener and ErrorEventListener are now marked with annotation @FunctionalInterface. 
+## 2.0
 ### 2.0.1
 1. Performance improvements while parsing delimited (CSV) sources and fixed width sources where lines are separated. 
 Performance of the parsing part should be improved by at least 50% in a normal scenario. Both CPU and memory impact has been significantly improved.

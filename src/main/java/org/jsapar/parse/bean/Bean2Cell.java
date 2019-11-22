@@ -3,8 +3,8 @@ package org.jsapar.parse.bean;
 import org.jsapar.compose.bean.BeanComposeException;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.*;
+import org.jsapar.parse.bean.reflect.PropertyDescriptor;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;

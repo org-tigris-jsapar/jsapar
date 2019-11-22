@@ -421,7 +421,7 @@ public class LineUtils {
             return booleanCell.getValue();
         }
 
-        return Boolean.valueOf(cell.get().getStringValue());
+        return Boolean.parseBoolean(cell.get().getStringValue());
     }
 
     /**

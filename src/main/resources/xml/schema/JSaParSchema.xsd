@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <xsd:schema elementFormDefault="qualified" targetNamespace="http://jsapar.tigris.org/JSaParSchema/2.0"
-            xmlns="http://jsapar.tigris.org/JSaParSchema/2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            xmlns="http://jsapar.tigris.org/JSaParSchema/2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            version="2.1">
     <xsd:element name="schema">
         <xsd:complexType>
             <xsd:choice>
@@ -80,7 +81,8 @@
     <xsd:sequence>
         <xsd:choice minOccurs="0">
             <xsd:element name="format" type="CellFormat" />
-            <xsd:element name="enumformat" type="EnumCellFormat" />
+            <xsd:element name="enum" type="EnumCellFormat" />
+            <xsd:element name="implieddecimal" type="ImpliedDecimalFormat" />
         </xsd:choice>
     	<xsd:element minOccurs="0" name="range"
                      type="CellValueRange">
@@ -212,6 +214,14 @@
         </xsd:attribute>
     </xsd:complexType>
 
+    <xsd:complexType name="ImpliedDecimalFormat">
+        <xsd:attribute name="decimals"  type="xsd:integer" use="required">
+            <xsd:annotation>
+                <xsd:documentation>The number of decimals to imply.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+
     <xsd:complexType name="EnumValueFormat">
         <xsd:attribute name="name" type="xsd:string" use="required">
             <xsd:annotation><xsd:documentation>The enum constant name. Needs to match exactly the enum value name of the enum class. Always case sensitive.</xsd:documentation></xsd:annotation>
@@ -318,6 +328,30 @@ If the sum of the length of the cells is less than this minlength then the line 
         <xsd:sequence minOccurs="0" maxOccurs="unbounded">
           <xsd:element name="line" type="CsvSchemaLine" />
         </xsd:sequence>
+        <xsd:attribute name="quotesyntax" default="FIRST_LAST">
+                    <xsd:annotation>
+                      <xsd:documentation>Specifies the syntax while parsing and composing of quoted cells.
+
+FIRST_LAST
+Quoted cells are considered quoted if and only if it begins and ends with a quote character and all the intermediate characters are treated as is.
+This is the most common scenario in delimited files since most sources that generates delimited files only adds quotes first and last of the cell without inspecting the content.
+"aaa","b""bb","ccc" will be treated as three cells with the values `aaa`, `b""bb` and `ccc`. No characters will be replaced or removed between the enclosing quotes. Be aware that this mode will treat the input "aaa","b"","ccc" as three cells with the values `aaa`, `b"` and `ccc`.
+While composing, the content of a cell is always written as is and enclosing quotes are just added.
+
+RFC4180
+Parsing and composing will consider the RFC 4180  regarding quotes. Any double occurrences of quote characters will be treated as if one quote character is an escape character and the other will become part of the cell value.
+For instance "aaa","b""bb","ccc" will still be treated as three cells but with the values `aaa`, `b"bb` and `ccc`. This mode will treat the input "aaa","b"",bbb" as two cells with the values `aaa` and , `b",bbb`.
+When composing quoted cells, all quotes within cell value will be escaped with an additional quote character in order to make the output compliant.
+According to RFC 4180, single quotes may not occur inside a quoted cell. This parser will however allow it and treat it as part of the cell value as long as it is not followed by a cell or line separator.
+</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="FIRST_LAST"></xsd:enumeration>
+              <xsd:enumeration value="RFC4180"></xsd:enumeration>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
@@ -348,26 +382,22 @@ If the sum of the length of the cells is less than this minlength then the line 
 
                         While composing, the schema is used as usual but an additional header line with the name of each
                         cell, is written first.
-
                     </xsd:documentation>
                 </xsd:annotation>
   			</xsd:attribute>
-  			<xsd:attribute name="quotechar">
+  			<xsd:attribute name="quotechar" default="&quot;">
   				<xsd:annotation>
   					<xsd:documentation>
-  						Specifies if there is a quote character used
-  						to encapsulate cells. Between the quotes, also the cell
+  						Specifies which quote character that should be used
+  						to encapsulate cells. Default is the standard double quote character (").
+                        The value "NONE" disables quoting entirely. Between the quotes, also the cell
   						separator and line separator will be regarded as content of the cell.
-  						A cell is considered to be quoted if and only
-  						if the first and the last character within the
-  						cell is the quote character. Any other quote
-  						characters are considered to be normal
-  						characters and thus becomes part of the cell.
+                        The quoting syntax can be specified on schema level.
   					</xsd:documentation>
   				</xsd:annotation>
   				<xsd:simpleType>
   					<xsd:restriction base="xsd:string">
-  						<xsd:maxLength value="1" />
+  						<xsd:maxLength value="4" />
   						<xsd:minLength value="1" />
   					</xsd:restriction>
   				</xsd:simpleType>

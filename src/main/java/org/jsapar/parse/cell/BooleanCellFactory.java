@@ -4,8 +4,8 @@ import org.jsapar.model.BooleanCell;
 import org.jsapar.model.Cell;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.text.BooleanFormat;
+import org.jsapar.text.Format;
 
-import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -13,13 +13,13 @@ import java.util.Locale;
  * Parses boolean values into {@link Cell} objects
  */
 public class BooleanCellFactory implements CellFactory {
-    private final static BooleanFormat defaultFormat = new BooleanFormat();
+    private final static BooleanFormat defaultFormat = new BooleanFormat(true);
 
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
         if (format == null)
             format = defaultFormat;
-        return new BooleanCell(name, (Boolean) format.parseObject(value));
+        return new BooleanCell(name, (Boolean) format.parse(value));
     }
 
     @Override
@@ -39,12 +39,12 @@ public class BooleanCellFactory implements CellFactory {
      * @return A format object to use for the boolean type cells.
      */
     @Override
-    public Format makeFormat(Locale locale, String pattern) {
+    public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
         String[] aTrueFalse = pattern.trim().split("\\s*;\\s*");
         if (aTrueFalse.length < 1 || aTrueFalse.length > 2)
             throw new IllegalArgumentException(
                     "Boolean format pattern should only contain two fields separated with ; character");
-        return new BooleanFormat(aTrueFalse[0].split("\\s*\\|\\s*"), aTrueFalse.length == 2 ? aTrueFalse[1].split("\\s*\\|\\s*") : new String[]{""});
+        return new BooleanFormat(aTrueFalse[0].split("\\s*\\|\\s*"), aTrueFalse.length == 2 ? aTrueFalse[1].split("\\s*\\|\\s*") : new String[]{""}, true);
     }
 
     /**

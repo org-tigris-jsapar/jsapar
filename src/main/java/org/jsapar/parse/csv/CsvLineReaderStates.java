@@ -1,6 +1,7 @@
 package org.jsapar.parse.csv;
 
 import org.jsapar.parse.LineParseException;
+import org.jsapar.schema.QuoteSyntax;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -13,7 +14,7 @@ import java.util.List;
  * This implementation uses state pattern. It loads characters into a buffer and creates cell value strings from that
  * buffer.
  */
-public class CsvLineReaderStates implements CsvLineReader {
+final class CsvLineReaderStates implements CsvLineReader {
     private static final String EMPTY_CELL = "";
     private final int maxLineLength;
 
@@ -24,8 +25,6 @@ public class CsvLineReaderStates implements CsvLineReader {
     private State unquotedCellState;
     private State state;
     private List<String> currentLine;
-    private int currentCellOffset =0;
-    private int offsetFromEndQuote =0;
     private EolCheck eolCheck;
     private final char lastEolChar;
 
@@ -39,19 +38,30 @@ public class CsvLineReaderStates implements CsvLineReader {
 
     private final ReadBuffer buffer;
 
+    private CellCreator currentCellCreator = new CellCreator();
     /**
      * @param lineSeparator  The line separator to use
      * @param reader The reader to read characters from.
      * @param allowReadAhead If true, reading from the reader can be optimized by reading larger chunks of data into a
- *                       buffer but that can only be utilized if it is ok to read until the end of the file or if it
+*                       buffer but that can only be utilized if it is ok to read until the end of the file or if it
      * @param maxLineLength The maximum number of characters in a line. Make sure that all lines fits within this size.
+     * @param quoteSyntax Determines the syntax of how quoted cells are parsed.
      */
-    public CsvLineReaderStates(String lineSeparator, Reader reader, boolean allowReadAhead, int maxLineLength) {
+    CsvLineReaderStates(String lineSeparator, Reader reader, boolean allowReadAhead, int maxLineLength, QuoteSyntax quoteSyntax) {
         eolCheck = Arrays.asList("\n", "\r\n").contains(lineSeparator) ? new EolCheckCRLF() : new EolCheckCustom(lineSeparator);
         lastEolChar = eolCheck.getLastEolChar();
 
         beginCellState = new BeginCellState();
-        foundEndQuoteState = new FoundEndQuoteState();
+        switch (quoteSyntax) {
+        case FIRST_LAST:
+            foundEndQuoteState = new FoundEndQuoteStateFirstLast();
+            break;
+        case RFC4180:
+            foundEndQuoteState = new FoundEndQuoteStateRfc();
+            break;
+        default:
+            throw new AssertionError("Unsupported quote syntax while parsing: " + quoteSyntax);
+        }
         foundEndQuoteWithinState = new FoundEndQuoteWithinState();
         quotedCellState = new QuotedCellState();
         unquotedCellState = new UnquotedCellState();
@@ -109,8 +119,7 @@ public class CsvLineReaderStates implements CsvLineReader {
                 if(count<1){
                     if(state == quotedCellState){
                         buffer.resetCell();
-                        currentCellOffset=0;
-                        offsetFromEndQuote=0;
+                        currentCellCreator.reset();
                         state=unquotedCellState;
                         continue;
                     }
@@ -120,7 +129,7 @@ public class CsvLineReaderStates implements CsvLineReader {
 
                     }
                     this.eof = true;
-                    addToLineExcept(offsetFromEndQuote);
+                    currentCellCreator.addToLine();
                     return lineComplete();
                 }
             }
@@ -158,35 +167,7 @@ public class CsvLineReaderStates implements CsvLineReader {
     private void beginCellState() {
         state = beginCellState;
         buffer.markCell();
-        currentCellOffset = 0;
-        offsetFromEndQuote = 0;
-    }
-
-    /**
-     * Adds a completed cell to a line.
-     * @param except Number of characters to skip from end while adding cell to line.
-     */
-    private void addToLineExcept(int except) {
-        final int cellStart = buffer.cellMark + currentCellOffset;
-        addToLine(cellStart, buffer.cursor-except-cellStart);
-    }
-
-    /**
-     * Adds a completed cell to a line.
-     * @param offset Begin index
-     * @param count Number of characters to add
-     */
-    private void addToLine(int offset, int count) {
-        if(count==0)
-            currentLine.add(EMPTY_CELL);
-        else
-            currentLine.add(new String(buffer.buffer, offset, count));
-    }
-
-    private void addEmptyToLine() {
-        currentLine.add(EMPTY_CELL);
-        buffer.markCell();
-        currentCellOffset = 0;
+        currentCellCreator.reset();
     }
 
     /**
@@ -211,7 +192,7 @@ public class CsvLineReaderStates implements CsvLineReader {
         int size = this.eolCheck.eolMatchSize(c);
         if(size<=0)
             return false;
-        addToLineExcept(size+skip);
+        currentCellCreator.addToLineExcept(size+skip);
         return true;
     }
 
@@ -222,19 +203,84 @@ public class CsvLineReaderStates implements CsvLineReader {
         boolean processChar(final char c);
     }
 
+
+    private class CellCreator {
+        private int currentCellOffset =0;
+        private int offsetFromEndQuote =0;
+        private int ignoresCount = 0;
+        private int[] ignoresAt = new int[128];
+        private StringBuilder stringBuilder = new StringBuilder();
+
+        private void addToLine(){
+            addToLineExcept(offsetFromEndQuote);
+        }
+        /**
+         * Adds a completed cell to a line.
+         * @param except Number of characters to skip from end while adding cell to line.
+         */
+        private void addToLineExcept(int except) {
+            final int cellStart = buffer.cellMark + currentCellOffset;
+            addToLine(cellStart, buffer.cursor-except-cellStart);
+        }
+
+        int currentCellSize(){
+            return buffer.cursor-(buffer.cellMark+currentCellOffset);
+        }
+
+        /**
+         * Adds a completed cell to a line.
+         * @param offset Begin index
+         * @param count Number of characters to add
+         */
+        void addToLine(int offset, int count) {
+            if(count==0)
+                currentLine.add(EMPTY_CELL);
+            else if (ignoresCount==0)
+                currentLine.add(new String(buffer.buffer, offset, count));
+            else{
+                stringBuilder.delete(0, stringBuilder.length()); // Reset stringBuilder
+                for (int i = 0; i<ignoresCount; i++) {
+                    int toAdd = ignoresAt[i]-offset;
+                    stringBuilder.append(buffer.buffer, offset, toAdd);
+                    offset=ignoresAt[i]+1;
+                    count-=(1+toAdd);
+                }
+                stringBuilder.append(buffer.buffer, offset, count);
+                currentLine.add(stringBuilder.toString());
+            }
+        }
+
+        void addEmptyToLine() {
+            currentLine.add(EMPTY_CELL);
+            buffer.markCell();
+            currentCellOffset = 0;
+        }
+
+        void ignoreCurrent(){
+            if(ignoresCount<=ignoresAt.length)
+                ignoresAt[ignoresCount++] = buffer.cursor-1;
+        }
+
+        void reset(){
+            currentCellOffset=0;
+            offsetFromEndQuote=0;
+            ignoresCount=0;
+        }
+    }
+
     /**
      *
      */
-    private class BeginCellState implements State {
+    private final class BeginCellState implements State {
         @Override
         public boolean processChar(final char c) {
             if (c == quoteChar) {
                 state = quotedCellState;
-                currentCellOffset++;
+                currentCellCreator.currentCellOffset++;
                 return false;
             }
             if (c == lastCellSeparatorChar && cellSeparator.length()==1) {
-                addEmptyToLine();
+                currentCellCreator.addEmptyToLine();
                 return false;
             }
             if (c == lastEolChar && endOfLineAddPending(c, 0)) {
@@ -248,11 +294,11 @@ public class CsvLineReaderStates implements CsvLineReader {
     /**
      * Unquoted cell content expected.
      */
-    private class UnquotedCellState implements State {
+    private final class UnquotedCellState implements State {
         @Override
         public boolean processChar(final char c) {
             if( c==lastCellSeparatorChar && tailOfCellMatches(cellSeparator)){
-                addToLineExcept(cellSeparator.length());
+                currentCellCreator.addToLineExcept(cellSeparator.length());
                 beginCellState();
                 return false;
             }
@@ -263,11 +309,11 @@ public class CsvLineReaderStates implements CsvLineReader {
     /**
      * Quoted cell content expected.
      */
-    private class QuotedCellState implements State {
+    private final class QuotedCellState implements State {
         @Override
         public boolean processChar(final char c) {
             if (c == quoteChar) {
-                offsetFromEndQuote=1;
+                currentCellCreator.offsetFromEndQuote=1;
                 state = foundEndQuoteState;
             }
             return false;
@@ -277,11 +323,11 @@ public class CsvLineReaderStates implements CsvLineReader {
     /**
      * End quote was found.
      */
-    private class FoundEndQuoteState implements State {
+    private final class FoundEndQuoteStateFirstLast implements State {
         @Override
         public boolean processChar(final char c) {
             if (c==lastCellSeparatorChar && cellSeparator.length()==1) {
-                addToLineExcept(2);
+                currentCellCreator.addToLineExcept(2);
                 beginCellState();
                 return false;
             }
@@ -289,11 +335,37 @@ public class CsvLineReaderStates implements CsvLineReader {
                 return true;
             }
             if (c == quoteChar) {
-                offsetFromEndQuote=1;
+                currentCellCreator.offsetFromEndQuote=1;
                 return false;
             }
 
-            offsetFromEndQuote++;
+            currentCellCreator.offsetFromEndQuote++;
+            state = foundEndQuoteWithinState;
+            return false;
+        }
+    }
+
+    /**
+     * End quote was found.
+     */
+    private final class FoundEndQuoteStateRfc implements State {
+        @Override
+        public boolean processChar(final char c) {
+            if (c==lastCellSeparatorChar && cellSeparator.length()==1) {
+                currentCellCreator.addToLineExcept(2);
+                beginCellState();
+                return false;
+            }
+            if(c == lastEolChar && endOfLineAddPending(c, 1)){
+                return true;
+            }
+            if (c == quoteChar ) {
+                currentCellCreator.ignoreCurrent();
+                state = quotedCellState;
+                return false;
+            }
+
+            currentCellCreator.offsetFromEndQuote++;
             state = foundEndQuoteWithinState;
             return false;
         }
@@ -302,35 +374,35 @@ public class CsvLineReaderStates implements CsvLineReader {
     /**
      * A second quote was found but some other character was found afterwards that was not a single character cell separator or line separator.
      */
-    private class FoundEndQuoteWithinState implements State {
+    private final class FoundEndQuoteWithinState implements State {
         @Override
         public boolean processChar(final char c) {
             if (c == quoteChar) {
                 state = foundEndQuoteState;
-                offsetFromEndQuote=1;
+                currentCellCreator.offsetFromEndQuote=1;
                 return false;
             }
             if (c == lastCellSeparatorChar && tailOfCellMatches(cellSeparator)) {
-                if(cellSeparator.length() == offsetFromEndQuote)
-                    addToLineExcept(cellSeparator.length()+1);
+                if(cellSeparator.length() == currentCellCreator.offsetFromEndQuote)
+                    currentCellCreator.addToLineExcept(cellSeparator.length()+1);
                 else
-                    addToLine(buffer.cellMark, buffer.cursor - buffer.cellMark -cellSeparator.length());
+                    currentCellCreator.addToLine(buffer.cellMark, buffer.cursor - buffer.cellMark -cellSeparator.length());
                 beginCellState();
                 return false;
             }
             if(c == lastEolChar){
                 final int eolSize = eolCheck.eolMatchSize(c);
-                if( eolSize == offsetFromEndQuote){
-                    addToLineExcept(eolSize+offsetFromEndQuote-1);
+                if( eolSize == currentCellCreator.offsetFromEndQuote){
+                    currentCellCreator.addToLineExcept(eolSize+currentCellCreator.offsetFromEndQuote-1);
                     return true;
                 }
                 else if(eolSize>0) {
-                    addToLine(buffer.cellMark, buffer.cursor - buffer.cellMark - eolSize);
+                    currentCellCreator.addToLine(buffer.cellMark, buffer.cursor - buffer.cellMark - eolSize);
                     return true;
                 }
             }
 
-            offsetFromEndQuote++;
+            currentCellCreator.offsetFromEndQuote++;
             return false;
         }
     }
@@ -347,7 +419,7 @@ public class CsvLineReaderStates implements CsvLineReader {
     /**
      * Checking end of line with either LF or CR+LF.
      */
-    class EolCheckCRLF implements EolCheck {
+    final class EolCheckCRLF implements EolCheck {
         @Override
         public int eolMatchSize(final char c) {
             if(buffer.cursor > 2 && buffer.buffer[buffer.cursor-2] == '\r')
@@ -364,7 +436,7 @@ public class CsvLineReaderStates implements CsvLineReader {
     /**
      * Checking end of line with custom arbitrary character sequence.
      */
-    class EolCheckCustom implements EolCheck {
+    final class EolCheckCustom implements EolCheck {
         private String lineSeparator;
         private char lastLineSeparatorChar;
 

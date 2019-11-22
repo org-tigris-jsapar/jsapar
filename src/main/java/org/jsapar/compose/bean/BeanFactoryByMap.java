@@ -3,7 +3,7 @@ package org.jsapar.compose.bean;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.parse.bean.Bean2Cell;
-import org.jsapar.parse.bean.BeanMap;
+import org.jsapar.bean.BeanMap;
 import org.jsapar.parse.bean.BeanPropertyMap;
 
 import java.lang.reflect.InvocationTargetException;

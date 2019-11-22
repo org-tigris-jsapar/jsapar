@@ -11,7 +11,7 @@ import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.cell.CellParser;
 import org.jsapar.parse.line.LineDecoratorErrorEventListener;
 import org.jsapar.parse.line.ValidationHandler;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 

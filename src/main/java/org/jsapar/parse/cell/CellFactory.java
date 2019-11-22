@@ -3,8 +3,8 @@ package org.jsapar.parse.cell;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.schema.SchemaCell;
+import org.jsapar.text.Format;
 
-import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
 

@@ -1,7 +1,8 @@
-package org.jsapar.parse.bean;
+package org.jsapar.bean;
 
 import org.jsapar.error.BeanException;
 import org.jsapar.error.JSaParException;
+import org.jsapar.parse.bean.BeanPropertyMap;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.jsapar.utils.XmlTypes;
@@ -9,7 +10,6 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.beans.IntrospectionException;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -56,7 +56,7 @@ public class Xml2BeanMapBuilder implements XmlTypes {
                 .collect(Collectors.toMap(e -> e.getAttribute("name"), e -> e.getAttribute("cellname")));
         try {
             return BeanPropertyMap.ofPropertyNames(className, lineType, cellNamesOfProperty);
-        } catch (ClassNotFoundException | IntrospectionException e) {
+        } catch (ClassNotFoundException e) {
             throw new JSaParException("Failed to build property map", e);
         }
     }

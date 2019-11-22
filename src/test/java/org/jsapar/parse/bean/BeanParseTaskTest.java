@@ -1,14 +1,12 @@
 package org.jsapar.parse.bean;
 
 import org.jsapar.TstPerson;
+import org.jsapar.bean.BeanMap;
 import org.jsapar.model.*;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.schema.Schema;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,10 +14,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * @author stejon0
- * 
- */
 public class BeanParseTaskTest {
     static final Date birthTime = new Date();
 
@@ -32,7 +26,7 @@ public class BeanParseTaskTest {
     }
 
     @Test
-    public void testBuild() throws IntrospectionException, ClassNotFoundException, IOException {
+    public void testBuild() throws ClassNotFoundException, IOException {
         List<TstPerson> people = new ArrayList<>(2);
         TstPerson person = new TstPerson();
         person.setFirstName("Jonas");

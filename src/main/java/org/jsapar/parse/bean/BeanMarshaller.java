@@ -1,19 +1,20 @@
 package org.jsapar.parse.bean;
 
 import org.jsapar.BeanCollection2TextConverter;
+import org.jsapar.bean.BeanMap;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
 import org.jsapar.parse.CellParseException;
+import org.jsapar.parse.bean.reflect.PropertyDescriptor;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 /**
- * Builds {@link Line} objects from single bean instances. The {@link Line#lineType} of each line will be
+ * Builds {@link Line} objects from single bean instances. The {@link Line#getLineType()} of each line will be
  * the name of the class denoted by {@link Class#getName()}. Each bean property that have a getter method will result in
  * a cell with the bean property name The {@link Cell#getName()} of each cell will be the name of the bean property, e.g. if
  * the bean has a method declared as {@code public int getNumber()}, it will result in a cell with the name "number" of
@@ -48,7 +49,7 @@ public class BeanMarshaller<T>  {
      */
     public Optional<Line> marshal(T bean, ErrorEventListener errorListener, long lineNumber) {
         return beanMap.getBeanPropertyMap(bean.getClass()).map(beanPropertyMap -> {
-            Line line = new Line(beanPropertyMap.getLineType());
+            Line line = new Line(beanPropertyMap.getLineType(), beanPropertyMap.size());
             line.setLineNumber(lineNumber);
             this.marshal(line, bean, beanPropertyMap, errorListener);
             return line;
@@ -56,7 +57,6 @@ public class BeanMarshaller<T>  {
     }
 
 
-    @SuppressWarnings("unchecked")
     private void marshal(Line line, Object object, BeanPropertyMap beanPropertyMap, ErrorEventListener errorListener) {
 
         for (Bean2Cell bean2Cell : beanPropertyMap.getBean2Cells()) {

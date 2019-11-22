@@ -2,8 +2,8 @@ package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
 import org.jsapar.parse.cell.CellFactory;
+import org.jsapar.text.Format;
 
-import java.text.Format;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -89,7 +89,7 @@ public class SchemaCellFormat implements Cloneable {
     /**
      * @return the format
      */
-    public java.text.Format getFormat() {
+    public Format getFormat() {
         return format;
     }
 

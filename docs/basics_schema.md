@@ -2,6 +2,8 @@
 layout: page
 title: Basics of JSaPar Schemas
 ---
+* TOC
+{:toc}
 
 # The schema
 The schema is what describes the structure of the input or output data. The same schema can be used for both parsing and composing.
@@ -11,7 +13,7 @@ The example below describes a simple schema for a CSV file taken from the first 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 http://jsapar.tigris.org/JSaParSchema/2.0/JSaParSchema.xsd">
+   xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd">
    <csvschema lineseparator="\n">
     <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;">
       <cell name="First name" />
@@ -28,7 +30,7 @@ In the schema above, I have added the xsi:schemaLocation which helps intelligent
 a lot of documentation about the details of each allowed element and attribute within the schema xml. A published version
 of the schema is located at. 
 
-[http://jsapar.tigris.org/JSaParSchema/2.0/JSaParSchema.xsd](http://jsapar.tigris.org/JSaParSchema/2.0/JSaParSchema.xsd)
+[http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd](http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd)
 
 If you want to download the XSD as a file, you will probably need to right click on the link above and choose *"Save link as..."* depending on your browser.
 
@@ -209,24 +211,40 @@ The disadvantage of this alternative is that since the parser does not know the 
 fetching the parsed value and the parser is unable to optimize parsing based on a fixed set of valid values.  
 1. Use the `<format>` element as described above with the type enum and specify the full class name as the pattern. 
 The valid values in the source still needs to match exactly the enum value names but now the parser is aware of the set of valid values and is able to cache values while parsing.
-1. Instead of the `<format>`, you may use the `<enumformat>` element instead.  This gives you the option to 
+1. Instead of the `<format>`, you may use the `<enum>` element instead.  This gives you the option to 
 map different values in your text source to the enum values of your enum class. For example, if your enum class `org.jsapar.TstGender` has the enum values `M` for male and `F` for female, 
 but you want to parse a text source that contains the text values `male` or `man` and `female` or `woman`, you can configure the cell like this in the schema:    
+
 ```xml
 <cell name="gender">
-    <enumformat class="org.jsapar.TstGender" ignorecase="true">
+    <enum class="org.jsapar.TstGender" ignorecase="true">
         <value name="M" text="male"/>
         <value name="M" text="man"/>
         <value name="F" text="female"/>
         <value name="F" text="woman"/>
-    </enumformat>
+    </enum>
 </cell>
 ``` 
+
 * By setting `ignorecase` to true, the case of the text value becomes insignificant while parsing but it also has negative impact on performance. While 
 composing, this attribute has no impact.
 * You don't have to specify mapping for values that has the same text value as the enum value name.   
 * You can add any number of different text representation for the same value but you can only have one enum name for each text representation.
 * While composing, the first text representation for each enum name will be used. In this case `"male"` and `"female"` will be used. 
+
+##### Implied decimal
+In fixed width files with its origin in COBOL it is quite common that decimals are implied instead of explicitly specified. The decimal point is omitted in the file and it is assumed that you should add a decimal point at a specific position while parsing. For instance the number 123 in the file should be interpreted as 1.23 if there are 2 implied decimals.   
+This is called [implied decimal](https://www.ibm.com/support/knowledgecenter/en/SSLVMB_24.0.0/spss/base/syn_data_list_implied_decimal_positions.html) format.
+You can specify a cell to be of type implied decimal by adding `<implieddecimal>` element instead of the `<format>`. For example:
+
+```xml
+<cell name="weight" length="6" padcharacter="0" alignment="right">
+    <implieddecimal decimals="2"/>
+</cell>
+```
+
+The resulting cell while parsing a cell of implied decimal is always a DecimalCell but when converting to bean it is perfectly fine to assign it to a
+float or double property.
 
 #### Empty cell values while parsing
 Sometimes empty cells in the input data are not really empty. They may contain a text like `NULL` or something like that. 
@@ -252,22 +270,50 @@ you may specify an empty pattern that matches any number of white space characte
 
 ### Quoted values
 The problem with delimited (CSV) data is that the value of a specific cell may also contain the delimiter character or even the line separator. 
-In order to handle this scenario the JSaPar library is capable of handling quoted cells. It does not fully comply to the 
-CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180) but we will get back to that in a moment.
+In order to handle this scenario the JSaPar library is capable of handling quoted cells. 
 
-You activate support for quoted values on a line type by specifying a quote character with the `quotechar` attribute:
+The support for quoted quoted values is activated by default and the default quote character is the standard double quote character("). 
+You can specify a different quote character with the `quotechar` attribute:
 ```xml
 ...
-    <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;">
+    <line occurs="*" linetype="Person" cellseparator=";" quotechar="&apos;">
 ...
 ```
-You can specify any character as quote character except the one you are using as line separator and cell separator. If you use a character that is 
-reserved by the markup language (XML), you will need to [escape it](https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references) as in the example above.    
+You can specify any character as quote character except the one you are using as line separator and cell separator. 
+If you use a character that is 
+reserved by the markup language (XML), you will need to [escape it](https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references) 
+as in the example above.
+
+You can disable the quote character support by with the value "NONE" for the attribute:
+```xml
+...
+    <line occurs="*" linetype="Person" cellseparator=";" quotechar="NONE">
+...
+```
+The CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180) defines how quoting should be done within a CSV file but the problem is that 
+most delimited files in the real world does not comply to that standard. 
+In order to overcome this obstacle, you can choose between two different flavors of quoting syntax in the csv schema of JSaPar:
+1. FIRST_LAST (default)
+1. RFC4180
+
+This is how you configure quote syntax RFC4180:
+```xml
+...
+    <csvschema quotesyntax="RFC4180">
+...
+```
+
+The different syntaxes are described in more details below.
+    
 #### Parsing quoted values
 As long as you have activated quoting as described above, the parser will automatically detect if a cell is quoted or not. Not all cells needs quoting. 
-*A cell is considered to be quoted if and only if the first and the last character of the cell is the quote character.* The quote characters will always be removed
-from the parsed value. 
-This differs slightly from the CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180)
+
+If the line separator or cell separator appears within the quotes of a cell it will be regarded as the content of the cell.
+A maximum of 25 line separators are allowed within the same cell. If that value is exceeded a JSaParException is thrown 
+since the input is probably invalid in some sense. This means that if a start quote is found but no end quote within the 
+following 25 lines or until the end of input data, it is considered an irreparable error.
+##### Quote syntax RFC4180
+This mode complies to the CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180)
 which states that:
 ```text
    7.  If double-quotes are used to enclose fields, then a double-quote
@@ -276,20 +322,29 @@ which states that:
 
        "aaa","b""bb","ccc"
 ```
+The standard also specifies that a single quote character may not appear within a quoted cell. 
+JSaPar will however allow single quote characters while parsing and consider 
+it as part of the cell value as long as it is not followed by either line or cell separator.
+##### Quote syntax FIRST_LAST (default)
+This is the default syntax since it applies 
+better to the majority of the real life delimited files since most of them 
+do not really comply to [RFC-4180](https://tools.ietf.org/html/rfc4180).
+
+*A cell is considered to be quoted if and only if the first and the last character of the cell is the quote character.* 
+
+The quote characters will always be removed
+from the parsed value. 
+This differs slightly from the CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180).
 JSaPar will instead only strip the first and the last quote of a cell regardless of if the cell content contains one or
-more additional quote characters. In the example above JSaPar would parse the value `b""bb` for the second cell. This applies 
-better to the majority of the real life delimited files since most of them do not really comply to [RFC-4180](https://tools.ietf.org/html/rfc4180). 
+more additional quote characters. In the example above (`"aaa","b""bb","ccc"`) JSaPar would parse the value `b""bb` for the second cell.  
 This also means that if you have a correctly placed start quote and the end quote is not the last character of the cell, the cell is not 
 considered to be quoted and the quote characters will instead be part of the cell value. 
 
-If the line separator or cell separator appears within the quotes of a cell it will be regarded as the content of the cell.
-A maximum of 25 line separators are allowed within the same cell. If that value is exceeded a JSaParException is thrown 
-since the input is probably invalid in some sense. This means that if a start quote is found but no end quote within the 
-following 25 lines or until the end of input data, it is considered an irreparable error.
+
 #### Composing quoted values
 If your data might contain characters like the line separator or the cell separator you will need to quote the output when 
-composing a delimited file. You activate quoting by specifying the quote character as described above. Now you have the option
-to specify the quoting behavior on each cell by adding the `quotebehavior` attribute like this:
+composing a delimited file. You have the option
+to specify the quoting behavior on each cell while composing by adding the `quotebehavior` attribute like this:
 ```xml
 ...
       <cell name="First name" quotebehavior="ALWAYS"/>
@@ -297,9 +352,11 @@ to specify the quoting behavior on each cell by adding the `quotebehavior` attri
 ``` 
 There are several options:
 1. **ALWAYS** - Always quote this cell in the output.
-1. **AUTOMATIC** - Quotes the cell only if needed, i.e. only if there is a cell separator, a line separator or a quote character 
+1. **AUTOMATIC** (default) - Quotes the cell only if needed, i.e. only if there is a cell separator, a line separator or a quote character 
 present in the data. This is the default. 
-1. **NEVER** - Never quote this cell. This may lead to invalid delimited output if the cell or line separator is present in the cell value.
+1. **NEVER** - Never quote this cell. This may lead to invalid delimited 
+output if the cell or line separator is present in the cell value but you could benefit from slightly faster execution 
+time if you are 100% sure that there can be no illegal characters in the content. This is the default for atomic types such as integer, boolean and enum.
 1. **REPLACE** - No quoting is done, instead it replaces all illegal characters with non breakable space in order to always 
 guarantee consistency of the delimited output. Can be used if the consumer of the output does not support quoted cells. 
 This is the default if no quote character is specified on the line. 
@@ -310,6 +367,8 @@ You can change the default quote behavior for a whole line type by specifying th
     <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;" quotebehavior="ALWAYS">
 ...
 ```
+
+If the quote syntax is RFC4180, all quote characters in a cell value will be escaped with an additional quote character while composing in order to comply to the RFC 4180 standard.
 
 * See [this example in the jsapar-examples project](https://github.com/org-tigris-jsapar/jsapar-examples/tree/master/src/main/java/org/jsapar/examples/schemabasics/c3)
 

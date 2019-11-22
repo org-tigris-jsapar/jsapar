@@ -1,4 +1,4 @@
-package org.jsapar.compose;
+package org.jsapar.compose.internal;
 
 import org.jsapar.compose.csv.CsvComposer;
 import org.jsapar.compose.fixed.FixedWidthComposer;
@@ -10,7 +10,6 @@ import java.io.Writer;
 
 /**
  * Factory for creating schema composer based on schema.
- * Created by stejon0 on 2016-01-24.
  */
 public class TextComposerFactory implements ComposerFactory {
 

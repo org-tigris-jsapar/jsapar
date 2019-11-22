@@ -13,10 +13,6 @@ import java.util.Locale;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * @author stejon0
- *
- */
 public class Schema2XmlExtractorTest {
 
 

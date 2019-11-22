@@ -4,6 +4,9 @@ title: Basics
 ---
 This article will describe the basics of using the library. Since schemas are a large part of the library, [basics of schemas](basics_chema)  are described in this separate article.
 
+* TOC
+{:toc}
+
 There are three different tasks that the JSaPar library can be used for:
 1. **Parsing** - Parsing a text source into the internal data model and handle the result in code. 
 2. **Composing** - Compose text output by feeding data of the internal data model in java code. 
@@ -62,6 +65,8 @@ The JSaPar library contains some convenient implementations of the org.jsapar.pa
         <td>For smaller files you may want to handle all
         the events after the parsing is complete. In that case you may choose to use this implementation.
         This listener acts as an [aggregator](http://www.enterpriseintegrationpatterns.com/patterns/messaging/Aggregator.html) and builds a `org.jsapar.model.Document` object containing all the parsed lines that you can iterate afterwards.</td></tr>
+    <tr><td><b>org.jsapar.parse. ByLineTypeLineEventListener</b></td>
+        <td>Allows you to register different listeners for different line types. Use MulticastLineEventListener if you want to have multiple handlers for each line type.</td></tr>
     <tr><td><b>org.jsapar.parse. MulticastLineEventListener</b></td>
         <td>If you need to handle the events in multiple event listener implementation, this implementation provides a
             way to register multiple line event listeners which are called one by one for each line event.</td></tr>
@@ -296,22 +301,36 @@ Tests have shown though that unless the data source is really large, the gain of
 than the overhead of starting a new thread and synchronizing threads. As a rule of thumb while working with normal
 files on disc, don't use this concurrent version unless your input normally exceeds at least 1MB.
 ## Running text to text conversion from command line
-The class `org.jsapar.Text2TextConverter` has a main method that is also registered as the default main method for the jar file.
+The class `org.jsapar.ConverterMain` has a main method that is also registered as the default main method for the jar file.
 This means that you can run the converter without any coding at all.
 
 If you run it without any arguments you will get a help text with further instructions:
 ```bash
-$ java -jar jsapar-2.0.0.jar
+$ java -jar jsapar-2.1.0.jar 
 IllegalArgumentException: Too few arguments
 
 Usage:
- 1. jsapar.jar <property file name>
- 2. jsapar.jar -in.schema <input schem name> -out.schema <output schema name>
-               -in.file <input file name> [-out.file <output file name>]
-               [-in.file.encoding <input file encoding (or system default is used)>]
-               [-out.file.encoding <output file encoding (or system default is used)>]
+ 1. Read all properties from a file:
+jsapar.jar <property file name> 
 
-Alternative 1. above reads the arguments from a property file.
+ 2. Convert from one text file to another using different input and output
+    schemas:
+jsapar.jar -in.schema <input schema path> 
+           -out.schema <output schema path>
+           -in.file <input file name> 
+           [-out.file <output file name>]
+           [-in.file.encoding  <input file encoding (or system default is used)>]
+           [-out.file.encoding <output file encoding (or system default is used)>]
 
+ 3. Transform a text file into xml, html or any other format using XSLT:
+jsapar.jar -in.schema <input schema path> 
+           -xslt.file <xslt file path>
+           -in.file <input file name> 
+           [-out.file <output file name>]
+           [-in.file.encoding  <input file encoding (or system default is used)>]
+           [-out.file.encoding <output file encoding (or system default is used)>]
+           [-xslt.encoding     <xslt file encoding (or system default is used)>]
+           [-xslt.method       <xslt method to use. (xml is default)
+                                Probably one of xml, html or text>]
 ```
 

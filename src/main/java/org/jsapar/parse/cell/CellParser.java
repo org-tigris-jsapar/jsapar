@@ -7,11 +7,11 @@ import org.jsapar.model.CellType;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
+import org.jsapar.text.Format;
 import org.jsapar.utils.cache.Cache;
 import org.jsapar.utils.cache.DisabledCache;
 import org.jsapar.utils.cache.LimitedSizeCache;
 
-import java.text.Format;
 import java.text.ParseException;
 import java.util.Locale;
 

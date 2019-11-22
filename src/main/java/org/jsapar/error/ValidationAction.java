@@ -1,7 +1,7 @@
 package org.jsapar.error;
 
 import org.jsapar.compose.bean.BeanComposeConfig;
-import org.jsapar.parse.text.TextParseConfig;
+import org.jsapar.text.TextParseConfig;
 
 /**
  * Enum describing different actions to take upon validation.
