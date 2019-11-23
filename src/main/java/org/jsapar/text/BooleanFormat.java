@@ -30,7 +30,7 @@ public class BooleanFormat implements Format<Boolean> {
     private String falseValue;
     private String[] optionalTrue;
     private String[] optionalFalse;
-    private boolean ignoreCase = true;
+    private boolean ignoreCase;
 
     /**
      * Creates a default instance where the text "true" is the true value and "false" is the false value.

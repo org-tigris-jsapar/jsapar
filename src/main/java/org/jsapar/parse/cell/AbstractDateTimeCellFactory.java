@@ -1,26 +1,26 @@
 package org.jsapar.parse.cell;
 
-import org.jsapar.text.DateTimeFormat;
 import org.jsapar.text.Format;
 
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 
 /**
  */
 public abstract class AbstractDateTimeCellFactory implements CellFactory {
 
-    private final DateTimeFormat defaultFormat;
+    private final Format<TemporalAccessor> defaultFormat;
 
-    private AbstractDateTimeCellFactory(DateTimeFormat defaultFormat) {
+    private AbstractDateTimeCellFactory(Format<TemporalAccessor> defaultFormat) {
         this.defaultFormat = defaultFormat;
     }
 
     AbstractDateTimeCellFactory(DateTimeFormatter defaultFormatter) {
-        this(new DateTimeFormat(defaultFormatter));
+        this(Format.ofDateTimeInstance(defaultFormatter));
     }
 
-    protected Format getDefaultFormat() {
+    Format getDefaultFormat() {
         return defaultFormat;
     }
 
@@ -33,7 +33,7 @@ public abstract class AbstractDateTimeCellFactory implements CellFactory {
     public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
         if (pattern == null || pattern.isEmpty())
             return makeFormat(locale);
-        return new DateTimeFormat(DateTimeFormatter.ofPattern(pattern, locale));
+        return Format.ofDateTimeInstance(locale, pattern);
     }
 
 

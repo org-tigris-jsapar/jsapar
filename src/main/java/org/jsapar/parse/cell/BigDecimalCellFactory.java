@@ -3,7 +3,6 @@ package org.jsapar.parse.cell;
 import org.jsapar.model.BigDecimalCell;
 import org.jsapar.model.Cell;
 import org.jsapar.schema.SchemaCellFormat;
-import org.jsapar.text.DecimalFormat;
 import org.jsapar.text.Format;
 
 import java.math.BigDecimal;
@@ -36,7 +35,7 @@ public class BigDecimalCellFactory implements CellFactory {
      */
     @Override
     public Format makeFormat(Locale locale) {
-        return new DecimalFormat(locale);
+        return Format.ofDecimalInstance(locale);
     }
 
     /**
@@ -45,11 +44,11 @@ public class BigDecimalCellFactory implements CellFactory {
      * @return A {@link java.text.NumberFormat} instance to use while parsing decimal values.
      */
     @Override
-    public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
+    public Format makeFormat(Locale locale, String pattern) {
         if (locale == null)
             locale = SchemaCellFormat.defaultLocale;
         if (pattern == null || pattern.isEmpty())
             return makeFormat(locale);
-        return new DecimalFormat(pattern, locale);
+        return Format.ofDecimalInstance(pattern, locale);
     }
 }

@@ -15,7 +15,7 @@ public class ImpliedDecimalFormat implements Format<BigDecimal> {
     /**
      * @param decimals Number of decimals to imply
      */
-    public ImpliedDecimalFormat(int decimals) {
+    ImpliedDecimalFormat(int decimals) {
         this.decimals = decimals;
     }
 
@@ -23,6 +23,11 @@ public class ImpliedDecimalFormat implements Format<BigDecimal> {
         return decimals;
     }
 
+    /**
+     * Formats supplied object.
+     * @param o The object to format. Can be of type BigDecimal, BigInteger, Number or a string containing a decimal value.
+     * @return The formatted string.
+     */
     @Override
     public String format(Object o) {
         BigDecimal value;

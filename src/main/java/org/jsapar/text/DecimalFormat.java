@@ -10,18 +10,18 @@ import java.util.Locale;
  * able to parse the
  * old format since they are still widely used.
  */
-public class DecimalFormat implements Format<BigDecimal> {
+class DecimalFormat implements Format<BigDecimal> {
     private final NumberFormat numberFormat;
 
-    public DecimalFormat(String pattern, Locale locale) {
-        this(pattern, new DecimalFormatSymbols(locale));
+    DecimalFormat(String pattern, Locale locale) {
+        this(pattern, DecimalFormatSymbols.getInstance(locale));
     }
 
-    public DecimalFormat(Locale locale) {
+    DecimalFormat(Locale locale) {
         this("0.#", locale);
     }
 
-    public DecimalFormat(String pattern, DecimalFormatSymbols decimalFormatSymbols) {
+    DecimalFormat(String pattern, DecimalFormatSymbols decimalFormatSymbols) {
         java.text.DecimalFormat textFormat = new java.text.DecimalFormat(pattern, decimalFormatSymbols);
         textFormat.setParseBigDecimal(true);
         this.numberFormat = new NumberFormat(textFormat);
