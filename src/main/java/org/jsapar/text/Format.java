@@ -61,7 +61,7 @@ public interface Format<T> {
 
     /**
      * @param locale  The locale to use
-     * @param pattern The date pattern to use according to {@link DateTimeFormatter}
+     * @param pattern The date pattern to use according to {@link DateTimeFormatter}. Required.
      * @return An instance that formats and parses date time objects.
      */
     static  Format<TemporalAccessor>  ofDateTimeInstance(Locale locale, String pattern){
@@ -74,6 +74,8 @@ public interface Format<T> {
      * @return An instance that formats and parses decimal numbers into {@link BigDecimal}.
      */
     static Format<BigDecimal> ofDecimalInstance(String pattern, Locale locale){
+        if(pattern == null || pattern.isEmpty())
+            return ofDecimalInstance(locale);
         return new DecimalFormat(pattern, locale);
     }
 
@@ -103,7 +105,7 @@ public interface Format<T> {
 
     /**
      * @param pattern The regular expression to check while both parsing and formatting.
-     * @return An instance that checks that the text representation matches the supplied regular expression.
+     * @return An instance that checks that the text representation matches the supplied regular expression. If null or empty, no check will be made.
      * @see java.util.regex.Pattern
      */
     static Format<String> ofStringInstance(String pattern){

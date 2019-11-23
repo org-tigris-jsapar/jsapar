@@ -47,8 +47,6 @@ public class BigDecimalCellFactory implements CellFactory {
     public Format makeFormat(Locale locale, String pattern) {
         if (locale == null)
             locale = SchemaCellFormat.defaultLocale;
-        if (pattern == null || pattern.isEmpty())
-            return makeFormat(locale);
         return Format.ofDecimalInstance(pattern, locale);
     }
 }
