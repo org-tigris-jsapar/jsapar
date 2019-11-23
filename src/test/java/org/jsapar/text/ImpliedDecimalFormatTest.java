@@ -1,4 +1,4 @@
-package org.jsapar.utils.text;
+package org.jsapar.text;
 
 import org.jsapar.text.Format;
 import org.jsapar.text.ImpliedDecimalFormat;

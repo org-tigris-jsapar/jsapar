@@ -1,9 +1,9 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
-import org.jsapar.text.BooleanFormat;
 import org.junit.Test;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -82,9 +82,9 @@ public class SchemaCellFormatTest {
      * @throws SchemaException 
      */
     @Test
-    public void testSchemaCellFormat() throws SchemaException {
+    public void testSchemaCellFormat() throws SchemaException, ParseException {
         SchemaCellFormat format = new SchemaCellFormat(CellType.BOOLEAN, "yes;");
-        assertEquals(BooleanFormat.class, format.getFormat().getClass());
+        assertEquals(Boolean.TRUE, format.getFormat().parse("yes"));
     }
     
 }

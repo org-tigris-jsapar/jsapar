@@ -7,13 +7,29 @@ import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 
 /**
- * Interface for parsing and formating objects from and to String. Use one of the factory methods to create an instance
- * that fits the purpose.
+ * Interface for parsing and formatting objects from and to String. Use one of the static factory methods of this interface
+ * to create an instance that fits the purpose. For instance, you can use {@link #ofJavaTextFormat(java.text.Format)} in order
+ * to wrap a java.text.Format instance.
  * @param <T>
  */
 public interface Format<T> {
+
+    /**
+     * Parses an instance of type T from the supplied string.
+     * @param stringValue The string value to parse from.
+     * @return A parsed object.
+     * @throws ParseException If parsing fails for any reason.
+     */
     T parse(String stringValue) throws ParseException;
-    String format(Object value);
+
+    /**
+     * Formats supplied object into string.
+     * @param value The value to format. Usually it should be of the type T but this method is a bit more generous and
+     *              may accepts other type of objects on occasion.
+     * @return A string that is formatted from the supplied object.
+     * @throws IllegalArgumentException If the supplied value is of an unsupported type.
+     */
+    String format(Object value) throws IllegalArgumentException;
 
     /**
      * @param format The java.text.Format to use.
@@ -23,6 +39,65 @@ public interface Format<T> {
     static <T> Format<T>  ofJavaTextFormat(java.text.Format format){
         return new JavaTextFormat<>(format);
     }
+
+    /**
+     * @param ignoreCase If true, upper/lower case is ignored.
+     * @return An instance that formats and parses Boolean in a default manner using 'true' or the true value and 'false' for false.
+     */
+    static Format<Boolean> ofBooleanInstance(boolean ignoreCase){
+        return new BooleanFormat(ignoreCase);
+    }
+
+    /**
+     * @param trueValue  The string value to use for true.
+     * @param falseValue The string value to use for false.
+     * @param ignoreCase If true, upper/lower case is ignored.
+     * @return An instance that formats and parses Boolean.
+     */
+    static Format<Boolean> ofBooleanInstance(String trueValue, String falseValue, boolean ignoreCase){
+        return new BooleanFormat(trueValue, falseValue, ignoreCase);
+    }
+
+    /**
+     * Creates a formatter for boolean values where multiple values are accepted as true or false values. When parsing,
+     * the supplied
+     * values are tested for equality against the input in following order:
+     * <ol>
+     *     <li>The first true value.</li>
+     *     <li>The first false value.</li>
+     *     <li>The rest of the true values are tested in supplied order.</li>
+     *     <li>The rest of the false values are tested in supplied order.</li>
+     * </ol>
+     * @param trueValues  An array of all of the strings that represents the true value. The first item in the array is used when formatting.
+     * @param falseValues An array of all of the strings that represents the false value. The first item in the array is used when formatting.
+     * @param ignoreCase If true, upper/lower case is ignored.
+     * @return An instance that formats and parses Boolean.
+     */
+    static Format<Boolean> ofBooleanInstance(String[] trueValues, String[] falseValues, boolean ignoreCase){
+        return new BooleanFormat(trueValues, falseValues, ignoreCase);
+    }
+
+
+    /**
+     * Create a {@link Format} instance for the boolean cell type given the locale and a specified pattern.
+     * @param pattern A pattern to use for the format object. If null or empty, default format will be returned.
+     *                The pattern should contain the true and false values separated with a ; character.
+     * Example: pattern="Y;N" will imply that Y represents true and N to represents false.
+     * Comparison while parsing is not case sensitive.
+     * Multiple true or false values can be specified, separated with the | character but the first value is always the
+     * one used while composing. Example: pattern="Y|YES;N|NO"
+     * @param ignoreCase If true, upper/lower case is ignored.
+     * @return An instance that formats and parses Boolean.
+     */
+    static Format<Boolean> ofBooleanInstance(String pattern, boolean ignoreCase){
+        String[] aTrueFalse = pattern.trim().split("\\s*;\\s*");
+        if (aTrueFalse.length < 1 || aTrueFalse.length > 2)
+            throw new IllegalArgumentException(
+                    "Boolean format pattern should only contain two fields separated with ; character");
+        return ofBooleanInstance(aTrueFalse[0].split("\\s*\\|\\s*"), aTrueFalse.length == 2 ? aTrueFalse[1].split("\\s*\\|\\s*") : new String[]{""}, ignoreCase);
+    }
+
+
 
     /**
      * @param pattern The parse pattern to use as in {@link java.text.DecimalFormat}. If null, only the locale is uses.

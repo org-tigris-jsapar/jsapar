@@ -1,8 +1,6 @@
 package org.jsapar.text;
 
-import java.text.FieldPosition;
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -24,7 +22,7 @@ import java.util.stream.Stream;
  * are used when formatting.
  *
  */
-public class BooleanFormat implements Format<Boolean> {
+class BooleanFormat implements Format<Boolean> {
 
     private String trueValue;
     private String falseValue;
@@ -38,10 +36,9 @@ public class BooleanFormat implements Format<Boolean> {
      * <li>Optional true values while parsing are: "on", "1", "yes", "y"</li>
      * <li>Optional false values while parsing are: "off", "0", "no", "n"</li>
      * </ul>
-     * @param ignoreCase
+     * @param ignoreCase If true, ignores upper/lower case.
      */
-    @SuppressWarnings("WeakerAccess")
-    public BooleanFormat(boolean ignoreCase) {
+    BooleanFormat(boolean ignoreCase) {
         this(new String[]{"true", "on", "1", "yes", "y"}, new String[]{"false", "off", "0", "no", "n"}, true);
         this.ignoreCase = ignoreCase;
     }
@@ -50,9 +47,9 @@ public class BooleanFormat implements Format<Boolean> {
      * Creates a formatter for boolean values.
      *  @param trueValue  The string that represents the true value.
      * @param falseValue The string that represents the false value.
-     * @param ignoreCase
+     * @param ignoreCase If true, ignores upper/lower case.
      */
-    public BooleanFormat(String trueValue, String falseValue, boolean ignoreCase) {
+    BooleanFormat(String trueValue, String falseValue, boolean ignoreCase) {
         this.trueValue = trueValue;
         this.falseValue = falseValue;
         this.ignoreCase = ignoreCase;
@@ -76,7 +73,7 @@ public class BooleanFormat implements Format<Boolean> {
      * @param falseValues An array of all of the strings that represents the false value. The first item in the array is used when formatting.
      * @param ignoreCase
      */
-    public BooleanFormat(String[] trueValues, String[] falseValues, boolean ignoreCase) {
+    BooleanFormat(String[] trueValues, String[] falseValues, boolean ignoreCase) {
         assert trueValues != null: "trueValues parameter cannot be null";
         assert falseValues != null: "falseValues parameter cannot be null";
         assert trueValues.length > 0: "trueValues needs to contain at least one value";

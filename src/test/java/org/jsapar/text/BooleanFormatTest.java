@@ -1,4 +1,4 @@
-package org.jsapar.utils.text;
+package org.jsapar.text;
 
 import org.jsapar.text.BooleanFormat;
 import org.junit.Test;
