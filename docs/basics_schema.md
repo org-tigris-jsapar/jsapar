@@ -2,6 +2,7 @@
 layout: page
 title: Basics of JSaPar Schemas
 ---
+<h1>Basics of JSaPar Schemas</h1>
 * TOC
 {:toc}
 

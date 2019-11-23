@@ -3,8 +3,6 @@ layout: page
 title: Advanced
 ---
 # Links
-## Other related projects
-
 If the [JSaPar](https://github.com/org-tigris-jsapar/jsapar) library didn't help solving your problem, maybe one of these other libraries could be of any help instead.<br />
 <br />
 <b>B</b> <br />

@@ -1,7 +1,8 @@
 ---
 layout: default
-title: Upgrading from JSaPar 1.x
+title: Upgrading from earlier versions of JSaPar
 ---
+<h1>Upgrading from earlier versions of JSaPar</h1>
 * TOC
 {:toc}
 
