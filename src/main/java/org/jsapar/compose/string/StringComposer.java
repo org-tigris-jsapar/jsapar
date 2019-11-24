@@ -1,13 +1,13 @@
 package org.jsapar.compose.string;
 
-import org.jsapar.compose.cell.CellComposer;
 import org.jsapar.compose.Composer;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaLine;
 
-import java.util.stream.Stream;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Composer that creates {@link StringComposedEvent} for each line that is composed.
@@ -20,29 +20,27 @@ import java.util.stream.Stream;
 public class StringComposer implements Composer {
 
     private final Schema             schema;
-    private final static CellComposer cellComposer = new CellComposer();
     private final StringComposedEventListener stringComposedEventListener;
+    private final Map<String, StringLineComposer> lineComposers;
 
     public StringComposer(Schema schema, StringComposedEventListener composedEventListener) {
         this.schema = schema;
         this.stringComposedEventListener = composedEventListener;
+        lineComposers = schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, StringLineComposer::new));
     }
 
     @Override
     public boolean composeLine(Line line) {
-        return schema.getSchemaLine(line.getLineType())
-                .filter(schemaLine -> !schemaLine.isIgnoreWrite())
-                .map(schemaLine -> stringComposedEvent(new StringComposedEvent(
+        StringLineComposer lineComposer = lineComposers.get(line.getLineType());
+        if(lineComposer == null || lineComposer.isIgnoreWrite())
+            return false;
+        stringComposedEvent(new StringComposedEvent(
                         line.getLineType(),
                         line.getLineNumber(),
-                        composeStringLine(schemaLine, line))))
-                .orElse(false);
+                        lineComposer.composeStringLine(line)));
+        return true;
     }
 
-    private Stream<String> composeStringLine(SchemaLine schemaLine, Line line) {
-        return schemaLine.stream().map(schemaCell -> cellComposer
-                .format(line.getCell(schemaCell.getName()).orElse(null), schemaCell));
-    }
 
     @Override
     public void setErrorEventListener(ErrorEventListener errorListener) {

@@ -11,7 +11,6 @@ import java.util.Locale;
  * Parses string values into {@link Cell} objects
  */
 public class StringCellFactory implements CellFactory{
-    private Format<String> stringFormatTemplate = Format.ofStringInstance();
 
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
@@ -22,12 +21,12 @@ public class StringCellFactory implements CellFactory{
 
     @Override
     public Format makeFormat(Locale locale) {
-        return stringFormatTemplate;
+        return null;
     }
 
     @Override
     public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
-        return Format.ofStringInstance(pattern);
+        return pattern != null ? Format.ofStringInstance(pattern) : null;
     }
 
 }

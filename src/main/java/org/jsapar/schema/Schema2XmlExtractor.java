@@ -1,6 +1,7 @@
 package org.jsapar.schema;
 
 import org.jsapar.compose.cell.CellComposer;
+import org.jsapar.compose.cell.CellFormat;
 import org.jsapar.model.CellType;
 import org.jsapar.text.EnumFormat;
 import org.jsapar.text.ImpliedDecimalFormat;
@@ -27,8 +28,6 @@ import java.util.Locale;
  */
 @SuppressWarnings("WeakerAccess")
 public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
-
-    private static final CellComposer cellComposer = new CellComposer();
 
     /**
      * Writes supplied schema as xml to supplied writer.
@@ -340,10 +339,11 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
      */
     private Element extractCellRange(Document xmlDocument, SchemaCell schemaCell) {
         Element xmlRange = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_RANGE);
+        CellFormat cellFormat = CellFormat.ofSchemaCell(schemaCell);
         if (schemaCell.getMinValue() != null)
-            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MIN, cellComposer.format(schemaCell.getMinValue(), schemaCell));
+            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MIN, cellFormat.format(schemaCell.getMinValue()));
         if (schemaCell.getMaxValue() != null)
-            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MAX,cellComposer.format( schemaCell.getMaxValue(), schemaCell));
+            xmlRange.setAttribute(ATTRIB_SCHEMA_CELL_MAX, cellFormat.format(schemaCell.getMaxValue()));
         return xmlRange;
     }
 
