@@ -1,6 +1,6 @@
 package org.jsapar.compose.fixed;
 
-import org.jsapar.compose.cell.CellComposer;
+import org.jsapar.compose.cell.CellFormat;
 import org.jsapar.model.Cell;
 import org.jsapar.schema.FixedWidthSchemaCell;
 
@@ -12,31 +12,34 @@ import java.io.Writer;
  */
 class FixedWidthCellComposer {
 
-    private CellComposer cellComposer = new CellComposer();
-    private Writer writer;
+    private final CellFormat cellFormat;
+    private final FixedWidthSchemaCell schemaCell;
 
-    FixedWidthCellComposer(Writer writer) {
-        if(writer == null)
-            throw new IllegalArgumentException("Writer of cell composer cannot be null");
-        this.writer = writer;
+    FixedWidthCellComposer(FixedWidthSchemaCell schemaCell) {
+        this.cellFormat = CellFormat.ofSchemaCell(schemaCell);
+        this.schemaCell = schemaCell;
     }
+
 
     /**
      * Writes a cell to the supplied writer using supplied fill character.
      *
-     * @param cell
-     *            The cell to write
-     * @param schemaCell The schema of the cell
+     * @param writer     The writer to write to.
+     * @param cell       The cell to write
      * @throws IOException If there is an error writing characters
+     * @return The length of the cell written.
      */
-    void compose(Cell cell, FixedWidthSchemaCell schemaCell) throws IOException {
-        String sValue = cellComposer.format(cell, schemaCell);
-        compose(sValue, schemaCell.getPadCharacter(), schemaCell.getLength(), schemaCell.getAlignment());
+    int compose(Writer writer, Cell cell) throws IOException {
+        final String sValue = cellFormat.format(cell);
+        compose(writer, sValue, schemaCell.getPadCharacter(), schemaCell.getLength(), schemaCell.getAlignment());
+        return schemaCell.getLength();
     }
 
     /**
      * Writes a cell to the supplied writer using supplied fill character.
      *
+     *
+     * @param writer     The writer to write to.
      * @param sValue
      *            The value to write
      * @param fillCharacter
@@ -47,28 +50,30 @@ class FixedWidthCellComposer {
      *            The alignment of the cell content if the content is smaller than the cell length.
      * @throws IOException If there is an error writing characters
      */
-    private void compose(String sValue, char fillCharacter, int length, FixedWidthSchemaCell.Alignment alignment)
+    private void compose(Writer writer, String sValue, char fillCharacter, int length, FixedWidthSchemaCell.Alignment alignment)
             throws IOException{
         if (sValue.length() == length) {
             writer.write(sValue);
         } else if (sValue.length() > length) {
             // If the cell value is larger than the cell length, we have to cut the value.
-            fit(alignment, sValue, length);
+            fit(writer, alignment, sValue, length);
         } else {
             // Otherwise use the alignment of the schema.
             int nToFill = length - sValue.length();
-            pad(alignment, nToFill, sValue, fillCharacter);
+            pad(writer, alignment, nToFill, sValue, fillCharacter);
         }
     }
 
     /**
      * Fits supplied value to supplied length, cutting in the correct end.
+     *
+     * @param writer     The writer to write to.
      * @param alignment The alignment to use.
      * @param sValue The value to write. Needs to be longer than or equal to supplied length
      * @param length The maximum number of characters to write.
      * @throws IOException If there is an error writing characters
      */
-    private void fit(FixedWidthSchemaCell.Alignment alignment, String sValue, int length) throws IOException {
+    private void fit(Writer writer, FixedWidthSchemaCell.Alignment alignment, String sValue, int length) throws IOException {
         switch (alignment) {
             case LEFT:
                 writer.write(sValue, 0, length);
@@ -85,13 +90,15 @@ class FixedWidthCellComposer {
     /**
      * Padds supplied value in the correct end with the supplied number of characters
      *
+     *
+     * @param writer     The writer to write to.
      * @param alignment How to allign the value of the cell.
      * @param nToFill Number of characters to fill
      * @param sValue The value to write
      * @param fillCharacter The fill character to use.
      * @throws IOException If there is an error writing characters
      */
-    private void pad(FixedWidthSchemaCell.Alignment alignment,
+    private void pad(Writer writer, FixedWidthSchemaCell.Alignment alignment,
                      int nToFill,
                      String sValue,
                      char fillCharacter) throws IOException {
@@ -127,4 +134,11 @@ class FixedWidthCellComposer {
         }
     }
 
+    public String getName() {
+        return schemaCell.getName();
+    }
+
+    public Cell makeEmptyCell() {
+        return schemaCell.makeEmptyCell();
+    }
 }
