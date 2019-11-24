@@ -2,7 +2,7 @@ package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
 import org.jsapar.text.EnumFormat;
-import org.jsapar.text.ImpliedDecimalFormat;
+import org.jsapar.text.Format;
 import org.jsapar.utils.StringUtils;
 import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Attr;
@@ -411,7 +411,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
 
     private void assignImpliedDecimalFormat(SchemaCell cell, Element xmlFormat) {
         int decimals = parseAttribute(xmlFormat, "decimals").map(Integer::parseInt).orElse(0);
-        cell.setCellFormat(new SchemaCellFormat(CellType.DECIMAL, new ImpliedDecimalFormat(decimals)));
+        cell.setCellFormat(new SchemaCellFormat(CellType.DECIMAL, Format.ofImpliedDecimalInstance(decimals)));
     }
 
 

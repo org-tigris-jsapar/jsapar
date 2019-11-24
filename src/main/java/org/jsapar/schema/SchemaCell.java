@@ -58,7 +58,7 @@ public abstract class SchemaCell implements Cloneable {
      * Creates a schema cell with the specified name and format parameters.
      * @param sName The name of the cell.
      * @param type The type of the cell.
-     * @param format The format to use
+     * @param format The format to use. It is vital that the provided Format implementation returns the correct type from parsing.
      */
     public SchemaCell(String sName, CellType type, Format format) {
         this(sName, new SchemaCellFormat(type, format));

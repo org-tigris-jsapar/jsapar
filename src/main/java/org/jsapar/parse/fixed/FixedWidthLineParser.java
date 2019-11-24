@@ -50,12 +50,12 @@ final class FixedWidthLineParser {
         boolean setDefaultsOnly = false;
         boolean oneRead = false;
         boolean oneIgnored = false;
-        boolean handleInsufficient = true;
 
         lineDecoratorErrorEventListener.initialize(errorListener, line);
         for (FixedWidthCellParser cellParser : cellParsers) {
             FixedWidthSchemaCell schemaCell = cellParser.getSchemaCell();
             if (setDefaultsOnly) {
+                cellParser.checkIfMandatory(errorListener);
                 if (cellParser.isDefaultValue())
                     line.addCell(cellParser.makeDefaultCell());
                 continue;
@@ -68,8 +68,11 @@ final class FixedWidthLineParser {
                     oneIgnored = true;
 
                 if (nSkipped != schemaCell.getLength()) {
-                    if (oneRead)
+                    if (oneRead) {
                         setDefaultsOnly = true;
+                        if(!lineValidationInsufficient(lineReader, errorListener))
+                            return null;
+                    }
                     continue;
                 }
             } else {
@@ -82,14 +85,8 @@ final class FixedWidthLineParser {
                             if(cell != null)
                                 line.addCell(cell);
                         }
-                        //noinspection ConstantConditions
-                        if (handleInsufficient) {
-                            if (!validationHandler
-                                    .lineValidation(this, lineReader.getLineNumber(), "Insufficient number of characters for line",
-                                            config.getOnLineInsufficient(), errorListener)) {
-                                return null;
-                            }
-                            handleInsufficient = false;
+                        if (!lineValidationInsufficient(lineReader, errorListener)) {
+                            return null;
                         }
                     }
                     continue;
@@ -104,12 +101,19 @@ final class FixedWidthLineParser {
 
         int remaining = lineReader.remainsForLine();
         if(remaining > 0) {
-            if(!validationHandler.lineValidation(this, lineReader.getLineNumber(), "Trailing characters found on line",
+            if(!validationHandler.lineValidation(this, lineReader.getLineNumber(), ()-> remaining + " trailing characters found on line",
                     config.getOnLineOverflow(), errorListener))
                 return null; // Ignore the line.
         }
 
         return line;
+    }
+
+    private boolean lineValidationInsufficient(ReadBuffer lineReader, ErrorEventListener errorListener) {
+        return validationHandler.lineValidation(this, lineReader.getLineNumber(),
+                () -> "Insufficient number of characters for line of type " + lineSchema.getLineType()
+                        + ". Expected at least " + lineSchema.getTotalCellLength(), config.getOnLineInsufficient(),
+                errorListener);
     }
 
 }

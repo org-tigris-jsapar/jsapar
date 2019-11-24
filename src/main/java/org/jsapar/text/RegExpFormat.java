@@ -7,14 +7,14 @@ import java.util.regex.Pattern;
  * A formatter that while both parsing and formatting, checks that the value matches supplied regex pattern.
  *
  */
-public class RegExpFormat implements Format<String> {
+class RegExpFormat implements Format<String> {
 
     private final Pattern pattern;
 
     /**
      * @param pattern The regex pattern to match while parsing and formatting.
      */
-    public RegExpFormat(String pattern) {
+    RegExpFormat(String pattern) {
         this.pattern = Pattern.compile(pattern);
     }
 

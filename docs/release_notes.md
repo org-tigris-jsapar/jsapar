@@ -2,10 +2,15 @@
 layout: page
 title: Release notes
 ---
+# Release notes
 * TOC
 {:toc}
 
-# Release notes
+## 2.2
+### 2.2.0
+* The SchemaCell now accepts a native org.jsapar.text.Format instead of the java.text.Format. The native Format interface 
+wraps the java.text.Format and makes it possible to implement different parsing 
+and format tat does not conform to the java.text.Format contract. 
 ## 2.1
 ### 2.1.0
 * The default quote character for delimited files is now the double quote character (") and quoting is enabled by default.

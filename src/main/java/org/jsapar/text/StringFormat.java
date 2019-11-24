@@ -1,10 +1,12 @@
 package org.jsapar.text;
 
-import java.text.ParseException;
+/**
+ * Just passes the string value through untouched while parsing or formatting.
+ */
+class StringFormat implements Format<String> {
 
-public class StringFormat implements Format<String> {
     @Override
-    public String parse(String stringValue) throws ParseException {
+    public String parse(String stringValue) {
         return stringValue;
     }
 

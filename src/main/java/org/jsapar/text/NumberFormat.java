@@ -12,18 +12,19 @@ import java.util.Locale;
 import java.util.function.Function;
 
 /**
+ * Formats and parses number objects.
  * As of JDK 9 some locales have got new decimal symbols. This is implementation has a work around to also still be
  * able to parse the
  * old format since they are still widely used.
  */
-public class NumberFormat extends JavaTextFormat<Number> implements Format<Number> {
+class NumberFormat extends JavaTextFormat<Number> implements Format<Number> {
     private final List<Function<String, String>> mappers = new ArrayList<>(3);
 
-    public NumberFormat(String pattern, Locale locale) {
+    NumberFormat(String pattern, Locale locale) {
         this(new java.text.DecimalFormat(pattern, new DecimalFormatSymbols(locale)));
     }
 
-    public NumberFormat(java.text.NumberFormat numberFormat) {
+    NumberFormat(java.text.NumberFormat numberFormat) {
         super(numberFormat);
         if(numberFormat instanceof java.text.DecimalFormat) {
             DecimalFormat decimalFormat = (DecimalFormat) numberFormat;
@@ -47,7 +48,7 @@ public class NumberFormat extends JavaTextFormat<Number> implements Format<Numbe
         }
     }
 
-    public NumberFormat(Locale locale) {
+    NumberFormat(Locale locale) {
         this(java.text.NumberFormat.getInstance(locale));
     }
 

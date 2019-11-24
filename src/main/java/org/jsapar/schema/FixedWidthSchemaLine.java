@@ -223,12 +223,8 @@ public class FixedWidthSchemaLine extends SchemaLine {
     /**
      * @return The sum of the length of all cells.
      */
-    int getTotalCellLength(){
-        int sum = 0;
-        for (FixedWidthSchemaCell schemaCell : schemaCells) {
-            sum += schemaCell.getLength();
-        }
-        return sum;
+    public int getTotalCellLength(){
+        return schemaCells.stream().mapToInt(FixedWidthSchemaCell::getLength).sum();
     }
 
 }

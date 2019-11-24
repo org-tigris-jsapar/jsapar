@@ -2,7 +2,8 @@
 layout: page
 title: Basics
 ---
-This article will describe the basics of using the library. Since schemas are a large part of the library, [basics of schemas](basics_chema)  are described in this separate article.
+<h1>Basics</h1>
+This article will describe the basics of using the library. Since schemas are a large part of the library, [basics of schemas](basics_schema)  are described in this separate article.
 
 * TOC
 {:toc}
