@@ -33,4 +33,11 @@ class CsvCellComposer {
     }
 
 
+    public String getName() {
+        return schemaCell.getName();
+    }
+
+    public Cell makeEmptyCell() {
+        return schemaCell.makeEmptyCell();
+    }
 }
