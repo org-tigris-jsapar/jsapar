@@ -1,5 +1,6 @@
 package org.jsapar.compose.fixed;
 
+import org.jsapar.compose.fixed.pad.Filler;
 import org.jsapar.compose.line.LineComposer;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
@@ -19,9 +20,10 @@ import java.util.stream.Collectors;
  */
 class FixedWidthLineComposer implements LineComposer {
 
-    private final Writer writer;
-    private final FixedWidthSchemaLine lineSchema;
+    private final Writer                       writer;
+    private final FixedWidthSchemaLine         lineSchema;
     private final List<FixedWidthCellComposer> cellComposers;
+    private final Filler                       filler;
 
     FixedWidthLineComposer(Writer writer, FixedWidthSchemaLine lineSchema) {
         if(writer == null)
@@ -31,6 +33,7 @@ class FixedWidthLineComposer implements LineComposer {
         this.writer = writer;
         this.lineSchema = lineSchema;
         this.cellComposers = lineSchema.stream().map(FixedWidthCellComposer::new).collect(Collectors.toList());
+        filler = new Filler(lineSchema.getPadCharacter(), lineSchema.getMinLength());
     }
 
     /**
@@ -56,7 +59,7 @@ class FixedWidthLineComposer implements LineComposer {
                 totalLength += composer.compose(writer, line.getCell(composer.getName()).orElse(composer.makeEmptyCell()));
             }
             if (lineSchema.getMinLength() > totalLength) {
-                FixedWidthCellComposer.fill(writer, lineSchema.getPadCharacter(), lineSchema.getMinLength() - totalLength);
+                filler.fill(writer, lineSchema.getMinLength() - totalLength);
             }
         }
         catch (IOException e){
