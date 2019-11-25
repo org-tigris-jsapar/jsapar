@@ -24,6 +24,7 @@ public class Filler {
     }
 
     /**
+     * Writes same character specified number of times.
      * @param writer The writer to fill to.
      * @param toFill The number of characters to write.
      * @throws IOException If fails to write to writer
