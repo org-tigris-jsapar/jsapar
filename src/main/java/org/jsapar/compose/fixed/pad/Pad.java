@@ -30,6 +30,8 @@ public interface Pad {
      * @return
      */
     static Pad ofAlignment(FixedWidthSchemaCell.Alignment alignment, char padCharacter, int length){
+        if(length <=0 )
+            return new PadNone();
         switch (alignment) {
         case LEFT:
             return new PadRight(padCharacter, length);
