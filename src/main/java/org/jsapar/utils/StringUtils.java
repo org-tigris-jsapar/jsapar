@@ -14,8 +14,7 @@ public class StringUtils {
      * removed.
      */
     public static String removeAll(String s, char chToRemove) {
-        return s.codePoints().filter(it -> it != (int) chToRemove)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
+        return removeAll(s, c->chToRemove==(char)c);
     }
 
 
