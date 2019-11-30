@@ -5,18 +5,6 @@ import java.util.function.IntPredicate;
 @SuppressWarnings("WeakerAccess")
 public class StringUtils {
 
-    /**
-     * Removes all characters of specified type from the string
-     *
-     * @param s          The string to remove from
-     * @param chToRemove The character to remove
-     * @return The new string where all character of type chToRemove has been
-     * removed.
-     */
-    public static String removeAll(String s, char chToRemove) {
-        return removeAll(s, c->chToRemove==(char)c);
-    }
-
 
     /**
      * Removes all characters that are regarded as white-space according to
@@ -50,8 +38,33 @@ public class StringUtils {
      * @return A string without any space characters.
      */
     private static String removeAll(String s, IntPredicate check) {
-        return s.codePoints().filter(it -> !check.test(it))
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
+        for(int i=0; i<s.length(); i++){
+            if(check.test(s.codePointAt(i))){
+                return removeAll(s, check, i);
+            }
+        }
+        return s;
+    }
+
+    /**
+     * Removes all characters that are regarded as space according to
+     * provided check where first confirmed match is found.
+     * @param s        String to remove from.
+     * @param check    Check lambda, if returns true, character will be removed.
+     * @param firstFound The position of the first confirmed match.
+     * @return A string without any space characters.
+     */
+    private static String removeAll(String s, IntPredicate check, int firstFound) {
+        StringBuilder sb = new StringBuilder(s.length()-1);
+        sb.append(s, 0, firstFound);
+
+        for(int i=firstFound+1; i<s.length(); i++){
+            int codePoint = s.codePointAt(i);
+            if(!check.test(codePoint)){
+                sb.appendCodePoint(codePoint);
+            }
+        }
+        return sb.toString();
     }
 
     /**
