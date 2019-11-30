@@ -30,12 +30,12 @@ public class StringUtils {
 
 
     /**
-     * Removes all characters that are regarded as space according to
+     * Removes all characters that matches
      * provided check
      *
      * @param s        String to remove from.
      * @param check    Check lambda, if returns true, character will be removed.
-     * @return A string without any space characters.
+     * @return A string without any characters matching the check.
      */
     private static String removeAll(String s, IntPredicate check) {
         for(int i=0; i<s.length(); i++){
@@ -47,12 +47,12 @@ public class StringUtils {
     }
 
     /**
-     * Removes all characters that are regarded as space according to
+     * Removes all characters that matches
      * provided check where first confirmed match is found.
      * @param s        String to remove from.
      * @param check    Check lambda, if returns true, character will be removed.
      * @param firstFound The position of the first confirmed match.
-     * @return A string without any space characters.
+     * @return A string without any characters matching the check.
      */
     private static String removeAll(String s, IntPredicate check, int firstFound) {
         StringBuilder sb = new StringBuilder(s.length()-1);
@@ -65,25 +65,6 @@ public class StringUtils {
             }
         }
         return sb.toString();
-    }
-
-    /**
-     * Counts number of whole occurrences of subString within s
-     * @param s The string to count occurrences within
-     * @param subString The sub string to count
-     * @return The number of whole occurrences of subString within s.
-     */
-    public static int countMatches(final String s, final String subString) {
-        if (s == null || s.isEmpty() ) {
-            return 0;
-        }
-        int count = 0;
-        int index = 0;
-        while ((index = s.indexOf(subString, index)) >= 0 ) {
-            count++;
-            index += subString.length();
-        }
-        return count;
     }
 
     /**
