@@ -31,7 +31,7 @@ easier to maintain and increases flexibility.
 
 The focus of this fix-release has been to add some missing functionality such as enums and to build using Java 11. See [release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes#2.1.0) for details
 
-*See [further announcements here](wiki/Announcements).*
+*See [further announcements here](https://github.com/org-tigris-jsapar/jsapar/wiki/Announcements).*
 ## Mission
 The goal of this project is a java library that removes the burden of parsing and composing flat files and CSV files from the developer.
 
