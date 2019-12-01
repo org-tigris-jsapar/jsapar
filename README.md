@@ -30,14 +30,8 @@ easier to maintain and increases flexibility.
 *2019-11-05*
 
 The focus of this fix-release has been to add some missing functionality such as enums and to build using Java 11. See [release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes#2.1.0) for details
-### Version 2.0.1 is released 
-*2019-03-04*
 
-The focus of this fix-release has been to improve performance while parsing. See [release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes#2.0.1) for details
-### Version 2.0.0 is now officially released 
-*2018-11-24*
-
-Version 2.0.0 is now officially released and is available in <a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">maven repository</a>.
+*See [further announcements here](wiki/Announcements).*
 ## Mission
 The goal of this project is a java library that removes the burden of parsing and composing flat files and CSV files from the developer.
 
