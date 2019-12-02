@@ -1,9 +1,12 @@
 package org.jsapar.parse.text;
 
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
+import org.jsapar.model.Line;
 import org.jsapar.parse.LineEventListener;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 /**
  * Internal interface for text parser that can parse text based on a schema.
@@ -21,6 +24,6 @@ public interface TextSchemaParser {
      * @return Number of lines parsed
      * @throws IOException If there is an error reading from the input reader.
      */
-    long parse(LineEventListener listener, ErrorEventListener errorListener) throws IOException;
+    long parse(Consumer<Line> listener, Consumer<JSaParException> errorListener) throws IOException;
 
 }

@@ -1,18 +1,17 @@
 package org.jsapar.parse.fixed;
 
-import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.line.ValidationHandler;
-import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.SchemaLine;
+import org.jsapar.text.TextParseConfig;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.function.Consumer;
 
 /**
  * Abstract base class for fixed width text parser based on schema.
@@ -33,7 +32,7 @@ public class FixedWidthParser implements TextSchemaParser {
         minLineLength = schema.stream().mapToInt(sl->sl.stream().mapToInt(FixedWidthSchemaCell::getLength).sum()).min().orElse(1);
     }
 
-    private void handleNoParser(long lineNumber, LineParserMatcherResult result, ErrorEventListener errorEventListener) {
+    private void handleNoParser(long lineNumber, LineParserMatcherResult result, Consumer<JSaParException> errorEventListener) {
 
         // Check if EOF
         if (result == LineParserMatcherResult.NOT_MATCHING)
@@ -47,7 +46,7 @@ public class FixedWidthParser implements TextSchemaParser {
 
 
     @Override
-    public long parse(LineEventListener lineEventListener, ErrorEventListener errorListener) throws IOException {
+    public long parse(Consumer<Line> lineEventListener, Consumer<JSaParException> errorListener) throws IOException {
         FWLineParserFactory lineParserFactory = new FWLineParserFactory(getSchema(), config);
         while(true){
             if(lineParserFactory.isEmpty())
@@ -69,7 +68,7 @@ public class FixedWidthParser implements TextSchemaParser {
             if(lineParser.isIgnoreRead())
                 continue;
             if (line != null)
-                lineEventListener.lineParsedEvent(new LineParsedEvent(this, line));
+                lineEventListener.accept( line );
             else if(lineReader.eofReached())
                 return lineReader.getLineNumber()-1; // End of stream.
         }

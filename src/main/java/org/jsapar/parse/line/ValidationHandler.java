@@ -2,9 +2,11 @@ package org.jsapar.parse.line;
 
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.error.ValidationAction;
 import org.jsapar.parse.LineParseException;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -33,7 +35,7 @@ public class ValidationHandler {
                                   long lineNumber,
                                   Supplier<String> messageSupplier,
                                   ValidationAction action,
-                                  ErrorEventListener eventListener) {
+                                  Consumer<JSaParException> eventListener) {
         switch (action) {
         case ERROR: {
             LineParseException error = new LineParseException(lineNumber, messageSupplier.get());

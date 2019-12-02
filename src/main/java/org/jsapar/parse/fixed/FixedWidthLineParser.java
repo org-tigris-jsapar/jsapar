@@ -1,9 +1,10 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
-import org.jsapar.parse.line.LineDecoratorErrorEventListener;
+import org.jsapar.parse.line.LineDecoratorErrorConsumer;
 import org.jsapar.parse.line.ValidationHandler;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
@@ -11,6 +12,7 @@ import org.jsapar.schema.FixedWidthSchemaLine;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -22,8 +24,8 @@ final class FixedWidthLineParser {
     private FixedWidthSchemaLine lineSchema;
     private List<FixedWidthCellParser> cellParsers;
     private ValidationHandler    validationHandler = new ValidationHandler();
-    private TextParseConfig config;
-    private LineDecoratorErrorEventListener lineDecoratorErrorEventListener = new LineDecoratorErrorEventListener();
+    private TextParseConfig            config;
+    private LineDecoratorErrorConsumer lineDecoratorErrorConsumer = new LineDecoratorErrorConsumer();
 
     FixedWidthLineParser(FixedWidthSchemaLine lineSchema, TextParseConfig config) {
         this.lineSchema = lineSchema;
@@ -44,14 +46,14 @@ final class FixedWidthLineParser {
     }
 
     @SuppressWarnings("UnnecessaryContinue")
-    public Line parse(ReadBuffer lineReader, ErrorEventListener errorListener) throws IOException {
+    public Line parse(ReadBuffer lineReader, Consumer<JSaParException> errorListener) throws IOException {
         Line line = new Line(lineSchema.getLineType(), lineSchema.getSchemaCells().size());
         line.setLineNumber(lineReader.getLineNumber());
         boolean setDefaultsOnly = false;
         boolean oneRead = false;
         boolean oneIgnored = false;
 
-        lineDecoratorErrorEventListener.initialize(errorListener, line);
+        lineDecoratorErrorConsumer.initialize(errorListener, line);
         for (FixedWidthCellParser cellParser : cellParsers) {
             FixedWidthSchemaCell schemaCell = cellParser.getSchemaCell();
             if (setDefaultsOnly) {
@@ -76,12 +78,12 @@ final class FixedWidthLineParser {
                     continue;
                 }
             } else {
-                Cell cell = cellParser.parse(lineReader, lineDecoratorErrorEventListener);
+                Cell cell = cellParser.parse(lineReader, lineDecoratorErrorConsumer);
                 if (cell == null) {
                     if (oneRead) {
                         setDefaultsOnly = true;
                         if (cellParser.isDefaultValue()) {
-                            cell = cellParser.parse(EMPTY_STRING, lineDecoratorErrorEventListener);
+                            cell = cellParser.parse(EMPTY_STRING, lineDecoratorErrorConsumer);
                             if(cell != null)
                                 line.addCell(cell);
                         }
