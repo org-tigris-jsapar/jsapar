@@ -24,9 +24,13 @@ public class StringComposer implements Composer {
     private final Map<String, StringLineComposer> lineComposers;
 
     public StringComposer(Schema schema, StringComposedEventListener composedEventListener) {
+        this(schema, composedEventListener, schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, StringLineComposer::new)));
+    }
+
+    StringComposer(Schema schema, StringComposedEventListener composedEventListener, Map<String, StringLineComposer> lineComposers) {
         this.schema = schema;
         this.stringComposedEventListener = composedEventListener;
-        lineComposers = schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, StringLineComposer::new));
+        this.lineComposers = lineComposers;
     }
 
     @Override

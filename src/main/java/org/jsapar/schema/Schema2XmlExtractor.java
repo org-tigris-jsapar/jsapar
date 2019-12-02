@@ -1,6 +1,5 @@
 package org.jsapar.schema;
 
-import org.jsapar.compose.cell.CellComposer;
 import org.jsapar.compose.cell.CellFormat;
 import org.jsapar.model.CellType;
 import org.jsapar.text.EnumFormat;
