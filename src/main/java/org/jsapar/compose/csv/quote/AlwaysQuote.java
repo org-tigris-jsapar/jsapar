@@ -66,7 +66,7 @@ public class AlwaysQuote implements Quoter {
     }
 
     /**
-     * Writes value but escapes quotes according to RFC4180
+     * Writes value but escapes quotes according to RFC4180.
      */
     private class ValueComposerRfc implements Quoter{
         private final char escapeChar;
@@ -77,13 +77,20 @@ public class AlwaysQuote implements Quoter {
 
         @Override
         public void writeValue(Writer writer, String value) throws IOException {
-            for(int i=0; i<value.length(); i++){
-                char ch = value.charAt(i);
-                if(ch == quoteChar) {
-                    writer.write(escapeChar);
-                }
-                writer.write(ch);
+            int start = 0;
+            int found;
+            while(-1 != (found=value.indexOf(quoteChar, start))){
+                final int len = found - start;
+                if(len > 0)
+                    writer.write(value, start, len);
+                writer.write(escapeChar);
+                writer.write(quoteChar);
+                start = found +1;
             }
+
+            final int len = value.length() - start;
+            if(len > 0)
+                writer.write(value, start, len);
         }
     }
 
