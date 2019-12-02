@@ -10,8 +10,6 @@ import java.util.regex.Pattern;
  */
 public class NeverQuoteButReplace implements Quoter {
     private final NeverQuote neverQuote;
-    private final String cellSeparator;
-    private final String lineSeparator;
     private final char cellSeparatorFirst;
     private final char lineSeparatorFirst;
     private final Pattern cellSeparatorPattern;
@@ -24,10 +22,8 @@ public class NeverQuoteButReplace implements Quoter {
         if(cellSeparator == null || cellSeparator.isEmpty()) {
             throw new IllegalArgumentException("Cell separator cannot be null or empty.");
         }
-        this.cellSeparator = cellSeparator;
         if(lineSeparator == null || lineSeparator.isEmpty())
             throw new IllegalArgumentException("Line separator cannot be null or empty.");
-        this.lineSeparator = lineSeparator;
 
         cellSeparatorFirst = cellSeparator.charAt(0);
         lineSeparatorFirst = lineSeparator.charAt(0);
@@ -57,7 +53,8 @@ public class NeverQuoteButReplace implements Quoter {
      */
     private boolean shouldReplace(String value) {
         for(int i=0; i<value.length();i++){
-            if(value.charAt(i)== cellSeparatorFirst || value.charAt(i)==lineSeparatorFirst){
+            final char c = value.charAt(i);
+            if(c == cellSeparatorFirst || c ==lineSeparatorFirst){
                 return true;
             }
         }
