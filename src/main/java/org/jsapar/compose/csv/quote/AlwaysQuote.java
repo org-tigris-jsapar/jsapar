@@ -51,17 +51,25 @@ public class AlwaysQuote implements Quoter {
         @Override
         public void writeValue(Writer writer, String value) throws IOException {
             int written=0;
-            for(int i=0; i<value.length() && written<maxLength; i++){
-                char ch = value.charAt(i);
-                if(ch == quoteChar) {
-                    if(written+2>maxLength)
-                        break;
-                    writer.write(escapeChar);
-                    written++;
+            int start = 0;
+            int found;
+            while(written < maxLength && -1 != (found=value.indexOf(quoteChar, start))){
+                final int len = Math.min(found - start, maxLength - written);
+                if(len > 0) {
+                    writer.write(value, start, len);
+                    written += len;
                 }
-                writer.write(ch);
-                written++;
+                if(written + 2 <= maxLength) {
+                    writer.write(escapeChar);
+                    writer.write(quoteChar);
+                }
+                written += 2; // Increment also when not actually adding quote to avoid appending more chars
+                start = found +1;
             }
+
+            final int len = Math.min(value.length() - start, maxLength - written);
+            if(len > 0)
+                writer.write(value, start, len);
         }
     }
 
