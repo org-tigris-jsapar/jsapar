@@ -46,7 +46,7 @@ public class Bean2TextConverterTest {
         Schema composeSchema = makeOutputSchema();
         StringWriter writer = new StringWriter();
         try (Bean2TextConverter<TstPerson> converter = new Bean2TextConverter<>(composeSchema, writer)) {
-            converter.setErrorEventListener(event -> fail("Got error event"));
+            converter.setErrorConsumer(error -> fail("Got error event"));
             converter.addLineManipulator(line -> {
                 if(line.getNonEmptyCell("firstName").map(Cell::getStringValue).orElse("").equals("Nisse"))
                     return false;

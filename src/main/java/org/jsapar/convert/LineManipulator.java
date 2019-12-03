@@ -17,6 +17,7 @@ import org.jsapar.model.Line;
  * @see BeanCollection2TextConverter
  * @see ConvertTask
  */
+@FunctionalInterface
 public interface LineManipulator {
 
     /**

@@ -63,7 +63,9 @@ public class CsvParser implements TextSchemaParser {
     private void handleNoParser(CsvLineReader lineReader, Consumer<JSaParException> errorEventListener) {
         if (lineReader.lastLineWasEmpty())
             return;
-        validationHandler.lineValidation(this, lineReader.currentLineNumber(), ()->"No schema line could be used to parse line number " + lineReader.currentLineNumber(), parseConfig.getOnUndefinedLineType(), errorEventListener);
+        validationHandler.lineValidation(
+                lineReader.currentLineNumber(), parseConfig.getOnUndefinedLineType(), errorEventListener,
+                ()->"No schema line could be used to parse line number " + lineReader.currentLineNumber());
     }
 
 

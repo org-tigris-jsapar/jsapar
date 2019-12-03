@@ -1,6 +1,5 @@
 package org.jsapar.parse.fixed;
 
-import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
@@ -103,19 +102,18 @@ final class FixedWidthLineParser {
 
         int remaining = lineReader.remainsForLine();
         if(remaining > 0) {
-            if(!validationHandler.lineValidation(this, lineReader.getLineNumber(), ()-> remaining + " trailing characters found on line",
-                    config.getOnLineOverflow(), errorListener))
+            if(!validationHandler.lineValidation(lineReader.getLineNumber(), config.getOnLineOverflow(), errorListener,
+                    ()-> remaining + " trailing characters found on line"))
                 return null; // Ignore the line.
         }
 
         return line;
     }
 
-    private boolean lineValidationInsufficient(ReadBuffer lineReader, ErrorEventListener errorListener) {
-        return validationHandler.lineValidation(this, lineReader.getLineNumber(),
-                () -> "Insufficient number of characters for line of type " + lineSchema.getLineType()
-                        + ". Expected at least " + lineSchema.getTotalCellLength(), config.getOnLineInsufficient(),
-                errorListener);
+    private boolean lineValidationInsufficient(ReadBuffer lineReader, Consumer<JSaParException> errorListener) {
+        return validationHandler.lineValidation(lineReader.getLineNumber(), config.getOnLineInsufficient(),
+                errorListener, () -> "Insufficient number of characters for line of type " + lineSchema.getLineType()
+                        + ". Expected at least " + lineSchema.getTotalCellLength());
     }
 
 }

@@ -1,15 +1,18 @@
 package org.jsapar;
 
 import org.jsapar.convert.LineManipulator;
+import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.ExceptionErrorEventListener;
+import org.jsapar.error.ExceptionErrorConsumer;
 import org.jsapar.bean.BeanMap;
+import org.jsapar.error.JSaParException;
 import org.jsapar.parse.bean.BeanMarshaller;
 import org.jsapar.schema.Schema;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Converts from beans to text output. This implementation accepts beans pushed one by one to be converted. See
@@ -39,11 +42,11 @@ import java.util.List;
  */
 public class Bean2TextConverter<T> implements AutoCloseable{
 
-    private final BeanMarshaller<T>     beanMarshaller;
-    private final TextComposer          textComposer;
-    private       long                  lineNumber         = 1;
-    private       List<LineManipulator> manipulators       = new java.util.LinkedList<>();
-    private       ErrorEventListener    errorEventListener = new ExceptionErrorEventListener();
+    private final BeanMarshaller<T>         beanMarshaller;
+    private final TextComposer              textComposer;
+    private       long                      lineNumber         = 1;
+    private       List<LineManipulator>     manipulators  = new java.util.LinkedList<>();
+    private       Consumer<JSaParException> errorConsumer = new ExceptionErrorConsumer();
 
     /**
      * Creates a converter with supplied composer schema.
@@ -78,7 +81,7 @@ public class Bean2TextConverter<T> implements AutoCloseable{
      * @return True if successfully composed an output line. False if no line was composed.
      */
     public boolean convert(T bean) {
-        return beanMarshaller.marshal(bean, errorEventListener, lineNumber++).map(line -> {
+        return beanMarshaller.marshal(bean, errorConsumer, lineNumber++).map(line -> {
             for (LineManipulator manipulator : manipulators) {
                 if (!manipulator.manipulate(line))
                     return false;
@@ -88,8 +91,20 @@ public class Bean2TextConverter<T> implements AutoCloseable{
         }).orElse(false);
     }
 
+    /**
+     * Use {@link #setErrorConsumer(Consumer) instead!}
+     * @param errorEventListener The error event listener to send error events to.
+     */
+    @Deprecated
     public void setErrorEventListener(ErrorEventListener errorEventListener) {
-        this.errorEventListener = errorEventListener;
+        this.errorConsumer = e->errorEventListener.errorEvent(new ErrorEvent(this, e));
+    }
+
+    /**
+     * @param errorConsumer The error consumer that will handle errors. By default an exception is thrown.
+     */
+    public void setErrorConsumer(Consumer<JSaParException> errorConsumer) {
+        this.errorConsumer = errorConsumer;
     }
 
     /**

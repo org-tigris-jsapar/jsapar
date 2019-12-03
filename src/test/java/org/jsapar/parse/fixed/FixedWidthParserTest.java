@@ -1,8 +1,10 @@
 package org.jsapar.parse.fixed;
 
+import org.jsapar.error.ExceptionErrorConsumer;
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.model.Document;
 import org.jsapar.model.LineUtils;
+import org.jsapar.parse.DocumentBuilderLineConsumer;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
@@ -42,8 +44,8 @@ public class FixedWidthParserTest {
 
     private Document build(Reader reader, FixedWidthSchema schema) throws IOException {
         FixedWidthParser parser = new FixedWidthParser(reader, schema, new TextParseConfig());
-        DocumentBuilderLineEventListener builder = new DocumentBuilderLineEventListener();
-        parser.parse(builder, new ExceptionErrorEventListener());
+        DocumentBuilderLineConsumer builder = new DocumentBuilderLineConsumer();
+        parser.parse(builder, new ExceptionErrorConsumer());
         return builder.getDocument();
     }
 
