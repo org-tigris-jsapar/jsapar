@@ -79,8 +79,6 @@ However if you plan to build and test the source consider the following:
 * Earlier versions of the library in the download packages are built with Java 6 but with target compatibility level 1.5. It is no guarantee that the library will work for earlier version of Java.
 
 ## Other sources of information
-<ul>
-<li><a href="http://jsapar.blogspot.com/">The JSaPar developer blog</a>.</li>
-<li><a href="http://ezroad.blogspot.com/2010/02/last-week-friend-of-mine-decided-to.html">Parsing Huge Text Files Using Java and JSaPar</a></li>
-</ul>
+* [Links to other related projects](links)
+
 
