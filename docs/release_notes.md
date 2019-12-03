@@ -2,10 +2,10 @@
 layout: page
 title: Release notes
 ---
+# Release notes
 * TOC
 {:toc}
 
-# Release notes
 ## 2.1
 ### 2.1.0
 * The default quote character for delimited files is now the double quote character (") and quoting is enabled by default.
