@@ -1,12 +1,13 @@
 package org.jsapar.compose.string;
 
 import org.jsapar.compose.Composer;
-import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaLine;
 
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -19,16 +20,14 @@ import java.util.stream.Collectors;
  */
 public class StringComposer implements Composer {
 
-    private final Schema             schema;
     private final StringComposedEventListener stringComposedEventListener;
     private final Map<String, StringLineComposer> lineComposers;
 
     public StringComposer(Schema schema, StringComposedEventListener composedEventListener) {
-        this(schema, composedEventListener, schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, StringLineComposer::new)));
+        this(composedEventListener, schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, StringLineComposer::new)));
     }
 
-    StringComposer(Schema schema, StringComposedEventListener composedEventListener, Map<String, StringLineComposer> lineComposers) {
-        this.schema = schema;
+    StringComposer(StringComposedEventListener composedEventListener, Map<String, StringLineComposer> lineComposers) {
         this.stringComposedEventListener = composedEventListener;
         this.lineComposers = lineComposers;
     }
@@ -45,10 +44,9 @@ public class StringComposer implements Composer {
         return true;
     }
 
-
     @Override
-    public void setErrorEventListener(ErrorEventListener errorListener) {
-//        this.errorEventListener = errorListener; // Not used.
+    public void setErrorConsumer(Consumer<JSaParException> errorConsumer) {
+        //        this.errorEventListener = errorListener; // Not used.
     }
 
     private boolean stringComposedEvent(StringComposedEvent event) {

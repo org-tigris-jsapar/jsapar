@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class StringComposerNullOnEmptyCell extends StringComposer {
 
     public StringComposerNullOnEmptyCell(Schema schema, StringComposedEventListener composedEventListener) {
-        super(schema, composedEventListener, schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, StringLineComposerNullOnEmptyCell::new)));
+        super(composedEventListener, schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, StringLineComposerNullOnEmptyCell::new)));
     }
 
 

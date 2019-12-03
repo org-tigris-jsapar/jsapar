@@ -29,10 +29,10 @@ public class CsvParserTest {
         String text = "firstName\njohn";
         CsvParser parser = new CsvParser(new StringReader(text), schema);
         AtomicInteger errorCount = new AtomicInteger(0);
-        parser.parse(event -> {
+        parser.parse(line -> {
                     assertEquals(1, errorCount.get()); // "Should report an error before first line is parsed.
-                    assertEquals(1, event.getLine().size());
-                    assertEquals("john", event.getLine().getCell("firstName").map(Cell::getStringValue).orElse(null));
+                    assertEquals(1, line.size());
+                    assertEquals("john", line.getCell("firstName").map(Cell::getStringValue).orElse(null));
                 },
                 errorEvent -> errorCount.incrementAndGet());
         assertEquals(1, errorCount.get());
@@ -52,11 +52,11 @@ public class CsvParserTest {
         String text = "firstName;;lastName\njohn;L;doe";
         CsvParser parser = new CsvParser(new StringReader(text), schema);
         AtomicInteger errorCount = new AtomicInteger(0);
-        parser.parse(event -> {
+        parser.parse(line -> {
                     assertEquals(0, errorCount.get()); // "Should report an error before first line is parsed.
-                    assertEquals(2, event.getLine().size());
-                    assertEquals("john", event.getLine().getCell("firstName").map(Cell::getStringValue).orElse(null));
-                    assertEquals("doe", event.getLine().getCell("lastName").map(Cell::getStringValue).orElse(null));
+                    assertEquals(2, line.size());
+                    assertEquals("john", line.getCell("firstName").map(Cell::getStringValue).orElse(null));
+                    assertEquals("doe", line.getCell("lastName").map(Cell::getStringValue).orElse(null));
                 },
                 errorEvent -> errorCount.incrementAndGet());
         assertEquals(0, errorCount.get());

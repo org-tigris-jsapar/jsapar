@@ -1,10 +1,14 @@
 package org.jsapar.convert;
 
+import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.ExceptionErrorConsumer;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Abstract base class for all converters.
@@ -28,8 +32,8 @@ import java.util.List;
  */
 public abstract class AbstractConverter {
 
-    private List<LineManipulator> manipulators = new java.util.LinkedList<>();
-    private ErrorEventListener errorListener;
+    private List<LineManipulator>     manipulators = new java.util.LinkedList<>();
+    private Consumer<JSaParException> errorConsumer = new ExceptionErrorConsumer();
 
     public AbstractConverter() {
     }
@@ -48,8 +52,17 @@ public abstract class AbstractConverter {
      * Replaces existing error event listener.
      * @param errorListener The new error event listener to use.
      */
+    @Deprecated
     public void setErrorEventListener(ErrorEventListener errorListener) {
-        this.errorListener = errorListener;
+        this.errorConsumer = e-> errorListener.errorEvent(new ErrorEvent(this, e));
+    }
+
+    /**
+     * Replaces existing error event listener.
+     * @param errorConsumer The new error consumer
+     */
+    public void setErrorConsumer(Consumer<JSaParException> errorConsumer){
+        this.errorConsumer = errorConsumer;
     }
 
     /**
@@ -60,8 +73,7 @@ public abstract class AbstractConverter {
      */
     protected long execute(ConvertTask convertTask) throws IOException {
         manipulators.forEach(convertTask::addLineManipulator);
-        if(errorListener != null)
-            convertTask.setErrorEventListener(errorListener);
+        convertTask.setErrorConsumer(errorConsumer);
         return convertTask.execute();
     }
 

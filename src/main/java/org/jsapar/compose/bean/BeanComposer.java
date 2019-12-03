@@ -3,13 +3,12 @@ package org.jsapar.compose.bean;
 import org.jsapar.compose.ComposeException;
 import org.jsapar.compose.Composer;
 import org.jsapar.compose.line.ValidationHandler;
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.ExceptionErrorEventListener;
+import org.jsapar.error.*;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Consumer;
 
 /**
  * Composer class that composes java beans based on a document or by single lines. The result is that for each bean that
@@ -19,10 +18,10 @@ import java.lang.reflect.InvocationTargetException;
  * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.
  */
 @SuppressWarnings("UnusedReturnValue")
-public class BeanComposer<T> implements Composer, BeanEventListener<T>, ErrorEventListener {
-    private BeanEventListener<T> composedEventListener;
-    private ErrorEventListener errorEventListener = new ExceptionErrorEventListener();
-    private BeanFactory<T> beanFactory;
+public class BeanComposer<T> implements Composer, BeanEventListener<T> {
+    private BeanEventListener<T>      composedEventListener;
+    private Consumer<JSaParException> errorConsumer = new ExceptionErrorConsumer();
+    private BeanFactory<T>            beanFactory;
     private BeanComposeConfig config;
     private ValidationHandler validationHandler = new ValidationHandler();
 
@@ -68,9 +67,9 @@ public class BeanComposer<T> implements Composer, BeanEventListener<T>, ErrorEve
         try {
             bean = beanFactory.createBean(line);
             if (bean == null) {
-                if (!validationHandler.lineValidationError(this, line,
+                if (!validationHandler.lineValidationError(line,
                         "BeanFactory failed to instantiate object for this line because there was no associated class. You can errors like this by setting config.onUndefinedLineType=OMIT_LINE",
-                        config.getOnUndefinedLineType(), this)) {
+                        config.getOnUndefinedLineType(), errorConsumer)) {
                     return false;
                 }
             } else {
@@ -92,7 +91,7 @@ public class BeanComposer<T> implements Composer, BeanEventListener<T>, ErrorEve
     }
 
     private void generateErrorEvent(Line line, String message, Throwable t) {
-        errorEvent(new ErrorEvent(this, new ComposeException(message, line, t)));
+        errorConsumer.accept( new ComposeException(message, line, t));
     }
 
 
@@ -101,8 +100,8 @@ public class BeanComposer<T> implements Composer, BeanEventListener<T>, ErrorEve
     }
 
     @Override
-    public void setErrorEventListener(ErrorEventListener errorEventListener) {
-        this.errorEventListener = errorEventListener;
+    public void setErrorConsumer(Consumer<JSaParException> errorEventListener) {
+        this.errorConsumer = errorEventListener;
     }
 
     public BeanFactory<T> getBeanFactory() {
@@ -118,11 +117,6 @@ public class BeanComposer<T> implements Composer, BeanEventListener<T>, ErrorEve
         if (composedEventListener != null) {
             composedEventListener.beanComposedEvent(event);
         }
-    }
-
-    @Override
-    public void errorEvent(ErrorEvent event) {
-        errorEventListener.errorEvent(event);
     }
 
     /**
@@ -147,7 +141,7 @@ public class BeanComposer<T> implements Composer, BeanEventListener<T>, ErrorEve
                     | InvocationTargetException
                     | NoSuchMethodException
                     | InstantiationException e) {
-                errorEventListener.errorEvent(new ErrorEvent(this, new ComposeException(e.getMessage() + " while handling cell " + cell, e)));
+                errorConsumer.accept( new ComposeException(e.getMessage() + " while handling cell " + cell, e));
             }
         }
         return objectToAssign;

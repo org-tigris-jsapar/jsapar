@@ -2,14 +2,17 @@ package org.jsapar.convert;
 
 import org.jsapar.compose.Composer;
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.MulticastConsumer;
 import org.jsapar.parse.ParseTask;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Reads from supplied parseTask and outputs each line to the composer. By adding
@@ -45,9 +48,21 @@ public class ConvertTask {
      *
      * @param errorListener The new error event listener to use for both parsing and composing.
      */
+    @Deprecated
     public void setErrorEventListener(ErrorEventListener errorListener) {
         this.parseTask.setErrorEventListener(errorListener);
         this.composer.setErrorEventListener(errorListener);
+    }
+
+    /**
+     * Sets an error consumer to this parser. Default behavior otherwise is to throw an exception upon the first
+     * error. If you want more than one consumer to get each error event, use a {@link MulticastConsumer}.
+     *
+     * @param errorConsumer The error consumer.
+     */
+    public void setErrorConsumer(Consumer<JSaParException> errorConsumer){
+        this.parseTask.setErrorConsumer(errorConsumer);
+        this.composer.setErrorConsumer(errorConsumer);
     }
 
     /**

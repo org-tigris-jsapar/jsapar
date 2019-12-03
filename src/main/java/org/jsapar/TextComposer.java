@@ -5,6 +5,7 @@ import org.jsapar.compose.internal.ComposerFactory;
 import org.jsapar.compose.internal.SchemaComposer;
 import org.jsapar.compose.internal.TextComposerFactory;
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
@@ -12,6 +13,7 @@ import org.jsapar.schema.Schema;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.io.Writer;
+import java.util.function.Consumer;
 
 /**
  * This class contains methods for transforming a Document or Line into a text output. E.g. if you want to write
@@ -93,8 +95,8 @@ public class TextComposer implements Composer, AutoCloseable {
     }
 
     @Override
-    public void setErrorEventListener(ErrorEventListener errorListener) {
-       // TODO: Add error handling when composing.
+    public void setErrorConsumer(Consumer<JSaParException> errorConsumer) {
+        // TODO: Add error handling when composing.
     }
 
     /**

@@ -3,8 +3,11 @@ package org.jsapar.compose.line;
 import org.jsapar.compose.ComposeException;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.error.ValidationAction;
 import org.jsapar.model.Line;
+
+import java.util.function.Consumer;
 
 /**
  * Internal utility class for handling validation error.
@@ -17,7 +20,6 @@ public class ValidationHandler {
     /**
      * Handles an error while composing depending on the supplied {@link ValidationAction}
      *
-     * @param source        The origin of the error. Usually, use this from caller.
      * @param line          The line where the error occurred.
      * @param message       A descriptive message of the error.
      * @param action        The error action currently configured for the error.
@@ -29,16 +31,14 @@ public class ValidationHandler {
      * @return True if the line should be processed, false otherwise.
      * @throws ComposeException if the action is {@link ValidationAction#EXCEPTION}
      */
-    public boolean lineValidationError(Object source,
-                                       Line line,
+    public boolean lineValidationError(Line line,
                                        String message,
                                        ValidationAction action,
-                                       ErrorEventListener eventListener) {
+                                       Consumer<JSaParException> eventListener) {
         switch (action) {
         case ERROR: {
             ComposeException error = new ComposeException(message, line);
-            ErrorEvent event = new ErrorEvent(source, error);
-            eventListener.errorEvent(event);
+            eventListener.accept(error);
             return true;
         }
         case EXCEPTION: {
