@@ -7,6 +7,11 @@ title: Release notes
 {:toc}
 
 ## 2.1
+### 2.1.1
+* Fixed problem that insufficient-error was not signalled correctly as en error when when parsing an "ignoreread" cell.
+* Fixed problem converting to/from bean when bean class was annotated using lombok @Getter/@Setter and at the same time 
+implementing an interface that imposed a getter or a setter.
+
 ### 2.1.0
 * The default quote character for delimited files is now the double quote character (") and quoting is enabled by default.
  If you don't want quoting support, you need to actively switch it off. See [Quoted values](basics_schema#quoted-values) in documentation.

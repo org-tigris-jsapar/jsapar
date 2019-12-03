@@ -20,18 +20,12 @@ making it easy to process delimited and fixed width data sources.
 By separating the description of the data format into a schema that can be loaded from XML it makes the code
 easier to maintain and increases flexibility.
 
+* [Announcements](https://github.com/org-tigris-jsapar/jsapar/wiki/Announcements)
 * [Documentation](https://org-tigris-jsapar.github.io/jsapar/)
 * [Release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes)
 * [Javadocs API documentation](https://javadoc.io/doc/org.tigris.jsapar/jsapar)
 * [Examples](https://github.com/org-tigris-jsapar/jsapar-examples)
 
-## News
-### Version 2.1.0 is released 
-*2019-11-05*
-
-The focus of this fix-release has been to add some missing functionality such as enums and to build using Java 11. See [release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes#2.1.0) for details
-
-*See [further announcements here](https://github.com/org-tigris-jsapar/jsapar/wiki/Announcements).*
 ## Mission
 The goal of this project is a java library that removes the burden of parsing and composing flat files and CSV files from the developer.
 
