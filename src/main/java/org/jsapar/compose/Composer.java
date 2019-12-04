@@ -75,7 +75,7 @@ public interface Composer extends AutoCloseable{
      */
     @Deprecated
     default void setErrorEventListener(ErrorEventListener errorEventListener){
-        setErrorConsumer(e->new ErrorEvent(this, e));
+        setErrorConsumer(e->errorEventListener.errorEvent(new ErrorEvent(this, e)));
     }
 
     /**

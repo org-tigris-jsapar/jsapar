@@ -28,7 +28,7 @@ public interface ParseTask extends AutoCloseable {
      */
     @Deprecated
     default void setLineEventListener(LineEventListener eventListener){
-        setLineConsumer(l->new LineParsedEvent(this, l));
+        setLineConsumer(l->eventListener.lineParsedEvent(new LineParsedEvent(this, l)));
     }
 
     /**
@@ -41,7 +41,7 @@ public interface ParseTask extends AutoCloseable {
      */
     @Deprecated
     default void setErrorEventListener(ErrorEventListener errorEventListener){
-        setErrorConsumer(e->new ErrorEvent(this, e));
+        setErrorConsumer(e->errorEventListener.errorEvent(new ErrorEvent(this, e)));
     }
 
     /**
