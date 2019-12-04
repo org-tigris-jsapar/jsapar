@@ -81,32 +81,19 @@ public class ConvertTask {
      */
     public long execute() throws IOException {
         try {
-            parseTask.setLineEventListener(new LineForwardListener());
+            parseTask.setLineConsumer(line->{
+                for (LineManipulator manipulator : manipulators) {
+                    if (!manipulator.manipulate(line))
+                        return;
+                }
+                composer.composeLine(line);
+            });
             return parseTask.execute();
         }catch (UncheckedIOException e){
             throw e.getCause() != null ? e.getCause() : new IOException(e);
         }
     }
 
-    /**
-     * Internal class for handling output of one line at a time while receiving parsing events.
-     *
-     */
-    public class LineForwardListener implements LineEventListener {
-
-        public LineForwardListener() {
-        }
-
-        @Override
-        public void lineParsedEvent(LineParsedEvent event) {
-            Line line = event.getLine();
-            for (LineManipulator manipulator : manipulators) {
-                if (!manipulator.manipulate(line))
-                    return;
-            }
-            composer.composeLine(line);
-        }
-    }
 
     public ParseTask getParseTask() {
         return parseTask;
