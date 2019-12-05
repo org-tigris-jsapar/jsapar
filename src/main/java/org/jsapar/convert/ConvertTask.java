@@ -4,8 +4,6 @@ import org.jsapar.compose.Composer;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.MulticastConsumer;
 import org.jsapar.parse.ParseTask;
 
@@ -81,13 +79,7 @@ public class ConvertTask {
      */
     public long execute() throws IOException {
         try {
-            parseTask.setLineConsumer(line->{
-                for (LineManipulator manipulator : manipulators) {
-                    if (!manipulator.manipulate(line))
-                        return;
-                }
-                composer.composeLine(line);
-            });
+            parseTask.setLineConsumer(this::forEachLine);
             return parseTask.execute();
         }catch (UncheckedIOException e){
             throw e.getCause() != null ? e.getCause() : new IOException(e);
@@ -101,5 +93,13 @@ public class ConvertTask {
 
     public Composer getComposer() {
         return composer;
+    }
+
+    protected void forEachLine(Line line) {
+        for (LineManipulator manipulator : manipulators) {
+            if (!manipulator.manipulate(line))
+                return;
+        }
+        composer.composeLine(line);
     }
 }

@@ -25,7 +25,7 @@ import java.io.IOException;
  *
  */
 public class ConcurrentConvertTask extends ConvertTask implements ConcurrentStartStop{
-    private ConcurrentLineEventListener concurrentLineEventListener = new ConcurrentLineEventListener(new LineForwardListener());
+    private ConcurrentConsumer<Line> concurrentLineEventListener = new ConcurrentConsumer<>(this::forEachLine);
     /** Creates a converter
      * @param parseTask The parseTask to use while parsing
      * @param composer The composer to use while composing.
@@ -35,8 +35,8 @@ public class ConcurrentConvertTask extends ConvertTask implements ConcurrentStar
     }
 
     public long execute() throws IOException {
-        try (ConcurrentLineEventListener lineEventListener = this.concurrentLineEventListener) {
-            getParseTask().setLineEventListener(lineEventListener);
+        try (ConcurrentConsumer<Line> lineEventListener = this.concurrentLineEventListener) {
+            getParseTask().setLineConsumer(lineEventListener);
             lineEventListener.start();
             return getParseTask().execute();
         }
