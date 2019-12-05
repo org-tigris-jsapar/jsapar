@@ -39,6 +39,8 @@ public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppa
     private List<Runnable> onStart = new LinkedList<>();
     private List<Runnable> onStop = new LinkedList<>();
 
+    private static class END{}
+
     /**
      * Creates a concurrent line event listener that have a queue size of 1000 events.
      * @param consumer The consumer that will be called by consumer thread.
@@ -87,7 +89,7 @@ public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppa
             while (!shouldStop) {
                 T event = events.take();
                 // Check if it is just an event to release wait block.
-                if (event.getClass() != Object.class) {
+                if (event.getClass() != END.class) {
                     listener.accept(event);
                 }
             }
@@ -142,7 +144,7 @@ public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppa
         try {
             if(isRunning()) {
                 //noinspection unchecked
-                events.put((T) new Object()); // Make sure the blocking is released immediately
+                events.put((T) new END()); // Make sure the blocking is released immediately
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
