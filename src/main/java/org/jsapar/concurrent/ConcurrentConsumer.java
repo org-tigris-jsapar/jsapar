@@ -72,7 +72,7 @@ public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppa
         synchronized (this) {
             if (exception != null) {
                 try {
-                    throw new JSaParException("Exception in concurrent event listening thread", exception);
+                    throw new JSaParException("Exception in concurrent consuming thread", exception);
                 } finally {
                     exception = null;
                 }
