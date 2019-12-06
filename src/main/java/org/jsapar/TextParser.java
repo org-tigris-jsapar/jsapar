@@ -3,6 +3,7 @@ package org.jsapar;
 import org.jsapar.model.Line;
 import org.jsapar.parse.AbstractParser;
 import org.jsapar.parse.LineEventListener;
+import org.jsapar.parse.LineEventListenerLineConsumer;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
@@ -25,8 +26,8 @@ import java.util.function.Consumer;
  * </ol>
  * <p>
  * The default error handling is to throw an exception upon the first error that occurs. You can however change that
- * behavior by adding an {@link org.jsapar.error.ErrorEventListener}. There are several implementations to choose from such as
- * {@link org.jsapar.error.RecordingErrorEventListener} or
+ * behavior by adding a error {@link Consumer}. There are several implementations to choose from such as
+ * {@link org.jsapar.parse.CollectingConsumer} or
  * {@link org.jsapar.error.ThresholdRecordingErrorEventListener}, or you may implement your own.
  *
  * @see TextComposer
@@ -58,8 +59,7 @@ public class TextParser extends AbstractParser {
      */
     @Deprecated
     public long parse(Reader reader, LineEventListener lineEventListener) throws IOException {
-        final Consumer<Line> lineConsumer = line->lineEventListener.lineParsedEvent(new LineParsedEvent(this, line));
-        return parse(reader, lineConsumer);
+        return parse(reader, new LineEventListenerLineConsumer(lineEventListener));
     }
 
     /**

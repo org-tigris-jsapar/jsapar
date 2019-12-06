@@ -1,8 +1,8 @@
 package org.jsapar;
 
+import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.JSaParException;
-import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.parse.xml.Text2SAXReader;
 import org.jsapar.schema.Schema;
 import org.xml.sax.InputSource;
@@ -13,6 +13,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.function.Consumer;
 
 /**
  * Can be used to convert a CSV or fixed with file to xml output or any other text output by applying transformation.
@@ -105,9 +106,21 @@ public class Text2XmlConverter {
 
     /**
      * Replaces existing error event listener.
+     *
+     * Deprecated since 2.2. Use {@link #setErrorConsumer(Consumer)} instead.
      * @param errorEventListener The new error event listener to use.
      */
+    @Deprecated
     public void setErrorEventListener(ErrorEventListener errorEventListener) {
-        this.saxReader.setErrorEventListener(errorEventListener);
+        this.setErrorConsumer(e->errorEventListener.errorEvent(new ErrorEvent(this, e)));
     }
+
+    /**
+     * Replaces existing error consumer.
+     * @param errorConsumer The new error event listener to use.
+     */
+    public void setErrorConsumer(Consumer<JSaParException> errorConsumer) {
+        this.saxReader.setErrorConsumer(errorConsumer);
+    }
+
 }

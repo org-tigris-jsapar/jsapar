@@ -1,8 +1,7 @@
 package org.jsapar;
 
-import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.JSaParException;
-import org.jsapar.error.RecordingErrorEventListener;
+import org.jsapar.parse.CollectingConsumer;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.Xml2SchemaBuilder;
 
@@ -67,7 +66,7 @@ public class ConverterMain {
 
             final String outputSchemaPath = properties.getProperty("out.schema");
             final String outputXsltPath = properties.getProperty("xslt.file");
-            RecordingErrorEventListener errors = new RecordingErrorEventListener();
+            CollectingConsumer<JSaParException> errors = new CollectingConsumer<>();
             if(outputSchemaPath != null) {
                 convertText2Text(errors, inFileName, inFileEncoding, outFileEncoding, outFileName, inputSchema, outputSchemaPath);
             }
@@ -80,7 +79,7 @@ public class ConverterMain {
                 printUsage(System.out);
 
             }
-            List<JSaParException> parseErrors = errors.getErrors();
+            List<JSaParException> parseErrors = errors.getCollected();
             if (parseErrors.size() > 0)
                 System.out.println("===> Found errors while converting file " + inFileName + ": "
                         + System.getProperty("line.separator") + parseErrors);
@@ -93,7 +92,7 @@ public class ConverterMain {
         }
     }
 
-    private void convertText2Text(ErrorEventListener errorEventListener, String inFileName, String inFileEncoding, String outFileEncoding, String outFileName, Schema inputSchema, String outputSchemaPath) throws IOException {
+    private void convertText2Text(CollectingConsumer<JSaParException> errorEventListener, String inFileName, String inFileEncoding, String outFileEncoding, String outFileName, Schema inputSchema, String outputSchemaPath) throws IOException {
         Schema outputSchema = Xml2SchemaBuilder.loadSchemaFromXmlFile(new File(outputSchemaPath));
 
         try (Reader inputFileReader = new InputStreamReader(
@@ -101,13 +100,13 @@ public class ConverterMain {
              Writer writer = new OutputStreamWriter(
                      new FileOutputStream(outFileName), outFileEncoding )) {
             Text2TextConverter converter = makeConverter(inputSchema, outputSchema);
-            converter.setErrorEventListener(errorEventListener);
+            converter.setErrorConsumer(errorEventListener);
             converter.convert(inputFileReader, writer);
 
         }
     }
 
-    private void transformText(ErrorEventListener errorEventListener, String inFileName, String inFileEncoding, String outFileEncoding, String outFileName, Schema inputSchema, String outputXsltPath, Properties properties) throws IOException, TransformerConfigurationException {
+    private void transformText(CollectingConsumer<JSaParException> errorConsumer, String inFileName, String inFileEncoding, String outFileEncoding, String outFileName, Schema inputSchema, String outputXsltPath, Properties properties) throws IOException, TransformerConfigurationException {
         String xsltEncoding = properties.getProperty("xslt.encoding", Charset.defaultCharset().name());
         String xsltMethod = properties.getProperty("xslt.method", "xml");
 
@@ -120,7 +119,7 @@ public class ConverterMain {
             transformer.setOutputProperty(OutputKeys.METHOD, xsltMethod);
 
             Text2XmlConverter converter = new Text2XmlConverter(inputSchema, transformer);
-            converter.setErrorEventListener(errorEventListener);
+            converter.setErrorConsumer(errorConsumer);
             converter.convert(inputFileReader, writer);
         }
     }

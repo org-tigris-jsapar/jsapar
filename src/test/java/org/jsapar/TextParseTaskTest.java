@@ -2,13 +2,14 @@ package org.jsapar;
 
 import org.jsapar.error.JSaParException;
 import org.jsapar.error.MaxErrorsExceededException;
-import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.error.ThresholdRecordingErrorEventListener;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Document;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.CellParseException;
+import org.jsapar.parse.DocumentBuilderLineConsumer;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
+import org.jsapar.parse.CollectingConsumer;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
@@ -68,9 +69,9 @@ public class TextParseTaskTest {
         Reader reader = new StringReader(toParse);
         List<JSaParException> parseErrors = new ArrayList<>();
         TextParseTask parser = new TextParseTask(schema, reader);
-        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-        parser.setLineEventListener(listener);
-        parser.setErrorEventListener(new RecordingErrorEventListener(parseErrors));
+        DocumentBuilderLineConsumer listener = new DocumentBuilderLineConsumer();
+        parser.setLineConsumer(listener);
+        parser.setErrorConsumer(new CollectingConsumer<>(parseErrors));
         parser.execute();
         Document doc = listener.getDocument();
         Assert.assertEquals(1, parseErrors.size());
