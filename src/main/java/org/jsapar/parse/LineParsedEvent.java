@@ -7,6 +7,7 @@ import java.util.EventObject;
 /**
  * Event object that is sent as event to all {@link LineEventListener} instances of a parser for each line while parsing.
  */
+@Deprecated
 public final class LineParsedEvent extends EventObject {
 
     /**

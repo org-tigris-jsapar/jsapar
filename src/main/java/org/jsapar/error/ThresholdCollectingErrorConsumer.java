@@ -1,24 +1,23 @@
 package org.jsapar.error;
 
+import org.jsapar.parse.CollectingConsumer;
+
 import java.util.List;
 
 /**
  * This error event listener records errors until it reaches a maximum number. Any errors that occurs after maximum
  * number has been reached will cause a {@link MaxErrorsExceededException} instead.
- *
- * Deprecated since 2.2. Use {@link ThresholdCollectingErrorConsumer} instead.
  */
-@Deprecated
-public class ThresholdRecordingErrorEventListener extends RecordingErrorEventListener {
+public class ThresholdCollectingErrorConsumer extends CollectingConsumer<JSaParException> {
     private int maxNumberOfErrors;
 
     /**
-     * Creates an error event listener where the error list needs to be fetched with
-     * {@link RecordingErrorEventListener#getErrors()} afterwards.
+     * Creates an error consumer where the error list needs to be fetched with
+     * {@link CollectingConsumer#getCollected()} afterwards.
      *
      * @param maxNumberOfErrors The maximum number of errors allowed to be recorded
      */
-    public ThresholdRecordingErrorEventListener(int maxNumberOfErrors) {
+    public ThresholdCollectingErrorConsumer(int maxNumberOfErrors) {
         this.maxNumberOfErrors = maxNumberOfErrors;
     }
 
@@ -28,7 +27,7 @@ public class ThresholdRecordingErrorEventListener extends RecordingErrorEventLis
      * @param maxNumberOfErrors The maximum number of errors allowed to be recorded
      * @param errors            The list that errors will be added to.
      */
-    public ThresholdRecordingErrorEventListener(int maxNumberOfErrors, List<JSaParException> errors) {
+    public ThresholdCollectingErrorConsumer(int maxNumberOfErrors, List<JSaParException> errors) {
         super(errors);
         this.maxNumberOfErrors = maxNumberOfErrors;
     }
@@ -41,14 +40,14 @@ public class ThresholdRecordingErrorEventListener extends RecordingErrorEventLis
      * Any errors that occurs after maximum
      * number has been reached will cause a {@link MaxErrorsExceededException} to be thrown.
      *
-     * @param event The event that contains the error information.
+     * @param error The the error information.
      */
     @Override
-    public void errorEvent(ErrorEvent event) {
+    public void accept(JSaParException error) {
         synchronized(this) {
-            super.errorEvent(event);
-            if (getErrors().size() > maxNumberOfErrors)
-                throw new MaxErrorsExceededException(event.getError(), getErrors());
+            super.accept(error);
+            if (this.size() > maxNumberOfErrors)
+                throw new MaxErrorsExceededException(error, getCollected());
         }
     }
 }

@@ -2,6 +2,7 @@ package org.jsapar;
 
 import org.jsapar.error.JSaParException;
 import org.jsapar.error.MaxErrorsExceededException;
+import org.jsapar.error.ThresholdCollectingErrorConsumer;
 import org.jsapar.error.ThresholdRecordingErrorEventListener;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Document;
@@ -90,9 +91,9 @@ public class TextParseTaskTest {
 
         Reader reader = new StringReader(toParse);
         TextParseTask parser = new TextParseTask(schema, reader);
-        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-        parser.setLineEventListener(listener);
-        parser.setErrorEventListener(new ThresholdRecordingErrorEventListener(0));
+        DocumentBuilderLineConsumer listener = new DocumentBuilderLineConsumer();
+        parser.setLineConsumer(listener);
+        parser.setErrorConsumer(new ThresholdCollectingErrorConsumer(0));
         parser.execute();
         Document doc = listener.getDocument();
     }

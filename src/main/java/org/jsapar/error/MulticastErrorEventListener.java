@@ -7,7 +7,10 @@ import java.util.List;
  * Distributes all error events to multiple {@link ErrorEventListener} instances. All registered listeners
  * are called one by one from the same thread.
  * If no {@link ErrorEventListener} is registered, this implementation will throw an exception upon the first error.
+ *
+ * Deprecated since 2.2. Use {@link org.jsapar.parse.MulticastConsumer} instead.
  */
+@Deprecated
 public class MulticastErrorEventListener implements ErrorEventListener{
 
     private List<ErrorEventListener> eventListeners = new ArrayList<>();

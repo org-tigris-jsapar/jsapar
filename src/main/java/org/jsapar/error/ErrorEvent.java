@@ -11,6 +11,7 @@ import java.util.EventObject;
  * Please register your own {@link ErrorEventListener} in any of these classes in order to deal with the errors that
  * occurs.
  */
+@Deprecated
 public final class ErrorEvent extends EventObject {
     final JSaParException error;
 
