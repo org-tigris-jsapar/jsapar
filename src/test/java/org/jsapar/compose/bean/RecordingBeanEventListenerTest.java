@@ -15,7 +15,7 @@ public class RecordingBeanEventListenerTest {
         RecordingBeanEventListener<TstPerson> recordingBeanEventListener = new RecordingBeanEventListener<>();
         TstPerson tstPerson = new TstPerson();
         assertEquals(0, recordingBeanEventListener.getBeans().size());
-        recordingBeanEventListener.beanComposedEvent(new BeanEvent<>(this, tstPerson, new Line("Test")));
+        recordingBeanEventListener.beanComposedEvent(new BeanEvent<>(tstPerson, new Line("Test")));
         assertEquals(1, recordingBeanEventListener.getBeans().size());
         assertSame(tstPerson, recordingBeanEventListener.getBeans().get(0));
     }
@@ -26,7 +26,7 @@ public class RecordingBeanEventListenerTest {
         RecordingBeanEventListener<TstPerson> recordingBeanEventListener = new RecordingBeanEventListener<>();
         TstPerson tstPerson = new TstPerson();
         assertEquals(0, recordingBeanEventListener.size());
-        recordingBeanEventListener.beanComposedEvent(new BeanEvent<>(this, tstPerson, new Line("Test")));
+        recordingBeanEventListener.beanComposedEvent(new BeanEvent<>(tstPerson, new Line("Test")));
         assertEquals(1, recordingBeanEventListener.size());
         recordingBeanEventListener.clear();
         assertEquals(0, recordingBeanEventListener.size());
@@ -36,7 +36,7 @@ public class RecordingBeanEventListenerTest {
     public void iterator() {
         RecordingBeanEventListener<TstPerson> recordingBeanEventListener = new RecordingBeanEventListener<>();
         TstPerson tstPerson = new TstPerson();
-        recordingBeanEventListener.beanComposedEvent(new BeanEvent<>(this, tstPerson, new Line("Test")));
+        recordingBeanEventListener.beanComposedEvent(new BeanEvent<>(tstPerson, new Line("Test")));
         Iterator<TstPerson> iterator = recordingBeanEventListener.iterator();
         assertSame(tstPerson, iterator.next());
         assertFalse(iterator.hasNext());
@@ -46,7 +46,7 @@ public class RecordingBeanEventListenerTest {
     public void iterable() {
         RecordingBeanEventListener<TstPerson> recordingBeanEventListener = new RecordingBeanEventListener<>();
         TstPerson tstPerson = new TstPerson();
-        recordingBeanEventListener.beanComposedEvent(new BeanEvent<>(this, tstPerson, new Line("Test")));
+        recordingBeanEventListener.beanComposedEvent(new BeanEvent<>(tstPerson, new Line("Test")));
         boolean found = false;
         for (TstPerson person : recordingBeanEventListener) {
             assertSame(tstPerson, person);

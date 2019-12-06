@@ -11,7 +11,7 @@ public class BeanEventTest {
     @Test
     public void getBean() {
         TstPerson person = new TstPerson();
-        BeanEvent<TstPerson> beanEvent = new BeanEvent<>(this, person, new Line("test"));
+        BeanEvent<TstPerson> beanEvent = new BeanEvent<>(person, new Line("test"));
         assertSame(person, beanEvent.getBean());
     }
 
@@ -20,14 +20,14 @@ public class BeanEventTest {
         TstPerson person = new TstPerson();
         Line line = new Line("test");
         line.setLineNumber(17);
-        BeanEvent<TstPerson> beanEvent = new BeanEvent<>(this, person, line);
+        BeanEvent<TstPerson> beanEvent = new BeanEvent<>(person, line);
         assertEquals(17, beanEvent.getLineNumber());
     }
 
     @Test
     public void getLineType() {
         TstPerson person = new TstPerson();
-        BeanEvent<TstPerson> beanEvent = new BeanEvent<>(this, person, new Line("test"));
+        BeanEvent<TstPerson> beanEvent = new BeanEvent<>(person, new Line("test"));
         assertEquals("test", beanEvent.getLineType());
     }
 
@@ -35,7 +35,7 @@ public class BeanEventTest {
     public void getLine() {
         TstPerson person = new TstPerson();
         Line line = new Line("test");
-        BeanEvent<TstPerson> beanEvent = new BeanEvent<>(this, person, line);
+        BeanEvent<TstPerson> beanEvent = new BeanEvent<>(person, line);
         assertSame(line, beanEvent.getLine());
     }
 }
