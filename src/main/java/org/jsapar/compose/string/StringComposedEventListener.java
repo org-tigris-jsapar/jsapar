@@ -4,6 +4,7 @@ package org.jsapar.compose.string;
  * Interface for receiving event call-backs while composing.
  *
  */
+@FunctionalInterface
 public interface StringComposedEventListener {
 
     /**
