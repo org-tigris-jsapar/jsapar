@@ -9,7 +9,10 @@ import java.util.Optional;
  * different classes of the parsed beans. You may only register one listener for each class.
  * <p>
  * The default listener will be called if no listener was registered for the class.
+ *
+ * Deprecated since 2.2. Use {@link ByClassBeanConsumer} instead.
  */
+@Deprecated
 public class ByClassBeanEventListener<T> implements BeanEventListener<T> {
     private Map<Class<?>, BeanEventListener<T>> beanEventListeners = new HashMap<>();
 
