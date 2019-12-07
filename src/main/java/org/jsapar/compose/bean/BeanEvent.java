@@ -6,6 +6,7 @@ import org.jsapar.model.Line;
  * Event that is generated each time a bean is composed by a {@link BeanComposer}
  * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.
  */
+@Deprecated
 public final class BeanEvent<T>  {
 
     private final T bean;

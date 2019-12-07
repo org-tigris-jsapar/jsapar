@@ -5,6 +5,7 @@ import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.ConvertTask;
 import org.jsapar.error.BeanException;
 import org.jsapar.bean.BeanMap;
+import org.jsapar.model.Line;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
@@ -12,6 +13,8 @@ import org.jsapar.schema.Schema;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * Converts text input to Java bean objects. You can choose to use the standard behavior or you may customize assigning
@@ -70,18 +73,44 @@ public class Text2BeanConverter<T> extends AbstractConverter {
 
     /**
      * Executes the actual convert. Will produce a callback to supplied eventListener for each bean that is parsed.
+     * Deprecated since 2.2. Use {@link #convertForEach(Reader, Consumer)} or {@link #convertForEach(Reader, BiConsumer)} instead.
      * @param reader The reader to read the text from.
      * @param eventListener The callback interface which will receive a callback for each bean that is successfully parsed.
      * @return Number of converted beans.
      * @throws IOException In case of io error.
      */
+    @Deprecated
     public long convert(Reader reader, BeanEventListener<T> eventListener) throws IOException {
+        return convertForEach(reader, new BeanEventListenerConsumer<>(eventListener));
+    }
+
+    /**
+     * Executes the actual convert. For each bean that is composed, the bean composer will be called. This method also
+     * supplies the line to the consumer in case information is needed from the line that was lost while composing the
+     * bean.
+     * @param reader The reader to read the text from.
+     * @param beanConsumer The bi-consumer that will be called for each bean that is composed. First argument is the bean, the second is the line.
+     * @return Number of converted beans.
+     * @throws IOException In case of io error.
+     */
+    public long convertForEach(Reader reader, BiConsumer<T, Line> beanConsumer) throws IOException {
         BeanComposer<T> composer = new BeanComposer<>(composeConfig, beanFactory);
         ConvertTask convertTask = new ConvertTask(new TextParseTask(this.parseSchema, reader, parseConfig), composer);
-        composer.setComposedEventListener(eventListener);
+        composer.setBeanConsumer(beanConsumer);
         if (beanFactory != null)
             composer.setBeanFactory(beanFactory);
         return execute(convertTask);
+    }
+
+    /**
+     * Executes the actual convert. For each bean that is composed, the bean composer will be called.
+     * @param reader The reader to read the text from.
+     * @param beanConsumer The consumer that will be called for each bean that is composed.
+     * @return Number of converted beans.
+     * @throws IOException In case of io error.
+     */
+    public long convertForEach(Reader reader, Consumer<T> beanConsumer) throws IOException {
+        return convertForEach(reader, (bean, line)->beanConsumer.accept(bean));
     }
 
     public void setComposeConfig(BeanComposeConfig composeConfig) {

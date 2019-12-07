@@ -4,7 +4,6 @@ import org.jsapar.model.Line;
 import org.jsapar.parse.AbstractParser;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineEventListenerLineConsumer;
-import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
@@ -51,7 +50,7 @@ public class TextParser extends AbstractParser {
     /**
      * Reads text from supplied reader and parses each line. Each parsed line generates a call-back to the lineEventListener.
      *
-     * Deprecated since 2.2. Use {@link #parse(Reader, Consumer)} instead.
+     * Deprecated since 2.2. Use {@link #parseForEach(Reader, Consumer)} instead.
      * @param reader The reader to read text from.
      * @param lineEventListener The call-back interface.
      * @return Number of parsed lines.
@@ -59,7 +58,7 @@ public class TextParser extends AbstractParser {
      */
     @Deprecated
     public long parse(Reader reader, LineEventListener lineEventListener) throws IOException {
-        return parse(reader, new LineEventListenerLineConsumer(lineEventListener));
+        return parseForEach(reader, new LineEventListenerLineConsumer(lineEventListener));
     }
 
     /**
@@ -69,7 +68,7 @@ public class TextParser extends AbstractParser {
      * @return Number of parsed lines.
      * @throws IOException In case of IO error
      */
-    public long parse(Reader reader, Consumer<Line> lineConsumer) throws IOException {
+    public long parseForEach(Reader reader, Consumer<Line> lineConsumer) throws IOException {
         TextParseTask parseTask = new TextParseTask(this.parseSchema, reader, parseConfig);
         return execute(parseTask, lineConsumer);
     }
