@@ -6,6 +6,12 @@ title: Upgrading from earlier versions of JSaPar
 * TOC
 {:toc}
 
+## Upgrading from version 2.1
+All the event based methods and classes have been replaced by corresponding Consumer based. The old methods and classes have been 
+marked as deprecated so they still work but it is recommended to switch 
+to the new methods. There should be a note in the javadoc for each deprecated method about how to switch to the new methods. 
+
+
 ## Upgrading from version 2.0
 The following classes has moved to package `org.jsapar.bean` in order to make them visible externally when introducing modules: 
   * org.jsapar.parse.bean.BeanMap
@@ -16,12 +22,12 @@ The following classes has moved to package `org.jsapar.text` in order to make th
 
 ## Upgrading from version 1.x
 The 2.0 version of the library differs fundamentally from the 1.x versions so there is no easy way to upgrade. This
-article will however try to help as much as possible.
+chapter will however try to help as much as possible.
 
 Almost all package names has changed in 2.0.
 ## Converter
 * The class `org.jsapar.io.Converter` is more or less replaced by `org.jsapar.Text2TextConverter`
-* It is no longer possible to get a list of errors as return value from the converter, instead use `org.jsapar.error.RecordingErrorEventListener` if you want to handle all errors when done parsing.
+* It is no longer possible to get a list of errors as return value from the converter, instead use `org.jsapar.error.RecordingErrorConsumer` if you want to handle all errors when done parsing.
 
 ## Outputter
 * The class `org.jsapar.output.Outputter` is more or less replaced by `org.jsapar.TextComposer`

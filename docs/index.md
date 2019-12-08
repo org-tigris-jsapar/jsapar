@@ -56,7 +56,7 @@ into any markup language by the use of xslt.
 * [Basics](basics)
 * [Basics of Schema](basics_schema)
 * [Javadocs API documentation](https://javadoc.io/doc/org.tigris.jsapar/jsapar)
-* [Upgrading from JSaPar 1.x versions](upgradingfrom1)
+* [Upgrading from JSaPar 1.x versions](upgradingfrom)
 
 ## Resources
 * [Source code and issues](https://github.com/org-tigris-jsapar/jsapar)

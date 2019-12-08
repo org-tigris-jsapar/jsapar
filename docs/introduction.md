@@ -9,8 +9,8 @@ title: JSaPar Introduction
 The <a href="api/index.html">javadoc</a> contains more comprehensive documentation regarding the classes mentioned below. <br/><br/>
 The JSaPar is a java library that provides a parser for flat and CSV (Comma Separated Values) files.
 The concept is that a schema denotes the way text data should be parsed or composed. The schema instance to be used can be built by specifying a xml-document or it can be constructed programmatically by using java code.
-The parser is event driven, meaning that you need to provide an event handler while parsing. For convenience there are some
-event handlers provided or you may implement your own. For instance, the org.jsapar.parse.DocumentBuilderLineEventHandler
+The parser is consumer driven, meaning that you need to provide a consumer while parsing that can handle each line. For convenience there are some
+consumers provided but you may also implement your own. For instance, the org.jsapar.parse.DocumentBuilderLineConsumer
 builds a  a org.jsapar.model.Document object that contains a list of org.jsapar.model.Line objects which contains a list
 of org.jsapar.model.Cell objects.
 
@@ -65,8 +65,8 @@ try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
     Schema schema = Schema.ofXml(schemaReader);
     TextParser parser = new TextParser(schema);
     Document document = new Document();
-    DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener(document);
-    parser.parse(fileReader, listener);
+    DocumentBuilderLineConsumer documentBuilder = new DocumentBuilderLineConsumer(document);
+    parser.parseForEach(fileReader, documentBuilder);
     Line firstLine = document.iterator().next();
     assert "Erik".equals( LineUtils.getStringCellValue(firstLine, "First name")) );
 }
@@ -74,8 +74,8 @@ try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
 In this example we
 1. Load the Schema from a file by using a FileReader for the schema file.
 1. Then we use that schema to create a TextParser.
-1. We then create a DocumentBuilderLineEventListener that is a pre defined event listener that collects all
-the events for each line and then fills a Document object with lines that can be fetched when done parsing.
+1. We then create a DocumentBuilderLineConsumer that is a pre defined consumer that consumes all
+the lines and adds them to a Document object that will eventually contain all the lines that can be fetched when done parsing.
 1. The resulting document instance contains a list of Line objects where each Line represent a line in the input file. 
 Now, depending on what we want to do
 with the parsed result, we may for example use the LineUtils class that contains a number of convenient methods to get cell
@@ -83,7 +83,7 @@ values of different types from a Line.
 
 That is all you need to parse a CSV file. As you can see with this example the library works with `java.io.Reader` so the data source is not actually limited to just files, it can be of any text data source.
 
-The example above is a small simple example. For larger data sources you probably want to implement a different event listener
+The example above is a small simple example. For larger data sources you probably want to implement a different line consumer
 that handles each line immediately as it is parsed. That way you will never load the whole content of the data source in the memory.
 
 If you rather work with your own Java bean class directly instead of getting Line objects, you probably want to look at the 

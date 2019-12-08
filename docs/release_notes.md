@@ -10,7 +10,10 @@ title: Release notes
 ### 2.2.0
 * The SchemaCell now accepts a native org.jsapar.text.Format instead of the java.text.Format. The native Format interface 
 wraps the java.text.Format and makes it possible to implement different parsing 
-and format tat does not conform to the java.text.Format contract. 
+and format that does not conform to the java.text.Format contract.
+* The event idiom has been replaced by the more modern Consumer concept from java functional. The parsers accepts a Consumer instead 
+of an the native event listener. The difference is that it reduces the need to create an event for each line that is parsed, instead 
+a consumer method is called. All event based methods and classes are still present in this version but have been marked as deprecated and may be removed in some future version.      
 ## 2.1
 ### 2.1.0
 * The default quote character for delimited files is now the double quote character (") and quoting is enabled by default.
