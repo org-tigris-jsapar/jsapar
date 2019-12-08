@@ -68,4 +68,11 @@ public class CollectingConsumer<T> implements Consumer<T> {
         return collected.size();
     }
 
+    /**
+     * Executes the supplied consumer for each item in the collected list.
+     * @param consumer  The consumer to execute.
+     */
+    public void forEach(Consumer<T> consumer) {
+        collected.forEach(consumer);
+    }
 }
