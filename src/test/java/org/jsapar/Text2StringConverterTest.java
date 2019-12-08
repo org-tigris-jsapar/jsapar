@@ -28,14 +28,14 @@ public class Text2StringConverterTest {
 
         Text2StringConverter converter = new Text2StringConverter(parseSchema, composeSchema);
         String source = "v11;v12;v13\nv21;v22;v23\n";
-        converter.convert(new StringReader(source), e -> {
-            assertEquals("test-line", e.getLineType());
-            switch ((int) e.getLineNumber()) {
+        converter.convertForEach(new StringReader(source), (cells, lineType, lineNumber) -> {
+            assertEquals("test-line", lineType);
+            switch ((int) lineNumber) {
                 case 1:
-                    assertArrayEquals(new String[]{"v12", "v11", "v13"}, e.stream().toArray());
+                    assertArrayEquals(new String[]{"v12", "v11", "v13"}, cells.toArray());
                     break;
                 case 2:
-                    assertArrayEquals(new String[]{"v22", "v21", "v23"}, e.stream().toArray());
+                    assertArrayEquals(new String[]{"v22", "v21", "v23"}, cells.toArray());
                     break;
             }
         });

@@ -11,36 +11,49 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * Composer that creates {@link StringComposedEvent} for each line that is composed.
+ * Composer that calls a {@link StringComposedConsumer} for each line that is composed.
  * <p>
- * The {@link StringComposedEvent} provides a
+ * The {@link StringComposedConsumer} provides a
  * {@link java.util.stream.Stream} of {@link java.lang.String} for the current {@link org.jsapar.model.Line} where each
  * string is matches the cell in a schema. Each cell is formatted according to provided
  * {@link org.jsapar.schema.Schema}.
  */
 public class StringComposer implements Composer {
 
-    private final StringComposedEventListener stringComposedEventListener;
+    private final StringComposedConsumer stringComposedConsumer;
     private final Map<String, StringLineComposer> lineComposers;
 
-    public StringComposer(Schema schema, StringComposedEventListener composedEventListener) {
-        this(composedEventListener, schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, StringLineComposer::new)));
+
+    public StringComposer(Schema schema, StringComposedConsumer stringComposedConsumer) {
+        this(stringComposedConsumer, schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, StringLineComposer::new)));
     }
 
+    @Deprecated
+    public StringComposer(Schema schema, StringComposedEventListener composedEventListener) {
+        this(composedEventListener,
+                schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, StringLineComposer::new)));
+    }
+
+    @Deprecated
     StringComposer(StringComposedEventListener composedEventListener, Map<String, StringLineComposer> lineComposers) {
-        this.stringComposedEventListener = composedEventListener;
+        this.stringComposedConsumer = (line, lineType, lineNumber) -> composedEventListener.stringComposedEvent(new StringComposedEvent(lineType, lineNumber, line));
+        this.lineComposers = lineComposers;
+    }
+
+    StringComposer(StringComposedConsumer composedEventListener, Map<String, StringLineComposer> lineComposers) {
+        this.stringComposedConsumer = composedEventListener;
         this.lineComposers = lineComposers;
     }
 
     @Override
     public boolean composeLine(Line line) {
         StringLineComposer lineComposer = lineComposers.get(line.getLineType());
-        if(lineComposer == null || lineComposer.isIgnoreWrite())
+        if (lineComposer == null || lineComposer.isIgnoreWrite())
             return false;
-        stringComposedEvent(new StringComposedEvent(
-                        line.getLineType(),
-                        line.getLineNumber(),
-                        lineComposer.composeStringLine(line)));
+        stringComposedConsumer.accept(lineComposer.composeStringLine(line),
+                line.getLineType(),
+                line.getLineNumber()
+        );
         return true;
     }
 
@@ -49,12 +62,5 @@ public class StringComposer implements Composer {
         //        this.errorEventListener = errorListener; // Not used.
     }
 
-    private boolean stringComposedEvent(StringComposedEvent event) {
-        if (this.stringComposedEventListener != null) {
-            stringComposedEventListener.stringComposedEvent(event);
-            return true;
-        }
-        return false;
-    }
 
 }

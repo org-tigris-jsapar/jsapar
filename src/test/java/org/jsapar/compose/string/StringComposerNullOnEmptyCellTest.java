@@ -27,8 +27,8 @@ public class StringComposerNullOnEmptyCellTest {
                 .addSchemaCell(new CsvSchemaCell("Last name"))
                 .addSchemaCell(cellWithDefault));
         AtomicBoolean called = new AtomicBoolean(false);
-        StringComposerNullOnEmptyCell composer = new StringComposerNullOnEmptyCell(schema, event -> {
-            assertEquals(Arrays.asList("name1", null, "hat"), event.stream().collect(Collectors.toList()));
+        StringComposerNullOnEmptyCell composer = new StringComposerNullOnEmptyCell(schema, (cells, lineType, lineNumber)  -> {
+            assertEquals(Arrays.asList("name1", null, "hat"), cells.collect(Collectors.toList()));
             called.getAndSet(true);
         });
         assertFalse(called.get());

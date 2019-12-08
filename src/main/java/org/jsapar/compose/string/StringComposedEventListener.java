@@ -5,6 +5,7 @@ package org.jsapar.compose.string;
  *
  */
 @FunctionalInterface
+@Deprecated
 public interface StringComposedEventListener {
 
     /**
