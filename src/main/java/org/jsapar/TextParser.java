@@ -73,10 +73,19 @@ public class TextParser extends AbstractParser {
         return execute(parseTask, lineConsumer);
     }
 
+    /**
+     * Gets the current {@link TextParseConfig} for this parser. Makes it possible to change each specific configuration
+     * value.
+     * @return The current parse configuration for this parser.
+     */
     public TextParseConfig getParseConfig() {
         return parseConfig;
     }
 
+    /**
+     * Replaces the current parse configuration
+     * @param parseConfig The new parse config
+     */
     public void setParseConfig(TextParseConfig parseConfig) {
         this.parseConfig = parseConfig;
     }

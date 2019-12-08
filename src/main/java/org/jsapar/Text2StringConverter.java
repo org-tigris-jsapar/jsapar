@@ -17,9 +17,9 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
- * Converts a text input to  {@link StringComposedEvent} for each line that is parsed.
+ * Converts a text input to  {@link Stream} of {@link String} for each line that is parsed.
  * <p>
- * The {@link StringComposedEvent} provides a
+ * The {@link StringComposedConsumer} provides a
  * {@link java.util.stream.Stream} of {@link java.lang.String} for the current {@link org.jsapar.model.Line} where each
  * string is matches the cell in a schema. Each cell is formatted according to provided
  * {@link org.jsapar.schema.Schema}.

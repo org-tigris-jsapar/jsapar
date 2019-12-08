@@ -2,6 +2,9 @@ package org.jsapar.compose.string;
 
 import java.util.stream.Stream;
 
+/**
+ * A functional interface that gets called for each line when collecting to strings.
+ */
 @FunctionalInterface
 public interface StringComposedConsumer {
 

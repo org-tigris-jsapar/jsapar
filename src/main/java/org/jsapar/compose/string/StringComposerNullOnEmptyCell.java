@@ -1,6 +1,5 @@
 package org.jsapar.compose.string;
 
-import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaLine;
 
