@@ -1,12 +1,12 @@
 package org.jsapar;
 
+import org.jsapar.bean.BeanMap;
 import org.jsapar.compose.Composer;
-import org.jsapar.compose.bean.RecordingBeanEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.error.ValidationAction;
 import org.jsapar.model.*;
-import org.jsapar.parse.DocumentBuilderLineEventListener;
-import org.jsapar.bean.BeanMap;
+import org.jsapar.parse.CollectingConsumer;
+import org.jsapar.parse.DocumentBuilderLineConsumer;
 import org.jsapar.parse.xml.XmlParser;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaException;
@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * These tests are not unit tests!!<br>
@@ -31,7 +31,6 @@ import static org.junit.Assert.assertEquals;
  * below show how JSaPar can be used to parse files.
  * 
  */
-@SuppressWarnings("unchecked")
 public class JSaParExamplesTest {
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -42,8 +41,8 @@ public class JSaParExamplesTest {
              Reader fileReader = new FileReader("examples/01_Names.csv")) {
             Schema schema = Schema.ofXml(schemaReader);
             TextParser parser = new TextParser(schema);
-            DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-            parser.parse(fileReader, listener);
+            DocumentBuilderLineConsumer listener = new DocumentBuilderLineConsumer();
+            parser.parseForEach(fileReader, listener);
             Document document = listener.getDocument();
 
             assertEquals(3, document.size());
@@ -101,9 +100,9 @@ public class JSaParExamplesTest {
              Reader fileReader = new FileReader("examples/02_Names.txt")) {
             TextParser parser = new TextParser(Schema.ofXml(schemaReader));
             parser.getParseConfig().setOnLineInsufficient(ValidationAction.ERROR);
-            DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-            parser.parse(fileReader, listener);
-            Document document = listener.getDocument();
+            DocumentBuilderLineConsumer documentBuilder = new DocumentBuilderLineConsumer();
+            parser.parseForEach(fileReader, documentBuilder);
+            Document document = documentBuilder.getDocument();
 
             assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name"));
             assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name"));
@@ -120,8 +119,8 @@ public class JSaParExamplesTest {
         try (Reader schemaReader = new FileReader("examples/03_FlatFileSchema.xml");
              Reader fileReader = new FileReader("examples/03_FlatFileNames.txt")) {
             TextParser parser = new TextParser(Schema.ofXml(schemaReader));
-            DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-            parser.parse(fileReader, listener);
+            DocumentBuilderLineConsumer listener = new DocumentBuilderLineConsumer();
+            parser.parseForEach(fileReader, listener);
             Document document = listener.getDocument();
 
             assertEquals(3, document.size());
@@ -142,8 +141,8 @@ public class JSaParExamplesTest {
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         Reader fileReader = new FileReader("examples/04_Names.txt");
         TextParser parser = new TextParser(schemaBuilder.build(schemaReader));
-        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-        parser.parse(fileReader, listener);
+        DocumentBuilderLineConsumer listener = new DocumentBuilderLineConsumer();
+        parser.parseForEach(fileReader, listener);
         Document document = listener.getDocument();
         fileReader.close();
 
@@ -220,9 +219,9 @@ public class JSaParExamplesTest {
     public final void testExampleXml05() throws IOException, JSaParException {
         Reader fileReader = new FileReader("examples/05_Names.xml");
         XmlParser parser = new XmlParser();
-        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-        parser.parse(fileReader, listener);
-        Document document = listener.getDocument();
+        DocumentBuilderLineConsumer documentBuilder = new DocumentBuilderLineConsumer();
+        parser.parseForEach(fileReader, documentBuilder);
+        Document document = documentBuilder.getDocument();
         fileReader.close();
 
         // System.out.println("Errors: " + parseErrors.toString());
@@ -243,9 +242,9 @@ public class JSaParExamplesTest {
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         Reader fileReader = new FileReader("examples/06_NamesControlCell.csv");
         TextParser parser = new TextParser(schemaBuilder.build(schemaReader));
-        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-        parser.parse(fileReader, listener);
-        Document document = listener.getDocument();
+        DocumentBuilderLineConsumer documentBuilder = new DocumentBuilderLineConsumer();
+        parser.parseForEach(fileReader, documentBuilder);
+        Document document = documentBuilder.getDocument();
         fileReader.close();
 
         assertEquals("06_NamesControlCell.csv", LineUtils.getStringCellValue(document.getLine(0), "FileName"));
@@ -293,16 +292,15 @@ public class JSaParExamplesTest {
         Assert.assertTrue(outFile.isFile());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public final void testExampleCsvToJava07()
             throws IOException, JSaParException, ParseException {
         try (Reader schemaReader = new FileReader("examples/07_CsvSchemaToJava.xml");
              Reader fileReader = new FileReader("examples/07_Names.csv")) {
-            Text2BeanConverter converter = new Text2BeanConverter(Schema.ofXml(schemaReader));
-            RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
-            converter.convert(fileReader, beanEventListener);
-            List<TstPerson> people = beanEventListener.getBeans();
+            Text2BeanConverter<TstPerson> converter = new Text2BeanConverter<>(Schema.ofXml(schemaReader));
+            CollectingConsumer<TstPerson> beanConsumer = new CollectingConsumer<>();
+            converter.convertForEach(fileReader, beanConsumer);
+            List<TstPerson> people = beanConsumer.getCollected();
 
             assertEquals(2, people.size());
             assertEquals("Erik", people.get(0).getFirstName());
@@ -415,11 +413,11 @@ public class JSaParExamplesTest {
         try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
                 Reader fileReader = new FileReader("examples/06_NamesControlCell.csv");
                 Reader beanMapReader = new FileReader("examples/06_BeanMap.xml")) {
-            Text2BeanConverter converter = new Text2BeanConverter(Schema.ofXml(schemaReader), BeanMap.ofXml(beanMapReader));
+            Text2BeanConverter<TstPerson> converter = new Text2BeanConverter<>(Schema.ofXml(schemaReader), BeanMap.ofXml(beanMapReader));
             converter.getComposeConfig().setOnUndefinedLineType(ValidationAction.OMIT_LINE);
-            RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
-            converter.convert(fileReader, beanEventListener);
-            List<TstPerson> people = beanEventListener.getBeans();
+            CollectingConsumer<TstPerson> beanConsumer = new CollectingConsumer<>();
+            converter.convertForEach(fileReader, beanConsumer);
+            List<TstPerson> people = beanConsumer.getCollected();
 
             assertEquals(2, people.size());
             assertEquals("Erik", people.get(0).getFirstName());
@@ -469,11 +467,11 @@ public class JSaParExamplesTest {
             throws IOException, JSaParException {
         try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
              Reader fileReader = new FileReader("examples/06_NamesControlCell.csv")) {
-            Text2BeanConverter converter = new Text2BeanConverter(Schema.ofXml(schemaReader), BeanMap.ofClass(TstPersonAnnotated.class));
+            Text2BeanConverter<TstPersonAnnotated> converter = new Text2BeanConverter<>(Schema.ofXml(schemaReader), BeanMap.ofClass(TstPersonAnnotated.class));
             converter.getComposeConfig().setOnUndefinedLineType(ValidationAction.OMIT_LINE);
-            RecordingBeanEventListener<TstPersonAnnotated> beanEventListener = new RecordingBeanEventListener<>();
-            converter.convert(fileReader, beanEventListener);
-            List<TstPersonAnnotated> people = beanEventListener.getBeans();
+            CollectingConsumer<TstPersonAnnotated> beanConsumer = new CollectingConsumer<>();
+            converter.convertForEach(fileReader, beanConsumer);
+            List<TstPersonAnnotated> people = beanConsumer.getCollected();
 
             assertEquals(2, people.size());
             assertEquals("Erik", people.get(0).getFirstName());
@@ -486,17 +484,17 @@ public class JSaParExamplesTest {
 
     @Test
     public final void testExampleCsvToBean06_beanMapOverride()
-            throws IOException, JSaParException, ClassNotFoundException {
+            throws IOException, JSaParException {
         try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
                 Reader fileReader = new FileReader("examples/06_NamesControlCell.csv")) {
             final BeanMap overrideBeanMap = BeanMap.ofClass(TstPersonAnnotated.class);
             final Schema parseSchema = Schema.ofXml(schemaReader);
             BeanMap beanMap = BeanMap.ofSchema(parseSchema, overrideBeanMap);
-            Text2BeanConverter converter = new Text2BeanConverter(parseSchema, beanMap);
+            Text2BeanConverter<TstPersonAnnotated> converter = new Text2BeanConverter<>(parseSchema, beanMap);
             converter.getComposeConfig().setOnUndefinedLineType(ValidationAction.OMIT_LINE);
-            RecordingBeanEventListener<TstPersonAnnotated> beanEventListener = new RecordingBeanEventListener<>();
-            converter.convert(fileReader, beanEventListener);
-            List<TstPersonAnnotated> people = beanEventListener.getBeans();
+            CollectingConsumer<TstPersonAnnotated> beanConsumer = new CollectingConsumer<>();
+            converter.convertForEach(fileReader, beanConsumer);
+            List<TstPersonAnnotated> people = beanConsumer.getCollected();
 
             assertEquals(2, people.size());
             assertEquals("Erik", people.get(0).getFirstName());
@@ -517,11 +515,11 @@ public class JSaParExamplesTest {
             final BeanMap overrideBeanMap = BeanMap.ofXml(beanMapReader);
             final Schema parseSchema = Schema.ofXml(schemaReader);
             BeanMap beanMap = BeanMap.ofSchema(parseSchema, overrideBeanMap);
-            Text2BeanConverter converter = new Text2BeanConverter(parseSchema, beanMap);
+            Text2BeanConverter<TstPerson> converter = new Text2BeanConverter<>(parseSchema, beanMap);
             converter.getComposeConfig().setOnUndefinedLineType(ValidationAction.OMIT_LINE);
-            RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
-            converter.convert(fileReader, beanEventListener);
-            List<TstPerson> people = beanEventListener.getBeans();
+            CollectingConsumer<TstPerson> beanConsumer = new CollectingConsumer<>();
+            converter.convertForEach(fileReader, beanConsumer);
+            List<TstPerson> people = beanConsumer.getCollected();
 
             assertEquals(3, people.size());
             assertEquals(TstGender.M, people.get(0).getGender());
@@ -538,23 +536,23 @@ public class JSaParExamplesTest {
                 Reader fileReader = new FileReader("examples/08_NamesWithHeader.csv")) {
             Schema schema = Schema.ofXml(schemaReader);
             TextParser parser = new TextParser(schema);
-            DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-            parser.parse(fileReader, listener);
-            Document document = listener.getDocument();
+            DocumentBuilderLineConsumer documentBuilder = new DocumentBuilderLineConsumer();
+            parser.parseForEach(fileReader, documentBuilder);
+            Document document = documentBuilder.getDocument();
 
             assertEquals(3, document.size());
             assertEquals("Erik", LineUtils.getStringCellValue(document.getLine(0), "First name"));
             assertEquals("Erik", document.getLine(0).getNonEmptyCell("First name").map(Cell::getStringValue).orElse("fail"));
             assertEquals("Svensson", LineUtils.getStringCellValue(document.getLine(0), "Last name"));
-            assertEquals(true, LineUtils.getBooleanCellValue(document.getLine(0), "Has dog", false));
+            assertTrue(LineUtils.getBooleanCellValue(document.getLine(0), "Has dog", false));
             assertEquals("Fredrik", LineUtils.getStringCellValue(document.getLine(1), "First name"));
             assertEquals("Larsson", LineUtils.getStringCellValue(document.getLine(1), "Last name"));
             assertEquals("false", LineUtils.getStringCellValue(document.getLine(1), "Has dog"));
-            assertEquals(false, LineUtils.getBooleanCellValue(document.getLine(1),"Has dog").orElseThrow(AssertionError::new));
+            assertFalse(LineUtils.getBooleanCellValue(document.getLine(1),"Has dog").orElseThrow(AssertionError::new));
 
             assertEquals("Alfred", LineUtils.getStringCellValue(document.getLine(2), "First name"));
             assertEquals("Nilsson", LineUtils.getStringCellValue(document.getLine(2), "Last name"));
-            assertEquals(false, LineUtils.getBooleanCellValue(document.getLine(2), "Has dog").orElseThrow(AssertionError::new));
+            assertFalse(LineUtils.getBooleanCellValue(document.getLine(2), "Has dog").orElseThrow(AssertionError::new));
 
             assertEquals("Person", document.getLine(0).getLineType());
             assertEquals("Person", document.getLine(1).getLineType());

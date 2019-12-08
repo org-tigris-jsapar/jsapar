@@ -4,7 +4,6 @@ import org.jsapar.model.Line;
 import org.jsapar.parse.AbstractParser;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineEventListenerLineConsumer;
-import org.jsapar.parse.LineParsedEvent;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -22,7 +21,7 @@ public class XmlParser extends AbstractParser {
     /**
      * Reads xml from supplied reader and parses each line. Each parsed line generates a call-back to the lineEventListener.
      * <p>
-     * Deprecated since 2.2. Use {@link #parse(Reader, Consumer)} instead.
+     * Deprecated since 2.2. Use {@link #parseForEach(Reader, Consumer)} instead.
      *
      * @param reader            The reader to read xml from.
      * @param lineEventListener The call-back interface.
@@ -31,7 +30,7 @@ public class XmlParser extends AbstractParser {
      */
     @Deprecated
     public long parse(Reader reader, LineEventListener lineEventListener) throws IOException {
-        return parse(reader, new LineEventListenerLineConsumer(lineEventListener));
+        return parseForEach(reader, new LineEventListenerLineConsumer(lineEventListener));
     }
 
     /**
@@ -41,7 +40,7 @@ public class XmlParser extends AbstractParser {
      * @return Number of parsed lines.
      * @throws IOException In case of IO error
      */
-    public long parse(Reader reader, Consumer<Line> lineConsumer) throws IOException {
+    public long parseForEach(Reader reader, Consumer<Line> lineConsumer) throws IOException {
         XmlParseTask parseTask = new XmlParseTask(reader);
         return execute(parseTask, lineConsumer);
     }
