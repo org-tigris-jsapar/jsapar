@@ -535,9 +535,8 @@ public class JSaParExamplesTest {
         try (Reader schemaReader = new FileReader("examples/08_CsvFirstLineAsSchema.xml");
                 Reader fileReader = new FileReader("examples/08_NamesWithHeader.csv")) {
             Schema schema = Schema.ofXml(schemaReader);
-            TextParser parser = new TextParser(schema);
             DocumentBuilderLineConsumer documentBuilder = new DocumentBuilderLineConsumer();
-            parser.parseForEach(fileReader, documentBuilder);
+            TextParser.parseForEach(schema, fileReader, documentBuilder);
             Document document = documentBuilder.getDocument();
 
             assertEquals(3, document.size());

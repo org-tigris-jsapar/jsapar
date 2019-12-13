@@ -8,12 +8,14 @@ title: Release notes
 
 ## 2.2
 ### 2.2.0
-* The SchemaCell now accepts a native org.jsapar.text.Format instead of the java.text.Format. The native Format interface 
-wraps the java.text.Format and makes it possible to implement different parsing 
-and format that does not conform to the java.text.Format contract.
+Focus of this release has been to improve composing performance, both for delimited and fixed width target. Also parsing performance
+benefits from some of the changes. 
 * The event idiom has been replaced by the more modern Consumer concept from java functional. The parsers accepts a Consumer instead 
 of an the native event listener. The difference is that it reduces the need to create an event for each line that is parsed, instead 
 a consumer method is called. All event based methods and classes are still present in this version but have been marked as deprecated and may be removed in some future version.      
+* The SchemaCell now accepts a native org.jsapar.text.Format instead of the java.text.Format. The native Format interface 
+wraps the java.text.Format and makes it possible to implement different parsing 
+and format that does not conform to the java.text.Format contract.
 ## 2.1
 ### 2.1.1
 * Fixed problem that insufficient-error was not signalled correctly as en error when when parsing an "ignoreread" cell.

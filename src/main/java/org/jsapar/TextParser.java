@@ -49,9 +49,10 @@ public class TextParser extends AbstractParser {
 
     /**
      * Reads text from supplied reader and parses each line. Each parsed line generates a call-back to the lineEventListener.
-     *
+     * <p>
      * Deprecated since 2.2. Use {@link #parseForEach(Reader, Consumer)} instead.
-     * @param reader The reader to read text from.
+     *
+     * @param reader            The reader to read text from.
      * @param lineEventListener The call-back interface.
      * @return Number of parsed lines.
      * @throws IOException In case of IO error
@@ -63,7 +64,8 @@ public class TextParser extends AbstractParser {
 
     /**
      * Reads text from supplied reader and parses each line. Each parsed line generates a call-back to the lineConsumer.
-     * @param reader The reader to read text from.
+     *
+     * @param reader       The reader to read text from.
      * @param lineConsumer The line consumer that will be called for each line.
      * @return Number of parsed lines.
      * @throws IOException In case of IO error
@@ -74,8 +76,27 @@ public class TextParser extends AbstractParser {
     }
 
     /**
+     * Reads text from supplied reader and parses each line. Each parsed line generates a call-back to the lineConsumer.
+     * <p>
+     * Convenience method that both create a parser instance and performs the parsing in one call. This method can only be used
+     * if there are no requirements to configure anything apart from the default behavior.
+     *
+     * @param schema       The schema to use for parsing.
+     * @param reader       The reader to read text from.
+     * @param lineConsumer The line consumer that will be called for each line.
+     * @return Number of parsed lines.
+     * @throws IOException In case of IO error
+     * @see #parseForEach(Reader, Consumer)
+     */
+    public static long parseForEach(Schema schema, Reader reader, Consumer<Line> lineConsumer) throws IOException {
+        TextParser parser = new TextParser(schema);
+        return parser.parseForEach(reader, lineConsumer);
+    }
+
+    /**
      * Gets the current {@link TextParseConfig} for this parser. Makes it possible to change each specific configuration
      * value.
+     *
      * @return The current parse configuration for this parser.
      */
     public TextParseConfig getParseConfig() {
@@ -84,6 +105,7 @@ public class TextParser extends AbstractParser {
 
     /**
      * Replaces the current parse configuration
+     *
      * @param parseConfig The new parse config
      */
     public void setParseConfig(TextParseConfig parseConfig) {
