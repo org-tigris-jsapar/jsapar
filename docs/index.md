@@ -33,8 +33,8 @@ The library should
 * Support for different type of lines where line type is determined by the value of defined "condition cells". 
 * The schema can be expressed with xml notation or created directly within the java code.
 * Can handle internationalization of numbers and dates both while parsing and composing.
-* The parser can either produce a Document class, representing the content of the file, or you can choose to receive
- events for each line that has been successfully parsed.
+* The parser can either produce a Document class, representing the content of the file, or you can choose to provide 
+a consumer for each line that is successfully parsed.
 * Can handle huge files without loading everything into memory.
 * The output Document class contains a list of lines which contains a list of cells.
 * The input and outputs are given by java.io.Reader and java.io.Writer which means that it is not necessarily files
