@@ -5,7 +5,10 @@ import java.util.List;
 /**
  * This error event listener records errors until it reaches a maximum number. Any errors that occurs after maximum
  * number has been reached will cause a {@link MaxErrorsExceededException} instead.
+ *
+ * Deprecated since 2.2. Use {@link ThresholdCollectingErrorConsumer} instead.
  */
+@Deprecated
 public class ThresholdRecordingErrorEventListener extends RecordingErrorEventListener {
     private int maxNumberOfErrors;
 

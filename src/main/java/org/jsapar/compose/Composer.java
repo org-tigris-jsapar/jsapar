@@ -1,12 +1,16 @@
 package org.jsapar.compose;
 
+import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.error.MulticastErrorEventListener;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
+import org.jsapar.parse.MulticastConsumer;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -67,9 +71,20 @@ public interface Composer extends AutoCloseable{
     /**
      * Sets an error event listener to this composer. If you want to add more than one error event listeners, use the {@link MulticastErrorEventListener}
      *
-     * @param errorListener The error event listener to add.
+     * @param errorEventListener The error event listener to add.
      */
-    void setErrorEventListener(ErrorEventListener errorListener);
+    @Deprecated
+    default void setErrorEventListener(ErrorEventListener errorEventListener){
+        setErrorConsumer(e->errorEventListener.errorEvent(new ErrorEvent(this, e)));
+    }
+
+    /**
+     * Sets an error consumer to this composer. Default behavior otherwise is to throw an exception upon the first
+     * error. If you want more than one consumer to get each error event, use a {@link MulticastConsumer}.
+     *
+     * @param errorConsumer The error consumer.
+     */
+    void setErrorConsumer(Consumer<JSaParException> errorConsumer);
 
     @Override
     default void close() throws IOException{

@@ -19,13 +19,13 @@ public class ByLineTypeBeanEventListenerTest {
             called.set(true);
         });
 
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstPerson(), new Line("test0")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstPerson(), new Line("test0")));
         assertFalse(called.get());
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstPerson(), new Line("test1")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstPerson(), new Line("test1")));
         assertTrue(called.get());
         called.set(false);
         assertTrue(lineEventListener.remove("test1").isPresent());
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstPerson(), new Line("test1")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstPerson(), new Line("test1")));
         assertFalse(called.get());
     }
 
@@ -39,11 +39,11 @@ public class ByLineTypeBeanEventListenerTest {
         };
         lineEventListener.put("test1", test1Listener);
 
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstPerson(), new Line("test1")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstPerson(), new Line("test1")));
         assertTrue(called.get());
         called.set(false);
         assertTrue(lineEventListener.remove("test1").isPresent());
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstPerson(), new Line("test1")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstPerson(), new Line("test1")));
         assertFalse(called.get());
     }
 
@@ -57,7 +57,7 @@ public class ByLineTypeBeanEventListenerTest {
             called.set(true);
         });
         lineEventListener.setDefault(e->defaultCalled.set(true));
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstPerson(), new Line("test0")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstPerson(), new Line("test0")));
         assertFalse(called.get());
         assertTrue(defaultCalled.get());
     }
@@ -71,13 +71,13 @@ public class ByLineTypeBeanEventListenerTest {
             called.set(true);
         });
 
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstPerson(), new Line("test0")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstPerson(), new Line("test0")));
         assertFalse(called.get());
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstPerson(), new Line("test1")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstPerson(), new Line("test1")));
         assertTrue(called.get());
         called.set(false);
         lineEventListener.removeAll();
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstPerson(), new Line("test1")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstPerson(), new Line("test1")));
         assertFalse(called.get());
 
     }

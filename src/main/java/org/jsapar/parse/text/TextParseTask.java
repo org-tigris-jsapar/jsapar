@@ -50,7 +50,7 @@ public class TextParseTask extends AbstractParseTask implements ParseTask, AutoC
      */
     @Override
     public long execute() throws IOException {
-        return schema.makeSchemaParser(reader, parseConfig).parse(this, this);
+        return schema.makeSchemaParser(reader, parseConfig).parse(getLineConsumer(), getErrorConsumer());
     }
 
     /**

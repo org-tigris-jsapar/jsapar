@@ -2,6 +2,7 @@ package org.jsapar.parse.bean.reflect;
 
 import org.junit.Test;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -70,6 +71,22 @@ public class BeanInfoReflectionTest {
         public void getVoid(){}
     }
 
+    public interface TestInterface{
+        String getArg();
+    }
+
+    public static class TestBean2 extends TestBean1 implements TestInterface{
+        private String arg;
+
+        public String getArg() {
+            return arg;
+        }
+
+        public void setArg(String arg) {
+            this.arg = arg;
+        }
+    }
+
     @Test
     public void getPropertyDescriptorsByName() {
         BeanInfo beanInfo = new BeanInfoReflection(TestBean1.class);
@@ -100,5 +117,17 @@ public class BeanInfoReflectionTest {
         // Properties with two leading capital letters should not be decapitalized.
         assertEquals("getURL", properties.get("URL").getReadMethod().getName());
 
+    }
+
+
+    @Test
+    public void getPropertyDescriptorsByName_override() {
+        BeanInfo beanInfo = new BeanInfoReflection(TestBean2.class);
+        Map<String, PropertyDescriptor> properties = beanInfo.getPropertyDescriptorsByName();
+        assertEquals("getArg", properties.get("arg").getReadMethod().getName());
+        assertEquals("setArg", properties.get("arg").getWriteMethod().getName());
+
+        assertEquals("getNum", properties.get("num").getReadMethod().getName());
+        assertEquals("setNum", properties.get("num").getWriteMethod().getName());
     }
 }

@@ -1,7 +1,6 @@
 package org.jsapar.parse.cell;
 
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.parse.CellParseException;
@@ -9,11 +8,10 @@ import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.text.Format;
 import org.jsapar.utils.cache.Cache;
-import org.jsapar.utils.cache.DisabledCache;
-import org.jsapar.utils.cache.LimitedSizeCache;
 
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 /**
  * Internal class for parsing text on cell level.
@@ -62,7 +60,7 @@ public class CellParser<S extends SchemaCell> {
      * @param errorEventListener Error event listener to deliver errors to.
      * @return A new cell of a type according to the schema specified. Returns null if there was en error while parsing.
      */
-    public Cell parse(String sValue, ErrorEventListener errorEventListener) {
+    public Cell parse(String sValue, Consumer<JSaParException> errorEventListener) {
         if (sValue.isEmpty()) {
             checkIfMandatory(errorEventListener);
 
@@ -87,15 +85,15 @@ public class CellParser<S extends SchemaCell> {
      * @param errorEventListener Error event listener to deliver errors to.
      * @return A new cell of a type according to the schema specified. Returns null if an error occurs.
      */
-    private Cell doParse(String sValue, ErrorEventListener errorEventListener) {
+    private Cell doParse(String sValue, Consumer<JSaParException> errorEventListener) {
 
         try {
             Cell cell = makeCell(sValue);
             validateRange(schemaCell, cell);
             return cell;
         } catch (java.text.ParseException e) {
-            errorEventListener.errorEvent(new ErrorEvent(this,
-                    new CellParseException(schemaCell.getName(), sValue, schemaCell.getCellFormat(), e)));
+            errorEventListener.accept(
+                    new CellParseException(schemaCell.getName(), sValue, schemaCell.getCellFormat(), e));
             return null;
         }
 
@@ -168,11 +166,11 @@ public class CellParser<S extends SchemaCell> {
      *
      * @param errorEventListener The error event listener to deliver errors to.
      */
-    protected void checkIfMandatory(ErrorEventListener errorEventListener) {
+    public void checkIfMandatory(Consumer<JSaParException> errorEventListener) {
         if (schemaCell.isMandatory()) {
             CellParseException e = new CellParseException(schemaCell.getName(), EMPTY_STRING,
                     schemaCell.getCellFormat(), "Mandatory cell requires a value.");
-            errorEventListener.errorEvent(new ErrorEvent(this, e));
+            errorEventListener.accept(e);
         }
     }
 

@@ -4,10 +4,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 
-public class DateTimeFormat implements Format<TemporalAccessor> {
+class DateTimeFormat implements Format<TemporalAccessor> {
     private final DateTimeFormatter formatter;
 
-    public DateTimeFormat(DateTimeFormatter formatter) {
+    DateTimeFormat(DateTimeFormatter formatter) {
         this.formatter = formatter;
     }
 

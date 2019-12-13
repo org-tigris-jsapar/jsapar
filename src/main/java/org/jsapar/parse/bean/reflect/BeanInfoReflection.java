@@ -31,13 +31,15 @@ public final class BeanInfoReflection implements BeanInfo {
 
         Map<String, Method> getters = propertyMethodsStream(c, GET_PREFIX)
                 .filter(m->m.getParameterCount()==0 && !m.getReturnType().equals(Void.TYPE))
-                .collect(Collectors.toMap(m->propertyName(m.getName(), GET_PREFIX.length()), m->m));
+                .collect(Collectors.toMap(m->propertyName(m.getName(), GET_PREFIX.length()), m->m,
+                        BeanInfoReflection::mostExplicit));
 
         Map<String, Method> isers = propertyMethodsStream(c, IS_PREFIX)
                 .filter(m->m.getParameterCount()==0
                         && (m.getReturnType().isAssignableFrom(Boolean.class)
                             || m.getReturnType().isAssignableFrom(Boolean.TYPE)) )
-                .collect(Collectors.toMap(m->propertyName(m.getName(), IS_PREFIX.length()), m->m));
+                .collect(Collectors.toMap(m->propertyName(m.getName(), IS_PREFIX.length()), m->m,
+                        BeanInfoReflection::mostExplicit));
 
         Map<String, Method> setters = propertyMethodsStream(c, SET_PREFIX)
                 .filter(m->m.getParameterCount()==1 )
@@ -60,6 +62,20 @@ public final class BeanInfoReflection implements BeanInfo {
     }
 
     /**
+     * In case there are multiple getters/setters with the same name, use the one from the most explicit class. This can
+     * happen when getter is injected by for instance a lombok annotation and there already is a getter/setter with the same
+     * name in one of the interfaces.
+     * @param l Left method
+     * @param r Right method
+     * @return The most appropriate getter/setter or just the left if it is not possible to determine.
+     */
+    private static Method mostExplicit(Method l, Method r) {
+        if(l.getDeclaringClass().isAssignableFrom(r.getDeclaringClass()))
+            return r;
+        return l;
+    }
+
+    /**
      * In case there are multiple setters with different types, find the setter with the same argument type as any
      * getter.
      * @param l Left setter
@@ -69,6 +85,9 @@ public final class BeanInfoReflection implements BeanInfo {
      * @return The most appropriate setter or just the left if it is not possible to determine.
      */
     private static Method chooseSetter(Method l, Method r, Map<String, Method> getters, Map<String, Method> isers) {
+        if(Arrays.equals(l.getParameterTypes(), r.getParameterTypes())){
+            return mostExplicit(l, r);
+        }
         final String propertyName = propertyName(l.getName(), SET_PREFIX.length());
         final Method is = isers.get(propertyName);
         if(is != null){

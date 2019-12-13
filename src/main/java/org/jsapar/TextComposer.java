@@ -5,6 +5,7 @@ import org.jsapar.compose.internal.ComposerFactory;
 import org.jsapar.compose.internal.SchemaComposer;
 import org.jsapar.compose.internal.TextComposerFactory;
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
@@ -12,6 +13,7 @@ import org.jsapar.schema.Schema;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.io.Writer;
+import java.util.function.Consumer;
 
 /**
  * This class contains methods for transforming a Document or Line into a text output. E.g. if you want to write
@@ -43,7 +45,7 @@ public class TextComposer implements Composer, AutoCloseable {
      * @param writer          The writer to write text output to. Caller is responsible for either closing the writer or call the close method of the created instance.
      * @param composerFactory A factory interface for creating {@link SchemaComposer} based on schema.
      */
-    public TextComposer(Schema schema, Writer writer, ComposerFactory composerFactory) {
+    TextComposer(Schema schema, Writer writer, ComposerFactory composerFactory) {
         if(writer == null)
             throw new IllegalArgumentException("Writer of text composer cannot be null");
         if(schema == null)
@@ -93,8 +95,8 @@ public class TextComposer implements Composer, AutoCloseable {
     }
 
     @Override
-    public void setErrorEventListener(ErrorEventListener errorListener) {
-       // TODO: Add error handling when composing.
+    public void setErrorConsumer(Consumer<JSaParException> errorConsumer) {
+        // TODO: Add error handling when composing.
     }
 
     /**

@@ -26,9 +26,9 @@ public class Text2BeanConverterTest {
         String input = "John;Doe";
         Text2BeanConverter<TstPerson> converter = new Text2BeanConverter<>(schema);
         try(Reader reader=new StringReader(input)){
-            long count = converter.convert(reader, e -> {
-                assertEquals("John", e.getBean().getFirstName());
-                assertEquals("Doe", e.getBean().getLastName());
+            long count = converter.convertForEach(reader, b -> {
+                assertEquals("John", b.getFirstName());
+                assertEquals("Doe", b.getLastName());
             });
             assertEquals(1, count);
         }
@@ -68,9 +68,9 @@ public class Text2BeanConverterTest {
             }
         });
         try(Reader reader=new StringReader(input)){
-            long count = converter.convert(reader, e -> {
-                assertEquals("JOHN", e.getBean().getFirstName());
-                assertEquals("DOE", e.getBean().getLastName());
+            long count = converter.convertForEach(reader, bean -> {
+                assertEquals("JOHN", bean.getFirstName());
+                assertEquals("DOE", bean.getLastName());
             });
             assertEquals(1, count);
         }

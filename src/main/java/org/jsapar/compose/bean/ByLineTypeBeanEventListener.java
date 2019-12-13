@@ -9,8 +9,11 @@ import java.util.Optional;
  * different line types. You may only register one listener for each line type.
  * <p>
  * The default listener will be called if no listener was registered for the line type.
+ *
+ * Deprecated since 2.2. Use {@link ByLineTypeBeanConsumer} instead.
  */
 @SuppressWarnings("WeakerAccess")
+@Deprecated
 public class ByLineTypeBeanEventListener<T> implements BeanEventListener<T> {
     private Map<String, BeanEventListener<T>> beanEventListeners = new HashMap<>();
     /**

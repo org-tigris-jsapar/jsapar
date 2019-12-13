@@ -52,10 +52,8 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
     public long execute() {
         AtomicLong count = new AtomicLong(1);
         stream.forEach(bean ->
-                beanMarshaller.marshal(bean, this, count.incrementAndGet()).ifPresent(line ->
-                        lineParsedEvent(new LineParsedEvent(
-                                this,
-                                line))));
+                beanMarshaller.marshal(bean, getErrorConsumer(), count.incrementAndGet()).ifPresent(line ->
+                        getLineConsumer().accept(line)));
         return count.get();
     }
 

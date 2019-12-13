@@ -1,15 +1,15 @@
 package org.jsapar.parse.fixed;
 
-import org.jsapar.error.ExceptionErrorEventListener;
+import org.jsapar.error.ExceptionErrorConsumer;
 import org.jsapar.error.ValidationAction;
 import org.jsapar.model.Document;
-import org.jsapar.parse.DocumentBuilderLineEventListener;
+import org.jsapar.parse.DocumentBuilderLineConsumer;
 import org.jsapar.parse.LineParseException;
-import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 import org.jsapar.schema.MatchingCellValueCondition;
+import org.jsapar.text.TextParseConfig;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -32,8 +32,8 @@ public class FixedWidthParserControlCellTest {
         TextParseConfig config = new TextParseConfig();
         config.setMaxLineLength(20);
         FixedWidthParser parser = new FixedWidthParser(reader, schema, config);
-        DocumentBuilderLineEventListener builder = new DocumentBuilderLineEventListener();
-        parser.parse(builder, new ExceptionErrorEventListener());
+        DocumentBuilderLineConsumer builder = new DocumentBuilderLineConsumer();
+        parser.parse(builder, new ExceptionErrorConsumer());
         Document doc = builder.getDocument();
 
         checkResult(doc);
@@ -170,8 +170,8 @@ public class FixedWidthParserControlCellTest {
 
     private Document build(Reader reader, FixedWidthSchema schema, TextParseConfig config) throws IOException {
         FixedWidthParser parser = new FixedWidthParser(reader, schema, config);
-        DocumentBuilderLineEventListener builder = new DocumentBuilderLineEventListener();
-        parser.parse(builder, new ExceptionErrorEventListener());
+        DocumentBuilderLineConsumer builder = new DocumentBuilderLineConsumer();
+        parser.parse(builder, new ExceptionErrorConsumer());
         return builder.getDocument();
     }
 

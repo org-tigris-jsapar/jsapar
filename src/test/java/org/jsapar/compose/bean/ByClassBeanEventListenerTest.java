@@ -27,13 +27,13 @@ public class ByClassBeanEventListenerTest {
             called.set(true);
         });
 
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstAuthor(), new Line("test0")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstAuthor(), new Line("test0")));
         assertFalse(called.get());
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstEmployee(), new Line("test1")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstEmployee(), new Line("test1")));
         assertTrue(called.get());
         called.set(false);
         assertTrue(lineEventListener.remove(TstEmployee.class).isPresent());
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstEmployee(), new Line("test1")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstEmployee(), new Line("test1")));
         assertFalse(called.get());
     }
 
@@ -47,11 +47,11 @@ public class ByClassBeanEventListenerTest {
             called.set(true);
         });
 
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstEmployee(), new Line("test1")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstEmployee(), new Line("test1")));
         assertTrue(called.get());
         called.set(false);
         lineEventListener.removeAll();
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstEmployee(), new Line("test1")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstEmployee(), new Line("test1")));
         assertFalse(called.get());
     }
 
@@ -65,7 +65,7 @@ public class ByClassBeanEventListenerTest {
             called.set(true);
         });
         lineEventListener.setDefault(e->defaultCalled.set(true));
-        lineEventListener.beanComposedEvent(new BeanEvent<>(this, new TstAuthor(), new Line("test0")));
+        lineEventListener.beanComposedEvent(new BeanEvent<>(new TstAuthor(), new Line("test0")));
         assertFalse(called.get());
         assertTrue(defaultCalled.get());
     }

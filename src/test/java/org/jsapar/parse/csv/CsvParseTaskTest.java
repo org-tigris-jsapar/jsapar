@@ -1,13 +1,16 @@
 package org.jsapar.parse.csv;
 
-import org.jsapar.error.ExceptionErrorEventListener;
+import org.jsapar.error.ExceptionErrorConsumer;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.model.LineUtils;
-import org.jsapar.parse.DocumentBuilderLineEventListener;
-import org.jsapar.schema.*;
+import org.jsapar.parse.DocumentBuilderLineConsumer;
+import org.jsapar.schema.CsvSchema;
+import org.jsapar.schema.CsvSchemaCell;
+import org.jsapar.schema.CsvSchemaLine;
+import org.jsapar.schema.MatchingCellValueCondition;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -212,8 +215,8 @@ public class CsvParseTaskTest {
 
     private Document build(CsvSchema schema, Reader reader, int actualRows) throws IOException {
         CsvParser parser = new CsvParser(reader, schema);
-        DocumentBuilderLineEventListener builder = new DocumentBuilderLineEventListener();
-        long rows = parser.parse(builder, new ExceptionErrorEventListener());
+        DocumentBuilderLineConsumer builder = new DocumentBuilderLineConsumer();
+        long rows = parser.parse(builder, new ExceptionErrorConsumer());
         assertEquals(actualRows, rows);
         return builder.getDocument();
     }

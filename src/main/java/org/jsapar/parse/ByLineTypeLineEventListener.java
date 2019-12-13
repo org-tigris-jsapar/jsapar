@@ -10,8 +10,10 @@ import java.util.Optional;
  * for a particular line type, register an instance of {@link MulticastLineEventListener} for that line type.
  * <p>
  * The default listener will be called if no listener was registered for the line type.
+ * Deprecated since 2.2. Use {@link ByLineTypeLineConsumer} instead
  */
 @SuppressWarnings("WeakerAccess")
+@Deprecated
 public class ByLineTypeLineEventListener implements LineEventListener {
 
     /**

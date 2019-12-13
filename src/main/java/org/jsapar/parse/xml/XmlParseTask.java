@@ -1,13 +1,13 @@
 package org.jsapar.parse.xml;
 
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.DateCell;
 import org.jsapar.model.Line;
-import org.jsapar.parse.*;
+import org.jsapar.parse.AbstractParseTask;
+import org.jsapar.parse.CellParseException;
+import org.jsapar.parse.ParseTask;
 import org.jsapar.parse.cell.CellParser;
 import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.schema.Xml2SchemaBuilder;
@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.GregorianCalendar;
+import java.util.function.Consumer;
 
 /**
  * Parses xml text that conform to the schema http://jsapar.tigris.org/XMLDocumentFormat/2.0
@@ -65,7 +66,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
             // factory.set
             SAXParser parser = parserFactory.newSAXParser();
             org.xml.sax.InputSource is = new org.xml.sax.InputSource(reader);
-            JSaParSAXHandler handler = new JSaParSAXHandler(this, this);
+            JSaParSAXHandler handler = new JSaParSAXHandler(getLineConsumer(), getErrorConsumer());
             parser.parse(is, handler);
             return handler.currentLineNumber-1;
         } catch (ParserConfigurationException | SAXException e) {
@@ -84,12 +85,12 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
         private CellType currentCellType;
         private String   currentCellName;
         private Cell     currentCell;
-        private boolean cellStarted = false;
-        private LineEventListener  listener;
-        private ErrorEventListener errorEventListener;
-        private long currentLineNumber = 1;
+        private boolean            cellStarted = false;
+        private Consumer<Line>            listener;
+        private Consumer<JSaParException> errorEventListener;
+        private long                      currentLineNumber = 1;
 
-        JSaParSAXHandler(LineEventListener listener, ErrorEventListener errorEventListener) {
+        JSaParSAXHandler(Consumer<Line> listener, Consumer<JSaParException> errorEventListener) {
             this.listener = listener;
             this.errorEventListener = errorEventListener;
         }
@@ -108,7 +109,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
                     this.currentCell = null;
                     this.cellStarted = false;
                 } else if (localName.equals("line")) {
-                    this.listener.lineParsedEvent(new LineParsedEvent(this, this.currentLine));
+                    this.listener.accept(this.currentLine);
                     this.currentLine = null;
                 }
             } catch (JSaParException e) {
@@ -192,7 +193,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
         public void error(SAXParseException e) {
             CellParseException error = new CellParseException(this.currentLineNumber, this.currentCellName, "", null,
                     e.getMessage());
-            this.errorEventListener.errorEvent(new ErrorEvent(this, error));
+            this.errorEventListener.accept(error);
         }
 
         /*
@@ -205,7 +206,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
         public void fatalError(SAXParseException e) {
             CellParseException error = new CellParseException(this.currentLineNumber, this.currentCellName, "", null,
                     e.getMessage());
-            this.errorEventListener.errorEvent(new ErrorEvent(this, error));
+            this.errorEventListener.accept(error);
         }
 
         /*
@@ -219,7 +220,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
         public void warning(SAXParseException e) {
             CellParseException error = new CellParseException(this.currentLineNumber, this.currentCellName, "", null,
                     e.getMessage());
-            this.errorEventListener.errorEvent(new ErrorEvent(this, error));
+            this.errorEventListener.accept(error);
         }
 
     }

@@ -6,6 +6,7 @@ import java.util.EventListener;
  * Interface for receiving event call-backs while parsing.
  */
 @FunctionalInterface
+@Deprecated
 public interface LineEventListener extends EventListener {
 
     /**

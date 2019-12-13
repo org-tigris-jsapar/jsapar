@@ -6,7 +6,10 @@ import org.jsapar.model.Document;
  * This line event listener can be used to build a document based on line events.
  * Use this class only if you are sure that the whole data can be parsed into memory. If the
  * data source is too big, most likely a OutOfMemory exception will be thrown. For large data sources use your own {@link LineEventListener} implementation instead and handle lines one by one.
+ *
+ * Deprecated since 2.2. Use {@link DocumentBuilderLineConsumer} instead.
  */
+@Deprecated
 public class DocumentBuilderLineEventListener implements LineEventListener, AutoCloseable {
     private Document document;
 

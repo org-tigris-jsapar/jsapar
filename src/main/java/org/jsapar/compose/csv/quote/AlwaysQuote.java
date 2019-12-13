@@ -51,22 +51,30 @@ public class AlwaysQuote implements Quoter {
         @Override
         public void writeValue(Writer writer, String value) throws IOException {
             int written=0;
-            for(int i=0; i<value.length() && written<maxLength; i++){
-                char ch = value.charAt(i);
-                if(ch == quoteChar) {
-                    if(written+2>maxLength)
-                        break;
-                    writer.write(escapeChar);
-                    written++;
+            int start = 0;
+            int found;
+            while(written < maxLength && -1 != (found=value.indexOf(quoteChar, start))){
+                final int len = Math.min(found - start, maxLength - written);
+                if(len > 0) {
+                    writer.write(value, start, len);
+                    written += len;
                 }
-                writer.write(ch);
-                written++;
+                if(written + 2 <= maxLength) {
+                    writer.write(escapeChar);
+                    writer.write(quoteChar);
+                }
+                written += 2; // Increment also when not actually adding quote to avoid appending more chars
+                start = found +1;
             }
+
+            final int len = Math.min(value.length() - start, maxLength - written);
+            if(len > 0)
+                writer.write(value, start, len);
         }
     }
 
     /**
-     * Writes value but escapes quotes according to RFC4180
+     * Writes value but escapes quotes according to RFC4180.
      */
     private class ValueComposerRfc implements Quoter{
         private final char escapeChar;
@@ -77,13 +85,20 @@ public class AlwaysQuote implements Quoter {
 
         @Override
         public void writeValue(Writer writer, String value) throws IOException {
-            for(int i=0; i<value.length(); i++){
-                char ch = value.charAt(i);
-                if(ch == quoteChar) {
-                    writer.write(escapeChar);
-                }
-                writer.write(ch);
+            int start = 0;
+            int found;
+            while(-1 != (found=value.indexOf(quoteChar, start))){
+                final int len = found - start;
+                if(len > 0)
+                    writer.write(value, start, len);
+                writer.write(escapeChar);
+                writer.write(quoteChar);
+                start = found +1;
             }
+
+            final int len = value.length() - start;
+            if(len > 0)
+                writer.write(value, start, len);
         }
     }
 

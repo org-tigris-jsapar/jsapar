@@ -1,9 +1,9 @@
 package org.jsapar.parse.fixed;
 
-import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
-import org.jsapar.parse.line.LineDecoratorErrorEventListener;
+import org.jsapar.parse.line.LineDecoratorErrorConsumer;
 import org.jsapar.parse.line.ValidationHandler;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchemaCell;
@@ -11,6 +11,7 @@ import org.jsapar.schema.FixedWidthSchemaLine;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -22,8 +23,8 @@ final class FixedWidthLineParser {
     private FixedWidthSchemaLine lineSchema;
     private List<FixedWidthCellParser> cellParsers;
     private ValidationHandler    validationHandler = new ValidationHandler();
-    private TextParseConfig config;
-    private LineDecoratorErrorEventListener lineDecoratorErrorEventListener = new LineDecoratorErrorEventListener();
+    private TextParseConfig            config;
+    private LineDecoratorErrorConsumer lineDecoratorErrorConsumer = new LineDecoratorErrorConsumer();
 
     FixedWidthLineParser(FixedWidthSchemaLine lineSchema, TextParseConfig config) {
         this.lineSchema = lineSchema;
@@ -44,18 +45,18 @@ final class FixedWidthLineParser {
     }
 
     @SuppressWarnings("UnnecessaryContinue")
-    public Line parse(ReadBuffer lineReader, ErrorEventListener errorListener) throws IOException {
+    public Line parse(ReadBuffer lineReader, Consumer<JSaParException> errorListener) throws IOException {
         Line line = new Line(lineSchema.getLineType(), lineSchema.getSchemaCells().size());
         line.setLineNumber(lineReader.getLineNumber());
         boolean setDefaultsOnly = false;
         boolean oneRead = false;
         boolean oneIgnored = false;
-        boolean handleInsufficient = true;
 
-        lineDecoratorErrorEventListener.initialize(errorListener, line);
+        lineDecoratorErrorConsumer.initialize(errorListener, line);
         for (FixedWidthCellParser cellParser : cellParsers) {
             FixedWidthSchemaCell schemaCell = cellParser.getSchemaCell();
             if (setDefaultsOnly) {
+                cellParser.checkIfMandatory(errorListener);
                 if (cellParser.isDefaultValue())
                     line.addCell(cellParser.makeDefaultCell());
                 continue;
@@ -68,28 +69,25 @@ final class FixedWidthLineParser {
                     oneIgnored = true;
 
                 if (nSkipped != schemaCell.getLength()) {
-                    if (oneRead)
+                    if (oneRead) {
                         setDefaultsOnly = true;
+                        if(!lineValidationInsufficient(lineReader, errorListener))
+                            return null;
+                    }
                     continue;
                 }
             } else {
-                Cell cell = cellParser.parse(lineReader, lineDecoratorErrorEventListener);
+                Cell cell = cellParser.parse(lineReader, lineDecoratorErrorConsumer);
                 if (cell == null) {
                     if (oneRead) {
                         setDefaultsOnly = true;
                         if (cellParser.isDefaultValue()) {
-                            cell = cellParser.parse(EMPTY_STRING, lineDecoratorErrorEventListener);
+                            cell = cellParser.parse(EMPTY_STRING, lineDecoratorErrorConsumer);
                             if(cell != null)
                                 line.addCell(cell);
                         }
-                        //noinspection ConstantConditions
-                        if (handleInsufficient) {
-                            if (!validationHandler
-                                    .lineValidation(this, lineReader.getLineNumber(), "Insufficient number of characters for line",
-                                            config.getOnLineInsufficient(), errorListener)) {
-                                return null;
-                            }
-                            handleInsufficient = false;
+                        if (!lineValidationInsufficient(lineReader, errorListener)) {
+                            return null;
                         }
                     }
                     continue;
@@ -104,12 +102,18 @@ final class FixedWidthLineParser {
 
         int remaining = lineReader.remainsForLine();
         if(remaining > 0) {
-            if(!validationHandler.lineValidation(this, lineReader.getLineNumber(), "Trailing characters found on line",
-                    config.getOnLineOverflow(), errorListener))
+            if(!validationHandler.lineValidation(lineReader.getLineNumber(), config.getOnLineOverflow(), errorListener,
+                    ()-> remaining + " trailing characters found on line"))
                 return null; // Ignore the line.
         }
 
         return line;
+    }
+
+    private boolean lineValidationInsufficient(ReadBuffer lineReader, Consumer<JSaParException> errorListener) {
+        return validationHandler.lineValidation(lineReader.getLineNumber(), config.getOnLineInsufficient(),
+                errorListener, () -> "Insufficient number of characters for line of type " + lineSchema.getLineType()
+                        + ". Expected at least " + lineSchema.getTotalCellLength());
     }
 
 }

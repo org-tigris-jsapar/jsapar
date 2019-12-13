@@ -11,7 +11,10 @@ import java.util.stream.Stream;
  * composing. The Generic type T should be set to a common base class of all the expected beans. Use {@link Object} as
  * base class if there is no common base class for all beans. A {@link ClassCastException} will be thrown if the bean
  * created could not be converted into the class defined by T.
+ *
+ * Deprecated since 2.2. Use {@link org.jsapar.parse.CollectingConsumer} instead.
  */
+@Deprecated
 public class RecordingBeanEventListener<T> implements BeanEventListener<T>, Iterable<T> {
     private List<T> beans = new ArrayList<>();
 

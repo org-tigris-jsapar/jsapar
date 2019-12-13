@@ -1,22 +1,22 @@
 package org.jsapar.parse.cell;
 
 import org.jsapar.model.BooleanCell;
-import org.jsapar.text.BooleanFormat;
 import org.jsapar.text.Format;
 import org.junit.Test;
 
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class BooleanCellFactoryTest {
     @Test
     public void makeCell() throws Exception {
         BooleanCellFactory instance = new BooleanCellFactory();
         assertEquals(new BooleanCell("nnn", Boolean.TRUE), instance.makeCell("nnn", "true", null));
-        assertEquals(new BooleanCell("nnn", Boolean.TRUE), instance.makeCell("nnn", "J", new BooleanFormat("J", "N", true)));
+        assertEquals(new BooleanCell("nnn", Boolean.TRUE), instance.makeCell("nnn", "J", Format.ofBooleanInstance("J", "N", true)));
         assertEquals(new BooleanCell("nnn", Boolean.FALSE), instance.makeCell("nnn", "false", null));
-        assertEquals(new BooleanCell("nnn", Boolean.FALSE), instance.makeCell("nnn", "N", new BooleanFormat("J", "N", true)));
+        assertEquals(new BooleanCell("nnn", Boolean.FALSE), instance.makeCell("nnn", "N", Format.ofBooleanInstance("J", "N", true)));
     }
 
     @Test
@@ -24,7 +24,6 @@ public class BooleanCellFactoryTest {
         BooleanCellFactory instance = new BooleanCellFactory();
         Format f = instance.makeFormat(Locale.getDefault());
         assertNotNull(f);
-        assertEquals(f.getClass(), BooleanFormat.class);
         assertEquals("true", f.format(true));
         assertEquals("false", f.format(false));
         assertEquals(true, f.parse("yes"));
@@ -38,7 +37,6 @@ public class BooleanCellFactoryTest {
         BooleanCellFactory instance = new BooleanCellFactory();
         Format f = instance.makeFormat(Locale.getDefault(), "J|JA|1;N|NEJ|0");
         assertNotNull(f);
-        assertEquals(f.getClass(), BooleanFormat.class);
         assertEquals("J", f.format(true));
         assertEquals("N", f.format(false));
         assertEquals(true, f.parse("ja"));

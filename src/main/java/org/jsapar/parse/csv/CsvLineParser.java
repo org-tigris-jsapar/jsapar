@@ -1,22 +1,21 @@
 package org.jsapar.parse.csv;
 
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
-import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineParseException;
 import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.cell.CellParser;
-import org.jsapar.parse.line.LineDecoratorErrorEventListener;
+import org.jsapar.parse.line.LineDecoratorErrorConsumer;
 import org.jsapar.parse.line.ValidationHandler;
-import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
+import org.jsapar.text.TextParseConfig;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -29,8 +28,8 @@ class CsvLineParser {
     private              List<CellParser<CsvSchemaCell>> cellParsers;
     private              TextParseConfig                 config;
     private              long                            usedCount                       = 0L;
-    private              ValidationHandler               validationHandler               = new ValidationHandler();
-    private              LineDecoratorErrorEventListener lineDecoratorErrorEventListener = new LineDecoratorErrorEventListener();
+    private ValidationHandler          validationHandler          = new ValidationHandler();
+    private LineDecoratorErrorConsumer lineDecoratorErrorConsumer = new LineDecoratorErrorConsumer();
     /**
      * Creates a csv line parser with the given line schema.
      *
@@ -69,7 +68,7 @@ class CsvLineParser {
      * @return True if a line was parsed, false if no line could be parsed.
      * @throws IOException if an io-error occur
      */
-    boolean parse(CsvLineReader lineReader, LineEventListener listener, ErrorEventListener errorListener)
+    boolean parse(CsvLineReader lineReader, Consumer<Line> listener, Consumer<JSaParException> errorListener)
             throws IOException {
 
         if(lineReader.eofReached())
@@ -92,12 +91,12 @@ class CsvLineParser {
         // Create with same size as schema plus 1 to handle trailing cell separator which is quite common.
         Line line = new Line(lineSchema.getLineType(), 1 + lineSchema.getSchemaCells().size());
         line.setLineNumber(lineReader.currentLineNumber());
-        lineDecoratorErrorEventListener.initialize(errorListener, line);
+        lineDecoratorErrorConsumer.initialize(errorListener, line);
 
         java.util.Iterator<CellParser<CsvSchemaCell>> itParser = cellParsers.iterator();
         for (String sCell : rawCells) {
             if (itParser.hasNext()) {
-                addCellToLineBySchema(line, itParser.next(), sCell, lineDecoratorErrorEventListener);
+                addCellToLineBySchema(line, itParser.next(), sCell, lineDecoratorErrorConsumer);
             } else {
                 if(!addCellToLineWithoutSchema(line, sCell, errorListener))
                     return true;
@@ -108,15 +107,14 @@ class CsvLineParser {
 
         // We have to fill all the default values and mandatory items for remaining cells within the schema.
         while (itParser.hasNext()) {
-            if (!validationHandler.lineValidation(this, line.getLineNumber(),
-                    "Insufficient number of cells could be read from the line", config.getOnLineInsufficient(),
-                    errorListener)) {
+            if (!validationHandler.lineValidation(line.getLineNumber(), config.getOnLineInsufficient(), errorListener,
+                    ()->"Insufficient number of cells could be read from the line of type " + lineSchema.getLineType())) {
                 return true;
             }
-            addCellToLineBySchema(line, itParser.next(), EMPTY_STRING, lineDecoratorErrorEventListener);
+            addCellToLineBySchema(line, itParser.next(), EMPTY_STRING, lineDecoratorErrorConsumer);
         }
 
-        listener.lineParsedEvent(new LineParsedEvent(this, line));
+        listener.accept( line );
         return true;
     }
 
@@ -125,10 +123,11 @@ class CsvLineParser {
      *
      * @param masterLineSchema The base to use while creating csv schema. May add formatting, defaults etc.
      * @param asCells          An array of cells in the header line to use for building the schema.
+     * @param errorListener    The error handler
      * @return A CsvSchemaLine created from the header line.
      *
      */
-    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, List<String> asCells, ErrorEventListener errorListener) {
+    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, List<String> asCells, Consumer<JSaParException> errorListener) {
 
         CsvSchemaLine schemaLine = masterLineSchema.clone();
         schemaLine.getSchemaCells().clear();
@@ -152,12 +151,14 @@ class CsvLineParser {
         return schemaLine;
     }
 
-    private void checkMissingMandatoryValues(CsvSchemaLine schemaLine, CsvSchemaLine masterLineSchema, ErrorEventListener errorListener) {
+    private void checkMissingMandatoryValues(CsvSchemaLine schemaLine,
+                                             CsvSchemaLine masterLineSchema,
+                                             Consumer<JSaParException> errorListener) {
         masterLineSchema.getSchemaCells().stream().filter(schemaCell -> schemaCell.isMandatory()
                 && schemaLine.getCsvSchemaCell(schemaCell.getName()) == null).forEach(schemaCell -> errorListener
-                .errorEvent(new ErrorEvent(this, new LineParseException(0, "Mandatory cell " + schemaCell.getName()
+                .accept(new LineParseException(0, "Mandatory cell " + schemaCell.getName()
                         + " is missing in the header line that is used as schema for lines of type [" + schemaLine
-                        .getLineType() + "]."))));
+                        .getLineType() + "].")));
 
     }
 
@@ -186,22 +187,23 @@ class CsvLineParser {
      *
      */
     @SuppressWarnings("UnusedParameters")
-    private boolean handleEmptyLine(long lineNumber, ErrorEventListener listener) {
+    private boolean handleEmptyLine(long lineNumber, Consumer<JSaParException> listener) {
         return true;
     }
 
     /**
      * Adds a cell to the line according to the schema.
-     *  @param line               The line to add a cell to
+     * @param line               The line to add a cell to
      * @param cellParser         The cell parser
      * @param sCell              The string value of the cell
      * @param errorEventListener The error event listener to report errors to.
      *
      */
+    @SuppressWarnings("rawtypes")
     private void addCellToLineBySchema(Line line,
                                        CellParser<CsvSchemaCell> cellParser,
                                        String sCell,
-                                       ErrorEventListener errorEventListener) {
+                                       Consumer<JSaParException> errorEventListener) {
 
         CsvSchemaCell cellSchema = cellParser.getSchemaCell();
         if (cellSchema.isIgnoreRead()) {
@@ -219,18 +221,17 @@ class CsvLineParser {
 
     /**
      * Adds overflowing cell to the line if there is no schema.
-     *
-     * @param line          The line to add cell to
+     *  @param line          The line to add cell to
      * @param sCell         The string value of the cell.
      * @param errorListener Error listener to send error event to if so is configured.
      *
      */
-    private boolean addCellToLineWithoutSchema(Line line, String sCell, ErrorEventListener errorListener)
+    @SuppressWarnings("rawtypes")
+    private boolean addCellToLineWithoutSchema(Line line, String sCell, Consumer<JSaParException> errorListener)
             {
 
-        if (!validationHandler.lineValidation(this, line.getLineNumber(),
-                "Found additional cell on the line that is not described in the line schema.",
-                config.getOnLineOverflow(), errorListener)) {
+        if (!validationHandler.lineValidation(line.getLineNumber(), config.getOnLineOverflow(), errorListener,
+                ()->"Found additional cell on the line that is not described in the line schema.")) {
             return false;
         }
         Cell cell;

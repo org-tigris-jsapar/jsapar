@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ class CsvLineComposer implements LineComposer {
     private CsvSchemaLine schemaLine;
     private String lineSeparator;
     private QuoteSyntax quoteSyntax;
-    private Map<String, CsvCellComposer> cellComposers;
+    private List<CsvCellComposer> cellComposers;
     private boolean firstRow=true;
 
     CsvLineComposer(Writer writer, CsvSchemaLine schemaLine, String lineSeparator, QuoteSyntax quoteSyntax) {
@@ -38,12 +39,13 @@ class CsvLineComposer implements LineComposer {
         cellComposers = makeCellComposers(schemaLine, lineSeparator);
     }
 
-    private Map<String, CsvCellComposer> makeCellComposers(CsvSchemaLine schemaLine, String lineSeparator) {
+    private List<CsvCellComposer> makeCellComposers(CsvSchemaLine schemaLine, String lineSeparator) {
         return schemaLine.getSchemaCells().stream()
-                .collect(Collectors.toMap(CsvSchemaCell::getName, it ->makeCellComposer(schemaLine, it, lineSeparator)));
+                .map(this::makeCellComposer)
+                .collect(Collectors.toList());
     }
 
-    private CsvCellComposer makeCellComposer(CsvSchemaLine schemaLine, CsvSchemaCell schemaCell, String lineSeparator) {
+    private CsvCellComposer makeCellComposer(CsvSchemaCell schemaCell) {
         return new CsvCellComposer(schemaCell, makeQuoter(schemaLine, schemaCell, lineSeparator));
     }
 
@@ -94,11 +96,10 @@ class CsvLineComposer implements LineComposer {
             firstRow = false;
             String sCellSeparator = schemaLine.getCellSeparator();
 
-            Iterator<CsvSchemaCell> iter = schemaLine.iterator();
+            Iterator<CsvCellComposer> iter = cellComposers.iterator();
             while (iter.hasNext()) {
-                CsvSchemaCell schemaCell = iter.next();
-                Cell cell = line.getCell(schemaCell.getName()).orElse(schemaCell.makeEmptyCell());
-                CsvCellComposer cellComposer = cellComposers.get(schemaCell.getName());
+                CsvCellComposer cellComposer = iter.next();
+                Cell cell = line.getCell(cellComposer.getName()).orElse(cellComposer.makeEmptyCell());
                 cellComposer.compose(writer, cell);
 
                 if (iter.hasNext())

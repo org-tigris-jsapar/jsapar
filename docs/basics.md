@@ -2,7 +2,8 @@
 layout: page
 title: Basics
 ---
-This article will describe the basics of using the library. Since schemas are a large part of the library, [basics of schemas](basics_chema)  are described in this separate article.
+<h1>Basics</h1>
+This article will describe the basics of using the library. Since schemas are a large part of the library, [basics of schemas](basics_schema)  are described in this separate article.
 
 * TOC
 {:toc}
@@ -32,7 +33,7 @@ line by native java types.
 The `Document` class is equivalent of the [DOM Document](https://en.wikipedia.org/wiki/Document_Object_Model) while parsing XML.
 It is the container of all the following `Lines`. The `Document` class should only be used when handling small sized 
 data since it stores all the lines in memory. When dealing with larger data inputs or outputs you should use the `Line`
-directly, using events while parsing or feeding lines one-by-one while composing.
+directly, using consumer while parsing or feeding lines one-by-one while composing.
 
 You can add lines to a document and you can iterate existing lines.
 
@@ -45,37 +46,38 @@ instance of the `TextParser` by supplying a schema.
 ```java
 ...
     TextParser parser = new TextParser(schema);
-    DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener(document);
-    parser.parse(fileReader, listener);
+    DocumentBuilderLineConsumer documentBuilder = new DocumentBuilderLineConsumer();
+    parser.parseForEach(fileReader, documentBuilder);
+    Document document = documentBuilder.getDocument()
 ...    
 ```
 The schema is used for describing the text format. [See Basics of Schemas](basics_schema) for information about schemas. After that we start the parsing by calling the parse method.
-The supplied line event listener is the class that receives an event for each line that is parsed.
+The supplied line consumer is the class that gets called for each line that is parsed.
 
-## Events for each line
+## Consumer gets called for each line
 For very large data sources there can be a problem to build the complete `org.jsapar.model.Document` in the memory before further processing.
 It may simply take up to much memory. There are other situations where you may prefer to handle one line at a time instead of getting all
 lines in a `Document` when parsing is complete.
 
-All parsers in this library requires that you provide an event handler that implements org.jsapar.parse.LineEventListener while parsing.
+All parsers in this library requires that you provide a `java.util.function.Consumer<Line>` while parsing.
 
-The JSaPar library contains some convenient implementations of the org.jsapar.parse.LineEventListener interface:
+The JSaPar library contains some convenient implementations of the `java.util.function.Consumer<Line>` interface:
 <table>
-    <tr><td><b>org.jsapar.parse. DocumentBuilderLineEventListener</b></td>
+    <tr><td><b>org.jsapar.parse. DocumentBuilderLineConsumer</b></td>
         <td>For smaller files you may want to handle all
-        the events after the parsing is complete. In that case you may choose to use this implementation.
-        This listener acts as an [aggregator](http://www.enterpriseintegrationpatterns.com/patterns/messaging/Aggregator.html) and builds a `org.jsapar.model.Document` object containing all the parsed lines that you can iterate afterwards.</td></tr>
-    <tr><td><b>org.jsapar.parse. ByLineTypeLineEventListener</b></td>
-        <td>Allows you to register different listeners for different line types. Use MulticastLineEventListener if you want to have multiple handlers for each line type.</td></tr>
-    <tr><td><b>org.jsapar.parse. MulticastLineEventListener</b></td>
-        <td>If you need to handle the events in multiple event listener implementation, this implementation provides a
-            way to register multiple line event listeners which are called one by one for each line event.</td></tr>
-    <tr><td><b>org.jsapar.concurrent. ConcurrentLineEventListener</b></td>
+        the lines after the parsing is complete. In that case you may choose to use this implementation.
+        This consumer acts as an [aggregator](http://www.enterpriseintegrationpatterns.com/patterns/messaging/Aggregator.html) and builds a `org.jsapar.model.Document` object containing all the parsed lines that you can iterate afterwards.</td></tr>
+    <tr><td><b>org.jsapar.parse. ByLineTypeLineConsumer</b></td>
+        <td>Allows you to register different line consumers for different line types. Use MulticastConsumer if you want to have multiple consumers for each line type.</td></tr>
+    <tr><td><b>org.jsapar.parse. MulticastConsumer</b></td>
+        <td>If you need to handle the lines in multiple consumer implementations, this implementation provides a
+            way to register multiple consumers which are called one by one for each line.</td></tr>
+    <tr><td><b>org.jsapar.concurrent. ConcurrentConsumer</b></td>
         <td>This implementation separates the parsing thread from the consuming thread. It makes it possible for you to
-            register a consumer line event listener that is called from a separate consumer thread.</td></tr>
+            register a consumer that is called from a separate consumer thread.</td></tr>
 </table>
 
-These implementations only demonstrates what can be done in a `LineEventListener` implementation. Feel free to create
+These implementations only demonstrates what can be done in a `java.util.function.Consumer` implementation. Feel free to create
 your own implementation for instance if you need to feed the result to a database or any other scenario.
 ## Configuration
 The parser behavior can be configured in some cases, for instance:
@@ -88,17 +90,26 @@ IOErrors and other serious runtime errors are thrown immediately as exceptions a
 These type of errors indicate a bug or maybe an error reading the input.
  
 ### Format errors
-Format error are handled by the library in a similar way as with line parsed events. An event is fired for every error 
-and passed to a registered `ErrorEventListener`. By default, the `ExceptionErrorEventListener` is registered so if you 
-don't do anything, an exception will be thrown at first error. As with the line event listener there are some provided 
+Format error are handled by the library in a similar way as with line consumers. An error consumer is called for every error 
+. By default, the `ExceptionErrorConsumer` is registered so if you 
+don't do anything, an exception will be thrown at first error. As with the line consumer there are some provided 
 alternatives, in the `org.jsapar.error` package, to use if you don't want to implement your own:
 
-`ExceptionErrorEventListener` | Throws an exception upon the first error
-`RecordingErrorEventListener` | Records all errors in a list and allows you to retrieve all errors when parsing is done.
-`ThresholdRecordingErrorEventListener` | Records all errors in a list and allows you to retrieve all errors when parsing is done but if the number of errors exceeds a threshold, an exception is thrown.
-`MulticastErrorEventListener` | Allows you to register multiple other error event listeners that each will get all the error events.
+|Consumer Class name|Description|
+|---|---|
+|`ExceptionErrorConsumer` | Throws an exception upon the first error|
+|`ThresholdCollectingErrorConsumer` | Records all errors in a list and allows you to retrieve all errors when parsing is done but if the number of errors exceeds a threshold, an exception is thrown.|
 
-Each error event contains detailed information about where in the input the error occurred and what was the cause of the errors. 
+You may also use the more generic consumers in the `org.jsapar.parse` package: 
+
+`CollectingConsumer` | Records all errors in a list and allows you to retrieve all errors when parsing is done.
+`MulticastConsumer` | Allows you to register multiple other error consumers that each will get called when an error occurs.
+
+|   |
+|---|
+|   |
+
+Each error contains detailed information about where in the input the error occurred and what was the cause of the errors. 
 
 You can also access all errors that have occurred while parsing a line directly on the `Line` object so if you want to deal with the
 errors together with you parsing code, you can just register an error event listener that does nothing in order to avoid 
@@ -178,10 +189,10 @@ The following of the [java bean requirements](https://en.wikipedia.org/wiki/Java
 * There has to be a constructor with no arguments.
 * There have be both getter and setter methods for all bean properties.
 
-As with the parser the `Text2BeanConverter` produces events for each bean that has been parsed. You need to provide an implementation
-of the `org.jsapar.compose.bean.BeanEventListener` which will be notified for each bean that is parsed. 
+As with the parser the `Text2BeanConverter` calls a consumer for each bean that has been parsed. You need to provide an implementation
+of the `java.util.function.BiConsumer<T, Line>` or `java.util.function.Consumer<T>` which will be called for each bean that is parsed. 
 
-There is a provided implementation: `org.jsapar.compose.bean.RecordingBeanEventListener` that saves all beans that was 
+You may use the implementation: `org.jsapar.parse.CollectingConsumer` that saves all beans that was 
 created in an internal list to be retrieved later. Not to be used for large data sets since it will store all beans in memory.   
 
 ### Example
@@ -243,8 +254,7 @@ The java code needed for this to work:
 ```java
     Schema parseSchema = Schema.ofXml(inputSchemaReader);
     Text2BeanConverter<Employee> converter = new Text2BeanConverter<>(parseSchema);
-    converter.convert(fileReader, (beanEvent)->{
-        Emplyee employee = beanEvent.getBean();
+    converter.convertForEach(fileReader, employee->{
         // Handle each emplyee here...
     });
     

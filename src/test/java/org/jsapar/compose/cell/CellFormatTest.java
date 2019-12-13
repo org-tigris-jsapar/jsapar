@@ -12,7 +12,7 @@ import java.util.Locale;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class CellComposerTest {
+public class CellFormatTest {
 
     /**
      * To be able to have a specific SchemaCell to test.
@@ -37,8 +37,8 @@ public class CellComposerTest {
         schemaCell.setDefaultValue("TheDefault");
 
         Cell cell = new StringCell("Test", "");
-        CellComposer composer = new CellComposer();
-        assertEquals("TheDefault", composer.format(cell, schemaCell));
+        CellFormat format = CellFormat.ofSchemaCell(schemaCell);
+        assertEquals("TheDefault", format.format(cell));
     }
 
     @Test
@@ -47,17 +47,8 @@ public class CellComposerTest {
         schemaCell.setDefaultValue("TheDefault");
 
         Cell cell = new EmptyCell("Test", CellType.STRING);
-        CellComposer composer = new CellComposer();
-        assertEquals("TheDefault", composer.format(cell, schemaCell));
-    }
-
-    @Test
-    public void testFormat_null_DefaultValue() throws SchemaException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
-        schemaCell.setDefaultValue("TheDefault");
-
-        CellComposer composer = new CellComposer();
-        assertEquals("TheDefault", composer.format(null, schemaCell));
+        CellFormat format = CellFormat.ofSchemaCell(schemaCell);
+        assertEquals("TheDefault", format.format(cell));
     }
 
     @Test
@@ -65,18 +56,10 @@ public class CellComposerTest {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
 
         Cell cell = new EmptyCell("Test", CellType.STRING);
-        CellComposer composer = new CellComposer();
-        assertEquals("", composer.format(cell, schemaCell));
+        CellFormat format = CellFormat.ofSchemaCell(schemaCell);
+        assertEquals("", format.format(cell));
     }
 
-
-    @Test
-    public void testFormat_null_no_default()  {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
-
-        CellComposer composer = new CellComposer();
-        assertEquals("", composer.format(null, schemaCell));
-    }
 
     @Test
     public void testFormat_DefaultValue_float() throws SchemaException {
@@ -85,8 +68,8 @@ public class CellComposerTest {
         schemaCell.setCellFormat(CellType.FLOAT, "#.00");
         schemaCell.setDefaultValue("123456,78901");
 
-        CellComposer composer = new CellComposer();
-        String value = composer.format(new EmptyCell("test", CellType.FLOAT), schemaCell);
+        CellFormat format = CellFormat.ofSchemaCell(schemaCell);
+        String value = format.format(new EmptyCell("test", CellType.FLOAT));
         assertEquals("123456,78901", value);
     }
 
@@ -95,8 +78,8 @@ public class CellComposerTest {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
         schemaCell.setCellFormat(CellType.INTEGER);
 
-        CellComposer composer = new CellComposer();
-        String value = composer.format(new EmptyCell("test", CellType.INTEGER), schemaCell);
+        CellFormat format = CellFormat.ofSchemaCell(schemaCell);
+        String value = format.format(new EmptyCell("test", CellType.INTEGER));
         assertEquals("", value);
     }
 
@@ -108,8 +91,8 @@ public class CellComposerTest {
 
         DateCell cell = (DateCell) cellFactory.makeCell("Name", "2007-10-01 14:13", schemaCell.getCellFormat().getFormat());
 
-        CellComposer composer = new CellComposer();
-        String value = composer.format(cell, schemaCell);
+        CellFormat format = CellFormat.ofSchemaCell(schemaCell);
+        String value = format.format(cell);
 
 
         assertEquals("2007-10-01 14:13", value);
@@ -120,8 +103,8 @@ public class CellComposerTest {
     public void testFormat() throws SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test");
 
-        CellComposer composer = new CellComposer();
-        String value = composer.format(new StringCell("test","A"), schemaCell);
+        CellFormat format = CellFormat.ofSchemaCell(schemaCell);
+        String value = format.format(new StringCell("test","A"));
         assertEquals("A", value);
     }
 
@@ -129,8 +112,8 @@ public class CellComposerTest {
     public void testFormat_Regexp() throws SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test", CellType.STRING, "A|B", new Locale("sv","SE"));
 
-        CellComposer composer = new CellComposer();
-        String value = composer.format(new StringCell("test","A"), schemaCell);
+        CellFormat format = CellFormat.ofSchemaCell(schemaCell);
+        String value = format.format(new StringCell("test","A"));
         assertEquals("A", value);
     }
 
@@ -138,8 +121,8 @@ public class CellComposerTest {
     public void testFormat_Regexp_fail() throws SchemaException {
         TestSchemaCell schemaCell = new TestSchemaCell("test", CellType.STRING, "A|B", new Locale("sv","SE"));
 
-        CellComposer composer = new CellComposer();
-        composer.format(new StringCell("test","C"), schemaCell);
+        CellFormat format = CellFormat.ofSchemaCell(schemaCell);
+        format.format(new StringCell("test","C"));
         fail("Should throw exception");
     }
 

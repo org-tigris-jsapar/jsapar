@@ -24,8 +24,8 @@ public class FixedWidthCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","Jonas");
-        FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(cell, schemaCell);
+        FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
+        composer.compose(writer, cell);
 
         assertEquals("   Jonas   ", writer.toString());
     }
@@ -37,8 +37,8 @@ public class FixedWidthCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","000Jonas000");
-        FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(cell, schemaCell);
+        FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
+        composer.compose(writer, cell);
 
         assertEquals("0Jonas0", writer.toString());
     }
@@ -53,8 +53,8 @@ public class FixedWidthCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","000Jonas000");
-        FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(cell, schemaCell);
+        FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
+        composer.compose(writer, cell);
 
         assertEquals("0Jonas", writer.toString());
     }
@@ -66,8 +66,8 @@ public class FixedWidthCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","Jonas");
-        FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(cell, schemaCell);
+        FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
+        composer.compose(writer, cell);
 
         assertEquals("Jonas      ", writer.toString());
     }
@@ -78,8 +78,8 @@ public class FixedWidthCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","Jonas");
-        FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(cell, schemaCell);
+        FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
+        composer.compose(writer, cell);
 
         assertEquals("Jonas", writer.toString());
     }
@@ -93,8 +93,8 @@ public class FixedWidthCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","Jonas");
-        FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(cell, schemaCell);
+        FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
+        composer.compose(writer, cell);
 
         assertEquals("******Jonas", writer.toString());
     }
@@ -107,8 +107,8 @@ public class FixedWidthCellComposerTest {
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name","0000Jonas");
-        FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(cell, schemaCell);
+        FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
+        composer.compose(writer, cell);
 
         assertEquals("0Jonas", writer.toString());
     }
@@ -119,8 +119,8 @@ public class FixedWidthCellComposerTest {
         schemaCell.setDefaultValue("10");
 
         Writer writer = new StringWriter();
-        FixedWidthCellComposer composer = new FixedWidthCellComposer(writer);
-        composer.compose(null, schemaCell);
+        FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
+        composer.compose(writer, composer.makeEmptyCell());
 
         assertEquals("10         ", writer.toString());
     }

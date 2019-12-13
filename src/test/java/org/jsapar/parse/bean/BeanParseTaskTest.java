@@ -26,7 +26,7 @@ public class BeanParseTaskTest {
     }
 
     @Test
-    public void testBuild() throws ClassNotFoundException, IOException {
+    public void testBuild() throws IOException {
         List<TstPerson> people = new ArrayList<>(2);
         TstPerson person = new TstPerson();
         person.setFirstName("Jonas");

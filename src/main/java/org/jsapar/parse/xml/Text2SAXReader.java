@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.function.Consumer;
 
 /**
  * Parses an input source and generates SAX events for each attribute or element.
@@ -167,7 +168,7 @@ public class Text2SAXReader implements XMLReader {
      * Replaces existing error event listener.
      * @param errorEventListener The new error event listener to use.
      */
-    public void setErrorEventListener(ErrorEventListener errorEventListener) {
-        this.textParser.setErrorEventListener(errorEventListener);
+    public void setErrorConsumer(Consumer<JSaParException> errorEventListener) {
+        this.textParser.setErrorConsumer(errorEventListener);
     }
 }

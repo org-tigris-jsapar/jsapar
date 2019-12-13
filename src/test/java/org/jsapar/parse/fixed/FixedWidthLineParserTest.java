@@ -1,5 +1,6 @@
 package org.jsapar.parse.fixed;
 
+import org.jsapar.error.ExceptionErrorConsumer;
 import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.error.ValidationAction;
@@ -46,7 +47,7 @@ public class FixedWidthLineParserTest {
 
         TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
-        Line line = parser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener() );
+        Line line = parser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer() );
         assertNotNull(line);
         assertEquals("Jonas", LineUtils.getStringCellValue(line, "First name"));
         assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last name"));
@@ -68,7 +69,7 @@ public class FixedWidthLineParserTest {
 
         TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
-        Line line = parser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener() );
+        Line line = parser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer() );
         assertNotNull(line);
         assertEquals("Jonas", LineUtils.getStringCellValue(line, "First name"));
         assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last name"));
@@ -88,7 +89,7 @@ public class FixedWidthLineParserTest {
         TextParseConfig config = new TextParseConfig();
         config.setOnLineInsufficient(ValidationAction.EXCEPTION);
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
-        parser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener() );
+        parser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer() );
         fail("Exception is expected");
     }
 
@@ -108,8 +109,33 @@ public class FixedWidthLineParserTest {
 
         TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
-        Line line = parser.parse(makeReadBuffer(toParse), event -> {
-            CellParseException e = (CellParseException) event.getError();
+        Line line = parser.parse(makeReadBuffer(toParse), error -> {
+            CellParseException e = (CellParseException) error;
+            assertEquals("City", e.getCellName());
+            foundError=true;
+        });
+
+        assertNotNull(line);
+        assertEquals(true, foundError);
+    }
+
+    @Test
+    public void testParse_mandatory()
+            throws IOException, JSaParException {
+        String toParse = "JonasStenberg";
+        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
+        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
+        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        FixedWidthSchemaCell cityCell = new FixedWidthSchemaCell("City", 8);
+        cityCell.setMandatory(true);
+        schemaLine.addSchemaCell(cityCell);
+        schema.addSchemaLine(schemaLine);
+
+        TextParseConfig config = new TextParseConfig();
+        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
+        Line line = parser.parse(makeReadBuffer(toParse), error -> {
+            CellParseException e = (CellParseException) error;
             assertEquals("City", e.getCellName());
             foundError=true;
         });
@@ -134,7 +160,7 @@ public class FixedWidthLineParserTest {
 
         TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
-        Line line = parser.parse(makeReadBuffer(toParse), new ExceptionErrorEventListener() );
+        Line line = parser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer() );
         assertNotNull(line);
     }
     

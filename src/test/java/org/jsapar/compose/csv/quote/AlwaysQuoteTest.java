@@ -50,6 +50,11 @@ public class AlwaysQuoteTest {
         w = new StringWriter();
         instance.writeValue(w, "hej/san/123456");
         assertEquals("/hej//san//123456/", w.toString());
+
+        w = new StringWriter();
+        instance.writeValue(w, "/hej//san/123456/");
+        assertEquals("///hej////san//123456///", w.toString());
+
     }
 
     @Test

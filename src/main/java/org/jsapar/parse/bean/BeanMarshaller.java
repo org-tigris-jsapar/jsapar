@@ -2,8 +2,7 @@ package org.jsapar.parse.bean;
 
 import org.jsapar.BeanCollection2TextConverter;
 import org.jsapar.bean.BeanMap;
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
@@ -12,6 +11,7 @@ import org.jsapar.parse.bean.reflect.PropertyDescriptor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Builds {@link Line} objects from single bean instances. The {@link Line#getLineType()} of each line will be
@@ -47,7 +47,7 @@ public class BeanMarshaller<T>  {
      * @param lineNumber The number of the line being parsed. Numbering starts from 1.
      * @return A {@link Line} object containing cells according to the getter method of the supplied bean.
      */
-    public Optional<Line> marshal(T bean, ErrorEventListener errorListener, long lineNumber) {
+    public Optional<Line> marshal(T bean, Consumer<JSaParException> errorListener, long lineNumber) {
         return beanMap.getBeanPropertyMap(bean.getClass()).map(beanPropertyMap -> {
             Line line = new Line(beanPropertyMap.getLineType(), beanPropertyMap.size());
             line.setLineNumber(lineNumber);
@@ -57,7 +57,7 @@ public class BeanMarshaller<T>  {
     }
 
 
-    private void marshal(Line line, Object object, BeanPropertyMap beanPropertyMap, ErrorEventListener errorListener) {
+    private void marshal(Line line, Object object, BeanPropertyMap beanPropertyMap, Consumer<JSaParException> errorListener) {
 
         for (Bean2Cell bean2Cell : beanPropertyMap.getBean2Cells()) {
             PropertyDescriptor pd = bean2Cell.getPropertyDescriptor();
@@ -83,7 +83,7 @@ public class BeanMarshaller<T>  {
         }
     }
 
-    private void handleCellError(ErrorEventListener errorListener,
+    private void handleCellError(Consumer<JSaParException> errorListener,
                                  String sAttributeName,
                                  Object object,
                                  Line line,
@@ -92,7 +92,7 @@ public class BeanMarshaller<T>  {
                 "Unable to build cell for attribute " + sAttributeName + " of class " + object.getClass().getName()
                         + " - " + message);
         line.addCellError(error);
-        errorListener.errorEvent(new ErrorEvent(this, error));
+        errorListener.accept(error);
     }
 
  }

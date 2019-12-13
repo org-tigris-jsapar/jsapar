@@ -7,7 +7,10 @@ import java.util.stream.Collectors;
 /**
  * Saves all lines that was composed into a list of list of strings that can be retrieved by calling {@link #getLines()}
  * at any time or when done composing.
+ *
+ * Deprecated since 2.2. Use {@link CollectingStringConsumer} instead.
  */
+@Deprecated
 public class RecordingStringEventListener implements StringComposedEventListener {
     private List< List <String> > lines = new ArrayList<>();
 

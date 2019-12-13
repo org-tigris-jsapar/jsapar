@@ -4,7 +4,7 @@ import org.jsapar.TstGender;
 import org.jsapar.TstPerson;
 import org.jsapar.TstPostAddress;
 import org.jsapar.bean.BeanMap;
-import org.jsapar.error.ExceptionErrorEventListener;
+import org.jsapar.error.ExceptionErrorConsumer;
 import org.jsapar.model.*;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaCell;
@@ -16,7 +16,7 @@ import org.junit.Test;
 import java.util.Date;
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class BeanMarshallerTest {
     static final Date birthTime = new Date();
@@ -34,7 +34,7 @@ public class BeanMarshallerTest {
         person.setGender(TstGender.M);
 
         BeanMarshaller<TstPerson> beanMarshaller = new BeanMarshaller<>(makeBeanMap());
-        Line line = beanMarshaller.marshal(person, new ExceptionErrorEventListener(), 1).orElse(null);
+        Line line = beanMarshaller.marshal(person, new ExceptionErrorConsumer(), 1).orElse(null);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         //        assertEquals(8, line.size());
         assertEquals("Jonas", line.getCell("firstName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
@@ -52,7 +52,7 @@ public class BeanMarshallerTest {
         person.setFirstName("Jonas");
         person.setAddress(new TstPostAddress("Stigen", "Staden"));
         BeanMarshaller<TstPerson> beanMarshaller = new BeanMarshaller<>(makeBeanMap());
-        Line line = beanMarshaller.marshal(person, new ExceptionErrorEventListener(), 1).orElse(null);
+        Line line = beanMarshaller.marshal(person, new ExceptionErrorConsumer(), 1).orElse(null);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
         assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
@@ -68,7 +68,7 @@ public class BeanMarshallerTest {
         person.getAddress().setSubAddress(new TstPostAddress("Road", "Town"));
         person.setWorkAddress(new TstPostAddress("Gatan", "Byn"));
         BeanMarshaller<TstPerson> beanMarshaller = new BeanMarshaller<>(makeBeanMap());
-        Line line = beanMarshaller.marshal(person, new ExceptionErrorEventListener(), 1).orElse(null);
+        Line line = beanMarshaller.marshal(person, new ExceptionErrorConsumer(), 1).orElse(null);
         assertEquals("org.jsapar.TstPerson", line.getLineType());
         assertEquals("Stigen", LineUtils.getStringCellValue(line,"address.street"));
         assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));

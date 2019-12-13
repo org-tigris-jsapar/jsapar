@@ -6,7 +6,9 @@ import java.util.EventListener;
  * Interface for receiving event call-backs while composing.
  * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.
  *
+ * Deprecated since 2.2. Use BiConsumer or Consumer instead.
  */
+@Deprecated
 public interface BeanEventListener<T> extends EventListener {
 
     /**

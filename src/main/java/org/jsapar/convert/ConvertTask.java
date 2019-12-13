@@ -2,14 +2,15 @@ package org.jsapar.convert;
 
 import org.jsapar.compose.Composer;
 import org.jsapar.error.ErrorEventListener;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.MulticastConsumer;
 import org.jsapar.parse.ParseTask;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Reads from supplied parseTask and outputs each line to the composer. By adding
@@ -45,9 +46,21 @@ public class ConvertTask {
      *
      * @param errorListener The new error event listener to use for both parsing and composing.
      */
+    @Deprecated
     public void setErrorEventListener(ErrorEventListener errorListener) {
         this.parseTask.setErrorEventListener(errorListener);
         this.composer.setErrorEventListener(errorListener);
+    }
+
+    /**
+     * Sets an error consumer to this parser. Default behavior otherwise is to throw an exception upon the first
+     * error. If you want more than one consumer to get each error event, use a {@link MulticastConsumer}.
+     *
+     * @param errorConsumer The error consumer.
+     */
+    public void setErrorConsumer(Consumer<JSaParException> errorConsumer){
+        this.parseTask.setErrorConsumer(errorConsumer);
+        this.composer.setErrorConsumer(errorConsumer);
     }
 
     /**
@@ -66,32 +79,13 @@ public class ConvertTask {
      */
     public long execute() throws IOException {
         try {
-            parseTask.setLineEventListener(new LineForwardListener());
+            parseTask.setLineConsumer(this::forEachLine);
             return parseTask.execute();
         }catch (UncheckedIOException e){
             throw e.getCause() != null ? e.getCause() : new IOException(e);
         }
     }
 
-    /**
-     * Internal class for handling output of one line at a time while receiving parsing events.
-     *
-     */
-    public class LineForwardListener implements LineEventListener {
-
-        public LineForwardListener() {
-        }
-
-        @Override
-        public void lineParsedEvent(LineParsedEvent event) {
-            Line line = event.getLine();
-            for (LineManipulator manipulator : manipulators) {
-                if (!manipulator.manipulate(line))
-                    return;
-            }
-            composer.composeLine(line);
-        }
-    }
 
     public ParseTask getParseTask() {
         return parseTask;
@@ -99,5 +93,13 @@ public class ConvertTask {
 
     public Composer getComposer() {
         return composer;
+    }
+
+    protected void forEachLine(Line line) {
+        for (LineManipulator manipulator : manipulators) {
+            if (!manipulator.manipulate(line))
+                return;
+        }
+        composer.composeLine(line);
     }
 }

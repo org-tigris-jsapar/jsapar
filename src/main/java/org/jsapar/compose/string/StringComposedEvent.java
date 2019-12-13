@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 /**
  * Generated once for each line that is composed.
  */
+@Deprecated
 public class StringComposedEvent {
     private final String lineType;
     private final Stream<String> line;

@@ -2,6 +2,7 @@
 layout: page
 title: Advanced
 ---
+<h1>Advanced</h1>
 * TOC
 {:toc}
 *This page is under construction*

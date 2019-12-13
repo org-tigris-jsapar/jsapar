@@ -1,37 +1,32 @@
 package org.jsapar.parse;
 
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.error.ErrorEventListener;
-import org.jsapar.error.ExceptionErrorEventListener;
+import org.jsapar.error.*;
+import org.jsapar.model.Line;
+
+import java.util.function.Consumer;
 
 /**
  * Abstract implementation of {@link ParseTask} interface. Provides possibility to have line event listeners and
  * error event listeners. Override this class to implement a specific parser.
  */
-public abstract class AbstractParseTask implements ParseTask, LineEventListener, ErrorEventListener {
-    private LineEventListener  lineEventListener  = null;
-    private ErrorEventListener errorEventListener = new ExceptionErrorEventListener();
+public abstract class AbstractParseTask implements ParseTask {
+    private Consumer<Line>            lineConsumer       = null;
+    private Consumer<JSaParException> errorConsumer = new ExceptionErrorConsumer();
 
 
-    @Override
-    public void setLineEventListener(LineEventListener eventListener) {
-        this.lineEventListener = eventListener;
+    public Consumer<Line> getLineConsumer() {
+        return lineConsumer;
     }
 
-    @Override
-    public void setErrorEventListener(ErrorEventListener errorEventListener) {
-        this.errorEventListener = errorEventListener;
+    public void setLineConsumer(Consumer<Line> lineConsumer) {
+        this.lineConsumer = lineConsumer;
     }
 
-    @Override
-    public void lineParsedEvent(LineParsedEvent event)  {
-        if(lineEventListener != null)
-            lineEventListener.lineParsedEvent(event);
+    public Consumer<JSaParException> getErrorConsumer() {
+        return errorConsumer;
     }
 
-    @Override
-    public void errorEvent(ErrorEvent event) {
-        errorEventListener.errorEvent(event);
+    public void setErrorConsumer(Consumer<JSaParException> errorConsumer) {
+        this.errorConsumer = errorConsumer;
     }
-
 }

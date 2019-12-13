@@ -7,6 +7,7 @@ import java.util.EventListener;
  * 
  */
 @FunctionalInterface
+@Deprecated
 public interface ErrorEventListener extends EventListener {
 
     /**
