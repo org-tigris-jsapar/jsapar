@@ -25,19 +25,14 @@ The library should
 * Be flexible to use in different situations.
 * Be independent of other (third party) libraries.
 * Use schemas in order to distinctly separate the description of the format of the data source from the code.
-* Unburden the tremendous tasks of a developer dealing with fixed width and delimited data sources.
+* Unburden the tremendous tasks for a developer dealing with fixed width and delimited data sources.
 
 ## Features
-* Support for flat files with fixed positions.
-* Support for CSV and all other delimited files such as TAB-separated or multi character separated.
-* Configurable line separator character sequence.
-* Support for quoted CSV cells.
-* Support for multi line quoted CSV cells. Line breaks are allowed within quoted cells.
 * Support for type conversion while parsing and composing.
-* Can handle internationalization of numbers and dates both while parsing and composing.
+* Uses a schema to express the source or target format.
 * Support for different type of lines where line type is determined by the value of defined "condition cells". 
-* Support converting Java objects to or from any of the other supported input or output formats.
 * The schema can be expressed with xml notation or created directly within the java code.
+* Can handle internationalization of numbers and dates both while parsing and composing.
 * The parser can either produce a Document class, representing the content of the file, or you can choose to receive
  events for each line that has been successfully parsed.
 * Can handle huge files without loading everything into memory.
@@ -45,10 +40,27 @@ The library should
 * The input and outputs are given by java.io.Reader and java.io.Writer which means that it is not necessarily files
 that are parsed or generated.
 * The schema contains information about the format of each cell regarding data type and syntax.
-* Parsing errors can either be handled by exceptions thrown at first error or the errors can be collected during
+* Errors can either be handled by exceptions thrown at first error or the errors can be collected during
 parsing to be able to deal with them later.
-* Support for consuming or producing an internal xml format which can be used to transform any of the supported formats 
+* Can consume or produce an internal xml format which can be used to transform any of the supported formats 
 into any markup language by the use of xslt.
+### Bean mapping features
+* Support converting Java objects to or from any of the other supported input or output formats.
+* Supports natively all primitive types, Number types, String, BigDecimal, BigInteger, Enum, java.util.Date and the java.time types.
+* It is possible to programmatically make manipulations and transformations between parsing and the bean is created which makes it possible to 
+join and split cells that does not fit a bean property one-to-one.
+### CSV features
+* Support for CSV and all other delimited files such as TAB-separated or multi character separated.
+* Configurable line separator character sequence.
+* Handles quoted cells with configurable quote character.
+* Can handle quotes both according to [RFC4180](https://tools.ietf.org/html/rfc4180) and naive quoting first and last.
+* Handles multi line quoted CSV cells. Line breaks are allowed within quoted cells.
+* Cell separator can be configured as one or multiple characters.
+### Fixed width features
+* Can both parse and compose flat files with fixed positions with or without line separator characters.
+* Custom fill character
+* Custom cell alignment
+* [Implied decimal](https://www.ibm.com/support/knowledgecenter/en/SSLVMB_24.0.0/spss/base/syn_data_list_implied_decimal_positions.html)
 
 ## Documentation
 * [Release notes](release_notes)
