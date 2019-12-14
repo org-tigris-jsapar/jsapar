@@ -53,20 +53,20 @@ public class CsvSchemaCell extends SchemaCell {
         super(sName, cellFormat);
     }
 
-    public static Builder builder(String name){
-        return new Builder(name);
+    public static <T> Builder<T> builder(String name){
+        return new Builder<>(name);
     }
 
-    public static class Builder extends SchemaCell.Builder<CsvSchemaCell, Builder>{
+    public static class Builder<T> extends SchemaCell.Builder<T, CsvSchemaCell, Builder<T>>{
         private QuoteBehavior quoteBehavior = QuoteBehavior.AUTOMATIC;
         private int maxLength = -1;
 
-        public Builder withQuoteBehavior(QuoteBehavior quoteBehavior) {
+        public Builder<T> withQuoteBehavior(QuoteBehavior quoteBehavior) {
             this.quoteBehavior = quoteBehavior;
             return this;
         }
 
-        public Builder withMaxLength(int maxLength){
+        public Builder<T> withMaxLength(int maxLength){
             this.maxLength = maxLength;
             return this;
         }

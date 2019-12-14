@@ -44,7 +44,7 @@ public class Xml2SchemaBuilderTest {
         assertEquals(5, firstNameSchema.getLength());
         assertEquals(8, lastNameSchema.getLength());
         FixedWidthSchemaCell shoeSizeSchema = firstLineSchema.getSchemaCells().get(2);
-        assertTrue(shoeSizeSchema.getEmptyCondition().satisfies("NULL"));
+        assertTrue(shoeSizeSchema.getEmptyCondition().test("NULL"));
 
         assertEquals(CellType.INTEGER, shoeSizeSchema
                 .getCellFormat().getCellType());
@@ -98,8 +98,8 @@ public class Xml2SchemaBuilderTest {
         Collection<CsvSchemaCell> schemaCells = csvSchema.getSchemaLines().iterator().next().getSchemaCells();
         Iterator<CsvSchemaCell> it = schemaCells.iterator();
         CsvSchemaCell controlCell = it.next();
-        assertTrue(controlCell.getLineCondition().satisfies("P"));
-        assertFalse(controlCell.getLineCondition().satisfies("X"));
+        assertTrue(controlCell.getLineCondition().test("P"));
+        assertFalse(controlCell.getLineCondition().test("X"));
         assertEquals("type", controlCell.getName());
         assertEquals("First name", it.next().getName());
         assertEquals("Last name", it.next().getName());

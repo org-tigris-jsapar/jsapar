@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.*;
 import java.util.Locale;
+import java.util.function.Predicate;
 
 import static org.junit.Assert.*;
 
@@ -86,7 +87,7 @@ public class CellParserTest {
     @Test
     public void testMakeCell_empty_pattern() throws SchemaException, java.text.ParseException {
         TestSchemaCell schemaCell = new TestSchemaCell("test",CellType.FLOAT, "#.00", new Locale("sv","SE"));
-        schemaCell.setEmptyCondition(new MatchingCellValueCondition("NULL"));
+        schemaCell.setEmptyCondition((Predicate<String>) new MatchingCellValueCondition("NULL"));
         CellParser cellParser = new CellParser<>(schemaCell, 0);
 
         Cell nonEmptyCell = cellParser.makeCell("1,25");

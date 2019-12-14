@@ -61,7 +61,7 @@ class CsvLineParserMatcher {
                     String value = cells.get(controlCell.pos);
                     if (value == null)
                         return null;
-                    if (!controlCell.schemaCell.getLineCondition().satisfies(value))
+                    if (!controlCell.schemaCell.getLineCondition().test(value))
                         return null;
                 }
             }

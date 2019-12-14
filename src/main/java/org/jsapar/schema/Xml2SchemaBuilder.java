@@ -17,6 +17,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.function.Predicate;
 
 /**
  * Builds a {@link Schema} instance from xml that conforms to the JSaPar xsd.
@@ -283,6 +284,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
     private CsvSchemaCell buildCsvSchemaCell(Element xmlSchemaCell, Locale locale, QuoteBehavior quoteBehavior) throws SchemaException {
 
         String sName = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_NAME);
+
         CsvSchemaCell cell = new CsvSchemaCell(sName);
         Node xmlMaxLength = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_MAX_LENGTH);
         if (xmlMaxLength != null)
@@ -415,7 +417,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
     }
 
 
-    private MatchingCellValueCondition extractCellValueCondition(Element xmlCellValueCondition) throws SchemaException {
+    private Predicate<String> extractCellValueCondition(Element xmlCellValueCondition) throws SchemaException {
         Element xmlMatch = getChild(xmlCellValueCondition, ELEMENT_MATCH);
         if(xmlMatch != null){
             String pattern = getAttributeValue(xmlMatch, ATTRIB_PATTERN);

@@ -78,31 +78,32 @@ public class SchemaCellFormat implements Cloneable {
         this.format = CellFactory.getInstance(cellType).makeFormat(locale, pattern);
     }
 
-    public static class Builder {
+    public static class Builder<T> {
         Locale locale = defaultLocale;
         private final CellType cellType;
-        private Format format;
+        private Format<T> format;
         private String pattern;
 
         Builder(CellType cellType) {
             this.cellType = cellType;
         }
 
-        public <T> Builder withFormat(Format<T> format) {
+        public Builder<T> withFormat(Format<T> format) {
             this.format = format;
             return this;
         }
 
-        public Builder withPattern(String pattern) {
+        public Builder<T> withPattern(String pattern) {
             this.pattern = pattern;
             return this;
         }
 
-        public Builder withLocale(Locale locale) {
+        public Builder<T> withLocale(Locale locale) {
             this.locale = locale;
             return this;
         }
 
+        @SuppressWarnings("unchecked")
         public SchemaCellFormat build(){
             if(format == null)
                 format = CellFactory.getInstance(cellType).makeFormat(locale, pattern);
@@ -111,8 +112,8 @@ public class SchemaCellFormat implements Cloneable {
         }
     }
 
-    public static Builder builder(CellType cellType){
-        return new Builder(cellType);
+    public static <T>  Builder<T> builder(CellType cellType){
+        return new Builder<T>(cellType);
     }
 
     /**

@@ -43,7 +43,7 @@ class FWLineParserMatcher {
                     String value = lineReader.readToString(controlCell.trimmer, offset, controlCell.schemaCell.getLength());
                     if (value == null)
                         return LineParserMatcherResult.EOF; // EOF reached
-                    if (!controlCell.schemaCell.getLineCondition().satisfies(value))
+                    if (!controlCell.schemaCell.getLineCondition().test(value))
                         return LineParserMatcherResult.NOT_MATCHING; // Not matching criteria.
                     read = controlCell.beginPos + controlCell.schemaCell.getLength();
                 }

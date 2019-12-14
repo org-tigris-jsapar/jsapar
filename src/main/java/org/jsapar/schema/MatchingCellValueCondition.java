@@ -1,5 +1,6 @@
 package org.jsapar.schema;
 
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -7,7 +8,7 @@ import java.util.regex.Pattern;
  * A {@link CellValueCondition} that matches based on a regex expression. The whole expression needs to match.
  * @see Pattern
  */
-public class MatchingCellValueCondition implements CellValueCondition {
+public class MatchingCellValueCondition implements CellValueCondition, Predicate<String> {
     private final Pattern pattern;
 
     /**
@@ -21,8 +22,7 @@ public class MatchingCellValueCondition implements CellValueCondition {
 
     @Override
     public boolean satisfies(String value) {
-        Matcher m = pattern.matcher(value);
-        return m.matches();
+        return this.test(value);
     }
 
     /**
@@ -30,5 +30,11 @@ public class MatchingCellValueCondition implements CellValueCondition {
      */
     public String getPattern() {
         return pattern.pattern();
+    }
+
+    @Override
+    public boolean test(String value) {
+        Matcher m = pattern.matcher(value);
+        return m.matches();
     }
 }

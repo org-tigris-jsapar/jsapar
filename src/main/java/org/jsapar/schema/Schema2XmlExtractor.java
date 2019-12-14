@@ -21,6 +21,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.Locale;
+import java.util.function.Predicate;
 
 /**
  * Extracts xml representation for a {@link Schema} and writes it to a writer.
@@ -319,7 +320,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
         }
     }
 
-    private Element extractCellValueCondition(Document xmlDocument, CellValueCondition lineCondition, String elementName)
+    private Element extractCellValueCondition(Document xmlDocument, Predicate<String> lineCondition, String elementName)
             throws SchemaException {
         Element xmlLineCondition = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, elementName);
         if (lineCondition instanceof MatchingCellValueCondition){

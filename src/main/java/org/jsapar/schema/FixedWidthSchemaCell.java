@@ -105,11 +105,11 @@ public class FixedWidthSchemaCell extends SchemaCell {
     }
 
 
-    public static Builder builder(String name, int length){
-        return new Builder(name, length);
+    public static <T> Builder<T> builder(String name, int length){
+        return new Builder<>(name, length);
     }
 
-    public static class Builder extends SchemaCell.Builder<FixedWidthSchemaCell, Builder>{
+    public static class Builder<T> extends SchemaCell.Builder<T, FixedWidthSchemaCell, Builder<T>>{
         private final int length;
         private Alignment alignment = Alignment.LEFT;
         private char padCharacter = ' ';
@@ -121,22 +121,22 @@ public class FixedWidthSchemaCell extends SchemaCell {
             this.length = length;
         }
 
-        public Builder withAlignment(Alignment alignment) {
+        public Builder<T> withAlignment(Alignment alignment) {
             this.alignment = alignment;
             return this;
         }
 
-        public Builder withPadCharacter(char padCharacter){
+        public Builder<T> withPadCharacter(char padCharacter){
             this.padCharacter = padCharacter;
             return this;
         }
 
-        public Builder withTrimPadCharacter(boolean trimPadCharacter) {
+        public Builder<T> withTrimPadCharacter(boolean trimPadCharacter) {
             this.trimPadCharacter = trimPadCharacter;
             return this;
         }
 
-        public Builder withTrimLeadingSpaces(boolean trimLeadingSpaces) {
+        public Builder<T> withTrimLeadingSpaces(boolean trimLeadingSpaces) {
             this.trimLeadingSpaces = trimLeadingSpaces;
             return this;
         }

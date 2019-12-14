@@ -111,7 +111,7 @@ public class CellParser<S extends SchemaCell> {
     Cell makeCell(String sValue) throws ParseException {
 
         // If the cell is empty, check if default value exists.
-        if (sValue.length() <= 0 || (schemaCell.hasEmptyCondition() && schemaCell.getEmptyCondition().satisfies(sValue))) {
+        if (sValue.length() <= 0 || (schemaCell.hasEmptyCondition() && schemaCell.getEmptyCondition().test(sValue))) {
             if (schemaCell.isDefaultValue()) {
                 return defaultCell;
             } else {

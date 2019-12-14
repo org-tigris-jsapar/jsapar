@@ -9,13 +9,14 @@ import org.junit.Test;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Locale;
+import java.util.function.Predicate;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 public class TextComposerTest {
-    private Document       document;
+    private Document document;
 
     @Before
     public void setUp() throws Exception {
@@ -82,15 +83,15 @@ public class TextComposerTest {
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name");
         FixedWidthSchemaCell typeCellSchema = new FixedWidthSchemaCell("Type", 1);
         typeCellSchema.setDefaultValue("N");
-        typeCellSchema.setLineCondition(new MatchingCellValueCondition("N"));
+        typeCellSchema.setLineCondition((Predicate<String>) new MatchingCellValueCondition("N"));
         schemaLine.addSchemaCell(typeCellSchema);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
         schema.addSchemaLine(schemaLine);
 
         Line line = new Line("Name");
-        line.addCell(new StringCell("First name","Jonas"));
-        line.addCell(new StringCell("Last name","Stenberg"));
+        line.addCell(new StringCell("First name", "Jonas"));
+        line.addCell(new StringCell("Last name", "Stenberg"));
 
         Writer writer = new StringWriter();
         TextComposer composer = new TextComposer(schema, writer);
@@ -99,7 +100,7 @@ public class TextComposerTest {
         assertEquals("NJonasStenberg", writer.toString());
     }
 
-    
+
     @Test
     public void testWriteLine_FixedWidthControllCell_minLength()
             throws JSaParException {
@@ -109,7 +110,7 @@ public class TextComposerTest {
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name");
         FixedWidthSchemaCell typeCellSchema = new FixedWidthSchemaCell("Type", 1);
         typeCellSchema.setDefaultValue("N");
-        typeCellSchema.setLineCondition(new MatchingCellValueCondition("N"));
+        typeCellSchema.setLineCondition((Predicate<String>) new MatchingCellValueCondition("N"));
         schemaLine.addSchemaCell(typeCellSchema);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
@@ -117,8 +118,8 @@ public class TextComposerTest {
         schema.addSchemaLine(schemaLine);
 
         Line line = new Line("Name");
-        line.addCell(new StringCell("First name","Jonas"));
-        line.addCell(new StringCell("Last name","Stenberg"));
+        line.addCell(new StringCell("First name", "Jonas"));
+        line.addCell(new StringCell("Last name", "Stenberg"));
 
         Writer writer = new StringWriter();
         TextComposer composer = new TextComposer(schema, writer);
@@ -144,8 +145,8 @@ public class TextComposerTest {
         schema.addSchemaLine(outputSchemaLine);
 
         Line line1 = new Line("Person");
-        line1.addCell(new StringCell("First name","Jonas"));
-        line1.addCell(new StringCell("Last name","Stenberg"));
+        line1.addCell(new StringCell("First name", "Jonas"));
+        line1.addCell(new StringCell("Last name", "Stenberg"));
 
         StringWriter writer = new StringWriter();
         TextComposer composer = new TextComposer(schema, writer);
@@ -195,10 +196,12 @@ public class TextComposerTest {
         schemaLine.addSchemaCell(new CsvSchemaCell("First name"));
         schemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
 
-        CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe size",CellType.INTEGER);
+        CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe size", CellType.INTEGER);
         shoeSizeCell.setDefaultValue("41");
         schemaLine.addSchemaCell(shoeSizeCell);
-        schemaLine.addSchemaCell(CsvSchemaCell.builder("Birth date").withCellFormat(CellType.DATE, "yyyy-MM-dd").build());
+        schemaLine.addSchemaCell(CsvSchemaCell.builder("Birth date")
+                .withCellFormatBuilder(SchemaCellFormat.builder(CellType.DATE).withPattern("yyyy-MM-dd"))
+                .build());
 
         schemaLine.setFirstLineAsSchema(true);
         schema.addSchemaLine(schemaLine);

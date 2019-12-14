@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.function.Predicate;
 
 import static org.junit.Assert.assertEquals;
 
@@ -181,7 +182,7 @@ public class CsvParseTaskTest {
         CsvSchemaLine schemaLine = new CsvSchemaLine("Address");
         schemaLine.setCellSeparator(":");
         CsvSchemaCell schemaCell = new CsvSchemaCell("type");
-        schemaCell.setLineCondition(new MatchingCellValueCondition("Address"));
+        schemaCell.setLineCondition((Predicate<String>) new MatchingCellValueCondition("Address"));
         schemaLine.addSchemaCell(schemaCell);
         schemaLine.addSchemaCell(new CsvSchemaCell("street"));
         schemaLine.addSchemaCell(new CsvSchemaCell("postcode"));
@@ -190,7 +191,7 @@ public class CsvParseTaskTest {
 
         schemaLine = new CsvSchemaLine("Name");
         CsvSchemaCell nameTypeSchemaCell = new CsvSchemaCell("type");
-        nameTypeSchemaCell.setLineCondition(new MatchingCellValueCondition("Name"));
+        nameTypeSchemaCell.setLineCondition((Predicate<String>) new MatchingCellValueCondition("Name"));
         schemaLine.addSchemaCell(nameTypeSchemaCell);
         schemaLine.addSchemaCell(new CsvSchemaCell("first.name"));
         schemaLine.addSchemaCell(new CsvSchemaCell("last.name"));

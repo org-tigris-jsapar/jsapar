@@ -15,6 +15,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.function.Predicate;
 
 import static org.junit.Assert.assertEquals;
 
@@ -42,7 +43,7 @@ public class FixedWidthParserControlCellTest {
     private void addSchemaLinesOneCharControl(FixedWidthSchema schema) {
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name");
         FixedWidthSchemaCell typeN = new FixedWidthSchemaCell("Type", 1);
-        typeN.setLineCondition(new MatchingCellValueCondition("N"));
+        typeN.setLineCondition((Predicate<String>) new MatchingCellValueCondition("N"));
         schemaLine.addSchemaCell(typeN);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
@@ -50,7 +51,7 @@ public class FixedWidthParserControlCellTest {
 
         schemaLine = new FixedWidthSchemaLine("Address");
         FixedWidthSchemaCell typeA = new FixedWidthSchemaCell("Type", 1);
-        typeA.setLineCondition(new MatchingCellValueCondition("A"));
+        typeA.setLineCondition((Predicate<String>) new MatchingCellValueCondition("A"));
         schemaLine.addSchemaCell(typeA);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street", 10));
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
@@ -60,7 +61,7 @@ public class FixedWidthParserControlCellTest {
     private void addSchemaLinesTwoCharControl(FixedWidthSchema schema) {
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name");
         FixedWidthSchemaCell typeN = new FixedWidthSchemaCell("Type", 2);
-        typeN.setLineCondition(new MatchingCellValueCondition("N"));
+        typeN.setLineCondition((Predicate<String>)new MatchingCellValueCondition("N"));
         schemaLine.addSchemaCell(typeN);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
@@ -68,7 +69,7 @@ public class FixedWidthParserControlCellTest {
 
         schemaLine = new FixedWidthSchemaLine("Address");
         FixedWidthSchemaCell typeA = new FixedWidthSchemaCell("Type", 2);
-        typeA.setLineCondition(new MatchingCellValueCondition("AA"));
+        typeA.setLineCondition((Predicate<String>)new MatchingCellValueCondition("AA"));
         schemaLine.addSchemaCell(typeA);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street", 10));
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
