@@ -113,6 +113,14 @@ public class FixedWidthSchemaCell extends SchemaCell {
         this.length = length;
     }
 
+    private <T> FixedWidthSchemaCell(Builder<T> builder){
+        super(builder);
+        this.length = builder.length;
+        this.alignment = builder.alignment != null ? builder.alignment : defaultAlignment(getCellFormat().getCellType());
+        this.trimLeadingSpaces = builder.trimLeadingSpaces;
+        this.trimPadCharacter = builder.trimPadCharacter;
+        this.padCharacter = builder.padCharacter;
+    }
 
     public static <T> Builder<T> builder(String name, int length){
         return new Builder<>(name, length);
@@ -120,7 +128,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
 
     public static class Builder<T> extends SchemaCell.Builder<T, FixedWidthSchemaCell, Builder<T>>{
         private final int length;
-        private Alignment alignment = Alignment.LEFT;
+        private Alignment alignment;
         private char padCharacter = ' ';
         private boolean trimPadCharacter = true;
         private boolean trimLeadingSpaces = true;
@@ -151,18 +159,8 @@ public class FixedWidthSchemaCell extends SchemaCell {
         }
 
         @Override
-        protected FixedWidthSchemaCell newInstance(String name, SchemaCellFormat cellFormat, Locale locale) {
-            return new FixedWidthSchemaCell(name, length, cellFormat, locale);
-        }
-
-        @Override
         public FixedWidthSchemaCell build() {
-            FixedWidthSchemaCell schemaCell = super.build();
-            schemaCell.alignment = alignment != null ? alignment : defaultAlignment(schemaCell.getCellFormat().getCellType());
-            schemaCell.trimLeadingSpaces = trimLeadingSpaces;
-            schemaCell.trimPadCharacter = trimPadCharacter;
-            schemaCell.padCharacter = padCharacter;
-            return schemaCell;
+            return new FixedWidthSchemaCell(this);
         }
     }
 

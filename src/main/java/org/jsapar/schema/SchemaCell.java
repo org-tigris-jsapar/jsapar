@@ -93,6 +93,27 @@ public abstract class SchemaCell implements Cloneable {
         this.locale = (locale != null) ? locale : DEFAULT_LOCALE;
     }
 
+    protected <T, C extends SchemaCell, B extends Builder<T, C, B>> SchemaCell(Builder<T, C, B> builder) {
+        this.name = builder.name;
+        this.cellFormat = builder.cellFormatBuilder != null ?  builder.cellFormatBuilder.build() : CELL_FORMAT_PROTOTYPE;
+        this.locale = builder.locale;
+        this.defaultValue = builder.defaultValue;
+        this.emptyCondition = builder.emptyCondition;
+        this.ignoreRead = builder.ignoreRead;
+        this.ignoreWrite = builder.ignoreWrite;
+        this.lineCondition = builder.lineCondition;
+        try {
+            if (builder.minValue != null) {
+                this.setMinValue(builder.minValue);
+            }
+            if (builder.maxValue != null)
+                this.setMaxValue(builder.maxValue);
+        } catch (ParseException e) {
+            throw new SchemaException("Failed to parse min or max value from string according to format.", e);
+        }
+        this.mandatory = builder.mandatory;
+        this.emptyCell = new EmptyCell(name, cellFormat.getCellType());
+    }
 
     @SuppressWarnings("unchecked")
     public static abstract class Builder<T, C extends SchemaCell, B extends Builder<T, C, B>> {
@@ -158,29 +179,7 @@ public abstract class SchemaCell implements Cloneable {
             return (B) this;
         }
 
-        public C build() {
-            if (cellFormatBuilder == null)
-                cellFormatBuilder = SchemaCellFormat.builder(CellType.STRING);
-            C instance = newInstance(this.name, this.cellFormatBuilder.build(), this.locale);
-            instance.setDefaultValue(this.defaultValue);
-            instance.setEmptyCondition(this.emptyCondition);
-            instance.setIgnoreRead(this.ignoreRead);
-            instance.setIgnoreWrite(this.ignoreWrite);
-            instance.setLineCondition(this.lineCondition);
-            try {
-                if (this.minValue != null) {
-                    instance.setMinValue(this.minValue);
-                }
-                if (this.maxValue != null)
-                    instance.setMaxValue(this.maxValue);
-            } catch (ParseException e) {
-                throw new JSaParException("Failed to parse min or max value from string according to format.", e);
-            }
-            instance.setMandatory(this.mandatory);
-            return instance;
-        }
-
-        protected abstract C newInstance(String name, SchemaCellFormat cellFormat, Locale locale);
+        public abstract C build();
     }
 
     /**

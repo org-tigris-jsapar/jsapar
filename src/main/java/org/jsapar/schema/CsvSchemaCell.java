@@ -53,6 +53,12 @@ public class CsvSchemaCell extends SchemaCell {
         super(sName, cellFormat, locale);
     }
 
+    private <T> CsvSchemaCell(Builder<T> builder){
+        super(builder);
+        this.maxLength = builder.maxLength;
+        this.quoteBehavior = builder.quoteBehavior;
+    }
+
     public static <T> Builder<T> builder(String name){
         return new Builder<>(name);
     }
@@ -76,16 +82,8 @@ public class CsvSchemaCell extends SchemaCell {
         }
 
         @Override
-        protected CsvSchemaCell newInstance(String name, SchemaCellFormat cellFormat, Locale locale) {
-            return new CsvSchemaCell(name, cellFormat, locale);
-        }
-
-        @Override
         public CsvSchemaCell build() {
-            CsvSchemaCell schemaCell = super.build();
-            schemaCell.setQuoteBehavior(quoteBehavior);
-            schemaCell.setMaxLength(maxLength);
-            return schemaCell;
+            return new CsvSchemaCell(this);
         }
     }
 
