@@ -13,10 +13,11 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.text.ParseException;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -158,20 +159,20 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         int nLength = getIntValue(getMandatoryAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_CELL_LENGTH));
         String sName = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_NAME);
 
-        FixedWidthSchemaCell cell = new FixedWidthSchemaCell(sName, nLength);
-        assignSchemaCellBase(cell, xmlSchemaCell, locale);
+        FixedWidthSchemaCell.Builder cellBuilder = FixedWidthSchemaCell.builder(sName, nLength);
+        assignSchemaCellBase(cellBuilder, xmlSchemaCell, locale);
 
         Node xmlAlignment = xmlSchemaCell.getAttributeNode(ATTRIB_FW_SCHEMA_CELL_ALIGNMENT);
         if(xmlAlignment != null) {
             switch (getStringValue(xmlAlignment)) {
             case "left":
-                cell.setAlignment(FixedWidthSchemaCell.Alignment.LEFT);
+                cellBuilder.withAlignment(FixedWidthSchemaCell.Alignment.LEFT);
                 break;
             case "center":
-                cell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
+                cellBuilder.withAlignment(FixedWidthSchemaCell.Alignment.CENTER);
                 break;
             case "right":
-                cell.setAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
+                cellBuilder.withAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
                 break;
             default:
                 throw new SchemaException(
@@ -179,21 +180,17 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
                                 xmlAlignment));
             }
         }
-        else{
-            cell.setDefaultAlignmentForType();
-        }
-
-        cell.setPadCharacter(parseAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_PAD_CHARACTER)
+        cellBuilder.withPadCharacter(parseAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_PAD_CHARACTER)
                 .map(s -> s.charAt(0))
                 .orElseGet(schemaLine::getPadCharacter));
 
         parseBooleanAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_TRIM_PAD_CHARACTER)
-                .ifPresent(cell::setTrimPadCharacter);
+                .ifPresent(cellBuilder::withTrimPadCharacter);
 
         parseBooleanAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_TRIM_LEADING_SPACES)
-                .ifPresent(cell::setTrimLeadingSpaces);
+                .ifPresent(cellBuilder::withTrimLeadingSpaces);
 
-        return cell;
+        return cellBuilder.build();
     }
 
     /**
@@ -285,16 +282,16 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
 
         String sName = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_NAME);
 
-        CsvSchemaCell cell = new CsvSchemaCell(sName);
+        CsvSchemaCell.Builder cellBuilder = CsvSchemaCell.builder(sName);
         Node xmlMaxLength = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_MAX_LENGTH);
         if (xmlMaxLength != null)
-            cell.setMaxLength(getIntValue(xmlMaxLength));
-        cell.setQuoteBehavior( parseAttribute(xmlSchemaCell, ATTRIB_CSV_QUOTE_BEHAVIOR)
+            cellBuilder.withMaxLength(getIntValue(xmlMaxLength));
+        cellBuilder.withQuoteBehavior( parseAttribute(xmlSchemaCell, ATTRIB_CSV_QUOTE_BEHAVIOR)
                 .map(QuoteBehavior::valueOf)
                 .orElse(quoteBehavior));
 
-        assignSchemaCellBase(cell, xmlSchemaCell, locale);
-        return cell;
+        assignSchemaCellBase(cellBuilder, xmlSchemaCell, locale);
+        return cellBuilder.build();
 
     }
 
@@ -355,65 +352,74 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      * @param locale The default locale
      * @throws SchemaException  When there is an error in the schema
      */
-    private void assignSchemaCellBase(SchemaCell cell, Element xmlSchemaCell, Locale locale) throws SchemaException {
-        try {
-            Element xmlLocale = getChild(xmlSchemaCell, ELEMENT_LOCALE);
-            if (xmlLocale != null)
-                locale = buildLocale(xmlLocale);
-            cell.setLocale(locale);
+    private void assignSchemaCellBase(SchemaCell.Builder cellBuilder, Element xmlSchemaCell, Locale locale) throws SchemaException {
+        Node xmlIgnoreRead = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_IGNOREREAD);
+        if (xmlIgnoreRead != null)
+            cellBuilder.withIgnoreRead(getBooleanValue(xmlIgnoreRead));
 
-            Node xmlIgnoreRead = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_IGNOREREAD);
-            if (xmlIgnoreRead != null)
-                cell.setIgnoreRead(getBooleanValue(xmlIgnoreRead));
+        Node xmlIgnoreWrite = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_IGNOREWRITE);
+        if (xmlIgnoreWrite != null)
+            cellBuilder.withIgnoreWrite(getBooleanValue(xmlIgnoreWrite));
 
-            Node xmlIgnoreWrite = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_IGNOREWRITE);
-            if (xmlIgnoreWrite != null)
-                cell.setIgnoreWrite(getBooleanValue(xmlIgnoreWrite));
+        Node xmlMandatory = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_MANDATORY);
+        if (xmlMandatory != null)
+            cellBuilder.withMandatory(getBooleanValue(xmlMandatory));
 
-            Node xmlMandatory = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_MANDATORY);
-            if (xmlMandatory != null)
-                cell.setMandatory(getBooleanValue(xmlMandatory));
+        Element xmlLineCondition = getChild(xmlSchemaCell, ELEMENT_LINE_CONDITION);
+        if (xmlLineCondition != null)
+            cellBuilder.withLineCondition(extractCellValueCondition(xmlLineCondition));
 
-            Element xmlLineCondition = getChild(xmlSchemaCell, ELEMENT_LINE_CONDITION);
-            if (xmlLineCondition != null)
-                cell.setLineCondition(extractCellValueCondition(xmlLineCondition));
+        Element xmlEmptyCondition = getChild(xmlSchemaCell, ELEMENT_EMPTY_CONDITION);
+        if (xmlEmptyCondition != null)
+            cellBuilder.withEmptyCondition(extractCellValueCondition(xmlEmptyCondition));
 
-            Element xmlEmptyCondition = getChild(xmlSchemaCell, ELEMENT_EMPTY_CONDITION);
-            if (xmlEmptyCondition != null)
-                cell.setEmptyCondition(extractCellValueCondition(xmlEmptyCondition));
+        SchemaCellFormat.Builder formatBuilder =
+                parseCellFormat(xmlSchemaCell)
+                        .orElseGet(() -> parseEnumCellFormat(xmlSchemaCell)
+                                .orElseGet(() -> parseImpliedDecimalFormat(xmlSchemaCell)
+                                        .orElseGet(() -> SchemaCellFormat.builder(CellType.STRING))));
 
-            getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_FORMAT).ifPresent(
-                    xmlFormat -> assignCellFormat(cell, xmlFormat));
+        Element xmlLocale = getChild(xmlSchemaCell, ELEMENT_LOCALE);
+        if (xmlLocale != null)
+            locale = buildLocale(xmlLocale);
+        formatBuilder.withLocale(locale);
+        cellBuilder.withCellFormatBuilder(formatBuilder);
 
-            getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_ENUM_FORMAT).ifPresent(
-                    xmlFormat -> assignCellEnumFormat(cell, xmlFormat));
-
-            getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_IMPLIED_DECIMALFORMAT).ifPresent(
-                    xmlFormat -> assignImpliedDecimalFormat(cell, xmlFormat));
-
-            Element xmlRange = getChild(xmlSchemaCell, ELEMENT_RANGE);
-            if (xmlRange != null) {
-                Node minValue = xmlRange.getAttributeNode(ATTRIB_SCHEMA_CELL_MIN);
-                if (minValue != null)
-                    cell.setMinValue(getStringValue(minValue));
-                Node maxValue = xmlRange.getAttributeNode(ATTRIB_SCHEMA_CELL_MAX);
-                if (maxValue != null)
-                    cell.setMaxValue(getStringValue(maxValue));
-            }
-
-            Node xmlDefault = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_DEFAULT_VALUE);
-            if (xmlDefault != null)
-                cell.setDefaultValue(getStringValue(xmlDefault));
-
-        } catch (ParseException e) {
-            throw new SchemaException("Failed to parse value within xml schema. ", e);
+        Element xmlRange = getChild(xmlSchemaCell, ELEMENT_RANGE);
+        if (xmlRange != null) {
+            Node minValue = xmlRange.getAttributeNode(ATTRIB_SCHEMA_CELL_MIN);
+            if (minValue != null)
+                cellBuilder.withMinValue(getStringValue(minValue));
+            Node maxValue = xmlRange.getAttributeNode(ATTRIB_SCHEMA_CELL_MAX);
+            if (maxValue != null)
+                cellBuilder.withMaxValue(getStringValue(maxValue));
         }
+
+        Node xmlDefault = xmlSchemaCell.getAttributeNode(ATTRIB_SCHEMA_CELL_DEFAULT_VALUE);
+        if (xmlDefault != null)
+            cellBuilder.withDefaultValue(getStringValue(xmlDefault));
+
 
     }
 
-    private void assignImpliedDecimalFormat(SchemaCell cell, Element xmlFormat) {
+    private Optional<SchemaCellFormat.Builder<BigDecimal>> parseImpliedDecimalFormat(Element xmlSchemaCell) {
+        return getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_IMPLIED_DECIMALFORMAT)
+                .map(i -> makeImpliedDecimalFormatBuilder(i));
+    }
+
+    private Optional<SchemaCellFormat.Builder> parseEnumCellFormat(Element xmlSchemaCell) {
+        return getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_ENUM_FORMAT)
+                .map(e -> makeEnumFormatBuilder(e));
+    }
+
+    private Optional<SchemaCellFormat.Builder> parseCellFormat(Element xmlSchemaCell) {
+        return getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_FORMAT).map(
+                xmlFormat -> makeCellFormatBuilder(xmlFormat));
+    }
+
+    private SchemaCellFormat.Builder<BigDecimal> makeImpliedDecimalFormatBuilder(Element xmlFormat) {
         int decimals = parseAttribute(xmlFormat, "decimals").map(Integer::parseInt).orElse(0);
-        cell.setCellFormat(new SchemaCellFormat(CellType.DECIMAL, Format.ofImpliedDecimalInstance(decimals)));
+        return SchemaCellFormat.<BigDecimal>builder(CellType.DECIMAL).withFormat(Format.ofImpliedDecimalInstance(decimals));
     }
 
 
@@ -429,19 +435,18 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
     /**
      * Adds formatting to the cell.
      * 
-     * @param cell The cell to assign to
      * @param xmlFormat The xml element to parse
      * @throws SchemaException  When there is an error in the schema
      */
-    private void assignCellFormat(SchemaCell cell, Element xmlFormat) throws SchemaException {
+    private SchemaCellFormat.Builder makeCellFormatBuilder(Element xmlFormat) throws SchemaException {
         String sType = getAttributeValue(xmlFormat, "type");
         String sPattern = getAttributeValue(xmlFormat, "pattern");
 
-        cell.setCellFormat(makeCellType(sType), sPattern);
+        return SchemaCellFormat.builder(makeCellType(sType)).withPattern(sPattern);
     }
 
     @SuppressWarnings("unchecked")
-    private void assignCellEnumFormat(SchemaCell cell, Element xmlFormat) throws SchemaException {
+    private SchemaCellFormat.Builder makeEnumFormatBuilder(Element xmlFormat) throws SchemaException {
         String sEnumClass = getAttributeValue(xmlFormat, "class");
         boolean ignoreCase = parseBooleanAttribute(xmlFormat, "ignorecase").orElse(false);
         try {
@@ -450,7 +455,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
                 format.putEnumValueIfAbsent(getAttributeValue(xmlValue, "text"), getAttributeValue(xmlValue, "name"));
             });
 
-            cell.setCellFormat(new SchemaCellFormat(CellType.ENUM, format));
+            return SchemaCellFormat.builder(CellType.ENUM).withFormat(format);
         } catch (ClassNotFoundException e) {
             throw new SchemaException("Unable to find enum class " + sEnumClass + " within classpath. Make sure that the class is fully qualified.");
         }

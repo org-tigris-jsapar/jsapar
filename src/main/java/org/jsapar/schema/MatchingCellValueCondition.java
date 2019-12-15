@@ -5,10 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A {@link CellValueCondition} that matches based on a regex expression. The whole expression needs to match.
+ * A {@link Predicate} that matches based on a regex expression. The whole expression needs to match.
  * @see Pattern
  */
-public class MatchingCellValueCondition implements CellValueCondition, Predicate<String> {
+public class MatchingCellValueCondition implements Predicate<String> {
     private final Pattern pattern;
 
     /**
@@ -18,11 +18,6 @@ public class MatchingCellValueCondition implements CellValueCondition, Predicate
      */
     public MatchingCellValueCondition(String regex) {
         this.pattern = Pattern.compile(regex);
-    }
-
-    @Override
-    public boolean satisfies(String value) {
-        return this.test(value);
     }
 
     /**

@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 public abstract class SchemaCell implements Cloneable {
 
     private final static SchemaCellFormat CELL_FORMAT_PROTOTYPE = new SchemaCellFormat(CellType.STRING);
+    private final static Locale DEFAULT_LOCALE = Locale.US;
 
     private final String name;
     private SchemaCellFormat cellFormat;
@@ -46,7 +47,7 @@ public abstract class SchemaCell implements Cloneable {
      * @param sName The name of the cell.
      */
     public SchemaCell(String sName) {
-        this(sName, CELL_FORMAT_PROTOTYPE);
+        this(sName, CELL_FORMAT_PROTOTYPE, DEFAULT_LOCALE);
     }
 
     /**
@@ -56,7 +57,7 @@ public abstract class SchemaCell implements Cloneable {
      * @param type  The type of the cell.
      */
     public SchemaCell(String sName, CellType type) {
-        this(sName, new SchemaCellFormat(type));
+        this(sName, new SchemaCellFormat(type), DEFAULT_LOCALE);
     }
 
     /**
@@ -67,7 +68,7 @@ public abstract class SchemaCell implements Cloneable {
      * @param format The format to use. It is vital that the provided Format implementation returns the correct type from parsing.
      */
     public <T> SchemaCell(String sName, CellType type, Format<T> format) {
-        this(sName, new SchemaCellFormat(type, format));
+        this(sName, new SchemaCellFormat(type, format), DEFAULT_LOCALE);
     }
 
 
@@ -80,22 +81,22 @@ public abstract class SchemaCell implements Cloneable {
      * @param locale  The locale to use while formatting and parsing dates and numbers that are locale specific. If null, US locale is used.
      */
     public SchemaCell(String sName, CellType type, String pattern, Locale locale) {
-        this(sName, new SchemaCellFormat(type, pattern, locale));
-        this.locale = (locale != null) ? locale : Locale.US;
+        this(sName, new SchemaCellFormat(type, pattern, locale), locale);
     }
 
-    protected SchemaCell(String sName, SchemaCellFormat cellFormat) {
-        if (sName == null || sName.isEmpty())
+    protected SchemaCell(String name, SchemaCellFormat cellFormat, Locale locale) {
+        if (name == null || name.isEmpty())
             throw new IllegalArgumentException("SchemaCell.name cannot be null or empty.");
         this.cellFormat = cellFormat;
-        this.name = sName;
-        this.emptyCell = new EmptyCell(sName, cellFormat.getCellType());
+        this.name = name;
+        this.emptyCell = new EmptyCell(name, cellFormat.getCellType());
+        this.locale = (locale != null) ? locale : DEFAULT_LOCALE;
     }
 
 
     @SuppressWarnings("unchecked")
     public static abstract class Builder<T, C extends SchemaCell, B extends Builder<T, C, B>> {
-        private String name;
+        private final String name;
         private SchemaCellFormat.Builder<T> cellFormatBuilder;
         private boolean ignoreRead;
         private boolean ignoreWrite;
@@ -105,6 +106,7 @@ public abstract class SchemaCell implements Cloneable {
         private String defaultValue;
         private Predicate<String> emptyCondition;
         private Predicate<String> lineCondition;
+        private Locale locale=Locale.US;
 
         Builder(String name) {
             this.name = name;
@@ -112,6 +114,7 @@ public abstract class SchemaCell implements Cloneable {
 
         public B withCellFormatBuilder(SchemaCellFormat.Builder<T> cellFormatBuilder) {
             this.cellFormatBuilder = cellFormatBuilder;
+            this.locale = cellFormatBuilder.getLocale();
             return (B) this;
         }
 
@@ -158,13 +161,12 @@ public abstract class SchemaCell implements Cloneable {
         public C build() {
             if (cellFormatBuilder == null)
                 cellFormatBuilder = SchemaCellFormat.builder(CellType.STRING);
-            C instance = newInstance(this.name, this.cellFormatBuilder.build());
+            C instance = newInstance(this.name, this.cellFormatBuilder.build(), this.locale);
             instance.setDefaultValue(this.defaultValue);
             instance.setEmptyCondition(this.emptyCondition);
             instance.setIgnoreRead(this.ignoreRead);
             instance.setIgnoreWrite(this.ignoreWrite);
             instance.setLineCondition(this.lineCondition);
-            instance.setLocale(this.cellFormatBuilder.locale);
             try {
                 if (this.minValue != null) {
                     instance.setMinValue(this.minValue);
@@ -178,7 +180,7 @@ public abstract class SchemaCell implements Cloneable {
             return instance;
         }
 
-        protected abstract C newInstance(String name, SchemaCellFormat cellFormat);
+        protected abstract C newInstance(String name, SchemaCellFormat cellFormat, Locale locale);
     }
 
     /**

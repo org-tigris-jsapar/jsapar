@@ -37,9 +37,7 @@ public class SchemaCellFormat implements Cloneable {
      * @param cellType The expected data type of the cell.
      */
     public SchemaCellFormat(CellType cellType) {
-        this.cellType = cellType;
-        this.format = null;
-        this.pattern = null;
+        this(cellType, (Format) null, null);
     }
 
     /**
@@ -48,9 +46,7 @@ public class SchemaCellFormat implements Cloneable {
      * @param format The format class to use.
      */
     public SchemaCellFormat(CellType cellType, Format format) {
-        this.cellType = cellType;
-        this.format = format;
-        this.pattern = null;
+        this(cellType, format, null);
     }
 
     /**
@@ -60,6 +56,12 @@ public class SchemaCellFormat implements Cloneable {
      */
     public SchemaCellFormat(CellType cellType, String pattern) {
         this(cellType, pattern, defaultLocale);
+    }
+
+    private SchemaCellFormat(CellType cellType, Format format, String pattern) {
+        this.cellType = cellType;
+        this.format = format;
+        this.pattern = pattern;
     }
 
     /**
@@ -79,7 +81,7 @@ public class SchemaCellFormat implements Cloneable {
     }
 
     public static class Builder<T> {
-        Locale locale = defaultLocale;
+        private Locale locale = defaultLocale;
         private final CellType cellType;
         private Format<T> format;
         private String pattern;
@@ -105,10 +107,14 @@ public class SchemaCellFormat implements Cloneable {
 
         @SuppressWarnings("unchecked")
         public SchemaCellFormat build(){
-            if(format == null)
+            if(format == null && pattern != null)
                 format = CellFactory.getInstance(cellType).makeFormat(locale, pattern);
 
-            return new SchemaCellFormat(cellType, format);
+            return new SchemaCellFormat(cellType, format, pattern);
+        }
+
+        public Locale getLocale() {
+            return locale;
         }
     }
 

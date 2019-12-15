@@ -49,8 +49,8 @@ public class CsvSchemaCell extends SchemaCell {
         super(name, type);
     }
 
-    public CsvSchemaCell(String sName, SchemaCellFormat cellFormat) {
-        super(sName, cellFormat);
+    protected CsvSchemaCell(String sName, SchemaCellFormat cellFormat, Locale locale) {
+        super(sName, cellFormat, locale);
     }
 
     public static <T> Builder<T> builder(String name){
@@ -76,8 +76,8 @@ public class CsvSchemaCell extends SchemaCell {
         }
 
         @Override
-        protected CsvSchemaCell newInstance(String name, SchemaCellFormat cellFormat) {
-            return new CsvSchemaCell(name, cellFormat);
+        protected CsvSchemaCell newInstance(String name, SchemaCellFormat cellFormat, Locale locale) {
+            return new CsvSchemaCell(name, cellFormat, locale);
         }
 
         @Override

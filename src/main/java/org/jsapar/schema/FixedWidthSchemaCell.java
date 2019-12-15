@@ -2,10 +2,13 @@ package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
 
+import java.util.Locale;
+
 /**
  * Describes how a cell is represented for a fixed width schema.
  */
 public class FixedWidthSchemaCell extends SchemaCell {
+
 
     /**
      * Describes how a cell is aligned within its allocated space.
@@ -76,6 +79,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
         this.padCharacter = padCharacter;
     }
 
+
     /**
      * Creates a fixed with schema cell with specified name and length.
      * 
@@ -100,8 +104,13 @@ public class FixedWidthSchemaCell extends SchemaCell {
      *            The format of the cell
      */
     public FixedWidthSchemaCell(String sName, int nLength, SchemaCellFormat cellFormat) {
-        super(sName, cellFormat);
+        super(sName, cellFormat, null);
         this.length = nLength;
+    }
+
+    private FixedWidthSchemaCell(String name, int length, SchemaCellFormat cellFormat, Locale locale) {
+        super(name, cellFormat, locale);
+        this.length = length;
     }
 
 
@@ -142,14 +151,14 @@ public class FixedWidthSchemaCell extends SchemaCell {
         }
 
         @Override
-        protected FixedWidthSchemaCell newInstance(String name, SchemaCellFormat cellFormat) {
-            return new FixedWidthSchemaCell(name, length, cellFormat);
+        protected FixedWidthSchemaCell newInstance(String name, SchemaCellFormat cellFormat, Locale locale) {
+            return new FixedWidthSchemaCell(name, length, cellFormat, locale);
         }
 
         @Override
         public FixedWidthSchemaCell build() {
             FixedWidthSchemaCell schemaCell = super.build();
-            schemaCell.alignment = alignment;
+            schemaCell.alignment = alignment != null ? alignment : defaultAlignment(schemaCell.getCellFormat().getCellType());
             schemaCell.trimLeadingSpaces = trimLeadingSpaces;
             schemaCell.trimPadCharacter = trimPadCharacter;
             schemaCell.padCharacter = padCharacter;
@@ -196,10 +205,14 @@ public class FixedWidthSchemaCell extends SchemaCell {
      */
     @SuppressWarnings("WeakerAccess")
     public void setDefaultAlignmentForType() {
-        if(getCellFormat().getCellType() == CellType.INTEGER || getCellFormat().getCellType() == CellType.DECIMAL)
-            this.alignment = Alignment.RIGHT;
+        this.alignment = defaultAlignment(getCellFormat().getCellType());
+    }
+
+    private static Alignment defaultAlignment(CellType type){
+        if(type == CellType.INTEGER || type == CellType.DECIMAL )
+            return Alignment.RIGHT;
         else
-            this.alignment = Alignment.LEFT;
+            return Alignment.LEFT;
     }
 
     public FixedWidthSchemaCell clone(){
