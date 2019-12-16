@@ -50,7 +50,10 @@ public class ImpliedDecimalFormat implements Format<BigDecimal> {
         return integerFormat.format(value);
     }
 
-
+    @Override
+    public String toString() {
+        return "Implied decimal with " + decimals + " decimals";
+    }
 
     @Override
     public BigDecimal parse(String s) {
