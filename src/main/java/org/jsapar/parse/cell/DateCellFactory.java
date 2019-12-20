@@ -19,10 +19,6 @@ DateCellFactory implements CellFactory {
 
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
-        if(format == null) {
-            return new DateCell(name, (Date) ISO_DATE_FORMAT.parseObject(value));
-        }
-
         return new DateCell(name, (Date) format.parse(value));
     }
 

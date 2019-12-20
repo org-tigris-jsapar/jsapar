@@ -13,8 +13,6 @@ public class FloatCellFactory extends NumberCellFactory {
 
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
-        if(format == null)
-            return new FloatCell(name, Double.valueOf(value));
         final Number number = super.parseNumber(format, value);
         return new FloatCell(name, number instanceof Double ? (Double) number : number.doubleValue());
     }

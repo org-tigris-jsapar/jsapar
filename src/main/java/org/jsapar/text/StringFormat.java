@@ -14,4 +14,9 @@ class StringFormat implements Format<String> {
     public String format(Object value) {
         return String.valueOf(value);
     }
+
+    @Override
+    public String toString() {
+        return "StringFormat";
+    }
 }

@@ -290,15 +290,14 @@ public class CellParserTest {
     @Test
     public void testParse_Integer_MinRangeNotValid() {
 
-        SchemaCell schemaCell = StringSchemaCell.builder("test").build();
-        schemaCell.setCellFormat(CellType.INTEGER);
+        SchemaCell schemaCell = StringSchemaCell.builder("test").withCellType(CellType.INTEGER).build();
         schemaCell.setMinValue(new IntegerCell("test",54321));
         schemaCell.setMaxValue(new IntegerCell("test",54322));
         CellParser cellParser = new CellParser<>(schemaCell, 0);
         RecordingErrorEventListener errorListener = new RecordingErrorEventListener();
         cellParser.parse("12345", errorListener);
         assertEquals(1, errorListener.getErrors().size());
-        assertEquals("Cell='test' Value='12345' Expected: CellType=INTEGER - The value is below minimum range limit (54321).", errorListener.getErrors().get(0).getMessage());
+        assertEquals("Cell='test' Value='12345' Expected: CellType=INTEGER, Format={NumberFormat} - The value is below minimum range limit (54321).", errorListener.getErrors().get(0).getMessage());
     }
 
     /**
@@ -308,15 +307,12 @@ public class CellParserTest {
     @Test
     public void testMakeCell_Integer_MaxRangeNotValid() {
 
-        SchemaCell schemaCell = StringSchemaCell.builder("test").build();
-        schemaCell.setCellFormat(CellType.INTEGER);
-        schemaCell.setMinValue(new IntegerCell("test",0));
-        schemaCell.setMaxValue(new IntegerCell("test",100));
+        SchemaCell schemaCell = StringSchemaCell.builder("test").withCellType(CellType.INTEGER).withMinValue("0").withMaxValue("100").build();
         CellParser cellParser = new CellParser<>(schemaCell, 0);
         RecordingErrorEventListener errorListener = new RecordingErrorEventListener();
         cellParser.parse("12345", errorListener);
         assertEquals(1, errorListener.getErrors().size());
-        assertEquals("Cell='test' Value='12345' Expected: CellType=INTEGER - The value is above maximum range limit (100).", errorListener.getErrors().get(0).getMessage());
+        assertEquals("Cell='test' Value='12345' Expected: CellType=INTEGER, Format={NumberFormat} - The value is above maximum range limit (100).", errorListener.getErrors().get(0).getMessage());
     }
 
 

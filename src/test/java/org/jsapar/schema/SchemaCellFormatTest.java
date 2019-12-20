@@ -64,7 +64,7 @@ public class SchemaCellFormatTest {
     @Test
     public void testToString() {
         SchemaCellFormat format = new SchemaCellFormat(CellType.INTEGER);
-        assertEquals("CellType=INTEGER", format.toString());
+        assertEquals("CellType=INTEGER, Format={NumberFormat}", format.toString());
     }
 
     /**

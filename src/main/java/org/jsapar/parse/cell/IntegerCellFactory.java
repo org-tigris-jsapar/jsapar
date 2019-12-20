@@ -13,8 +13,6 @@ import java.util.Locale;
 public class IntegerCellFactory extends NumberCellFactory {
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
-        if(format == null)
-            return new IntegerCell(name, Long.valueOf(value));
         Number number = super.parseNumber(format, value);
         return new IntegerCell(name, number.longValue());
     }

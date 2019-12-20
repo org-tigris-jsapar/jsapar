@@ -1,5 +1,7 @@
 package org.jsapar.text;
 
+import org.jsapar.model.CharacterCell;
+
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
@@ -90,6 +92,8 @@ public interface Format<T> {
      * @return An instance that formats and parses Boolean.
      */
     static Format<Boolean> ofBooleanInstance(String pattern, boolean ignoreCase){
+        if(pattern == null || pattern.isEmpty())
+            return ofBooleanInstance(ignoreCase);
         String[] aTrueFalse = pattern.trim().split("\\s*;\\s*");
         if (aTrueFalse.length < 1 || aTrueFalse.length > 2)
             throw new IllegalArgumentException(
@@ -190,5 +194,13 @@ public interface Format<T> {
             return ofStringInstance();
         return new RegExpFormat(pattern);
     }
+
+    /**
+     * @return An instance that formats characters.
+     */
+    static Format ofCharacterInstance() {
+        return new CharacterFormat();
+    }
+
 
 }

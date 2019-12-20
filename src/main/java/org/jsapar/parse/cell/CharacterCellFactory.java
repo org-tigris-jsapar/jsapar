@@ -14,13 +14,6 @@ public class CharacterCellFactory implements CellFactory {
 
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
-        if (format == null) {
-            if (value.length() > 1) {
-                throw new java.text.ParseException("Invalid characters found while parsing single character.", 1);
-            } else if (value.length() == 1)
-                return new CharacterCell(name, value.charAt(0));
-            throw new java.text.ParseException("Empty value found while parsing single character.", 0);
-        }
         final Character characterValue = (Character) format.parse(value);
         return new CharacterCell(name, characterValue);
     }
@@ -31,7 +24,7 @@ public class CharacterCellFactory implements CellFactory {
     }
 
     @Override
-    public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
-        return null;
+    public Format makeFormat(Locale locale, String pattern) {
+        return Format.ofCharacterInstance();
     }
 }

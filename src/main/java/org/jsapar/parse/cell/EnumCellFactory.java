@@ -18,8 +18,6 @@ public class EnumCellFactory implements CellFactory{
     @SuppressWarnings("unchecked")
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
-        if (format == null)
-            throw new ParseException("Format is required while parsing enum cell values.", 0);
         Enum enumValue = (Enum) format.parse(value);
         return new EnumCell(name, enumValue);
     }

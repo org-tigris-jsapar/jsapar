@@ -72,4 +72,8 @@ class NumberFormat extends JavaTextFormat<Number> implements Format<Number> {
         return super.parse(stringValue);
     }
 
+    @Override
+    public String toString() {
+        return "NumberFormat";
+    }
 }

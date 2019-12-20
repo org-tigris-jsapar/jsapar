@@ -23,9 +23,6 @@ public class BigDecimalCellFactory implements CellFactory {
      */
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
-        if (format == null)
-            return new BigDecimalCell(name, new BigDecimal(value));
-
         return new BigDecimalCell(name, (BigDecimal) format.parse(value));
     }
 

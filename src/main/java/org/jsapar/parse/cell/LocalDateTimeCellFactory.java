@@ -20,9 +20,6 @@ public class LocalDateTimeCellFactory extends AbstractDateTimeCellFactory{
 
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
-        if (format == null)
-            format = getDefaultFormat();
-
         return new LocalDateTimeCell(name, LocalDateTime.from((TemporalAccessor) format.parse(value)));
     }
 

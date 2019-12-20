@@ -14,19 +14,17 @@ public class StringCellFactory implements CellFactory{
 
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {
-        if(format != null)
-            value = (String) format.parse(value);
-        return new StringCell(name, value);
+        return new StringCell(name, (String) format.parse(value));
     }
 
     @Override
     public Format makeFormat(Locale locale) {
-        return null;
+        return Format.ofStringInstance();
     }
 
     @Override
     public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
-        return pattern != null ? Format.ofStringInstance(pattern) : null;
+        return pattern != null ? Format.ofStringInstance(pattern) : Format.ofStringInstance();
     }
 
 }

@@ -37,7 +37,7 @@ public class FixedWidthSchemaCellTest {
     @Test
     public void testToString() {
         FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11, FixedWidthSchemaCell.Alignment.LEFT, '*');
-        assertEquals("SchemaCell name='First name' cellFormat=CellType=STRING length=11 alignment=LEFT", schemaCell.toString());
+        assertEquals("SchemaCell name='First name' cellFormat=CellType=STRING, Format={StringFormat} length=11 alignment=LEFT", schemaCell.toString());
     }
 
 }

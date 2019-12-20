@@ -37,7 +37,7 @@ public class SchemaCellFormat implements Cloneable {
      * @param cellType The expected data type of the cell.
      */
     public SchemaCellFormat(CellType cellType) {
-        this(cellType, (Format) null, null);
+        this(cellType, CellFactory.getInstance(cellType).makeFormat(defaultLocale, null), null);
     }
 
     /**
