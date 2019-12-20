@@ -347,7 +347,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
     /**
      * Assign common parts for base class.
      * 
-     * @param cell The cell to assign to
+     * @param cellBuilder   The cellBuilder that builds the cell schema.
      * @param xmlSchemaCell The xml element to parse
      * @param locale The default locale
      * @throws SchemaException  When there is an error in the schema
@@ -373,17 +373,14 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         if (xmlEmptyCondition != null)
             cellBuilder.withEmptyCondition(extractCellValueCondition(xmlEmptyCondition));
 
-        SchemaCellFormat.Builder formatBuilder =
-                parseCellFormat(xmlSchemaCell)
-                        .orElseGet(() -> parseEnumCellFormat(xmlSchemaCell)
-                                .orElseGet(() -> parseImpliedDecimalFormat(xmlSchemaCell)
-                                        .orElseGet(() -> SchemaCellFormat.builder(CellType.STRING))));
-
-        Element xmlLocale = getChild(xmlSchemaCell, ELEMENT_LOCALE);
-        if (xmlLocale != null)
-            locale = buildLocale(xmlLocale);
-        formatBuilder.withLocale(locale);
-        cellBuilder.withCellFormatBuilder(formatBuilder);
+        if(!parseCellFormat(xmlSchemaCell, cellBuilder)){
+            if(!parseEnumCellFormat(xmlSchemaCell, cellBuilder)){
+                parseImpliedDecimalFormat(xmlSchemaCell, cellBuilder);
+            }
+        }
+        getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_LOCALE).ifPresent(xmlLocale->{
+            cellBuilder.withLocale(buildLocale(xmlLocale));
+        });
 
         Element xmlRange = getChild(xmlSchemaCell, ELEMENT_RANGE);
         if (xmlRange != null) {
@@ -402,24 +399,50 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
 
     }
 
-    private Optional<SchemaCellFormat.Builder<BigDecimal>> parseImpliedDecimalFormat(Element xmlSchemaCell) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private boolean parseImpliedDecimalFormat(Element xmlSchemaCell, SchemaCell.Builder cellBuilder) {
         return getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_IMPLIED_DECIMALFORMAT)
-                .map(i -> makeImpliedDecimalFormatBuilder(i));
+                .map(xmlFormat -> {
+                    int decimals = parseAttribute(xmlFormat, "decimals").map(Integer::parseInt).orElse(0);
+                    cellBuilder.withFormat(Format.ofImpliedDecimalInstance(decimals));
+                    return true;
+                }).orElse(false);
     }
 
-    private Optional<SchemaCellFormat.Builder> parseEnumCellFormat(Element xmlSchemaCell) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private boolean parseEnumCellFormat(Element xmlSchemaCell, SchemaCell.Builder cellBuilder) {
         return getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_ENUM_FORMAT)
-                .map(e -> makeEnumFormatBuilder(e));
+                .map(xmlFormat -> {
+                    String sEnumClass = getAttributeValue(xmlFormat, "class");
+                    boolean ignoreCase = parseBooleanAttribute(xmlFormat, "ignorecase").orElse(false);
+                    try {
+                        EnumFormat format = new EnumFormat(Class.forName(sEnumClass), ignoreCase);
+                        getChildrenStream(JSAPAR_XML_SCHEMA, xmlFormat, "value").forEach(xmlValue->{
+                            format.putEnumValueIfAbsent(getAttributeValue(xmlValue, "text"), getAttributeValue(xmlValue, "name"));
+                        });
+
+                        cellBuilder.withFormat(format);
+                        return true;
+                    } catch (ClassNotFoundException e) {
+                        throw new SchemaException("Unable to find enum class " + sEnumClass + " within classpath. Make sure that the class is fully qualified.");
+                    }
+                }).orElse(false);
     }
 
-    private Optional<SchemaCellFormat.Builder> parseCellFormat(Element xmlSchemaCell) {
-        return getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_FORMAT).map(
-                xmlFormat -> makeCellFormatBuilder(xmlFormat));
-    }
-
-    private SchemaCellFormat.Builder<BigDecimal> makeImpliedDecimalFormatBuilder(Element xmlFormat) {
-        int decimals = parseAttribute(xmlFormat, "decimals").map(Integer::parseInt).orElse(0);
-        return SchemaCellFormat.<BigDecimal>builder(CellType.DECIMAL).withFormat(Format.ofImpliedDecimalInstance(decimals));
+    /**
+     * Adds formatting to the cell.
+     *
+     * @param xmlSchemaCell The base element.
+     * @param cellBuilder The cell builder to add format to.
+     * @throws SchemaException  When there is an error in the schema
+     * @return
+     */
+    private boolean parseCellFormat(Element xmlSchemaCell, SchemaCell.Builder cellBuilder) {
+        return getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_FORMAT).map( xmlFormat->{
+            parseAttribute(xmlFormat, "type").ifPresent(s->cellBuilder.withCellType(makeCellType(s)));
+            parseAttribute(xmlFormat, "pattern").ifPresent(cellBuilder::withPattern);
+            return true;
+                }).orElse(false);
     }
 
 
@@ -432,35 +455,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         throw new SchemaException("Expected line condition is missing");
     }
 
-    /**
-     * Adds formatting to the cell.
-     * 
-     * @param xmlFormat The xml element to parse
-     * @throws SchemaException  When there is an error in the schema
-     */
-    private SchemaCellFormat.Builder makeCellFormatBuilder(Element xmlFormat) throws SchemaException {
-        String sType = getAttributeValue(xmlFormat, "type");
-        String sPattern = getAttributeValue(xmlFormat, "pattern");
 
-        return SchemaCellFormat.builder(makeCellType(sType)).withPattern(sPattern);
-    }
 
-    @SuppressWarnings("unchecked")
-    private SchemaCellFormat.Builder makeEnumFormatBuilder(Element xmlFormat) throws SchemaException {
-        String sEnumClass = getAttributeValue(xmlFormat, "class");
-        boolean ignoreCase = parseBooleanAttribute(xmlFormat, "ignorecase").orElse(false);
-        try {
-            EnumFormat format = new EnumFormat(Class.forName(sEnumClass), ignoreCase);
-            getChildrenStream(JSAPAR_XML_SCHEMA, xmlFormat, "value").forEach(xmlValue->{
-                format.putEnumValueIfAbsent(getAttributeValue(xmlValue, "text"), getAttributeValue(xmlValue, "name"));
-            });
-
-            return SchemaCellFormat.builder(CellType.ENUM).withFormat(format);
-        } catch (ClassNotFoundException e) {
-            throw new SchemaException("Unable to find enum class " + sEnumClass + " within classpath. Make sure that the class is fully qualified.");
-        }
-
-    }
 
 
     /**

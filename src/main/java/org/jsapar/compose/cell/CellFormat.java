@@ -22,8 +22,8 @@ public interface CellFormat {
     static CellFormat ofSchemaCell(SchemaCell schemaCell){
         if(schemaCell.isIgnoreWrite())
             return new NothingCellFormat();
-        if(schemaCell.getCellFormat().getFormat() != null){
-            return new FormatCellFormat(schemaCell.getCellFormat().getFormat(), schemaCell.isDefaultValue() ? schemaCell.getDefaultValue() :"");
+        if(schemaCell.getFormat() != null){
+            return new FormatCellFormat(schemaCell.getFormat(), schemaCell.isDefaultValue() ? schemaCell.getDefaultValue() :"");
         }
         return new StringValueFormat(schemaCell.isDefaultValue() ? schemaCell.getDefaultValue() :"");
     }

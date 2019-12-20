@@ -1,11 +1,13 @@
 package org.jsapar.schema;
 
-import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.EmptyCell;
+import org.jsapar.parse.cell.CellFactory;
 import org.jsapar.parse.cell.CellParser;
+import org.jsapar.text.EnumFormat;
 import org.jsapar.text.Format;
+import org.jsapar.text.ImpliedDecimalFormat;
 
 import java.text.ParseException;
 import java.util.Locale;
@@ -36,7 +38,7 @@ public abstract class SchemaCell implements Cloneable {
      */
     private Cell emptyCell;
     private String defaultValue = null;
-    private Locale locale = Locale.US;
+    private Locale locale;
     private Predicate<String> emptyCondition = null;
     private Predicate<String> lineCondition = null;
 
@@ -44,8 +46,10 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * Creates a string cell with specified name. The format can be added after creation by using the {@link #setCellFormat(CellType, String)} method.
      *
+     * Deprecated. Use builder instead.
      * @param sName The name of the cell.
      */
+    @Deprecated
     public SchemaCell(String sName) {
         this(sName, CELL_FORMAT_PROTOTYPE, DEFAULT_LOCALE);
     }
@@ -53,9 +57,11 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * Creates a schema cell with the specified name and format parameters.
      *
+     * Deprecated. Use builder instead.
      * @param sName The name of the cell.
      * @param type  The type of the cell.
      */
+    @Deprecated
     public SchemaCell(String sName, CellType type) {
         this(sName, new SchemaCellFormat(type), DEFAULT_LOCALE);
     }
@@ -63,10 +69,12 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * Creates a schema cell with the specified name and format parameters.
      *
+     * Deprecated. Use builder instead.
      * @param sName  The name of the cell.
      * @param type   The type of the cell.
      * @param format The format to use. It is vital that the provided Format implementation returns the correct type from parsing.
      */
+    @Deprecated
     public <T> SchemaCell(String sName, CellType type, Format<T> format) {
         this(sName, new SchemaCellFormat(type, format), DEFAULT_LOCALE);
     }
@@ -75,15 +83,18 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * Creates a schema cell with the specified name and format parameters.
      *
+     * Deprecated. Use builder instead.
      * @param sName   The name of the cell.
      * @param type    The type of the cell.
      * @param pattern The pattern to use while formatting and parsing. The pattern has different meaning depending on the type of the cell.
      * @param locale  The locale to use while formatting and parsing dates and numbers that are locale specific. If null, US locale is used.
      */
+    @Deprecated
     public SchemaCell(String sName, CellType type, String pattern, Locale locale) {
         this(sName, new SchemaCellFormat(type, pattern, locale), locale);
     }
 
+    @Deprecated
     protected SchemaCell(String name, SchemaCellFormat cellFormat, Locale locale) {
         if (name == null || name.isEmpty())
             throw new IllegalArgumentException("SchemaCell.name cannot be null or empty.");
@@ -93,10 +104,15 @@ public abstract class SchemaCell implements Cloneable {
         this.locale = (locale != null) ? locale : DEFAULT_LOCALE;
     }
 
+    @SuppressWarnings("unchecked")
     protected <T, C extends SchemaCell, B extends Builder<T, C, B>> SchemaCell(Builder<T, C, B> builder) {
         this.name = builder.name;
-        this.cellFormat = builder.cellFormatBuilder != null ?  builder.cellFormatBuilder.build() : CELL_FORMAT_PROTOTYPE;
+        Format<T> format = builder.format;
         this.locale = builder.locale;
+        if(format == null)
+            format = CellFactory.getInstance(builder.cellType).makeFormat(locale, builder.pattern);
+
+        this.cellFormat = new SchemaCellFormat(builder.cellType, format, builder.pattern);
         this.defaultValue = builder.defaultValue;
         this.emptyCondition = builder.emptyCondition;
         this.ignoreRead = builder.ignoreRead;
@@ -118,7 +134,6 @@ public abstract class SchemaCell implements Cloneable {
     @SuppressWarnings("unchecked")
     public static abstract class Builder<T, C extends SchemaCell, B extends Builder<T, C, B>> {
         private final String name;
-        private SchemaCellFormat.Builder<T> cellFormatBuilder;
         private boolean ignoreRead;
         private boolean ignoreWrite;
         private boolean mandatory;
@@ -127,15 +142,40 @@ public abstract class SchemaCell implements Cloneable {
         private String defaultValue;
         private Predicate<String> emptyCondition;
         private Predicate<String> lineCondition;
+        private CellType cellType = CellType.STRING;
+        private Format<T> format;
+        private String pattern;
         private Locale locale=Locale.US;
 
         Builder(String name) {
             this.name = name;
         }
 
-        public B withCellFormatBuilder(SchemaCellFormat.Builder<T> cellFormatBuilder) {
-            this.cellFormatBuilder = cellFormatBuilder;
-            this.locale = cellFormatBuilder.getLocale();
+        public B withCellType(CellType cellType) {
+            this.cellType = cellType;
+            return (B) this;
+        }
+
+        public B withFormat(Format<T> format) {
+            this.format = format;
+            if(format instanceof EnumFormat)
+                return withCellType(CellType.ENUM);
+            if(format instanceof ImpliedDecimalFormat)
+                return withCellType(CellType.DECIMAL);
+            return (B) this;
+        }
+
+        public B withPattern(String pattern) {
+            this.pattern = pattern;
+            return (B) this;
+        }
+
+        public B withLocale(String language, String country) {
+            return withLocale(new Locale(language, country));
+        }
+
+        public B withLocale(Locale locale) {
+            this.locale = locale;
             return (B) this;
         }
 
@@ -236,8 +276,10 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * Sets format of this schema cell using a type that needs no format pattern
      *
+     * Deprecated. Should not be changed after creation
      * @param cellType The type of the cell
      */
+    @Deprecated
     public void setCellFormat(CellType cellType) {
         this.setCellFormat(new SchemaCellFormat(cellType));
     }
@@ -245,9 +287,11 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * Sets format of this schema cell using the locale of the cell.
      *
+     * Deprecated. Should not be changed after creation
      * @param cellType The type of the cell
      * @param sPattern The pattern
      */
+    @Deprecated
     public void setCellFormat(CellType cellType, String sPattern) {
         this.setCellFormat(new SchemaCellFormat(cellType, sPattern, locale));
     }
@@ -255,18 +299,22 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * Sets format of this schema cell.
      *
+     * Deprecated. Should not be changed after creation
      * @param cellType The type of the cell
      * @param sPattern The pattern
      * @param locale   The locale to use for the cell.
      */
+    @Deprecated
     public void setCellFormat(CellType cellType, String sPattern, Locale locale) {
         this.locale = locale;
         this.setCellFormat(new SchemaCellFormat(cellType, sPattern, locale));
     }
 
     /**
+     * Deprecated. Should not be changed after creation
      * @param cellFormat the cellFormat to set
      */
+    @Deprecated
     void setCellFormat(SchemaCellFormat cellFormat) {
         if (cellFormat == null)
             throw new IllegalArgumentException("cellFormat argument cannot be null");
@@ -363,8 +411,10 @@ public abstract class SchemaCell implements Cloneable {
     }
 
     /**
+     * Deprecated. Should not be changed after creation.
      * @param locale the locale to set
      */
+    @Deprecated
     public void setLocale(Locale locale) {
         // Re-create the format since it may change depending on that locale changed.
         this.setCellFormat(cellFormat.getCellType(), cellFormat.getPattern(), locale);
@@ -540,4 +590,10 @@ public abstract class SchemaCell implements Cloneable {
         return this.emptyCell;
     }
 
+    /**
+     * @return the format
+     */
+    public Format getFormat(){
+        return this.cellFormat.getFormat();
+    }
 }

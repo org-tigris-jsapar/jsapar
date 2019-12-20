@@ -6,6 +6,7 @@ import org.jsapar.compose.csv.quote.QuoteIfNeeded;
 import org.jsapar.model.*;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.QuoteSyntax;
+import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.schema.SchemaException;
 import org.junit.Test;
 
@@ -105,6 +106,19 @@ public class CsvCellComposerTest {
 
         // Non breakable space as grouping character.
         assertEquals("123\u00A0456,59", writer.toString());
+    }
+
+    @Test
+    public final void testOutput_int_us() throws IOException, SchemaException {
+        CsvSchemaCell schemaElement = CsvSchemaCell.builder("Integer").withCellType(CellType.INTEGER).build();
+
+        Writer writer = new StringWriter();
+        Cell cell = new IntegerCell("Integer", 123456);
+        CsvCellComposer composer = new CsvCellComposer(schemaElement, new NeverQuote(33));
+        composer.compose(writer, cell);
+
+        // Non breakable space as grouping character.
+        assertEquals("123456", writer.toString());
     }
 
     @Test

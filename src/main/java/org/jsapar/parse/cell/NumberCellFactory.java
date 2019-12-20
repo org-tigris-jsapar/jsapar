@@ -22,9 +22,11 @@ public abstract class NumberCellFactory implements CellFactory{
     }
 
     @Override
-    public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
+    public Format makeFormat(Locale locale, String pattern) {
         if (locale == null)
             locale = SchemaCellFormat.defaultLocale;
+        if(pattern == null || pattern.isEmpty())
+            return makeFormat(locale);
         return Format.ofNumberInstance(pattern, locale);
     }
 }

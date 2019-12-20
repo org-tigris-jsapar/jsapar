@@ -52,7 +52,7 @@ public class TextParseTaskTest {
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Shoe size", 3, new SchemaCellFormat(CellType.INTEGER)));
+        schemaLine.addSchemaCell(FixedWidthSchemaCell.builder("Shoe size", 3).withCellType(CellType.INTEGER).build());
         schema.addSchemaLine(schemaLine);
 
         Document doc = build(toParse, schema);
@@ -64,7 +64,7 @@ public class TextParseTaskTest {
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Shoe size", 3, new SchemaCellFormat(CellType.INTEGER)));
+        schemaLine.addSchemaCell(FixedWidthSchemaCell.builder("Shoe size", 3).withCellType(CellType.INTEGER).build());
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
@@ -86,7 +86,7 @@ public class TextParseTaskTest {
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Shoe size", 3, new SchemaCellFormat(CellType.INTEGER)));
+        schemaLine.addSchemaCell(FixedWidthSchemaCell.builder("Shoe size", 3).withCellType(CellType.INTEGER).build());
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
@@ -121,8 +121,8 @@ public class TextParseTaskTest {
     private Document build(String toParse, FixedWidthSchema schema) throws IOException {
         Reader reader = new StringReader(toParse);
         TextParseTask parser = new TextParseTask(schema, reader);
-        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-        parser.setLineEventListener(listener);
+        DocumentBuilderLineConsumer listener = new DocumentBuilderLineConsumer();
+        parser.setLineConsumer(listener);
         parser.execute();
         parser.close();
         return listener.getDocument();

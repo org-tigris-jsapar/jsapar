@@ -33,7 +33,7 @@ DateCellFactory implements CellFactory {
     }
 
     @Override
-    public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
+    public Format makeFormat(Locale locale, String pattern) {
         if(pattern == null || pattern.isEmpty())
             return makeFormat(locale);
         return Format.ofJavaTextFormat(new SimpleDateFormat(pattern));

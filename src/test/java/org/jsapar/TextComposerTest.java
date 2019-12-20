@@ -200,7 +200,7 @@ public class TextComposerTest {
         shoeSizeCell.setDefaultValue("41");
         schemaLine.addSchemaCell(shoeSizeCell);
         schemaLine.addSchemaCell(CsvSchemaCell.builder("Birth date")
-                .withCellFormatBuilder(SchemaCellFormat.builder(CellType.DATE).withPattern("yyyy-MM-dd"))
+                .withCellType(CellType.DATE).withPattern("yyyy-MM-dd")
                 .build());
 
         schemaLine.setFirstLineAsSchema(true);

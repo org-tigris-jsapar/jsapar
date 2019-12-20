@@ -39,7 +39,7 @@ public class CellParser<S extends SchemaCell> {
         cellFactory = CellFactory.getInstance(cellType);
         assert cellFactory != null;
         cellCache = Cache.ofMaxSize(cellFactory.actualCacheMaxSize(schemaCell, maxCacheSize));
-        format = schemaCell.getCellFormat().getFormat();
+        format = schemaCell.getFormat();
         if(format == null)
             format  = cellFactory.makeFormat(schemaCell.getLocale());
 

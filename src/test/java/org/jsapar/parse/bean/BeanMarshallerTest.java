@@ -86,7 +86,7 @@ public class BeanMarshallerTest {
         schemaLine.addSchemaCell(new CsvSchemaCell("birthTime", CellType.DATE));
         schemaLine.addSchemaCell(new CsvSchemaCell("door", CellType.CHARACTER));
         schemaLine.addSchemaCell(CsvSchemaCell.builder("gender")
-                .withCellFormatBuilder( SchemaCellFormat.builder(CellType.ENUM).withPattern("org.jsapar.TstGender") )
+                .withCellType(CellType.ENUM).withPattern("org.jsapar.TstGender")
                 .build());
         schemaLine.addSchemaCell(new CsvSchemaCell("address.street", CellType.STRING));
         schemaLine.addSchemaCell(new CsvSchemaCell("address.town", CellType.STRING));

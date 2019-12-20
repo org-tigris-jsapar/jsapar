@@ -123,7 +123,9 @@ public interface Format<T> {
      * @return An instance that formats and parses integer numbers.
      */
     static  Format<Number>  ofIntegerInstance(Locale locale){
-        return new NumberFormat(java.text.NumberFormat.getIntegerInstance(locale));
+        final java.text.NumberFormat intFormat = java.text.NumberFormat.getIntegerInstance(locale);
+        intFormat.setGroupingUsed(false);
+        return new NumberFormat(intFormat);
     }
 
     /**

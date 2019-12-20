@@ -51,7 +51,7 @@ public class EnumCellFactory implements CellFactory{
 
     @Override
     public int actualCacheMaxSize(SchemaCell schemaCell, int configuredCacheMaxSize) {
-        Format format = schemaCell.getCellFormat().getFormat();
+        Format format = schemaCell.getFormat();
         if(format instanceof EnumFormat){
             EnumFormat enumFormat = (EnumFormat) format;
             return enumFormat.numberOfTextValues();

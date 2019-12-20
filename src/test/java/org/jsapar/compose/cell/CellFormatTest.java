@@ -4,6 +4,7 @@ import org.jsapar.model.*;
 import org.jsapar.parse.cell.DateCellFactory;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
+import org.jsapar.schema.StringSchemaCell;
 import org.junit.Test;
 
 import java.text.ParseException;
@@ -63,10 +64,12 @@ public class CellFormatTest {
 
     @Test
     public void testFormat_DefaultValue_float() throws SchemaException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
-        schemaCell.setLocale( new Locale("sv","SE"));
-        schemaCell.setCellFormat(CellType.FLOAT, "#.00");
-        schemaCell.setDefaultValue("123456,78901");
+        SchemaCell schemaCell = StringSchemaCell.builder("test")
+                .withLocale("sv","SE")
+                .withCellType(CellType.FLOAT)
+                .withPattern("#.00")
+                .withDefaultValue("123456,78901")
+                .build();
 
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
         String value = format.format(new EmptyCell("test", CellType.FLOAT));
@@ -75,8 +78,9 @@ public class CellFormatTest {
 
     @Test
     public void testFormat_empty_integer() throws SchemaException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
-        schemaCell.setCellFormat(CellType.INTEGER);
+        SchemaCell schemaCell = StringSchemaCell.builder("test")
+                .withCellType(CellType.INTEGER)
+                .build();
 
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
         String value = format.format(new EmptyCell("test", CellType.INTEGER));
@@ -89,7 +93,7 @@ public class CellFormatTest {
         schemaCell.setCellFormat(CellType.DATE, "yyyy-MM-dd HH:mm");
         DateCellFactory cellFactory = new DateCellFactory();
 
-        DateCell cell = (DateCell) cellFactory.makeCell("Name", "2007-10-01 14:13", schemaCell.getCellFormat().getFormat());
+        DateCell cell = (DateCell) cellFactory.makeCell("Name", "2007-10-01 14:13", schemaCell.getFormat());
 
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
         String value = format.format(cell);
