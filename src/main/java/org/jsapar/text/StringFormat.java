@@ -12,7 +12,7 @@ class StringFormat implements Format<String> {
 
     @Override
     public String format(Object value) {
-        return String.valueOf(value);
+        return value.toString();
     }
 
     @Override

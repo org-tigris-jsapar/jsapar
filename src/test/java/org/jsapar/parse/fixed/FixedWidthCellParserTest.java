@@ -209,8 +209,8 @@ public class FixedWidthCellParserTest {
         String toParse = "-123,456.78  ";
         FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("Decimal", 11)
                 .withCellType(CellType.DECIMAL)
-                        .withLocale( Locale.UK)
-                        .withPattern("#,###.#")
+                .withLocale( Locale.UK)
+                .withPattern("#,###.#")
                 .build();
 
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
@@ -235,22 +235,39 @@ public class FixedWidthCellParserTest {
 
     @Test
     public final void testBuild_float() throws IOException, JSaParException {
-        String toParse = "1123,234";
-        FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("Float", 6);
-        schemaCell.setCellFormat(CellType.FLOAT);
+        String toParse = "1123.234";
+        FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("Float", 6)
+                .withCellType(CellType.FLOAT)
+                .build();
 
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
         FloatCell cell = (FloatCell) cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer());
         double value = cell.getValue().doubleValue();
 
-        assertEquals(1123, 234, value);
+        assertEquals(1123.2, value, 0.001);
     }
 
     @Test
     public final void testBuild_floatExp() throws IOException, JSaParException {
         String toParse = "1.234E6 ";
         FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("Float", 8)
-                .withCellType(CellType.FLOAT).withPattern("#.###E0").build();
+                .withCellType(CellType.FLOAT)
+                .build();
+
+        FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
+        FloatCell cell = (FloatCell) cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer());
+        double value = cell.getValue().doubleValue();
+
+        assertEquals(1.234e6, value, 0.001);
+    }
+
+    @Test
+    public final void testBuild_floatExp_pattern() throws IOException, JSaParException {
+        String toParse = "1.234E6 ";
+        FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("Float", 8)
+                .withCellType(CellType.FLOAT)
+                .withPattern("#.###E0")
+                .build();
 
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
         FloatCell cell = (FloatCell) cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer());
@@ -264,8 +281,8 @@ public class FixedWidthCellParserTest {
         String toParse = "1,234E6 ";
         FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("Float", 8)
                 .withCellType(CellType.FLOAT)
-                        .withLocale(new Locale("sv", "SE"))
-                        .withPattern("#.###E0")
+                .withLocale(new Locale("sv", "SE"))
+                .withPattern("#.###E0")
                 .build();
 
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);

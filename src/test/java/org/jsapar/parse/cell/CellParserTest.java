@@ -297,7 +297,7 @@ public class CellParserTest {
         RecordingErrorEventListener errorListener = new RecordingErrorEventListener();
         cellParser.parse("12345", errorListener);
         assertEquals(1, errorListener.getErrors().size());
-        assertEquals("Cell='test' Value='12345' Expected: CellType=INTEGER, Format={NumberFormat} - The value is below minimum range limit (54321).", errorListener.getErrors().get(0).getMessage());
+        assertEquals("Cell='test' Value='12345' Expected: CellType=INTEGER, Format={USIntegerFormat} - The value is below minimum range limit (54321).", errorListener.getErrors().get(0).getMessage());
     }
 
     /**
@@ -312,7 +312,7 @@ public class CellParserTest {
         RecordingErrorEventListener errorListener = new RecordingErrorEventListener();
         cellParser.parse("12345", errorListener);
         assertEquals(1, errorListener.getErrors().size());
-        assertEquals("Cell='test' Value='12345' Expected: CellType=INTEGER, Format={NumberFormat} - The value is above maximum range limit (100).", errorListener.getErrors().get(0).getMessage());
+        assertEquals("Cell='test' Value='12345' Expected: CellType=INTEGER, Format={USIntegerFormat} - The value is above maximum range limit (100).", errorListener.getErrors().get(0).getMessage());
     }
 
 

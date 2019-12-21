@@ -1,7 +1,5 @@
 package org.jsapar.text;
 
-import org.jsapar.model.CharacterCell;
-
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
@@ -124,9 +122,21 @@ public interface Format<T> {
 
     /**
      * @param locale The locale to use.
+     * @return An instance that formats and parses double precision numbers.
+     */
+    static  Format<Number>  ofDoubleInstance(Locale locale){
+        if(locale == Locale.US)
+            return new USDoubleFormat();
+        return ofNumberInstance(locale);
+    }
+
+    /**
+     * @param locale The locale to use.
      * @return An instance that formats and parses integer numbers.
      */
     static  Format<Number>  ofIntegerInstance(Locale locale){
+        if(locale == Locale.US)
+            return new USIntegerFormat();
         final java.text.NumberFormat intFormat = java.text.NumberFormat.getIntegerInstance(locale);
         intFormat.setGroupingUsed(false);
         return new NumberFormat(intFormat);
