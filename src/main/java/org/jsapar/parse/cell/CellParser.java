@@ -89,7 +89,7 @@ public class CellParser<S extends SchemaCell> {
 
         try {
             Cell cell = makeCell(sValue);
-            validateRange(schemaCell, cell);
+            validateRange(cell);
             return cell;
         } catch (java.text.ParseException e) {
             errorEventListener.accept(
@@ -149,16 +149,15 @@ public class CellParser<S extends SchemaCell> {
      * Validates that the cell value is within the valid range. Throws a SchemaException if value is
      * not within borders.
      *
-     * @param cellSchema The cell schema to use
      * @param cell       The cell to validate
      * @throws ParseException If the value cannot be parsed according to the format of this cell schema.
      */
     @SuppressWarnings("unchecked")
-    private void validateRange(SchemaCell cellSchema, Cell cell) throws java.text.ParseException {
-        if (cellSchema.getMinValue() != null && cell.compareValueTo(cellSchema.getMinValue()) < 0) {
-            throw new java.text.ParseException("The value is below minimum range limit ("+cellSchema.getMinValue().getStringValue()+").", 0);
-        } else if (cellSchema.getMaxValue() != null && cell.compareValueTo(cellSchema.getMaxValue()) > 0)
-            throw new java.text.ParseException("The value is above maximum range limit ("+cellSchema.getMaxValue().getStringValue()+").", 0);
+    private void validateRange(Cell cell) throws ParseException {
+        if (schemaCell.getMinValue() != null && cell.compareValueTo(schemaCell.getMinValue()) < 0) {
+            throw new ParseException("The value is below minimum range limit ("+schemaCell.getMinValue().getStringValue()+").", 0);
+        } else if (schemaCell.getMaxValue() != null && cell.compareValueTo(schemaCell.getMaxValue()) > 0)
+            throw new ParseException("The value is above maximum range limit ("+schemaCell.getMaxValue().getStringValue()+").", 0);
     }
 
     /**

@@ -11,6 +11,7 @@ import org.jsapar.text.ImpliedDecimalFormat;
 
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -111,6 +112,7 @@ public abstract class SchemaCell implements Cloneable {
         this.locale = builder.locale;
         if(format == null)
             format = CellFactory.getInstance(builder.cellType).makeFormat(locale, builder.pattern);
+        Objects.requireNonNull(format, "Format is required for SchemaCell. A CellFactory instance returned a null value.");
 
         this.cellFormat = new SchemaCellFormat(builder.cellType, format, builder.pattern);
         this.defaultValue = builder.defaultValue;
@@ -131,6 +133,12 @@ public abstract class SchemaCell implements Cloneable {
         this.emptyCell = new EmptyCell(name, cellFormat.getCellType());
     }
 
+    /**
+     * Abstract builder for schema cell. Use explicit sub-classes in order to create an instance of a SchemaCell.
+     * @param <T> The value type of the cells of this cell.
+     * @param <C> The schema cell type.
+     * @param <B> The actual builder type.
+     */
     @SuppressWarnings("unchecked")
     public static abstract class Builder<T, C extends SchemaCell, B extends Builder<T, C, B>> {
         private final String name;
@@ -170,50 +178,110 @@ public abstract class SchemaCell implements Cloneable {
             return (B) this;
         }
 
+        /**
+         * The locale is used to format numbers.
+         * @param language The language of the locale.
+         * @param country The country of the locale.
+         * @return The builder instance.
+         */
         public B withLocale(String language, String country) {
             return withLocale(new Locale(language, country));
         }
 
+        /**
+         * The locale is used to format numbers.
+         * @param locale The locale to use.
+         * @return The builder instance.
+         */
         public B withLocale(Locale locale) {
             this.locale = locale;
             return (B) this;
         }
 
+        /**
+         * @param ignoreRead Indicates if this cell should be ignored after reading it from the buffer. If
+         *                   ignoreRead is true the cell will not be stored to the current Line object.
+         * @return The builder instance.
+         */
         public B withIgnoreRead(boolean ignoreRead) {
             this.ignoreRead = ignoreRead;
             return (B) this;
         }
 
+        /**
+         * @param ignoreWrite If true, this cell will be blank while writing.
+         */
         public B withIgnoreWrite(boolean ignoreWrite) {
             this.ignoreWrite = ignoreWrite;
             return (B) this;
         }
 
+        /**
+         * @param mandatory Indicates if the corresponding cell is mandatory, that is an error will be
+         *                  reported if it does not exist while parsing.
+         */
         public B withMandatory(boolean mandatory) {
             this.mandatory = mandatory;
             return (B) this;
         }
 
+        /**
+         * @param minValue The string representation of the min value as it would be presented in the text input.
+         */
         public B withMinValue(String minValue) {
             this.minValue = minValue;
             return (B) this;
         }
 
+        /**
+         * @param maxValue The string representation of the max value as it would be presented in the text input.
+         */
         public B withMaxValue(String maxValue) {
             this.maxValue = maxValue;
             return (B) this;
         }
 
+        /**
+         * Sets the default value as a string. The default value have to be parsable according to the
+         * schema format. As long as it is parsable, it will be used exactly as is even though it might
+         * not look the same as if it was formatted from a value.
+         *
+         * @param defaultValue The default value formatted according to this schema. Will be used if input/output
+         *                      is missing for this cell.
+         */
         public B withDefaultValue(String defaultValue) {
             this.defaultValue = defaultValue;
             return (B) this;
         }
 
+        /**
+         * A condition that if satisfied for a specific text input, indicates that the cell is actually empty. For instance
+         * the cell might contain the text NULL to indicate that there is no value even though this is a date or a numeric
+         * field. In that case a {@link MatchingCellValueCondition} can be used to match the pattern "NULL".
+         *
+         * @param emptyCondition the condition that needs to be satisfied if this cell is to be considered empty
+         */
         public B withEmptyCondition(Predicate<String> emptyCondition) {
             this.emptyCondition = emptyCondition;
             return (B) this;
         }
 
+        /**
+         * A regular expression that if matching for a specific text input, indicates that the cell is actually empty. For instance
+         * the cell might contain the text NULL to indicate that there is no value even though this is a date or a numeric
+         * field. In that case the pattern "NULL" can be used.
+         *
+         * @param pattern The regex pattern to match against
+         */
+        public B withEmptyPattern(String pattern) {
+            this.emptyCondition = new MatchingCellValueCondition(pattern);
+            return (B) this;
+        }
+
+
+        /**
+         * @param lineCondition A predicate that needs to be satisfied for this cell if the parser is going to use this line type.
+         */
         public B withLineCondition(Predicate<String> lineCondition) {
             this.lineCondition = lineCondition;
             return (B) this;
