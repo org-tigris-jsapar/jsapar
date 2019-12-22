@@ -27,8 +27,10 @@ public class CsvSchemaCell extends SchemaCell {
     /**
      * Creates a CSV string cell with specified name. The format can be added after creation by using the {@link #setCellFormat(CellType, String)} method.
      *
+     * Deprecated since 2.2. Use builder instead.
      * @param sName The name of the cell.
      */
+    @Deprecated
     public CsvSchemaCell(String sName) {
         super(sName);
     }
@@ -36,21 +38,20 @@ public class CsvSchemaCell extends SchemaCell {
     /**
      * Creates a CSV schema cell with the specified name and format parameters.
      *
+     * Deprecated since 2.2. Use builder instead.
      * @param sName   The name of the cell.
      * @param type    The type of the cell.
      * @param pattern The pattern to use while formatting and parsing. The pattern has different meaning depending on the type of the cell.
      * @param locale  The locale to use while formatting and parsing dates and numbers that are locale specific. If null, US locale is used.
      */
+    @Deprecated
     public CsvSchemaCell(String sName, CellType type, String pattern, Locale locale) {
         super(sName, type, pattern, locale);
     }
 
+    @Deprecated
     public CsvSchemaCell(String name, CellType type) {
         super(name, type);
-    }
-
-    protected CsvSchemaCell(String sName, SchemaCellFormat cellFormat, Locale locale) {
-        super(sName, cellFormat, locale);
     }
 
     private <T> CsvSchemaCell(Builder<T> builder){

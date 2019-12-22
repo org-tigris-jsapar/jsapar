@@ -159,11 +159,19 @@ public abstract class SchemaCell implements Cloneable {
             this.name = name;
         }
 
+        /**
+         * @param cellType The type of the cell.
+         * @return This builder.
+         */
         public B withCellType(CellType cellType) {
             this.cellType = cellType;
             return (B) this;
         }
 
+        /**
+         * @param format A format instance that can be used to parse and compose to this cell type.
+         * @return This builder
+         */
         public B withFormat(Format<T> format) {
             this.format = format;
             if(format instanceof EnumFormat)
@@ -173,6 +181,10 @@ public abstract class SchemaCell implements Cloneable {
             return (B) this;
         }
 
+        /**
+         * @param pattern The pattern of the cell. See {@link SchemaCellFormat}
+         * @return This builder.
+         */
         public B withPattern(String pattern) {
             this.pattern = pattern;
             return (B) this;

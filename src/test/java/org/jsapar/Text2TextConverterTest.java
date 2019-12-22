@@ -87,16 +87,18 @@ public class Text2TextConverterTest {
         String toParse = "Jonas 41       " + LN + "Frida ERROR    ";
         FixedWidthSchema inputSchema = new FixedWidthSchema();
         FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine("Person");
-        inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 6));
-        FixedWidthSchemaCell schemaCell2 = new FixedWidthSchemaCell("Shoe size", 9, new SchemaCellFormat(
-                CellType.INTEGER));
+        inputSchemaLine.addSchemaCell(FixedWidthSchemaCell.builder("First name", 6).build());
+        FixedWidthSchemaCell schemaCell2 = FixedWidthSchemaCell.builder("Shoe size", 9)
+                .withCellType(CellType.INTEGER)
+                .withAlignment(FixedWidthSchemaCell.Alignment.LEFT)
+                .build();
         inputSchemaLine.addSchemaCell(schemaCell2);
         inputSchema.addSchemaLine(inputSchemaLine);
 
         CsvSchema outputSchema = new CsvSchema();
         CsvSchemaLine outputSchemaLine = new CsvSchemaLine("Person");
-        outputSchemaLine.addSchemaCell(new CsvSchemaCell("First name"));
-        outputSchemaLine.addSchemaCell(new CsvSchemaCell("Shoe size"));
+        outputSchemaLine.addSchemaCell( CsvSchemaCell.builder("First name").build());
+        outputSchemaLine.addSchemaCell( CsvSchemaCell.builder("Shoe size").build());
         outputSchemaLine.setCellSeparator(";");
         outputSchema.addSchemaLine(outputSchemaLine);
 
@@ -119,9 +121,8 @@ public class Text2TextConverterTest {
         String toParse = "Jonas 41       " + LN + "Frida ERROR    ";
         FixedWidthSchema inputSchema = new FixedWidthSchema();
         FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine("Person");
-        inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 6));
-        FixedWidthSchemaCell schemaCell2 = new FixedWidthSchemaCell("Shoe size", 9, new SchemaCellFormat(
-                CellType.INTEGER));
+        inputSchemaLine.addSchemaCell( FixedWidthSchemaCell.builder("First name", 6).build());
+        FixedWidthSchemaCell schemaCell2 =  FixedWidthSchemaCell.builder("Shoe size", 9).withCellType(CellType.INTEGER).build();
         inputSchemaLine.addSchemaCell(schemaCell2);
         inputSchema.addSchemaLine(inputSchemaLine);
 

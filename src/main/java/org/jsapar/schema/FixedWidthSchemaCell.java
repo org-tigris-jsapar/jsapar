@@ -2,8 +2,6 @@ package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
 
-import java.util.Locale;
-
 /**
  * Describes how a cell is represented for a fixed width schema.
  */
@@ -63,7 +61,8 @@ public class FixedWidthSchemaCell extends SchemaCell {
 
     /**
      * Creates a fixed with schema cell with specified name, length and alignment.
-     * 
+     *
+     * Deprecated since 2.2. Use builder instead.
      * @param sName
      *            The name of the cell
      * @param nLength
@@ -73,6 +72,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
      * @param padCharacter
      *            The pad character to use to fill the cell.
      */
+    @Deprecated
     public FixedWidthSchemaCell(String sName, int nLength, Alignment alignment, Character padCharacter) {
         this(sName, nLength);
         this.alignment = alignment;
@@ -82,12 +82,14 @@ public class FixedWidthSchemaCell extends SchemaCell {
 
     /**
      * Creates a fixed with schema cell with specified name and length.
-     * 
+     *
+     * Deprecated since 2.2. Use builder instead.
      * @param sName
      *            The name of the cell
      * @param nLength
      *            The length of the cell
      */
+    @Deprecated
     public FixedWidthSchemaCell(String sName, int nLength) {
         super(sName);
         this.length = nLength;
@@ -95,7 +97,8 @@ public class FixedWidthSchemaCell extends SchemaCell {
 
     /**
      * Creates a fixed with schema cell with specified name, length and format.
-     * 
+     *
+     * Deprecated since 2.2. Use builder instead.
      * @param sName
      *            The name of the cell
      * @param nLength
@@ -103,14 +106,10 @@ public class FixedWidthSchemaCell extends SchemaCell {
      * @param cellFormat
      *            The format of the cell
      */
+    @Deprecated
     public FixedWidthSchemaCell(String sName, int nLength, SchemaCellFormat cellFormat) {
         super(sName, cellFormat, null);
         this.length = nLength;
-    }
-
-    private FixedWidthSchemaCell(String name, int length, SchemaCellFormat cellFormat, Locale locale) {
-        super(name, cellFormat, locale);
-        this.length = length;
     }
 
     private <T> FixedWidthSchemaCell(Builder<T> builder){
