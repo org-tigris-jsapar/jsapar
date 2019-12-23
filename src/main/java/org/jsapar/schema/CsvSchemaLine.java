@@ -77,6 +77,45 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
         super(lineType, nOccurs);
     }
 
+    public CsvSchemaLine(Builder builder) {
+        super(builder);
+        this.cellSeparator = builder.cellSeparator;
+        this.firstLineAsSchema = builder.firstLineAsSchema;
+        this.quoteChar = builder.quoteChar;
+    }
+
+
+    public class Builder extends SchemaLine<CsvSchemaCell>.Builder<CsvSchemaLine, Builder>{
+        private boolean firstLineAsSchema = false;
+        private String cellSeparator = ";";
+        private char quoteChar = '"';
+
+
+        public Builder(String lineType) {
+            super(lineType);
+        }
+
+        public Builder withFirstLineAsSchema(boolean firstLineAsSchema){
+            this.firstLineAsSchema = firstLineAsSchema;
+            return this;
+        }
+
+        public Builder withCellSeparator(String cellSeparator){
+            this.cellSeparator = cellSeparator;
+            return this;
+        }
+
+        public Builder withQuoteChar(Character quoteChar){
+            this.quoteChar = quoteChar;
+            return this;
+        }
+
+        @Override
+        public CsvSchemaLine build() {
+            return new CsvSchemaLine(this);
+        }
+    }
+
 
     public String getCellSeparator() {
         return cellSeparator;

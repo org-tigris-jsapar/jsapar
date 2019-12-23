@@ -88,6 +88,54 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
         this.setOccurs(nOccurs);
     }
 
+    public <L extends SchemaLine<C>, B extends Builder<L, B>> SchemaLine(Builder<L, B> builder) {
+        builder.schemaCells.forEach(c-> this.schemaCells.put(c.getName(), c));
+        this.occurs = builder.occurs;
+        this.lineType = builder.lineType;
+        this.ignoreRead = builder.ignoreRead;
+        this.ignoreWrite = builder.ignoreWrite;
+    }
+
+    @SuppressWarnings("unchecked")
+    public abstract class Builder<L extends SchemaLine<C>, B extends Builder<L, B>> {
+        private final String lineType;
+        private List<C> schemaCells = new ArrayList<>();
+        private int occurs;
+        private boolean ignoreRead;
+        private boolean ignoreWrite;
+
+        public Builder(String lineType) {
+            this.lineType = lineType;
+        }
+
+        public B withOccurs(int nOccurs) {
+            this.occurs = nOccurs;
+            return (B) this;
+        }
+
+        /**
+         * Adds a supplied schema cell to this builder. Can be called multiple times to add more cells.
+         * @param schemaCell The schema cell to add.
+         * @return This builder instance.
+         */
+        public B withCell(C schemaCell) {
+            this.schemaCells.add(schemaCell);
+            return (B) this;
+        }
+
+        public B withIgnoreRead(boolean ignoreRead) {
+            this.ignoreRead = ignoreRead;
+            return (B) this;
+        }
+
+        public B withIgnoreWrite(boolean ignoreWrite) {
+            this.ignoreWrite = ignoreWrite;
+            return (B) this;
+        }
+
+        public abstract L build();
+    }
+
     /**
      * @return The number of times this type of line occurs in the corresponding input or output.
      */

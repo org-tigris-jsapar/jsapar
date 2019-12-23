@@ -12,7 +12,6 @@ import java.util.stream.Stream;
  */
 public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
 
-    private java.util.List<FixedWidthSchemaCell> schemaCells        = new java.util.ArrayList<>();
     private char                                 padCharacter       = ' ';
     private int                                  minLength          = -1;
 
@@ -55,28 +54,6 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
         super(lineType, nOccurs);
     }
 
-    /**
-     * @return the cells
-     */
-    public java.util.List<FixedWidthSchemaCell> getSchemaCells() {
-        return schemaCells;
-    }
-
-    /**
-     * Adds a schema cell to this row.
-     * 
-     * @param schemaCell The schema cell to add
-     * @return This instance of the schema line, allows to chain calls.
-     */
-    public FixedWidthSchemaLine addSchemaCell(FixedWidthSchemaCell schemaCell) {
-        if(schemaCell == null)
-            throw new IllegalArgumentException("Cell schema cannot be null.");
-        this.schemaCells.add(schemaCell);
-        return this;
-    }
-
-
-
 
 
     /*
@@ -87,17 +64,7 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
     public FixedWidthSchemaLine clone(){
         FixedWidthSchemaLine line;
         line = (FixedWidthSchemaLine) super.clone();
-
-        line.schemaCells = new java.util.LinkedList<>();
-        for (FixedWidthSchemaCell cell : this.schemaCells) {
-            line.addSchemaCell(cell.clone());
-        }
         return line;
-    }
-
-    @Override
-    public Stream<FixedWidthSchemaCell> stream() {
-        return this.schemaCells.stream();
     }
 
     /*
@@ -107,7 +74,7 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
      */
     @Override
     public String toString() {
-        return super.toString() + " padCharacter='" + this.padCharacter + "' schemaCells=" + this.schemaCells;
+        return super.toString() + " padCharacter='" + this.padCharacter;
     }
 
     /**
@@ -136,7 +103,7 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
     @SuppressWarnings("WeakerAccess")
     public FixedWidthCellPositions getCellPositions(String cellName) {
         FixedWidthCellPositions pos = new FixedWidthCellPositions();
-        for (FixedWidthSchemaCell cell : schemaCells) {
+        for (FixedWidthSchemaCell cell : this) {
             pos.increment(cell);
             if (cell.getName().equals(cellName))
                 return pos;
@@ -156,11 +123,6 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
     public int getCellFirstPosition(String cellName) {
         FixedWidthCellPositions pos = getCellPositions(cellName);
         return pos != null ? pos.getFirst() : -1;
-    }
-
-    @Override
-    public int size() {
-        return this.schemaCells.size();
     }
 
     /**
@@ -205,7 +167,7 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
      * @return The sum of the length of all cells.
      */
     public int getTotalCellLength(){
-        return schemaCells.stream().mapToInt(FixedWidthSchemaCell::getLength).sum();
+        return stream().mapToInt(FixedWidthSchemaCell::getLength).sum();
     }
 
 }
