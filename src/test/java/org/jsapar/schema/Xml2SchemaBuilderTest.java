@@ -36,22 +36,26 @@ public class Xml2SchemaBuilderTest {
 
         FixedWidthSchemaLine firstLineSchema = fwSchema.getSchemaLines().iterator().next();
         assertEquals(240, firstLineSchema.getMinLength());
-        FixedWidthSchemaCell firstNameSchema = firstLineSchema.getSchemaCells().get(0);
+        Iterator<FixedWidthSchemaCell> iterator = firstLineSchema.getSchemaCells().iterator();
+        FixedWidthSchemaCell firstNameSchema = iterator.next();
         assertEquals("First name", firstNameSchema.getName());
-        FixedWidthSchemaCell lastNameSchema = firstLineSchema.getSchemaCells().get(1);
+        FixedWidthSchemaCell lastNameSchema = iterator.next();
         assertEquals("Last name", lastNameSchema.getName());
 
         assertEquals(5, firstNameSchema.getLength());
         assertEquals(8, lastNameSchema.getLength());
-        FixedWidthSchemaCell shoeSizeSchema = firstLineSchema.getSchemaCells().get(2);
+        FixedWidthSchemaCell shoeSizeSchema = iterator.next();
         assertTrue(shoeSizeSchema.getEmptyCondition().test("NULL"));
 
         assertEquals(CellType.INTEGER, shoeSizeSchema
                 .getCellFormat().getCellType());
 
-        SchemaLine schemaLine = fwSchema.getSchemaLine("Person").orElse(null);
+        FixedWidthSchemaLine schemaLine = fwSchema.getSchemaLine("Person").orElse(null);
         Assert.assertNotNull(schemaLine);
-        FixedWidthSchemaCell schemaCell = ((FixedWidthSchemaLine)schemaLine).getSchemaCells().get(2);
+        iterator = schemaLine.iterator();
+        iterator.next();
+        iterator.next();
+        FixedWidthSchemaCell schemaCell = iterator.next();
         assertEquals( FixedWidthSchemaCell.Alignment.RIGHT, schemaCell.getAlignment() );
         assertEquals( "00000000", schemaCell.getCellFormat().getPattern() );
     }

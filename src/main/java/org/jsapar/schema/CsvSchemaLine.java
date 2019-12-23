@@ -84,8 +84,11 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
         this.quoteChar = builder.quoteChar;
     }
 
+    public static Builder builder(String lineType){
+        return new Builder(lineType);
+    }
 
-    public class Builder extends SchemaLine<CsvSchemaCell>.Builder<CsvSchemaLine, Builder>{
+    public static class Builder extends SchemaLine.Builder<CsvSchemaCell, CsvSchemaLine, Builder>{
         private boolean firstLineAsSchema = false;
         private String cellSeparator = ";";
         private char quoteChar = '"';
@@ -105,8 +108,33 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
             return this;
         }
 
-        public Builder withQuoteChar(Character quoteChar){
+        public Builder withQuoteChar(char quoteChar){
             this.quoteChar = quoteChar;
+            return this;
+        }
+
+        /**
+         * Convenience method that creates a string csv cell with supplied name without any further
+         * formatting and adds it to this builder. For more advanced options use {@link SchemaLine.Builder#withCell(SchemaCell)}
+         * @param cellName The name of the cell.
+         * @return This builder instance.
+         * @see SchemaLine.Builder#withCell(SchemaCell)
+         */
+        public Builder withCell(String cellName){
+            return this.withCell(CsvSchemaCell.builder(cellName).build());
+        }
+
+        /**
+         * Convenience method that creates a string csv cell with supplied names without any further
+         * formatting and adds it to this builder. For more advanced options use {@link SchemaLine.Builder#withCell(SchemaCell)}
+         * @param cellNames The names of the cells.
+         * @return This builder instance.
+         * @see SchemaLine.Builder#withCell(SchemaCell)
+         */
+        public Builder withCells(String ... cellNames){
+            for(String cellName: cellNames){
+                withCell(cellName);
+            }
             return this;
         }
 

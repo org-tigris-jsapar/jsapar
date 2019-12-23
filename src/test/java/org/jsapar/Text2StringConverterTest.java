@@ -16,15 +16,13 @@ public class Text2StringConverterTest {
     @Test
     public void convert() throws IOException {
         CsvSchema parseSchema = new CsvSchema();
-        parseSchema.addSchemaLine(new CsvSchemaLine("test-line")
-                .addSchemaCell(new CsvSchemaCell("c1"))
-                .addSchemaCell(new CsvSchemaCell("c2"))
-                .addSchemaCell(new CsvSchemaCell("c3")));
+        parseSchema.addSchemaLine( CsvSchemaLine.builder("test-line")
+                .withCells("c1", "c2", "c3")
+                .build());
         CsvSchema composeSchema = new CsvSchema();
-        composeSchema.addSchemaLine(new CsvSchemaLine("test-line")
-                .addSchemaCell(new CsvSchemaCell("c2"))
-                .addSchemaCell(new CsvSchemaCell("c1"))
-                .addSchemaCell(new CsvSchemaCell("c3")));
+        composeSchema.addSchemaLine( CsvSchemaLine.builder("test-line")
+                .withCells("c2", "c1", "c3")
+                .build());
 
         Text2StringConverter converter = new Text2StringConverter(parseSchema, composeSchema);
         String source = "v11;v12;v13\nv21;v22;v23\n";

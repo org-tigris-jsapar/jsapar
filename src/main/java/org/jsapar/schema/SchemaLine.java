@@ -88,7 +88,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
         this.setOccurs(nOccurs);
     }
 
-    public <L extends SchemaLine<C>, B extends Builder<L, B>> SchemaLine(Builder<L, B> builder) {
+    public <L extends SchemaLine<C>, B extends Builder<C, L, B>> SchemaLine(Builder<C, L, B> builder) {
         builder.schemaCells.forEach(c-> this.schemaCells.put(c.getName(), c));
         this.occurs = builder.occurs;
         this.lineType = builder.lineType;
@@ -97,10 +97,10 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
     }
 
     @SuppressWarnings("unchecked")
-    public abstract class Builder<L extends SchemaLine<C>, B extends Builder<L, B>> {
+    public abstract static class Builder<C extends SchemaCell, L extends SchemaLine<C>, B extends Builder<C, L, B>> {
         private final String lineType;
         private List<C> schemaCells = new ArrayList<>();
-        private int occurs;
+        private int occurs = OCCURS_INFINITE;
         private boolean ignoreRead;
         private boolean ignoreWrite;
 

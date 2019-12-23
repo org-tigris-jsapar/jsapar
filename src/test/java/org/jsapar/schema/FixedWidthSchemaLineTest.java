@@ -18,10 +18,10 @@ public class FixedWidthSchemaLineTest {
 
     @Test
     public final void testClone() {
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine();
-        schemaLine.setLineType("Nisse");
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        FixedWidthSchemaLine schemaLine =  FixedWidthSchemaLine.builder("Nisse")
+                .withCell("First name", 5)
+                .withCell("Last name", 8)
+                .build();
 
         FixedWidthSchemaLine clone = schemaLine.clone();
 
@@ -29,19 +29,21 @@ public class FixedWidthSchemaLineTest {
 
         // Does not clone strings values yet. Might do that in the future.
         assertSame(schemaLine.getLineType(), clone.getLineType());
-        assertEquals(schemaLine.getSchemaCells().get(0).getName(), clone.getSchemaCells().get(0).getName());
-        assertFalse(schemaLine.getSchemaCells().get(0) == clone.getSchemaCells().get(0));
+        assertEquals(schemaLine.iterator().next().getName(), clone.iterator().next().getName());
+        assertNotSame(schemaLine.iterator().next(), clone.iterator().next());
     }
 
     @Test
     public void testGetCellPositions() throws JSaParException {
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street address", 14));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("City", 8));
-        
+        FixedWidthSchemaLine schemaLine =  FixedWidthSchemaLine.builder("Nisse")
+                .withOccurs(1)
+                .withCell("First name", 5)
+                .withCell("Last name", 8)
+                .withCell("Street address", 14)
+                .withCell("Zip code", 6)
+                .withCell("City", 8)
+                .build();
+
         FixedWidthCellPositions pos = schemaLine.getCellPositions("First name");
         assertEquals(1, pos.getFirst());
         assertEquals(5, pos.getLast());
@@ -58,12 +60,14 @@ public class FixedWidthSchemaLineTest {
 
     @Test
     public void testGetCellFirstPositions() throws JSaParException {
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street address", 14));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("City", 8));
+        FixedWidthSchemaLine schemaLine =  FixedWidthSchemaLine.builder("Nisse")
+                .withOccurs(1)
+                .withCell("First name", 5)
+                .withCell("Last name", 8)
+                .withCell("Street address", 14)
+                .withCell("Zip code", 6)
+                .withCell("City", 8)
+                .build();
         
         int pos = schemaLine.getCellFirstPosition("First name");
         assertEquals(1, pos);
@@ -79,10 +83,13 @@ public class FixedWidthSchemaLineTest {
     
     @Test
     public void testGetSchemaCell(){
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        FixedWidthSchemaCell cell1 = new FixedWidthSchemaCell("First name", 5); 
-        schemaLine.addSchemaCell(cell1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
+        FixedWidthSchemaCell cell1 = FixedWidthSchemaCell.builder("First name", 5).build();
+
+        FixedWidthSchemaLine schemaLine =  FixedWidthSchemaLine.builder("Nisse")
+                .withOccurs(1)
+                .withCell(cell1)
+                .withCell("Last name", 8)
+                .build();
 
         assertNull(schemaLine.getSchemaCell("Does not exist"));
         assertSame(cell1, schemaLine.getSchemaCell("First name"));
@@ -90,10 +97,11 @@ public class FixedWidthSchemaLineTest {
     }
     
     @Test
+    @Deprecated
     public void testAddFillerCellToReachMinLength(){
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
         schemaLine.setMinLength(10);
-        FixedWidthSchemaCell cell1 = new FixedWidthSchemaCell("First name", 5);
+        FixedWidthSchemaCell cell1 = FixedWidthSchemaCell.builder("First name", 5).build();
         schemaLine.addSchemaCell(cell1);
         assertEquals(5, schemaLine.getTotalCellLength());
         assertEquals(1, schemaLine.size());
@@ -102,4 +110,17 @@ public class FixedWidthSchemaLineTest {
         assertEquals(10, schemaLine.getTotalCellLength());
         assertEquals(2, schemaLine.size());
     }
+
+    @Test
+    public void testBuildWithMinLength(){
+        FixedWidthSchemaLine schemaLine =  FixedWidthSchemaLine.builder("Nisse")
+                .withOccurs(1)
+                .withMinLength(10)
+                .withCell("First name", 5)
+                .build();
+
+        assertEquals(10, schemaLine.getTotalCellLength());
+        assertEquals(2, schemaLine.size());
+    }
+
 }

@@ -36,9 +36,10 @@ public class Text2BeanConverterTest {
 
     protected CsvSchema makeTestCsvSchema() {
         CsvSchema schema = new CsvSchema();
-        schema.addSchemaLine(new CsvSchemaLine("org.jsapar.TstPerson")
-                .addSchemaCell(new CsvSchemaCell("firstName"))
-                .addSchemaCell(new CsvSchemaCell("lastName")));
+        schema.addSchemaLine( CsvSchemaLine.builder("org.jsapar.TstPerson")
+                .withCell(CsvSchemaCell.builder("firstName").build())
+                .withCell(CsvSchemaCell.builder("lastName").build())
+                .build());
         return schema;
     }
 
