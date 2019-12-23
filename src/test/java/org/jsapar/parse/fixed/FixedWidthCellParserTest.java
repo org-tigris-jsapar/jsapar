@@ -42,10 +42,11 @@ public class FixedWidthCellParserTest {
     @Test
     public final void testBuild_dont_trim() throws IOException, JSaParException {
         String toParse = "   Jonas   ";
-        FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
-        schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
-        schemaCell.setPadCharacter('!');
-        schemaCell.setTrimLeadingSpaces(false);
+        FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("First name", 11)
+                .withPadCharacter('!')
+                .withTrimLeadingSpaces(false)
+                .withAlignment(FixedWidthSchemaCell.Alignment.CENTER)
+                .build();
 
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
         Cell cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer());
@@ -114,10 +115,11 @@ public class FixedWidthCellParserTest {
     @Test
     public final void testBuildEmptyMandatoryNoTrim() throws Exception {
         String toParse = "           ";
-        FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
-        schemaCell.setMandatory(true);
-        schemaCell.setPadCharacter('!');
-        schemaCell.setTrimLeadingSpaces(false);
+        FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("First name", 11)
+                .withTrimLeadingSpaces(false)
+                .withPadCharacter('!')
+                .withMandatory(true)
+                .build();
 
         Cell cell;
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);

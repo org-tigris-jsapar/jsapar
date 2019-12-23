@@ -21,10 +21,8 @@ public class CsvParserTest {
         CsvSchemaLine schemaLine = new CsvSchemaLine("Person");
         schema.addSchemaLine(schemaLine);
         schemaLine.setFirstLineAsSchema(true);
-        schemaLine.addSchemaCell(new CsvSchemaCell("firstName", CellType.STRING));
-        final CsvSchemaCell lastNameCell = new CsvSchemaCell("lastName", CellType.STRING);
-        lastNameCell.setMandatory(true);
-        schemaLine.addSchemaCell(lastNameCell);
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("firstName").build());
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("lastName").withMandatory(true).build());
 
         String text = "firstName\njohn";
         CsvParser parser = new CsvParser(new StringReader(text), schema);
@@ -44,10 +42,8 @@ public class CsvParserTest {
         CsvSchemaLine schemaLine = new CsvSchemaLine("Person");
         schema.addSchemaLine(schemaLine);
         schemaLine.setFirstLineAsSchema(true);
-        schemaLine.addSchemaCell(new CsvSchemaCell("firstName", CellType.STRING));
-        final CsvSchemaCell lastNameCell = new CsvSchemaCell("lastName", CellType.STRING);
-        lastNameCell.setMandatory(true);
-        schemaLine.addSchemaCell(lastNameCell);
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("firstName").build());
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("lastName").withMandatory(true).build());
 
         String text = "firstName;;lastName\njohn;L;doe";
         CsvParser parser = new CsvParser(new StringReader(text), schema);

@@ -125,12 +125,16 @@ public class CsvParseTaskTest {
             throws IOException, JSaParException {
         CsvSchema schema = new CsvSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine();
-        CsvSchemaCell shoeSizeCell = new CsvSchemaCell("Shoe Size", CellType.INTEGER);
-        shoeSizeCell.setDefaultValue("43");
-        schemaLine.addSchemaCell(shoeSizeCell);
-        CsvSchemaCell hasDogCell = new CsvSchemaCell("HasDog",CellType.BOOLEAN);
-        hasDogCell.setDefaultValue("false");
-        schemaLine.addSchemaCell(hasDogCell);
+        schemaLine.addSchemaCell(CsvSchemaCell.builder("Shoe Size")
+                .withCellType(CellType.INTEGER)
+                .withDefaultValue("43")
+                .build());
+
+        schemaLine.addSchemaCell(CsvSchemaCell.builder("HasDog")
+                .withCellType(CellType.BOOLEAN)
+                .withDefaultValue("false")
+                .build());
+
         schemaLine.setFirstLineAsSchema(true);
         schema.addSchemaLine(schemaLine);
 

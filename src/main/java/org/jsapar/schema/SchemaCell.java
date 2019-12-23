@@ -159,6 +159,22 @@ public abstract class SchemaCell implements Cloneable {
             this.name = name;
         }
 
+        public Builder(String name, SchemaCell schemaCell) {
+            this.name = name;
+            ignoreRead = schemaCell.ignoreRead;
+            ignoreWrite = schemaCell.ignoreWrite;
+            mandatory = schemaCell.mandatory;
+            minValue = schemaCell.cellFormat.getFormat().format(schemaCell.getMinValue().getValue());
+            maxValue = schemaCell.cellFormat.getFormat().format(schemaCell.getMaxValue().getValue());
+            defaultValue = schemaCell.defaultValue;
+            emptyCondition = schemaCell.emptyCondition;
+            lineCondition = schemaCell.lineCondition;
+            cellType  = schemaCell.cellFormat.getCellType();
+            format = schemaCell.cellFormat.getFormat();
+            pattern = schemaCell.cellFormat.getPattern();
+            locale= schemaCell.locale;
+        }
+
         /**
          * @param cellType The type of the cell.
          * @return This builder.
@@ -299,6 +315,9 @@ public abstract class SchemaCell implements Cloneable {
             return (B) this;
         }
 
+        /**
+         * @return A newly created SchemaCell instance.
+         */
         public abstract C build();
     }
 

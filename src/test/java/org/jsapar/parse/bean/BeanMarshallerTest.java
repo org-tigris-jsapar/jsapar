@@ -78,22 +78,22 @@ public class BeanMarshallerTest {
     public static Schema makeOutputSchema(){
         CsvSchema schema = new CsvSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine(TstPerson.class.getName());
-        schemaLine.addSchemaCell(new CsvSchemaCell("firstName", CellType.STRING));
-        schemaLine.addSchemaCell(new CsvSchemaCell("lastName", CellType.STRING));
-        schemaLine.addSchemaCell(new CsvSchemaCell("shoeSize", CellType.INTEGER));
-        schemaLine.addSchemaCell(new CsvSchemaCell("streetNumber", CellType.INTEGER));
-        schemaLine.addSchemaCell(new CsvSchemaCell("luckyNumber", CellType.DECIMAL));
-        schemaLine.addSchemaCell(new CsvSchemaCell("birthTime", CellType.DATE));
-        schemaLine.addSchemaCell(new CsvSchemaCell("door", CellType.CHARACTER));
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("firstName").build());
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("lastName").build());
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("shoeSize").withCellType(CellType.INTEGER).build());
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("streetNumber").withCellType(CellType.INTEGER).build());
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("luckyNumber").withCellType(CellType.DECIMAL).build());
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("birthTime").withCellType(CellType.DATE).build());
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("door").withCellType(CellType.CHARACTER).build());
         schemaLine.addSchemaCell(CsvSchemaCell.builder("gender")
                 .withCellType(CellType.ENUM).withPattern("org.jsapar.TstGender")
                 .build());
-        schemaLine.addSchemaCell(new CsvSchemaCell("address.street", CellType.STRING));
-        schemaLine.addSchemaCell(new CsvSchemaCell("address.town", CellType.STRING));
-        schemaLine.addSchemaCell(new CsvSchemaCell("workAddress.street", CellType.STRING));
-        schemaLine.addSchemaCell(new CsvSchemaCell("workAddress.town", CellType.STRING));
-        schemaLine.addSchemaCell(new CsvSchemaCell("address.subAddress.street", CellType.STRING));
-        schemaLine.addSchemaCell(new CsvSchemaCell("address.subAddress.town", CellType.STRING));
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("address.street").build());
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("address.town").build());
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("workAddress.street").build());
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("workAddress.town").build());
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("address.subAddress.street").build());
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("address.subAddress.town").build());
         schema.addSchemaLine(schemaLine);
         return schema;
     }

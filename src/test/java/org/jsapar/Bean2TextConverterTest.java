@@ -69,8 +69,8 @@ public class Bean2TextConverterTest {
     private CsvSchema makeOutputSchema() {
         CsvSchema outputSchema = new CsvSchema();
         CsvSchemaLine outputSchemaLine = new CsvSchemaLine("org.jsapar.TstPerson");
-        outputSchemaLine.addSchemaCell(new CsvSchemaCell("firstName"));
-        outputSchemaLine.addSchemaCell(new CsvSchemaCell("lastName"));
+        outputSchemaLine.addSchemaCell(CsvSchemaCell.builder("firstName").build());
+        outputSchemaLine.addSchemaCell(CsvSchemaCell.builder("lastName").build());
         outputSchemaLine.setCellSeparator(";");
         outputSchema.addSchemaLine(outputSchemaLine);
         outputSchema.setLineSeparator("|");

@@ -136,11 +136,10 @@ class CsvLineParser {
             CsvSchemaCell schemaCell = masterLineSchema.getCsvSchemaCell(sCell);
             if (schemaCell == null) {
                 if(sCell.isEmpty()){
-                    schemaCell = new CsvSchemaCell("@@"+ ignoreCellCount++ + "@@");
-                    schemaCell.setIgnoreRead(true);
+                    schemaCell = CsvSchemaCell.builder("@@"+ ignoreCellCount++ + "@@").withIgnoreRead(true).build();
                 }
                 else {
-                    schemaCell = new CsvSchemaCell(sCell);
+                    schemaCell = CsvSchemaCell.builder(sCell).build();
                 }
             }
             schemaLine.addSchemaCell(schemaCell);

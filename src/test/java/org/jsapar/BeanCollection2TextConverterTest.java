@@ -32,8 +32,8 @@ public class BeanCollection2TextConverterTest {
 
         CsvSchema schema = new CsvSchema();
         CsvSchemaLine schemaLine = new CsvSchemaLine(TstPerson.class.getName());
-        schemaLine.addSchemaCell(new CsvSchemaCell("firstName", CellType.STRING));
-        schemaLine.addSchemaCell(new CsvSchemaCell("lastName", CellType.STRING));
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("firstName").build());
+        schemaLine.addSchemaCell( CsvSchemaCell.builder("lastName").build());
         schema.addSchemaLine(schemaLine);
         StringWriter writer = new StringWriter();
         BeanCollection2TextConverter<TstPerson> converter = new BeanCollection2TextConverter<>(schema);
