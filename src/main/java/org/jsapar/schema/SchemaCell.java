@@ -164,8 +164,10 @@ public abstract class SchemaCell implements Cloneable {
             ignoreRead = schemaCell.ignoreRead;
             ignoreWrite = schemaCell.ignoreWrite;
             mandatory = schemaCell.mandatory;
-            minValue = schemaCell.cellFormat.getFormat().format(schemaCell.getMinValue().getValue());
-            maxValue = schemaCell.cellFormat.getFormat().format(schemaCell.getMaxValue().getValue());
+            if(schemaCell.getMinValue() != null)
+                minValue = schemaCell.cellFormat.getFormat().format(schemaCell.getMinValue().getValue());
+            if(schemaCell.getMaxValue() != null)
+                maxValue = schemaCell.cellFormat.getFormat().format(schemaCell.getMaxValue().getValue());
             defaultValue = schemaCell.defaultValue;
             emptyCondition = schemaCell.emptyCondition;
             lineCondition = schemaCell.lineCondition;
@@ -457,11 +459,9 @@ public abstract class SchemaCell implements Cloneable {
         StringBuilder sb = new StringBuilder();
         sb.append("SchemaCell name='");
         sb.append(this.name);
-        sb.append("'");
-        if (this.cellFormat != null) {
-            sb.append(" cellFormat=");
-            sb.append(this.cellFormat);
-        }
+        sb.append("' ");
+        sb.append(this.cellFormat);
+
         if (this.defaultValue != null) {
             sb.append(" defaultValue=");
             sb.append(this.defaultValue);
