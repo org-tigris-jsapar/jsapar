@@ -22,7 +22,7 @@ class FWLineParserMatcher {
         this.lineParser = new FixedWidthLineParser(schemaLine, config);
         occursLeft = schemaLine.getOccurs();
         int beginPos=0;
-        for (FixedWidthSchemaCell schemaCell : schemaLine.getSchemaCells()) {
+        for (FixedWidthSchemaCell schemaCell : schemaLine) {
             if(schemaCell.hasLineCondition()){
                 controlCells.add(new FWControlCell(beginPos, schemaCell, ReadBuffer.makeTrimmer(schemaCell)));
             }

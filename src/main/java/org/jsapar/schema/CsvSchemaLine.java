@@ -11,10 +11,9 @@ import java.util.stream.Stream;
  * @see CsvSchema
  * @see CsvSchemaCell
  */
-public class CsvSchemaLine extends SchemaLine {
+public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
     private static final char NO_QUOTING = 0;
 
-    private Map<String, CsvSchemaCell> schemaCells = new LinkedHashMap<>();
 
     /**
      * Set this to true when the first line of the input text contains the names and order of the cells in the following
@@ -78,23 +77,6 @@ public class CsvSchemaLine extends SchemaLine {
         super(lineType, nOccurs);
     }
 
-    /**
-     * @return the cells
-     */
-    public Collection<CsvSchemaCell> getSchemaCells() {
-        return schemaCells.values();
-    }
-
-    /**
-     * Adds a schema cell to this row.
-     *
-     * @param cell The cell to add
-     * @return This instance of the schema line, allows to chain calls.
-     */
-    public CsvSchemaLine addSchemaCell(CsvSchemaCell cell) {
-        this.schemaCells.put(cell.getName(), cell);
-        return this;
-    }
 
     public String getCellSeparator() {
         return cellSeparator;
@@ -121,11 +103,6 @@ public class CsvSchemaLine extends SchemaLine {
     public CsvSchemaLine clone() {
         CsvSchemaLine line;
         line = (CsvSchemaLine) super.clone();
-        line.schemaCells = new LinkedHashMap<>();
-
-        for (CsvSchemaCell cell : this.schemaCells.values()) {
-            line.addSchemaCell(cell.clone());
-        }
         return line;
     }
 
@@ -148,8 +125,6 @@ public class CsvSchemaLine extends SchemaLine {
             sb.append(" quoteChar=");
             sb.append(this.quoteChar);
         }
-        sb.append(" schemaCells=");
-        sb.append(this.schemaCells);
         return sb.toString();
     }
 
@@ -178,42 +153,6 @@ public class CsvSchemaLine extends SchemaLine {
 
     public void setQuoteChar(char quoteChar) {
         this.quoteChar = quoteChar;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.jsapar.schema.SchemaLine#getSchemaCell(java.lang.String)
-     */
-    @Override
-    public SchemaCell getSchemaCell(String cellName) {
-        return getCsvSchemaCell(cellName);
-    }
-
-    /**
-     * @param cellName The name of the cell to get.
-     * @return {@link CsvSchemaCell} with specified name that is attached to this line or null if no such {@link CsvSchemaCell} exist.
-     */
-    public CsvSchemaCell getCsvSchemaCell(String cellName) {
-        return schemaCells.get(cellName);
-    }
-
-    @Override
-    public int size() {
-        return this.schemaCells.size();
-    }
-
-    @Override
-    public Stream<CsvSchemaCell> stream() {
-        return schemaCells.values().stream();
-    }
-
-    public Iterator<CsvSchemaCell> iterator() {
-        return schemaCells.values().iterator();
-    }
-
-    public void forEach(Consumer<? super SchemaCell> consumer) {
-        schemaCells.values().forEach(consumer);
     }
 
 

@@ -10,7 +10,7 @@ import java.util.stream.Stream;
  * 
  *
  */
-public class FixedWidthSchemaLine extends SchemaLine {
+public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
 
     private java.util.List<FixedWidthSchemaCell> schemaCells        = new java.util.ArrayList<>();
     private char                                 padCharacter       = ' ';
@@ -100,16 +100,6 @@ public class FixedWidthSchemaLine extends SchemaLine {
         return this.schemaCells.stream();
     }
 
-    @Override
-    public Iterator<? extends SchemaCell> iterator() {
-        return this.schemaCells.iterator();
-    }
-
-    @Override
-    public void forEach(Consumer<? super SchemaCell> consumer) {
-        this.schemaCells.forEach(consumer);
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -166,15 +156,6 @@ public class FixedWidthSchemaLine extends SchemaLine {
     public int getCellFirstPosition(String cellName) {
         FixedWidthCellPositions pos = getCellPositions(cellName);
         return pos != null ? pos.getFirst() : -1;
-    }
-
-    @Override
-    public SchemaCell getSchemaCell(String cellName) {
-        for (FixedWidthSchemaCell schemaCell : schemaCells) {
-            if (schemaCell.getName().equals(cellName))
-                return schemaCell;
-        }
-        return null;
     }
 
     @Override

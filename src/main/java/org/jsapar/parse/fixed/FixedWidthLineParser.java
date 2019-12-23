@@ -46,7 +46,7 @@ final class FixedWidthLineParser {
 
     @SuppressWarnings("UnnecessaryContinue")
     public Line parse(ReadBuffer lineReader, Consumer<JSaParException> errorListener) throws IOException {
-        Line line = new Line(lineSchema.getLineType(), lineSchema.getSchemaCells().size());
+        Line line = new Line(lineSchema.getLineType(), lineSchema.size());
         line.setLineNumber(lineReader.getLineNumber());
         boolean setDefaultsOnly = false;
         boolean oneRead = false;

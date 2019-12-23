@@ -141,7 +141,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
         if(schemaLine.getMinLength()>0)
             xmlSchemaLine.setAttribute(ATTRIB_FW_SCHEMA_MIN_LENGTH, String.valueOf(schemaLine.getMinLength()));
 
-        for (FixedWidthSchemaCell schemaCell : schemaLine.getSchemaCells()) {
+        for (FixedWidthSchemaCell schemaCell : schemaLine) {
             Element xmlCell = extractFixedWidthSchemaCell(xmlDocument, schemaCell);
             xmlSchemaLine.appendChild(xmlCell);
         }
@@ -224,7 +224,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
 
         xmlSchemaLine.setAttribute(ATTRIB_CSV_QUOTE_CHAR, schemaLine.isQuoteCharUsed() ? String.valueOf(schemaLine.getQuoteChar()): QUOTE_CHAR_NONE);
 
-        for (CsvSchemaCell schemaCell : schemaLine.getSchemaCells()) {
+        for (CsvSchemaCell schemaCell : schemaLine) {
             Element xmlCell = extractCsvSchemaCell(xmlDocument, schemaCell);
             xmlSchemaLine.appendChild(xmlCell);
         }

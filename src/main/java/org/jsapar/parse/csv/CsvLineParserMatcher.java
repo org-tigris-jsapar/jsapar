@@ -28,7 +28,7 @@ class CsvLineParserMatcher {
         occursLeft = schemaLine.getOccurs();
         lineParser = new CsvLineParser(schemaLine, config);
         int pos = 0;
-        for (CsvSchemaCell schemaCell : schemaLine.getSchemaCells()) {
+        for (CsvSchemaCell schemaCell : schemaLine) {
             if (schemaCell.hasLineCondition()) {
                 controlCells.add(new CsvControlCell(pos, schemaCell));
             }

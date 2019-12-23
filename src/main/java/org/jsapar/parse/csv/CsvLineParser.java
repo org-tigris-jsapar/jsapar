@@ -89,7 +89,7 @@ class CsvLineParser {
             return true;
 
         // Create with same size as schema plus 1 to handle trailing cell separator which is quite common.
-        Line line = new Line(lineSchema.getLineType(), 1 + lineSchema.getSchemaCells().size());
+        Line line = new Line(lineSchema.getLineType(), 1 + lineSchema.size());
         line.setLineNumber(lineReader.currentLineNumber());
         lineDecoratorErrorConsumer.initialize(errorListener, line);
 
@@ -130,10 +130,10 @@ class CsvLineParser {
     private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, List<String> asCells, Consumer<JSaParException> errorListener) {
 
         CsvSchemaLine schemaLine = masterLineSchema.clone();
-        schemaLine.getSchemaCells().clear();
+        schemaLine.clear();
         int ignoreCellCount=1;
         for (String sCell : asCells) {
-            CsvSchemaCell schemaCell = masterLineSchema.getCsvSchemaCell(sCell);
+            CsvSchemaCell schemaCell = masterLineSchema.getSchemaCell(sCell);
             if (schemaCell == null) {
                 if(sCell.isEmpty()){
                     schemaCell = CsvSchemaCell.builder("@@"+ ignoreCellCount++ + "@@").withIgnoreRead(true).build();
@@ -153,8 +153,8 @@ class CsvLineParser {
     private void checkMissingMandatoryValues(CsvSchemaLine schemaLine,
                                              CsvSchemaLine masterLineSchema,
                                              Consumer<JSaParException> errorListener) {
-        masterLineSchema.getSchemaCells().stream().filter(schemaCell -> schemaCell.isMandatory()
-                && schemaLine.getCsvSchemaCell(schemaCell.getName()) == null).forEach(schemaCell -> errorListener
+        masterLineSchema.stream().filter(schemaCell -> schemaCell.isMandatory()
+                && schemaLine.getSchemaCell(schemaCell.getName()) == null).forEach(schemaCell -> errorListener
                 .accept(new LineParseException(0, "Mandatory cell " + schemaCell.getName()
                         + " is missing in the header line that is used as schema for lines of type [" + schemaLine
                         .getLineType() + "].")));
@@ -169,8 +169,8 @@ class CsvLineParser {
      * @param masterLineSchema The master schema line to get default values from.
      */
     private void addMissingDefaultValuesFromMaster(CsvSchemaLine schemaLine, CsvSchemaLine masterLineSchema) {
-        masterLineSchema.getSchemaCells().stream().filter(schemaCell -> schemaCell.isDefaultValue()
-                && schemaLine.getCsvSchemaCell(schemaCell.getName()) == null).forEach(schemaCell -> {
+        masterLineSchema.stream().filter(schemaCell -> schemaCell.isDefaultValue()
+                && schemaLine.getSchemaCell(schemaCell.getName()) == null).forEach(schemaCell -> {
             CsvSchemaCell defaultCell = schemaCell.clone();
             defaultCell.setIgnoreRead(true);
             schemaLine.addSchemaCell(defaultCell);

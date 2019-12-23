@@ -2,9 +2,7 @@ package org.jsapar.schema;
 
 import org.jsapar.model.Line;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -15,12 +13,17 @@ import java.util.stream.Stream;
  * @see Schema
  * @see SchemaCell
  */
-public abstract class SchemaLine implements Cloneable {
+public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Iterable<C> {
     /**
      * Constant to be used in occurs attribute and that indicates that lines can occur infinite number of times.
      */
     private static final int OCCURS_INFINITE = Integer.MAX_VALUE;
     private static final String NOT_SET = "";
+
+    /**
+     * The schema cells.
+     */
+    private Map<String, C> schemaCells = new LinkedHashMap<>();
 
     /**
      * The number of times this type of line occurs in the corresponding input or output.
@@ -121,7 +124,9 @@ public abstract class SchemaLine implements Cloneable {
      * @param cellName The name of the schema cell to find.
      * @return The schema cell with the supplied name or null if no such cell was found.
      */
-    public abstract SchemaCell getSchemaCell(String cellName);
+    public C getSchemaCell(String cellName){
+        return schemaCells.get(cellName);
+    }
 
 
     /**
@@ -191,14 +196,11 @@ public abstract class SchemaLine implements Cloneable {
             sb.append("INFINITE");
         else
             sb.append(this.occurs);
+        sb.append(" schemaCells=");
+        sb.append(this.schemaCells);
         return sb.toString();
     }
 
-
-    /**
-     * @return Number of cells in a line
-     */
-    public abstract int size();
 
     @Override
     public boolean equals(Object o) {
@@ -216,19 +218,61 @@ public abstract class SchemaLine implements Cloneable {
     }
 
     @Override
-    public SchemaLine clone() {
+    public SchemaLine<C> clone() {
         try {
-            return (SchemaLine) super.clone();
+            SchemaLine<C> clone = (SchemaLine<C>) super.clone();
+            clone.schemaCells = new LinkedHashMap<>();
+
+            for (C cell : this.schemaCells.values()) {
+                clone.addSchemaCell((C) cell.clone());
+            }
+
+            return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError("Can never happen.", e);
         }
     }
 
-    public abstract Stream<? extends SchemaCell> stream();
+    /**
+     * @return A collection of all schema cells in the correct order.
+     */
+    public Collection<C> getSchemaCells(){
+        return this.schemaCells.values();
+    }
 
-    public abstract Iterator<? extends SchemaCell> iterator();
 
-    public abstract void forEach(Consumer<? super SchemaCell> consumer);
+    /**
+     * Adds a schema cell to this row.
+     *
+     * @param cell The cell to add
+     */
+    public void addSchemaCell(C cell) {
+        this.schemaCells.put(cell.getName(), cell);
+    }
 
-    public abstract Collection<? extends SchemaCell> getSchemaCells();
+    /**
+     * @return Number of cells in a line
+     */
+    public int size() {
+        return this.schemaCells.size();
+    }
+
+    public Stream<C> stream() {
+        return schemaCells.values().stream();
+    }
+
+    public Iterator<C> iterator() {
+        return schemaCells.values().iterator();
+    }
+
+    public void forEach(Consumer<? super C> consumer) {
+        schemaCells.values().forEach(consumer);
+    }
+
+    /**
+     * Removes all schema cells from this line.
+     */
+    public void clear(){
+        schemaCells.clear();
+    }
 }

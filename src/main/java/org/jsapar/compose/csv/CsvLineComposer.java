@@ -40,7 +40,7 @@ class CsvLineComposer implements LineComposer {
     }
 
     private List<CsvCellComposer> makeCellComposers(CsvSchemaLine schemaLine, String lineSeparator) {
-        return schemaLine.getSchemaCells().stream()
+        return schemaLine.stream()
                 .map(this::makeCellComposer)
                 .collect(Collectors.toList());
     }
@@ -121,7 +121,7 @@ class CsvLineComposer implements LineComposer {
     private void composeHeaderLine() {
         CsvSchemaLine unformattedSchemaLine = schemaLine.clone();
         unformattedSchemaLine.setFirstLineAsSchema(false);
-        for (CsvSchemaCell schemaCell : unformattedSchemaLine.getSchemaCells()) {
+        for (CsvSchemaCell schemaCell : unformattedSchemaLine) {
             schemaCell.setCellFormat(CellType.STRING);
         }
         CsvLineComposer headerLineComposer = new CsvLineComposer(writer, unformattedSchemaLine, lineSeparator, quoteSyntax);
@@ -135,7 +135,7 @@ class CsvLineComposer implements LineComposer {
     private Line buildHeaderLineFromSchema(CsvSchemaLine headerSchemaLine)  {
         Line line = new Line(headerSchemaLine.getLineType(), headerSchemaLine.size());
 
-        for (CsvSchemaCell schemaCell : headerSchemaLine.getSchemaCells()) {
+        for (CsvSchemaCell schemaCell : headerSchemaLine) {
             line.addCell(new StringCell(schemaCell.getName(), schemaCell.getName()));
         }
 
