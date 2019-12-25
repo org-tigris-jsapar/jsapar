@@ -48,7 +48,7 @@
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:attribute>
-    <xsd:attribute name="linetype" type="xsd:string" >
+    <xsd:attribute name="linetype" type="xsd:string" use="required">
       <xsd:annotation>
         <xsd:documentation>
           Specifies the type of the line. If there are more than one type of line or if linecondition cells are used, then

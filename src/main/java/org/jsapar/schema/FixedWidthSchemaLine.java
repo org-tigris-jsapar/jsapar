@@ -100,6 +100,10 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
         public FixedWidthSchemaLine build() {
             return new FixedWidthSchemaLine(this);
         }
+
+        public char getPadCharacter() {
+            return this.padCharacter;
+        }
     }
 
 

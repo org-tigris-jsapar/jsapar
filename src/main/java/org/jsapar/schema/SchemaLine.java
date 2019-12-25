@@ -133,7 +133,12 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
             return (B) this;
         }
 
+        public void withOccursInfinitely() {
+            this.occurs = OCCURS_INFINITE;
+        }
+
         public abstract L build();
+
     }
 
     /**

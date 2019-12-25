@@ -199,6 +199,11 @@ public abstract class SchemaCell implements Cloneable {
             return (B) this;
         }
 
+        public <E extends Enum<E>> B withEnumFormat(Class<E> enumClass, boolean ignoreCase){
+            withCellType(CellType.ENUM);
+            return (B) withFormat((Format<T>) new EnumFormat<E>(enumClass, ignoreCase));
+        }
+
         /**
          * @param pattern The pattern of the cell. See {@link SchemaCellFormat}
          * @return This builder.
@@ -321,6 +326,7 @@ public abstract class SchemaCell implements Cloneable {
          * @return A newly created SchemaCell instance.
          */
         public abstract C build();
+
     }
 
     /**

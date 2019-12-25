@@ -2,6 +2,7 @@ package org.jsapar.schema;
 
 import org.jsapar.TstGender;
 import org.jsapar.model.CellType;
+import org.jsapar.text.EnumFormat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,12 +24,13 @@ public class Schema2XmlExtractorTest {
     public void testExtractXml_FixedWidth() throws SchemaException {
         StringWriter writer = new StringWriter();
         FixedWidthSchema schema = new FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
-        schemaLine.setMinLength(240);
+        FixedWidthSchemaLine schemaLine = FixedWidthSchemaLine.builder("Person")
+                .withOccurs(2)
+                .withMinLength(240)
+                .withCell("First name", 5)
+                .withCell("Last name", 8)
+                .build();
         schema.setLineSeparator("");
-
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
         schema.addSchemaLine(schemaLine);
         
         Schema2XmlExtractor extractor = new Schema2XmlExtractor();
@@ -52,13 +54,15 @@ public class Schema2XmlExtractorTest {
     public void testExtractXml_Csv() throws SchemaException {
         StringWriter writer = new StringWriter();
         CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine(2);
+        CsvSchemaLine schemaLine = CsvSchemaLine.builder("Person")
+                .withOccurs(2)
+                .withCells("First name","Last name")
+                .withCell( CsvSchemaCell.builder("Gender")
+                        .withLocale(Locale.getDefault())
+                        .withEnumFormat(TstGender.class, true)
+                        .build())
+                .build();
 
-        schemaLine.addSchemaCell(new CsvSchemaCell("First name"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
-        CsvSchemaCell schemaCell = new CsvSchemaCell("Gender", CellType.ENUM, TstGender.class.getName(), Locale.getDefault());
-
-        schemaLine.addSchemaCell(schemaCell);
         schema.addSchemaLine(schemaLine);
         
         Schema2XmlExtractor extractor = new Schema2XmlExtractor();

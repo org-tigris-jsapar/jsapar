@@ -113,6 +113,11 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
             return this;
         }
 
+        public Builder withoutQuoteChar() {
+            this.quoteChar = NO_QUOTING;
+            return this;
+        }
+
         /**
          * Convenience method that creates a string csv cell with supplied name without any further
          * formatting and adds it to this builder. For more advanced options use {@link SchemaLine.Builder#withCell(SchemaCell)}
@@ -142,6 +147,7 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
         public CsvSchemaLine build() {
             return new CsvSchemaLine(this);
         }
+
     }
 
 

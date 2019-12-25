@@ -13,11 +13,9 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -123,26 +121,26 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      * @throws SchemaException If there are errors in the schema.
      */
     private FixedWidthSchemaLine buildFixedWidthSchemaLine(Element xmlSchemaLine, Locale locale) throws SchemaException {
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine();
+        FixedWidthSchemaLine.Builder schemaLineBuilder = FixedWidthSchemaLine.builder(parseAttribute(xmlSchemaLine, ATTRIB_SCHEMA_LINE_LINETYPE).orElse("unknown"));
 
-        assignSchemaLineBase(schemaLine, xmlSchemaLine);
+        assignSchemaLineBase(schemaLineBuilder, xmlSchemaLine);
 
         parseAttribute(xmlSchemaLine, ATTRIB_FW_SCHEMA_PAD_CHARACTER)
                 .map(s->s.charAt(0))
-                .ifPresent(schemaLine::setPadCharacter);
+                .ifPresent(schemaLineBuilder::withPadCharacter);
 
         parseAttribute(xmlSchemaLine, ATTRIB_FW_SCHEMA_MIN_LENGTH)
                 .filter(s->!s.isEmpty())
                 .map(Integer::valueOf)
-                .ifPresent(schemaLine::setMinLength);
+                .ifPresent(schemaLineBuilder::withMinLength);
 
         NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node child = nodes.item(i);
             if (child instanceof Element)
-                schemaLine.addSchemaCell(buildFixedWidthSchemaCell((Element) child, locale, schemaLine));
+                schemaLineBuilder.withCell(buildFixedWidthSchemaCell((Element) child, locale, schemaLineBuilder.getPadCharacter()));
         }
-        return schemaLine;
+        return schemaLineBuilder.build();
     }
 
     /**
@@ -150,11 +148,11 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      * 
      * @param xmlSchemaCell The cell schema xml element
      * @param locale        The default locale
-     * @param schemaLine    The schema line to add schema cell to
+     * @param defaultPadCharacter The default pad character to use.
      * @return A newly created fixed width cell schema.
      * @throws SchemaException If there is an error in the schema.
      */
-    private FixedWidthSchemaCell buildFixedWidthSchemaCell(Element xmlSchemaCell, Locale locale, FixedWidthSchemaLine schemaLine) throws SchemaException {
+    private FixedWidthSchemaCell buildFixedWidthSchemaCell(Element xmlSchemaCell, Locale locale, char defaultPadCharacter) throws SchemaException {
 
         int nLength = getIntValue(getMandatoryAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_CELL_LENGTH));
         String sName = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_NAME);
@@ -182,7 +180,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         }
         cellBuilder.withPadCharacter(parseAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_PAD_CHARACTER)
                 .map(s -> s.charAt(0))
-                .orElseGet(schemaLine::getPadCharacter));
+                .orElse(defaultPadCharacter));
 
         parseBooleanAttribute(xmlSchemaCell, ATTRIB_FW_SCHEMA_TRIM_PAD_CHARACTER)
                 .ifPresent(cellBuilder::withTrimPadCharacter);
@@ -239,22 +237,22 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      */
     private CsvSchemaLine buildCsvSchemaLine(Element xmlSchemaLine, Locale locale) throws SchemaException {
 
-        CsvSchemaLine schemaLine = new CsvSchemaLine();
-        assignSchemaLineBase(schemaLine, xmlSchemaLine);
+        CsvSchemaLine.Builder schemaLineBuilder = CsvSchemaLine.builder(parseAttribute(xmlSchemaLine, ATTRIB_SCHEMA_LINE_LINETYPE).orElse("unknown"));
+        assignSchemaLineBase(schemaLineBuilder, xmlSchemaLine);
 
         parseAttribute(xmlSchemaLine, ATTRIB_CSV_SCHEMA_CELL_SEPARATOR)
                 .map(StringUtils::replaceEscapes2Java)
-                .ifPresent(schemaLine::setCellSeparator);
+                .ifPresent(schemaLineBuilder::withCellSeparator);
 
         Node xmlFirstLineAsSchema = xmlSchemaLine.getAttributeNode(ATTRIB_CSV_SCHEMA_LINE_FIRSTLINEASSCHEMA);
         if (xmlFirstLineAsSchema != null)
-            schemaLine.setFirstLineAsSchema(getBooleanValue(xmlFirstLineAsSchema));
+            schemaLineBuilder.withFirstLineAsSchema(getBooleanValue(xmlFirstLineAsSchema));
 
         parseAttribute(xmlSchemaLine, ATTRIB_CSV_QUOTE_CHAR).ifPresent(s->{
             if(s.equals(QUOTE_CHAR_NONE))
-                schemaLine.disableQuoteChar();
+                schemaLineBuilder.withoutQuoteChar();
             else
-                schemaLine.setQuoteChar(s.charAt(0));
+                schemaLineBuilder.withQuoteChar(s.charAt(0));
         });
 
         QuoteBehavior quoteBehavior = parseAttribute(xmlSchemaLine, ATTRIB_CSV_QUOTE_BEHAVIOR)
@@ -265,10 +263,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node child = nodes.item(i);
             if (child instanceof Element)
-                schemaLine.addSchemaCell(buildCsvSchemaCell((Element) child, locale, quoteBehavior));
+                schemaLineBuilder.withCell(buildCsvSchemaCell((Element) child, locale, quoteBehavior));
         }
 
-        return schemaLine;
+        return schemaLineBuilder.build();
     }
 
     /**
@@ -316,30 +314,25 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
 
     /**
      * Assign common pars for base class.
-     * 
-     * @param line The line to assign to
+     *  @param lineBuilder The line to assign to
      * @param xmlSchemaLine The xml element to parse
      */
-    private void assignSchemaLineBase(SchemaLine line, Element xmlSchemaLine)  {
+    private void assignSchemaLineBase(SchemaLine.Builder lineBuilder, Element xmlSchemaLine)  {
         Node xmlOccurs = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_OCCURS);
         if (xmlOccurs != null) {
             if (getStringValue(xmlOccurs).equals("*"))
-                line.setOccursInfinitely();
+                lineBuilder.withOccursInfinitely();
             else
-                line.setOccurs(getIntValue(xmlOccurs));
+                lineBuilder.withOccurs(getIntValue(xmlOccurs));
         }
-
-        Node xmlLineType = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_LINE_LINETYPE);
-        if (xmlLineType != null)
-            line.setLineType(getStringValue(xmlLineType));
 
         Node xmlIgnoreRead = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_IGNOREREAD);
         if (xmlIgnoreRead != null)
-            line.setIgnoreRead(getBooleanValue(xmlIgnoreRead));
+            lineBuilder.withIgnoreRead(getBooleanValue(xmlIgnoreRead));
 
         Node xmlIgnoreWrite = xmlSchemaLine.getAttributeNode(ATTRIB_SCHEMA_IGNOREWRITE);
         if (xmlIgnoreWrite != null)
-            line.setIgnoreWrite(getBooleanValue(xmlIgnoreWrite));
+            lineBuilder.withIgnoreWrite(getBooleanValue(xmlIgnoreWrite));
 
 
     }
