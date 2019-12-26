@@ -122,41 +122,43 @@ class CsvLineParser {
      * Builds a CsvSchemaLine from a header line.
      *
      * @param masterLineSchema The base to use while creating csv schema. May add formatting, defaults etc.
-     * @param asCells          An array of cells in the header line to use for building the schema.
+     * @param cellNames          Cells in the header line to use for building the schema.
      * @param errorListener    The error handler
      * @return A CsvSchemaLine created from the header line.
      *
      */
-    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, List<String> asCells, Consumer<JSaParException> errorListener) {
+    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, List<String> cellNames, Consumer<JSaParException> errorListener) {
 
-        CsvSchemaLine schemaLine = masterLineSchema.clone();
-        schemaLine.clear();
+        CsvSchemaLine.Builder schemaLineBuilder = CsvSchemaLine.builder(masterLineSchema.getLineType(), masterLineSchema);
+        schemaLineBuilder.withoutAnyCells();
         int ignoreCellCount=1;
-        for (String sCell : asCells) {
-            CsvSchemaCell schemaCell = masterLineSchema.getSchemaCell(sCell);
+        for (String cellName : cellNames) {
+            CsvSchemaCell schemaCell = masterLineSchema.getSchemaCell(cellName);
             if (schemaCell == null) {
-                if(sCell.isEmpty()){
+                if(cellName.isEmpty()){
                     schemaCell = CsvSchemaCell.builder("@@"+ ignoreCellCount++ + "@@").withIgnoreRead(true).build();
                 }
                 else {
-                    schemaCell = CsvSchemaCell.builder(sCell).build();
+                    schemaCell = CsvSchemaCell.builder(cellName).build();
                 }
             }
-            schemaLine.addSchemaCell(schemaCell);
+            schemaLineBuilder.withCell(schemaCell);
         }
-        addMissingDefaultValuesFromMaster(schemaLine, masterLineSchema);
-        checkMissingMandatoryValues(schemaLine, masterLineSchema, errorListener);
+        addMissingDefaultValuesFromMaster(schemaLineBuilder, masterLineSchema);
+        checkMissingMandatoryValues(cellNames, masterLineSchema, errorListener);
+        CsvSchemaLine schemaLine = schemaLineBuilder.build();
         this.cellParsers = this.makeCellParsers(schemaLine);
         return schemaLine;
     }
 
-    private void checkMissingMandatoryValues(CsvSchemaLine schemaLine,
+    private void checkMissingMandatoryValues(List<String> cells,
                                              CsvSchemaLine masterLineSchema,
                                              Consumer<JSaParException> errorListener) {
-        masterLineSchema.stream().filter(schemaCell -> schemaCell.isMandatory()
-                && schemaLine.getSchemaCell(schemaCell.getName()) == null).forEach(schemaCell -> errorListener
+        masterLineSchema.stream()
+                .filter(schemaCell -> schemaCell.isMandatory() && !cells.contains(schemaCell.getName()))
+                .forEach(schemaCell -> errorListener
                 .accept(new LineParseException(0, "Mandatory cell " + schemaCell.getName()
-                        + " is missing in the header line that is used as schema for lines of type [" + schemaLine
+                        + " is missing in the header line that is used as schema for lines of type [" + masterLineSchema
                         .getLineType() + "].")));
 
     }
@@ -164,17 +166,16 @@ class CsvLineParser {
     /**
      * Add all missing schema cells that has a default value in the master schema last on the line with
      * ignoreRead=true so that the default values are always set.
-     *
-     * @param schemaLine       The schema line to add missing default values to.
+     *  @param schemaLineBuilder       The schema line builder to add missing default values to.
      * @param masterLineSchema The master schema line to get default values from.
      */
-    private void addMissingDefaultValuesFromMaster(CsvSchemaLine schemaLine, CsvSchemaLine masterLineSchema) {
-        masterLineSchema.stream().filter(schemaCell -> schemaCell.isDefaultValue()
-                && schemaLine.getSchemaCell(schemaCell.getName()) == null).forEach(schemaCell -> {
-            CsvSchemaCell defaultCell = schemaCell.clone();
-            defaultCell.setIgnoreRead(true);
-            schemaLine.addSchemaCell(defaultCell);
-        });
+    private void addMissingDefaultValuesFromMaster(CsvSchemaLine.Builder schemaLineBuilder, CsvSchemaLine masterLineSchema) {
+        masterLineSchema.stream()
+                .filter(schemaCell -> schemaCell.isDefaultValue() && !schemaLineBuilder.containsCell(schemaCell.getName()))
+                .forEach(schemaCell ->
+                        schemaLineBuilder.withCell(CsvSchemaCell.builder(schemaCell.getName(), schemaCell)
+                                .withIgnoreRead(true)
+                                .build()));
     }
 
     /**

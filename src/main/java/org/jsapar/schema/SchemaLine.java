@@ -203,6 +203,9 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
 
         public abstract L build();
 
+        public boolean containsCell(String cellName) {
+            return schemaCells.stream().anyMatch(it->it.getName().equals(cellName));
+        }
     }
 
     /**
