@@ -92,8 +92,23 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
         this.quoteChar = builder.quoteChar;
     }
 
+    /**
+     * Creates a new builder for supplied line type.
+     * @param lineType The name of the line type of the new instance to create.
+     * @return A builder that builds CsvSchemaLine instances.
+     */
     public static Builder builder(String lineType){
         return new Builder(lineType);
+    }
+
+    /**
+     * Creates a new builder based on a supplied schema line. Can be used instead of clone as a copy constructor.
+     * @param lineType       The name of the line type of the new instance to create.
+     * @param schemaLine     The schema line to clone all values except the name from.
+     * @return A builder that builds CsvSchemaLine instances.
+     */
+    public static Builder builder(String lineType, CsvSchemaLine schemaLine){
+        return new Builder(lineType, schemaLine);
     }
 
     public static class Builder extends SchemaLine.Builder<CsvSchemaCell, CsvSchemaLine, Builder>{
@@ -106,21 +121,49 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
             super(lineType);
         }
 
+        public Builder(String lineType, CsvSchemaLine schemaLine) {
+            super(lineType, schemaLine);
+            this.quoteChar = schemaLine.quoteChar;
+            this.cellSeparator = schemaLine.cellSeparator;
+            this.firstLineAsSchema = schemaLine.firstLineAsSchema;
+        }
+
+        /**
+         * @param firstLineAsSchema Set this to true when the first line of the input text contains the names and order of the cells in the following
+         *       lines, i.e. the first line is a header line that works as a schema for the rest of the file. In that case this
+         *       schema line instance will only be used to get
+         *       formatting instructions and default values, it will not denote the order of the cells. The order is given by the
+         *       first line of the input instead. Default is false
+         * @return This builder instance.
+         */
         public Builder withFirstLineAsSchema(boolean firstLineAsSchema){
             this.firstLineAsSchema = firstLineAsSchema;
             return this;
         }
 
+        /**
+         * @param cellSeparator The character sequence that separates each cell. Default is the ';' (semicolon) character.
+         * @return This builder instance.
+         */
         public Builder withCellSeparator(String cellSeparator){
             this.cellSeparator = cellSeparator;
             return this;
         }
 
+        /**
+         * @param quoteChar Specifies quote character used to encapsulate cells. Default is the standard double quote character (").
+         *       Disable quoting by calling {@link #withoutQuoteChar()}.
+         * @return This builder instance.
+         */
         public Builder withQuoteChar(char quoteChar){
             this.quoteChar = quoteChar;
             return this;
         }
 
+        /**
+         * Disables quoting for this line type. Successive call to {@link #withQuoteChar(char)} will again enable quoting.
+          * @return This builder instance.
+         */
         public Builder withoutQuoteChar() {
             this.quoteChar = NO_QUOTING;
             return this;

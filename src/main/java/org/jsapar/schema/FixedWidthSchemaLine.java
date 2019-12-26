@@ -1,9 +1,5 @@
 package org.jsapar.schema;
 
-import java.util.Iterator;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
-
 /**
  * This class represents the schema for a line of a fixed with file. Each cell within the line has a
  * specified size. There are no delimiter characters.
@@ -72,8 +68,24 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
         }
     }
 
+    /**
+     * Creates a new builder for supplied line type.
+     * @param lineType The name of the line type of the new instance to create.
+     * @return A builder that builds FixedWithSchemaLine instances.
+     */
     public static Builder builder(String lineType) {
         return new Builder(lineType);
+    }
+
+    /**
+     * Creates a new builder based on a supplied schema line. Can be used instead of clone as a copy constructor.
+     * @param lineType       The name of the line type of the new instance to create.
+     * @param schemaLine     The schema line to clone all values except the name from.
+     * @return A builder that builds FixedWithSchemaLine instances.
+     */
+    public static Builder builder(String lineType, FixedWidthSchemaLine schemaLine)
+    {
+        return new Builder(lineType, schemaLine);
     }
 
     public static class Builder extends SchemaLine.Builder<FixedWidthSchemaCell, FixedWidthSchemaLine, Builder> {
@@ -85,11 +97,26 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
             super(lineType);
         }
 
+        public Builder(String lineType, FixedWidthSchemaLine schemaLine) {
+            super(lineType, schemaLine);
+            this.padCharacter = schemaLine.padCharacter;
+            this.minLength = schemaLine.minLength;
+        }
+
+        /**
+         * @param padCharacter The pad character to use when padding line. Default is space.
+         * @return This builder instance.
+         */
         public Builder withPadCharacter(char padCharacter) {
             this.padCharacter = padCharacter;
             return this;
         }
 
+        /**
+         * @param minLength The minimal length of a line to generate. If the sum of all cells' length do not reach the length of a line, the
+         *      line will be filled with the pad character. When parsing, the parse configuration determines the behavior if this length is not reached.
+         * @return This builder instance.
+         */
         public Builder withMinLength(int minLength) {
             this.minLength = minLength;
             return this;

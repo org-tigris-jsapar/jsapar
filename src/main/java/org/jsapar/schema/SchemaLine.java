@@ -120,10 +120,34 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
             this.lineType = lineType;
         }
 
-        public B withOccurs(int nOccurs) {
-            this.occurs = nOccurs;
+        public Builder(String lineType, SchemaLine<C> schemaLine) {
+            this.lineType = lineType;
+            this.schemaCells.addAll(schemaLine.schemaCells.values());
+            this.occurs = schemaLine.occurs;
+            this.ignoreRead = schemaLine.ignoreRead;
+            this.ignoreWrite = schemaLine.ignoreWrite;
+        }
+
+        /**
+         * Successive calls to this method or {@link #withOccursInfinitely()} for the same builder will replace previous value.
+         * @param occurs The maximum number of times this type of line occurs in the corresponding input or output. Default is infinite.
+         * @return This builder instance.
+         */
+        public B withOccurs(int occurs) {
+            this.occurs = occurs;
             return (B) this;
         }
+
+        /**
+         * Resets the occurs value for this type of line to be the default infinite value.
+         * Successive calls to this method or {@link #withOccurs(int)} )} for the same builder will replace previous value.
+         * @return This builder instance.
+         */
+        public B withOccursInfinitely() {
+            this.occurs = OCCURS_INFINITE;
+            return (B) this;
+        }
+
 
         /**
          * Adds a supplied schema cell to this builder. Can be called multiple times to add more cells.
@@ -147,18 +171,34 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
             return (B) this;
         }
 
+        /**
+         * Removes any cells added so far to this builder.
+         * @return This builder instance.
+         */
+        public B withoutAnyCells() {
+            this.schemaCells.clear();
+            return (B) this;
+        }
+
+        /**
+         * Successive calls to this method for the same builder will replace previous value.
+         * @param ignoreRead If set to true, this type of line will be read from the input but then ignored, thus the
+         *                   line consumer will not be called. Default is false.
+         * @return This builder instance.
+         */
         public B withIgnoreRead(boolean ignoreRead) {
             this.ignoreRead = ignoreRead;
             return (B) this;
         }
 
+        /**
+         * Successive calls to this method for the same builder will replace previous value.
+         * @param ignoreWrite If set to true, this type of line will not be written to the output. Default is false.
+         * @return This builder instance.
+         */
         public B withIgnoreWrite(boolean ignoreWrite) {
             this.ignoreWrite = ignoreWrite;
             return (B) this;
-        }
-
-        public void withOccursInfinitely() {
-            this.occurs = OCCURS_INFINITE;
         }
 
         public abstract L build();
