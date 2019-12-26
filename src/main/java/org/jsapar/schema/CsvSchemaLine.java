@@ -1,9 +1,5 @@
 package org.jsapar.schema;
 
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
-
 /**
  * Describes the schema for a delimiter separated line. For instance if you want to ignore a header line you
  * can add a SchemaLine instance to your schema with occurs==1 and ignoreRead==true;
@@ -44,40 +40,52 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
 
     /**
      * Creates an empty schema line.
+     * <p>
+     * Deprecated since 2.2. Use builder instead.
      */
+    @Deprecated
     public CsvSchemaLine() {
         super();
     }
 
     /**
      * Creates an empty schema line which occurs nOccurs number of times.
+     * <p>
+     * Deprecated since 2.2. Use builder instead.
      *
      * @param nOccurs The number of times this type of line occurs in the input.
      */
+    @Deprecated
     public CsvSchemaLine(int nOccurs) {
         super(nOccurs);
     }
 
     /**
      * Creates a CsvSchemaLine with the supplied line type and occurs infinite number of times.
+     * <p>
+     * Deprecated since 2.2. Use builder instead.
      *
      * @param lineType The type of the line
      */
+    @Deprecated
     public CsvSchemaLine(String lineType) {
         super(lineType);
     }
 
     /**
      * Creates a CsvSchemaLine with the supplied line type and occurs supplied number of times.
+     * <p>
+     * Deprecated since 2.2. Use builder instead.
      *
      * @param lineType The type of the line
      * @param nOccurs  The number of times this type of line occurs in the input/output.
      */
+    @Deprecated
     public CsvSchemaLine(String lineType, int nOccurs) {
         super(lineType, nOccurs);
     }
 
-    public CsvSchemaLine(Builder builder) {
+    private CsvSchemaLine(Builder builder) {
         super(builder);
         this.cellSeparator = builder.cellSeparator;
         this.firstLineAsSchema = builder.firstLineAsSchema;

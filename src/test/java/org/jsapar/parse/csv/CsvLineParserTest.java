@@ -16,6 +16,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 
@@ -42,11 +44,9 @@ public class CsvLineParserTest {
     }
 
     static CsvSchemaLine makeCsvSchemaLine() {
-        CsvSchemaLine schemaLine = new CsvSchemaLine();
-        for (int i = 0; i < 7; i++) {
-            schemaLine.addSchemaCell(new CsvSchemaCell(String.valueOf(i)));
-        }
-        return schemaLine;
+        return CsvSchemaLine.builder("testLine")
+                .withCells("0","1","2","3","4","5","6")
+                .build();
     }
 
     private CsvLineReader makeCsvLineReaderForString(String sLine) {

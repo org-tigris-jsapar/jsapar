@@ -5,7 +5,6 @@ import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchema;
-import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 import org.junit.Test;
 
@@ -19,20 +18,20 @@ public class CsvComposerTest {
     public final void testCompose_firstLineAsHeader() throws JSaParException {
         CsvSchema schema = new CsvSchema();
 
-        CsvSchemaLine schemaLine = new CsvSchemaLine();
-        schemaLine.addSchemaCell(new CsvSchemaCell("FirstName"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("LastName"));
-        schemaLine.setFirstLineAsSchema(true);
+        CsvSchemaLine schemaLine =  CsvSchemaLine.builder("line")
+                .withCells("FirstName", "LastName")
+                .withFirstLineAsSchema(true)
+                .build();
         schema.addSchemaLine(schemaLine);
 
         Document doc = new Document();
 
-        Line line1 = new Line("");
+        Line line1 = new Line("line");
         line1.addCell(new StringCell("FirstName","Jonas"));
         line1.addCell(new StringCell("LastName","Stenberg"));
         doc.addLine(line1);
 
-        Line line2 = new Line("");
+        Line line2 = new Line("line");
         line2.addCell(new StringCell("FirstName","Nils"));
         line2.addCell(new StringCell("LastName", "Nilsson"));
         doc.addLine(line2);

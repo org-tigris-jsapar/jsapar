@@ -55,15 +55,21 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
 
     /**
      * Creates a SchemaLine that occurs infinite number of times.
+     * <p>
+     * Deprecated since 2.2. Use builder instead.
      */
+    @Deprecated
     public SchemaLine() {
     }
 
     /**
      * Creates a SchemaLine that occurs supplied number of times.
      *
+     * <p>
+     * Deprecated since 2.2. Use builder instead.
      * @param nOccurs The number of times that a line of this type occurs in the input or output text.
      */
+    @Deprecated
     public SchemaLine(int nOccurs) {
         this.occurs = nOccurs;
     }
@@ -71,8 +77,11 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
     /**
      * Creates a SchemaLine with the supplied line type and that occurs infinite number of times.
      *
+     * <p>
+     * Deprecated since 2.2. Use builder instead.
      * @param lineType The name of the type of the line.
      */
+    @Deprecated
     public SchemaLine(String lineType) {
         this.setLineType(lineType);
     }
@@ -80,15 +89,18 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
     /**
      * Creates a SchemaLine with the supplied line type and occurs supplied number of times.
      *
+     * <p>
+     * Deprecated since 2.2. Use builder instead.
      * @param lineType The line type of this schema line.
      * @param nOccurs  The number of times it should occur.
      */
+    @Deprecated
     public SchemaLine(String lineType, int nOccurs) {
         this.setLineType(lineType);
         this.setOccurs(nOccurs);
     }
 
-    public <L extends SchemaLine<C>, B extends Builder<C, L, B>> SchemaLine(Builder<C, L, B> builder) {
+    <L extends SchemaLine<C>, B extends Builder<C, L, B>> SchemaLine(Builder<C, L, B> builder) {
         builder.schemaCells.forEach(c-> this.schemaCells.put(c.getName(), c));
         this.occurs = builder.occurs;
         this.lineType = builder.lineType;
@@ -120,6 +132,18 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
          */
         public B withCell(C schemaCell) {
             this.schemaCells.add(schemaCell);
+            return (B) this;
+        }
+
+        /**
+         * Adds a supplied schema cells to this builder in the order provided. Can be called multiple times to add more cells.
+         * @param schemaCells The schema cells to add.
+         * @return This builder instance.
+         */
+        public B withCells(C ... schemaCells) {
+            for(C cell : schemaCells){
+                withCell(cell);
+            }
             return (B) this;
         }
 

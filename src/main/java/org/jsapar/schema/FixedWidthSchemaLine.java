@@ -15,7 +15,10 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
 
     /**
      * Creates an empty schema line.
+     * <p>
+     * Deprecated since 2.2. Use builder instead.
      */
+    @Deprecated
     public FixedWidthSchemaLine() {
         super();
     }
@@ -24,8 +27,11 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
      * Creates an empty schema line which will occur nOccurs times within the file. When the line
      * has occured nOccurs times this schema-line will not be used any more.
      *
+     * <p>
+     * Deprecated since 2.2. Use builder instead.
      * @param nOccurs The number of times this schema line is used while parsing or writing. Use {@link #OCCURS_INFINITE} constant for infinite number of times.
      */
+    @Deprecated
     public FixedWidthSchemaLine(int nOccurs) {
         super(nOccurs);
     }
@@ -33,9 +39,12 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
     /**
      * Creates an empty schema line which parses lines of type lineType.
      *
+     * <p>
+     * Deprecated since 2.2. Use builder instead.
      * @param lineType The line type for which this schema line is used. The line type is stored as the
      *                 lineType of the generated Line.
      */
+    @Deprecated
     public FixedWidthSchemaLine(String lineType) {
         super(lineType);
     }
@@ -44,14 +53,17 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
     /**
      * Creates a fixed width schema line with the supplied line type and specified to occur supplied number of times.
      *
+     * <p>
+     * Deprecated since 2.2. Use builder instead.
      * @param lineType The line type of this schema line.
      * @param nOccurs  The number of times it should occur. Use {@link #OCCURS_INFINITE} constant for infinite number of times.
      */
+    @Deprecated
     public FixedWidthSchemaLine(String lineType, int nOccurs) {
         super(lineType, nOccurs);
     }
 
-    public FixedWidthSchemaLine(Builder builder) {
+    private FixedWidthSchemaLine(Builder builder) {
         super(builder);
         this.minLength = builder.minLength;
         this.padCharacter = builder.padCharacter;
