@@ -3,6 +3,7 @@ package org.jsapar.bean;
 import org.jsapar.error.BeanException;
 import org.jsapar.parse.bean.BeanPropertyMap;
 import org.jsapar.schema.Schema;
+import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
 
 import java.io.IOException;
@@ -61,11 +62,11 @@ public class BeanMap {
      * @throws BeanException If one of the line types describes a class name that does exist in the class path or
      *                             if one of the cell names describes a bean property that does not exist for the class.
      */
-    public static BeanMap ofSchema(Schema schema) throws BeanException {
+    public static  <L extends SchemaLine<? extends SchemaCell>> BeanMap ofSchema(Schema<L> schema) throws BeanException {
         try {
             BeanMap beanMap = new BeanMap();
 
-            for (SchemaLine schemaLine : schema.getSchemaLines()) {
+            for (L schemaLine : schema.getSchemaLines()) {
                 beanMap.putBean2Line(schemaLine.getLineType(), BeanPropertyMap.ofSchemaLine(schemaLine));
             }
             return beanMap;
@@ -118,11 +119,11 @@ public class BeanMap {
      * @throws BeanException If one of the line types describes a class name that does exist in the class path or
      *                       if one of the cell names describes a bean property that does not exist for the class.
      */
-    public static BeanMap ofSchema(Schema schema, BeanMap overrideValues) throws BeanException {
+    public static <L extends SchemaLine<? extends SchemaCell>> BeanMap ofSchema(Schema<L> schema, BeanMap overrideValues) throws BeanException {
         try {
             BeanMap beanMap = new BeanMap();
 
-            for (SchemaLine schemaLine : schema.getSchemaLines()) {
+            for (L schemaLine : schema) {
                 BeanPropertyMap overridePropertyMap = overrideValues.beanPropertyMapByLineType
                         .get(schemaLine.getLineType());
                 if (overridePropertyMap == null) {

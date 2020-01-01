@@ -70,9 +70,13 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
             if (null != xmlSchema)
                 return buildFixedWidthSchema(xmlSchema);
 
+            xmlSchema = getChild(xmlRoot, ELEMENT_STRING_SCHEMA);
+            if (null != xmlSchema)
+                return buildStringSchema(xmlSchema);
+
             throw new SAXException(
-                    "Failed to find specific schema XML element. Expected one of " + ELEMENT_CSV_SCHEMA + " or "
-                            + ELEMENT_FIXED_WIDTH_SCHEMA);
+                    "Failed to find specific schema XML element. Expected one of " + ELEMENT_CSV_SCHEMA + ", "
+                            + ELEMENT_FIXED_WIDTH_SCHEMA+ " or " + ELEMENT_STRING_SCHEMA);
         }
         catch(ParserConfigurationException|SAXException e){
             throw new SchemaException("Failed to load schema from xml ", e);
@@ -81,36 +85,63 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         }
     }
 
-    /**
-     * @param xmlSchema The xml element to parse schema from
-     * @return A parsed schema.
-     * @throws SchemaException If there are errors in the schema configuration.
-     */
-    private Schema buildFixedWidthSchema(Element xmlSchema) throws SchemaException {
-        FixedWidthSchema schema = new FixedWidthSchema();
+    private StringSchema buildStringSchema(Element xmlSchema) {
+        StringSchema.Builder schemaBuilder = StringSchema.builder();
 
-        assignFixedWidthSchema(schema, xmlSchema);
-        schema.addFillerCellsToReachLineMinLength();
-        return schema;
-    }
-
-    /**
-     * Assigns additional fixed width schema
-     * @param xmlSchema The schema xml element.
-     * @throws SchemaException If there are errors in the schema configuration.
-     */
-    private void assignFixedWidthSchema(FixedWidthSchema schema, Element xmlSchema) throws SchemaException {
-
-        assignSchemaBase(schema, xmlSchema);
+        Locale defaultLocale = assignSchemaBase(schemaBuilder, xmlSchema);
 
         NodeList nodes = xmlSchema.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE);
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node child = nodes.item(i);
             if (child instanceof Element)
-                schema.addSchemaLine(buildFixedWidthSchemaLine((Element) child, schema.getLocale()));
+                schemaBuilder.withLine(buildStringSchemaLine((Element) child, defaultLocale));
+        }
+        return schemaBuilder.build();
+    }
+
+
+    /**
+     * @param xmlSchema The xml element to parse schema from
+     * @return A parsed schema.
+     * @throws SchemaException If there are errors in the schema configuration.
+     */
+    private FixedWidthSchema buildFixedWidthSchema(Element xmlSchema) throws SchemaException {
+        FixedWidthSchema.Builder schemaBuilder = FixedWidthSchema.builder();
+
+        assignFixedWidthSchema(schemaBuilder, xmlSchema);
+        return schemaBuilder.build();
+    }
+
+    /**
+     * Assigns additional fixed width schema
+     *
+     * @param schemaBuilder
+     * @param xmlSchema The schema xml element.
+     * @throws SchemaException If there are errors in the schema configuration.
+     */
+    private void assignFixedWidthSchema(FixedWidthSchema.Builder schemaBuilder, Element xmlSchema) throws SchemaException {
+
+        Locale defaultLocale = assignSchemaBase(schemaBuilder, xmlSchema);
+
+        NodeList nodes = xmlSchema.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE);
+        for (int i = 0; i < nodes.getLength(); i++) {
+            org.w3c.dom.Node child = nodes.item(i);
+            if (child instanceof Element)
+                schemaBuilder.withLine(buildFixedWidthSchemaLine((Element) child, defaultLocale));
         }
     }
 
+    private StringSchemaLine buildStringSchemaLine(Element xmlSchemaLine, Locale defaultLocale) {
+        StringSchemaLine.Builder schemaLineBuilder = StringSchemaLine.builder(parseAttribute(xmlSchemaLine, ATTRIB_SCHEMA_LINE_LINETYPE).orElse("unknown"));
+        assignSchemaLineBase(schemaLineBuilder, xmlSchemaLine);
+        NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
+        for (int i = 0; i < nodes.getLength(); i++) {
+            org.w3c.dom.Node child = nodes.item(i);
+            if (child instanceof Element)
+                schemaLineBuilder.withCell(buildStringSchemaCell((Element) child, defaultLocale));
+        }
+        return schemaLineBuilder.build();
+    }
 
     /**
      * Builds the lines of a file schema from an xml input.
@@ -141,6 +172,14 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
                 schemaLineBuilder.withCell(buildFixedWidthSchemaCell((Element) child, locale, schemaLineBuilder.getPadCharacter()));
         }
         return schemaLineBuilder.build();
+    }
+
+    private StringSchemaCell buildStringSchemaCell(Element xmlSchemaCell, Locale defaultLocale) {
+        String sName = getAttributeValue(xmlSchemaCell, ATTRIB_SCHEMA_CELL_NAME);
+
+        StringSchemaCell.Builder cellBuilder = StringSchemaCell.builder(sName);
+        assignSchemaCellBase(cellBuilder, xmlSchemaCell, defaultLocale);
+        return cellBuilder.build();
     }
 
     /**
@@ -199,31 +238,31 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      * @throws SchemaException If there is an error in the schema.
      */
     private Schema buildCsvSchema(Element xmlSchema) throws SchemaException {
-        CsvSchema schema = new CsvSchema();
-        assignCsvSchema(schema, xmlSchema);
-        return schema;
+        CsvSchema.Builder schemaBuilder = CsvSchema.builder();
+        assignCsvSchema(schemaBuilder, xmlSchema);
+        return schemaBuilder.build();
     }
 
     /**
      * Assigns values to a CSV schema object.
      * 
-     * @param schema    The schema to assign values to
+     * @param schemaBuilder    The schema to assign values to
      * @param xmlSchema A schema xml element
      * @throws SchemaException If there is an error in the schema.
      */
-    private void assignCsvSchema(CsvSchema schema, Element xmlSchema) throws SchemaException {
+    private void assignCsvSchema(CsvSchema.Builder schemaBuilder, Element xmlSchema) throws SchemaException {
 
-        assignSchemaBase(schema, xmlSchema);
+        Locale defaultLocale = assignSchemaBase(schemaBuilder, xmlSchema);
 
         parseAttribute(xmlSchema, ATTRIB_CSV_SCHEMA_QUOTE_SYNTAX)
                 .map(QuoteSyntax::valueOf)
-                .ifPresent(schema::setQuoteSyntax);
+                .ifPresent(schemaBuilder::withQuoteSyntax);
 
         NodeList nodes = xmlSchema.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE);
         for (int i = 0; i < nodes.getLength(); i++) {
             org.w3c.dom.Node child = nodes.item(i);
             if (child instanceof Element)
-                schema.addSchemaLine(buildCsvSchemaLine((Element) child, schema.getLocale()));
+                schemaBuilder.withLine(buildCsvSchemaLine((Element) child, defaultLocale));
         }
     }
 
@@ -296,19 +335,17 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
     /**
      * Assign common parts for base class.
      * 
-     * @param schema The schema to assign to
+     * @param schemaBuilder The schema to assign to
      * @param xmlSchema The xml element to parse
      * @throws SchemaException  When there is an error in the schema
+     * @return
      */
-    private void assignSchemaBase(Schema schema, Element xmlSchema) throws SchemaException {
+    private Locale assignSchemaBase(Schema.Builder schemaBuilder, Element xmlSchema) throws SchemaException {
         parseAttribute(xmlSchema, ATTRIB_SCHEMA_LINESEPARATOR)
                 .map(StringUtils::replaceEscapes2Java)
-                .ifPresent(schema::setLineSeparator);
+                .ifPresent(schemaBuilder::withLineSeparator);
 
-        Element xmlLocale = getChild(xmlSchema, ELEMENT_LOCALE);
-        if (xmlLocale != null)
-            schema.setLocale(buildLocale(xmlLocale));
-
+        return getChild(JSAPAR_XML_SCHEMA, xmlSchema, ELEMENT_LOCALE).map(this::buildLocale).orElse(SchemaCellFormat.defaultLocale);
     }
 
 

@@ -1,13 +1,14 @@
 package org.jsapar.parse.text;
 
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
-import org.jsapar.parse.LineEventListener;
-import org.jsapar.parse.LineParsedEvent;
+import org.jsapar.parse.csv.CsvParser;
+import org.jsapar.parse.fixed.FixedWidthParser;
+import org.jsapar.schema.*;
+import org.jsapar.text.TextParseConfig;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.util.function.Consumer;
 
 /**
@@ -28,4 +29,18 @@ public interface TextSchemaParser {
      */
     long parse(Consumer<Line> lineConsumer, Consumer<JSaParException> errorConsumer) throws IOException;
 
+    /**
+     * Internal method to create a schema parser using this schema.
+     * @param schema The schema to create a parser for.
+     * @param reader The reader to use for the parser.
+     * @param parseConfig Current parse configuration.
+     * @return Create a schema based text parser.     *
+     */
+    static TextSchemaParser ofSchema(Schema<? extends SchemaLine<? extends SchemaCell>> schema, Reader reader, TextParseConfig parseConfig) {
+        if (schema instanceof CsvSchema)
+            return new CsvParser(reader, (CsvSchema) schema, parseConfig);
+        if (schema instanceof FixedWidthSchema)
+            return new FixedWidthParser(reader, (FixedWidthSchema) schema, parseConfig);
+        throw new IllegalArgumentException("Unsupported schema type: " + schema.getClass() + " while parsing.");
+    }
 }

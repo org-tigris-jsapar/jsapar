@@ -1,15 +1,10 @@
 package org.jsapar.schema;
 
 import org.jsapar.parse.fixed.FixedWidthParser;
-import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextSchemaParser;
+import org.jsapar.text.TextParseConfig;
 
 import java.io.Reader;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Defines a schema for a fixed position buffer. Each cell is defined by a fixed number of
@@ -24,24 +19,31 @@ import java.util.stream.Stream;
  * If the line separator is an empty string, the lines will be separated by the sum of the length of
  * the cells within the schema.
  */
-public class FixedWidthSchema extends Schema {
+public class FixedWidthSchema extends Schema<FixedWidthSchemaLine> {
 
-    /**
-     * A list of fixed with schema lines which builds up this schema.
-     */
-    private LinkedHashMap<String, FixedWidthSchemaLine> schemaLines = new LinkedHashMap<>();
-
-
-    /**
-     * @param schemaLine the schemaLines to set
-     */
-    public void addSchemaLine(FixedWidthSchemaLine schemaLine) {
-        this.schemaLines.put(schemaLine.getLineType(), schemaLine);
+    @Deprecated
+    public FixedWidthSchema() {
     }
 
-    @Override
-    public boolean isEmpty() {
-        return this.schemaLines.isEmpty();
+    private FixedWidthSchema(Builder builder) {
+        super(builder);
+    }
+
+    public static Builder builder(){
+        return new Builder();
+    }
+
+    public static class Builder extends Schema.Builder<FixedWidthSchemaLine, FixedWidthSchema, Builder>{
+        private QuoteSyntax quoteSyntax = QuoteSyntax.FIRST_LAST;
+
+        private Builder(){
+        }
+
+
+        @Override
+        public FixedWidthSchema build() {
+            return new FixedWidthSchema(this);
+        }
     }
 
     /*
@@ -53,8 +55,6 @@ public class FixedWidthSchema extends Schema {
     public FixedWidthSchema clone() {
         FixedWidthSchema schema = (FixedWidthSchema) super.clone();
 
-        schema.schemaLines = new LinkedHashMap<>();
-        this.stream().map(FixedWidthSchemaLine::clone).forEach(schema::addSchemaLine);
         return schema;
     }
 
@@ -65,37 +65,7 @@ public class FixedWidthSchema extends Schema {
      */
     @Override
     public String toString() {
-        return "FixedWidthSchema" + super.toString() + " schemaLines=" + this.schemaLines;
-    }
-
-    @Override
-    public Collection<FixedWidthSchemaLine> getSchemaLines() {
-        return this.schemaLines.values();
-    }
-
-    @Override
-    public Optional<FixedWidthSchemaLine> getSchemaLine(String lineType) {
-        return Optional.ofNullable(schemaLines.get(lineType));
-    }
-
-    @Override
-    public int size() {
-        return this.schemaLines.size();
-    }
-
-    @Override
-    public Stream<FixedWidthSchemaLine> stream() {
-        return this.schemaLines.values().stream();
-    }
-
-    @Override
-    public Iterator<FixedWidthSchemaLine> iterator() {
-        return schemaLines.values().iterator();
-    }
-
-    @Override
-    public TextSchemaParser makeSchemaParser(Reader reader, TextParseConfig parseConfig) {
-        return new FixedWidthParser(reader, this, parseConfig);
+        return "FixedWidthSchema" + super.toString();
     }
 
     /**

@@ -260,9 +260,6 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
         String lineSeparator = schema.getLineSeparator();
         lineSeparator = StringUtils.replaceJava2Escapes(lineSeparator);
         xmlSchema.setAttribute(ATTRIB_SCHEMA_LINESEPARATOR, lineSeparator);
-
-        Element xmlLocale = extractLocale(xmlDocument, schema.getLocale());
-        xmlSchema.appendChild(xmlLocale);
     }
 
     /**

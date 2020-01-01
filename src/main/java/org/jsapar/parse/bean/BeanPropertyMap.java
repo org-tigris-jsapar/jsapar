@@ -57,7 +57,7 @@ public class BeanPropertyMap {
         return lineClass.getConstructor().newInstance();
     }
 
-    public static BeanPropertyMap ofSchemaLine(SchemaLine<SchemaCell> schemaLine, BeanPropertyMap overrideValues) {
+    public static BeanPropertyMap ofSchemaLine(SchemaLine<? extends SchemaCell> schemaLine, BeanPropertyMap overrideValues) {
         try {
             if(overrideValues.ignoreLine())
                 return overrideValues;
@@ -73,7 +73,7 @@ public class BeanPropertyMap {
         }
     }
 
-    public static BeanPropertyMap ofSchemaLine(SchemaLine<SchemaCell> schemaLine) throws BeanException {
+    public static BeanPropertyMap ofSchemaLine(SchemaLine<? extends SchemaCell> schemaLine) throws BeanException {
         try {
             return ofPropertyNames(schemaLine.getLineType(), schemaLine.getLineType(), schemaLine.stream().collect(Collectors.toMap(SchemaCell::getName, SchemaCell::getName)));
         } catch (ClassNotFoundException  e) {

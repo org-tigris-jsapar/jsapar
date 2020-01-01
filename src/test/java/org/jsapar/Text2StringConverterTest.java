@@ -1,9 +1,7 @@
 package org.jsapar;
 
+import org.jsapar.schema.*;
 import org.jsapar.text.TextParseConfig;
-import org.jsapar.schema.CsvSchema;
-import org.jsapar.schema.CsvSchemaCell;
-import org.jsapar.schema.CsvSchemaLine;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -15,14 +13,12 @@ public class Text2StringConverterTest {
 
     @Test
     public void convert() throws IOException {
-        CsvSchema parseSchema = new CsvSchema();
-        parseSchema.addSchemaLine( CsvSchemaLine.builder("test-line")
-                .withCells("c1", "c2", "c3")
-                .build());
-        CsvSchema composeSchema = new CsvSchema();
-        composeSchema.addSchemaLine( CsvSchemaLine.builder("test-line")
-                .withCells("c2", "c1", "c3")
-                .build());
+        CsvSchema parseSchema = CsvSchema.builder()
+                .withLine(CsvSchemaLine.builder("test-line").withCells("c1", "c2", "c3").build())
+                .build();
+        StringSchema composeSchema = StringSchema.builder()
+                .withLine(StringSchemaLine.builder("test-line").withCells("c2", "c1", "c3").build())
+                .build();
 
         Text2StringConverter converter = new Text2StringConverter(parseSchema, composeSchema);
         String source = "v11;v12;v13\nv21;v22;v23\n";

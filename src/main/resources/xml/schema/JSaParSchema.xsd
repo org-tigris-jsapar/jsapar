@@ -7,6 +7,7 @@
             <xsd:choice>
                 <xsd:element name="csvschema" type="CsvSchema"/>
                 <xsd:element name="fixedwidthschema" type="FixedWidthSchema"/>
+                <xsd:element name="stringschema" type="StringSchema"/>
             </xsd:choice>
         </xsd:complexType>
     </xsd:element>
@@ -241,6 +242,16 @@
     </xsd:complexContent>
   </xsd:complexType>
 
+    <xsd:complexType name="StringSchema">
+        <xsd:complexContent mixed="false">
+            <xsd:extension base="Schema">
+                <xsd:sequence maxOccurs="unbounded">
+                    <xsd:element maxOccurs="unbounded" name="line" type="StringSchemaLine" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
   <xsd:complexType name="FixedWidthSchemaLine">
     <xsd:complexContent mixed="false">
       <xsd:extension base="SchemaLine">
@@ -267,6 +278,16 @@ If the sum of the length of the cells is less than this minlength then the line 
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+
+    <xsd:complexType name="StringSchemaLine">
+        <xsd:complexContent mixed="false">
+            <xsd:extension base="SchemaLine">
+                <xsd:sequence maxOccurs="unbounded">
+                    <xsd:element name="cell" type="SchemaCell" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
 
   <xsd:complexType name="FixedWidthSchemaCell">
   	<xsd:complexContent mixed="false">
@@ -347,8 +368,8 @@ According to RFC 4180, single quotes may not occur inside a quoted cell. This pa
                     </xsd:annotation>
                     <xsd:simpleType>
             <xsd:restriction base="xsd:string">
-              <xsd:enumeration value="FIRST_LAST"></xsd:enumeration>
-              <xsd:enumeration value="RFC4180"></xsd:enumeration>
+                <xsd:enumeration value="FIRST_LAST"/>
+                <xsd:enumeration value="RFC4180"/>
             </xsd:restriction>
           </xsd:simpleType>
         </xsd:attribute>

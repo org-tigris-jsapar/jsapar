@@ -4,6 +4,8 @@ import org.jsapar.parse.AbstractParseTask;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.ParseTask;
 import org.jsapar.schema.Schema;
+import org.jsapar.schema.SchemaCell;
+import org.jsapar.schema.SchemaLine;
 import org.jsapar.text.TextParseConfig;
 
 import java.io.IOException;
@@ -24,19 +26,20 @@ import java.io.Reader;
  * @see ParseTask
  */
 public class TextParseTask extends AbstractParseTask implements ParseTask, AutoCloseable {
-
-    private final Schema          schema;
     private final Reader          reader;
-    private final TextParseConfig parseConfig;
+    private final TextSchemaParser parser;
 
-    public TextParseTask(Schema schema, Reader reader) {
-        this(schema, reader, new TextParseConfig());
+    public TextParseTask(Schema<? extends SchemaLine<? extends SchemaCell>> schema, Reader reader) {
+        this(reader, TextSchemaParser.ofSchema(schema, reader, new TextParseConfig()));
     }
 
-    public TextParseTask(Schema schema, Reader reader, TextParseConfig parseConfig) {
-        this.schema = schema;
+    public TextParseTask(Schema<? extends SchemaLine<? extends SchemaCell>> schema, Reader reader, TextParseConfig parseConfig) {
+        this(reader, TextSchemaParser.ofSchema(schema, reader, parseConfig));
+    }
+
+    public TextParseTask(Reader reader, TextSchemaParser parser) {
         this.reader = reader;
-        this.parseConfig = parseConfig;
+        this.parser = parser;
     }
 
     /**
@@ -50,7 +53,7 @@ public class TextParseTask extends AbstractParseTask implements ParseTask, AutoC
      */
     @Override
     public long execute() throws IOException {
-        return schema.makeSchemaParser(reader, parseConfig).parse(getLineConsumer(), getErrorConsumer());
+        return parser.parse(getLineConsumer(), getErrorConsumer());
     }
 
     /**

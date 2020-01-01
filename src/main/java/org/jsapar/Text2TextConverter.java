@@ -2,6 +2,8 @@ package org.jsapar;
 
 import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.ConvertTask;
+import org.jsapar.schema.SchemaCell;
+import org.jsapar.schema.SchemaLine;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
@@ -17,17 +19,17 @@ import java.io.Writer;
  * @see org.jsapar.concurrent.ConcurrentText2TextConverter
  */
 public class Text2TextConverter extends AbstractConverter {
-    private final Schema          parseSchema;
-    private final Schema          composeSchema;
+    private final Schema<? extends SchemaLine<? extends SchemaCell>>          parseSchema;
+    private final Schema<? extends SchemaLine<? extends SchemaCell>>          composeSchema;
     private       TextParseConfig parseConfig;
 
-    public Text2TextConverter(Schema parseSchema, Schema composeSchema) {
+    public Text2TextConverter(Schema<? extends SchemaLine<? extends SchemaCell>> parseSchema, Schema<? extends SchemaLine<? extends SchemaCell>> composeSchema) {
         this.parseSchema = parseSchema;
         this.composeSchema = composeSchema;
         parseConfig = new TextParseConfig();
     }
 
-    public Text2TextConverter(Schema parseSchema, Schema composeSchema, TextParseConfig parseConfig) {
+    public Text2TextConverter(Schema<? extends SchemaLine<? extends SchemaCell>> parseSchema, Schema<? extends SchemaLine<? extends SchemaCell>> composeSchema, TextParseConfig parseConfig) {
         this.parseSchema = parseSchema;
         this.composeSchema = composeSchema;
         this.parseConfig = parseConfig;

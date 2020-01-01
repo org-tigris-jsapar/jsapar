@@ -1,12 +1,14 @@
 package org.jsapar.compose.string;
 
 import org.jsapar.model.Line;
+import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
+import org.jsapar.schema.StringSchemaLine;
 
 import java.util.stream.Stream;
 
 public class StringLineComposerNullOnEmptyCell extends StringLineComposer {
-    StringLineComposerNullOnEmptyCell(SchemaLine schemaLine) {
+    StringLineComposerNullOnEmptyCell(SchemaLine<? extends SchemaCell> schemaLine) {
         super(schemaLine);
     }
 

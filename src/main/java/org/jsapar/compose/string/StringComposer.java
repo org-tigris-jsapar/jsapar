@@ -4,6 +4,7 @@ import org.jsapar.compose.Composer;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
+import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
 
 import java.util.Map;
@@ -24,12 +25,12 @@ public class StringComposer implements Composer {
     private final Map<String, StringLineComposer> lineComposers;
 
 
-    public StringComposer(Schema schema, StringComposedConsumer stringComposedConsumer) {
+    public StringComposer(Schema<? extends SchemaLine<? extends SchemaCell>> schema, StringComposedConsumer stringComposedConsumer) {
         this(stringComposedConsumer, schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, StringLineComposer::new)));
     }
 
     @Deprecated
-    public StringComposer(Schema schema, StringComposedEventListener composedEventListener) {
+    public StringComposer(Schema<? extends SchemaLine<? extends SchemaCell>> schema, StringComposedEventListener composedEventListener) {
         this(composedEventListener,
                 schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, StringLineComposer::new)));
     }

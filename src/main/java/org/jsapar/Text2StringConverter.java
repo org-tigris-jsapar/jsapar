@@ -2,14 +2,15 @@ package org.jsapar;
 
 import org.jsapar.compose.Composer;
 import org.jsapar.compose.string.StringComposedConsumer;
-import org.jsapar.compose.string.StringComposedEvent;
 import org.jsapar.compose.string.StringComposedEventListener;
 import org.jsapar.compose.string.StringComposer;
 import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.ConvertTask;
-import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
+import org.jsapar.schema.SchemaCell;
+import org.jsapar.schema.SchemaLine;
+import org.jsapar.text.TextParseConfig;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -30,16 +31,16 @@ import java.util.stream.Stream;
  * See {@link AbstractConverter} for details about error handling and manipulating data.
  */
 public class Text2StringConverter extends AbstractConverter {
-    private final Schema parseSchema;
-    private final Schema composeSchema;
+    private final Schema<? extends SchemaLine<? extends SchemaCell>> parseSchema;
+    private final Schema<? extends SchemaLine<? extends SchemaCell>> composeSchema;
     private TextParseConfig parseConfig = new TextParseConfig();
 
-    public Text2StringConverter(Schema parseSchema, Schema composeSchema) {
+    public Text2StringConverter(Schema<? extends SchemaLine<? extends SchemaCell>> parseSchema, Schema<? extends SchemaLine<? extends SchemaCell>> composeSchema) {
         this.parseSchema = parseSchema;
         this.composeSchema = composeSchema;
     }
 
-    public Text2StringConverter(Schema parseSchema, Schema composeSchema, TextParseConfig parseConfig) {
+    public Text2StringConverter(Schema<? extends SchemaLine<? extends SchemaCell>> parseSchema, Schema<? extends SchemaLine<? extends SchemaCell>> composeSchema, TextParseConfig parseConfig) {
         this.parseSchema = parseSchema;
         this.composeSchema = composeSchema;
         this.parseConfig = parseConfig;
@@ -93,7 +94,7 @@ public class Text2StringConverter extends AbstractConverter {
      * @return The composer to use in this converter
      */
     @SuppressWarnings("WeakerAccess")
-    protected Composer makeComposer(Schema schema, StringComposedConsumer stringComposedConsumer) {
+    protected Composer makeComposer(Schema<? extends SchemaLine<? extends SchemaCell>> schema, StringComposedConsumer stringComposedConsumer) {
         return new StringComposer(schema, stringComposedConsumer);
     }
 

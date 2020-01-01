@@ -7,6 +7,7 @@ interface SchemaXmlTypes {
     String ELEMENT_ROOT                             = "schema";
     String ELEMENT_CSV_SCHEMA                       = "csvschema";
     String ELEMENT_FIXED_WIDTH_SCHEMA               = "fixedwidthschema";
+    String ELEMENT_STRING_SCHEMA                    = "stringschema";
     String ELEMENT_LOCALE                           = "locale";
     String ELEMENT_FORMAT                           = "format";
     String ELEMENT_ENUM_FORMAT                      = "enum";

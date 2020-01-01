@@ -8,10 +8,10 @@ public class CsvSchemaTest {
 
     @Test
     public void testClone() {
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine(2);
-        schemaLine.setLineType("Joho");
-        schema.addSchemaLine(schemaLine);
+        CsvSchemaLine schemaLine = CsvSchemaLine.builder("Joho").withOccurs(2).build();
+        CsvSchema schema = CsvSchema.builder()
+                .withLine(schemaLine)
+                .build();
 
         CsvSchema clone = schema.clone();
         assertEquals(1, clone.size());
@@ -36,7 +36,7 @@ public class CsvSchemaTest {
 
     @Test
     public void testToString() {
-        CsvSchema schema = new CsvSchema();
-        assertEquals("CsvSchema lineSeparator='\\n' locale=en_US schemaLines={}", schema.toString());
+        CsvSchema schema = CsvSchema.builder().build();
+        assertEquals("CsvSchema lineSeparator='\\n' schemaLines={}", schema.toString());
     }
 }

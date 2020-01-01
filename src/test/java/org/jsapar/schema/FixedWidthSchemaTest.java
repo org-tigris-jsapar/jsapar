@@ -30,7 +30,7 @@ public class FixedWidthSchemaTest {
 
     @Test
     public void testIterator(){
-        FixedWidthSchema schema = new FixedWidthSchema();
+        FixedWidthSchema schema = FixedWidthSchema.builder().build();
         assertTrue(schema.isEmpty());
         assertEquals(0, schema.size());
 
@@ -47,7 +47,7 @@ public class FixedWidthSchemaTest {
 
     @Test
     public void testToString() {
-        FixedWidthSchema schema = new FixedWidthSchema();
-        assertEquals("FixedWidthSchema lineSeparator='\\n' locale=en_US schemaLines={}", schema.toString());
+        FixedWidthSchema schema = FixedWidthSchema.builder().build();
+        assertEquals("FixedWidthSchema lineSeparator='\\n' schemaLines={}", schema.toString());
     }
 }

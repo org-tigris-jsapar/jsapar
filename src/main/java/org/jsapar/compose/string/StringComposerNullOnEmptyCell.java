@@ -1,7 +1,9 @@
 package org.jsapar.compose.string;
 
 import org.jsapar.schema.Schema;
+import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
+import org.jsapar.schema.StringSchema;
 
 import java.util.stream.Collectors;
 
@@ -19,11 +21,11 @@ import java.util.stream.Collectors;
 public class StringComposerNullOnEmptyCell extends StringComposer {
 
     @Deprecated
-    public StringComposerNullOnEmptyCell(Schema schema, StringComposedEventListener composedEventListener) {
+    public StringComposerNullOnEmptyCell(Schema<? extends SchemaLine<? extends SchemaCell>>  schema, StringComposedEventListener composedEventListener) {
         super(composedEventListener, schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, StringLineComposerNullOnEmptyCell::new)));
     }
 
-    public StringComposerNullOnEmptyCell(Schema schema, StringComposedConsumer composedEventConsumer) {
+    public StringComposerNullOnEmptyCell(Schema<? extends SchemaLine<? extends SchemaCell>>  schema, StringComposedConsumer composedEventConsumer) {
         super(composedEventConsumer, schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, StringLineComposerNullOnEmptyCell::new)));
     }
 

@@ -25,7 +25,7 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
      *
      * <p>
      * Deprecated since 2.2. Use builder instead.
-     * @param nOccurs The number of times this schema line is used while parsing or writing. Use {@link #OCCURS_INFINITE} constant for infinite number of times.
+     * @param nOccurs The number of times this schema line is used while parsing or writing.
      */
     @Deprecated
     public FixedWidthSchemaLine(int nOccurs) {
@@ -52,7 +52,7 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
      * <p>
      * Deprecated since 2.2. Use builder instead.
      * @param lineType The line type of this schema line.
-     * @param nOccurs  The number of times it should occur. Use {@link #OCCURS_INFINITE} constant for infinite number of times.
+     * @param nOccurs  The number of times it should occur.
      */
     @Deprecated
     public FixedWidthSchemaLine(String lineType, int nOccurs) {

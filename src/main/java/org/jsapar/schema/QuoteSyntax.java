@@ -8,7 +8,7 @@ public enum QuoteSyntax {
      * Quoted cells are considered quoted if and only if it begins and ends with a
      * quote character and all the intermediate characters are treated as is.
      * <p>
-     * This is the most common scenario in delimited files since most sources that generates delimited files only adds
+     * This is a naive approach but still the most common scenario in delimited files since most sources that generates delimited files only adds
      * quotes first and last of the cell without inspecting the content.
      * <p>
      * "aaa","b""bb","ccc" will be treated as three cells with the values `aaa`, `b""bb` and `ccc`.

@@ -3,6 +3,7 @@ package org.jsapar.compose.internal;
 import org.jsapar.compose.line.LineComposer;
 import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
+import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractSchemaComposer implements SchemaComposer{
     private final Writer writer;
-    private final Schema schema;
+    private final Schema<? extends SchemaLine<? extends SchemaCell>> schema;
     private Map<String, LineComposer> lineComposers;
 
     /**
@@ -28,7 +29,7 @@ public abstract class AbstractSchemaComposer implements SchemaComposer{
      * @param lineComposerCreator A {@link Function} that takes a {@link SchemaLine} as argument and returns a newly created
      *                            {@link LineComposer} that uses that schema line.
      */
-    public AbstractSchemaComposer(Writer writer, Schema schema, Function<SchemaLine, LineComposer> lineComposerCreator) {
+    public AbstractSchemaComposer(Writer writer, Schema<? extends SchemaLine<? extends SchemaCell>> schema, Function<SchemaLine<? extends SchemaCell>, LineComposer> lineComposerCreator) {
         this.writer = writer;
         this.schema = schema;
         lineComposers = schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, lineComposerCreator));

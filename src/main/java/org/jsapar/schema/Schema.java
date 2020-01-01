@@ -8,10 +8,8 @@ import org.jsapar.utils.StringUtils;
 import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.io.Writer;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -23,16 +21,57 @@ import java.util.stream.Stream;
  * @see Schema2XmlExtractor
  * 
  */
-public abstract class Schema implements Cloneable{
+public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> implements Cloneable, Iterable<L>{
 
-
-    private Locale locale = SchemaCellFormat.defaultLocale;
     private String lineSeparator = System.getProperty("line.separator");
+
+    @Deprecated
+    public Schema() {
+    }
+
+    /**
+     * The schema lines
+     */
+    private LinkedHashMap<String, L> schemaLines = new LinkedHashMap<>();
+
+    <S extends Schema<L>, B extends Schema.Builder<L, S, B>> Schema(Builder<L, S, B> builder) {
+        this.lineSeparator = builder.lineSeparator;
+        for (L schemaLine : builder.schemaLines) {
+            this.addSchemaLine(schemaLine);
+        }
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public abstract static class Builder<L extends SchemaLine<? extends SchemaCell>, S extends Schema<L>, B extends Schema.Builder<L, S, B>> {
+        private String lineSeparator = System.getProperty("line.separator");
+        private List<L> schemaLines = new ArrayList<>();
+
+        public B withLineSeparator(String lineSeparator){
+            this.lineSeparator = lineSeparator;
+            return (B)this;
+        }
+
+        public B withLine(L schemaLine){
+            this.schemaLines.add(schemaLine);
+            return (B)this;
+        }
+
+        abstract S build();
+    }
+    /**
+     * @param schemaLine the schemaLine to add
+     */
+    public void addSchemaLine(L schemaLine) {
+        this.schemaLines.put(schemaLine.getLineType(), schemaLine);
+    }
 
     /**
      * @return True if this schema does not contain any lines. False otherwise.
      */
-    public abstract boolean isEmpty();
+    public boolean isEmpty() {
+        return this.schemaLines.isEmpty();
+    }
 
     /**
      * Line separator string. Default value is the system default (Retrieved by
@@ -54,38 +93,21 @@ public abstract class Schema implements Cloneable{
         this.lineSeparator = lineSeparator;
     }
 
-    /**
-     * The locale of the schema is used to determine the formatting of for example numbers, decimal separators etc. It
-     * does not affect the error messages. Default is en_US.
-     * @return the locale
-     */
-    public Locale getLocale() {
-        return locale;
-    }
-
-    /**
-     * The locale of the schema is used to determine the formatting of for example numbers, decimal separators etc. It
-     * does not affect the error messages. Default is en_US.
-     * @param locale
-     *            the locale to set
-     */
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
 
 
-    public Schema clone(){
+    @SuppressWarnings("unchecked")
+    public Schema<L> clone(){
         try {
-            return (Schema) super.clone();
+            Schema<L> clone = (Schema<L>) super.clone();
+            clone.schemaLines = new LinkedHashMap<>();
+            for(L line: this){
+                clone.addSchemaLine((L) line.clone());
+            }
+            return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError(e);
         }
     }
-
-    /**
-     * @return list of all schema lines.
-     */
-    public abstract Collection<? extends SchemaLine> getSchemaLines();
 
     /*
      * (non-Javadoc)
@@ -94,23 +116,47 @@ public abstract class Schema implements Cloneable{
      */
     @Override
     public String toString() {
-        return " lineSeparator='" + StringUtils.replaceJava2Escapes(this.lineSeparator) + "' locale=" + this.locale;
+        return " lineSeparator='" + StringUtils.replaceJava2Escapes(this.lineSeparator) +
+                "' schemaLines=" +
+                this.schemaLines;
     }
 
+    /**
+     * @return list of all schema lines.
+     */
+    public Collection<L> getSchemaLines() {
+        return this.schemaLines.values();
+    }
 
     /**
      * @param lineType The line type to get {@link SchemaLine} for.
      * @return The {@link SchemaLine} with the supplied line type name. Optional.empty if no such schema line was
      *         found.
      */
-    public abstract Optional<? extends SchemaLine> getSchemaLine(String lineType);
-
+    public Optional<L> getSchemaLine(String lineType) {
+        return Optional.ofNullable(schemaLines.get(lineType));
+    }
 
     /**
      * @return Number of schema lines of this schema.
      */
-    public abstract int size();
+    public int size() {
+        return this.schemaLines.size();
+    }
 
+    /**
+     * @return A stream of all schema lines of this schema.
+     */
+    public Stream<L> stream() {
+        return this.schemaLines.values().stream();
+    }
+
+    /**
+     * @return An iterator of all schema lines of this schema.
+     */
+    public Iterator<L> iterator() {
+        return schemaLines.values().iterator();
+    }
 
     /**
      * Loads a schema instance from an xml that is read from the supplied reader. The xml needs to comply to the
@@ -143,20 +189,4 @@ public abstract class Schema implements Cloneable{
         extractor.extractXml(writer, this);
     }
 
-    /**
-     * @return A stream of all schema lines of this schema.
-     */
-    public abstract Stream<? extends SchemaLine> stream();
-
-    /**
-     * @return An iterator of all schema lines of this schema.
-     */
-    public abstract Iterator<? extends SchemaLine> iterator();
-    /**
-     * Internal method to create a schema parser using this schema.
-     * @param reader The reader to use for the parser.
-     * @param parseConfig Current parse configuration.
-     * @return Create a schema based text parser.
-     */
-    public abstract TextSchemaParser makeSchemaParser(Reader reader, TextParseConfig parseConfig);
 }

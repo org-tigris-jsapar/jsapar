@@ -6,6 +6,8 @@ import org.jsapar.convert.ConvertTask;
 import org.jsapar.error.BeanException;
 import org.jsapar.bean.BeanMap;
 import org.jsapar.model.Line;
+import org.jsapar.schema.SchemaCell;
+import org.jsapar.schema.SchemaLine;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
@@ -29,10 +31,10 @@ import java.util.function.Consumer;
  */
 public class Text2BeanConverter<T> extends AbstractConverter {
 
-    private final Schema         parseSchema;
+    private final Schema<? extends SchemaLine<? extends SchemaCell>> parseSchema;
     private BeanFactory<T> beanFactory;
     private BeanComposeConfig composeConfig = new BeanComposeConfig();
-    private TextParseConfig   parseConfig   = new TextParseConfig();
+    private TextParseConfig parseConfig = new TextParseConfig();
 
     /**
      * Creates a converter with supplied composer schema.
@@ -44,7 +46,7 @@ public class Text2BeanConverter<T> extends AbstractConverter {
      * mapping for all values that should be assigned to the bean instances. If you want to use a {@link BeanMap} that is created
      *                    from a combination of the schema and an additional override {@link BeanMap} you can use the method {@link BeanMap#ofSchema(Schema, BeanMap)} to create such combined instance.
      */
-    public Text2BeanConverter(Schema parseSchema, BeanMap beanMap) {
+    public Text2BeanConverter(Schema<? extends SchemaLine<? extends SchemaCell>> parseSchema, BeanMap beanMap) {
         this.parseSchema = parseSchema;
         this.beanFactory = new BeanFactoryByMap<>(beanMap);
     }
@@ -55,7 +57,7 @@ public class Text2BeanConverter<T> extends AbstractConverter {
      * @param parseSchema The schema to use while reading the text input.
      * @throws BeanException In case of error when instantiating bean.
      */
-    public Text2BeanConverter(Schema parseSchema) throws BeanException {
+    public Text2BeanConverter(Schema<? extends SchemaLine<? extends SchemaCell>> parseSchema) throws BeanException {
         this(parseSchema, BeanMap.ofSchema(parseSchema));
     }
 
