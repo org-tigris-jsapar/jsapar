@@ -1,10 +1,7 @@
 package org.jsapar.concurrent;
 
 import org.jsapar.error.JSaParException;
-import org.jsapar.schema.CsvSchemaCell;
-import org.jsapar.schema.CsvSchemaLine;
-import org.jsapar.schema.FixedWidthSchemaCell;
-import org.jsapar.schema.FixedWidthSchemaLine;
+import org.jsapar.schema.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,20 +17,21 @@ public class ConcurrentText2TextConverterTest {
     @Test
     public void testConvert() throws IOException, JSaParException {
         String toParse = "Jonas Stenberg \nFrida Bergsten ";
-        org.jsapar.schema.FixedWidthSchema inputSchema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine("Person");
-        inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 6));
-        inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 9));
-        inputSchema.addSchemaLine(inputSchemaLine);
-        inputSchema.setLineSeparator("\n");
+        FixedWidthSchema inputSchema = FixedWidthSchema.builder()
+                .withLine(FixedWidthSchemaLine.builder("Person")
+                        .withCell("First name", 6)
+                        .withCell("Last name", 9)
+                        .build())
+                .withLineSeparator("\n")
+                .build();
 
-        org.jsapar.schema.CsvSchema outputSchema = new org.jsapar.schema.CsvSchema();
-        CsvSchemaLine outputSchemaLine = new CsvSchemaLine("Person");
-        outputSchemaLine.addSchemaCell(new CsvSchemaCell("First name"));
-        outputSchemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
-        outputSchemaLine.setCellSeparator(";");
-        outputSchema.addSchemaLine(outputSchemaLine);
-        outputSchema.setLineSeparator("|");
+        CsvSchema outputSchema = CsvSchema.builder()
+                .withLine(CsvSchemaLine.builder("Person")
+                        .withCells("First name", "Last name")
+                        .withCellSeparator(";")
+                        .build())
+                .withLineSeparator("|")
+                .build();
 
         try (StringWriter writer = new StringWriter(); StringReader reader = new StringReader(toParse)) {
             ConcurrentText2TextConverter converter = new ConcurrentText2TextConverter(inputSchema, outputSchema);

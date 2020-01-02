@@ -16,13 +16,12 @@ public class CsvComposerTest {
 
     @Test
     public final void testCompose_firstLineAsHeader() throws JSaParException {
-        CsvSchema schema = new CsvSchema();
-
-        CsvSchemaLine schemaLine =  CsvSchemaLine.builder("line")
-                .withCells("FirstName", "LastName")
-                .withFirstLineAsSchema(true)
+        CsvSchema schema = CsvSchema.builder()
+                .withLine(CsvSchemaLine.builder("line")
+                        .withCells("FirstName", "LastName")
+                        .withFirstLineAsSchema(true)
+                        .build())
                 .build();
-        schema.addSchemaLine(schemaLine);
 
         Document doc = new Document();
 

@@ -29,14 +29,29 @@ public class FixedWidthSchema extends Schema<FixedWidthSchemaLine> {
         super(builder);
     }
 
+    /**
+     * @return A new builder instance that can be used to create fixed width schemas.
+     */
     public static Builder builder(){
         return new Builder();
     }
 
+    /**
+     * Makes it possible to create a new schema instance that is a copy of an existing schema.
+     * @param schema The schema to create a new copy of.
+     * @return A new builder that can be used to creat schemas.
+     */
+    public static Builder builder(FixedWidthSchema schema){
+        return new Builder(schema);
+    }
+
     public static class Builder extends Schema.Builder<FixedWidthSchemaLine, FixedWidthSchema, Builder>{
-        private QuoteSyntax quoteSyntax = QuoteSyntax.FIRST_LAST;
 
         private Builder(){
+        }
+
+        public Builder(FixedWidthSchema schema) {
+            super(schema);
         }
 
 
@@ -46,15 +61,9 @@ public class FixedWidthSchema extends Schema<FixedWidthSchemaLine> {
         }
     }
 
-    /*
-         * (non-Javadoc)
-         *
-         * @see org.jsapar.schema.Schema#clone()
-         */
     @Override
     public FixedWidthSchema clone() {
         FixedWidthSchema schema = (FixedWidthSchema) super.clone();
-
         return schema;
     }
 
@@ -74,7 +83,10 @@ public class FixedWidthSchema extends Schema<FixedWidthSchemaLine> {
      * cell will be the difference between all minLength of the line and the cells added so far. Adding more schema
      * cells after calling this method will add those cells after the filler cell which will probably lead to unexpected
      * behavior.
+     *
+     * Deprecated. This will be done automatically while using builders.
      */
+    @Deprecated
     void addFillerCellsToReachLineMinLength() {
         stream().forEach(FixedWidthSchemaLine::addFillerCellToReachMinLength);
     }

@@ -1,16 +1,5 @@
 package org.jsapar.schema;
 
-import org.jsapar.parse.csv.CsvParser;
-import org.jsapar.text.TextParseConfig;
-import org.jsapar.parse.text.TextSchemaParser;
-
-import java.io.Reader;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 /**
  * Defines a schema for a delimited input text. Each cell is delimited by a delimiter character sequence.
  * Lines are separated by the line separator defined by {@link Schema#getLineSeparator()}.
@@ -35,14 +24,31 @@ public class CsvSchema extends Schema<CsvSchemaLine> implements Cloneable{
         this.quoteSyntax = builder.quoteSyntax;
     }
 
+    /**
+     * @return A new builder that can be used to creat schemas.
+     */
     public static Builder builder(){
         return new Builder();
+    }
+
+    /**
+     * Makes it possible to create a new schema instance that is a copy of an existing schema.
+     * @param schema The schema to create a new copy of.
+     * @return A new builder that can be used to creat schemas.
+     */
+    public static Builder builder(CsvSchema schema){
+        return new Builder(schema);
     }
 
     public static class Builder extends Schema.Builder<CsvSchemaLine, CsvSchema, Builder>{
         private QuoteSyntax quoteSyntax = QuoteSyntax.FIRST_LAST;
 
         private Builder(){
+        }
+
+        private Builder(CsvSchema schema) {
+            super(schema);
+            this.quoteSyntax = schema.quoteSyntax;
         }
 
         /**
@@ -69,20 +75,23 @@ public class CsvSchema extends Schema<CsvSchemaLine> implements Cloneable{
         return schema;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.jsapar.schema.Schema#toString()
-     */
     @Override
     public String toString() {
         return "CsvSchema" + super.toString();
     }
 
+    /**
+     * @return The syntax while parsing and composing of quoted cells.
+     * @see QuoteSyntax
+     */
     public QuoteSyntax getQuoteSyntax() {
         return quoteSyntax;
     }
 
+    /**
+     * @param quoteSyntax Specifies the syntax while parsing and composing of quoted cells. Default is {@link QuoteSyntax#FIRST_LAST}
+     * @see QuoteSyntax
+     */
     public void setQuoteSyntax(QuoteSyntax quoteSyntax) {
         this.quoteSyntax = quoteSyntax;
     }

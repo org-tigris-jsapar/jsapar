@@ -75,27 +75,26 @@ public class BeanMarshallerTest {
         assertEquals("Byn", LineUtils.getStringCellValue(line,"workAddress.town"));
     }
 
-    public static Schema makeOutputSchema(){
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine(TstPerson.class.getName());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("firstName").build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("lastName").build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("shoeSize").withCellType(CellType.INTEGER).build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("streetNumber").withCellType(CellType.INTEGER).build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("luckyNumber").withCellType(CellType.DECIMAL).build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("birthTime").withCellType(CellType.DATE).build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("door").withCellType(CellType.CHARACTER).build());
-        schemaLine.addSchemaCell(CsvSchemaCell.builder("gender")
-                .withCellType(CellType.ENUM).withPattern("org.jsapar.TstGender")
-                .build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("address.street").build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("address.town").build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("workAddress.street").build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("workAddress.town").build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("address.subAddress.street").build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("address.subAddress.town").build());
-        schema.addSchemaLine(schemaLine);
-        return schema;
+    public static CsvSchema makeOutputSchema() {
+        return CsvSchema.builder().withLine(
+                CsvSchemaLine.builder(TstPerson.class.getName())
+                        .withCell(CsvSchemaCell.builder("firstName").build())
+                        .withCell(CsvSchemaCell.builder("lastName").build())
+                        .withCell(CsvSchemaCell.builder("shoeSize").withCellType(CellType.INTEGER).build())
+                        .withCell(CsvSchemaCell.builder("streetNumber").withCellType(CellType.INTEGER).build())
+                        .withCell(CsvSchemaCell.builder("luckyNumber").withCellType(CellType.DECIMAL).build())
+                        .withCell(CsvSchemaCell.builder("birthTime").withCellType(CellType.DATE).build())
+                        .withCell(CsvSchemaCell.builder("door").withCellType(CellType.CHARACTER).build())
+                        .withCell(CsvSchemaCell.builder("gender")
+                                .withCellType(CellType.ENUM).withPattern("org.jsapar.TstGender")
+                                .build())
+                        .withCell(CsvSchemaCell.builder("address.street").build())
+                        .withCell(CsvSchemaCell.builder("address.town").build())
+                        .withCell(CsvSchemaCell.builder("workAddress.street").build())
+                        .withCell(CsvSchemaCell.builder("workAddress.town").build())
+                        .withCell(CsvSchemaCell.builder("address.subAddress.street").build())
+                        .withCell(CsvSchemaCell.builder("address.subAddress.town").build())
+                        .build()).build();
     }
 
     public static BeanMap makeBeanMap() {

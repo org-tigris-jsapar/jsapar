@@ -76,12 +76,11 @@ public class ConcurrentBeanCollection2TextConverterTest {
     }
 
     private CsvSchema makeSchema() {
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine(TstPerson.class.getName());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("firstName").build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("lastName").build());
-        schema.addSchemaLine(schemaLine);
-        return schema;
+        return CsvSchema.builder()
+                .withLine(CsvSchemaLine.builder("org.jsapar.TstPerson")
+                        .withCells("firstName", "lastName")
+                        .build())
+                .build();
     }
 
 }

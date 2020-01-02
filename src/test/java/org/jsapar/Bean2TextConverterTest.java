@@ -3,9 +3,7 @@ package org.jsapar;
 import org.jsapar.model.Cell;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchema;
-import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
-import org.jsapar.schema.Schema;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -24,7 +22,7 @@ public class Bean2TextConverterTest {
         Collection<TstPerson> people = makePeople();
         try (StringWriter writer = new StringWriter()
         ) {
-            Schema composeSchema = makeOutputSchema();
+            CsvSchema composeSchema = makeOutputSchema();
 
 
             Bean2TextConverter<TstPerson> converter = new Bean2TextConverter<>(composeSchema, writer);
@@ -43,7 +41,7 @@ public class Bean2TextConverterTest {
     @Test
     public void addLineManipulator() throws IOException {
         Collection<TstPerson> people = makePeople();
-        Schema composeSchema = makeOutputSchema();
+        CsvSchema composeSchema = makeOutputSchema();
         StringWriter writer = new StringWriter();
         try (Bean2TextConverter<TstPerson> converter = new Bean2TextConverter<>(composeSchema, writer)) {
             converter.setErrorConsumer(error -> fail("Got error event"));
@@ -67,14 +65,13 @@ public class Bean2TextConverterTest {
     }
 
     private CsvSchema makeOutputSchema() {
-        CsvSchema outputSchema = new CsvSchema();
-        CsvSchemaLine outputSchemaLine = new CsvSchemaLine("org.jsapar.TstPerson");
-        outputSchemaLine.addSchemaCell(CsvSchemaCell.builder("firstName").build());
-        outputSchemaLine.addSchemaCell(CsvSchemaCell.builder("lastName").build());
-        outputSchemaLine.setCellSeparator(";");
-        outputSchema.addSchemaLine(outputSchemaLine);
-        outputSchema.setLineSeparator("|");
-        return outputSchema;
+        return CsvSchema.builder()
+                .withLineSeparator("|")
+                .withLine( CsvSchemaLine.builder("org.jsapar.TstPerson")
+                        .withCells("firstName", "lastName")
+                        .withCellSeparator(";")
+                        .build())
+                .build();
     }
 
     private Collection<TstPerson> makePeople() {

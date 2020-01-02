@@ -47,13 +47,40 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
         private String lineSeparator = System.getProperty("line.separator");
         private List<L> schemaLines = new ArrayList<>();
 
+        Builder() {
+        }
+
+        Builder(Schema<L> schema) {
+            this.lineSeparator = schema.lineSeparator;
+            this.schemaLines.addAll(schema.schemaLines.values());
+        }
+
+        /**
+         * @param lineSeparator  Line separator string. Default value is the system default
+         *                       (Retrieved by {@code System.getProperty("line.separator")}).
+         * @return This builder instance.
+         */
         public B withLineSeparator(String lineSeparator){
             this.lineSeparator = lineSeparator;
             return (B)this;
         }
 
+        /**
+         * Successive calls to this method adds one line for each call.
+         * @param schemaLine The schema line to add to this builder.
+         * @return This builder instance.
+         */
         public B withLine(L schemaLine){
             this.schemaLines.add(schemaLine);
+            return (B)this;
+        }
+
+        /**
+         * Removes all lines that have been added so far to this builder.
+         * @return This builder instance.
+         */
+        public B withoutAnyLine(){
+            this.schemaLines.clear();
             return (B)this;
         }
 

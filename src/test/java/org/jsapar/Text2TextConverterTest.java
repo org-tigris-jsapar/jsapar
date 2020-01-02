@@ -63,10 +63,10 @@ public class Text2TextConverterTest {
     }
 
     private CsvSchema makeCsvPersonSchema() {
-        CsvSchema outputSchema = new CsvSchema();
-        outputSchema.addSchemaLine(makeCsvPersonSchemaLine());
-        outputSchema.setLineSeparator("|");
-        return outputSchema;
+        return CsvSchema.builder()
+                .withLine(makeCsvPersonSchemaLine())
+                .withLineSeparator("|")
+                .build();
     }
 
     private CsvSchemaLine makeCsvPersonSchemaLine() {

@@ -29,6 +29,7 @@ import java.util.stream.Stream;
  * cell formatting.
  * <p>
  * See {@link AbstractConverter} for details about error handling and manipulating data.
+ * @see org.jsapar.schema.StringSchema
  */
 public class Text2StringConverter extends AbstractConverter {
     private final Schema<? extends SchemaLine<? extends SchemaCell>> parseSchema;

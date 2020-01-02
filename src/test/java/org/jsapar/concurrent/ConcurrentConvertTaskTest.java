@@ -17,8 +17,8 @@ public class ConcurrentConvertTaskTest {
 
     @Test
     public void testConcurrentText2TextConverter() throws JSaParException {
-        TextParseTask p = new TextParseTask(new CsvSchema(), new StringReader(""));
-        TextComposer c = new TextComposer(new FixedWidthSchema(), new StringWriter());
+        TextParseTask p = new TextParseTask(CsvSchema.builder().build(), new StringReader(""));
+        TextComposer c = new TextComposer( FixedWidthSchema.builder().build(), new StringWriter());
         ConvertTask instance = new ConcurrentConvertTask(p, c);
         assertSame(p, instance.getParseTask());
         assertSame(c, instance.getComposer());

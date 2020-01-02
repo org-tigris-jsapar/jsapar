@@ -1,8 +1,6 @@
 package org.jsapar;
 
-import org.jsapar.model.CellType;
 import org.jsapar.schema.CsvSchema;
-import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 import org.junit.Test;
 
@@ -12,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  */
@@ -30,11 +28,11 @@ public class BeanCollection2TextConverterTest {
         testPerson2.setAddress(new TstPostAddress("Path", "City"));
         people.add(testPerson2);
 
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine(TstPerson.class.getName());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("firstName").build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("lastName").build());
-        schema.addSchemaLine(schemaLine);
+        CsvSchema schema = CsvSchema.builder()
+                .withLine(CsvSchemaLine.builder(TstPerson.class.getName())
+                        .withCells("firstName", "lastName")
+                        .build())
+                .build();
         StringWriter writer = new StringWriter();
         BeanCollection2TextConverter<TstPerson> converter = new BeanCollection2TextConverter<>(schema);
         converter.convert(people, writer);
