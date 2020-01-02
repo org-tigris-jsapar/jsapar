@@ -23,9 +23,7 @@ public class CsvParseTaskTest {
 
     @Test
     public final void testParse_oneLine() throws IOException, JSaParException {
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
-        schema.addSchemaLine(schemaLine);
+        CsvSchema schema = makeCsvSchema();
         String sToParse = "Jonas;Stenberg;Hemgatan 19;111 22;Stockholm";
         java.io.Reader reader = new java.io.StringReader(sToParse);
         Document doc = build(schema, reader,1);
@@ -40,11 +38,15 @@ public class CsvParseTaskTest {
         assertEquals("Stockholm", LineUtils.getStringCellValue(line, "4"));
     }
 
+    public CsvSchema makeCsvSchema() {
+        return CsvSchema.builder()
+                    .withLine(CsvLineParserTest.makeCsvSchemaLine())
+                    .build();
+    }
+
     @Test
     public final void testParse_endingNewLine() throws IOException, JSaParException {
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
-        schema.addSchemaLine(schemaLine);
+        CsvSchema schema = makeCsvSchema();
         String sToParse = "Jonas;Stenberg;Hemgatan 19;111 22;Stockholm" + System.getProperty("line.separator");
         java.io.Reader reader = new java.io.StringReader(sToParse);
         Document doc = build(schema, reader,1);
@@ -61,9 +63,7 @@ public class CsvParseTaskTest {
 
     @Test
     public final void testParse_twoLines() throws IOException, JSaParException {
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
-        schema.addSchemaLine(schemaLine);
+        CsvSchema schema = makeCsvSchema();
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator") + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
         Document doc = build(schema, reader, 2);
@@ -79,9 +79,7 @@ public class CsvParseTaskTest {
 
     @Test
     public final void testParse_emptyLine_ignore() throws IOException, JSaParException {
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
-        schema.addSchemaLine(schemaLine);
+        CsvSchema schema = makeCsvSchema();
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator")
                 + System.getProperty("line.separator") + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
@@ -100,9 +98,7 @@ public class CsvParseTaskTest {
 
     @Test
     public final void testParse_emptyLine_ignore_space() throws IOException, JSaParException {
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = CsvLineParserTest.makeCsvSchemaLine();
-        schema.addSchemaLine(schemaLine);
+        CsvSchema schema = makeCsvSchema();
         String sToParse = "Jonas;Stenberg" + System.getProperty("line.separator") + " \t \t  "
                 + System.getProperty("line.separator") + "Nils;Nilsson";
         java.io.Reader reader = new java.io.StringReader(sToParse);
@@ -123,20 +119,20 @@ public class CsvParseTaskTest {
     @Test
     public final void testParse_firstLineAsHeader()
             throws IOException, JSaParException {
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine();
-        schemaLine.addSchemaCell(CsvSchemaCell.builder("Shoe Size")
-                .withCellType(CellType.INTEGER)
-                .withDefaultValue("43")
-                .build());
+        CsvSchema schema = CsvSchema.builder()
+                .withLine(CsvSchemaLine.builder("Person")
+                        .withFirstLineAsSchema(true)
+                        .withCell(CsvSchemaCell.builder("Shoe Size")
+                                .withCellType(CellType.INTEGER)
+                                .withDefaultValue("43")
+                                .build())
+                        .withCell(CsvSchemaCell.builder("HasDog")
+                                .withCellType(CellType.BOOLEAN)
+                                .withDefaultValue("false")
+                                .build())
+                        .build())
+                .build();
 
-        schemaLine.addSchemaCell(CsvSchemaCell.builder("HasDog")
-                .withCellType(CellType.BOOLEAN)
-                .withDefaultValue("false")
-                .build());
-
-        schemaLine.setFirstLineAsSchema(true);
-        schema.addSchemaLine(schemaLine);
 
         String sLineSep = System.getProperty("line.separator");
         String sToParse = "First Name;Last Name;Shoe Size" + sLineSep + "Jonas;Stenberg;41" + sLineSep
@@ -159,11 +155,12 @@ public class CsvParseTaskTest {
 
     @Test
     public final void testParse_firstLineAsHeader_quoted() throws IOException, JSaParException {
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine();
-        schemaLine.setFirstLineAsSchema(true);
-        schemaLine.setQuoteChar('$');
-        schema.addSchemaLine(schemaLine);
+        CsvSchema schema = CsvSchema.builder()
+                .withLine(CsvSchemaLine.builder("person")
+                        .withFirstLineAsSchema(true)
+                        .withQuoteChar('$')
+                        .build())
+                .build();
 
         String sLineSep = System.getProperty("line.separator");
         String sToParse = "$First Name$;$Last Name$" + sLineSep + "Jonas;$Stenberg$" + sLineSep + "Nils;Nilsson";
@@ -181,25 +178,18 @@ public class CsvParseTaskTest {
 
     @Test
     public void testParseControlCell() throws IOException {
-        CsvSchema schema = new CsvSchema();
-        schema.setLineSeparator("\n");
-        CsvSchemaLine schemaLine = new CsvSchemaLine("Address");
-        schemaLine.setCellSeparator(":");
-        CsvSchemaCell schemaCell = new CsvSchemaCell("type");
-        schemaCell.setLineCondition((Predicate<String>) new MatchingCellValueCondition("Address"));
-        schemaLine.addSchemaCell(schemaCell);
-        schemaLine.addSchemaCell(new CsvSchemaCell("street"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("postcode"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("post.town"));
-        schema.addSchemaLine(schemaLine);
-
-        schemaLine = new CsvSchemaLine("Name");
-        CsvSchemaCell nameTypeSchemaCell = new CsvSchemaCell("type");
-        nameTypeSchemaCell.setLineCondition((Predicate<String>) new MatchingCellValueCondition("Name"));
-        schemaLine.addSchemaCell(nameTypeSchemaCell);
-        schemaLine.addSchemaCell(new CsvSchemaCell("first.name"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("last.name"));
-        schema.addSchemaLine(schemaLine);
+        CsvSchema schema = CsvSchema.builder()
+                .withLineSeparator("\n")
+                .withLine(CsvSchemaLine.builder("Address")
+                        .withCellSeparator(":")
+                        .withCell(CsvSchemaCell.builder("type").withLineCondition(new MatchingCellValueCondition("Address")).build())
+                        .withCells("street", "postcode", "post.town")
+                        .build())
+                .withLine(CsvSchemaLine.builder("Name")
+                        .withCell(CsvSchemaCell.builder("type").withLineCondition(new MatchingCellValueCondition("Name")).build())
+                        .withCells("first.name", "last.name")
+                        .build())
+                .build();
 
         String sToParse = "Name;Jonas;Stenberg\nAddress:Storgatan 4:12345:Storstan";
         java.io.Reader reader = new java.io.StringReader(sToParse);

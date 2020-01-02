@@ -18,16 +18,19 @@ public class CsvSchemaTest {
 
         assertNotSame(schemaLine, clone.iterator().next());
     }
+    @Test
+    public void empty() {
+        CsvSchema schema = CsvSchema.builder().build();
+        assertTrue(schema.isEmpty());
+        assertEquals(0, schema.size());
+    }
 
     @Test
     public void iterator() {
-        CsvSchema schema = new CsvSchema();
-        assertTrue(schema.isEmpty());
-        assertEquals(0, schema.size());
+        CsvSchemaLine schemaLine = CsvSchemaLine.builder("Joho").withOccurs(2).build();
+        CsvSchema schema = CsvSchema.builder()
+                .withLine(schemaLine).build();
 
-        CsvSchemaLine schemaLine = new CsvSchemaLine(2);
-        schemaLine.setLineType("Joho");
-        schema.addSchemaLine(schemaLine);
         assertFalse(schema.isEmpty());
         assertEquals(1, schema.size());
 

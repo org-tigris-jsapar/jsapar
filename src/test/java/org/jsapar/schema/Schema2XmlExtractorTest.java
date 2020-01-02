@@ -23,16 +23,16 @@ public class Schema2XmlExtractorTest {
     @Test
     public void testExtractXml_FixedWidth() throws SchemaException {
         StringWriter writer = new StringWriter();
-        FixedWidthSchema schema = new FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = FixedWidthSchemaLine.builder("Person")
-                .withOccurs(2)
-                .withMinLength(240)
-                .withCell("First name", 5)
-                .withCell("Last name", 8)
+        FixedWidthSchema schema = FixedWidthSchema.builder()
+                .withLineSeparator("")
+                .withLine( FixedWidthSchemaLine.builder("Person")
+                    .withOccurs(2)
+                    .withMinLength(240)
+                    .withCell("First name", 5)
+                    .withCell("Last name", 8)
+                    .build())
                 .build();
-        schema.setLineSeparator("");
-        schema.addSchemaLine(schemaLine);
-        
+
         Schema2XmlExtractor extractor = new Schema2XmlExtractor();
         extractor.extractXml(writer, schema);
         
@@ -53,18 +53,17 @@ public class Schema2XmlExtractorTest {
     @Test
     public void testExtractXml_Csv() throws SchemaException {
         StringWriter writer = new StringWriter();
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = CsvSchemaLine.builder("Person")
-                .withOccurs(2)
-                .withCells("First name","Last name")
-                .withCell( CsvSchemaCell.builder("Gender")
-                        .withLocale(Locale.getDefault())
-                        .withEnumFormat(TstGender.class, true)
+        CsvSchema schema = CsvSchema.builder()
+                .withLine(CsvSchemaLine.builder("Person")
+                        .withOccurs(2)
+                        .withCells("First name", "Last name")
+                        .withCell(CsvSchemaCell.builder("Gender")
+                                .withLocale(Locale.getDefault())
+                                .withEnumFormat(TstGender.class, true)
+                                .build())
                         .build())
                 .build();
 
-        schema.addSchemaLine(schemaLine);
-        
         Schema2XmlExtractor extractor = new Schema2XmlExtractor();
         extractor.extractXml(writer, schema);
         

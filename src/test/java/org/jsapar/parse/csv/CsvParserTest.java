@@ -17,12 +17,7 @@ public class CsvParserTest {
 
     @Test
     public void parse_firstLineAsSchema_mandatory_cell_not_present() throws IOException {
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine("Person");
-        schema.addSchemaLine(schemaLine);
-        schemaLine.setFirstLineAsSchema(true);
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("firstName").build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("lastName").withMandatory(true).build());
+        CsvSchema schema = makePersonCsvSchema();
 
         String text = "firstName\njohn";
         CsvParser parser = new CsvParser(new StringReader(text), schema);
@@ -38,12 +33,7 @@ public class CsvParserTest {
 
     @Test
     public void parse_firstLineAsSchema_empty_cell_name() throws IOException {
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine("Person");
-        schema.addSchemaLine(schemaLine);
-        schemaLine.setFirstLineAsSchema(true);
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("firstName").build());
-        schemaLine.addSchemaCell( CsvSchemaCell.builder("lastName").withMandatory(true).build());
+        CsvSchema schema = makePersonCsvSchema();
 
         String text = "firstName;;lastName\njohn;L;doe";
         CsvParser parser = new CsvParser(new StringReader(text), schema);
@@ -56,6 +46,16 @@ public class CsvParserTest {
                 },
                 errorEvent -> errorCount.incrementAndGet());
         assertEquals(0, errorCount.get());
+    }
+
+    public CsvSchema makePersonCsvSchema() {
+        return CsvSchema.builder()
+                    .withLine(CsvSchemaLine.builder("Person")
+                            .withFirstLineAsSchema(true)
+                            .withCell("firstName")
+                            .withCell(CsvSchemaCell.builder("lastName").withMandatory(true).build())
+                            .build())
+                    .build();
     }
 
 }
