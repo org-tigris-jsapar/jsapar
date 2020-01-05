@@ -62,9 +62,7 @@ public class FixedWidthSchema extends Schema<FixedWidthSchemaLine> {
          * @return This builder instance.
          */
         public FixedWidthSchema.Builder withLine(String lineType, Function<FixedWidthSchemaLine.Builder, FixedWidthSchemaLine.Builder> lineBuilderHandler){
-            FixedWidthSchemaLine.Builder builder = FixedWidthSchemaLine.builder(lineType);
-            this.withLine(lineBuilderHandler.apply(builder).build());
-            return this;
+            return this.withLine(lineBuilderHandler.apply(FixedWidthSchemaLine.builder(lineType)).build());
         }
 
 

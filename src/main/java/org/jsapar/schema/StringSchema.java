@@ -47,9 +47,7 @@ public class StringSchema extends Schema<StringSchemaLine> {
          * @return This builder instance.
          */
         public StringSchema.Builder withLine(String lineType, Function<StringSchemaLine.Builder, StringSchemaLine.Builder> lineBuilderHandler){
-            StringSchemaLine.Builder builder = StringSchemaLine.builder(lineType);
-            this.withLine(lineBuilderHandler.apply(builder).build());
-            return this;
+            return this.withLine(lineBuilderHandler.apply(StringSchemaLine.builder(lineType)).build());
         }
 
         @Override

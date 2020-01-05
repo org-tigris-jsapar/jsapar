@@ -1,5 +1,7 @@
 package org.jsapar.schema;
 
+import java.util.function.Function;
+
 /**
  * Describes the schema for a delimiter separated line. For instance if you want to ignore a header line you
  * can add a SchemaLine instance to your schema with occurs==1 and ignoreRead==true;
@@ -170,6 +172,17 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
         }
 
         /**
+         * Convenience method that creates cell builder, calls the provided function before using that builder to create a schema cell.
+         * @param cellName The name of the cell.
+         * @param cellBuilderHandler The function that gets called with the created builder.
+         * @return This builder instance.
+         * @see SchemaLine.Builder#withCell(SchemaCell)
+         */
+        public Builder withCell(String cellName, Function<CsvSchemaCell.Builder<?>, CsvSchemaCell.Builder<?>> cellBuilderHandler){
+            return this.withCell(cellBuilderHandler.apply(CsvSchemaCell.builder(cellName)).build());
+        }
+
+        /**
          * Convenience method that creates a string csv cell with supplied name without any further
          * formatting and adds it to this builder. For more advanced options use {@link SchemaLine.Builder#withCell(SchemaCell)}
          * @param cellName The name of the cell.
@@ -177,7 +190,7 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
          * @see SchemaLine.Builder#withCell(SchemaCell)
          */
         public Builder withCell(String cellName){
-            return this.withCell(CsvSchemaCell.builder(cellName).build());
+            return this.withCell(cellName, c->c);
         }
 
         /**

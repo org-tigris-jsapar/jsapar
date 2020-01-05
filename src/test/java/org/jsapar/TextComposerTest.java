@@ -108,10 +108,7 @@ public class TextComposerTest {
         FixedWidthSchema schema = FixedWidthSchema.builder()
                 .withLineSeparator("")
                 .withLine("Name", l ->
-                        l.withCell(FixedWidthSchemaCell.builder("Type", 1)
-                            .withDefaultValue("N")
-                            .withLineCondition(new MatchingCellValueCondition("N"))
-                            .build())
+                        l.withCell("Type", 1, c-> c.withDefaultValue("N").withLineCondition(new MatchingCellValueCondition("N")))
                         .withCell("First name", 5)
                         .withCell("Last name", 8)
                         .withMinLength(20))

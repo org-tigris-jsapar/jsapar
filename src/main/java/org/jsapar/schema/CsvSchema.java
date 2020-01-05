@@ -70,9 +70,7 @@ public class CsvSchema extends Schema<CsvSchemaLine> implements Cloneable{
          * @return This builder instance.
          */
         public Builder withLine(String lineType, Function<CsvSchemaLine.Builder, CsvSchemaLine.Builder> lineBuilderHandler){
-            CsvSchemaLine.Builder builder = CsvSchemaLine.builder(lineType);
-            this.withLine(lineBuilderHandler.apply(builder).build());
-            return this;
+            return this.withLine(lineBuilderHandler.apply(CsvSchemaLine.builder(lineType)).build());
         }
 
         @Override

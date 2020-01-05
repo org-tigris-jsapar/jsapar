@@ -122,14 +122,8 @@ public class CsvParseTaskTest {
         CsvSchema schema = CsvSchema.builder()
                 .withLine(CsvSchemaLine.builder("Person")
                         .withFirstLineAsSchema(true)
-                        .withCell(CsvSchemaCell.builder("Shoe Size")
-                                .withCellType(CellType.INTEGER)
-                                .withDefaultValue("43")
-                                .build())
-                        .withCell(CsvSchemaCell.builder("HasDog")
-                                .withCellType(CellType.BOOLEAN)
-                                .withDefaultValue("false")
-                                .build())
+                        .withCell("Shoe Size", c->c.withCellType(CellType.INTEGER).withDefaultValue("43"))
+                        .withCell("HasDog", c->c.withCellType(CellType.BOOLEAN).withDefaultValue("false"))
                         .build())
                 .build();
 

@@ -1,5 +1,7 @@
 package org.jsapar.schema;
 
+import java.util.function.Function;
+
 /**
  * This class represents the schema for a line of a fixed with file. Each cell within the line has a
  * specified size. There are no delimiter characters.
@@ -123,6 +125,19 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
         }
 
         /**
+         * Convenience method that creates cell builder, calls the provided function before using that builder to create a schema cell.
+         *
+         * @param name               The name of the cell.
+         * @param length             The width of the cell.
+         * @param cellBuilderHandler The function that gets called with the created builder.
+         * @return This builder instance.
+         * @see SchemaLine.Builder#withCell(SchemaCell)
+         */
+        public FixedWidthSchemaLine.Builder withCell(String name, int length, Function<FixedWidthSchemaCell.Builder<?>, FixedWidthSchemaCell.Builder<?>> cellBuilderHandler) {
+            return this.withCell(cellBuilderHandler.apply(FixedWidthSchemaCell.builder(name, length)).build());
+        }
+
+        /**
          * Convenience method that creates a string csv cell with supplied name and length without any further
          * formatting and adds it to this builder. For more advanced options use {@link SchemaLine.Builder#withCell(SchemaCell)}
          *
@@ -132,7 +147,7 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
          * @see SchemaLine.Builder#withCell(SchemaCell)
          */
         public Builder withCell(String cellName, int cellLength) {
-            return this.withCell(FixedWidthSchemaCell.builder(cellName, cellLength).build());
+            return this.withCell(cellName, cellLength, c->c);
         }
 
         @Override
@@ -244,7 +259,7 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
 
         int diff = getMinLength() - getTotalCellLength();
         if (diff > 0) {
-            addSchemaCell(new FixedWidthSchemaCell("_fillToMinLength_", diff));
+            addSchemaCell( FixedWidthSchemaCell.builder("_fillToMinLength_", diff).build());
         }
 
     }
