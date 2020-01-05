@@ -1,5 +1,7 @@
 package org.jsapar.schema;
 
+import java.util.function.Function;
+
 /**
  * A string schema can be used to describe the format of each individual cell so that they are converted correctly into
  * strings. This schema cannot be used to parse a text input or create a text output.
@@ -36,6 +38,18 @@ public class StringSchema extends Schema<StringSchemaLine> {
 
         public Builder(StringSchema schema) {
             super(schema);
+        }
+
+        /**
+         * Creates a line builder and calls provided function before using that builder to build a csv schema line.
+         * @param lineType  The line type of the lines to create.
+         * @param lineBuilderHandler The function that gets called for the builder.
+         * @return This builder instance.
+         */
+        public StringSchema.Builder withLine(String lineType, Function<StringSchemaLine.Builder, StringSchemaLine.Builder> lineBuilderHandler){
+            StringSchemaLine.Builder builder = StringSchemaLine.builder(lineType);
+            this.withLine(lineBuilderHandler.apply(builder).build());
+            return this;
         }
 
         @Override

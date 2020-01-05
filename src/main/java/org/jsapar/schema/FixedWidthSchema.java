@@ -5,6 +5,7 @@ import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.text.TextParseConfig;
 
 import java.io.Reader;
+import java.util.function.Function;
 
 /**
  * Defines a schema for a fixed position buffer. Each cell is defined by a fixed number of
@@ -52,6 +53,18 @@ public class FixedWidthSchema extends Schema<FixedWidthSchemaLine> {
 
         public Builder(FixedWidthSchema schema) {
             super(schema);
+        }
+
+        /**
+         * Creates a line builder and calls provided function before using that builder to build a csv schema line.
+         * @param lineType  The line type of the lines to create.
+         * @param lineBuilderHandler The function that gets called for the builder.
+         * @return This builder instance.
+         */
+        public FixedWidthSchema.Builder withLine(String lineType, Function<FixedWidthSchemaLine.Builder, FixedWidthSchemaLine.Builder> lineBuilderHandler){
+            FixedWidthSchemaLine.Builder builder = FixedWidthSchemaLine.builder(lineType);
+            this.withLine(lineBuilderHandler.apply(builder).build());
+            return this;
         }
 
 

@@ -1,11 +1,9 @@
 package org.jsapar;
 
-import org.jsapar.error.JSaParException;
-import org.jsapar.error.MaxErrorsExceededException;
-import org.jsapar.error.RecordingErrorEventListener;
-import org.jsapar.error.ThresholdRecordingErrorEventListener;
+import org.jsapar.error.*;
 import org.jsapar.model.CellType;
 import org.jsapar.model.StringCell;
+import org.jsapar.parse.CollectingConsumer;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.*;
 import org.junit.Test;
@@ -80,58 +78,57 @@ public class Text2TextConverterTest {
     @Test
     public void testConvert_error() throws IOException, JSaParException {
         String toParse = "Jonas 41       " + LN + "Frida ERROR    ";
-        FixedWidthSchema inputSchema = new FixedWidthSchema();
-        FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine("Person");
-        inputSchemaLine.addSchemaCell(FixedWidthSchemaCell.builder("First name", 6).build());
-        FixedWidthSchemaCell schemaCell2 = FixedWidthSchemaCell.builder("Shoe size", 9)
-                .withCellType(CellType.INTEGER)
-                .withAlignment(FixedWidthSchemaCell.Alignment.LEFT)
-                .build();
-        inputSchemaLine.addSchemaCell(schemaCell2);
-        inputSchema.addSchemaLine(inputSchemaLine);
+        FixedWidthSchema inputSchema = makeFixedWidthPersonShoeSchema();
 
-        CsvSchema outputSchema = new CsvSchema();
-        CsvSchemaLine outputSchemaLine = new CsvSchemaLine("Person");
-        outputSchemaLine.addSchemaCell( CsvSchemaCell.builder("First name").build());
-        outputSchemaLine.addSchemaCell( CsvSchemaCell.builder("Shoe size").build());
-        outputSchemaLine.setCellSeparator(";");
-        outputSchema.addSchemaLine(outputSchemaLine);
+        CsvSchema outputSchema = CsvSchema.builder()
+                .withLine(CsvSchemaLine.builder("Person")
+                        .withCells("First name", "Shoe size")
+                        .withCellSeparator(";")
+                        .build())
+                .build();
 
         try (StringWriter writer = new StringWriter(); StringReader reader = new StringReader(toParse)) {
             Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
-            RecordingErrorEventListener errorEventListener = new RecordingErrorEventListener();
-            converter.setErrorEventListener(errorEventListener);
+            CollectingConsumer<JSaParException> errorEventListener = new CollectingConsumer<>();
+            converter.setErrorConsumer(errorEventListener);
             converter.convert(reader, writer);
             String sResult = writer.getBuffer().toString();
             String sExpected = "Jonas;41" + LN + "Frida;";
 
-            assertEquals(1, errorEventListener.getErrors().size());
+            assertEquals(1, errorEventListener.getCollected().size());
             assertEquals(sExpected, sResult);
         }
 
     }
 
+    public FixedWidthSchema makeFixedWidthPersonShoeSchema() {
+        return FixedWidthSchema.builder()
+                    .withLine(FixedWidthSchemaLine.builder("Person")
+                            .withCell("First name", 6)
+                            .withCell(FixedWidthSchemaCell.builder("Shoe size", 9)
+                                    .withCellType(CellType.INTEGER)
+                                    .withAlignment(FixedWidthSchemaCell.Alignment.LEFT)
+                                    .build())
+                            .build())
+                    .build();
+    }
+
     @Test(expected = MaxErrorsExceededException.class)
     public void testConvert_max_error() throws IOException, JSaParException {
         String toParse = "Jonas 41       " + LN + "Frida ERROR    ";
-        FixedWidthSchema inputSchema = new FixedWidthSchema();
-        FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine("Person");
-        inputSchemaLine.addSchemaCell( FixedWidthSchemaCell.builder("First name", 6).build());
-        FixedWidthSchemaCell schemaCell2 =  FixedWidthSchemaCell.builder("Shoe size", 9).withCellType(CellType.INTEGER).build();
-        inputSchemaLine.addSchemaCell(schemaCell2);
-        inputSchema.addSchemaLine(inputSchemaLine);
+        FixedWidthSchema inputSchema = makeFixedWidthPersonShoeSchema();
 
-        CsvSchema outputSchema = new CsvSchema();
-        CsvSchemaLine outputSchemaLine = new CsvSchemaLine("Person");
-        outputSchemaLine.addSchemaCell(new CsvSchemaCell("First name"));
-        outputSchemaLine.addSchemaCell(new CsvSchemaCell("Shoe size"));
-        outputSchemaLine.setCellSeparator(";");
-        outputSchema.addSchemaLine(outputSchemaLine);
+        CsvSchema outputSchema = CsvSchema.builder()
+                .withLine( CsvSchemaLine.builder("Person")
+                        .withCells("First name","Shoe size")
+                        .withCellSeparator(";")
+                        .build())
+                .build();
 
         try (StringWriter writer = new StringWriter(); StringReader reader = new StringReader(toParse)) {
             Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
-            RecordingErrorEventListener errorEventListener = new ThresholdRecordingErrorEventListener(0);
-            converter.setErrorEventListener(errorEventListener);
+            ThresholdCollectingErrorConsumer errorEventListener = new ThresholdCollectingErrorConsumer(0);
+            converter.setErrorConsumer(errorEventListener);
             converter.convert(reader, writer);
         }
 
@@ -160,21 +157,15 @@ public class Text2TextConverterTest {
     public void testConvert_twoKindOfLines() throws IOException, JSaParException {
         String toParse = "This file contains names" + LN + "Jonas Stenberg "
                 + LN + "Frida Bergsten ";
-        FixedWidthSchema inputSchema = new FixedWidthSchema();
-        FixedWidthSchemaLine inputSchemaLine = new FixedWidthSchemaLine("Header");
-        inputSchemaLine.setOccurs(1);
-        inputSchemaLine.addSchemaCell(new FixedWidthSchemaCell("Header", 100));
-        inputSchema.addSchemaLine(inputSchemaLine);
 
-        inputSchema.addSchemaLine( makeFixedWidthPersonSchemaLine());
+        FixedWidthSchema inputSchema = makeFixedWidthHeaderPersonSchema();
 
-        CsvSchema outputSchema = new CsvSchema();
-        CsvSchemaLine outputSchemaLine = CsvSchemaLine.builder("Header")
-                .withCell("Header")
+        CsvSchema outputSchema = CsvSchema.builder()
+                .withLine(CsvSchemaLine.builder("Header")
+                        .withCell("Header")
+                        .build())
+                .withLine(makeCsvPersonSchemaLine())
                 .build();
-        outputSchema.addSchemaLine(outputSchemaLine);
-
-        outputSchema.addSchemaLine(makeCsvPersonSchemaLine());
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
@@ -193,12 +184,12 @@ public class Text2TextConverterTest {
         String toParse = "Jonas Stenberg " + LN + "Frida Bergsten ";
         FixedWidthSchema inputSchema = makeFixedWidthPersonSchema();
 
-        CsvSchema outputSchema = new CsvSchema();
-        CsvSchemaLine outputSchemaLine = CsvSchemaLine.builder("Person")
-                .withCells("First name","Last name", "Town")
-                .withCellSeparator(";")
+        CsvSchema outputSchema = CsvSchema.builder()
+                .withLine(CsvSchemaLine.builder("Person")
+                        .withCells("First name", "Last name", "Town")
+                        .withCellSeparator(";")
+                        .build())
                 .build();
-        outputSchema.addSchemaLine(outputSchemaLine);
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
@@ -217,9 +208,9 @@ public class Text2TextConverterTest {
     }
 
     public FixedWidthSchema makeFixedWidthPersonSchema() {
-        FixedWidthSchema inputSchema = new FixedWidthSchema();
-        inputSchema.addSchemaLine(makeFixedWidthPersonSchemaLine());
-        return inputSchema;
+        return FixedWidthSchema.builder()
+                .withLine(makeFixedWidthPersonSchemaLine())
+                .build();
     }
 
     public FixedWidthSchemaLine makeFixedWidthPersonSchemaLine() {
@@ -234,14 +225,7 @@ public class Text2TextConverterTest {
     public void testConvert_twoKindOfLinesIn_OneKindOut() throws IOException, JSaParException {
         String toParse = "This file contains names" + LN + "Jonas Stenberg "
                 + LN + "Frida Bergsten ";
-        FixedWidthSchema inputSchema = new FixedWidthSchema();
-        FixedWidthSchemaLine inputSchemaLine = FixedWidthSchemaLine.builder("Header")
-                .withOccurs(1)
-                .withCell("Header", 100)
-                .build();
-        inputSchema.addSchemaLine(inputSchemaLine);
-
-        inputSchema.addSchemaLine(makeFixedWidthPersonSchemaLine());
+        FixedWidthSchema inputSchema = makeFixedWidthHeaderPersonSchema();
 
         CsvSchema outputSchema = makeCsvPersonSchema();
 
@@ -256,22 +240,25 @@ public class Text2TextConverterTest {
 
     }
 
+    public FixedWidthSchema makeFixedWidthHeaderPersonSchema() {
+        return FixedWidthSchema.builder()
+                .withLine(FixedWidthSchemaLine.builder("Header")
+                        .withOccurs(1)
+                        .withCell("Header", 100)
+                        .build())
+                .withLine(makeFixedWidthPersonSchemaLine())
+                .build();
+    }
+
 
     @Test
     public void testConvert_filter() throws IOException, JSaParException {
         String toParse = "This file contains names" + LN + "Jonas Stenberg "
                 + LN + "Frida Bergsten "
                 + LN + "Tomas Stornos  ";
-        FixedWidthSchema inputSchema = new FixedWidthSchema();
-        FixedWidthSchemaLine inputSchemaLine = FixedWidthSchemaLine.builder("Header")
-                .withOccurs(1)
-                .withCell("Header", 100)
-                .build();
-        inputSchema.addSchemaLine(inputSchemaLine);
-        inputSchema.addSchemaLine(makeFixedWidthPersonSchemaLine());
+        FixedWidthSchema inputSchema = makeFixedWidthHeaderPersonSchema();
 
-        CsvSchema outputSchema = new CsvSchema();
-        outputSchema.addSchemaLine(makeCsvPersonSchemaLine());
+        CsvSchema outputSchema = makeCsvPersonSchema();
 
         StringWriter writer = new StringWriter();
         StringReader reader = new StringReader(toParse);
@@ -279,7 +266,7 @@ public class Text2TextConverterTest {
         converter.addLineManipulator(line -> !line.getLineType().equals("Person") || !line.getCell("First name").orElseThrow(() -> new AssertionError("Should be set")).getStringValue().equals("Tomas"));
         converter.convert(reader, writer);
         String sResult = writer.getBuffer().toString();
-        String sExpected = "Jonas;Stenberg" + LN + "Frida;Bergsten";
+        String sExpected = "Jonas;Stenberg|Frida;Bergsten";
 
         assertEquals(sExpected, sResult);
 

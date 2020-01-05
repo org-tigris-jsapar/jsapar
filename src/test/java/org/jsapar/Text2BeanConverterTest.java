@@ -4,18 +4,17 @@ import org.jsapar.compose.bean.BeanComposeConfig;
 import org.jsapar.compose.bean.BeanFactory;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
-import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.CsvSchema;
-import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
-import org.jsapar.schema.Schema;
+import org.jsapar.text.TextParseConfig;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 public class Text2BeanConverterTest {
 
@@ -35,12 +34,11 @@ public class Text2BeanConverterTest {
     }
 
     protected CsvSchema makeTestCsvSchema() {
-        CsvSchema schema = new CsvSchema();
-        schema.addSchemaLine( CsvSchemaLine.builder("org.jsapar.TstPerson")
-                .withCell(CsvSchemaCell.builder("firstName").build())
-                .withCell(CsvSchemaCell.builder("lastName").build())
-                .build());
-        return schema;
+        return CsvSchema.builder()
+                .withLine(CsvSchemaLine.builder("org.jsapar.TstPerson")
+                        .withCells("firstName", "lastName")
+                        .build())
+                .build();
     }
 
     @Test
@@ -79,7 +77,7 @@ public class Text2BeanConverterTest {
 
     @Test
     public void setGetComposeConfig() {
-        Schema schema = new CsvSchema();
+        CsvSchema schema = CsvSchema.builder().build();
         Text2BeanConverter<TstPerson> converter = new Text2BeanConverter<>(schema);
         BeanComposeConfig composeConfig = new BeanComposeConfig();
         converter.setComposeConfig(composeConfig);
@@ -89,7 +87,7 @@ public class Text2BeanConverterTest {
 
     @Test
     public void setGetParseConfig() {
-        Schema schema = new CsvSchema();
+        CsvSchema schema = CsvSchema.builder().build();
         Text2BeanConverter<TstPerson> converter = new Text2BeanConverter<>(schema);
         TextParseConfig config = new TextParseConfig();
         converter.setParseConfig(config);

@@ -37,8 +37,8 @@ public class Text2StringConverterTest {
 
     @Test
     public void Text2StringConverter() {
-        CsvSchema parseSchema = new CsvSchema();
-        CsvSchema composeSchema = new CsvSchema();
+        CsvSchema parseSchema = CsvSchema.builder().build();
+        CsvSchema composeSchema = CsvSchema.builder().build();
         TextParseConfig config = new TextParseConfig();
         Text2StringConverter converter = new Text2StringConverter(parseSchema, composeSchema, config);
         assertSame(config, converter.getParseConfig());

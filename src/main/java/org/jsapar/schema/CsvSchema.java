@@ -1,5 +1,8 @@
 package org.jsapar.schema;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 /**
  * Defines a schema for a delimited input text. Each cell is delimited by a delimiter character sequence.
  * Lines are separated by the line separator defined by {@link Schema#getLineSeparator()}.
@@ -57,6 +60,18 @@ public class CsvSchema extends Schema<CsvSchemaLine> implements Cloneable{
          */
         public Builder withQuoteSyntax(QuoteSyntax quoteSyntax){
             this.quoteSyntax = quoteSyntax;
+            return this;
+        }
+
+        /**
+         * Creates a line builder and calls provided function before using that builder to build a csv schema line.
+         * @param lineType  The line type of the lines to create.
+         * @param lineBuilderHandler The function that gets called for the builder.
+         * @return This builder instance.
+         */
+        public Builder withLine(String lineType, Function<CsvSchemaLine.Builder, CsvSchemaLine.Builder> lineBuilderHandler){
+            CsvSchemaLine.Builder builder = CsvSchemaLine.builder(lineType);
+            this.withLine(lineBuilderHandler.apply(builder).build());
             return this;
         }
 

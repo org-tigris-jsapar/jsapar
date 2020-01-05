@@ -44,11 +44,12 @@ public class TextComposerTest {
     @Test
     public final void testWrite() {
         String sExpected = "JonasStenberg" + System.getProperty("line.separator") + "FridaBergsten";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("org.jsapar.TstPerson");
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("FirstName", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("LastName", 8));
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchema schema = FixedWidthSchema.builder()
+                .withLine(FixedWidthSchemaLine.builder("org.jsapar.TstPerson")
+                        .withCell("FirstName", 5)
+                        .withCell("LastName", 8)
+                        .build())
+                .build();
 
         Writer writer = new StringWriter();
         TextComposer composer = new TextComposer(schema, writer);
@@ -61,11 +62,11 @@ public class TextComposerTest {
     @Test
     public final void testWriteCsv() {
         String sExpected = "Jonas;Stenberg" + System.getProperty("line.separator") + "Frida;Bergsten";
-        org.jsapar.schema.CsvSchema schema = new org.jsapar.schema.CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine("org.jsapar.TstPerson");
-        schemaLine.addSchemaCell(new CsvSchemaCell("FirstName"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("LastName"));
-        schema.addSchemaLine(schemaLine);
+        CsvSchema schema = CsvSchema.builder()
+                .withLine(CsvSchemaLine.builder("org.jsapar.TstPerson")
+                        .withCells("FirstName", "LastName")
+                        .build())
+                .build();
 
         Writer writer = new StringWriter();
         TextComposer composer = new TextComposer(schema, writer);
@@ -77,17 +78,17 @@ public class TextComposerTest {
     @Test
     public void testOutputLine_FixedWidthControllCell()
             throws JSaParException {
-        FixedWidthSchema schema = new FixedWidthSchema();
-        schema.setLineSeparator("");
-
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name");
-        FixedWidthSchemaCell typeCellSchema = new FixedWidthSchemaCell("Type", 1);
-        typeCellSchema.setDefaultValue("N");
-        typeCellSchema.setLineCondition((Predicate<String>) new MatchingCellValueCondition("N"));
-        schemaLine.addSchemaCell(typeCellSchema);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchema schema = FixedWidthSchema.builder()
+                .withLineSeparator("")
+                .withLine(FixedWidthSchemaLine.builder("Name")
+                        .withCell(FixedWidthSchemaCell.builder("Type", 1)
+                                .withDefaultValue("N")
+                                .withLineCondition(new MatchingCellValueCondition("N"))
+                                .build())
+                        .withCell("First name", 5)
+                        .withCell("Last name", 8)
+                        .build())
+                .build();
 
         Line line = new Line("Name");
         line.addCell(new StringCell("First name", "Jonas"));
@@ -104,18 +105,17 @@ public class TextComposerTest {
     @Test
     public void testWriteLine_FixedWidthControllCell_minLength()
             throws JSaParException {
-        FixedWidthSchema schema = new FixedWidthSchema();
-        schema.setLineSeparator("");
-
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine("Name");
-        FixedWidthSchemaCell typeCellSchema = new FixedWidthSchemaCell("Type", 1);
-        typeCellSchema.setDefaultValue("N");
-        typeCellSchema.setLineCondition((Predicate<String>) new MatchingCellValueCondition("N"));
-        schemaLine.addSchemaCell(typeCellSchema);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schemaLine.setMinLength(20);
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchema schema = FixedWidthSchema.builder()
+                .withLineSeparator("")
+                .withLine("Name", l ->
+                        l.withCell(FixedWidthSchemaCell.builder("Type", 1)
+                            .withDefaultValue("N")
+                            .withLineCondition(new MatchingCellValueCondition("N"))
+                            .build())
+                        .withCell("First name", 5)
+                        .withCell("Last name", 8)
+                        .withMinLength(20))
+                .build();
 
         Line line = new Line("Name");
         line.addCell(new StringCell("First name", "Jonas"));
@@ -132,17 +132,10 @@ public class TextComposerTest {
 
     @Test
     public final void testWriteLine_csv() throws JSaParException {
-        org.jsapar.schema.CsvSchema schema = new org.jsapar.schema.CsvSchema();
-        CsvSchemaLine outputSchemaLine = new CsvSchemaLine("Header");
-        outputSchemaLine.setOccurs(1);
-        outputSchemaLine.addSchemaCell(new CsvSchemaCell("Header"));
-        schema.addSchemaLine(outputSchemaLine);
-
-        outputSchemaLine = new CsvSchemaLine("Person");
-        outputSchemaLine.addSchemaCell(new CsvSchemaCell("First name"));
-        outputSchemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
-        outputSchemaLine.setCellSeparator(";");
-        schema.addSchemaLine(outputSchemaLine);
+        CsvSchema schema = CsvSchema.builder()
+                .withLine("Header", line -> line.withOccurs(1).withCell("Header"))
+                .withLine("Person", line -> line.withCells("First name", "Last name").withCellSeparator(";"))
+                .build();
 
         Line line1 = new Line("Person");
         line1.addCell(new StringCell("First name", "Jonas"));
@@ -159,17 +152,10 @@ public class TextComposerTest {
 
     @Test
     public final void testWriteLine_csv_first() throws JSaParException {
-        org.jsapar.schema.CsvSchema schema = new org.jsapar.schema.CsvSchema();
-        CsvSchemaLine outputSchemaLine = new CsvSchemaLine("Header");
-        outputSchemaLine.setOccurs(1);
-        outputSchemaLine.addSchemaCell(new CsvSchemaCell("Header"));
-        schema.addSchemaLine(outputSchemaLine);
-
-        outputSchemaLine = new CsvSchemaLine();
-        outputSchemaLine.addSchemaCell(new CsvSchemaCell("First name"));
-        outputSchemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
-        outputSchemaLine.setCellSeparator(";");
-        schema.addSchemaLine(outputSchemaLine);
+        CsvSchema schema = CsvSchema.builder()
+                .withLine("Header", line -> line.withOccurs(1).withCell("Header"))
+                .withLine("Person", line -> line.withCells("First name", "Last name").withCellSeparator(";"))
+                .build();
 
         Line line1 = new Line("Header");
         line1.addCell(new StringCell("Header", "TheHeader"));
