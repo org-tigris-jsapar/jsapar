@@ -56,13 +56,13 @@ public class FixedWidthSchema extends Schema<FixedWidthSchemaLine> {
         }
 
         /**
-         * Creates a line builder and calls provided function before using that builder to build a csv schema line.
+         * Creates a line builder, applies defaults and calls provided function before using that builder to build a csv schema line.
          * @param lineType  The line type of the lines to create.
          * @param lineBuilderHandler The function that gets called for the builder.
          * @return This builder instance.
          */
         public FixedWidthSchema.Builder withLine(String lineType, Function<FixedWidthSchemaLine.Builder, FixedWidthSchemaLine.Builder> lineBuilderHandler){
-            return this.withLine(lineBuilderHandler.apply(FixedWidthSchemaLine.builder(lineType)).build());
+            return this.withLine(lineBuilderHandler.apply(FixedWidthSchemaLine.builder(lineType).applyDefaultsFrom(this)).build());
         }
 
 

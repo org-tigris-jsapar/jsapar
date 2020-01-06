@@ -125,7 +125,7 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
         }
 
         /**
-         * Convenience method that creates cell builder, calls the provided function before using that builder to create a schema cell.
+         * Convenience method that creates cell builder, applies defaults, calls the provided function before using that builder to create a schema cell.
          *
          * @param name               The name of the cell.
          * @param length             The width of the cell.
@@ -134,7 +134,7 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
          * @see SchemaLine.Builder#withCell(SchemaCell)
          */
         public FixedWidthSchemaLine.Builder withCell(String name, int length, Function<FixedWidthSchemaCell.Builder<?>, FixedWidthSchemaCell.Builder<?>> cellBuilderHandler) {
-            return this.withCell(cellBuilderHandler.apply(FixedWidthSchemaCell.builder(name, length)).build());
+            return this.withCell(cellBuilderHandler.apply(FixedWidthSchemaCell.builder(name, length).applyDefaultsFrom(this)).build());
         }
 
         /**

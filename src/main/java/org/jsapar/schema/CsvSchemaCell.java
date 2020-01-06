@@ -88,6 +88,16 @@ public class CsvSchemaCell extends SchemaCell {
         private QuoteBehavior quoteBehavior = QuoteBehavior.AUTOMATIC;
         private int maxLength = -1;
 
+        private Builder(String name) {
+            super(name);
+        }
+
+        private Builder(String name, CsvSchemaCell schemaCell) {
+            super(name, schemaCell);
+            this.maxLength = schemaCell.maxLength;
+            this.quoteBehavior = schemaCell.quoteBehavior;
+        }
+
         /**
          * @param quoteBehavior The quote behavior for the cell when composing. Default is {@link QuoteBehavior#AUTOMATIC}. Not used while parsing.
          * @return This builder instance.
@@ -110,14 +120,14 @@ public class CsvSchemaCell extends SchemaCell {
             return this;
         }
 
-        private Builder(String name) {
-            super(name);
-        }
-
-        private Builder(String name, CsvSchemaCell schemaCell) {
-            super(name, schemaCell);
-            this.maxLength = schemaCell.maxLength;
-            this.quoteBehavior = schemaCell.quoteBehavior;
+        /**
+         * Applies all default values from supplied line builder.
+         * @param schemaLineBuilder The line builder to apply defaults from.
+         * @return this builder instance.
+         */
+        public Builder<T> applyDefaultsFrom(CsvSchemaLine.Builder schemaLineBuilder) {
+            super.applyDefaultsFrom(schemaLineBuilder);
+            return withQuoteBehavior(schemaLineBuilder.getDefaultQuoteBehavior());
         }
 
         /**

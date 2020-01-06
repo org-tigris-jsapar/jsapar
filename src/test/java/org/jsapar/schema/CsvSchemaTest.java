@@ -2,6 +2,8 @@ package org.jsapar.schema;
 
 import org.junit.Test;
 
+import java.util.Locale;
+
 import static org.junit.Assert.*;
 
 public class CsvSchemaTest {
@@ -41,5 +43,20 @@ public class CsvSchemaTest {
     public void testToString() {
         CsvSchema schema = CsvSchema.builder().build();
         assertEquals("CsvSchema lineSeparator='\\n' schemaLines={}", schema.toString());
+    }
+
+    @Test
+    public void testDefaultLocale(){
+        CsvSchema schema = CsvSchema.builder()
+                .withDefaultLocale(Locale.KOREA)
+                .withLine("A", l -> l.withCells("a", "b", "c"))
+                .build();
+        assertEquals(1, schema.size());
+        CsvSchemaLine line = schema.iterator().next();
+        assertEquals(3, line.size());
+        for (CsvSchemaCell csvSchemaCell : line) {
+            assertEquals(Locale.KOREA, csvSchemaCell.getLocale());
+        }
+
     }
 }

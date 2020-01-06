@@ -19,18 +19,18 @@ public class StringSchemaLine extends SchemaLine<StringSchemaCell> {
         }
 
         /**
-         * Convenience method that creates cell builder, calls the provided function before using that builder to create a schema cell.
+         * Convenience method that creates cell builder, applies defaults, calls the provided function before using that builder to create a schema cell.
          * @param cellName The name of the cell.
          * @param cellBuilderHandler The function that gets called with the created builder.
          * @return This builder instance.
          * @see SchemaLine.Builder#withCell(SchemaCell)
          */
         public StringSchemaLine.Builder withCell(String cellName, Function<StringSchemaCell.Builder<?>, StringSchemaCell.Builder<?>> cellBuilderHandler){
-            return this.withCell(cellBuilderHandler.apply(StringSchemaCell.builder(cellName)).build());
+            return this.withCell(cellBuilderHandler.apply(StringSchemaCell.builder(cellName).applyDefaultsFrom(this)).build());
         }
 
         public Builder withCell(String cellName){
-            return this.withCell(StringSchemaCell.builder(cellName).build());
+            return withCell(cellName, c->c);
         }
 
         public Builder withCells(String ... cellNames){

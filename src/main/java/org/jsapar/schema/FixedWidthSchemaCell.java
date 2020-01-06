@@ -199,6 +199,11 @@ public class FixedWidthSchemaCell extends SchemaCell {
             return this;
         }
 
+        public Builder<T> applyDefaultsFrom(FixedWidthSchemaLine.Builder schemaLineBuilder) {
+            super.applyDefaultsFrom(schemaLineBuilder);
+            return withPadCharacter(schemaLineBuilder.getPadCharacter());
+        }
+
         @Override
         public FixedWidthSchemaCell build() {
             return new FixedWidthSchemaCell(this);

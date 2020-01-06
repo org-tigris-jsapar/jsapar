@@ -115,6 +115,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
         private int occurs = OCCURS_INFINITE;
         private boolean ignoreRead;
         private boolean ignoreWrite;
+        private Locale defaultLocale = SchemaCellFormat.defaultLocale;
 
         public Builder(String lineType) {
             this.lineType = lineType;
@@ -150,7 +151,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
 
 
         /**
-         * Adds a supplied schema cell to this builder. Can be called multiple times to add more cells.
+         * Adds a supplied schema cell to this builder. Can be called multiple times to add more cells. Does not apply default values that were set at line builder.
          * @param schemaCell The schema cell to add.
          * @return This builder instance.
          */
@@ -160,7 +161,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
         }
 
         /**
-         * Adds a supplied schema cells to this builder in the order provided. Can be called multiple times to add more cells.
+         * Adds a supplied schema cells to this builder in the order provided. Can be called multiple times to add more cells. Does not apply default values that were set at line builder.
          * @param schemaCells The schema cells to add.
          * @return This builder instance.
          */
@@ -178,6 +179,10 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
         public B withoutAnyCells() {
             this.schemaCells.clear();
             return (B) this;
+        }
+
+        public B applyDefaultsFrom(Schema.Builder schemaBuilder){
+            return withDefaultLocale(schemaBuilder.getDefaultLocale());
         }
 
         /**
@@ -201,10 +206,27 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
             return (B) this;
         }
 
+        /**
+         * Using this method to set a default locale will have no effect unless the defaults are applied to each line
+         * builder that is supposed to use this value. The default locale will not be assigned to the schema but only
+         * used during building phase.
+         * @param locale The default locale to use for lines of this schema.
+         * @return This builder instance.
+         * @see SchemaLine.Builder#applyDefaultsFrom(Schema.Builder)
+         */
+        public B withDefaultLocale(Locale locale){
+            this.defaultLocale = locale;
+            return (B)this;
+        }
+
         public abstract L build();
 
         public boolean containsCell(String cellName) {
             return schemaCells.stream().anyMatch(it->it.getName().equals(cellName));
+        }
+
+        public Locale getDefaultLocale() {
+            return defaultLocale;
         }
     }
 

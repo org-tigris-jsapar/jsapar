@@ -46,6 +46,7 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
     public abstract static class Builder<L extends SchemaLine<? extends SchemaCell>, S extends Schema<L>, B extends Schema.Builder<L, S, B>> {
         private String lineSeparator = System.getProperty("line.separator");
         private List<L> schemaLines = new ArrayList<>();
+        private Locale defaultLocale = SchemaCellFormat.defaultLocale;
 
         Builder() {
         }
@@ -66,7 +67,7 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
         }
 
         /**
-         * Successive calls to this method adds one line for each call.
+         * Successive calls to this method adds one line for each call. Does not apply default values that were set at schema builder.
          * @param schemaLine The schema line to add to this builder.
          * @return This builder instance.
          */
@@ -84,7 +85,24 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
             return (B)this;
         }
 
+        /**
+         * Using this method to set a default locale will have no effect unless the defaults are applied to each line
+         * builder that is supposed to use this value. The default locale will not be assigned to the schema but only
+         * used during building phase.
+         * @param locale The default locale to use for lines of this schema.
+         * @return This builder instance.
+         * @see SchemaLine.Builder#applyDefaultsFrom(Builder)
+         */
+        public B withDefaultLocale(Locale locale){
+            this.defaultLocale = locale;
+            return (B)this;
+        }
+
         abstract S build();
+
+        public Locale getDefaultLocale() {
+            return defaultLocale;
+        }
     }
     /**
      * @param schemaLine the schemaLine to add

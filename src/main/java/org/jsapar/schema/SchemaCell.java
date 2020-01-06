@@ -204,6 +204,11 @@ public abstract class SchemaCell implements Cloneable {
             return (B) withFormat((Format<T>) new EnumFormat<E>(enumClass, ignoreCase));
         }
 
+        public B applyDefaultsFrom(SchemaLine.Builder<?, ?, ?> schemaBuilder){
+            return withLocale(schemaBuilder.getDefaultLocale());
+        }
+
+
         /**
          * @param pattern The pattern of the cell. See {@link SchemaCellFormat}
          * @return This builder.

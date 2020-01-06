@@ -64,13 +64,13 @@ public class CsvSchema extends Schema<CsvSchemaLine> implements Cloneable{
         }
 
         /**
-         * Creates a line builder and calls provided function before using that builder to build a csv schema line.
+         * Creates a line builder, applies defaults and calls provided function before using that builder to build a csv schema line.
          * @param lineType  The line type of the lines to create.
          * @param lineBuilderHandler The function that gets called for the builder.
          * @return This builder instance.
          */
         public Builder withLine(String lineType, Function<CsvSchemaLine.Builder, CsvSchemaLine.Builder> lineBuilderHandler){
-            return this.withLine(lineBuilderHandler.apply(CsvSchemaLine.builder(lineType)).build());
+            return this.withLine(lineBuilderHandler.apply(CsvSchemaLine.builder(lineType).applyDefaultsFrom(this)).build());
         }
 
         @Override

@@ -117,6 +117,7 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
         private boolean firstLineAsSchema = false;
         private String cellSeparator = ";";
         private char quoteChar = '"';
+        private QuoteBehavior defaultQuoteBehavior = QuoteBehavior.AUTOMATIC;
 
 
         public Builder(String lineType) {
@@ -172,14 +173,26 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
         }
 
         /**
-         * Convenience method that creates cell builder, calls the provided function before using that builder to create a schema cell.
+         * Using this method to set a default quote behavior will have no effect unless the defaults are applied to cell
+         * builder that is supposed to use this value. The default quote behavior will not be assigned to the schema line but only
+         * used during building phase.
+         * @param quoteBehavior The default quote behavior for all cells. Default is {@link QuoteBehavior#AUTOMATIC}.
+         * @return This builder instance.
+         */
+        public Builder withDefaultQuoteBehavior(QuoteBehavior quoteBehavior) {
+            this.defaultQuoteBehavior = quoteBehavior;
+            return this;
+        }
+
+        /**
+         * Convenience method that creates cell builder, applies defaults, calls the provided function before using that builder to create a schema cell.
          * @param cellName The name of the cell.
          * @param cellBuilderHandler The function that gets called with the created builder.
          * @return This builder instance.
          * @see SchemaLine.Builder#withCell(SchemaCell)
          */
         public Builder withCell(String cellName, Function<CsvSchemaCell.Builder<?>, CsvSchemaCell.Builder<?>> cellBuilderHandler){
-            return this.withCell(cellBuilderHandler.apply(CsvSchemaCell.builder(cellName)).build());
+            return this.withCell(cellBuilderHandler.apply(CsvSchemaCell.builder(cellName).applyDefaultsFrom(this)).build());
         }
 
         /**
@@ -212,6 +225,9 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
             return new CsvSchemaLine(this);
         }
 
+        public QuoteBehavior getDefaultQuoteBehavior() {
+            return defaultQuoteBehavior;
+        }
     }
 
 

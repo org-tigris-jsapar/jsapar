@@ -9,7 +9,7 @@ import java.util.function.Function;
  * @see org.jsapar.compose.string.StringComposer
  * @see org.jsapar.compose.string.StringComposerNullOnEmptyCell
  */
-public class StringSchema extends Schema<StringSchemaLine> {
+public class StringSchema extends Schema<StringSchemaLine> implements Cloneable {
 
     private StringSchema(Builder builder) {
         super(builder);
@@ -41,18 +41,23 @@ public class StringSchema extends Schema<StringSchemaLine> {
         }
 
         /**
-         * Creates a line builder and calls provided function before using that builder to build a csv schema line.
+         * Creates a line builder, applies defaults and calls provided function before using that builder to build a csv schema line.
          * @param lineType  The line type of the lines to create.
          * @param lineBuilderHandler The function that gets called for the builder.
          * @return This builder instance.
          */
         public StringSchema.Builder withLine(String lineType, Function<StringSchemaLine.Builder, StringSchemaLine.Builder> lineBuilderHandler){
-            return this.withLine(lineBuilderHandler.apply(StringSchemaLine.builder(lineType)).build());
+            return this.withLine(lineBuilderHandler.apply(StringSchemaLine.builder(lineType).applyDefaultsFrom(this)).build());
         }
 
         @Override
         public StringSchema build() {
             return new StringSchema(this);
         }
+    }
+
+    @Override
+    public StringSchema clone() {
+        return (StringSchema) super.clone();
     }
 }
