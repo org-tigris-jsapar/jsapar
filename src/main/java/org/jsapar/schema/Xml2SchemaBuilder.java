@@ -132,8 +132,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
     }
 
     private FixedWidthSchemaLine.Builder buildFixedWidthSchemaLine(Element xmlSchemaLine, FixedWidthSchemaLine.Builder schemaLineBuilder) throws SchemaException {
-        assignSchemaLineBase(schemaLineBuilder, xmlSchemaLine, xc->buildFixedWidthSchemaCell(schemaLineBuilder, xc));
-
         parseAttribute(xmlSchemaLine, ATTRIB_FW_SCHEMA_PAD_CHARACTER)
                 .map(s->s.charAt(0))
                 .ifPresent(schemaLineBuilder::withPadCharacter);
@@ -143,6 +141,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
                 .map(Integer::valueOf)
                 .ifPresent(schemaLineBuilder::withMinLength);
 
+        assignSchemaLineBase(schemaLineBuilder, xmlSchemaLine, xc->buildFixedWidthSchemaCell(schemaLineBuilder, xc));
         return schemaLineBuilder;
     }
 
@@ -208,12 +207,11 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      */
     private void assignCsvSchema(CsvSchema.Builder schemaBuilder, Element xmlSchema) throws SchemaException {
 
-        assignSchemaBase(schemaBuilder, xmlSchema, xmlSchemaLine->buildCsvSchemaLine(schemaBuilder, xmlSchemaLine));
-
         parseAttribute(xmlSchema, ATTRIB_CSV_SCHEMA_QUOTE_SYNTAX)
                 .map(QuoteSyntax::valueOf)
                 .ifPresent(schemaBuilder::withQuoteSyntax);
 
+        assignSchemaBase(schemaBuilder, xmlSchema, xmlSchemaLine->buildCsvSchemaLine(schemaBuilder, xmlSchemaLine));
     }
 
 
@@ -224,8 +222,6 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
     }
 
     private CsvSchemaLine.Builder buildCsvSchemaLine(CsvSchemaLine.Builder schemaLineBuilder, Element xmlSchemaLine) throws SchemaException {
-        assignSchemaLineBase(schemaLineBuilder, xmlSchemaLine, xmlSchemaCell->buildCsvSchemaCell(schemaLineBuilder, xmlSchemaCell));
-
         parseAttribute(xmlSchemaLine, ATTRIB_CSV_SCHEMA_CELL_SEPARATOR)
                 .map(StringUtils::replaceEscapes2Java)
                 .ifPresent(schemaLineBuilder::withCellSeparator);
@@ -244,6 +240,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         parseAttribute(xmlSchemaLine, ATTRIB_CSV_QUOTE_BEHAVIOR)
                 .map(QuoteBehavior::valueOf)
                 .ifPresent(schemaLineBuilder::withDefaultQuoteBehavior);
+
+        assignSchemaLineBase(schemaLineBuilder, xmlSchemaLine, xmlSchemaCell->buildCsvSchemaCell(schemaLineBuilder, xmlSchemaCell));
 
         return schemaLineBuilder;
     }
