@@ -49,13 +49,15 @@ public class CsvSchemaTest {
     public void testDefaultLocale(){
         CsvSchema schema = CsvSchema.builder()
                 .withDefaultLocale(Locale.KOREA)
-                .withLine("A", l -> l.withCells("a", "b", "c"))
+                .withLine("A", l -> l.withDefaultQuoteBehavior(QuoteBehavior.ALWAYS).withCells("a", "b", "c"))
                 .build();
+
         assertEquals(1, schema.size());
         CsvSchemaLine line = schema.iterator().next();
         assertEquals(3, line.size());
         for (CsvSchemaCell csvSchemaCell : line) {
             assertEquals(Locale.KOREA, csvSchemaCell.getLocale());
+            assertEquals(QuoteBehavior.ALWAYS, csvSchemaCell.getQuoteBehavior());
         }
 
     }
