@@ -8,6 +8,7 @@ import org.jsapar.model.*;
 import org.jsapar.parse.CollectingConsumer;
 import org.jsapar.parse.DocumentBuilderLineConsumer;
 import org.jsapar.parse.xml.XmlParser;
+import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.Xml2SchemaBuilder;
@@ -93,6 +94,40 @@ public class JSaParExamplesTest {
         }
     }
 
+    @Test
+    public final void testExampleCsv01_builder_compose()
+            throws SchemaException, IOException{
+        try (StringWriter writer = new StringWriter()) {
+            CsvSchema schema = CsvSchema.builder()
+                    .withLine("Person", line ->
+                            line.withCellSeparator(";")
+                                    .withQuoteChar('"')
+                                    .withCell("First name")
+                                    .withCell("Middle name", cell -> cell.withIgnoreRead(true))
+                                    .withCell("Last name")
+                                    .withCell("Has dog", cell -> cell.withCellType(CellType.BOOLEAN).withPattern("yes;no"))
+                    ).build();
+            TextComposer composer = new TextComposer(schema, writer);
+            Line line1 = new Line("Person")
+                    .addCell(new StringCell("First name", "Erik"))
+                    .addCell(new StringCell("Middle name", "Vidfare"));
+            LineUtils.setStringCellValue(line1, "Last name", "Svensson");
+            composer.composeLine(line1);
+
+            composer.composeLine(new Line("Person")
+                    .addCell(new StringCell("First name", "Fredrik"))
+                    .addCell(new StringCell("Last name", "Larsson"))
+                    .addCell(new BooleanCell("Has dog", false)));
+
+            composer.composeEmptyLine();
+
+            String[] lines = writer.toString().split("\n", -1);
+            assertEquals(3, lines.length);
+            assertEquals("Erik;Vidfare;Svensson;", lines[0]);
+            assertEquals("Fredrik;;Larsson;no", lines[1]);
+            assertEquals("", lines[2]);
+        }
+    }
     @Test
     public final void testExampleFixedWidth02()
             throws IOException, JSaParException {

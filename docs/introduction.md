@@ -87,7 +87,7 @@ The example above is a small simple example. For larger data sources you probabl
 that handles each line immediately as it is parsed. That way you will never load the whole content of the data source in the memory.
 
 If you rather work with your own Java bean class directly instead of getting Line objects, you probably want to look at the 
-Text2BeanConverter class which delivers Java beans directly instead of Line objects. More about that in the [basics](basics) article.
+Text2BeanConverter class which delivers Java beans directly instead of Line objects. You can read more about that in the [basics](basics#converting-text-to-java-beans) article.
 
 ## Simple example of composing a CSV file
 The code to use the JSaPar library to compose a file, using the same schema as when parsing above, could look like this:
@@ -117,6 +117,8 @@ to the composer by using a java `Stream<Line>` or an `Iterator<Line>`.
 
 The advantage of this schema approach is that if you parse or compose a large number of similar files you can adapt the 
 schema file if the file format changes instead of making changes within your code.
+
+There is also the option to create the schema instance within the code instead of loading an xml file.
 
 ## Simple example of parsing and composing fixed width file
 As long as only the file format differs, only the schema needs to change. That is the whole idea of working with schemas.

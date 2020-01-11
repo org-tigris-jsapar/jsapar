@@ -1,15 +1,12 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.Document;
-import org.jsapar.text.TextParseConfig;
-import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.utils.StringUtils;
 
 import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -35,7 +32,6 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
     private LinkedHashMap<String, L> schemaLines = new LinkedHashMap<>();
 
     <S extends Schema<L>, B extends Schema.Builder<L, S, B>> Schema(Builder<L, S, B> builder) {
-        this.lineSeparator = builder.lineSeparator;
         for (L schemaLine : builder.schemaLines) {
             this.addSchemaLine(schemaLine);
         }
@@ -44,7 +40,6 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
 
     @SuppressWarnings("unchecked")
     public abstract static class Builder<L extends SchemaLine<? extends SchemaCell>, S extends Schema<L>, B extends Schema.Builder<L, S, B>> {
-        private String lineSeparator = System.getProperty("line.separator");
         private List<L> schemaLines = new ArrayList<>();
         private Locale defaultLocale = SchemaCellFormat.defaultLocale;
 
@@ -52,19 +47,9 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
         }
 
         Builder(Schema<L> schema) {
-            this.lineSeparator = schema.lineSeparator;
             this.schemaLines.addAll(schema.schemaLines.values());
         }
 
-        /**
-         * @param lineSeparator  Line separator string. Default value is the system default
-         *                       (Retrieved by {@code System.getProperty("line.separator")}).
-         * @return This builder instance.
-         */
-        public B withLineSeparator(String lineSeparator){
-            this.lineSeparator = lineSeparator;
-            return (B)this;
-        }
 
         /**
          * Successive calls to this method adds one line for each call. Does not apply default values that were set at schema builder.

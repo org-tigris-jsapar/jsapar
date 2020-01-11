@@ -1,10 +1,5 @@
 package org.jsapar.schema;
 
-import org.jsapar.parse.fixed.FixedWidthParser;
-import org.jsapar.parse.text.TextSchemaParser;
-import org.jsapar.text.TextParseConfig;
-
-import java.io.Reader;
 import java.util.function.Function;
 
 /**
@@ -20,7 +15,7 @@ import java.util.function.Function;
  * If the line separator is an empty string, the lines will be separated by the sum of the length of
  * the cells within the schema.
  */
-public class FixedWidthSchema extends Schema<FixedWidthSchemaLine> {
+public class FixedWidthSchema extends TextSchema<FixedWidthSchemaLine> {
 
     @Deprecated
     public FixedWidthSchema() {
@@ -46,7 +41,7 @@ public class FixedWidthSchema extends Schema<FixedWidthSchemaLine> {
         return new Builder(schema);
     }
 
-    public static class Builder extends Schema.Builder<FixedWidthSchemaLine, FixedWidthSchema, Builder>{
+    public static class Builder extends TextSchema.Builder<FixedWidthSchemaLine, FixedWidthSchema, Builder>{
 
         private Builder(){
         }

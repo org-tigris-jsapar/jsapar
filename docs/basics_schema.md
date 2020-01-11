@@ -16,7 +16,7 @@ The example below describes a simple schema for a CSV file taken from the first 
 <schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd">
    <csvschema lineseparator="\n">
-    <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;">
+    <line linetype="Person" cellseparator=";">
       <cell name="First name" />
       <cell name="Middle name" ignoreread="true"/>
       <cell name="Last name" />
@@ -25,8 +25,21 @@ The example below describes a simple schema for a CSV file taken from the first 
   </csvschema>
 </schema>
 ```
+The same schema can also be created in java code but then you tie the format to your compiled code and will need to update the source code if the format changes.
+```java
+CsvSchema schema = CsvSchema.builder()
+        .withLine("Person", line ->
+                line.withCellSeparator(";")
+                        .withCell("First name")
+                        .withCell("Middle name", cell -> cell.withIgnoreRead(true))
+                        .withCell("Last name")
+                        .withCell("Has dog", cell -> cell.withCellType(CellType.BOOLEAN).withPattern("yes;no"))
+        ).build();
+
+```
+
 ## The schema of the schema
-In the schema above, I have added the xsi:schemaLocation which helps intelligent xml editors to find the 
+In the xml schema above, I have added the xsi:schemaLocation which helps intelligent xml editors to find the
 <a href="https://en.wikipedia.org/wiki/XML_Schema_(W3C)">XSD</a> that is used for JSaPar schemas. The XSD itself provides
 a lot of documentation about the details of each allowed element and attribute within the schema xml. A published version
 of the schema is located at. 
@@ -126,10 +139,9 @@ The schema could look like this:
 ```
 When parsing a file with a schema like this, it is important that you check the line type of the returned Line instance.
 
-For instance, in your `LineEventListener` you should have a check like this:
+For instance, in your `Consumer<Line>` you should have a check like this:
 ```java
-void lineParsedEvent(LineParsedEvent event){
-   Line line = event.getLine();
+void accept(Line line){
    switch(line.getLineType()){
       case "Header":
          handleHeader(line);
@@ -143,6 +155,7 @@ void lineParsedEvent(LineParsedEvent event){
    }
 }
 ```
+(In this case you could also have used the `ByLineTypeLineConsumer` which allows you to register separate consumers for separate line types.)
 
 You may add a line condition on any cell within your schema. If you add more than one line condition on the same line, 
 all of them need to comply in order for the line type to be used.
@@ -163,7 +176,7 @@ cell type is string so if you do not want the library to do any type conversion,
 <cell name="TheName"/>
 ```
 With the attribute `mandatory="true"`, you can specify that an error is generated if a cell does not have any value. See 
-chapter about error handling in the [basics](basics) article.
+chapter about [error handling in the basics](basics#error-handling) article.
  
 The attribute `default` can be used to assign a default value that will be used if the cell does not contain any value.
 This works both while parsing and while composing.

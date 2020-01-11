@@ -124,7 +124,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
     }
 
     private void assignFixedWidthSchema(FixedWidthSchema.Builder schemaBuilder, Element xmlSchema) throws SchemaException {
-        assignSchemaBase(schemaBuilder, xmlSchema, xmlSchemaLine->buildFixedWidthSchemaLine(schemaBuilder, xmlSchemaLine));
+        assignTextSchemaBase(schemaBuilder, xmlSchema, xmlSchemaLine->buildFixedWidthSchemaLine(schemaBuilder, xmlSchemaLine));
     }
 
     private void buildFixedWidthSchemaLine(FixedWidthSchema.Builder schemaBuilder, Element xmlSchemaLine) throws SchemaException {
@@ -211,7 +211,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
                 .map(QuoteSyntax::valueOf)
                 .ifPresent(schemaBuilder::withQuoteSyntax);
 
-        assignSchemaBase(schemaBuilder, xmlSchema, xmlSchemaLine->buildCsvSchemaLine(schemaBuilder, xmlSchemaLine));
+        assignTextSchemaBase(schemaBuilder, xmlSchema, xmlSchemaLine->buildCsvSchemaLine(schemaBuilder, xmlSchemaLine));
     }
 
 
@@ -272,17 +272,14 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         return cellBuilder;
     }
 
-    /**
-     * Assign common parts for base class.
-     * 
-     * @param schemaBuilder The schema to assign to
-     * @param xmlSchema The xml element to parse
-     * @throws SchemaException  When there is an error in the schema
-     */
-    private void assignSchemaBase(Schema.Builder<?,?,?> schemaBuilder, Element xmlSchema, Consumer<Element> applyToEachLine) throws SchemaException {
+    private void assignTextSchemaBase(TextSchema.Builder<?,?,?> schemaBuilder, Element xmlSchema, Consumer<Element> applyToEachLine) throws SchemaException {
         parseAttribute(xmlSchema, ATTRIB_SCHEMA_LINESEPARATOR)
                 .map(StringUtils::replaceEscapes2Java)
                 .ifPresent(schemaBuilder::withLineSeparator);
+        assignSchemaBase(schemaBuilder, xmlSchema, applyToEachLine);
+    }
+
+    private void assignSchemaBase(Schema.Builder<?,?,?> schemaBuilder, Element xmlSchema, Consumer<Element> applyToEachLine) throws SchemaException {
 
         getChild(JSAPAR_XML_SCHEMA, xmlSchema, ELEMENT_LOCALE)
                 .map(this::buildLocale)

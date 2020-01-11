@@ -10,7 +10,7 @@ import java.util.function.Function;
  * @see SchemaLine
  * @see CsvSchemaLine
  */
-public class CsvSchema extends Schema<CsvSchemaLine> implements Cloneable{
+public class CsvSchema extends TextSchema<CsvSchemaLine> implements Cloneable{
 
 
     /**
@@ -43,7 +43,7 @@ public class CsvSchema extends Schema<CsvSchemaLine> implements Cloneable{
         return new Builder(schema);
     }
 
-    public static class Builder extends Schema.Builder<CsvSchemaLine, CsvSchema, Builder>{
+    public static class Builder extends TextSchema.Builder<CsvSchemaLine, CsvSchema, Builder>{
         private QuoteSyntax quoteSyntax = QuoteSyntax.FIRST_LAST;
 
         private Builder(){
