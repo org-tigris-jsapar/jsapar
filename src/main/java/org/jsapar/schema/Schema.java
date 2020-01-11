@@ -20,8 +20,6 @@ import java.util.stream.Stream;
  */
 public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> implements Cloneable, Iterable<L>{
 
-    private String lineSeparator = System.getProperty("line.separator");
-
     @Deprecated
     public Schema() {
     }
@@ -104,23 +102,20 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
     }
 
     /**
-     * Line separator string. Default value is the system default (Retrieved by
-     * {@code System.getProperty("line.separator")}).
+     * Deprecated. Only TextSchema should provide line separator. Provided for backward compatibility.
      * @return the lineSeparator
      */
     public String getLineSeparator() {
-        return lineSeparator;
+        throw new IllegalStateException("Not possible to get line separator unless schema is of type TextSchema.");
     }
 
     /**
-     * Sets the line separator string. Default value is the system default (Retrieved by
-     * {@code System.getProperty("line.separator")}).
-     * 
+     *
+     * Deprecated. Only TextSchema should provide line separator. Provided for backward compatibility.
      * @param lineSeparator
      *            the lineSeparator to set.
      */
     public void setLineSeparator(String lineSeparator) {
-        this.lineSeparator = lineSeparator;
     }
 
 
@@ -146,9 +141,7 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
      */
     @Override
     public String toString() {
-        return " lineSeparator='" + StringUtils.replaceJava2Escapes(this.lineSeparator) +
-                "' schemaLines=" +
-                this.schemaLines;
+        return " schemaLines=" + this.schemaLines;
     }
 
     /**

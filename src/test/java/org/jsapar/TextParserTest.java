@@ -21,6 +21,6 @@ public class TextParserTest {
     }
 
     private Schema makeInputSchema() {
-        return new CsvSchema();
+        return CsvSchema.builder().build();
     }
 }

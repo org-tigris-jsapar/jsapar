@@ -1,13 +1,17 @@
 package org.jsapar.schema;
 
+import org.jsapar.utils.StringUtils;
+
 public abstract class TextSchema<L extends SchemaLine<? extends SchemaCell>> extends Schema<L> {
+    private String lineSeparator = System.getProperty("line.separator");
+
     @Deprecated
     public TextSchema() {
     }
 
     <S extends TextSchema<L>, B extends Builder<L, S, B>> TextSchema(Builder<L, S, B> builder) {
         super(builder);
-        super.setLineSeparator(builder.lineSeparator);
+        this.lineSeparator = builder.lineSeparator;
     }
 
     @SuppressWarnings("unchecked")
@@ -31,5 +35,30 @@ public abstract class TextSchema<L extends SchemaLine<? extends SchemaCell>> ext
             return (B)this;
         }
 
+    }
+
+    /**
+     * Line separator string. Default value is the system default (Retrieved by
+     * {@code System.getProperty("line.separator")}).
+     * @return the lineSeparator
+     */
+    public String getLineSeparator() {
+        return lineSeparator;
+    }
+
+    /**
+     * Sets the line separator string. Default value is the system default (Retrieved by
+     * {@code System.getProperty("line.separator")}).
+     *
+     * @param lineSeparator
+     *            the lineSeparator to set.
+     */
+    public void setLineSeparator(String lineSeparator) {
+        this.lineSeparator = lineSeparator;
+    }
+
+    @Override
+    public String toString() {
+        return " lineSeparator='" + StringUtils.replaceJava2Escapes(this.lineSeparator) + "'" + super.toString();
     }
 }

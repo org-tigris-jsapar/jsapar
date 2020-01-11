@@ -4,8 +4,7 @@ import org.jsapar.error.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
-import org.jsapar.schema.FixedWidthSchemaCell;
-import org.jsapar.schema.FixedWidthSchemaLine;
+import org.jsapar.schema.FixedWidthSchema;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -15,19 +14,19 @@ public class FixedWidthComposerTest {
     @Test
     public final void testOutput_Flat() throws JSaParException {
         String sExpected = "JonasStenbergFridaBergsten";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
-        schema.setLineSeparator("");
+        FixedWidthSchema schema = FixedWidthSchema.builder()
+                .withLineSeparator("")
+                .withLine("Person", line->line
+                        .withOccurs(2)
+                        .withCell("First name", 5)
+                        .withCell("Last name", 8)
+                ).build();
 
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schema.addSchemaLine(schemaLine);
-
-        Line line1 = new Line("");
+        Line line1 = new Line("Person");
         line1.addCell(new StringCell("First name","Jonas"));
         line1.addCell(new StringCell("Last name","Stenberg"));
 
-        Line line2 = new Line("");
+        Line line2 = new Line("Person");
         line2.addCell(new StringCell("First name","Frida"));
         line2.addCell(new StringCell("Last name","Bergsten"));
 

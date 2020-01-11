@@ -1,8 +1,6 @@
 package org.jsapar;
 
 import org.jsapar.schema.CsvSchema;
-import org.jsapar.schema.CsvSchemaCell;
-import org.jsapar.schema.CsvSchemaLine;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -10,18 +8,17 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class Xml2TextConverterTest {
 
     @Test
     public void convert() throws IOException {
-        CsvSchema schema = new CsvSchema();
-        schema.setLineSeparator("\n");
-        CsvSchemaLine schemaLine = new CsvSchemaLine("test-line");
-        schemaLine.addSchemaCell(new CsvSchemaCell("c1"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("c2"));
-        schema.addSchemaLine(schemaLine);
+        CsvSchema schema = CsvSchema.builder()
+                .withLineSeparator("\n")
+                .withLine("test-line", line->line.withCells("c1", "c2"))
+                .build();
+
         Xml2TextConverter converter = new Xml2TextConverter(schema);
         String xml = "<?xml version='1.0' encoding='UTF-8'?>" +
                 "<document xmlns='http://jsapar.tigris.org/XMLDocumentFormat/2.0'>" +

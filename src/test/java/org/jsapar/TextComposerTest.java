@@ -8,12 +8,8 @@ import org.junit.Test;
 
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Locale;
-import java.util.function.Predicate;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TextComposerTest {
     private Document document;
@@ -170,26 +166,15 @@ public class TextComposerTest {
     @Test
     public final void testOutputLine_firstLineAsHeader()
             throws JSaParException {
-        CsvSchema schema = new CsvSchema();
-        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
-        schemaLine.addSchemaCell(new CsvSchemaCell("HeaderHeader"));
-        schema.addSchemaLine(schemaLine);
+        CsvSchema schema = CsvSchema.builder()
+                .withLine("Person", line -> line
+                        .withFirstLineAsSchema(true)
+                        .withCell("First name")
+                        .withCell("Last name")
+                        .withCell("Shoe size", c -> c.withCellType(CellType.INTEGER).withDefaultValue("41"))
+                        .withCell("Birth date", c -> c.withCellType(CellType.DATE).withPattern("yyyy-MM-dd"))
+                ).build();
 
-        schemaLine = new CsvSchemaLine("Person");
-        schemaLine.addSchemaCell(new CsvSchemaCell("First name"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("Last name"));
-
-        schemaLine.addSchemaCell(CsvSchemaCell.builder("Shoe size")
-                .withCellType(CellType.INTEGER)
-                .withDefaultValue("41")
-                .build());
-
-        schemaLine.addSchemaCell(CsvSchemaCell.builder("Birth date")
-                .withCellType(CellType.DATE).withPattern("yyyy-MM-dd")
-                .build());
-
-        schemaLine.setFirstLineAsSchema(true);
-        schema.addSchemaLine(schemaLine);
 
         Line line1 = new Line("Person");
         line1.addCell(new StringCell("First name", "Jonas"));

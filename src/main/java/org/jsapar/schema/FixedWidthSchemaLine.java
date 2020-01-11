@@ -141,13 +141,13 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
          * Convenience method that creates a string csv cell with supplied name and length without any further
          * formatting and adds it to this builder. For more advanced options use {@link SchemaLine.Builder#withCell(SchemaCell)}
          *
-         * @param cellName   The name of the cell.
+         * @param name   The name of the cell.
          * @param cellLength The length of the cell.
          * @return This builder instance.
          * @see SchemaLine.Builder#withCell(SchemaCell)
          */
-        public Builder withCell(String cellName, int cellLength) {
-            return this.withCell(cellName, cellLength, c->c);
+        public Builder withCell(String name, int cellLength) {
+            return this.withCell(name, cellLength, c->c);
         }
 
         @Override

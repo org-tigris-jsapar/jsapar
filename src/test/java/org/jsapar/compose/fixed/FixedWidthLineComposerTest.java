@@ -3,6 +3,7 @@ package org.jsapar.compose.fixed;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
+import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 import org.jsapar.schema.SchemaException;
@@ -22,16 +23,14 @@ public class FixedWidthLineComposerTest {
         line.addCell(new StringCell("Last name","Stenberg"));
         line.addCell(new StringCell("Street address", "Spiselvagen 19"));
 
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street address", 14));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
-        FixedWidthSchemaCell cityCellSchema = new FixedWidthSchemaCell("City", 8);
-        cityCellSchema.setDefaultValue("Huddinge");
-        schemaLine.addSchemaCell(cityCellSchema);
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchemaLine schemaLine =FixedWidthSchemaLine.builder("Person")
+                .withOccurs(1)
+                .withCell("First name", 5)
+                .withCell("Last name", 8)
+                .withCell("Street address", 14)
+                .withCell("Zip code", 6)
+                .withCell("City", 8, c->c.withDefaultValue("Huddinge"))
+                .build();
 
         Writer writer = new StringWriter();
         FixedWidthLineComposer composer = new FixedWidthLineComposer(writer, schemaLine);
