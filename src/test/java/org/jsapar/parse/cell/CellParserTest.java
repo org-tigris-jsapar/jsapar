@@ -2,7 +2,6 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.model.*;
-import org.jsapar.parse.cell.CellParser;
 import org.jsapar.schema.MatchingCellValueCondition;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
@@ -66,7 +65,7 @@ public class CellParserTest {
 
     @Test
     public void testMakeCell_DefaultValue_float() throws SchemaException, java.text.ParseException {
-        SchemaCell schemaCell = StringSchemaCell.builder("test").withCellType(CellType.FLOAT).withPattern("#.00").withLocale("sv","SE").build();
+        SchemaCell schemaCell = StringSchemaCell.builder("test").withType(CellType.FLOAT).withPattern("#.00").withLocale("sv","SE").build();
         schemaCell.setDefaultValue("123456,78901");
         CellParser cellParser = new CellParser<>(schemaCell, 0);
 
@@ -76,7 +75,7 @@ public class CellParserTest {
 
     @Test
     public void testMakeCell_empty_pattern() throws SchemaException, java.text.ParseException {
-        SchemaCell schemaCell = StringSchemaCell.builder("test").withCellType(CellType.FLOAT).withPattern("#.00").withLocale("sv","SE").build();
+        SchemaCell schemaCell = StringSchemaCell.builder("test").withType(CellType.FLOAT).withPattern("#.00").withLocale("sv","SE").build();
         schemaCell.setEmptyCondition((Predicate<String>) new MatchingCellValueCondition("NULL"));
         CellParser cellParser = new CellParser<>(schemaCell, 0);
 
@@ -90,7 +89,7 @@ public class CellParserTest {
 
     @Test
     public void testMakeCell_empty_pattern_default() throws SchemaException, java.text.ParseException {
-        SchemaCell schemaCell = StringSchemaCell.builder("test").withCellType(CellType.FLOAT).withPattern("#.00").withLocale("sv","SE").build();
+        SchemaCell schemaCell = StringSchemaCell.builder("test").withType(CellType.FLOAT).withPattern("#.00").withLocale("sv","SE").build();
         schemaCell.setEmptyPattern("NULL");
         schemaCell.setDefaultValue("123456,78901");
         CellParser cellParser = new CellParser<>(schemaCell, 0);
@@ -199,7 +198,7 @@ public class CellParserTest {
     @Test
     public void testMakeCell_LocalTime() throws SchemaException, java.text.ParseException {
         SchemaCell schemaCell = StringSchemaCell.builder("test")
-                .withCellType(CellType.LOCAL_TIME)
+                .withType(CellType.LOCAL_TIME)
                 .withPattern("HH:mm")
                 .withLocale("sv","SE")
                 .withDefaultValue("00:00")
@@ -217,7 +216,7 @@ public class CellParserTest {
     @Test
     public void testMakeCell_LocalDateTime() throws SchemaException, java.text.ParseException {
         SchemaCell schemaCell = StringSchemaCell.builder("test")
-                .withCellType(CellType.LOCAL_DATE_TIME)
+                .withType(CellType.LOCAL_DATE_TIME)
                 .withPattern("yyyy-MM-dd HH:mm")
                 .withLocale("sv","SE")
                 .withDefaultValue("2000-01-01 00:00")
@@ -234,7 +233,7 @@ public class CellParserTest {
     @Test
     public void testMakeCell_LocalDate() throws SchemaException, java.text.ParseException {
         SchemaCell schemaCell = StringSchemaCell.builder("test")
-                .withCellType(CellType.LOCAL_DATE)
+                .withType(CellType.LOCAL_DATE)
                 .withPattern("yyyy-MM-dd")
                 .withLocale("sv","SE")
                 .withDefaultValue("2000-01-01")
@@ -251,7 +250,7 @@ public class CellParserTest {
     @Test
     public void testMakeCell_ZonedDateTime() throws SchemaException, java.text.ParseException {
         SchemaCell schemaCell = StringSchemaCell.builder("test")
-                .withCellType(CellType.ZONED_DATE_TIME)
+                .withType(CellType.ZONED_DATE_TIME)
                 .withPattern("yyyy-MM-dd HH:mmX")
                 .withLocale("sv","SE")
                 .withDefaultValue("2000-01-01 00:00+00")
@@ -290,7 +289,7 @@ public class CellParserTest {
     @Test
     public void testParse_Integer_MinRangeNotValid() {
 
-        SchemaCell schemaCell = StringSchemaCell.builder("test").withCellType(CellType.INTEGER).build();
+        SchemaCell schemaCell = StringSchemaCell.builder("test").withType(CellType.INTEGER).build();
         schemaCell.setMinValue(new IntegerCell("test",54321));
         schemaCell.setMaxValue(new IntegerCell("test",54322));
         CellParser cellParser = new CellParser<>(schemaCell, 0);
@@ -307,7 +306,7 @@ public class CellParserTest {
     @Test
     public void testMakeCell_Integer_MaxRangeNotValid() {
 
-        SchemaCell schemaCell = StringSchemaCell.builder("test").withCellType(CellType.INTEGER).withMinValue("0").withMaxValue("100").build();
+        SchemaCell schemaCell = StringSchemaCell.builder("test").withType(CellType.INTEGER).withMinValue("0").withMaxValue("100").build();
         CellParser cellParser = new CellParser<>(schemaCell, 0);
         RecordingErrorEventListener errorListener = new RecordingErrorEventListener();
         cellParser.parse("12345", errorListener);

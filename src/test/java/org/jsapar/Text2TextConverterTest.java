@@ -106,7 +106,7 @@ public class Text2TextConverterTest {
                     .withLine(FixedWidthSchemaLine.builder("Person")
                             .withCell("First name", 6)
                             .withCell(FixedWidthSchemaCell.builder("Shoe size", 9)
-                                    .withCellType(CellType.INTEGER)
+                                    .withType(CellType.INTEGER)
                                     .withAlignment(FixedWidthSchemaCell.Alignment.LEFT)
                                     .build())
                             .build())

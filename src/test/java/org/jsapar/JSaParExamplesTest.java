@@ -105,7 +105,7 @@ public class JSaParExamplesTest {
                                     .withCell("First name")
                                     .withCell("Middle name", cell -> cell.withIgnoreRead(true))
                                     .withCell("Last name")
-                                    .withCell("Has dog", cell -> cell.withCellType(CellType.BOOLEAN).withPattern("yes;no"))
+                                    .withCell("Has dog", cell -> cell.withType(CellType.BOOLEAN).withPattern("yes;no"))
                     ).build();
             TextComposer composer = new TextComposer(schema, writer);
             Line line1 = new Line("Person")

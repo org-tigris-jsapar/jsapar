@@ -426,7 +426,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      */
     private boolean parseCellFormat(Element xmlSchemaCell, SchemaCell.Builder<?,?,?> cellBuilder) {
         return getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_FORMAT).map( xmlFormat->{
-            parseAttribute(xmlFormat, "type").ifPresent(s->cellBuilder.withCellType(makeCellType(s)));
+            parseAttribute(xmlFormat, "type").ifPresent(s->cellBuilder.withType(makeCellType(s)));
             parseAttribute(xmlFormat, "pattern").ifPresent(cellBuilder::withPattern);
             return true;
                 }).orElse(false);

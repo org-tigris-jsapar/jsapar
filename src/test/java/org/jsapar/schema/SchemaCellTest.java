@@ -46,7 +46,7 @@ public class SchemaCellTest {
     public void withMinValue() {
         SchemaCell schemaCell = StringSchemaCell.builder("test")
                 .withLocale("sv","SE")
-                .withCellType(CellType.DECIMAL)
+                .withType(CellType.DECIMAL)
                 .withPattern("#,###.0")
                 .withMinValue("123,34")
                 .build();

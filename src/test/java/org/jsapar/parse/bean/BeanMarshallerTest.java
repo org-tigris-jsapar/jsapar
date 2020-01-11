@@ -11,7 +11,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Date;
-import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 
@@ -80,13 +79,13 @@ public class BeanMarshallerTest {
                 CsvSchemaLine.builder(TstPerson.class.getName())
                         .withCell(CsvSchemaCell.builder("firstName").build())
                         .withCell(CsvSchemaCell.builder("lastName").build())
-                        .withCell(CsvSchemaCell.builder("shoeSize").withCellType(CellType.INTEGER).build())
-                        .withCell(CsvSchemaCell.builder("streetNumber").withCellType(CellType.INTEGER).build())
-                        .withCell(CsvSchemaCell.builder("luckyNumber").withCellType(CellType.DECIMAL).build())
-                        .withCell(CsvSchemaCell.builder("birthTime").withCellType(CellType.DATE).build())
-                        .withCell(CsvSchemaCell.builder("door").withCellType(CellType.CHARACTER).build())
+                        .withCell(CsvSchemaCell.builder("shoeSize").withType(CellType.INTEGER).build())
+                        .withCell(CsvSchemaCell.builder("streetNumber").withType(CellType.INTEGER).build())
+                        .withCell(CsvSchemaCell.builder("luckyNumber").withType(CellType.DECIMAL).build())
+                        .withCell(CsvSchemaCell.builder("birthTime").withType(CellType.DATE).build())
+                        .withCell(CsvSchemaCell.builder("door").withType(CellType.CHARACTER).build())
                         .withCell(CsvSchemaCell.builder("gender")
-                                .withCellType(CellType.ENUM).withPattern("org.jsapar.TstGender")
+                                .withType(CellType.ENUM).withPattern("org.jsapar.TstGender")
                                 .build())
                         .withCell(CsvSchemaCell.builder("address.street").build())
                         .withCell(CsvSchemaCell.builder("address.town").build())

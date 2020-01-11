@@ -3,10 +3,7 @@ package org.jsapar.compose.fixed;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
-import org.jsapar.schema.FixedWidthSchema;
-import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
-import org.jsapar.schema.SchemaException;
 import org.junit.Test;
 
 import java.io.StringWriter;

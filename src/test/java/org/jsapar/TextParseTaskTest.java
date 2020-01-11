@@ -3,19 +3,16 @@ package org.jsapar;
 import org.jsapar.error.JSaParException;
 import org.jsapar.error.MaxErrorsExceededException;
 import org.jsapar.error.ThresholdCollectingErrorConsumer;
-import org.jsapar.error.ThresholdRecordingErrorEventListener;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Document;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.DocumentBuilderLineConsumer;
-import org.jsapar.parse.DocumentBuilderLineEventListener;
 import org.jsapar.parse.CollectingConsumer;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
-import org.jsapar.schema.SchemaCellFormat;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -52,7 +49,7 @@ public class TextParseTaskTest {
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(FixedWidthSchemaCell.builder("Shoe size", 3).withCellType(CellType.INTEGER).build());
+        schemaLine.addSchemaCell(FixedWidthSchemaCell.builder("Shoe size", 3).withType(CellType.INTEGER).build());
         schema.addSchemaLine(schemaLine);
 
         Document doc = build(toParse, schema);
@@ -64,7 +61,7 @@ public class TextParseTaskTest {
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(FixedWidthSchemaCell.builder("Shoe size", 3).withCellType(CellType.INTEGER).build());
+        schemaLine.addSchemaCell(FixedWidthSchemaCell.builder("Shoe size", 3).withType(CellType.INTEGER).build());
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);
@@ -86,7 +83,7 @@ public class TextParseTaskTest {
         org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
         FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
         schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(FixedWidthSchemaCell.builder("Shoe size", 3).withCellType(CellType.INTEGER).build());
+        schemaLine.addSchemaCell(FixedWidthSchemaCell.builder("Shoe size", 3).withType(CellType.INTEGER).build());
         schema.addSchemaLine(schemaLine);
 
         Reader reader = new StringReader(toParse);

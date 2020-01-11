@@ -1,16 +1,13 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ExceptionErrorConsumer;
-import org.jsapar.error.ExceptionErrorConsumer;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.*;
 import org.jsapar.schema.FixedWidthSchemaCell;
-import org.jsapar.schema.SchemaCellFormat;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -193,7 +190,7 @@ public class FixedWidthCellParserTest {
     public final void testBuild_decimal_sv() throws IOException {
         String toParse = "-123 456,78  ";
         FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("Decimal", 11)
-                .withCellType(CellType.DECIMAL)
+                .withType(CellType.DECIMAL)
                         .withPattern("#,###.#")
                         .withLocale(new Locale("sv", "SE"))
                 .build();
@@ -210,7 +207,7 @@ public class FixedWidthCellParserTest {
     public final void testBuild_decimal_uk() throws IOException, JSaParException {
         String toParse = "-123,456.78  ";
         FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("Decimal", 11)
-                .withCellType(CellType.DECIMAL)
+                .withType(CellType.DECIMAL)
                 .withLocale( Locale.UK)
                 .withPattern("#,###.#")
                 .build();
@@ -226,7 +223,7 @@ public class FixedWidthCellParserTest {
     public final void testBuild_int() throws IOException, JSaParException {
         String toParse = "123456";
         FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("Integer", 6)
-                .withCellType(CellType.INTEGER).build();
+                .withType(CellType.INTEGER).build();
 
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
         IntegerCell cell = (IntegerCell) cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer());
@@ -239,7 +236,7 @@ public class FixedWidthCellParserTest {
     public final void testBuild_float() throws IOException, JSaParException {
         String toParse = "1123.234";
         FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("Float", 6)
-                .withCellType(CellType.FLOAT)
+                .withType(CellType.FLOAT)
                 .build();
 
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
@@ -253,7 +250,7 @@ public class FixedWidthCellParserTest {
     public final void testBuild_floatExp() throws IOException, JSaParException {
         String toParse = "1.234E6 ";
         FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("Float", 8)
-                .withCellType(CellType.FLOAT)
+                .withType(CellType.FLOAT)
                 .build();
 
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
@@ -267,7 +264,7 @@ public class FixedWidthCellParserTest {
     public final void testBuild_floatExp_pattern() throws IOException, JSaParException {
         String toParse = "1.234E6 ";
         FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("Float", 8)
-                .withCellType(CellType.FLOAT)
+                .withType(CellType.FLOAT)
                 .withPattern("#.###E0")
                 .build();
 
@@ -282,7 +279,7 @@ public class FixedWidthCellParserTest {
     public final void testBuild_floatExp_SE() throws IOException, JSaParException {
         String toParse = "1,234E6 ";
         FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("Float", 8)
-                .withCellType(CellType.FLOAT)
+                .withType(CellType.FLOAT)
                 .withLocale(new Locale("sv", "SE"))
                 .withPattern("#.###E0")
                 .build();

@@ -1,7 +1,6 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ExceptionErrorConsumer;
-import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.error.ValidationAction;
 import org.jsapar.model.CellType;
@@ -10,7 +9,6 @@ import org.jsapar.model.LineUtils;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.LineParseException;
 import org.jsapar.text.TextParseConfig;
-import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,14 +34,14 @@ public class FixedWidthLineParserTest {
     @Test
     public void testParse() throws IOException, JSaParException {
         String toParse = "JonasStenbergSpiselvagen 19141 59Huddinge";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street address", 14));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("City", 8));
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchemaLine schemaLine =FixedWidthSchemaLine.builder("Person")
+                .withOccurs(1)
+                .withCell("First name", 5)
+                .withCell("Last name", 8)
+                .withCell("Street address", 14)
+                .withCell("Zip code", 6)
+                .withCell("City", 8)
+                .build();
 
         TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
@@ -58,14 +56,12 @@ public class FixedWidthLineParserTest {
     @Test
     public void testParse_defaultLast() throws IOException, JSaParException {
         String toParse = "JonasStenberg";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        FixedWidthSchemaCell cityCell = new FixedWidthSchemaCell("City", 8);
-        cityCell.setDefaultValue("Falun");
-        schemaLine.addSchemaCell(cityCell);
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchemaLine schemaLine =FixedWidthSchemaLine.builder("Person")
+                .withOccurs(1)
+                .withCell("First name", 5)
+                .withCell("Last name", 8)
+                .withCell("City", 8, c->c.withDefaultValue("Falun"))
+                .build();
 
         TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
@@ -79,12 +75,12 @@ public class FixedWidthLineParserTest {
     @Test(expected = LineParseException.class)
     public void testParse_insufficient() throws IOException, JSaParException {
         String toParse = "JonasStenberg";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("City", 8));
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchemaLine schemaLine =FixedWidthSchemaLine.builder("Person")
+                .withOccurs(1)
+                .withCell("First name", 5)
+                .withCell("Last name", 8)
+                .withCell("City", 8)
+                .build();
 
         TextParseConfig config = new TextParseConfig();
         config.setOnLineInsufficient(ValidationAction.EXCEPTION);
@@ -97,15 +93,12 @@ public class FixedWidthLineParserTest {
     public void testParse_default_and_mandatory()
             throws IOException, JSaParException {
         String toParse = "JonasStenberg";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        FixedWidthSchemaCell cityCell = new FixedWidthSchemaCell("City", 8);
-        cityCell.setDefaultValue("Falun");
-        cityCell.setMandatory(true);
-        schemaLine.addSchemaCell(cityCell);
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchemaLine schemaLine =FixedWidthSchemaLine.builder("Person")
+                .withOccurs(1)
+                .withCell("First name", 5)
+                .withCell("Last name", 8)
+                .withCell("City", 8, c->c.withDefaultValue("Falun").withMandatory(true))
+                .build();
 
         TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
@@ -123,14 +116,12 @@ public class FixedWidthLineParserTest {
     public void testParse_mandatory()
             throws IOException, JSaParException {
         String toParse = "JonasStenberg";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        FixedWidthSchemaCell cityCell = new FixedWidthSchemaCell("City", 8);
-        cityCell.setMandatory(true);
-        schemaLine.addSchemaCell(cityCell);
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchemaLine schemaLine =FixedWidthSchemaLine.builder("Person")
+                .withOccurs(1)
+                .withCell("First name", 5)
+                .withCell("Last name", 8)
+                .withCell("City", 8, c->c.withMandatory(true))
+                .build();
 
         TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
@@ -147,16 +138,12 @@ public class FixedWidthLineParserTest {
     @Test(expected = CellParseException.class)
     public void testParse_parseError() throws IOException, JSaParException {
         String toParse = "JonasStenbergFortyone";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-
-        FixedWidthSchemaCell shoeSizeSchema = new FixedWidthSchemaCell("Shoe size", 8);
-        shoeSizeSchema.setCellFormat(CellType.INTEGER);
-        schemaLine.addSchemaCell(shoeSizeSchema);
-
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchemaLine schemaLine =FixedWidthSchemaLine.builder("Person")
+                .withOccurs(1)
+                .withCell("First name", 5)
+                .withCell("Last name", 8)
+                .withCell("Shoe size", 8, c->c.withType(CellType.INTEGER))
+                .build();
 
         TextParseConfig config = new TextParseConfig();
         FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);

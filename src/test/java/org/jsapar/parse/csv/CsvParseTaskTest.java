@@ -15,7 +15,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.function.Predicate;
 
 import static org.junit.Assert.assertEquals;
 
@@ -122,8 +121,8 @@ public class CsvParseTaskTest {
         CsvSchema schema = CsvSchema.builder()
                 .withLine(CsvSchemaLine.builder("Person")
                         .withFirstLineAsSchema(true)
-                        .withCell("Shoe Size", c->c.withCellType(CellType.INTEGER).withDefaultValue("43"))
-                        .withCell("HasDog", c->c.withCellType(CellType.BOOLEAN).withDefaultValue("false"))
+                        .withCell("Shoe Size", c->c.withType(CellType.INTEGER).withDefaultValue("43"))
+                        .withCell("HasDog", c->c.withType(CellType.BOOLEAN).withDefaultValue("false"))
                         .build())
                 .build();
 

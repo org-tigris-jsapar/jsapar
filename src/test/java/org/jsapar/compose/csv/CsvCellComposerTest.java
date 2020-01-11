@@ -6,7 +6,6 @@ import org.jsapar.compose.csv.quote.QuoteIfNeeded;
 import org.jsapar.model.*;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.QuoteSyntax;
-import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.schema.SchemaException;
 import org.junit.Test;
 
@@ -110,7 +109,7 @@ public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_int_us() throws IOException, SchemaException {
-        CsvSchemaCell schemaElement = CsvSchemaCell.builder("Integer").withCellType(CellType.INTEGER).build();
+        CsvSchemaCell schemaElement = CsvSchemaCell.builder("Integer").withType(CellType.INTEGER).build();
 
         Writer writer = new StringWriter();
         Cell cell = new IntegerCell("Integer", 123456);

@@ -66,7 +66,7 @@ public class CellFormatTest {
     public void testFormat_DefaultValue_float() throws SchemaException {
         SchemaCell schemaCell = StringSchemaCell.builder("test")
                 .withLocale("sv","SE")
-                .withCellType(CellType.FLOAT)
+                .withType(CellType.FLOAT)
                 .withPattern("#.00")
                 .withDefaultValue("123456,78901")
                 .build();
@@ -79,7 +79,7 @@ public class CellFormatTest {
     @Test
     public void testFormat_empty_integer() throws SchemaException {
         SchemaCell schemaCell = StringSchemaCell.builder("test")
-                .withCellType(CellType.INTEGER)
+                .withType(CellType.INTEGER)
                 .build();
 
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);

@@ -171,8 +171,8 @@ public class TextComposerTest {
                         .withFirstLineAsSchema(true)
                         .withCell("First name")
                         .withCell("Last name")
-                        .withCell("Shoe size", c -> c.withCellType(CellType.INTEGER).withDefaultValue("41"))
-                        .withCell("Birth date", c -> c.withCellType(CellType.DATE).withPattern("yyyy-MM-dd"))
+                        .withCell("Shoe size", c -> c.withType(CellType.INTEGER).withDefaultValue("41"))
+                        .withCell("Birth date", c -> c.withType(CellType.DATE).withPattern("yyyy-MM-dd"))
                 ).build();
 
 

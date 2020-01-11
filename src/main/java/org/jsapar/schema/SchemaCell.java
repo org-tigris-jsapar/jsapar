@@ -181,7 +181,7 @@ public abstract class SchemaCell implements Cloneable {
          * @param cellType The type of the cell.
          * @return This builder.
          */
-        public B withCellType(CellType cellType) {
+        public B withType(CellType cellType) {
             this.cellType = cellType;
             return (B) this;
         }
@@ -193,14 +193,14 @@ public abstract class SchemaCell implements Cloneable {
         public B withFormat(Format<T> format) {
             this.format = format;
             if(format instanceof EnumFormat)
-                return withCellType(CellType.ENUM);
+                return withType(CellType.ENUM);
             if(format instanceof ImpliedDecimalFormat)
-                return withCellType(CellType.DECIMAL);
+                return withType(CellType.DECIMAL);
             return (B) this;
         }
 
         public <E extends Enum<E>> B withEnumFormat(Class<E> enumClass, boolean ignoreCase){
-            withCellType(CellType.ENUM);
+            withType(CellType.ENUM);
             return (B) withFormat((Format<T>) new EnumFormat<E>(enumClass, ignoreCase));
         }
 

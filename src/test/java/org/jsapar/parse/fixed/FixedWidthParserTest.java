@@ -23,13 +23,13 @@ public class FixedWidthParserTest {
     @Test
     public final void testParse_Flat() throws IOException {
         String toParse = "JonasStenbergFridaStenberg";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
-        schema.setLineSeparator("");
-
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchema schema = FixedWidthSchema.builder()
+                .withLineSeparator("")
+                .withLine("Person", line->line
+                        .withOccurs(2)
+                        .withCell("First name", 5)
+                        .withCell("Last name", 8)
+                ).build();
 
         Reader reader = new StringReader(toParse);
 

@@ -8,12 +8,9 @@ public class FixedWidthSchemaTest {
 
     @Test
     public final void testClone() {
-        FixedWidthSchema schema = new FixedWidthSchema();
-        schema.setLineSeparator("");
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
-        schemaLine.setLineType("Joho");
-
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchema schema = FixedWidthSchema.builder().withLineSeparator("")
+                .withLine("Joho", l->l.withOccurs(2))
+                .build();
 
         FixedWidthSchema theClone = schema.clone();
 
@@ -24,19 +21,23 @@ public class FixedWidthSchemaTest {
 
         assertEquals(schema.getSchemaLines().iterator().next().getLineType(), theClone.getSchemaLines().iterator().next()
                 .getLineType());
-        assertFalse(schema.getSchemaLines().iterator().next() == theClone.getSchemaLines().iterator().next());
+        assertNotSame(schema.getSchemaLines().iterator().next(), theClone.getSchemaLines().iterator().next());
     }
 
 
     @Test
-    public void testIterator(){
+    public void testIterator_empty() {
         FixedWidthSchema schema = FixedWidthSchema.builder().build();
         assertTrue(schema.isEmpty());
         assertEquals(0, schema.size());
+    }
 
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
-        schemaLine.setLineType("Joho");
-        schema.addSchemaLine(schemaLine);
+    @Test
+    public void testIterator(){
+        FixedWidthSchemaLine schemaLine = FixedWidthSchemaLine.builder("Joho").withOccurs(2).build();
+        FixedWidthSchema schema = FixedWidthSchema.builder().withLineSeparator("")
+                .withLine(schemaLine)
+                .build();
         assertFalse(schema.isEmpty());
         assertEquals(1, schema.size());
 
