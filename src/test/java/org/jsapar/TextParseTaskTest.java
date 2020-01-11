@@ -30,12 +30,7 @@ public class TextParseTaskTest {
     @Test
     public void testBuild_fixed_oneLine() throws IOException {
         String toParse = "JonasStenberg";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schema.addSchemaLine(schemaLine);
-
+        FixedWidthSchema schema = makePersonNamesSchema();
         Document doc = build(toParse, schema);
 
         assertEquals(1, doc.size());
@@ -43,14 +38,18 @@ public class TextParseTaskTest {
         assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(0), "Last name"));
     }
 
+    public FixedWidthSchema makePersonNamesSchema() {
+        return FixedWidthSchema.builder()
+                    .withLine("Person", line->line
+                            .withCell("First name", 5)
+                            .withCell("Last name", 8)
+                    ).build();
+    }
+
     @Test(expected=CellParseException.class)
     public void testBuild_error_throws() throws IOException {
         String toParse = "JonasAAA";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(FixedWidthSchemaCell.builder("Shoe size", 3).withType(CellType.INTEGER).build());
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchema schema = makePersonShoeSchema();
 
         Document doc = build(toParse, schema);
     }
@@ -58,11 +57,7 @@ public class TextParseTaskTest {
     @Test
     public void testBuild_error_list() throws IOException {
         String toParse = "JonasAAA";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(FixedWidthSchemaCell.builder("Shoe size", 3).withType(CellType.INTEGER).build());
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchema schema = makePersonShoeSchema();
 
         Reader reader = new StringReader(toParse);
         List<JSaParException> parseErrors = new ArrayList<>();
@@ -77,14 +72,18 @@ public class TextParseTaskTest {
         Assert.assertEquals(1, ((CellParseException)parseErrors.get(0)).getLineNumber());
     }
 
+    public FixedWidthSchema makePersonShoeSchema() {
+        return FixedWidthSchema.builder()
+                    .withLine("Person", line->line
+                            .withCell("First name", 5)
+                            .withCell("Shoe size", 8, c->c.withType(CellType.INTEGER))
+                    ).build();
+    }
+
     @Test(expected=MaxErrorsExceededException.class)
     public void testBuild_error_list_max() throws IOException {
         String toParse = "JonasAAA";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(FixedWidthSchemaCell.builder("Shoe size", 3).withType(CellType.INTEGER).build());
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchema schema = makePersonShoeSchema();
 
         Reader reader = new StringReader(toParse);
         TextParseTask parser = new TextParseTask(schema, reader);
@@ -99,11 +98,7 @@ public class TextParseTaskTest {
     @Test
     public void testBuild_fixed_twoLines() throws IOException {
         String toParse = "JonasStenberg" + System.getProperty("line.separator") + "LinusStenberg";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchema schema = makePersonNamesSchema();
 
         Document doc = build(toParse, schema);
 
@@ -125,33 +120,4 @@ public class TextParseTaskTest {
         return listener.getDocument();
     }
 
-    @Test
-    public void testBuild_fixed_twoLines_toLong() throws IOException {
-        String toParse = "Jonas " + System.getProperty("line.separator") + "Frida";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(2);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schema.addSchemaLine(schemaLine);
-
-        Document doc = build(toParse, schema);
-        assertEquals(2, doc.size());
-        assertEquals("Jonas", LineUtils.getStringCellValue(doc.getLine(0), "First name"));
-        assertEquals("Frida", LineUtils.getStringCellValue(doc.getLine(1), "First name"));
-    }
-
-    @Test
-    public void testBuild_fixed_twoLines_infiniteOccurs() throws IOException {
-        String toParse = "Jonas" + System.getProperty("line.separator") + "Frida";
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine();
-        schemaLine.setOccursInfinitely();
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schema.addSchemaLine(schemaLine);
-
-        Document doc = build(toParse, schema);
-
-        assertEquals("Jonas", LineUtils.getStringCellValue(doc.getLine(0), "First name"));
-        assertEquals("Frida", LineUtils.getStringCellValue(doc.getLine(1), "First name"));
-    }
-    
 }
