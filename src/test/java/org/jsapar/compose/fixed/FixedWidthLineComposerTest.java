@@ -47,17 +47,15 @@ public class FixedWidthLineComposerTest {
         line.addCell(new StringCell("Last name","Stenberg"));
         line.addCell(new StringCell("Street address", "Hemvagen 19"));
 
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.setMinLength(50);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("First name", 5));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Street address", 14));
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Zip code", 6));
-        FixedWidthSchemaCell cityCellSchema = new FixedWidthSchemaCell("City", 12);
-        cityCellSchema.setDefaultValue("Storstaden");
-        schemaLine.addSchemaCell(cityCellSchema);
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchemaLine schemaLine =FixedWidthSchemaLine.builder("Person")
+                .withOccurs(1)
+                .withMinLength(50)
+                .withCell("First name", 5)
+                .withCell("Last name", 8)
+                .withCell("Street address", 14)
+                .withCell("Zip code", 6)
+                .withCell("City", 12, c->c.withDefaultValue("Storstaden"))
+                .build();
 
         java.io.Writer writer = new java.io.StringWriter();
         FixedWidthLineComposer composer = new FixedWidthLineComposer(writer, schemaLine);
@@ -74,13 +72,11 @@ public class FixedWidthLineComposerTest {
         line.addCell(new StringCell("Last name","Stenberg"));
         line.addCell(new StringCell("Street address", "Spiselvägen 19"));
 
-        org.jsapar.schema.FixedWidthSchema schema = new org.jsapar.schema.FixedWidthSchema();
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        FixedWidthSchemaCell firstNameSchema = new FixedWidthSchemaCell("First name", 5);
-        firstNameSchema.setIgnoreWrite(true);
-        schemaLine.addSchemaCell(firstNameSchema);
-        schemaLine.addSchemaCell(new FixedWidthSchemaCell("Last name", 8));
-        schema.addSchemaLine(schemaLine);
+        FixedWidthSchemaLine schemaLine =FixedWidthSchemaLine.builder("Person")
+                .withOccurs(1)
+                .withCell("First name", 5, c->c.withIgnoreWrite(true))
+                .withCell("Last name", 8)
+                .build();
 
         java.io.Writer writer = new java.io.StringWriter();
         FixedWidthLineComposer composer = new FixedWidthLineComposer(writer, schemaLine);
