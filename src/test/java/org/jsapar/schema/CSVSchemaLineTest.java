@@ -6,9 +6,8 @@ import static org.junit.Assert.*;
 
 public class CSVSchemaLineTest  {
 
-    boolean foundError=false;
-    
     @Test
+    @Deprecated
     public final void testCSVSchemaLine()  {
         CsvSchemaLine schemaLine = new CsvSchemaLine();
         assertEquals("", schemaLine.getLineType());
@@ -16,7 +15,7 @@ public class CSVSchemaLineTest  {
 
     @Test
     public final void testCSVSchemaLine_String()  {
-        CsvSchemaLine schemaLine = new CsvSchemaLine("LineType");
+        CsvSchemaLine schemaLine = CsvSchemaLine.builder("LineType").build();
         assertEquals("LineType", schemaLine.getLineType());
     }
     
@@ -24,14 +23,13 @@ public class CSVSchemaLineTest  {
 
     @Test
     public void testGetSchemaCell(){
-        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
-        schemaLine.setCellSeparator(";-)");
-        CsvSchemaCell cell1 = new CsvSchemaCell("First Name");
-        schemaLine.addSchemaCell(cell1);
-        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+        CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
+                .withCellSeparator(";-)")
+                .withCells("First Name", "Last Name")
+                .build();
         
         assertNull(schemaLine.getSchemaCell("Does not exist"));
-        assertSame(cell1, schemaLine.getSchemaCell("First Name"));
+        assertNotNull(schemaLine.getSchemaCell("First Name"));
         
     }
 }

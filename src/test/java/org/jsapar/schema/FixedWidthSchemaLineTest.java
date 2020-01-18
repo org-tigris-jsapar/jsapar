@@ -99,16 +99,13 @@ public class FixedWidthSchemaLineTest {
     @Test
     @Deprecated
     public void testAddFillerCellToReachMinLength(){
-        FixedWidthSchemaLine schemaLine = new FixedWidthSchemaLine(1);
-        schemaLine.setMinLength(10);
-        FixedWidthSchemaCell cell1 = FixedWidthSchemaCell.builder("First name", 5).build();
-        schemaLine.addSchemaCell(cell1);
-        assertEquals(5, schemaLine.getTotalCellLength());
-        assertEquals(1, schemaLine.size());
-        
-        schemaLine.addFillerCellToReachMinLength();
+        FixedWidthSchemaLine schemaLine = FixedWidthSchemaLine.builder("A")
+                .withMinLength(10)
+                .withCell("First name", 5)
+                .build();
+
         assertEquals(10, schemaLine.getTotalCellLength());
-        assertEquals(2, schemaLine.size());
+        assertEquals(2, schemaLine.size()); // A filler cell is added.
     }
 
     @Test
