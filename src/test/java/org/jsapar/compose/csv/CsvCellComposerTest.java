@@ -17,11 +17,12 @@ import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings("rawtypes")
 public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_String() throws IOException {
-        CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
+        CsvSchemaCell schemaElement = CsvSchemaCell.builder("First name").build();
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name", "Jonas");
@@ -34,8 +35,9 @@ public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_String_ignorewrite() throws IOException {
-        CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
-        schemaElement.setIgnoreWrite(true);
+        CsvSchemaCell schemaElement = CsvSchemaCell.builder("First name")
+                .withIgnoreWrite(true)
+                .build();
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("First name", "Jonas");
@@ -47,7 +49,7 @@ public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_String_quoted_contains_separator() throws IOException {
-        CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
+        CsvSchemaCell schemaElement = CsvSchemaCell.builder("First name").build();
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "Here; we come");
@@ -60,7 +62,7 @@ public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_String_quoted_starts_with_quote() throws IOException {
-        CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
+        CsvSchemaCell schemaElement = CsvSchemaCell.builder("First name").build();
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "'Here we come");
@@ -72,7 +74,7 @@ public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_String_quote_not_used() throws IOException {
-        CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
+        CsvSchemaCell schemaElement = CsvSchemaCell.builder("First name").build();
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "Joho");
@@ -84,7 +86,7 @@ public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_Int() throws IOException {
-        CsvSchemaCell schemaElement = new CsvSchemaCell("Shoe size");
+        CsvSchemaCell schemaElement = CsvSchemaCell.builder("Shoe size").build();
 
         Writer writer = new StringWriter();
         Cell cell = new IntegerCell("Shoe size", 123);
@@ -96,7 +98,11 @@ public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_BigDecimal() throws IOException, SchemaException {
-        CsvSchemaCell schemaElement = new CsvSchemaCell("Money", CellType.DECIMAL, "#,###.##", new Locale("sv", "SE"));
+        CsvSchemaCell schemaElement = CsvSchemaCell.builder("Money")
+                .withType(CellType.DECIMAL)
+                .withPattern("#,###.##")
+                .withLocale(new Locale("sv", "SE"))
+                .build();
 
         Writer writer = new StringWriter();
         Cell cell = new BigDecimalCell("test", new BigDecimal("123456.59"));
@@ -109,7 +115,9 @@ public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_int_us() throws IOException, SchemaException {
-        CsvSchemaCell schemaElement = CsvSchemaCell.builder("Integer").withType(CellType.INTEGER).build();
+        CsvSchemaCell schemaElement = CsvSchemaCell.builder("Integer")
+                .withType(CellType.INTEGER)
+                .build();
 
         Writer writer = new StringWriter();
         Cell cell = new IntegerCell("Integer", 123456);
@@ -122,8 +130,9 @@ public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_Boolean() throws IOException, SchemaException {
-        CsvSchemaCell schemaElement = new CsvSchemaCell("Loves");
-        schemaElement.setCellFormat(CellType.BOOLEAN);
+        CsvSchemaCell schemaElement = CsvSchemaCell.builder("Loves")
+                .withType(CellType.BOOLEAN)
+                .build();
 
         Writer writer = new StringWriter();
         Cell cell = new BooleanCell("Loves", true);
@@ -135,7 +144,7 @@ public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_Replace() throws IOException, SchemaException {
-        CsvSchemaCell schemaElement = new CsvSchemaCell("Greeting");
+        CsvSchemaCell schemaElement = CsvSchemaCell.builder("Greeting").build();
 
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "With;-)love");
@@ -169,11 +178,12 @@ public class CsvCellComposerTest {
 
     @Test
     public final void testOutput_maxLength_replace() throws IOException {
-        CsvSchemaCell schemaElement = new CsvSchemaCell("First name");
-        schemaElement.setMaxLength(4);
+        CsvSchemaCell schemaCell = CsvSchemaCell.builder("First name")
+                .withMaxLength(4)
+                .build();
         Writer writer = new StringWriter();
         Cell cell = new StringCell("test", "J;-)onas");
-        CsvCellComposer composer = new CsvCellComposer(schemaElement, new NeverQuoteButReplace(4, ";-)", "\n", "*"));
+        CsvCellComposer composer = new CsvCellComposer(schemaCell, new NeverQuoteButReplace(4, ";-)", "\n", "*"));
         composer.compose(writer, cell);
 
         // Replaces ; with non breaking space.

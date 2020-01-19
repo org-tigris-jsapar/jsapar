@@ -15,27 +15,12 @@ import static org.junit.Assert.fail;
 
 public class CellFormatTest {
 
-    /**
-     * To be able to have a specific SchemaCell to test.
-     *
-     */
-    private class TestSchemaCell extends SchemaCell {
 
-
-        TestSchemaCell(String name) {
-            super(name);
-        }
-
-        TestSchemaCell(String name, CellType type, String pattern, Locale locale) {
-            super(name, type, pattern, locale);
-        }
-    }
-
-    
     @Test
     public void testFormat_emptyString_DefaultValue() throws SchemaException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
-        schemaCell.setDefaultValue("TheDefault");
+        SchemaCell schemaCell = StringSchemaCell.builder("test")
+                .withDefaultValue("TheDefault")
+                .build();
 
         Cell cell = new StringCell("Test", "");
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
@@ -44,8 +29,9 @@ public class CellFormatTest {
 
     @Test
     public void testFormat_empty_DefaultValue() throws SchemaException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
-        schemaCell.setDefaultValue("TheDefault");
+        SchemaCell schemaCell = StringSchemaCell.builder("test")
+                .withDefaultValue("TheDefault")
+                .build();
 
         Cell cell = new EmptyCell("Test", CellType.STRING);
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
@@ -54,7 +40,7 @@ public class CellFormatTest {
 
     @Test
     public void testFormat_empty_no_default()  {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
+        SchemaCell schemaCell = StringSchemaCell.builder("test").build();
 
         Cell cell = new EmptyCell("Test", CellType.STRING);
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
@@ -89,15 +75,15 @@ public class CellFormatTest {
 
     @Test
     public final void testFormat_date() throws ParseException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
-        schemaCell.setCellFormat(CellType.DATE, "yyyy-MM-dd HH:mm");
+        SchemaCell schemaCell = StringSchemaCell.builder("test")
+                .withType(CellType.DATE)
+                .withPattern("yyyy-MM-dd HH:mm")
+                .build();
+
         DateCellFactory cellFactory = new DateCellFactory();
-
         DateCell cell = (DateCell) cellFactory.makeCell("Name", "2007-10-01 14:13", schemaCell.getFormat());
-
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
         String value = format.format(cell);
-
 
         assertEquals("2007-10-01 14:13", value);
     }
@@ -105,7 +91,7 @@ public class CellFormatTest {
 
     @Test
     public void testFormat() throws SchemaException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test");
+        SchemaCell schemaCell = StringSchemaCell.builder("test").build();
 
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
         String value = format.format(new StringCell("test","A"));
@@ -114,7 +100,11 @@ public class CellFormatTest {
 
     @Test
     public void testFormat_Regexp() throws SchemaException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test", CellType.STRING, "A|B", new Locale("sv","SE"));
+        SchemaCell schemaCell = StringSchemaCell.builder("test")
+                .withType(CellType.STRING)
+                .withPattern("A|B")
+                .withLocale("sv", "SE")
+                .build();
 
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
         String value = format.format(new StringCell("test","A"));
@@ -123,7 +113,11 @@ public class CellFormatTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testFormat_Regexp_fail() throws SchemaException {
-        TestSchemaCell schemaCell = new TestSchemaCell("test", CellType.STRING, "A|B", new Locale("sv","SE"));
+        SchemaCell schemaCell = StringSchemaCell.builder("test")
+                .withType(CellType.STRING)
+                .withPattern("A|B")
+                .withLocale("sv", "SE")
+                .build();
 
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
         format.format(new StringCell("test","C"));

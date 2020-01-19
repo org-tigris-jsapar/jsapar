@@ -6,7 +6,6 @@ import org.jsapar.error.ValidationAction;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.parse.LineParseException;
-import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.QuoteSyntax;
 import org.jsapar.schema.SchemaException;
@@ -16,8 +15,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 
@@ -241,10 +238,10 @@ public class CsvLineParserTest {
 
     @Test
     public void testParse_withNames() throws IOException {
-        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
-        schemaLine.setCellSeparator(";-)");
-        schemaLine.addSchemaCell(new CsvSchemaCell("0"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("1"));
+        CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
+                .withCellSeparator(";-)")
+                .withCells("0","1")
+                .build();
 
         String sLine = "Jonas;-)Stenberg";
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), line -> {
@@ -258,14 +255,11 @@ public class CsvLineParserTest {
 
     @Test
     public void testParse_maxLength() throws IOException {
-        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
-        schemaLine.setCellSeparator(";");
-        CsvSchemaCell schemaFirstName = new CsvSchemaCell("0");
-        schemaFirstName.setMaxLength(15);
-        schemaLine.addSchemaCell(schemaFirstName);
-        CsvSchemaCell schemaLastName = new CsvSchemaCell("1");
-        schemaLastName.setMaxLength(5);
-        schemaLine.addSchemaCell(schemaLastName);
+        CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
+                .withCellSeparator(";")
+                .withCell("0", c->c.withMaxLength(15))
+                .withCell("1", c->c.withMaxLength(5))
+                .build();
 
         String sLine = "Jonas;Stenberg";
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), line -> {
@@ -279,20 +273,19 @@ public class CsvLineParserTest {
 
     @Test
     public void testParse_withDefault() throws IOException, SchemaException {
-        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
-        schemaLine.setCellSeparator(";-)");
-        schemaLine.addSchemaCell(new CsvSchemaCell("0"));
-        CsvSchemaCell happyCell = new CsvSchemaCell("Happy");
-        happyCell.setDefaultValue("yes");
-        schemaLine.addSchemaCell(happyCell);
-        schemaLine.addSchemaCell(new CsvSchemaCell("2"));
+        CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
+                .withCellSeparator(";-)")
+                .withCell("0")
+                .withCell("1", c->c.withDefaultValue("yes"))
+                .withCell("2")
+                .build();
 
         String sLine = "Jonas;-);-)Stenberg";
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), line -> {
             
             assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
+            assertEquals("yes", LineUtils.getStringCellValue(line, "1"));
             assertEquals("Stenberg", LineUtils.getStringCellValue(line, "2"));
-            assertEquals("yes", LineUtils.getStringCellValue(line, "Happy"));
         }, new ExceptionErrorConsumer());
         assertTrue(rc);
 
@@ -300,14 +293,12 @@ public class CsvLineParserTest {
 
     @Test
     public void testParse_default_and_mandatory() throws IOException, SchemaException {
-        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
-        schemaLine.setCellSeparator(";-)");
-        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
-        CsvSchemaCell happyCell = new CsvSchemaCell("Happy");
-        happyCell.setDefaultValue("yes");
-        happyCell.setMandatory(true);
-        schemaLine.addSchemaCell(happyCell);
-        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+        CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
+                .withCellSeparator(";-)")
+                .withCell("First Name")
+                .withCell("Happy", c->c.withDefaultValue("yes").withMandatory(true))
+                .withCell("Last Name")
+                .build();
 
         String sLine = "Jonas;-);-)Stenberg";
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), line -> {
@@ -325,13 +316,12 @@ public class CsvLineParserTest {
 
     @Test
     public void testParse_withDefaultLast() throws IOException, SchemaException {
-        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
-        schemaLine.setCellSeparator(";-)");
-        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
-        CsvSchemaCell happyCell = new CsvSchemaCell("Happy");
-        happyCell.setDefaultValue("yes");
-        schemaLine.addSchemaCell(happyCell);
+        CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
+                .withCellSeparator(";-)")
+                .withCell("First Name")
+                .withCell("Last Name")
+                .withCell("Happy", c->c.withDefaultValue("yes"))
+                .build();
 
         String sLine = "Jonas;-)Stenberg";
         boolean rc = new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), line -> {
@@ -346,11 +336,10 @@ public class CsvLineParserTest {
 
     @Test(expected = LineParseException.class)
     public void testParse_exceptionOnInsufficient() throws IOException {
-        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
-        schemaLine.setCellSeparator(";-)");
-        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("Happy"));
+        CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
+                .withCellSeparator(";-)")
+                .withCells("First Name", "Last Name", "Happy")
+                .build();
 
         String sLine = "Jonas;-)Stenberg";
         TextParseConfig config = new TextParseConfig();
@@ -363,10 +352,10 @@ public class CsvLineParserTest {
 
     @Test(expected = LineParseException.class)
     public void testParse_exceptionOnOverflow() throws IOException {
-        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
-        schemaLine.setCellSeparator(";-)");
-        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
+        CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
+                .withCellSeparator(";-)")
+                .withCells("First Name", "Last Name")
+                .build();
 
         String sLine = "Jonas;-)Stenberg;-)Some other";
         TextParseConfig config = new TextParseConfig();
@@ -380,13 +369,12 @@ public class CsvLineParserTest {
 
     @Test(expected = CellParseException.class)
     public void testParse_withMandatoryLast() throws IOException {
-        CsvSchemaLine schemaLine = new CsvSchemaLine(1);
-        schemaLine.setCellSeparator(";-)");
-        schemaLine.addSchemaCell(new CsvSchemaCell("First Name"));
-        schemaLine.addSchemaCell(new CsvSchemaCell("Last Name"));
-        CsvSchemaCell happyCell = new CsvSchemaCell("Happy");
-        happyCell.setMandatory(true);
-        schemaLine.addSchemaCell(happyCell);
+        CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
+                .withCellSeparator(";-)")
+                .withCell("First Name")
+                .withCell("Last Name")
+                .withCell("Happy", c->c.withMandatory(true))
+                .build();
 
         String sLine = "Jonas;-)Stenberg";
         new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), line -> fail("Expects an error"), new ExceptionErrorConsumer());

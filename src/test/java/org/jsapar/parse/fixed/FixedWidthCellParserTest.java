@@ -27,8 +27,9 @@ public class FixedWidthCellParserTest {
     @Test
     public final void testBuild() throws IOException, JSaParException {
         String toParse = "   Jonas   ";
-        FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
-        schemaCell.setAlignment(FixedWidthSchemaCell.Alignment.CENTER);
+        FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("First name", 11)
+                .withAlignment(FixedWidthSchemaCell.Alignment.CENTER)
+                .build();
 
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
         Cell cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer());
@@ -54,8 +55,9 @@ public class FixedWidthCellParserTest {
     @Test
     public final void testBuildEmptyMandatory() throws IOException {
         String toParse = "           ";
-        FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
-        schemaCell.setMandatory(true);
+        FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("First name", 11)
+                .withMandatory(true)
+                .build();
 
         try {
             FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
@@ -70,7 +72,8 @@ public class FixedWidthCellParserTest {
     @Test
     public final void testBuildEmptyOptional() throws IOException {
         String toParse = "           ";
-        FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("First name", 11);
+        FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("First name", 11)
+                .build();
 
         Cell cell;
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
@@ -82,8 +85,9 @@ public class FixedWidthCellParserTest {
     @Test
     public final void testBuildEmptyOptionalInteger() throws IOException {
         String toParse = "           ";
-        FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("ShoeSize", 11);
-        schemaCell.setCellFormat(CellType.INTEGER);
+        FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("ShoeSize", 11)
+                .withType(CellType.INTEGER)
+                .build();
 
         Cell cell;
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
@@ -95,10 +99,11 @@ public class FixedWidthCellParserTest {
     @Test
     public final void testBuildEmptyOptionalInteger_padZero() throws IOException {
         String toParse = "           ";
-        FixedWidthSchemaCell schemaCell = new FixedWidthSchemaCell("ShoeSize", 11);
-        schemaCell.setCellFormat(CellType.INTEGER);
-        schemaCell.setPadCharacter('0');
-        schemaCell.setDefaultValue("42");
+        FixedWidthSchemaCell schemaCell = FixedWidthSchemaCell.builder("ShoeSize", 11)
+                .withType(CellType.INTEGER)
+                .withPadCharacter('0')
+                .withDefaultValue("42")
+                .build();
 
         Cell cell;
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
