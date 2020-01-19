@@ -271,6 +271,16 @@ public class BeanMap {
             return this;
         }
 
+        /**
+         * Associates a cell with a bean property when the bean property name and the cell name are the same.
+         * @param propertyName The bean property and also the cell name. Use dot notation to access sub-properties. E.g. address.street will
+         *                     refer to the property accessed with the getter chain getAddress().getStreet().
+         * @return This builder instance.
+         */
+        public BeanPropertyMapBuilder withCell(String propertyName){
+            return withCell(propertyName, propertyName);
+        }
+
         private BeanPropertyMap build(){
             return BeanPropertyMap.ofClass(beanClass, lineType, cellNamesOfProperty);
         }

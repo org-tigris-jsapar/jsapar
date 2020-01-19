@@ -77,8 +77,8 @@ public class Bean2TextConverterTest {
         ) {
             CsvSchema composeSchema = CsvSchema.builder()
                     .withLineSeparator("|")
-                    .withLine( CsvSchemaLine.builder("Person")
-                            .withCells("firstName", "lastName")
+                    .withLine( CsvSchemaLine.builder("Person") // Not the same as class name
+                            .withCells("firstName", "lastName") // ...but cell names are the same as property names.
                             .withCellSeparator(";")
                             .build())
                     .build();
