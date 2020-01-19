@@ -15,20 +15,29 @@ import java.util.function.Function;
  * A class that defines the mapping
  * <ol><li>Between the bean class and the line type</li>
  * <li>Between each bean property and the cell name</li></ol>
- * Instances can be created either from a schema, from an xml file or from one or several annotated classes.
+ * Instances can be created in several ways:
+ * <ol>
+ *     <li>By using a builder, see {@link #builder()}</li>
+ *     <li>From a schema if schema already contains class names and correct property names, see {@link #ofSchema(Schema)}</li>
+ *     <li>From a schema but with overridden values if any of the class names or properties differs from the schema, see {@link #ofSchema(Schema, BeanMap)}</li>
+ *     <li>From an xml file, see {@link #ofXml(Reader)}</li>
+ *     <li>From an annotated class, see {@link #ofClass(Class)}, and {@link #ofClasses(List)}</li>
+ * </ol>
+ * either from a schema, from an xml file or from one or several annotated classes.
  * @see JSaParLine
  * @see JSaParCell
  * @see JSaParContainsCells
  */
+@SuppressWarnings("ClassEscapesDefinedScope")
 public class BeanMap {
 
-    private Map<Class, BeanPropertyMap>  beanPropertyMap           = new HashMap<>();
+    private Map<Class<?>, BeanPropertyMap>  beanPropertyMap           = new HashMap<>();
     private Map<String, BeanPropertyMap> beanPropertyMapByLineType = new HashMap<>();
 
-    public BeanMap() {
+    private BeanMap() {
     }
 
-    public BeanMap(Builder builder) {
+    private BeanMap(Builder builder) {
         builder.beanPropertyMaps.forEach(m->putBean2Line(m.getLineClass(), m));
     }
 
@@ -41,7 +50,7 @@ public class BeanMap {
         BeanPropertyMap beanPropertyMap = this.beanPropertyMap.get(aClass);
         if (beanPropertyMap != null)
             return Optional.of(beanPropertyMap);
-        final Class superClass = aClass.getSuperclass();
+        final Class<?> superClass = aClass.getSuperclass();
         if (superClass == null || superClass == Object.class)
             return Optional.empty();
         return getBeanPropertyMap(superClass);
@@ -93,12 +102,12 @@ public class BeanMap {
     public static <C> BeanMap ofClasses(List<Class<C> > classes) {
         BeanMap beanMap = new BeanMap();
 
-        for (Class c : classes) {
+        for (Class<?> c : classes) {
             if (!c.isAnnotationPresent(JSaParLine.class))
                 throw new BeanException(
                         "The class " + c.getName() + " needs to have the annotation " + JSaParLine.class.getSimpleName()
                                 + ". Unable to create bean map.");
-            JSaParLine lineAnnotation = (JSaParLine) c.getAnnotation(JSaParLine.class);
+            JSaParLine lineAnnotation = c.getAnnotation(JSaParLine.class);
             beanMap.putBean2Line(c, BeanPropertyMap.ofClass(c, lineAnnotation.lineType()));
         }
         return beanMap;
@@ -106,7 +115,7 @@ public class BeanMap {
 
     /**
      * Creates a BeanMap instance based on an annotated class. The provided class needs to have the
-     * annotation {@link JSaParLine} and only attributes annotated with {@link JSaParCell} will be mapped to the schema
+     * annotation {@link JSaParLine} and only properties annotated with {@link JSaParCell} will be mapped to the schema
      * values.
      * @param lineClass The annotated class.
      * @return A newly created BeanMap instance.
@@ -189,27 +198,57 @@ public class BeanMap {
         return builder.build(reader);
     }
 
+    /**
+     * @return A newly created builder that builds a BeanMap instance.
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
 
+    /**
+     * Builder class that builds BeanMap instances.
+     */
     public static class Builder{
         List<BeanPropertyMap> beanPropertyMaps = new ArrayList<>();
         private Builder() {
         }
 
+        /**
+         * Maps a line type to a bean class but completely without cells. This is only useful if this BeanMap instance
+         * is to be used as override values for another BeanMap instance by using {@link BeanMap#ofSchema(Schema, BeanMap)}.
+         * @param lineType  The line type type map to.
+         * @param beanClass The bean class to map to.
+         * @return This builder instance.
+         */
         public Builder withLine(String lineType, Class<?> beanClass){
             return withLine(lineType, beanClass, l->l);
         }
 
+        /**
+         * Maps a line type to a bean class.
+         * @param lineType  The line type type map to.
+         * @param beanClass The bean class to map to.
+         * @param builderHandler A function that should prepare a {@link BeanPropertyMapBuilder} instance with cells.
+         * @return This builder instance.
+         */
         public Builder withLine(String lineType, Class<?> beanClass, Function<BeanPropertyMapBuilder, BeanPropertyMapBuilder> builderHandler){
             beanPropertyMaps.add(builderHandler.apply(new BeanPropertyMapBuilder(lineType, beanClass)).build());
             return this;
         }
 
+        /**
+         * Creates the actual BeanMap.
+         * @return A newly created BeanMap by using this builder.
+         */
         public BeanMap build(){
             return new BeanMap(this);
         }
 
     }
 
+    /**
+     * Builder class that associates cells with bean properties.
+     */
     public static class BeanPropertyMapBuilder {
         private final String lineType;
         private final Class<?> beanClass;
@@ -220,6 +259,13 @@ public class BeanMap {
             this.beanClass = beanClass;
         }
 
+        /**
+         * Associates a cell with a bean property
+         * @param cellName The name of cell.
+         * @param propertyName The bean property. Use dot notation to access sub-properties. E.g. address.street will
+         *                     refer to the property accessed with the getter chain getAddress().getStreet().
+         * @return This builder instance.
+         */
         public BeanPropertyMapBuilder withCell(String cellName, String propertyName){
             cellNamesOfProperty.put(propertyName, cellName);
             return this;

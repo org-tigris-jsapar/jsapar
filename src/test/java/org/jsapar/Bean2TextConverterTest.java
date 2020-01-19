@@ -1,5 +1,6 @@
 package org.jsapar;
 
+import org.jsapar.bean.BeanMap;
 import org.jsapar.model.Cell;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchema;
@@ -37,6 +38,68 @@ public class Bean2TextConverterTest {
         }
 
     }
+
+    @Test
+    public void convert_BeanMap() throws IOException {
+        Collection<TstPerson> people = makePeople();
+        try (StringWriter writer = new StringWriter()
+        ) {
+            CsvSchema composeSchema = CsvSchema.builder()
+                    .withLineSeparator("|")
+                    .withLine( CsvSchemaLine.builder("Person")
+                            .withCells("First Name", "Last Name")
+                            .withCellSeparator(";")
+                            .build())
+                    .build();
+
+            BeanMap beanMap= BeanMap.builder()
+                    .withLine("Person", TstPerson.class, l->l
+                            .withCell("First Name", "firstName")
+                            .withCell("Last Name", "lastName"))
+                    .build();
+
+            Bean2TextConverter<TstPerson> converter = new Bean2TextConverter<>(composeSchema, beanMap, writer);
+            for (TstPerson person : people) {
+                assertTrue(converter.convert(person));
+            }
+
+            String result = writer.toString();
+            assertEquals("Nisse;Holgersson|Jonte;Lionheart", result);
+            String[] lines = result.split(Pattern.quote(composeSchema.getLineSeparator()));
+            assertEquals(2, lines.length);
+        }
+    }
+
+    @Test
+    public void convert_BeanMap_cellsBySchema_linesByBeanMap() throws IOException {
+        Collection<TstPerson> people = makePeople();
+        try (StringWriter writer = new StringWriter()
+        ) {
+            CsvSchema composeSchema = CsvSchema.builder()
+                    .withLineSeparator("|")
+                    .withLine( CsvSchemaLine.builder("Person")
+                            .withCells("firstName", "lastName")
+                            .withCellSeparator(";")
+                            .build())
+                    .build();
+
+            BeanMap beanMap = BeanMap.ofSchema(composeSchema, BeanMap.builder()
+                    .withLine("Person", TstPerson.class
+                    ).build());
+
+            Bean2TextConverter<TstPerson> converter = new Bean2TextConverter<>(composeSchema, beanMap, writer);
+            for (TstPerson person : people) {
+                assertTrue(converter.convert(person));
+            }
+
+            String result = writer.toString();
+            assertEquals("Nisse;Holgersson|Jonte;Lionheart", result);
+            String[] lines = result.split(Pattern.quote(composeSchema.getLineSeparator()));
+            assertEquals(2, lines.length);
+        }
+
+    }
+
 
     @Test
     public void addLineManipulator() throws IOException {
