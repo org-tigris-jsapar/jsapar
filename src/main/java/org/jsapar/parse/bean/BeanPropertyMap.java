@@ -104,7 +104,7 @@ public class BeanPropertyMap {
                         : makeFieldEntryStream(f.getType(), prefix + f.getName() + '.'));
     }
 
-    private static BeanPropertyMap ofClass(Class lineClass, String lineType, Map<String, String> cellNamesOfProperty)  {
+    public static BeanPropertyMap ofClass(Class lineClass, String lineType, Map<String, String> cellNamesOfProperty)  {
         BeanPropertyMap beanPropertyMap = new BeanPropertyMap(lineType, lineClass);
 
         Map<String, PropertyDescriptor> descriptors = beanPropertyMap.beanInfo.getPropertyDescriptorsByName();
@@ -175,4 +175,5 @@ public class BeanPropertyMap {
     public int size() {
         return this.bean2CellByCellName.size();
     }
+
 }

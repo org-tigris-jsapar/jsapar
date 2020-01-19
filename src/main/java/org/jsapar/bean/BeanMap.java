@@ -9,6 +9,7 @@ import org.jsapar.schema.SchemaLine;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * A class that defines the mapping
@@ -23,6 +24,13 @@ public class BeanMap {
 
     private Map<Class, BeanPropertyMap>  beanPropertyMap           = new HashMap<>();
     private Map<String, BeanPropertyMap> beanPropertyMapByLineType = new HashMap<>();
+
+    public BeanMap() {
+    }
+
+    public BeanMap(Builder builder) {
+        builder.beanPropertyMaps.forEach(m->putBean2Line(m.getLineClass(), m));
+    }
 
     /**
      * @param aClass The class to get a {@link BeanPropertyMap} for.
@@ -181,5 +189,46 @@ public class BeanMap {
         return builder.build(reader);
     }
 
+
+    public static class Builder{
+        List<BeanPropertyMap> beanPropertyMaps = new ArrayList<>();
+        private Builder() {
+        }
+
+        public Builder withLine(String lineType, Class<?> beanClass){
+            return withLine(lineType, beanClass, l->l);
+        }
+
+        public Builder withLine(String lineType, Class<?> beanClass, Function<BeanPropertyMapBuilder, BeanPropertyMapBuilder> builderHandler){
+            beanPropertyMaps.add(builderHandler.apply(new BeanPropertyMapBuilder(lineType, beanClass)).build());
+            return this;
+        }
+
+        public BeanMap build(){
+            return new BeanMap(this);
+        }
+
+    }
+
+    public static class BeanPropertyMapBuilder {
+        private final String lineType;
+        private final Class<?> beanClass;
+        private final Map<String, String> cellNamesOfProperty = new HashMap<>();
+
+        private BeanPropertyMapBuilder(String lineType, Class<?> beanClass) {
+            this.lineType = lineType;
+            this.beanClass = beanClass;
+        }
+
+        public BeanPropertyMapBuilder withCell(String cellName, String propertyName){
+            cellNamesOfProperty.put(propertyName, cellName);
+            return this;
+        }
+
+        private BeanPropertyMap build(){
+            return BeanPropertyMap.ofClass(beanClass, lineType, cellNamesOfProperty);
+        }
+
+    }
 
 }
