@@ -31,8 +31,8 @@ class CsvLineParserMatcher {
         for (CsvSchemaCell schemaCell : schemaLine.getSchemaCells()) {
             if (schemaCell.hasLineCondition()) {
                 controlCells.add(new CsvControlCell(pos, schemaCell));
+                maxControlPos = pos;
             }
-            maxControlPos = pos;
             pos++;
         }
     }
