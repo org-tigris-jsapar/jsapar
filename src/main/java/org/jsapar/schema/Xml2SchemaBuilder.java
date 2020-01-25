@@ -272,7 +272,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         return cellBuilder;
     }
 
-    private void assignTextSchemaBase(TextSchema.Builder<?,?,?> schemaBuilder, Element xmlSchema, Consumer<Element> applyToEachLine) throws SchemaException {
+    private void assignTextSchemaBase(Schema.Builder<?,?,?> schemaBuilder, Element xmlSchema, Consumer<Element> applyToEachLine) throws SchemaException {
         parseAttribute(xmlSchema, ATTRIB_SCHEMA_LINESEPARATOR)
                 .map(StringUtils::replaceEscapes2Java)
                 .ifPresent(schemaBuilder::withLineSeparator);

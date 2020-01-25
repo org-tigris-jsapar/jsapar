@@ -7,11 +7,9 @@
             <xsd:choice>
                 <xsd:element name="csvschema" type="CsvSchema"/>
                 <xsd:element name="fixedwidthschema" type="FixedWidthSchema"/>
-                <xsd:element name="stringschema" type="StringSchema"/>
             </xsd:choice>
         </xsd:complexType>
     </xsd:element>
-
     <xsd:complexType name="Schema">
     <xsd:sequence>
     	<xsd:element minOccurs="0" name="locale"
@@ -23,28 +21,18 @@
     		</xsd:annotation>
     	</xsd:element>
     </xsd:sequence>
+    <xsd:attribute name="lineseparator" type="xsd:string" >
+      <xsd:annotation>
+        <xsd:documentation>A sequence of characters that separates each line. Default is the system default line
+            separator characters. To specify control characters, use either xml syntax e.g. &amp;#13; for LF and &amp;#10; for CR or
+            java notation such as '\n' for LF or '\r' for CR.
+            When parsing, if one of either '\r\n' or '\n' is specified as line separator, both both will be regarded as
+            line separator anyway. When composing, the specified sequence will be used.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
   </xsd:complexType>
-
-    <xsd:complexType name="TextSchema">
-        <xsd:complexContent mixed="false">
-            <xsd:extension base="Schema">
-                <xsd:sequence>
-                </xsd:sequence>
-                <xsd:attribute name="lineseparator" type="xsd:string">
-                    <xsd:annotation>
-                        <xsd:documentation>A sequence of characters that separates each line. Default is the system
-                            default line separator characters. To specify control characters, use either xml syntax e.g. &amp;#13;
-                            for LF and &amp;#10; for CR or java notation such as '\n' for LF or '\r' for CR.
-                            When parsing, if one of either '\r\n' or '\n' is specified as line separator, both both will be regarded as
-                            line separator anyway. When composing, the specified sequence will be used.
-                        </xsd:documentation>
-                    </xsd:annotation>
-                </xsd:attribute>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
-
-    <xsd:complexType name="SchemaLine">
+  <xsd:complexType name="SchemaLine">
     <xsd:attribute name="occurs">
       <xsd:annotation>
         <xsd:documentation>
@@ -244,23 +232,13 @@
 
     <xsd:complexType name="FixedWidthSchema">
     <xsd:complexContent mixed="false">
-      <xsd:extension base="TextSchema">
+      <xsd:extension base="Schema">
         <xsd:sequence maxOccurs="unbounded">
           <xsd:element maxOccurs="unbounded" name="line" type="FixedWidthSchemaLine" />
         </xsd:sequence>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-
-    <xsd:complexType name="StringSchema">
-        <xsd:complexContent mixed="false">
-            <xsd:extension base="Schema">
-                <xsd:sequence maxOccurs="unbounded">
-                    <xsd:element maxOccurs="unbounded" name="line" type="StringSchemaLine" />
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
 
   <xsd:complexType name="FixedWidthSchemaLine">
     <xsd:complexContent mixed="false">
@@ -288,16 +266,6 @@ If the sum of the length of the cells is less than this minlength then the line 
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
-
-    <xsd:complexType name="StringSchemaLine">
-        <xsd:complexContent mixed="false">
-            <xsd:extension base="SchemaLine">
-                <xsd:sequence maxOccurs="unbounded">
-                    <xsd:element name="cell" type="SchemaCell" />
-                </xsd:sequence>
-            </xsd:extension>
-        </xsd:complexContent>
-    </xsd:complexType>
 
   <xsd:complexType name="FixedWidthSchemaCell">
   	<xsd:complexContent mixed="false">
@@ -355,7 +323,7 @@ If the sum of the length of the cells is less than this minlength then the line 
   </xsd:complexType>
   <xsd:complexType name="CsvSchema">
     <xsd:complexContent mixed="false">
-      <xsd:extension base="TextSchema">
+      <xsd:extension base="Schema">
         <xsd:sequence minOccurs="0" maxOccurs="unbounded">
           <xsd:element name="line" type="CsvSchemaLine" />
         </xsd:sequence>

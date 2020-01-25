@@ -20,6 +20,8 @@ import java.util.stream.Stream;
  */
 public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> implements Cloneable, Iterable<L>{
 
+    private String lineSeparator = System.getProperty("line.separator");
+
     @Deprecated
     public Schema() {
     }
@@ -30,6 +32,7 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
     private LinkedHashMap<String, L> schemaLines = new LinkedHashMap<>();
 
     <S extends Schema<L>, B extends Schema.Builder<L, S, B>> Schema(Builder<L, S, B> builder) {
+        this.lineSeparator = builder.lineSeparator;
         for (L schemaLine : builder.schemaLines) {
             this.addSchemaLine(schemaLine);
         }
@@ -38,6 +41,7 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
 
     @SuppressWarnings("unchecked")
     public abstract static class Builder<L extends SchemaLine<? extends SchemaCell>, S extends Schema<L>, B extends Schema.Builder<L, S, B>> {
+        private String lineSeparator = System.getProperty("line.separator");
         private List<L> schemaLines = new ArrayList<>();
         private Locale defaultLocale = SchemaCellFormat.defaultLocale;
 
@@ -46,6 +50,16 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
 
         Builder(Schema<L> schema) {
             this.schemaLines.addAll(schema.schemaLines.values());
+        }
+
+        /**
+         * @param lineSeparator  Line separator string. Default value is the system default
+         *                       (Retrieved by {@code System.getProperty("line.separator")}).
+         * @return This builder instance.
+         */
+        public B withLineSeparator(String lineSeparator){
+            this.lineSeparator = lineSeparator;
+            return (B)this;
         }
 
 
@@ -102,20 +116,23 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
     }
 
     /**
-     * Deprecated. Only TextSchema should provide line separator. Provided for backward compatibility.
+     * Line separator string. Default value is the system default (Retrieved by
+     * {@code System.getProperty("line.separator")}).
      * @return the lineSeparator
      */
     public String getLineSeparator() {
-        throw new IllegalStateException("Not possible to get line separator unless schema is of type TextSchema.");
+        return lineSeparator;
     }
 
     /**
+     * Sets the line separator string. Default value is the system default (Retrieved by
+     * {@code System.getProperty("line.separator")}).
      *
-     * Deprecated. Only TextSchema should provide line separator. Provided for backward compatibility.
      * @param lineSeparator
      *            the lineSeparator to set.
      */
     public void setLineSeparator(String lineSeparator) {
+        this.lineSeparator = lineSeparator;
     }
 
 
@@ -141,7 +158,7 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
      */
     @Override
     public String toString() {
-        return " schemaLines=" + this.schemaLines;
+        return " lineSeparator='" + StringUtils.replaceJava2Escapes(this.lineSeparator) + "' schemaLines=" + this.schemaLines;
     }
 
     /**
