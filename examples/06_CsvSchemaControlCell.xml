@@ -2,13 +2,13 @@
 <schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd">
-  <csvschema lineseparator="\n" quotesyntax="RFC4180">
-    <line linetype="Header" cellseparator=";" quotechar="NONE">
+  <csvschema lineseparator="\n" quotesyntax="RFC4180" cellseparator=";">
+    <line linetype="Header" quotechar="NONE">
       <cell name="Type" default="H"><linecondition><match pattern="H"/></linecondition></cell>
       <cell name="FileName"/>
       <cell name="Created date"/>
     </line>
-    <line occurs="*" linetype="Person" cellseparator=";">
+    <line occurs="*" linetype="Person" >
       <cell name="Type" default="B" ><linecondition><match pattern="B"/></linecondition></cell>
       <cell name="First name" quotebehavior="ALWAYS"/>
       <cell name="Middle name" />
@@ -16,7 +16,7 @@
 <!--      <cell name="gender" ><format type="string" pattern="M|F"/> </cell>-->
       <cell name="gender" ><format type="enum" pattern="org.jsapar.TstGender"/> </cell>
     </line>
-    <line linetype="Footer" cellseparator=";">
+    <line linetype="Footer" >
       <cell name="Type" default="F"><linecondition><equals value="F" ignorecase="true"/></linecondition></cell>
       <cell name="Rowcount"/>
     </line>

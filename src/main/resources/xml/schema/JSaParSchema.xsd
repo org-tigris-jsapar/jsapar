@@ -327,6 +327,14 @@ If the sum of the length of the cells is less than this minlength then the line 
         <xsd:sequence minOccurs="0" maxOccurs="unbounded">
           <xsd:element name="line" type="CsvSchemaLine" />
         </xsd:sequence>
+
+        <xsd:attribute name="cellseparator" type="xsd:string">
+              <xsd:annotation>
+                  <xsd:documentation>
+                      A sequence of characters that are used to delimit each cell of all lines that does not have different cell separator specified.
+                  </xsd:documentation>
+              </xsd:annotation>
+        </xsd:attribute>
         <xsd:attribute name="quotesyntax" default="FIRST_LAST">
                     <xsd:annotation>
                       <xsd:documentation>Specifies the syntax while parsing and composing of quoted cells.

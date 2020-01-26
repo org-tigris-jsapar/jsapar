@@ -220,6 +220,11 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
             return this;
         }
 
+        public Builder applyDefaultsFrom(CsvSchema.Builder schemaBuilder) {
+            super.applyDefaultsFrom(schemaBuilder);
+            return withCellSeparator(schemaBuilder.getDefaultCellSeparator());
+        }
+
         @Override
         public CsvSchemaLine build() {
             return new CsvSchemaLine(this);

@@ -211,6 +211,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
                 .map(QuoteSyntax::valueOf)
                 .ifPresent(schemaBuilder::withQuoteSyntax);
 
+        parseAttribute(xmlSchema, ATTRIB_CSV_SCHEMA_CELL_SEPARATOR)
+                .map(StringUtils::replaceEscapes2Java)
+                .ifPresent(schemaBuilder::withDefaultCellSeparator);
+
         assignTextSchemaBase(schemaBuilder, xmlSchema, xmlSchemaLine->buildCsvSchemaLine(schemaBuilder, xmlSchemaLine));
     }
 

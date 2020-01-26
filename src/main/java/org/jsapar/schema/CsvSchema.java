@@ -44,6 +44,7 @@ public class CsvSchema extends Schema<CsvSchemaLine> implements Cloneable{
 
     public static class Builder extends Schema.Builder<CsvSchemaLine, CsvSchema, Builder>{
         private QuoteSyntax quoteSyntax = QuoteSyntax.FIRST_LAST;
+        private String defaultCellSeparator = ";";
 
         private Builder(){
         }
@@ -72,9 +73,25 @@ public class CsvSchema extends Schema<CsvSchemaLine> implements Cloneable{
             return this.withLine(lineBuilderHandler.apply(CsvSchemaLine.builder(lineType).applyDefaultsFrom(this)).build());
         }
 
+        /**
+         * Using this method to set a default cell separator unless the defaults are applied to each line
+         * builder that is supposed to use this value. The default cell separator will not be assigned to the schema but only
+         * used during building phase.
+         * @param cellSeparator  The cell separator to use by default. Default is ";"
+         * @return This builder instance.
+         */
+        public Builder withDefaultCellSeparator(String cellSeparator){
+            this.defaultCellSeparator = cellSeparator;
+            return this;
+        }
+
         @Override
         public CsvSchema build() {
             return new CsvSchema(this);
+        }
+
+        public String getDefaultCellSeparator() {
+            return defaultCellSeparator;
         }
     }
     
