@@ -17,7 +17,7 @@
       <cell name="gender" ><format type="enum" pattern="org.jsapar.TstGender"/> </cell>
     </line>
     <line linetype="Footer" cellseparator=";">
-      <cell name="Type" default="F"><linecondition><match pattern="F"/></linecondition></cell>
+      <cell name="Type" default="F"><linecondition><equals value="F" ignorecase="true"/></linecondition></cell>
       <cell name="Rowcount"/>
     </line>
   </csvschema>

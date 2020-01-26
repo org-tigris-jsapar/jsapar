@@ -439,6 +439,12 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
             String pattern = getAttributeValue(xmlMatch, ATTRIB_PATTERN);
             return new MatchingCellValueCondition(pattern);
         }
+        Element xmlEqual = getChild(xmlCellValueCondition, "equals");
+        if(xmlEqual != null){
+            boolean ignoreCase = parseBooleanAttribute(xmlEqual, "ignorecase").orElse(false);
+            String value = getAttributeValue(xmlEqual, "value");
+            return ignoreCase ? value::equalsIgnoreCase : value::equals;
+        }
         throw new SchemaException("Expected line condition is missing");
     }
 

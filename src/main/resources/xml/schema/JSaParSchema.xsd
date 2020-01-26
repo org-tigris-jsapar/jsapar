@@ -476,15 +476,27 @@ Available since 2.0</xsd:documentation>
   <xsd:complexType name="CellValueCondition">
   	<xsd:choice>
         <xsd:element name="match" type="CellRegex"/>
+        <xsd:element name="equals" type="CellEquals"/>
   	</xsd:choice>
   </xsd:complexType>
 
   <xsd:complexType name="CellRegex">
-      <xsd:attribute name="pattern" type="xsd:string">
+      <xsd:attribute name="pattern" type="xsd:string" use="required">
       	<xsd:annotation>
       		<xsd:documentation>Regular expression pattern that needs to match the content of the cell.</xsd:documentation>
       	</xsd:annotation></xsd:attribute>
   </xsd:complexType>
+
+    <xsd:complexType name="CellEquals">
+        <xsd:attribute name="value" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>The value that the cell value that needs to be equal to.</xsd:documentation>
+            </xsd:annotation></xsd:attribute>
+        <xsd:attribute name="ignorecase" type="xsd:boolean" default="false">
+            <xsd:annotation>
+                <xsd:documentation>If true, ignore case.</xsd:documentation>
+            </xsd:annotation></xsd:attribute>
+    </xsd:complexType>
 
   <xsd:simpleType name="QuoteBehaviorType">
         <xsd:annotation>
