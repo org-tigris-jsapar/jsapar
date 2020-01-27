@@ -27,7 +27,7 @@ public class EnumFormat<E extends Enum<E> > implements Format<E> {
         this.enumClass = enumClass;
         this.ignoreCase = ignoreCase;
         Arrays.stream(enumClass.getEnumConstants())
-                .forEach(v -> putEnumValue(v.name(), v));
+                .forEach(v -> putEnumValueIfAbsent(v.name(), v));
     }
 
     private EnumFormat(Builder<E> builder) {
