@@ -80,5 +80,9 @@ public class CsvLineParserMatcherTest {
         public boolean lastLineWasEmpty() {
             return false;
         }
+
+        @Override
+        public void skipLine() {
+        }
     }
 }

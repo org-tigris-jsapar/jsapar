@@ -1,10 +1,12 @@
 package org.jsapar.parse.csv;
 
+import org.jsapar.error.ValidationAction;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
+import org.jsapar.text.TextParseConfig;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -30,6 +32,26 @@ public class CsvParserTest {
                 errorEvent -> errorCount.incrementAndGet());
         assertEquals(1, errorCount.get());
     }
+
+    @Test
+    public void parse_IgnoreUndefinedLine() throws IOException {
+        CsvSchema schema = CsvSchema.builder()
+                .withLine("a", l->l
+                        .withCell("type", c->c.withLineCondition(v->v.equals("A")))
+                        .withCell("gg"))
+                .build();
+
+        String text = "x;yyy\nA;BBB\nX;YYY";
+        TextParseConfig config = new TextParseConfig();
+        config.setOnUndefinedLineType(ValidationAction.OMIT_LINE);
+        CsvParser parser = new CsvParser(new StringReader(text), schema, config);
+        parser.parse(line -> {
+                    assertEquals(2, line.getLineNumber());
+                    assertEquals("BBB", line.getCell("gg").map(Cell::getStringValue).orElse(null));
+                },
+                e -> {throw e;});
+    }
+
 
     @Test
     public void parse_firstLineAsSchema_empty_cell_name() throws IOException {

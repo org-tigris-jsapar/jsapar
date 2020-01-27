@@ -31,9 +31,9 @@ final class CsvLineReaderStates implements CsvLineReader {
     private boolean eof;
     private boolean reset;
 
-    private String cellSeparator;
+    private String cellSeparator=";";
     private char lastCellSeparatorChar;
-    private char quoteChar;
+    private char quoteChar='"';
     private long lineNumber = 0;
 
     private final ReadBuffer buffer;
@@ -77,6 +77,15 @@ final class CsvLineReaderStates implements CsvLineReader {
     public void reset(){
         this.eof=false;
         this.reset=true;
+    }
+
+    @Override
+    public void skipLine() throws IOException {
+        if(reset){
+            reset = false;
+            return;
+        }
+        readLine(cellSeparator, quoteChar);
     }
 
     @Override

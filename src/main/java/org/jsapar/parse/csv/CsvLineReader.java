@@ -53,4 +53,8 @@ public interface CsvLineReader {
      */
     boolean lastLineWasEmpty();
 
+    /**
+     * Skip next line.
+     */
+    void skipLine() throws IOException;
 }
