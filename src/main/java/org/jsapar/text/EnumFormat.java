@@ -17,8 +17,6 @@ public class EnumFormat<E extends Enum<E> > implements Format<E> {
     private Map<E, String> valueByEnum=new HashMap<>();
     private final Class<E> enumClass;
 
-
-
     /**
      * Creates a default enum format where values are the same as the Enum constants.
      * @param enumClass The enum class to use.
@@ -29,8 +27,60 @@ public class EnumFormat<E extends Enum<E> > implements Format<E> {
         this.enumClass = enumClass;
         this.ignoreCase = ignoreCase;
         Arrays.stream(enumClass.getEnumConstants())
-                .peek(v -> enumByValue.put(v.name(), v))
-                .forEach(v -> valueByEnum.put(v, v.name()));
+                .forEach(v -> putEnumValue(v.name(), v));
+    }
+
+    private EnumFormat(Builder<E> builder) {
+        this(builder.enumClass, builder.ignoreCase);
+        builder.enumByValue.forEach(this::putEnumValue);
+    }
+
+    /**
+     * Creates a builder that builds EnumFormat instances.
+     * @param enumClass  The enum class.
+     * @param <E> The enum type
+     * @return A newly created enum format builder for supplied enum class.
+     */
+    public static <E extends Enum<E> > Builder<E> builder(Class<E> enumClass) {
+        return new Builder<>(enumClass);
+    }
+
+    /**
+     * Builder that builds EnumFormat instances.
+     * @param <E>
+     */
+    public static class Builder<E extends Enum<E> >{
+        private final Class<E> enumClass;
+        private boolean ignoreCase;
+        private Map<String, E> enumByValue=new HashMap<>();
+
+        private Builder(Class<E> enumClass) {
+            this.enumClass = enumClass;
+        }
+
+        /**
+         * @param ignoreCase If true, upper/lower case is ignored in the text value.
+         * @return This builder instance.
+         */
+        public Builder<E> withIgnoreCase(boolean ignoreCase){
+            this.ignoreCase = ignoreCase;
+            return this;
+        }
+
+        /**
+         * Maps an enum value to a text value.
+         * @param textValue The text value
+         * @param value The enum value
+         * @return This builder instance.
+         */
+        public Builder<E> withValue(String textValue, E value){
+            this.enumByValue.put(textValue, value);
+            return this;
+        }
+
+        public EnumFormat<E> build(){
+            return new EnumFormat<>(this);
+        }
     }
 
     @Override
@@ -59,6 +109,17 @@ public class EnumFormat<E extends Enum<E> > implements Format<E> {
         this.valueByEnum.putIfAbsent(enumConstant, value);
     }
 
+    /**
+     * Associates a new string value with supplied enum constant, both from text to enum and from enum to text. If a
+     * value already exists in either direction, the old value will be overwritten.
+     * @param value  The string value
+     * @param enumConstant The enum constant
+     */
+    private void putEnumValue(String value, E enumConstant){
+        this.enumByValue.put(value, enumConstant);
+        this.enumByUValue.put(value.toUpperCase(), enumConstant);
+        this.valueByEnum.put(enumConstant, value);
+    }
 
     /**
      * Formats an enum value.
@@ -69,7 +130,7 @@ public class EnumFormat<E extends Enum<E> > implements Format<E> {
     @Override
     public String format(Object value) {
         if(value instanceof Enum){
-            return valueByEnum.get(value);
+            return valueByEnum.get((E)value);
         }
         if(value instanceof String && enumByValue.containsKey(value)) {
             return (String) value;
