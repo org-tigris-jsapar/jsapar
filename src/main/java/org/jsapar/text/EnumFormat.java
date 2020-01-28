@@ -138,10 +138,11 @@ public class EnumFormat<E extends Enum<E>> implements Format<E> {
      * @param value The value to format
      * @return the string value that represents the supplied enum value.
      */
+    @SuppressWarnings("SuspiciousMethodCalls")
     @Override
     public String format(Object value) {
         if(value instanceof Enum){
-            return valueByEnum.get((E)value);
+            return valueByEnum.get(value);
         }
         if(value instanceof String && enumByValue.containsKey(value)) {
             return (String) value;
