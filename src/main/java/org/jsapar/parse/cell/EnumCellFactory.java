@@ -38,10 +38,10 @@ public class EnumCellFactory implements CellFactory{
      */
     @SuppressWarnings("unchecked")
     @Override
-    public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
+    public Format makeFormat(Locale locale, String pattern) {
         try {
             Class<Enum> enumClass = (Class<Enum>) Class.forName(pattern);
-            return new EnumFormat(enumClass, false);
+            return EnumFormat.builder(enumClass).build();
         } catch (ClassNotFoundException e) {
             throw new SchemaException("There is no Enum class with class name: " + pattern);
         }

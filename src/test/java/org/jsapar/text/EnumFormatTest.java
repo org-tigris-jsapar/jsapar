@@ -15,7 +15,7 @@ public class EnumFormatTest {
 
     @Test
     public void format() {
-        EnumFormat<TestEnum> enumFormat = new EnumFormat<>(TestEnum.class, false);
+        EnumFormat<TestEnum> enumFormat = EnumFormat.builder(TestEnum.class).build();
         assertEquals("A", enumFormat.format(TestEnum.A));
         assertEquals("BB", enumFormat.format(TestEnum.BB));
         assertEquals("CCC", enumFormat.format(TestEnum.CCC));
@@ -35,14 +35,14 @@ public class EnumFormatTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void format_object_invalid_class() {
-        EnumFormat<TestEnum> enumFormat = new EnumFormat<>(TestEnum.class, false);
+        EnumFormat<TestEnum> enumFormat = EnumFormat.builder(TestEnum.class).build();
         enumFormat.format(this);
         fail();
     }
 
     @Test(expected = ParseException.class)
     public void parse_fail() throws ParseException {
-        EnumFormat<TestEnum> enumFormat = new EnumFormat<>(TestEnum.class, false);
+        EnumFormat<TestEnum> enumFormat = EnumFormat.builder(TestEnum.class).build();
         assertEquals(TestEnum.A, enumFormat.parse("Q"));
     }
 

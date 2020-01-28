@@ -15,7 +15,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -406,13 +409,24 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         return getChild(JSAPAR_XML_SCHEMA, xmlSchemaCell, ELEMENT_ENUM_FORMAT)
                 .map(xmlFormat -> {
                     String sEnumClass = getAttributeValue(xmlFormat, "class");
-                    boolean ignoreCase = parseBooleanAttribute(xmlFormat, "ignorecase").orElse(false);
                     try {
-                        EnumFormat format = new EnumFormat(Class.forName(sEnumClass), ignoreCase);
-                        getChildrenStream(JSAPAR_XML_SCHEMA, xmlFormat, "value").forEach(xmlValue->
-                                format.putEnumValueIfAbsent(getAttributeValue(xmlValue, "text"), getAttributeValue(xmlValue, "name")));
+                        final Class<Enum> enumClass = (Class<Enum>) Class.forName(sEnumClass);
+                        cellBuilder.withEnumFormat(enumClass, e->{
+                            EnumFormat.Builder builder = (EnumFormat.Builder) e;
+                            parseBooleanAttribute(xmlFormat, "ignorecase").ifPresent(builder::withIgnoreCase);
+                            Map<String, Enum> enumByName=new HashMap<>();
+                            Arrays.stream(enumClass.getEnumConstants())
+                                    .forEach(v -> enumByName.put(v.name(), v));
 
-                        cellBuilder.withFormat(format);
+                            getChildrenStream(JSAPAR_XML_SCHEMA, xmlFormat, "value").forEach(xmlValue -> {
+                                final String enumValueName = getAttributeValue(xmlValue, "name");
+                                final Enum enumValue = enumByName.get(enumValueName);
+                                if(enumValue == null)
+                                    throw new SchemaException("The enum constant " + enumValueName + " is not a valid value of the enum "+enumClass.getName());
+                                builder.withValue(getAttributeValue(xmlValue, "text"), enumValue);
+                            });
+                            return builder;
+                        });
                         return true;
                     } catch (ClassNotFoundException e) {
                         throw new SchemaException("Unable to find enum class " + sEnumClass + " within classpath. Make sure that the class is fully qualified.");

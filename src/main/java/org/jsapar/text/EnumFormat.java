@@ -8,21 +8,25 @@ import java.util.Map;
 
 /**
  * Format class that can be used to parse or format enum values based on the value.
- *
+ * Use builder class to build instances.
+ * Example:
+ * <p>
+ * {@code EnumFormat.builder(MyEnum.class).build();}
  */
-public class EnumFormat<E extends Enum<E> > implements Format<E> {
-    private final boolean ignoreCase;
-    private Map<String, E> enumByValue=new HashMap<>();
-    private Map<String, E> enumByUValue=new HashMap<>();
-    private Map<E, String> valueByEnum=new HashMap<>();
-    private final Class<E> enumClass;
+public class EnumFormat<E extends Enum<E>> implements Format<E> {
+    private final boolean        ignoreCase;
+    private       Map<String, E> enumByValue  = new HashMap<>();
+    private       Map<String, E> enumByUValue = new HashMap<>();
+    private       Map<E, String> valueByEnum  = new HashMap<>();
+    private final Class<E>       enumClass;
 
     /**
      * Creates a default enum format where values are the same as the Enum constants.
+     * Deprecated. Use builder instead.
      * @param enumClass The enum class to use.
      * @param ignoreCase If true, the case is ignored while parsing.
      */
-    @SuppressWarnings("WeakerAccess")
+    @Deprecated
     public EnumFormat(Class<E> enumClass, boolean ignoreCase) {
         this.enumClass = enumClass;
         this.ignoreCase = ignoreCase;
