@@ -12,6 +12,7 @@ import org.jsapar.text.ImpliedDecimalFormat;
 import java.text.ParseException;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -199,9 +200,30 @@ public abstract class SchemaCell implements Cloneable {
             return (B) this;
         }
 
-        public <E extends Enum<E>> B withEnumFormat(Class<E> enumClass, boolean ignoreCase){
+        /**
+         * Changes the type of this cell to ENUM and applies an enum format.
+         * @param enumClass The enum class to format.
+         * @param enumFormatBuilderHandler A function that takes an {@link EnumFormat.Builder} as argument and should
+         *                                 return the same {@link EnumFormat.Builder} instance. Makes it possible to
+         *                                 customize the enum format with additional settings, such as ignore case
+         *                                 or customized mappings.
+         * @param <E> The Enum type.
+         * @return This builder instance.
+         */
+        public <E extends Enum<E>> B withEnumFormat(Class<E> enumClass, Function<EnumFormat.Builder<E>, EnumFormat.Builder<E>> enumFormatBuilderHandler){
             withType(CellType.ENUM);
-            return (B) withFormat((Format<T>) new EnumFormat<E>(enumClass, ignoreCase));
+            return withFormat((Format<T>) enumFormatBuilderHandler.apply(EnumFormat.builder(enumClass)).build());
+        }
+
+        /**
+         * Changes the type of this cell to ENUM and applies an enum format where the text values match exactly the
+         * enum values case sensitive.
+         * @param enumClass The enum class to format.
+         * @param <E> The Enum type.
+         * @return This builder instance.
+         */
+        public <E extends Enum<E>> B withEnumFormat(Class<E> enumClass){
+            return withEnumFormat(enumClass, e->e);
         }
 
         public B applyDefaultsFrom(SchemaLine.Builder<?, ?, ?> schemaBuilder){

@@ -59,7 +59,7 @@ public class Schema2XmlExtractorTest {
                         .withCells("First name", "Last name")
                         .withCell(CsvSchemaCell.builder("Gender")
                                 .withLocale(Locale.getDefault())
-                                .withEnumFormat(TstGender.class, true)
+                                .withEnumFormat(TstGender.class, e->e.withIgnoreCase(true))
                                 .build())
                         .build())
                 .build();
