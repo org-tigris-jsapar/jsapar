@@ -9,9 +9,14 @@ import java.util.Map;
 /**
  * Format class that can be used to parse or format enum values based on the value.
  * Use builder class to build instances.
- * Example:
+ * <p>
+ * Example 1:
  * <p>
  * {@code EnumFormat.builder(MyEnum.class).build();}
+ * <p>
+ * Example 2:
+ * <p>
+ * {@code EnumFormat.builder(Weekdays.class).withIgnoreCase(true).withValue("fr", Weekdays.FRIDAY).build();}
  */
 public class EnumFormat<E extends Enum<E>> implements Format<E> {
     private final boolean        ignoreCase;
@@ -26,6 +31,7 @@ public class EnumFormat<E extends Enum<E>> implements Format<E> {
      * @param enumClass The enum class to use.
      * @param ignoreCase If true, the case is ignored while parsing.
      */
+    // TODO make private
     @Deprecated
     public EnumFormat(Class<E> enumClass, boolean ignoreCase) {
         this.enumClass = enumClass;
@@ -94,6 +100,7 @@ public class EnumFormat<E extends Enum<E>> implements Format<E> {
                         ", valid values=" + valueByEnum.keySet();
     }
 
+    @Deprecated
     public void putEnumValueIfAbsent(String value, String enumConstantName){
         E enumConstant = enumByValue.get(enumConstantName);
         if(enumConstant == null)
