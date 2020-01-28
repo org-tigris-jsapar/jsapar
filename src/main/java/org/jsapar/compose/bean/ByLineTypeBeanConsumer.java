@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * This bean consumer allows you to register different listeners for
@@ -36,12 +37,24 @@ public class ByLineTypeBeanConsumer<T> implements BiConsumer<T, Line> {
      * Puts a consumer for the specified line type, replacing any existing consumer.
      *
      * @param lineType          The line type to match for this consumer. Test is done by equals match.
-     * @param beanEventListener The consumer to put.
+     * @param beanAndLineConsumer The bi-consumer to put. Takes two arguments: the bean and the line that was generated.
      * @return Optional with previously registered consumer for this line type. Optional.empty if no previous
      * consumer was registered for this line type.
      */
-    public Optional<BiConsumer<T, Line>> put(String lineType, BiConsumer<T, Line> beanEventListener) {
-        return Optional.ofNullable(beanConsumers.put(lineType, beanEventListener));
+    public Optional<BiConsumer<T, Line>> put(String lineType, BiConsumer<T, Line> beanAndLineConsumer) {
+        return Optional.ofNullable(beanConsumers.put(lineType, beanAndLineConsumer));
+    }
+
+    /**
+     * Puts a consumer for the specified line type, replacing any existing consumer.
+     *
+     * @param lineType          The line type to match for this consumer. Test is done by equals match.
+     * @param beanConsumer The consumer to put. Takes one argument: The bean that was generated.
+     * @return Optional with previously registered consumer for this line type. Optional.empty if no previous
+     * consumer was registered for this line type.
+     */
+    public Optional<BiConsumer<T, Line>> put(String lineType, Consumer<T> beanConsumer) {
+        return Optional.ofNullable(beanConsumers.put(lineType, (b,l)->beanConsumer.accept(b)));
     }
 
 

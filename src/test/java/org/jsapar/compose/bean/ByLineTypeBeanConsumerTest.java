@@ -18,6 +18,7 @@ public class ByLineTypeBeanConsumerTest {
             assertEquals("test1", line.getLineType());
             called.set(true);
         });
+        lineEventListener.put("test2", bean-> fail("Line of type test2 should not be called."));
 
         lineEventListener.accept(new TstPerson(), new Line("test0"));
         assertFalse(called.get());
