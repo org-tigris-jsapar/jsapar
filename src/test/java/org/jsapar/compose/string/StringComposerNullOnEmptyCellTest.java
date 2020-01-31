@@ -22,16 +22,18 @@ public class StringComposerNullOnEmptyCellTest {
                 .withLine(CsvSchemaLine.builder("row")
                         .withCell("First name")
                         .withCell("Last name")
-                        .withCell(CsvSchemaCell.builder("On head").withDefaultValue("hat").build())
+                        .withCell("On head", c->c.withDefaultValue("hat"))
+                        .withCell("Pet", c->c.withDefaultValue(""))
                         .build())
                 .build();
         AtomicBoolean called = new AtomicBoolean(false);
         StringComposerNullOnEmptyCell composer = new StringComposerNullOnEmptyCell(schema, (cells, lineType, lineNumber)  -> {
-            assertEquals(Arrays.asList("name1", null, "hat"), cells.collect(Collectors.toList()));
+            assertEquals(Arrays.asList("name1", null, "hat", ""), cells.collect(Collectors.toList()));
             called.getAndSet(true);
         });
         assertFalse(called.get());
-        composer.composeLine(new Line("row").addCell(new StringCell("First name", "name1"))
+        composer.composeLine(new Line("row")
+                .addCell(new StringCell("First name", "name1"))
                 .addCell(StringCell.emptyOf("Last name")));
         assertTrue(called.get());
     }

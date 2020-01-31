@@ -3,7 +3,6 @@ package org.jsapar.compose.string;
 import org.jsapar.model.Line;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
-import org.jsapar.schema.StringSchemaLine;
 
 import java.util.stream.Stream;
 
@@ -14,6 +13,12 @@ public class StringLineComposerNullOnEmptyCell extends StringLineComposer {
 
     @Override
     Stream<String> composeStringLine(Line line) {
-        return super.composeStringLine(line).map(s->s.isEmpty() ? null : s);
+        return getCellComposers().stream().map(cellComposer ->
+             line.getCell(cellComposer.getName())
+                    .map(cellComposer::compose)
+                    .map(s->s.isEmpty() && !cellComposer.isDefaultValue() ? null : s)
+                    .orElseGet(()-> cellComposer.isDefaultValue() ? cellComposer.compose(cellComposer.makeEmptyCell()) : null)
+
+        );
     }
 }

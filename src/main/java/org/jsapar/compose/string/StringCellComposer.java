@@ -25,4 +25,7 @@ class StringCellComposer {
          return cellFormat.format(cell);
     }
 
+    public boolean isDefaultValue() {
+        return schemaCell.isDefaultValue();
+    }
 }

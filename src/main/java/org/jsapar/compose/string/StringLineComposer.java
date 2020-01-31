@@ -25,4 +25,8 @@ class StringLineComposer {
     boolean isIgnoreWrite(){
         return schemaLine.isIgnoreWrite();
     }
+
+    protected List<StringCellComposer> getCellComposers() {
+        return cellComposers;
+    }
 }
