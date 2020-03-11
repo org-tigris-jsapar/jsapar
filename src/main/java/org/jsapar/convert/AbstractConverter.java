@@ -9,6 +9,8 @@ import org.jsapar.model.Line;
 import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Abstract base class for all converters.
@@ -33,8 +35,15 @@ import java.util.function.Consumer;
  */
 public abstract class AbstractConverter {
 
-    private List<LineManipulator>     manipulators = new java.util.LinkedList<>();
-    private Consumer<JSaParException> errorConsumer = new ExceptionErrorConsumer();
+    private List<LineManipulator>        manipulators = new java.util.LinkedList<>();
+    private Consumer<JSaParException>    errorConsumer = new ExceptionErrorConsumer();
+    private Function<Line, Stream<Line>> transformer  = line->{
+        for (LineManipulator manipulator : manipulators) {
+            if (!manipulator.manipulate(line))
+                return Stream.empty();
+        }
+        return Stream.of(line);
+    };
 
     public AbstractConverter() {
     }
@@ -73,9 +82,20 @@ public abstract class AbstractConverter {
      * @throws IOException In case of io error while writing output.
      */
     protected long execute(ConvertTask convertTask) throws IOException {
-        manipulators.forEach(convertTask::addLineManipulator);
+        convertTask.setTransformer(this.transformer);
         convertTask.setErrorConsumer(errorConsumer);
         return convertTask.execute();
     }
 
+    /**
+     * Assigns a line transformer to this converter. The transformer should return a stream of all the lines that should
+     * be forwarded to the composer. Default is to iterate the line manipulators and use the result if all of them return true.
+     * <p>
+     * <b>Assigning a new line transformer will completely disable all registered line manipulators.</b>
+     *
+     * @param transformer The transformer to use.
+     */
+    public void setTransformer(Function<Line, Stream<Line>> transformer) {
+        this.transformer = transformer;
+    }
 }

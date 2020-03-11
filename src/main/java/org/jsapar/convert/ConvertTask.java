@@ -9,8 +9,9 @@ import org.jsapar.parse.ParseTask;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Reads from supplied parseTask and outputs each line to the composer. By adding
@@ -22,14 +23,13 @@ import java.util.function.Consumer;
  * considered when choosing the line type of the output schema line. This means that lines with a
  * type that does not exist in the output schema will be discarded in the output.
  * <p>
- * If your want lines to be discarded from the output depending of their contents, add a LineManipulator that returns
- * false for the lines that should not be composed.
- * @see SplittingConvertTask
+ * If your want lines to be transformed, discarded or split before composing depending of their contents, add a transformer. Each
+ * line returned in the transformer stream will be forwarded to the composer.
  */
 public class ConvertTask {
     private ParseTask parseTask;
     private Composer  composer;
-    private List<LineManipulator> manipulators = new java.util.LinkedList<>();
+    private Function<Line, Stream<Line>> transformer = Stream::of;
 
     /**
      * Creates a convert task with supplied parse task and composer.
@@ -65,16 +65,6 @@ public class ConvertTask {
     }
 
     /**
-     * Adds LineManipulator to this converter. All present line manipulators are executed for each
-     * line.
-     *
-     * @param manipulator The line manipulator to add.
-     */
-    public void addLineManipulator(LineManipulator manipulator) {
-        manipulators.add(manipulator);
-    }
-
-    /**
      * @return Number of converted lines.
      * @throws IOException In case of IO error.
      */
@@ -97,10 +87,16 @@ public class ConvertTask {
     }
 
     protected void forEachLine(Line line) {
-        for (LineManipulator manipulator : manipulators) {
-            if (!manipulator.manipulate(line))
-                return;
-        }
-        composer.composeLine(line);
+        transformer.apply(line).forEach(composer::composeLine);
+    }
+
+    /**
+     * Assigns a line transformer to this converter. The manipulator should return a stream of all the lines that should
+     * be forwarded to the composer. Default is simply forward the line without any changes.
+     *
+     * @param transformer The transformer to use.
+     */
+    public void setTransformer(Function<Line, Stream<Line>> transformer) {
+        this.transformer = transformer;
     }
 }
