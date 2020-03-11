@@ -15,9 +15,8 @@ import java.util.stream.Stream;
 
 /**
  * Reads from supplied parseTask and outputs each line to the composer. By adding
- * a LineManipulator you are able to make modifications of each line before it is written to the
- * output. The method {@link LineManipulator#manipulate(Line)} of all added LineManipulators are called for each line that is
- * parsed successfully.
+ * a transformer you are able to make modifications of each line before it is written to the
+ * output.
  * <p>
  * For each line, the line type of the parsed line is
  * considered when choosing the line type of the output schema line. This means that lines with a

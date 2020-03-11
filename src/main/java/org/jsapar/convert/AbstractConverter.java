@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  * Abstract base class for all converters.
  * <p>
  * By adding
- * a LineManipulator you are able to make modifications of each line before it is written to the
+ * a transformer or a LineManipulator you are able to make modifications of each line before it is written to the
  * output. The method {@link LineManipulator#manipulate(Line)} of all added LineManipulators are called for each line that are
  * parsed successfully.
  * <p>
@@ -25,7 +25,8 @@ import java.util.stream.Stream;
  * type that does not exist in the output schema will be discarded in the output.
  * <p>
  * If your want lines to be discarded from the output depending of their contents, add a LineManipulator that returns
- * false for the lines that should not be composed.
+ * false for the lines that should not be composed. An alternative is to use a transformer that also allows to split
+ * the line into multiple line instances before they are forwarded to the composer.
  * <p>
  * The default error handling is to throw an exception upon the first error that occurs. You can however change that
  * behavior by adding an error consumer with {@link #setErrorConsumer(Consumer)}. There are several implementations to
@@ -53,6 +54,7 @@ public abstract class AbstractConverter {
      * line.
      *
      * @param manipulator The line manipulator to add.
+     * @see #setTransformer(Function)
      */
     public void addLineManipulator(LineManipulator manipulator) {
         manipulators.add(manipulator);
