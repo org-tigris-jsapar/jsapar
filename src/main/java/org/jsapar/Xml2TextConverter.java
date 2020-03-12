@@ -29,8 +29,7 @@ public class Xml2TextConverter extends AbstractConverter {
      */
     public void convert(Reader reader, Writer writer) throws IOException {
         XmlParseTask parseTask = new XmlParseTask(reader);
-        ConvertTask convertTask = new ConvertTask(parseTask, new TextComposer(composeSchema, writer));
-        execute(convertTask);
+        execute(parseTask, new TextComposer(composeSchema, writer));
     }
 
 }

@@ -57,8 +57,7 @@ public class Text2StringConverter extends AbstractConverter {
     @Deprecated
     public long convert(Reader reader, StringComposedEventListener composedEventListener) throws IOException {
         TextParseTask parseTask = new TextParseTask(this.parseSchema, reader, parseConfig);
-        ConvertTask convertTask = new ConvertTask(parseTask, new StringComposer(composeSchema, composedEventListener));
-        return execute(convertTask);
+        return execute(parseTask, new StringComposer(composeSchema, composedEventListener));
     }
 
     /**
@@ -71,8 +70,7 @@ public class Text2StringConverter extends AbstractConverter {
      */
     public long convertForEach(Reader reader, StringComposedConsumer stringComposedConsumer) throws IOException {
         TextParseTask parseTask = new TextParseTask(this.parseSchema, reader, parseConfig);
-        ConvertTask convertTask = new ConvertTask(parseTask, makeComposer(composeSchema, stringComposedConsumer));
-        return execute(convertTask);
+        return execute(parseTask, makeComposer(composeSchema, stringComposedConsumer));
     }
 
     /**

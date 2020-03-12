@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
@@ -197,7 +198,7 @@ public class Text2TextConverterTest {
         Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
         converter.setTransformer(line -> {
             line.addCell(new StringCell("Town", "Stockholm"));
-            return Stream.of(line);
+            return Collections.singletonList(line);
         });
         converter.convert(reader, writer);
         String sResult = writer.getBuffer().toString();

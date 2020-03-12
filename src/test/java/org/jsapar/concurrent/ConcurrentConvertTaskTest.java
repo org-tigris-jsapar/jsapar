@@ -2,6 +2,7 @@ package org.jsapar.concurrent;
 
 import org.jsapar.TextComposer;
 import org.jsapar.convert.ConvertTask;
+import org.jsapar.error.ExceptionErrorConsumer;
 import org.jsapar.error.JSaParException;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.CsvSchema;
@@ -19,9 +20,8 @@ public class ConcurrentConvertTaskTest {
     public void testConcurrentText2TextConverter() throws JSaParException {
         TextParseTask p = new TextParseTask(CsvSchema.builder().build(), new StringReader(""));
         TextComposer c = new TextComposer( FixedWidthSchema.builder().build(), new StringWriter());
-        ConvertTask instance = new ConcurrentConvertTask(p, c);
+        ConvertTask instance = new ConcurrentConvertTask(p, c, c::composeLine, new ExceptionErrorConsumer());
         assertSame(p, instance.getParseTask());
-        assertSame(c, instance.getComposer());
     }
 
 }

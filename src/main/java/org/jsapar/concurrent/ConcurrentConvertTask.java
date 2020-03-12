@@ -2,10 +2,12 @@ package org.jsapar.concurrent;
 
 import org.jsapar.compose.Composer;
 import org.jsapar.convert.ConvertTask;
+import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.parse.ParseTask;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 /**
  * Concurrent version of the {@link ConvertTask}. The composer is executed in a separate worker thread. Also the line
@@ -25,17 +27,26 @@ import java.io.IOException;
  *
  */
 public class ConcurrentConvertTask extends ConvertTask implements ConcurrentStartStop{
-    private ConcurrentConsumer<Line> concurrentLineEventListener = new ConcurrentConsumer<>(this::forEachLine);
+    private final ConcurrentConsumer<Line> concurrentConsumer;
     /** Creates a converter
      * @param parseTask The parseTask to use while parsing
      * @param composer The composer to use while composing.
      */
-    public ConcurrentConvertTask(ParseTask parseTask, Composer composer) {
-        super(parseTask, composer);
+    public ConcurrentConvertTask(ParseTask parseTask, Composer composer, Consumer<Line> lineConsumer, Consumer<JSaParException> errorConsumer) {
+        this(parseTask, composer, new ConcurrentConsumer<>(lineConsumer), errorConsumer);
+    }
+
+    /** Creates a converter
+     * @param parseTask The parseTask to use while parsing
+     * @param composer The composer to use while composing.
+     */
+    private ConcurrentConvertTask(ParseTask parseTask, Composer composer, ConcurrentConsumer<Line> concurrentConsumer, Consumer<JSaParException> errorConsumer) {
+        super(parseTask, composer, concurrentConsumer, errorConsumer);
+        this.concurrentConsumer = concurrentConsumer;
     }
 
     public long execute() throws IOException {
-        try (ConcurrentConsumer<Line> lineEventListener = this.concurrentLineEventListener) {
+        try (ConcurrentConsumer<Line> lineEventListener = this.concurrentConsumer) {
             getParseTask().setLineConsumer(lineEventListener);
             lineEventListener.start();
             return getParseTask().execute();
@@ -44,11 +55,11 @@ public class ConcurrentConvertTask extends ConvertTask implements ConcurrentStar
 
 
     public void registerOnStart(Runnable onStart){
-        this.concurrentLineEventListener.registerOnStart(onStart);
+        this.concurrentConsumer.registerOnStart(onStart);
     }
 
     public void registerOnStop(Runnable onStop){
-        this.concurrentLineEventListener.registerOnStop(onStop);
+        this.concurrentConsumer.registerOnStop(onStop);
     }
 
 }

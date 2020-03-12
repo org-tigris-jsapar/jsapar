@@ -45,8 +45,7 @@ public class Text2TextConverter extends AbstractConverter {
      * @throws IOException In case of IO error
      */
     public long convert(Reader reader, Writer writer) throws IOException {
-        ConvertTask convertTask = new ConvertTask(makeParseTask(reader), makeComposer(writer));
-        return execute(convertTask);
+        return execute(makeParseTask(reader), makeComposer(writer));
     }
 
     /**

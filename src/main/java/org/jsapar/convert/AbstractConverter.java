@@ -1,23 +1,25 @@
 package org.jsapar.convert;
 
+import org.jsapar.compose.Composer;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.ExceptionErrorConsumer;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
+import org.jsapar.parse.ParseTask;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
  * Abstract base class for all converters.
  * <p>
  * By adding
- * a transformer or a LineManipulator you are able to make modifications of each line before it is written to the
- * output. The method {@link LineManipulator#manipulate(Line)} of all added LineManipulators are called for each line that are
+ * a transformer or a LineManipulator you are able to make modifications of each line before it is forwarded to the
+ * composer. The method {@link LineManipulator#manipulate(Line)} of all added LineManipulators are called for each line that are
  * parsed successfully.
  * <p>
  * For each line, the line type of the parsed line is
@@ -36,15 +38,9 @@ import java.util.stream.Stream;
  */
 public abstract class AbstractConverter {
 
-    private List<LineManipulator>        manipulators = new java.util.LinkedList<>();
-    private Consumer<JSaParException>    errorConsumer = new ExceptionErrorConsumer();
-    private Function<Line, Stream<Line>> transformer  = line->{
-        for (LineManipulator manipulator : manipulators) {
-            if (!manipulator.manipulate(line))
-                return Stream.empty();
-        }
-        return Stream.of(line);
-    };
+    private List<LineManipulator>      manipulators  = new java.util.LinkedList<>();
+    private Consumer<JSaParException>  errorConsumer = new ExceptionErrorConsumer();
+    private Function<Line, List<Line>> transformer;
 
     public AbstractConverter() {
     }
@@ -52,6 +48,8 @@ public abstract class AbstractConverter {
     /**
      * Adds LineManipulator to this converter. All present line manipulators are executed for each
      * line.
+     * <b>You cannot combine line manipulators with a transformer. Once a transformer is assigned, all line manipulators
+     * are ignored.</b>
      *
      * @param manipulator The line manipulator to add.
      * @see #setTransformer(Function)
@@ -79,16 +77,22 @@ public abstract class AbstractConverter {
 
     /**
      * Executes the convert task and applies all manipulators in order..
-     * @param convertTask The convert task to execute.
+     * @param parseTask The parse task to parse from
+     * @param composer The composer that should compose output.
      * @return The number of lines converted.
      * @throws IOException In case of io error while writing output.
      */
-    protected long execute(ConvertTask convertTask) throws IOException {
-        convertTask.setTransformer(this.transformer);
-        convertTask.setErrorConsumer(errorConsumer);
-        return convertTask.execute();
+    protected long execute(ParseTask parseTask, Composer composer) throws IOException {
+        return makeConvertTask(parseTask, composer).execute();
     }
 
+    protected ConvertTask makeConvertTask(ParseTask parseTask, Composer composer){
+        if(transformer != null)
+            return ConvertTask.of(parseTask, composer, errorConsumer, transformer);
+        if(!manipulators.isEmpty())
+            return ConvertTask.of(parseTask, composer, errorConsumer, manipulators);
+        return ConvertTask.of(parseTask, composer, errorConsumer);
+    }
     /**
      * Assigns a line transformer to this converter. The transformer should return a stream of all the lines that should
      * be forwarded to the composer. Default is to iterate the line manipulators and use the result if all of them return true.
@@ -97,7 +101,20 @@ public abstract class AbstractConverter {
      *
      * @param transformer The transformer to use.
      */
-    public void setTransformer(Function<Line, Stream<Line>> transformer) {
+    public void setTransformer(Function<Line, List<Line>> transformer) {
+        Objects.requireNonNull(transformer);
         this.transformer = transformer;
+    }
+
+    protected List<LineManipulator> getManipulators() {
+        return manipulators;
+    }
+
+    protected Function<Line, List<Line>> getTransformer() {
+        return transformer;
+    }
+
+    protected Consumer<JSaParException> getErrorConsumer() {
+        return errorConsumer;
     }
 }

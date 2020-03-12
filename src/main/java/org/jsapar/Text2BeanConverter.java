@@ -1,16 +1,15 @@
 package org.jsapar;
 
+import org.jsapar.bean.BeanMap;
 import org.jsapar.compose.bean.*;
 import org.jsapar.convert.AbstractConverter;
-import org.jsapar.convert.ConvertTask;
 import org.jsapar.error.BeanException;
-import org.jsapar.bean.BeanMap;
 import org.jsapar.model.Line;
+import org.jsapar.parse.text.TextParseTask;
+import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
 import org.jsapar.text.TextParseConfig;
-import org.jsapar.parse.text.TextParseTask;
-import org.jsapar.schema.Schema;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -97,11 +96,10 @@ public class Text2BeanConverter<T> extends AbstractConverter {
      */
     public long convertForEach(Reader reader, BiConsumer<T, Line> beanConsumer) throws IOException {
         BeanComposer<T> composer = new BeanComposer<>(composeConfig, beanFactory);
-        ConvertTask convertTask = new ConvertTask(new TextParseTask(this.parseSchema, reader, parseConfig), composer);
         composer.setBeanConsumer(beanConsumer);
         if (beanFactory != null)
             composer.setBeanFactory(beanFactory);
-        return execute(convertTask);
+        return execute(new TextParseTask(this.parseSchema, reader, parseConfig), composer);
     }
 
     /**

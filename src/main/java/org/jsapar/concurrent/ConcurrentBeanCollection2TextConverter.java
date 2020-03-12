@@ -1,8 +1,11 @@
 package org.jsapar.concurrent;
 
 import org.jsapar.BeanCollection2TextConverter;
+import org.jsapar.compose.Composer;
 import org.jsapar.convert.AbstractConverter;
 import org.jsapar.bean.BeanMap;
+import org.jsapar.convert.ConvertTask;
+import org.jsapar.parse.ParseTask;
 import org.jsapar.schema.Schema;
 
 import java.io.IOException;
@@ -32,15 +35,8 @@ public class ConcurrentBeanCollection2TextConverter<T> extends BeanCollection2Te
     }
 
     @Override
-    public long convert(Stream<? extends T> stream, Writer writer) throws IOException {
-        execute(convertTaskFactory.makeConvertTask(makeParseTask(stream), makeComposer(writer)));
-        return 0;
-    }
-
-    @Override
-    public long convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
-        execute(convertTaskFactory.makeConvertTask(makeParseTask(iterator), makeComposer(writer)));
-        return 0;
+    protected ConvertTask makeConvertTask(ParseTask parseTask, Composer composer) {
+        return convertTaskFactory.makeConvertTask(parseTask, composer, getErrorConsumer(), getTransformer(), getManipulators());
     }
 
     public void registerOnStart(Runnable onStart) {

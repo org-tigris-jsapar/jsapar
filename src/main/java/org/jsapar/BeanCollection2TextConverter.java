@@ -1,8 +1,7 @@
 package org.jsapar;
 
-import org.jsapar.convert.AbstractConverter;
-import org.jsapar.convert.ConvertTask;
 import org.jsapar.bean.BeanMap;
+import org.jsapar.convert.AbstractConverter;
 import org.jsapar.parse.bean.BeanParseTask;
 import org.jsapar.schema.Schema;
 
@@ -66,7 +65,7 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * @return Number of actually composed lines.
      */
     public long convert(Stream<? extends T> stream, Writer writer) throws IOException {
-        return execute(new ConvertTask(makeParseTask(stream), makeComposer(writer)));
+        return execute(makeParseTask(stream), makeComposer(writer));
     }
 
     /**
@@ -78,8 +77,7 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * @return Number of actually composed lines.
      */
     public long convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
-        ConvertTask convertTask = new ConvertTask(makeParseTask(iterator), makeComposer(writer));
-        return execute(convertTask);
+        return execute(makeParseTask(iterator), makeComposer(writer));
     }
 
     /**

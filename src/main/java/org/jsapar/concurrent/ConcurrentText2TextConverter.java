@@ -1,13 +1,12 @@
 package org.jsapar.concurrent;
 
 import org.jsapar.Text2TextConverter;
+import org.jsapar.compose.Composer;
 import org.jsapar.convert.AbstractConverter;
+import org.jsapar.convert.ConvertTask;
+import org.jsapar.parse.ParseTask;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.Schema;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
 
 /**
  * A multi threaded version of {@link org.jsapar.Text2TextConverter} where the composer is started in a separate worker
@@ -29,7 +28,7 @@ public class ConcurrentText2TextConverter extends Text2TextConverter implements 
      * @param parseSchema The schema to use while parsing
      * @param composeSchema The schema to use wile composing.
      */
-    public ConcurrentText2TextConverter(Schema parseSchema, Schema composeSchema) {
+    public ConcurrentText2TextConverter(Schema<?> parseSchema, Schema<?> composeSchema) {
         super(parseSchema, composeSchema);
     }
 
@@ -39,12 +38,13 @@ public class ConcurrentText2TextConverter extends Text2TextConverter implements 
      * @param composeSchema The schema to use wile composing.
      * @param parseConfig   Configuration about parsing behavior.
      */
-    public ConcurrentText2TextConverter(Schema parseSchema, Schema composeSchema, TextParseConfig parseConfig) {
+    public ConcurrentText2TextConverter(Schema<?> parseSchema, Schema<?> composeSchema, TextParseConfig parseConfig) {
         super(parseSchema, composeSchema, parseConfig);
     }
 
-    public long convert(Reader reader, Writer writer) throws IOException {
-        return execute(convertTaskFactory.makeConvertTask(makeParseTask(reader), makeComposer(writer)));
+    @Override
+    protected ConvertTask makeConvertTask(ParseTask parseTask, Composer composer) {
+        return convertTaskFactory.makeConvertTask(parseTask, composer, getErrorConsumer(), getTransformer(), getManipulators());
     }
 
     public void registerOnStart(Runnable onStart) {
