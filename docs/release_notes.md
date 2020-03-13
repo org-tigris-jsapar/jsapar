@@ -26,6 +26,9 @@ and format that does not conform to the java.text.Format contract.
 * Schema variants and BeanMap can now more easily be built in Java code by using builders.
 * Cell value conditions in the xml schema can now be created with `equals` on top of the existing `matches`. Using `equals` simply checks if the value is exactly equal to supplied value with an option to ignore case.
 * If you set any other locale than en-US upon a schema or a schema cell, formatting and parsing of numbers will then use locale specific symbols also when not specifying any explicit pattern.
+* Convert classes such as Text2TextConverter now supports that you supply a transformer Function<Line, List<Line>> that 
+allows one line from the parser to split into several lines before forwarding to the composer during converting.
+* ConvertTask class has been re-written with a new interface, constructed by static constructors that provides Consumer with the behavior instead of LineManipulator. 
 ## 2.1
 ### 2.1.1
 * Fixed problem that insufficient-error was not signalled correctly as en error when when parsing an "ignoreread" cell.

@@ -276,13 +276,53 @@ Bean2TextConverter<Employee> converter = new Bean2TextConverter<>(Schema.ofXml(s
 employees.forEach(employee ->converter.convert(employee));
 ```  
 
-## Manipulating lines while converting
-Not everything can be converted one-to-one by simple mapping of the format. Sometimes you need to add, remove or filter data for each line while converting.
-The `org.jsapar.convert.LineManipulator` interface can be used to act as both 
-[Content Enricher](http://www.enterpriseintegrationpatterns.com/patterns/messaging/DataEnricher.html) and
-[Content Filter](http://www.enterpriseintegrationpatterns.com/patterns/messaging/ContentFilter.html). You can add line manipulators
+## Manipulating or transforming lines while converting
+Not everything can be converted one-to-one by simple mapping of the format. Sometimes you need to add, remove, split or filter data for each line while converting.
+
+There are two options for manipulating data during transformation:
+1. Transformer. More flexible but also more complex. Allows enriching, filtering and splitting lines.
+2. LineManipulator. Simpler but provides no means of splitting into several lines.
+
+You cannot combine transformer and line manipulators for the same instance of a converter. Adding a transformer totally 
+disables all line manipulators.
+
+### Transformer 
+The transformer can be used for  
+ * [Content Enricher](http://www.enterpriseintegrationpatterns.com/patterns/messaging/DataEnricher.html) 
+ * [Content Filter](http://www.enterpriseintegrationpatterns.com/patterns/messaging/ContentFilter.html)
+ * [Splitter](https://www.enterpriseintegrationpatterns.com/patterns/messaging/Sequencer.html)
+
+A transformer is an implementation of `java.util.function.Function<Line, List<Line>>` which is called for each line. The `apply()` method takes a Line as parameter 
+and should return a list of lines. Only the lines returned by this function will be forwarded to the composer. Please note
+that if you want to split a line, you will need to clone the input line before altering it, otherwise you will forward several
+references to the same instance.
+
+By returning an empty list in the `apply()` method, you can indicate that the line should be omitted from the output.
+
+For example, if you may need to convert a cost contained in a cell between currencies:
+```java
+    Text2TextConverter converter = new Text2TextConverter(Schema.ofXml(inSchemaReader),
+            Schema.ofXml(outSchemaReader));
+
+    converter.setTransformer(line -> {
+        LineUtils.setDecimalCellValue(line, "costInSEK", convertGBPtoSEK(LineUtils.getDecimalCellValue(line, "costInGBP"));
+        return Collections.singeltonList(line);
+    });
+        
+    converter.convert(inReader, outWriter);
+```
+
+### LineManipulator
+The `org.jsapar.convert.LineManipulator` interface can be used for 
+ * [Content Enricher](http://www.enterpriseintegrationpatterns.com/patterns/messaging/DataEnricher.html) 
+ * [Content Filter](http://www.enterpriseintegrationpatterns.com/patterns/messaging/ContentFilter.html)
+ 
+You can add line manipulators
 to all converters and thus tap into the stream of lines and manipulate them before they are processed further. By returning
 false from the `manipulate()` method, you can indicate that the line should be omitted from the output.
+
+It is a bit simpler to use than the [transformer](#Transformer) described above but does on the other hand not provide any
+means of splitting into several lines.
 
 For example, if you may need to convert a cost contained in a cell between currencies. Then you can add a line manipulator to the converter like this:
  
