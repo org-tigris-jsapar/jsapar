@@ -18,7 +18,7 @@ These are the specific changes:
 This may break existing code if you iterate lines or cells in schema.
 If you encounter problem during upgrade, in most cases it is enough to add wild card type <?> to the Schema. E.g. Schema<?>.
 * The event idiom has been replaced by the more modern Consumer concept from java functional. The parsers accepts a Consumer instead 
-of an the native event listener. The difference is that it reduces the need to create an event for each line that is parsed, instead 
+of a native event listener. The difference is that it reduces the need to create an event for each line that is parsed, instead 
 a consumer method is called. All event based methods and classes are still present in this version but have been marked as deprecated and may be removed in some future version.      
 * The SchemaCell now accepts a native org.jsapar.text.Format instead of the java.text.Format. The native Format interface 
 wraps the java.text.Format and makes it possible to implement different parsing 
@@ -31,7 +31,7 @@ allows one line from the parser to split into several lines before forwarding to
 * ConvertTask class has been re-written with a new interface, constructed by static constructors that provides Consumer with the behavior instead of LineManipulator. 
 ## 2.1
 ### 2.1.1
-* Fixed problem that insufficient-error was not signalled correctly as en error when when parsing an "ignoreread" cell.
+* Fixed problem that insufficient-error was not signaled correctly as en error when parsing an "ignoreread" cell.
 * Fixed problem converting to/from bean when bean class was annotated using lombok @Getter/@Setter and at the same time 
 implementing an interface that imposed a getter or a setter.
 
