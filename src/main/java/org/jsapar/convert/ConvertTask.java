@@ -1,7 +1,6 @@
 package org.jsapar.convert;
 
 import org.jsapar.compose.Composer;
-import org.jsapar.concurrent.ConcurrentConsumer;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.parse.ParseTask;
