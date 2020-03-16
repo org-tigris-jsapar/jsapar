@@ -58,9 +58,8 @@ public class ConvertTask {
         if(lineManipulators.size() == 1){
             final LineManipulator manipulator = lineManipulators.get(0);
             return line->{
-                if(!manipulator.manipulate(line))
-                    return;
-                composer.composeLine(line);
+                if(manipulator.manipulate(line))
+                    composer.composeLine(line);
             };
         }
         return line->{
