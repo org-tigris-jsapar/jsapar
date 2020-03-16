@@ -52,6 +52,17 @@ public class ConvertTask {
     }
 
     public static Consumer<Line> makeManipulateAndComposeConsumer(Composer composer, List<LineManipulator> lineManipulators) {
+        if(lineManipulators.isEmpty()){
+            return composer::composeLine;
+        }
+        if(lineManipulators.size() == 1){
+            final LineManipulator manipulator = lineManipulators.get(0);
+            return line->{
+                if(!manipulator.manipulate(line))
+                    return;
+                composer.composeLine(line);
+            };
+        }
         return line->{
             for (LineManipulator manipulator : lineManipulators) {
                 if (!manipulator.manipulate(line))
