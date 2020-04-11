@@ -15,7 +15,7 @@
  *    Schema schema = Schema.ofXml(schemaReader);
  *    TextParser parser = new TextParser(schema);
  *    Document document = new Document();
- *    DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener(document);
+ *    DocumentBuilderLineConsumer listener = new DocumentBuilderLineConsumer();
  *    parser.parse(fileReader, listener);
  * }
  * }</pre>
@@ -38,9 +38,9 @@
  * try (Reader schemaReader = new FileReader("examples/07_CsvSchemaToJava.xml");
  *    Reader fileReader = new FileReader("examples/07_Names.csv")) {
  *    Text2BeanConverter converter = new Text2BeanConverter(Schema.ofXml(schemaReader));
- *    RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
+ *    CollectingConsumer<TstPerson> beanEventListener = new CollectingConsumer<>();
  *    converter.convert(fileReader, beanEventListener);
- *    List<TstPerson> people = beanEventListener.getLines();
+ *    List<TstPerson> people = beanEventListener.getCollected();
  * }
  * }</pre>
  *

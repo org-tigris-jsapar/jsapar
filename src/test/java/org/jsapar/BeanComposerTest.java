@@ -4,6 +4,7 @@ import org.jsapar.compose.ComposeException;
 import org.jsapar.compose.bean.*;
 import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.model.*;
+import org.jsapar.parse.CollectingConsumer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,10 +55,10 @@ public class BeanComposerTest {
         document.addLine(line2);
 
         BeanComposer<TstPerson> composer = new BeanComposer<>();
-        RecordingBeanEventListener<TstPerson> beanEventListener = new RecordingBeanEventListener<>();
-        composer.setComposedEventListener(beanEventListener);
+        CollectingConsumer<TstPerson> beanEventListener = new CollectingConsumer<>();
+        composer.setBeanConsumer(beanEventListener);
         composer.compose(document);
-        java.util.List<TstPerson> objects = beanEventListener.getBeans();
+        java.util.List<TstPerson> objects = beanEventListener.getCollected();
         assertEquals(2, objects.size());
         TstPerson firstPerson = objects.get(0);
         assertEquals("Jonas", firstPerson.getFirstName());
