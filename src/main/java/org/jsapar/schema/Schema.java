@@ -31,7 +31,7 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
      */
     private LinkedHashMap<String, L> schemaLines = new LinkedHashMap<>();
 
-    <S extends Schema<L>, B extends Schema.Builder<L, S, B>> Schema(Builder<L, S, B> builder) {
+    protected <S extends Schema<L>, B extends Schema.Builder<L, S, B>> Schema(Builder<L, S, B> builder) {
         this.lineSeparator = builder.lineSeparator;
         for (L schemaLine : builder.schemaLines) {
             this.addSchemaLine(schemaLine);
@@ -45,10 +45,10 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
         private List<L> schemaLines = new ArrayList<>();
         private Locale defaultLocale = SchemaCellFormat.defaultLocale;
 
-        Builder() {
+        protected Builder() {
         }
 
-        Builder(Schema<L> schema) {
+        protected Builder(Schema<L> schema) {
             this.schemaLines.addAll(schema.schemaLines.values());
         }
 
@@ -95,7 +95,7 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
             return (B)this;
         }
 
-        abstract S build();
+        protected abstract S build();
 
         public Locale getDefaultLocale() {
             return defaultLocale;

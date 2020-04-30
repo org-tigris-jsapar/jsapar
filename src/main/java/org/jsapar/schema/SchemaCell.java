@@ -156,7 +156,7 @@ public abstract class SchemaCell implements Cloneable {
         private String pattern;
         private Locale locale=Locale.US;
 
-        Builder(String name) {
+        protected Builder(String name) {
             this.name = name;
         }
 

@@ -4,7 +4,6 @@ import org.jsapar.compose.Composer;
 import org.jsapar.compose.internal.ComposerFactory;
 import org.jsapar.compose.internal.SchemaComposer;
 import org.jsapar.compose.internal.TextComposerFactory;
-import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
@@ -22,11 +21,10 @@ import java.util.function.Consumer;
  * 
  */
 public class TextComposer implements Composer, AutoCloseable {
-    private final Writer          writer;
-    private final Schema          schema;
-    private final ComposerFactory composerFactory;
-    private       SchemaComposer  currentSchemaComposer;
-    private boolean breakBefore = false;
+    private final Writer         writer;
+    private final Schema<?>      schema;
+    private final SchemaComposer schemaComposer;
+    private       boolean        breakBefore = false;
 
     /**
      * Creates an TextComposer with a schema.
@@ -34,7 +32,7 @@ public class TextComposer implements Composer, AutoCloseable {
      * @param schema The schema to use.
      * @param writer The writer to write text output to. Caller is responsible for either closing the writer or call the close method of the created instance.
      */
-    public TextComposer(Schema schema, Writer writer) {
+    public TextComposer(Schema<?> schema, Writer writer) {
         this(schema, writer, new TextComposerFactory());
     }
 
@@ -45,20 +43,14 @@ public class TextComposer implements Composer, AutoCloseable {
      * @param writer          The writer to write text output to. Caller is responsible for either closing the writer or call the close method of the created instance.
      * @param composerFactory A factory interface for creating {@link SchemaComposer} based on schema.
      */
-    TextComposer(Schema schema, Writer writer, ComposerFactory composerFactory) {
+    TextComposer(Schema<?> schema, Writer writer, ComposerFactory composerFactory) {
         if(writer == null)
             throw new IllegalArgumentException("Writer of text composer cannot be null");
         if(schema == null)
             throw new IllegalArgumentException("Schema of text composer cannot be null");
         this.schema = schema;
         this.writer = writer;
-        this.composerFactory = composerFactory;
-    }
-
-    private SchemaComposer makeSchemaComposer() {
-        if (currentSchemaComposer == null)
-            currentSchemaComposer = composerFactory.makeComposer(schema, writer);
-        return currentSchemaComposer;
+        this.schemaComposer = composerFactory.makeComposer(schema, writer);
     }
 
     /**
@@ -109,17 +101,9 @@ public class TextComposer implements Composer, AutoCloseable {
      * @return True if line was composed, false otherwise.
      */
     boolean writeLine(Line line) {
-        SchemaComposer schemaComposer = makeSchemaComposer();
         return schemaComposer.composeLine(line);
     }
 
-
-    /**
-     * @return the schema
-     */
-    public Schema getSchema() {
-        return schema;
-    }
 
     /**
      * Closes the attached writer.

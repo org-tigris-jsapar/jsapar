@@ -100,7 +100,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
         this.setOccurs(nOccurs);
     }
 
-    <L extends SchemaLine<C>, B extends Builder<C, L, B>> SchemaLine(Builder<C, L, B> builder) {
+    protected <L extends SchemaLine<C>, B extends Builder<C, L, B>> SchemaLine(Builder<C, L, B> builder) {
         builder.schemaCells.forEach(c-> this.schemaCells.put(c.getName(), c));
         this.occurs = builder.occurs;
         this.lineType = builder.lineType;

@@ -49,7 +49,6 @@ public class TextComposerTest {
 
         Writer writer = new StringWriter();
         TextComposer composer = new TextComposer(schema, writer);
-        assertSame(schema, composer.getSchema());
         composer.compose(document);
 
         assertEquals(sExpected, writer.toString());
