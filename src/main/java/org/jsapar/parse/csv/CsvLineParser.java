@@ -68,7 +68,7 @@ class CsvLineParser {
      * @return True if a line was parsed, false if no line could be parsed.
      * @throws IOException if an io-error occur
      */
-    boolean parse(CsvLineReader lineReader, Consumer<Line> listener, Consumer<JSaParException> errorListener)
+    boolean parse(CsvLineReader lineReader, Consumer<? super Line> listener, Consumer<JSaParException> errorListener)
             throws IOException {
 
         if(lineReader.eofReached())

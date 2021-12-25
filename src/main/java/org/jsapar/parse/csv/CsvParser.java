@@ -10,7 +10,13 @@ import org.jsapar.text.TextParseConfig;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.UncheckedIOException;
+import java.util.Spliterator;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Internal class for parsing CSV input.
@@ -60,6 +66,50 @@ public class CsvParser implements TextSchemaParser {
 
     }
 
+    public Stream<Line> stream(Consumer<JSaParException> errorListener) throws IOException {
+        if(schema.isEmpty()) {
+            return Stream.empty();
+        }
+        try {
+            Spliterator<Line> spliterator = new Spliterator<>() {
+                @Override
+                public boolean tryAdvance(Consumer<? super Line> action) {
+                    try {
+                        CsvLineParser lineParser = lineParserFactory.makeLineParser(lineReader);
+                        if (lineParser == null) {
+                            if (lineParserFactory.isEmpty() || lineReader.eofReached())
+                                return false;
+                            handleNoParser(lineReader, errorListener);
+                            return true;
+                        }
+                        return lineParser.parse(lineReader, action, errorListener);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                }
+
+                @Override
+                public Spliterator<Line> trySplit() {
+                    return null;
+                }
+
+                @Override
+                public long estimateSize() {
+                    return 0;
+                }
+
+                @Override
+                public int characteristics() {
+                    return 0;
+                }
+            };
+
+            return StreamSupport.stream(spliterator, false);
+        }catch (UncheckedIOException e){
+            throw e.getCause();
+        }
+
+    }
     private void handleNoParser(CsvLineReader lineReader, Consumer<JSaParException> errorEventListener)
             throws IOException {
         if (lineReader.lastLineWasEmpty())
