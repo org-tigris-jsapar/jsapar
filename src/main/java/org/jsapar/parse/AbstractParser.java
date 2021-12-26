@@ -42,4 +42,8 @@ public class AbstractParser {
     public void setErrorConsumer(Consumer<JSaParException> errorConsumer) {
         this.errorConsumer = errorConsumer;
     }
+
+    protected Consumer<JSaParException> getErrorConsumer() {
+        return errorConsumer;
+    }
 }

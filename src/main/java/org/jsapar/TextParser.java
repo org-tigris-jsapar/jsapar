@@ -4,6 +4,7 @@ import org.jsapar.model.Line;
 import org.jsapar.parse.AbstractParser;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.LineEventListenerLineConsumer;
+import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.Schema;
@@ -11,6 +12,7 @@ import org.jsapar.schema.Schema;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * This class is the starting point for parsing a text (like a text file). <br>
@@ -35,14 +37,14 @@ import java.util.function.Consumer;
  */
 public class TextParser extends AbstractParser {
 
-    private final Schema          parseSchema;
+    private final Schema<?>          parseSchema;
     private       TextParseConfig parseConfig;
 
-    public TextParser(Schema parseSchema) {
+    public TextParser(Schema<?> parseSchema) {
         this(parseSchema, new TextParseConfig());
     }
 
-    public TextParser(Schema parseSchema, TextParseConfig parseConfig) {
+    public TextParser(Schema<?> parseSchema, TextParseConfig parseConfig) {
         this.parseSchema = parseSchema;
         this.parseConfig = parseConfig;
     }
@@ -75,6 +77,16 @@ public class TextParser extends AbstractParser {
         return execute(parseTask, lineConsumer);
     }
 
+    public Stream<Line> stream(Reader reader) throws IOException {
+        TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
+        return parser.stream(false, getErrorConsumer());
+    }
+
+    public Stream<Line> parallelStream(Reader reader) throws IOException {
+        TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
+        return parser.stream(true, getErrorConsumer());
+    }
+
     /**
      * Reads text from supplied reader and parses each line. Each parsed line generates a call-back to the lineConsumer.
      * <p>
@@ -88,7 +100,7 @@ public class TextParser extends AbstractParser {
      * @throws IOException In case of IO error
      * @see #parseForEach(Reader, Consumer)
      */
-    public static long parseForEach(Schema schema, Reader reader, Consumer<Line> lineConsumer) throws IOException {
+    public static long parseForEach(Schema<?> schema, Reader reader, Consumer<Line> lineConsumer) throws IOException {
         TextParser parser = new TextParser(schema);
         return parser.parseForEach(reader, lineConsumer);
     }
