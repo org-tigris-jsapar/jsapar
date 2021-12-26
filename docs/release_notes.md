@@ -5,7 +5,10 @@ title: Release notes
 # Release notes
 * TOC
 {:toc}
-
+## 2.3
+### 2.3.0
+1. Built with and for Java 11. Support for Java 8 and below is dropped. 
+2. Added methods to get stream of lines while parsing. This makes parsing lazy, i.e. lines are pulled from the source `Reader` upon requested.
 ## 2.2
 ### 2.2.0
 There are two main focus areas of this release:
