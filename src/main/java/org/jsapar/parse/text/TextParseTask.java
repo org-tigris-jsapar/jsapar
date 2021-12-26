@@ -1,5 +1,6 @@
 package org.jsapar.parse.text;
 
+import org.jsapar.model.Line;
 import org.jsapar.parse.AbstractParseTask;
 import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.ParseTask;
@@ -10,6 +11,7 @@ import org.jsapar.text.TextParseConfig;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.stream.Stream;
 
 /**
  * This class is used for a one-off parsing of a text source. You create an instance of this class, calls execute, then dispose it.. <br>

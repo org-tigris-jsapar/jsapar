@@ -12,9 +12,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.util.Spliterator;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -66,7 +64,7 @@ public class CsvParser implements TextSchemaParser {
 
     }
 
-    public Stream<Line> stream(Consumer<JSaParException> errorListener) throws IOException {
+    public Stream<Line> stream(boolean parallel, Consumer<JSaParException> errorListener) throws IOException {
         if(schema.isEmpty()) {
             return Stream.empty();
         }
@@ -104,7 +102,7 @@ public class CsvParser implements TextSchemaParser {
                 }
             };
 
-            return StreamSupport.stream(spliterator, false);
+            return StreamSupport.stream(spliterator, parallel);
         }catch (UncheckedIOException e){
             throw e.getCause();
         }

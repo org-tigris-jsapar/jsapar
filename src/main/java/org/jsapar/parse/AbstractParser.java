@@ -13,9 +13,8 @@ import java.util.function.Consumer;
  * Abstract base class for all parsers.
  *
  * The default error handling is to throw an exception upon the first error that occurs. You can however change that
- * behavior by adding an {@link org.jsapar.error.ErrorEventListener}. There are several implementations to choose from such as
- * {@link org.jsapar.error.RecordingErrorEventListener} or
- * {@link org.jsapar.error.ThresholdRecordingErrorEventListener}, or you may implement your own..
+ * behavior by adding an error consumer with {@link #setErrorConsumer(Consumer)}. There are several implementations to choose from such as
+ * {@link org.jsapar.error.ThresholdCollectingErrorConsumer}, or you may implement your own.
  */
 public class AbstractParser {
 
