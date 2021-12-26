@@ -3,12 +3,13 @@
 [![Javadocs](https://javadoc.io/badge/org.tigris.jsapar/jsapar.svg)](https://javadoc.io/doc/org.tigris.jsapar/jsapar)
 [![Build Status](https://travis-ci.org/org-tigris-jsapar/jsapar.png?branch=master)](https://travis-ci.org/org-tigris-jsapar/jsapar)
 
-[![Java 8](https://img.shields.io/badge/java-8-brightgreen.svg)](#java-8)
-[![Java 9-ea](https://img.shields.io/badge/java-9-brightgreen.svg)](#java-9)
-[![Java 10-ea](https://img.shields.io/badge/java-10-brightgreen.svg)](#java-10)
 [![Java 11-ea](https://img.shields.io/badge/java-11-brightgreen.svg)](#java-11)
 [![Java 12-ea](https://img.shields.io/badge/java-12-brightgreen.svg)](#java-12)
 [![Java 13-ea](https://img.shields.io/badge/java-13-brightgreen.svg)](#java-13)
+[![Java 14-ea](https://img.shields.io/badge/java-14-brightgreen.svg)](#java-14)
+[![Java 15-ea](https://img.shields.io/badge/java-15-brightgreen.svg)](#java-15)
+[![Java 16-ea](https://img.shields.io/badge/java-16-brightgreen.svg)](#java-16)
+[![Java 17-ea](https://img.shields.io/badge/java-17-brightgreen.svg)](#java-17)
 # jsapar
 **JSaPar** stands for  **J**ava **S**chem**a** based **Par**ser
 

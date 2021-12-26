@@ -4,6 +4,10 @@ jdk:
   - openjdk11
   - openjdk12
   - openjdk13
+  - openjdk14
+  - openjdk15
+  - openjdk16
+  - openjdk17
 
 sudo: false
 install: mvn install -Dgpg.skip -DskipTests -Dmaven.javadoc.skip=true -B -V
