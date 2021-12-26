@@ -5,6 +5,7 @@ import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.error.ValidationAction;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Document;
+import org.jsapar.model.Line;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.DocumentBuilderLineConsumer;
 import org.jsapar.parse.DocumentBuilderLineEventListener;
@@ -19,6 +20,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
@@ -44,6 +47,31 @@ public class FixedWidthParserTest {
 
         assertEquals("Frida", LineUtils.getStringCellValue(doc.getLine(1), "First name"));
         assertEquals("Stenberg", LineUtils.getStringCellValue(doc.getLine(1), "Last name"));
+    }
+
+    @Test
+    public final void testStream() throws IOException {
+        String toParse = "JonasStenbergFridaStenberg";
+        FixedWidthSchema schema = FixedWidthSchema.builder()
+                .withLineSeparator("")
+                .withLine("Person", line->line
+                        .withOccurs(2)
+                        .withCell("First name", 5)
+                        .withCell("Last name", 8)
+                ).build();
+
+        Reader reader = new StringReader(toParse);
+
+        FixedWidthParser parser = new FixedWidthParser(reader, schema, new TextParseConfig());
+        List<Line> lines = parser.stream(false, e -> {
+            throw e;
+        }).collect(Collectors.toList());
+
+        assertEquals("Jonas", LineUtils.getStringCellValue(lines.get(0), "First name"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(lines.get(0), "Last name"));
+
+        assertEquals("Frida", LineUtils.getStringCellValue(lines.get(1), "First name"));
+        assertEquals("Stenberg", LineUtils.getStringCellValue(lines.get(1), "Last name"));
     }
 
     @Test

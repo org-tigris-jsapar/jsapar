@@ -77,11 +77,31 @@ public class TextParser extends AbstractParser {
         return execute(parseTask, lineConsumer);
     }
 
+    /**
+     * Returns a stream of lines that are lazily populated by lines when pulled from the stream. The reader is consumed
+     * on the fly upon pulling items from the stream.
+     * <p/>
+     * This method is particularly efficient if you don't want to scan through the whole source since it will abort
+     * parsing as soon as you stop pulling items from the stream.
+     * @param reader The reader to parse from.
+     * @return a stream of lines that are lazily populated by lines when pulled from the stream. The order of the stream is according to the order lines were parsed from the reader.
+     * @throws IOException If there is an error reading from the input reader.
+     */
     public Stream<Line> stream(Reader reader) throws IOException {
         TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
         return parser.stream(false, getErrorConsumer());
     }
 
+    /**
+     * Returns a parallel stream of lines that are lazily populated by lines when pulled from the stream. The reader is consumed
+     * on the fly upon pulling items from the stream.
+     * <p/>
+     * This method is particularly efficient if you don't want to scan through the whole source since it will abort
+     * parsing as soon as you stop pulling items from the stream.
+     * @param reader The reader to parse from.
+     * @return a parallel stream of lines that are lazily populated by lines when pulled from the stream. Note that the order of a parallel stream is undefined.
+     * @throws IOException If there is an error reading from the input reader.
+     */
     public Stream<Line> parallelStream(Reader reader) throws IOException {
         TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
         return parser.stream(true, getErrorConsumer());
