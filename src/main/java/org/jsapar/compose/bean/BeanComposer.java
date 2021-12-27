@@ -9,6 +9,7 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -25,7 +26,7 @@ public class BeanComposer<T> implements Composer{
     private Consumer<JSaParException> errorConsumer = new ExceptionErrorConsumer();
     private BeanFactory<T>            beanFactory;
     private BeanComposeConfig config;
-    private ValidationHandler validationHandler = new ValidationHandler();
+    private final ValidationHandler validationHandler = new ValidationHandler();
 
     /**
      * Creates a bean composer with {@link BeanFactoryDefault} as {@link BeanFactory}
@@ -63,6 +64,32 @@ public class BeanComposer<T> implements Composer{
     }
 
 
+    public Optional<T> toBean(Line line){
+        try {
+            T bean = beanFactory.createBean(line);
+            if (bean == null) {
+                validationHandler.lineValidationError(line,
+                        "BeanFactory failed to instantiate object for this line because there was no associated class. You can supress errors like this by setting config.onUndefinedLineType=OMIT_LINE",
+                        config.getOnUndefinedLineType(), errorConsumer);
+                return Optional.empty();
+            } else {
+                assign(line, bean);
+                return Optional.of(bean);
+            }
+        } catch (InstantiationException|NoSuchMethodException|InvocationTargetException e) {
+            generateErrorEvent(line, "Failed to instantiate object. Skipped creating bean", e);
+        } catch (IllegalAccessException e) {
+            generateErrorEvent(line, "Failed to call set method. Skipped creating bean", e);
+        } catch (ClassNotFoundException e) {
+            generateErrorEvent(line, "Class not found. Skipped creating bean", e);
+        } catch (ClassCastException e) {
+            generateErrorEvent(line,
+                    "Class of the created bean is not inherited from the generic type specified when creating the BeanComposer",
+                    e);
+        }
+        return Optional.empty();
+    }
+
     @Override
     public boolean composeLine(Line line) {
         T bean = null;
@@ -70,7 +97,7 @@ public class BeanComposer<T> implements Composer{
             bean = beanFactory.createBean(line);
             if (bean == null) {
                 if (!validationHandler.lineValidationError(line,
-                        "BeanFactory failed to instantiate object for this line because there was no associated class. You can errors like this by setting config.onUndefinedLineType=OMIT_LINE",
+                        "BeanFactory failed to instantiate object for this line because there was no associated class. You can supress errors like this by setting config.onUndefinedLineType=OMIT_LINE",
                         config.getOnUndefinedLineType(), errorConsumer)) {
                     return false;
                 }

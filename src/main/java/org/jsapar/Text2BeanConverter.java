@@ -6,6 +6,7 @@ import org.jsapar.convert.AbstractConverter;
 import org.jsapar.error.BeanException;
 import org.jsapar.model.Line;
 import org.jsapar.parse.text.TextParseTask;
+import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
@@ -16,6 +17,7 @@ import java.io.Reader;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * Converts text input to Java bean objects. You can choose to use the standard behavior or you may customize assigning
@@ -100,6 +102,40 @@ public class Text2BeanConverter<T> extends AbstractConverter {
         if (beanFactory != null)
             composer.setBeanFactory(beanFactory);
         return execute(new TextParseTask(this.parseSchema, reader, parseConfig), composer);
+    }
+
+    private Stream<T> stream(Reader reader, boolean parallel) throws IOException {
+        BeanComposer<T> composer = new BeanComposer<>(composeConfig, beanFactory);
+        TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
+        return parser.stream(parallel, getErrorConsumer()).flatMap(line->composer.toBean(line).stream());
+    }
+
+    /**
+     * Returns a stream of beans that are lazily populated by lines when pulled from the stream. The reader is consumed
+     * on the fly upon pulling items from the stream.
+     * <p/>
+     * This method is particularly efficient if you don't want to scan through the whole source since it will abort
+     * parsing as soon as you stop pulling items from the stream.
+     * @param reader The reader to parse from.
+     * @return a stream of beans that are lazily populated by lines when pulled from the stream. The order of the stream is according to the order lines were parsed from the reader.
+     * @throws IOException If there is an error reading from the input reader.
+     */
+    public Stream<T> stream(Reader reader) throws IOException {
+        return stream(reader, false);
+    }
+
+    /**
+     * Returns a parallel stream of beans that are lazily populated by lines when pulled from the stream. The reader is consumed
+     * on the fly upon pulling items from the stream.
+     * <p/>
+     * This method is particularly efficient if you don't want to scan through the whole source since it will abort
+     * parsing as soon as you stop pulling items from the stream.
+     * @param reader The reader to parse from.
+     * @return a parallel stream of beans that are lazily populated by lines when pulled from the stream. Note that the order of a parallel stream is undefined.
+     * @throws IOException If there is an error reading from the input reader.
+     */
+    public Stream<T> parallelStream(Reader reader) throws IOException {
+        return stream(reader, true);
     }
 
     /**

@@ -88,8 +88,7 @@ public class TextParser extends AbstractParser {
      * @throws IOException If there is an error reading from the input reader.
      */
     public Stream<Line> stream(Reader reader) throws IOException {
-        TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
-        return parser.stream(false, getErrorConsumer());
+        return stream(reader, false);
     }
 
     /**
@@ -103,8 +102,12 @@ public class TextParser extends AbstractParser {
      * @throws IOException If there is an error reading from the input reader.
      */
     public Stream<Line> parallelStream(Reader reader) throws IOException {
+        return stream(reader, true);
+    }
+
+    private Stream<Line> stream(Reader reader, boolean parallel) throws IOException {
         TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
-        return parser.stream(true, getErrorConsumer());
+        return parser.stream(parallel, getErrorConsumer());
     }
 
     /**
