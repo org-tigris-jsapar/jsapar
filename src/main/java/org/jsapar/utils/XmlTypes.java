@@ -126,8 +126,7 @@ public interface XmlTypes {
 
             @Override
             public void warning(SAXParseException e) {
-                // System.out.println("Warning while validating schema" +
-                // e);
+                // Maybe take action?
             }
         };
 

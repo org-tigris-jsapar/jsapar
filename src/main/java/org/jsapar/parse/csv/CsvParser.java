@@ -20,11 +20,10 @@ import java.util.stream.StreamSupport;
  * Internal class for parsing CSV input.
  */
 public class CsvParser implements TextSchemaParser {
-    
-    private CsvLineReader lineReader;
-    private CsvSchema            schema;
-    private CsvLineParserFactory lineParserFactory;
-    private TextParseConfig      parseConfig;
+    private final CsvLineReader lineReader;
+    private final CsvSchema schema;
+    private final CsvLineParserFactory lineParserFactory;
+    private final TextParseConfig parseConfig;
     private final ValidationHandler validationHandler = new ValidationHandler();
 
     CsvParser(Reader reader, CsvSchema schema) {

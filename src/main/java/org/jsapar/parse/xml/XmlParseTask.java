@@ -36,10 +36,8 @@ import java.util.function.Consumer;
  * Parses xml text that conform to the schema http://jsapar.tigris.org/XMLDocumentFormat/2.0
  */
 public class XmlParseTask extends AbstractParseTask implements ParseTask {
-    // private final static String SCHEMA_LANGUAGE =
-    // "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
 
-    private Reader reader;
+    private final Reader reader;
 
     public XmlParseTask(Reader reader) {
         this.reader = reader;
@@ -84,10 +82,10 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
         private Line     currentLine;
         private CellType currentCellType;
         private String   currentCellName;
-        private Cell     currentCell;
+        private Cell<?>     currentCell;
         private boolean            cellStarted = false;
-        private Consumer<Line>            listener;
-        private Consumer<JSaParException> errorEventListener;
+        private final Consumer<Line>            listener;
+        private final Consumer<JSaParException> errorEventListener;
         private long                      currentLineNumber = 1;
 
         JSaParSAXHandler(Consumer<Line> listener, Consumer<JSaParException> errorEventListener) {

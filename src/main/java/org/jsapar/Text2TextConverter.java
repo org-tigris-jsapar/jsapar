@@ -1,12 +1,11 @@
 package org.jsapar;
 
 import org.jsapar.convert.AbstractConverter;
-import org.jsapar.convert.ConvertTask;
+import org.jsapar.parse.text.TextParseTask;
+import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
 import org.jsapar.text.TextParseConfig;
-import org.jsapar.parse.text.TextParseTask;
-import org.jsapar.schema.Schema;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -64,7 +63,7 @@ public class Text2TextConverter extends AbstractConverter {
      * @throws IOException In case of IO error
      * @see #convert(Reader, Writer)
      */
-    public static long convert(Schema parseSchema, Schema composeSchema, Reader reader, Writer writer)
+    public static long convert(Schema<?> parseSchema, Schema<?> composeSchema, Reader reader, Writer writer)
             throws IOException {
         Text2TextConverter converter = new Text2TextConverter(parseSchema, composeSchema);
         return converter.convert(reader, writer);
@@ -86,11 +85,11 @@ public class Text2TextConverter extends AbstractConverter {
         this.parseConfig = parseConfig;
     }
 
-    public Schema getParseSchema() {
+    public Schema<?> getParseSchema() {
         return parseSchema;
     }
 
-    public Schema getComposeSchema() {
+    public Schema<?> getComposeSchema() {
         return composeSchema;
     }
 

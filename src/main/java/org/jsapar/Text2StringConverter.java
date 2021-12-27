@@ -1,12 +1,10 @@
 package org.jsapar;
 
 import org.jsapar.compose.Composer;
-import org.jsapar.compose.bean.BeanComposer;
 import org.jsapar.compose.string.StringComposedConsumer;
 import org.jsapar.compose.string.StringComposedEventListener;
 import org.jsapar.compose.string.StringComposer;
 import org.jsapar.convert.AbstractConverter;
-import org.jsapar.convert.ConvertTask;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.schema.Schema;

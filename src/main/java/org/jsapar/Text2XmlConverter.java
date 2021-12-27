@@ -29,7 +29,7 @@ public class Text2XmlConverter {
      * {@link #applyXslt(Reader, String)}
      * @param parseSchema The parsing schema to use.
      */
-    public Text2XmlConverter(Schema parseSchema) {
+    public Text2XmlConverter(Schema<?> parseSchema) {
         TextParser textParser = new TextParser(parseSchema);
         this.saxReader = new Text2SAXReader(textParser);
         try {
@@ -48,7 +48,7 @@ public class Text2XmlConverter {
      * @param parseSchema The parsing schema to use.
      * @param transformer The {@link Transformer} to apply to the xml before generating the output.
      */
-    public Text2XmlConverter(Schema parseSchema, Transformer transformer) {
+    public Text2XmlConverter(Schema<?> parseSchema, Transformer transformer) {
         TextParser textParser = new TextParser(parseSchema);
         this.saxReader = new Text2SAXReader(textParser);
         this.transformer = transformer;

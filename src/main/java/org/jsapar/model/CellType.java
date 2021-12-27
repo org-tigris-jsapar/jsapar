@@ -62,9 +62,9 @@ public enum CellType {
      */
     ENUM(new EnumCellFactory(), true, false);
 
-    private CellFactory cellFactory;
-    private boolean atomic;
-    private boolean number;
+    private final CellFactory cellFactory;
+    private final boolean atomic;
+    private final boolean number;
 
     CellType(CellFactory cellFactory, boolean atomic, boolean number) {
         this.cellFactory = cellFactory;

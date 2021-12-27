@@ -1,7 +1,6 @@
 package org.jsapar;
 
 import org.jsapar.convert.AbstractConverter;
-import org.jsapar.convert.ConvertTask;
 import org.jsapar.parse.xml.XmlParseTask;
 import org.jsapar.schema.Schema;
 
@@ -15,9 +14,9 @@ import java.io.Writer;
  * @see org.jsapar.parse.xml.XmlParser
  */
 public class Xml2TextConverter extends AbstractConverter {
-    private final Schema composeSchema;
+    private final Schema<?> composeSchema;
 
-    public Xml2TextConverter(Schema composeSchema) {
+    public Xml2TextConverter(Schema<?> composeSchema) {
         this.composeSchema = composeSchema;
     }
 

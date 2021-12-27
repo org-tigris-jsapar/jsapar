@@ -58,13 +58,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         try(InputStream schemaStream = Xml2SchemaBuilder.class.getResourceAsStream(schemaFileName)) {
             if (schemaStream == null)
                 throw new FileNotFoundException("Could not find schema file: " + schemaFileName);
-            // File schemaFile = new
-            // File("resources/xml/schema/JSaParSchema.xsd");
-
-            // javax.xml.validation.Schema xmlSchema;
 
             Element xmlRoot = parseXmlDocument(reader, schemaStream);
-            // Element xmlRoot = (Element) xmlDocument.getFirstChild();
 
             Element xmlSchema = getChild(xmlRoot, ELEMENT_CSV_SCHEMA);
             if (null != xmlSchema)
