@@ -38,6 +38,7 @@ public interface TextSchemaParser {
      * @param parallel If true the returned stream will be a parallel stream with no guarantee of execution order.
      * @param errorConsumer The error consumer that will receive events for each error.
      * @return a stream of lines that are lazily populated by lines when pulled from the stream.
+     * @since 2.3
      * @throws IOException If there is an error reading from the input reader.
      */
     Stream<Line> stream(boolean parallel, Consumer<JSaParException> errorConsumer) throws IOException;

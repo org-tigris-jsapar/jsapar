@@ -8,8 +8,10 @@ import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Composer that calls a {@link StringComposedConsumer} for each line that is composed.
@@ -57,6 +59,13 @@ public class StringComposer implements Composer {
                 line.getLineNumber()
         );
         return true;
+    }
+
+    public Optional<Stream<String>> toStringLine(Line line) {
+        StringLineComposer lineComposer = lineComposers.get(line.getLineType());
+        if (lineComposer == null || lineComposer.isIgnoreWrite())
+            return Optional.empty();
+        return Optional.of(lineComposer.composeStringLine(line));
     }
 
     @Override

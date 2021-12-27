@@ -118,6 +118,7 @@ public class Text2BeanConverter<T> extends AbstractConverter {
      * parsing as soon as you stop pulling items from the stream.
      * @param reader The reader to parse from.
      * @return a stream of beans that are lazily populated by lines when pulled from the stream. The order of the stream is according to the order lines were parsed from the reader.
+     * @since 2.3
      * @throws IOException If there is an error reading from the input reader.
      */
     public Stream<T> stream(Reader reader) throws IOException {
@@ -132,6 +133,7 @@ public class Text2BeanConverter<T> extends AbstractConverter {
      * parsing as soon as you stop pulling items from the stream.
      * @param reader The reader to parse from.
      * @return a parallel stream of beans that are lazily populated by lines when pulled from the stream. Note that the order of a parallel stream is undefined.
+     * @since 2.3
      * @throws IOException If there is an error reading from the input reader.
      */
     public Stream<T> parallelStream(Reader reader) throws IOException {
@@ -143,6 +145,7 @@ public class Text2BeanConverter<T> extends AbstractConverter {
      * @param reader The reader to read the text from.
      * @param beanConsumer The consumer that will be called for each bean that is composed.
      * @return Number of converted beans.
+     * @since 2.2
      * @throws IOException In case of io error.
      */
     public long convertForEach(Reader reader, Consumer<T> beanConsumer) throws IOException {

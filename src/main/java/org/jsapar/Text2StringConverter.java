@@ -1,12 +1,14 @@
 package org.jsapar;
 
 import org.jsapar.compose.Composer;
+import org.jsapar.compose.bean.BeanComposer;
 import org.jsapar.compose.string.StringComposedConsumer;
 import org.jsapar.compose.string.StringComposedEventListener;
 import org.jsapar.compose.string.StringComposer;
 import org.jsapar.convert.AbstractConverter;
 import org.jsapar.convert.ConvertTask;
 import org.jsapar.parse.text.TextParseTask;
+import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
@@ -84,6 +86,42 @@ public class Text2StringConverter extends AbstractConverter {
      */
     public long convertForEach(Reader reader, Consumer<Stream<String>> stringComposedConsumer) throws IOException {
         return this.convertForEach(reader, (cells, lineType, lineNumber)->stringComposedConsumer.accept(cells));
+    }
+
+    private Stream<Stream<String>> stream(Reader reader, boolean parallel) throws IOException {
+        StringComposer composer = new StringComposer(composeSchema, (c,l,n)->{});
+        TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
+        return parser.stream(parallel, getErrorConsumer()).flatMap(line->composer.toStringLine(line).stream());
+    }
+
+    /**
+     * Returns a stream of lines consisting of stream of cell values that are lazily populated by lines when pulled from the stream. The reader is consumed
+     * on the fly upon pulling items from the stream.
+     * <p/>
+     * This method is particularly efficient if you don't want to scan through the whole source since it will abort
+     * parsing as soon as you stop pulling items from the stream.
+     * @param reader The reader to parse from.
+     * @return a stream of lines consisting of stream of cell values that are lazily populated by lines when pulled from the stream. The order of the stream is according to the order lines were parsed from the reader.
+     * @since 2.3
+     * @throws IOException If there is an error reading from the input reader.
+     */
+    public Stream<Stream<String>> stream(Reader reader) throws IOException {
+        return stream(reader, false);
+    }
+
+    /**
+     * Returns a parallel stream of lines consisting of stream of cell values that are lazily populated by lines when pulled from the stream. The reader is consumed
+     * on the fly upon pulling items from the stream.
+     * <p/>
+     * This method is particularly efficient if you don't want to scan through the whole source since it will abort
+     * parsing as soon as you stop pulling items from the stream.
+     * @param reader The reader to parse from.
+     * @return a parallel stream of lines consisting of stream of cell values that are lazily populated by lines when pulled from the stream. Note that the order of a parallel stream is undefined.
+     * @since 2.3
+     * @throws IOException If there is an error reading from the input reader.
+     */
+    public Stream<Stream<String>> parallelStream(Reader reader) throws IOException {
+        return stream(reader, true);
     }
 
     /**

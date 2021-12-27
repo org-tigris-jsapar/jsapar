@@ -70,6 +70,7 @@ public class TextParser extends AbstractParser {
      * @param reader       The reader to read text from.
      * @param lineConsumer The line consumer that will be called for each line.
      * @return Number of parsed lines.
+     * @since 2.2
      * @throws IOException In case of IO error
      */
     public long parseForEach(Reader reader, Consumer<Line> lineConsumer) throws IOException {
@@ -85,6 +86,7 @@ public class TextParser extends AbstractParser {
      * parsing as soon as you stop pulling items from the stream.
      * @param reader The reader to parse from.
      * @return a stream of lines that are lazily populated by lines when pulled from the stream. The order of the stream is according to the order lines were parsed from the reader.
+     * @since 2.3
      * @throws IOException If there is an error reading from the input reader.
      */
     public Stream<Line> stream(Reader reader) throws IOException {
@@ -99,6 +101,7 @@ public class TextParser extends AbstractParser {
      * parsing as soon as you stop pulling items from the stream.
      * @param reader The reader to parse from.
      * @return a parallel stream of lines that are lazily populated by lines when pulled from the stream. Note that the order of a parallel stream is undefined.
+     * @since 2.3
      * @throws IOException If there is an error reading from the input reader.
      */
     public Stream<Line> parallelStream(Reader reader) throws IOException {
@@ -120,8 +123,9 @@ public class TextParser extends AbstractParser {
      * @param reader       The reader to read text from.
      * @param lineConsumer The line consumer that will be called for each line.
      * @return Number of parsed lines.
-     * @throws IOException In case of IO error
      * @see #parseForEach(Reader, Consumer)
+     * @since 2.2
+     * @throws IOException In case of IO error
      */
     public static long parseForEach(Schema<?> schema, Reader reader, Consumer<Line> lineConsumer) throws IOException {
         TextParser parser = new TextParser(schema);
