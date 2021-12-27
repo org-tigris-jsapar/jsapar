@@ -64,6 +64,12 @@ public class BeanComposer<T> implements Composer{
     }
 
 
+    /**
+     * The behavior in case of mapping error depends on the configuration supplied when creating this instance.
+     * @param line The line to convert into a bean instance.
+     * @return Optionally a converted bean or Optional.empty() if no bean could be constructed based on the line.
+     * @throws ComposeException in case of error while composing the bean.
+     */
     public Optional<T> toBean(Line line){
         try {
             T bean = beanFactory.createBean(line);
@@ -173,7 +179,7 @@ public class BeanComposer<T> implements Composer{
      */
     private T assign(Line line, T objectToAssign) {
 
-        for (Cell cell : line) {
+        for (Cell<?> cell : line) {
             String sName = cell.getName();
             if (sName == null || sName.isEmpty() || cell.isEmpty())
                 continue;
