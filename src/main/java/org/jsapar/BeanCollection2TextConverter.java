@@ -32,15 +32,15 @@ import java.util.stream.Stream;
  */
 public class BeanCollection2TextConverter<T> extends AbstractConverter {
 
-    private final Schema  composerSchema;
-    private       BeanMap beanMap;
+    private final Schema<?>  composerSchema;
+    private final BeanMap beanMap;
 
     /**
      * Creates a converter with supplied composer schema.
      *
      * @param composerSchema The schema to use while composing text output.
      */
-    public BeanCollection2TextConverter(Schema composerSchema) {
+    public BeanCollection2TextConverter(Schema<?> composerSchema) {
         this(composerSchema, BeanMap.ofSchema(composerSchema));
     }
 
@@ -50,7 +50,7 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * @param composerSchema The schema to use while composing text output.
      * @param beanMap        The bean map to use to map schema names to bean properties.
      */
-    public BeanCollection2TextConverter(Schema composerSchema, BeanMap beanMap) {
+    public BeanCollection2TextConverter(Schema<?> composerSchema, BeanMap beanMap) {
         assert composerSchema != null;
         this.composerSchema = composerSchema;
         this.beanMap = beanMap;

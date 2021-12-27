@@ -1,9 +1,19 @@
 package org.jsapar;
 
+import org.jsapar.error.ValidationAction;
+import org.jsapar.model.Cell;
+import org.jsapar.model.Line;
+import org.jsapar.parse.csv.CsvParser;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.Schema;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -20,7 +30,29 @@ public class TextParserTest {
         assertSame(newConfig, parser.getParseConfig());
     }
 
-    private Schema makeInputSchema() {
+
+    @Test
+    public void stream() throws IOException {
+        CsvSchema schema = CsvSchema.builder()
+                .withLine("a", l->l
+                        .withCell("type", c->c.withLineCondition(v->v.equals("A")))
+                        .withCell("gg"))
+                .build();
+
+        String text = "x;yyy\nA;BBB\nX;YYY\nA;CCC";
+        TextParseConfig config = new TextParseConfig();
+        config.setOnUndefinedLineType(ValidationAction.OMIT_LINE);
+        TextParser parser = new TextParser(schema, config);
+        try(Reader reader = new StringReader(text)) {
+            List<Line> result = parser.stream(reader).collect(Collectors.toList());
+            assertEquals(2, result.size());
+            assertEquals("BBB", result.get(0).getCell("gg").map(Cell::getStringValue).orElse(null));
+        }
+    }
+
+    private Schema<?> makeInputSchema() {
         return CsvSchema.builder().build();
     }
+
+
 }

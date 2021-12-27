@@ -19,7 +19,7 @@ import static org.junit.Assert.assertSame;
 public class Text2BeanConverterTest {
 
     @Test
-    public void convert() throws IOException {
+    public void convertForEach() throws IOException {
         CsvSchema schema = makeTestCsvSchema();
 
         String input = "John;Doe";
@@ -30,6 +30,30 @@ public class Text2BeanConverterTest {
                 assertEquals("Doe", b.getLastName());
             });
             assertEquals(1, count);
+        }
+    }
+
+    @Test
+    public void stream() throws IOException {
+        CsvSchema schema = makeTestCsvSchema();
+        String input = "John;Doe";
+        Text2BeanConverter<TstPerson> converter = new Text2BeanConverter<>(schema);
+        try (Reader reader = new StringReader(input)) {
+            TstPerson person = converter.stream(reader).findFirst().orElseThrow();
+            assertEquals("John", person.getFirstName());
+            assertEquals("Doe", person.getLastName());
+        }
+    }
+
+    @Test
+    public void parallelStream() throws IOException {
+        CsvSchema schema = makeTestCsvSchema();
+        String input = "John;Doe";
+        Text2BeanConverter<TstPerson> converter = new Text2BeanConverter<>(schema);
+        try (Reader reader = new StringReader(input)) {
+            TstPerson person = converter.parallelStream(reader).findFirst().orElseThrow();
+            assertEquals("John", person.getFirstName());
+            assertEquals("Doe", person.getLastName());
         }
     }
 

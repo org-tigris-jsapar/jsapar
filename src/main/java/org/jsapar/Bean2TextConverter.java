@@ -34,9 +34,8 @@ import java.util.function.Consumer;
  * }</pre>
  * <p>
  * The default error behavior is to throw an exception upon the first error that occurs. You can however change that
- * behavior by adding an {@link org.jsapar.error.ErrorEventListener}. There are several implementations to choose from such as
- * {@link org.jsapar.error.RecordingErrorEventListener} or
- * {@link org.jsapar.error.ThresholdRecordingErrorEventListener}, or you may implement your own.
+ * behavior by adding an error consumer using {@link #setErrorConsumer(Consumer)}. There are several implementations to choose from such as
+ * {@link org.jsapar.error.ThresholdCollectingErrorConsumer}, or you may implement your own.
  *
  * @see BeanCollection2TextConverter
  */
@@ -45,7 +44,7 @@ public class Bean2TextConverter<T> implements AutoCloseable{
     private final BeanMarshaller<T>         beanMarshaller;
     private final TextComposer              textComposer;
     private       long                      lineNumber         = 1;
-    private       List<LineManipulator>     manipulators  = new java.util.LinkedList<>();
+    private final List<LineManipulator>     manipulators  = new java.util.LinkedList<>();
     private       Consumer<JSaParException> errorConsumer = new ExceptionErrorConsumer();
 
     /**
@@ -54,7 +53,7 @@ public class Bean2TextConverter<T> implements AutoCloseable{
      * @param composerSchema The schema to use while composing text output.
      * @param writer         The writer to write text output to. Caller is responsible for either closing the writer or call the close method of the created instance.
      */
-    public Bean2TextConverter(Schema composerSchema, Writer writer){
+    public Bean2TextConverter(Schema<?> composerSchema, Writer writer){
         this(composerSchema, BeanMap.ofSchema(composerSchema), writer);
     }
 
@@ -68,7 +67,7 @@ public class Bean2TextConverter<T> implements AutoCloseable{
      * @param writer         The writer to write text output to. Caller is responsible for either closing the writer or call the close method of the created instance.
      */
     @SuppressWarnings("WeakerAccess")
-    public Bean2TextConverter(Schema composerSchema, BeanMap beanMap, Writer writer) {
+    public Bean2TextConverter(Schema<?> composerSchema, BeanMap beanMap, Writer writer) {
         assert composerSchema != null;
         beanMarshaller = new BeanMarshaller<>(beanMap);
         textComposer = new TextComposer(composerSchema, writer);

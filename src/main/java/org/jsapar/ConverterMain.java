@@ -62,7 +62,7 @@ public class ConverterMain {
             String outFileEncoding = properties.getProperty("out.file.encoding", Charset.defaultCharset().name());
             String outFileName = properties.getProperty("out.file", inFileName + ".out");
 
-            Schema inputSchema = Xml2SchemaBuilder.loadSchemaFromXmlFile(new File(properties.getProperty("in.schema")));
+            Schema<?> inputSchema = Xml2SchemaBuilder.loadSchemaFromXmlFile(new File(properties.getProperty("in.schema")));
 
             final String outputSchemaPath = properties.getProperty("out.schema");
             final String outputXsltPath = properties.getProperty("xslt.file");
@@ -92,8 +92,8 @@ public class ConverterMain {
         }
     }
 
-    private void convertText2Text(CollectingConsumer<JSaParException> errorEventListener, String inFileName, String inFileEncoding, String outFileEncoding, String outFileName, Schema inputSchema, String outputSchemaPath) throws IOException {
-        Schema outputSchema = Xml2SchemaBuilder.loadSchemaFromXmlFile(new File(outputSchemaPath));
+    private void convertText2Text(CollectingConsumer<JSaParException> errorEventListener, String inFileName, String inFileEncoding, String outFileEncoding, String outFileName, Schema<?> inputSchema, String outputSchemaPath) throws IOException {
+        Schema<?> outputSchema = Xml2SchemaBuilder.loadSchemaFromXmlFile(new File(outputSchemaPath));
 
         try (Reader inputFileReader = new InputStreamReader(
                 new FileInputStream(inFileName), inFileEncoding );
@@ -106,7 +106,7 @@ public class ConverterMain {
         }
     }
 
-    private void transformText(CollectingConsumer<JSaParException> errorConsumer, String inFileName, String inFileEncoding, String outFileEncoding, String outFileName, Schema inputSchema, String outputXsltPath, Properties properties) throws IOException, TransformerConfigurationException {
+    private void transformText(CollectingConsumer<JSaParException> errorConsumer, String inFileName, String inFileEncoding, String outFileEncoding, String outFileName, Schema<?> inputSchema, String outputXsltPath, Properties properties) throws IOException, TransformerConfigurationException {
         String xsltEncoding = properties.getProperty("xslt.encoding", Charset.defaultCharset().name());
         String xsltMethod = properties.getProperty("xslt.method", "xml");
 
@@ -158,7 +158,7 @@ public class ConverterMain {
         out.println();
     }
 
-    private Text2TextConverter makeConverter(Schema inputSchema, Schema outputSchema) {
+    private Text2TextConverter makeConverter(Schema<?> inputSchema, Schema<?> outputSchema) {
         return new Text2TextConverter(inputSchema, outputSchema);
     }
 
