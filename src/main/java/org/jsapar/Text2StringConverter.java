@@ -69,6 +69,7 @@ public class Text2StringConverter extends AbstractConverter {
      * @return Number of converted lines.
      * @throws IOException In case of IO error
      * @see #convertForEach(Reader, Consumer)
+     * @since 2.2
      */
     public long convertForEach(Reader reader, StringComposedConsumer stringComposedConsumer) throws IOException {
         TextParseTask parseTask = new TextParseTask(this.parseSchema, reader, parseConfig);
@@ -82,7 +83,7 @@ public class Text2StringConverter extends AbstractConverter {
      * @return Number of converted lines.
      * @throws IOException In case of IO error
      * @see #convertForEach(Reader, StringComposedConsumer)
-     *
+     * @since 2.2
      */
     public long convertForEach(Reader reader, Consumer<Stream<String>> stringComposedConsumer) throws IOException {
         return this.convertForEach(reader, (cells, lineType, lineNumber)->stringComposedConsumer.accept(cells));
