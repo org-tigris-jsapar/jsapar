@@ -63,7 +63,7 @@ public class CsvParser implements TextSchemaParser {
 
     }
 
-    public Stream<Line> stream(boolean parallel, Consumer<JSaParException> errorListener) throws IOException {
+    public Stream<Line> stream(Consumer<JSaParException> errorListener) throws IOException {
         if(schema.isEmpty()) {
             return Stream.empty();
         }
@@ -92,16 +92,16 @@ public class CsvParser implements TextSchemaParser {
 
                 @Override
                 public long estimateSize() {
-                    return 0;
+                    return Long.MAX_VALUE;
                 }
 
                 @Override
                 public int characteristics() {
-                    return 0;
+                    return IMMUTABLE|ORDERED|NONNULL;
                 }
             };
 
-            return StreamSupport.stream(spliterator, parallel);
+            return StreamSupport.stream(spliterator, false);
         }catch (UncheckedIOException e){
             throw e.getCause();
         }

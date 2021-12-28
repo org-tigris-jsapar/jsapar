@@ -80,7 +80,7 @@ public class FixedWidthParser implements TextSchemaParser {
     }
 
     @Override
-    public Stream<Line> stream(boolean parallel, Consumer<JSaParException> errorConsumer) throws IOException {
+    public Stream<Line> stream(Consumer<JSaParException> errorConsumer) throws IOException {
         if(schema.isEmpty()) {
             return Stream.empty();
         }
@@ -122,16 +122,16 @@ public class FixedWidthParser implements TextSchemaParser {
 
                 @Override
                 public long estimateSize() {
-                    return 0;
+                    return Long.MAX_VALUE;
                 }
 
                 @Override
                 public int characteristics() {
-                    return 0;
+                    return IMMUTABLE|ORDERED|NONNULL;
                 }
             };
 
-            return StreamSupport.stream(spliterator, parallel);
+            return StreamSupport.stream(spliterator, false);
         }catch (UncheckedIOException e){
             throw e.getCause();
         }

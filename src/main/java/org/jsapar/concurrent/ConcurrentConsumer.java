@@ -87,7 +87,7 @@ public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppa
             onStart.forEach(Runnable::run);
             running = true;
             synchronized (this) {
-                notify();
+                notifyAll();
             }
             while (!shouldStop) {
                 T event = events.take();
@@ -97,7 +97,7 @@ public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppa
                 }
             }
             synchronized (this) {
-                notify();
+                notifyAll();
             }
         } catch (InterruptedException e) {
             // Gracefully and silently terminate.
@@ -110,7 +110,7 @@ public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppa
             onStop.forEach(Runnable::run);
             running = false;
             synchronized (this) {
-                notify();
+                notifyAll();
             }
         }
     }
@@ -137,7 +137,6 @@ public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppa
             try {
                 synchronized (this) {
                     wait(100L);
-//                    Thread.sleep(1L);
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -176,18 +175,16 @@ public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppa
             if(Thread.currentThread() != this.thread) {
                 while (running && !events.isEmpty()) {
                     synchronized (this) {
-                        wait(100L);
+                        wait(10L);
                     }
-//                    Thread.sleep(1L);
                 }
             }
             stop();
             if(Thread.currentThread() != this.thread) {
                 while (running) {
                     synchronized (this) {
-                        wait(100L);
+                        wait(10L);
                     }
-//                    Thread.sleep(1L);
                 }
             }
             checkException();

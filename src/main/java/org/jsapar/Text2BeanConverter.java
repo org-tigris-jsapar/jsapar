@@ -104,11 +104,6 @@ public class Text2BeanConverter<T> extends AbstractConverter {
         return execute(new TextParseTask(this.parseSchema, reader, parseConfig), composer);
     }
 
-    private Stream<T> stream(Reader reader, boolean parallel) throws IOException {
-        BeanComposer<T> composer = new BeanComposer<>(composeConfig, beanFactory);
-        TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
-        return parser.stream(parallel, getErrorConsumer()).flatMap(line->composer.toBean(line).stream());
-    }
 
     /**
      * Returns a stream of beans that are lazily populated by lines when pulled from the stream. The reader is consumed
@@ -122,22 +117,9 @@ public class Text2BeanConverter<T> extends AbstractConverter {
      * @throws IOException If there is an error reading from the input reader.
      */
     public Stream<T> stream(Reader reader) throws IOException {
-        return stream(reader, false);
-    }
-
-    /**
-     * Returns a parallel stream of beans that are lazily populated by lines when pulled from the stream. The reader is consumed
-     * on the fly upon pulling items from the stream.
-     * <p/>
-     * This method is particularly efficient if you don't want to scan through the whole source since it will abort
-     * parsing as soon as you stop pulling items from the stream.
-     * @param reader The reader to parse from.
-     * @return a parallel stream of beans that are lazily populated by lines when pulled from the stream. Note that the order of a parallel stream is undefined.
-     * @since 2.3
-     * @throws IOException If there is an error reading from the input reader.
-     */
-    public Stream<T> parallelStream(Reader reader) throws IOException {
-        return stream(reader, true);
+        BeanComposer<T> composer = new BeanComposer<>(composeConfig, beanFactory);
+        TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
+        return parser.stream(getErrorConsumer()).flatMap(line->composer.toBean(line).stream());
     }
 
     /**

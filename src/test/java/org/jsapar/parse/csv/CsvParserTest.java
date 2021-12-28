@@ -66,7 +66,7 @@ public class CsvParserTest {
         TextParseConfig config = new TextParseConfig();
         config.setOnUndefinedLineType(ValidationAction.OMIT_LINE);
         CsvParser parser = new CsvParser(new StringReader(text), schema, config);
-        List<Line> result = parser.stream(false, e -> {
+        List<Line> result = parser.stream(e -> {
             throw e;
         }).collect(Collectors.toList());
         assertEquals(2, result.size());

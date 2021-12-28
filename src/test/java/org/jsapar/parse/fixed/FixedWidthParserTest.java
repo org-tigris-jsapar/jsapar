@@ -1,20 +1,14 @@
 package org.jsapar.parse.fixed;
 
 import org.jsapar.error.ExceptionErrorConsumer;
-import org.jsapar.error.ExceptionErrorEventListener;
 import org.jsapar.error.ValidationAction;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.model.LineUtils;
 import org.jsapar.parse.DocumentBuilderLineConsumer;
-import org.jsapar.parse.DocumentBuilderLineEventListener;
-import org.jsapar.parse.csv.CsvParser;
-import org.jsapar.schema.CsvSchema;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
-import org.jsapar.schema.FixedWidthSchemaCell;
-import org.jsapar.schema.FixedWidthSchemaLine;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -63,7 +57,7 @@ public class FixedWidthParserTest {
         Reader reader = new StringReader(toParse);
 
         FixedWidthParser parser = new FixedWidthParser(reader, schema, new TextParseConfig());
-        List<Line> lines = parser.stream(false, e -> {
+        List<Line> lines = parser.stream(e -> {
             throw e;
         }).collect(Collectors.toList());
 
