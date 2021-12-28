@@ -2,24 +2,17 @@ package org.jsapar.parse.bean;
 
 import org.jsapar.TstPerson;
 import org.jsapar.bean.BeanMap;
-import org.jsapar.model.*;
-import org.jsapar.parse.DocumentBuilderLineEventListener;
-import org.jsapar.schema.Schema;
+import org.jsapar.model.Line;
+import org.jsapar.parse.CollectingConsumer;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public class BeanParseTaskTest {
-    static final Date birthTime = new Date();
-
-    private Schema makeOutputSchema(){
-        return BeanMarshallerTest.makeOutputSchema();
-    }
 
     private BeanMap makeBeanMap() {
         return BeanMarshallerTest.makeBeanMap();
@@ -37,17 +30,17 @@ public class BeanParseTaskTest {
         people.add(person);
 
         BeanParseTask<TstPerson> parser = new BeanParseTask<>(people.stream(), makeBeanMap());
-        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-        parser.setLineEventListener(listener);
+        CollectingConsumer<Line> listener = new CollectingConsumer<>();
+        parser.setLineConsumer(listener);
         parser.execute();
-        Document doc = listener.getDocument();
+        List<Line> lines = listener.getCollected();
 
-        assertEquals(2, doc.size());
-        Line line = doc.getLine(0);
+        assertEquals(2, lines.size());
+        Line line = lines.get(0);
         assertEquals("Jonas",
                 line.getCell("firstName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
 
-        line = doc.getLine(1);
+        line = lines.get(1);
         assertEquals("Test2", line.getCell("firstName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
         parser.close();
     }

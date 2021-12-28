@@ -10,11 +10,11 @@ import static org.junit.Assert.*;
 
 public class ByClassBeanEventListenerTest {
 
-    private class TstEmployee extends TstPerson{
+    private static class TstEmployee extends TstPerson{
 
     }
 
-    private class TstAuthor extends TstPerson{
+    private static class TstAuthor extends TstPerson{
 
     }
 

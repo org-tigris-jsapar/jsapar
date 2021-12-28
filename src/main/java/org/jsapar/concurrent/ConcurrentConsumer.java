@@ -13,7 +13,7 @@ import java.util.function.Consumer;
  * Makes it possible to handle line events in a different thread than the {@link ParseTask}. Please note
  * that the {@link org.jsapar.model.Line} classes
  * are internally thread safe so if you have more than one event listeners registered in a chain after this listener
- * (by using {@link org.jsapar.parse.MulticastLineEventListener}) , all accesses to the events within these event
+ * (by using {@link org.jsapar.parse.MulticastConsumer}) , all accesses to the events within these event
  * listeners needs to be synchronized on
  * the event object. As long as you have only one event listener registered, no external synchronization is needed.
  * <p>
@@ -30,14 +30,14 @@ import java.util.function.Consumer;
  */
 public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppable, ConcurrentStartStop {
 
-    private BlockingQueue<T> events;
+    private final BlockingQueue<T> events;
     private volatile boolean shouldStop = false;
     private volatile boolean running = false;
-    private Consumer<T> listener;
+    private final Consumer<T> listener;
     private Throwable exception = null;
     private Thread thread;
-    private List<Runnable> onStart = new LinkedList<>();
-    private List<Runnable> onStop = new LinkedList<>();
+    private final List<Runnable> onStart = new LinkedList<>();
+    private final List<Runnable> onStop = new LinkedList<>();
 
     private static class END{}
 
@@ -86,12 +86,18 @@ public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppa
         try {
             onStart.forEach(Runnable::run);
             running = true;
+            synchronized (this) {
+                notify();
+            }
             while (!shouldStop) {
                 T event = events.take();
                 // Check if it is just an event to release wait block.
                 if (event.getClass() != END.class) {
                     listener.accept(event);
                 }
+            }
+            synchronized (this) {
+                notify();
             }
         } catch (InterruptedException e) {
             // Gracefully and silently terminate.
@@ -103,6 +109,9 @@ public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppa
         } finally {
             onStop.forEach(Runnable::run);
             running = false;
+            synchronized (this) {
+                notify();
+            }
         }
     }
 
@@ -126,7 +135,10 @@ public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppa
         // Wait for the consumer thread to start before returning.
         while (!isRunning() && !shouldStop)
             try {
-                Thread.sleep(1L);
+                synchronized (this) {
+                    wait(100L);
+//                    Thread.sleep(1L);
+                }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
@@ -163,13 +175,19 @@ public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppa
         try {
             if(Thread.currentThread() != this.thread) {
                 while (running && !events.isEmpty()) {
-                    Thread.sleep(1L);
+                    synchronized (this) {
+                        wait(100L);
+                    }
+//                    Thread.sleep(1L);
                 }
             }
             stop();
             if(Thread.currentThread() != this.thread) {
                 while (running) {
-                    Thread.sleep(1L);
+                    synchronized (this) {
+                        wait(100L);
+                    }
+//                    Thread.sleep(1L);
                 }
             }
             checkException();
