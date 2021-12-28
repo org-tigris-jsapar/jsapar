@@ -157,8 +157,8 @@ public class BeanComposer<T> implements Composer{
     }
 
     @Override
-    public void setErrorConsumer(Consumer<JSaParException> errorEventListener) {
-        this.errorConsumer = errorEventListener;
+    public void setErrorConsumer(Consumer<JSaParException> errorConsumer) {
+        this.errorConsumer = errorConsumer;
     }
 
     public BeanFactory<T> getBeanFactory() {

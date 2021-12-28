@@ -71,16 +71,16 @@ public class Text2BeanConverterTest {
 
         String input = "John;Doe";
         Text2BeanConverter<TstPerson> converter = new Text2BeanConverter<>(schema);
-        converter.setBeanFactory(new BeanFactory<TstPerson>() {
+        converter.setBeanFactory(new BeanFactory<>() {
             @Override
             public TstPerson createBean(Line line) {
                 return new TstPerson();
             }
 
             @Override
-            public void assignCellToBean(String lineType, TstPerson bean, Cell cell) {
+            public void assignCellToBean(String lineType, TstPerson bean, Cell<?> cell) {
                 // Just convert to upper case and assign.
-                switch(cell.getName()){
+                switch (cell.getName()) {
                     case "firstName":
                         bean.setFirstName(cell.getStringValue().toUpperCase());
                         break;

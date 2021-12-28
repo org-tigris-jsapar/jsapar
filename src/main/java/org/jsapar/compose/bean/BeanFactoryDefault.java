@@ -26,7 +26,7 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
     }
 
     @Override
-    public void assignCellToBean(String lineType, T bean, Cell cell) throws BeanComposeException {
+    public void assignCellToBean(String lineType, T bean, Cell<?> cell) throws BeanComposeException {
         String sName = cell.getName();
         try {
             String[] nameLevels = sName.split("\\.");

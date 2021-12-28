@@ -35,12 +35,12 @@ public interface BeanFactory<T> {
      * @param bean The bean to assign to.
      * @param cell The cell to assign.
      * @throws BeanComposeException In case there is an error assigning the cell. This exception will be caught by the
-     * calling {@link BeanComposer} and converted into an {@link org.jsapar.error.ErrorEvent}.
+     * calling {@link BeanComposer} and converted into a call to the assigned error consumer.
      * @throws InvocationTargetException If not possible to invoke method.
      * @throws IllegalAccessException In case a setter method is not publicly accessible.
      * @throws InstantiationException If it was not possible to instantiate a bean.
      * @throws NoSuchMethodException In case the setter method does not exist.
      */
-    void assignCellToBean(String lineType, T bean, Cell cell) throws BeanComposeException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException;
+    void assignCellToBean(String lineType, T bean, Cell<?> cell) throws BeanComposeException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException;
 
 }

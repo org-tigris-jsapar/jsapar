@@ -31,7 +31,7 @@ public class BeanFactoryByMap<T> implements BeanFactory<T>{
     }
 
     @Override
-    public void assignCellToBean(String lineType, T bean, Cell cell) throws InvocationTargetException, InstantiationException, IllegalAccessException, BeanComposeException, NoSuchMethodException {
+    public void assignCellToBean(String lineType, T bean, Cell<?> cell) throws InvocationTargetException, InstantiationException, IllegalAccessException, BeanComposeException, NoSuchMethodException {
         BeanPropertyMap beanPropertyMap = beanMap.getBeanPropertyMap(lineType);
         Bean2Cell bean2Cell = beanPropertyMap.getBean2CellByName(cell.getName());
         if(bean2Cell != null)
