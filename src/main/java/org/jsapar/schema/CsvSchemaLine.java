@@ -264,7 +264,6 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
         return line;
     }
 
-
     /*
      * (non-Javadoc)
      *

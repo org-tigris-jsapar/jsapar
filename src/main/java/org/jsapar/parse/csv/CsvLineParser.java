@@ -5,7 +5,6 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.parse.LineParseException;
-import org.jsapar.parse.LineParsedEvent;
 import org.jsapar.parse.cell.CellParser;
 import org.jsapar.parse.line.LineDecoratorErrorConsumer;
 import org.jsapar.parse.line.ValidationHandler;
@@ -26,10 +25,10 @@ class CsvLineParser {
     private static final String                          EMPTY_STRING                    = "";
     private              CsvSchemaLine                   lineSchema;
     private              List<CellParser<CsvSchemaCell>> cellParsers;
-    private              TextParseConfig                 config;
+    private final TextParseConfig                 config;
     private              long                            usedCount                       = 0L;
-    private ValidationHandler          validationHandler          = new ValidationHandler();
-    private LineDecoratorErrorConsumer lineDecoratorErrorConsumer = new LineDecoratorErrorConsumer();
+    private final ValidationHandler          validationHandler          = new ValidationHandler();
+    private final LineDecoratorErrorConsumer lineDecoratorErrorConsumer = new LineDecoratorErrorConsumer();
     /**
      * Creates a csv line parser with the given line schema.
      *
@@ -60,7 +59,7 @@ class CsvLineParser {
     }
 
     /**
-     * Parses one line from the given lineReader and sends a {@link LineParsedEvent} to the provided listener.
+     * Parses one line from the given lineReader and calls supplied listener.
      *
      * @param lineReader    The line reader to read one line from.
      * @param listener      The event listener to receive events when parsing is complete.

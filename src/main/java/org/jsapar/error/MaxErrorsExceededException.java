@@ -3,7 +3,7 @@ package org.jsapar.error;
 import java.util.List;
 
 /**
- * Used by {@link ThresholdRecordingErrorEventListener} and is thrown when the maximum number of errors has occured.
+ * Used by {@link ThresholdCollectingErrorConsumer} and is thrown when the maximum number of errors has occurred.
  * Please note that an instance of this class contains a list of all errors that has occurred until the threshold was
  * reached so if your memory is limited, don't use too large threshold value because the list can become too large.
  */

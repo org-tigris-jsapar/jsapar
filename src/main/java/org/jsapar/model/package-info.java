@@ -7,8 +7,8 @@
  * <p>
  * You can use this model to build a structure that you later compose to an output by using a {@link org.jsapar.compose.Composer}.
  * <p>
- * While using a {@link org.jsapar.parse.ParseTask}, this model will be the result, either as separate
- * {@link org.jsapar.model.Line} objects in {@link org.jsapar.parse.LineParsedEvent} or as a complete {@link org.jsapar.model.Document}.
+ * While using any of the parsers such as {@link org.jsapar.TextParser}, this model will be the result. The model is also
+ * used as intermediate result in all the converter implementations.
  *
  * In order to make it easier to retrieve and alter cell values within a {@link org.jsapar.model.Line}, you may use the {@link org.jsapar.model.LineUtils} class.
  */

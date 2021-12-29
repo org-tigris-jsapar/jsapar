@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 /**
  * This line event listener can be used to build a document based on line events.
  * Use this class only if you are sure that the whole data can be parsed into memory. If the
- * data source is too big, most likely a OutOfMemory exception will be thrown. For large data sources use your own {@link LineEventListener} implementation instead and handle lines one by one.
+ * data source is too big, most likely a OutOfMemory exception will be thrown. For large data sources use your own {@link Consumer} implementation instead and handle lines one by one.
  */
 public class DocumentBuilderLineConsumer implements Consumer<Line>, AutoCloseable {
     private Document document;

@@ -1,7 +1,7 @@
 package org.jsapar.compose.csv;
 
-import org.jsapar.compose.line.LineComposer;
 import org.jsapar.compose.csv.quote.*;
+import org.jsapar.compose.line.LineComposer;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
@@ -16,7 +16,6 @@ import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -24,11 +23,11 @@ import java.util.stream.Collectors;
  */
 class CsvLineComposer implements LineComposer {
 
-    private Writer        writer;
-    private CsvSchemaLine schemaLine;
-    private String lineSeparator;
-    private QuoteSyntax quoteSyntax;
-    private List<CsvCellComposer> cellComposers;
+    private final Writer        writer;
+    private final CsvSchemaLine schemaLine;
+    private final String lineSeparator;
+    private final QuoteSyntax quoteSyntax;
+    private final List<CsvCellComposer> cellComposers;
     private boolean firstRow=true;
 
     CsvLineComposer(Writer writer, CsvSchemaLine schemaLine, String lineSeparator, QuoteSyntax quoteSyntax) {
@@ -36,10 +35,10 @@ class CsvLineComposer implements LineComposer {
         this.schemaLine = schemaLine;
         this.lineSeparator = lineSeparator;
         this.quoteSyntax = quoteSyntax;
-        cellComposers = makeCellComposers(schemaLine, lineSeparator);
+        cellComposers = makeCellComposers(schemaLine);
     }
 
-    private List<CsvCellComposer> makeCellComposers(CsvSchemaLine schemaLine, String lineSeparator) {
+    private List<CsvCellComposer> makeCellComposers(CsvSchemaLine schemaLine) {
         return schemaLine.stream()
                 .map(this::makeCellComposer)
                 .collect(Collectors.toList());
@@ -99,7 +98,7 @@ class CsvLineComposer implements LineComposer {
             Iterator<CsvCellComposer> iter = cellComposers.iterator();
             while (iter.hasNext()) {
                 CsvCellComposer cellComposer = iter.next();
-                Cell cell = line.getCell(cellComposer.getName()).orElse(cellComposer.makeEmptyCell());
+                Cell<?> cell = line.getCell(cellComposer.getName()).orElse(cellComposer.makeEmptyCell());
                 cellComposer.compose(writer, cell);
 
                 if (iter.hasNext())

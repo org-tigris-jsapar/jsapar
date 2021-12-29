@@ -1,7 +1,7 @@
 package org.jsapar.error;
 
 /**
- * Base class for all types of errors that can be added to an {@link ErrorEvent}
+ * Base class for all types of errors
  */
 public class JSaParException extends RuntimeException{
 

@@ -359,6 +359,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
         return Objects.hash(getLineType());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public SchemaLine<C> clone() {
         try {

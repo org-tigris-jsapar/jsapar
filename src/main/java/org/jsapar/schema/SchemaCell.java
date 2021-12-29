@@ -32,13 +32,13 @@ public abstract class SchemaCell implements Cloneable {
     private boolean ignoreRead = false;
     private boolean ignoreWrite = false;
     private boolean mandatory = false;
-    private Cell minValue = null;
-    private Cell maxValue = null;
+    private Cell<?> minValue = null;
+    private Cell<?> maxValue = null;
 
     /**
      * If parsing an empty value this cell can be used, avoiding a lot of object creation.
      */
-    private Cell emptyCell;
+    private final Cell<?> emptyCell;
     private String defaultValue = null;
     private Locale locale;
     private Predicate<String> emptyCondition = null;
