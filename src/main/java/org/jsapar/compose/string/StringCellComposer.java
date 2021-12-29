@@ -2,6 +2,7 @@ package org.jsapar.compose.string;
 
 import org.jsapar.compose.cell.CellFormat;
 import org.jsapar.model.Cell;
+import org.jsapar.model.EmptyCell;
 import org.jsapar.schema.SchemaCell;
 
 class StringCellComposer {
@@ -17,11 +18,11 @@ class StringCellComposer {
         return schemaCell.getName();
     }
 
-    Cell makeEmptyCell() {
+    EmptyCell makeEmptyCell() {
         return schemaCell.makeEmptyCell();
     }
 
-    String compose(Cell cell)  {
+    String compose(Cell<?> cell)  {
          return cellFormat.format(cell);
     }
 

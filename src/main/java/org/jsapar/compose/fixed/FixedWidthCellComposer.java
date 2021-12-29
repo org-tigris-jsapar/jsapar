@@ -3,6 +3,7 @@ package org.jsapar.compose.fixed;
 import org.jsapar.compose.cell.CellFormat;
 import org.jsapar.compose.fixed.pad.Pad;
 import org.jsapar.model.Cell;
+import org.jsapar.model.EmptyCell;
 import org.jsapar.schema.FixedWidthSchemaCell;
 
 import java.io.IOException;
@@ -32,9 +33,9 @@ class FixedWidthCellComposer {
      * @throws IOException If there is an error writing characters
      * @return The length of the cell written.
      */
-    int compose(Writer writer, Cell cell) throws IOException {
+    int compose(Writer writer, Cell<?> cell) throws IOException {
         final String sValue = cellFormat.format(cell);
-        compose(writer, sValue, schemaCell.getPadCharacter(), schemaCell.getLength(), schemaCell.getAlignment());
+        compose(writer, sValue, schemaCell.getLength());
         return schemaCell.getLength();
     }
 
@@ -45,15 +46,11 @@ class FixedWidthCellComposer {
      * @param writer     The writer to write to.
      * @param sValue
      *            The value to write
-     * @param fillCharacter
-     *            The fill character to fill empty spaces.
      * @param length
      *            The number of characters to write.
-     * @param alignment
-     *            The alignment of the cell content if the content is smaller than the cell length.
      * @throws IOException If there is an error writing characters
      */
-    private void compose(Writer writer, String sValue, char fillCharacter, int length, FixedWidthSchemaCell.Alignment alignment)
+    private void compose(Writer writer, String sValue, int length)
             throws IOException{
         if (sValue.length() == length) {
             writer.write(sValue);
@@ -69,7 +66,7 @@ class FixedWidthCellComposer {
         return schemaCell.getName();
     }
 
-    public Cell makeEmptyCell() {
+    public EmptyCell makeEmptyCell() {
         return schemaCell.makeEmptyCell();
     }
 }

@@ -3,6 +3,7 @@ package org.jsapar.compose.csv;
 import org.jsapar.compose.cell.CellFormat;
 import org.jsapar.compose.csv.quote.Quoter;
 import org.jsapar.model.Cell;
+import org.jsapar.model.EmptyCell;
 import org.jsapar.schema.CsvSchemaCell;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ class CsvCellComposer {
      * @param cell   The cell to compose output for.
      * @throws IOException In case of error in underlying IO operation
      */
-    void compose(Writer writer, Cell cell) throws IOException {
+    void compose(Writer writer, Cell<?> cell) throws IOException {
         quoter.writeValue(writer, cellFormat.format(cell));
     }
 
@@ -38,7 +39,7 @@ class CsvCellComposer {
         return schemaCell.getName();
     }
 
-    Cell makeEmptyCell() {
+    EmptyCell makeEmptyCell() {
         return schemaCell.makeEmptyCell();
     }
 }

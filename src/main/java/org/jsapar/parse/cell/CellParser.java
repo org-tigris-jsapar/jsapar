@@ -3,6 +3,7 @@ package org.jsapar.parse.cell;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
+import org.jsapar.model.EmptyCell;
 import org.jsapar.parse.CellParseException;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
@@ -18,12 +19,12 @@ import java.util.function.Consumer;
  */
 public class CellParser<S extends SchemaCell> {
 
-    private S schemaCell;
-    private Cell<?> defaultCell;
-    private Cell<?> emptyCell;
-    private CellFactory cellFactory;
-    private Format format;
-    private final Cache<String, Cell> cellCache ;
+    private final S schemaCell;
+    private final Cell<?> defaultCell;
+    private final EmptyCell emptyCell;
+    private final CellFactory cellFactory;
+    private Format<?> format;
+    private final Cache<String, Cell<?>> cellCache ;
     private static final String EMPTY_STRING = "";
 
 
@@ -60,7 +61,7 @@ public class CellParser<S extends SchemaCell> {
      * @param errorEventListener Error event listener to deliver errors to.
      * @return A new cell of a type according to the schema specified. Returns null if there was en error while parsing.
      */
-    public Cell parse(String sValue, Consumer<JSaParException> errorEventListener) {
+    public Cell<?> parse(String sValue, Consumer<JSaParException> errorEventListener) {
         if (sValue.isEmpty()) {
             checkIfMandatory(errorEventListener);
 
@@ -85,10 +86,10 @@ public class CellParser<S extends SchemaCell> {
      * @param errorEventListener Error event listener to deliver errors to.
      * @return A new cell of a type according to the schema specified. Returns null if an error occurs.
      */
-    private Cell doParse(String sValue, Consumer<JSaParException> errorEventListener) {
+    private Cell<?> doParse(String sValue, Consumer<JSaParException> errorEventListener) {
 
         try {
-            Cell cell = makeCell(sValue);
+            Cell<?> cell = makeCell(sValue);
             validateRange(cell);
             return cell;
         } catch (java.text.ParseException e) {
@@ -108,7 +109,7 @@ public class CellParser<S extends SchemaCell> {
      *         value.
      * @throws ParseException If the value cannot be parsed according to the format of this cell schema.
      */
-    Cell makeCell(String sValue) throws ParseException {
+    Cell<?> makeCell(String sValue) throws ParseException {
 
         // If the cell is empty, check if default value exists.
         if (sValue.length() <= 0 || (schemaCell.hasEmptyCondition() && schemaCell.getEmptyCondition().test(sValue))) {
@@ -118,7 +119,7 @@ public class CellParser<S extends SchemaCell> {
                 return emptyCell;
             }
         }
-        Cell cell = cellCache.get(sValue);
+        Cell<?> cell = cellCache.get(sValue);
         if(cell == null) {
             cell = cellFactory.makeCell(schemaCell.getName(), sValue, format);
             cellCache.put(sValue, cell);
@@ -138,11 +139,11 @@ public class CellParser<S extends SchemaCell> {
      *         the default format for supplied type and locale.
      * @throws ParseException If the value cannot be parsed according to the format of this cell schema.
      */
-    public static Cell makeCell(CellType cellType, String sName, String sValue, Locale locale)
+    public static Cell<?> makeCell(CellType cellType, String sName, String sValue, Locale locale)
             throws java.text.ParseException {
         CellFactory cellFactory = CellFactory.getInstance(cellType);
 
-        Format format = cellFactory.makeFormat(locale);
+        Format<?> format = cellFactory.makeFormat(locale);
         return cellFactory.makeCell(sName, sValue, format);
     }
     /**
@@ -153,7 +154,7 @@ public class CellParser<S extends SchemaCell> {
      * @throws ParseException If the value cannot be parsed according to the format of this cell schema.
      */
     @SuppressWarnings("unchecked")
-    private void validateRange(Cell cell) throws ParseException {
+    private void validateRange(Cell<?> cell) throws ParseException {
         if (schemaCell.getMinValue() != null && cell.compareValueTo(schemaCell.getMinValue()) < 0) {
             throw new ParseException("The value is below minimum range limit ("+schemaCell.getMinValue().getStringValue()+").", 0);
         } else if (schemaCell.getMaxValue() != null && cell.compareValueTo(schemaCell.getMaxValue()) > 0)
@@ -177,7 +178,7 @@ public class CellParser<S extends SchemaCell> {
         return schemaCell;
     }
 
-    public Cell makeDefaultCell() {
+    public Cell<?> makeDefaultCell() {
         return defaultCell;
     }
 

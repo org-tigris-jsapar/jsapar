@@ -38,7 +38,7 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * If parsing an empty value this cell can be used, avoiding a lot of object creation.
      */
-    private final Cell<?> emptyCell;
+    private final EmptyCell emptyCell;
     private String defaultValue = null;
     private Locale locale;
     private Predicate<String> emptyCondition = null;
@@ -718,7 +718,7 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * @return An empty cell for this schema cell.
      */
-    public Cell makeEmptyCell() {
+    public EmptyCell makeEmptyCell() {
         return this.emptyCell;
     }
 

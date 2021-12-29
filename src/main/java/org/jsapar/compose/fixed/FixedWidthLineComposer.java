@@ -2,17 +2,13 @@ package org.jsapar.compose.fixed;
 
 import org.jsapar.compose.fixed.pad.Filler;
 import org.jsapar.compose.line.LineComposer;
-import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
-import org.jsapar.schema.FixedWidthSchemaCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
