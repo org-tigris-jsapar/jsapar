@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("EmptyMethod")
 public class ByLineTypeLineConsumerTest {
 
     @Test

@@ -41,6 +41,7 @@ public class Bean2CellTest {
         assertEquals(Boolean.TRUE, booleanCell.getValue());
     }
 
+    @SuppressWarnings("unused")
     private class LocalDateTimeHolder{
          private LocalDateTime dateTime;
 

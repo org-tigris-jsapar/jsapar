@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * Uses a collection of java bean objects and for each object calls {@link java.util.function.Consumer#accept(Object)} of the supplied line consumer. The {@link Line#lineType} of each line will be
+ * Uses a collection of java bean objects and for each object calls {@link java.util.function.Consumer#accept(Object)} of the supplied line consumer. The value of {@link Line#getLineType()} of each line will be
  * the name of the class denoted by {@link Class#getName()}. Each bean property that have a getter method will result in
  * a cell with the bean property name The {@link Cell#getName()} of each cell will be the name of the bean property, e.g. if
  * the bean has a method declared as {@code public int getNumber()}, it will result in a cell with the name "number" of

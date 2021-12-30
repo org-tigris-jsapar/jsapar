@@ -2,13 +2,14 @@ package org.jsapar.parse.bean.reflect;
 
 import org.junit.Test;
 
-import java.lang.reflect.Method;
 import java.util.Map;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("ALL")
 public class BeanInfoReflectionTest {
 
+    @SuppressWarnings("unused")
     public static class TestBean1{
         private String arg;
         private int    num;
@@ -71,6 +72,7 @@ public class BeanInfoReflectionTest {
         public void getVoid(){}
     }
 
+    @SuppressWarnings("unused")
     public interface TestInterface{
         String getArg();
     }
@@ -82,6 +84,7 @@ public class BeanInfoReflectionTest {
             return arg;
         }
 
+        @Override
         public void setArg(String arg) {
             this.arg = arg;
         }

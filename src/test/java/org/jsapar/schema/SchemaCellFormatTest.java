@@ -48,9 +48,7 @@ public class SchemaCellFormatTest {
         SchemaCellFormat format = new SchemaCellFormat(CellType.FLOAT, "", Locale.FRANCE);
         assertEquals("42,3", format.getFormat().format(42.3));
     }
-    /**
-     * Test method for {@link org.jsapar.schema.SchemaCellFormat#getCellType()}.
-     */
+
     @Test
     public void testGetCellType() {
         SchemaCellFormat format = new SchemaCellFormat(CellType.INTEGER);
@@ -58,29 +56,18 @@ public class SchemaCellFormatTest {
     }
 
 
-    /**
-     * Test method for {@link org.jsapar.schema.SchemaCellFormat#toString()}.
-     */
     @Test
     public void testToString() {
         SchemaCellFormat format = new SchemaCellFormat(CellType.INTEGER);
         assertEquals("CellType=INTEGER, Format={USIntegerFormat}", format.toString());
     }
 
-    /**
-     * Test method for {@link org.jsapar.schema.SchemaCellFormat#getPattern()}.
-     * @throws SchemaException 
-     */
     @Test
     public void testGetPattern() throws SchemaException {
         SchemaCellFormat format = new SchemaCellFormat(CellType.INTEGER, "0000", Locale.FRANCE);
         assertEquals("0000", format.getPattern());
     }
 
-    /**
-     * Test method for {@link org.jsapar.schema.SchemaCellFormat#getPattern()}.
-     * @throws SchemaException 
-     */
     @Test
     public void testSchemaCellFormat() throws SchemaException, ParseException {
         SchemaCellFormat format = new SchemaCellFormat(CellType.BOOLEAN, "yes;");

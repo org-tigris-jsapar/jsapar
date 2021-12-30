@@ -20,17 +20,17 @@ public abstract class AbstractDateTimeCellFactory implements CellFactory {
         this(Format.ofDateTimeInstance(defaultFormatter));
     }
 
-    Format getDefaultFormat() {
+    Format<TemporalAccessor> getDefaultFormat() {
         return defaultFormat;
     }
 
     @Override
-    public Format makeFormat(Locale locale) {
+    public Format<TemporalAccessor> makeFormat(Locale locale) {
         return defaultFormat;
     }
 
     @Override
-    public Format makeFormat(Locale locale, String pattern) {
+    public Format<TemporalAccessor> makeFormat(Locale locale, String pattern) {
         if (pattern == null || pattern.isEmpty())
             return makeFormat(locale);
         return Format.ofDateTimeInstance(locale, pattern);

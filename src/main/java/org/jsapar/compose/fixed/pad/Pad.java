@@ -27,7 +27,7 @@ public interface Pad {
      * @param alignment  The alignment.
      * @param padCharacter The character to pad with.
      * @param length The expected length to pad or fit to.
-     * @return
+     * @return A Pad instance of supplied parameters.
      */
     static Pad ofAlignment(FixedWidthSchemaCell.Alignment alignment, char padCharacter, int length){
         if(length <=0 )

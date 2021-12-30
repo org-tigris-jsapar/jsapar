@@ -71,7 +71,7 @@ class BooleanFormat implements Format<Boolean> {
      * </ol>
      *  @param trueValues  An array of all of the strings that represents the true value. The first item in the array is used when formatting.
      * @param falseValues An array of all of the strings that represents the false value. The first item in the array is used when formatting.
-     * @param ignoreCase
+     * @param ignoreCase If true, ignore case while parsing.
      */
     BooleanFormat(String[] trueValues, String[] falseValues, boolean ignoreCase) {
         assert trueValues != null: "trueValues parameter cannot be null";

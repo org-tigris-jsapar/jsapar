@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "EmptyMethod"})
 public class ByLineTypeLineEventListenerTest {
 
     @Test

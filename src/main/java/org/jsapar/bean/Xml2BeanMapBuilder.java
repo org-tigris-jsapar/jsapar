@@ -26,10 +26,9 @@ public class Xml2BeanMapBuilder implements XmlTypes {
      * Loads a {@link BeanMap} instance from xml that is read from the supplied reader.
      * @param reader The reader to read xml from.
      * @return A newly created {@link BeanMap} instance.
-     * @throws ClassNotFoundException In case one of the classes referenced from the bean map xml could not be created.
      * @throws IOException In case there was an io error while reading xml.
      */
-    public BeanMap build(Reader reader) throws ClassNotFoundException, IOException {
+    public BeanMap build(Reader reader) throws IOException {
         String schemaFileName = "/xml/schema/BeanMapSchema.xsd";
 
         try(InputStream schemaStream = Xml2SchemaBuilder.class.getResourceAsStream(schemaFileName)) {
@@ -106,8 +105,6 @@ public class Xml2BeanMapBuilder implements XmlTypes {
             return beanMapBuilder.build(new InputStreamReader(is, encoding));
         } catch (IOException  e) {
             throw new UncheckedIOException("Failed to load bean map from xml resource", e);
-        } catch (ClassNotFoundException e) {
-            throw new BeanException("Failed to load bean map", e);
         }
     }
 
