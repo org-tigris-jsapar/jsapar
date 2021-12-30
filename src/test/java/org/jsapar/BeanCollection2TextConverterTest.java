@@ -44,8 +44,8 @@ public class BeanCollection2TextConverterTest {
         assertEquals("Jonathan;Lionheart", resultLines[1]);
 
         writer = new StringWriter();
-        converter.convert(people.iterator(), writer);
-
+        long count = converter.convert(people.iterator(), writer);
+        assertEquals(2, count);
         String result2=writer.toString();
         assertEquals(result1, result2);
     }

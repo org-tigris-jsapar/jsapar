@@ -28,7 +28,8 @@ public class ConcurrentBeanCollection2TextConverterTest {
         CsvSchema schema = makeSchema();
         StringWriter writer = new StringWriter();
         BeanCollection2TextConverter<TstPerson> converter = new ConcurrentBeanCollection2TextConverter<>(schema);
-        converter.convert(people, writer);
+        long count = converter.convert(people, writer);
+        assertEquals(2, count);
 
         String result=writer.toString();
         String[] resultLines = result.split(schema.getLineSeparator());

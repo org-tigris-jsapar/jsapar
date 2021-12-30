@@ -49,7 +49,7 @@ public class BeanParseTask<T> extends AbstractParseTask implements ParseTask {
      */
     @Override
     public long execute() {
-        AtomicLong count = new AtomicLong(1);
+        AtomicLong count = new AtomicLong(0);
         stream.forEach(bean ->
                 beanMarshaller.marshal(bean, getErrorConsumer(), count.incrementAndGet()).ifPresent(line ->
                         getLineConsumer().accept(line)));
