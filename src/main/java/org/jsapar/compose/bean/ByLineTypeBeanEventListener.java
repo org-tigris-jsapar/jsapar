@@ -15,7 +15,7 @@ import java.util.Optional;
 @SuppressWarnings("WeakerAccess")
 @Deprecated
 public class ByLineTypeBeanEventListener<T> implements BeanEventListener<T> {
-    private Map<String, BeanEventListener<T>> beanEventListeners = new HashMap<>();
+    private final Map<String, BeanEventListener<T>> beanEventListeners = new HashMap<>();
     /**
      * The default listener that gets called if no other listener was registered for the line type. If no default
      * listener is explicitly set, the default behavior is to simply ignore the event.

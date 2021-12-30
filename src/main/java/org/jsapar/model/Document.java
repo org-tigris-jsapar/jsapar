@@ -23,7 +23,7 @@ public class Document implements Serializable, Iterable<Line> {
      */
     private static final long serialVersionUID = 6098681751483565286L;
 
-    private List<Line> lines;
+    private final List<Line> lines;
 
     /**
      * Creates an empty document.

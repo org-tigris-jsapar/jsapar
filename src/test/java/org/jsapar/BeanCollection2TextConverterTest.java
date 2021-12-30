@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 /**
  */
 public class BeanCollection2TextConverterTest {
-    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Test
     public void testConvert() throws Exception {

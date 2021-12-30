@@ -1,13 +1,11 @@
 package org.jsapar.parse.xml;
 
 import org.jsapar.TextParser;
-import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.JSaParException;
-import org.jsapar.error.RecordingErrorEventListener;
 import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
 import org.jsapar.model.DateCell;
 import org.jsapar.model.Line;
-import org.jsapar.parse.LineParsedEvent;
 import org.xml.sax.*;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -24,7 +22,7 @@ public class Text2SAXReader implements XMLReader {
 
     private static final String URI = "";
     private ContentHandler contentHandler;
-    private TextParser textParser;
+    private final TextParser textParser;
     private ErrorHandler errorHandler;
 
     public Text2SAXReader(TextParser textParser) {
@@ -36,14 +34,13 @@ public class Text2SAXReader implements XMLReader {
         contentHandler.startDocument();
         contentHandler.startElement(URI, "document", "document", new AttributesImpl());
 
-        textParser.parse(inputSource.getCharacterStream(), this::handleLineParsedEvent);
+        textParser.parseForEach(inputSource.getCharacterStream(), this::handleLineParsed);
         contentHandler.endElement(URI, "document", "document");
         contentHandler.endDocument();
     }
 
-    private void handleLineParsedEvent(LineParsedEvent event) {
+    private void handleLineParsed(Line line) {
         AttributesImpl attributes = new AttributesImpl();
-        Line line = event.getLine();
         attributes.addAttribute(URI, "linetype", "linetype", "CDATA", line.getLineType());
         attributes.addAttribute(URI, "number", "number", "integer", String.valueOf(line.getLineNumber()));
         try {
@@ -79,19 +76,17 @@ public class Text2SAXReader implements XMLReader {
         }
     }
 
-    private String cellTypeToXmlType(Cell c) {
+    private String cellTypeToXmlType(Cell<?> c) {
         return c.getCellType().name().toLowerCase();
     }
 
-    private String makeCellXmlValue(Cell c) {
-        switch (c.getCellType()) {
-            case DATE:
-                Date value = ((DateCell) c).getValue();
-                ZonedDateTime zDate = ZonedDateTime.ofInstant(value.toInstant(), ZoneId.systemDefault());
-                return zDate.toString();
-            default:
-                return c.getStringValue();
+    private String makeCellXmlValue(Cell<?> c) {
+        if (c.getCellType() == CellType.DATE) {
+            Date value = ((DateCell) c).getValue();
+            ZonedDateTime zDate = ZonedDateTime.ofInstant(value.toInstant(), ZoneId.systemDefault());
+            return zDate.toString();
         }
+        return c.getStringValue();
     }
 
     private void handleSAXException(SAXException e) {

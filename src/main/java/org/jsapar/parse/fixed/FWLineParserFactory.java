@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * Creates fixed width line parsers based on schema.
  */
 class FWLineParserFactory {
-    private List<FWLineParserMatcher> lineParserMatchers;
+    private final List<FWLineParserMatcher> lineParserMatchers;
     private LineParserMatcherResult lastResult;
 
     FWLineParserFactory(FixedWidthSchema schema, TextParseConfig config) {

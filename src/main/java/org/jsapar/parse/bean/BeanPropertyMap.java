@@ -14,18 +14,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class BeanPropertyMap {
-    private String lineType;
+    private final String lineType;
 
-    private Map<String, Bean2Cell> bean2CellByProperty = new HashMap<>();
-    private Map<String, Bean2Cell> bean2CellByCellName = new HashMap<>();
+    private final Map<String, Bean2Cell> bean2CellByProperty = new HashMap<>();
+    private final Map<String, Bean2Cell> bean2CellByCellName = new HashMap<>();
     private BeanInfo               beanInfo;
-    private Class                  lineClass;
+    private Class<?>                  lineClass;
 
     private BeanPropertyMap(String lineType) {
         this.lineType = lineType;
     }
 
-    private BeanPropertyMap(String lineType, Class lineClass) {
+    private BeanPropertyMap(String lineType, Class<?> lineClass) {
         this.lineType = lineType;
         this.beanInfo = BeanInfo.ofClass(lineClass);
         this.lineClass = lineClass;
@@ -52,7 +52,6 @@ public class BeanPropertyMap {
     }
 
 
-    @SuppressWarnings("unchecked")
     public Object createBean() throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         return lineClass.getConstructor().newInstance();
     }
@@ -89,14 +88,14 @@ public class BeanPropertyMap {
         return ofClass(Class.forName(className), lineType, cellNamesOfProperty);
     }
 
-    public static BeanPropertyMap ofClass(Class lineClass, String lineType)  {
+    public static BeanPropertyMap ofClass(Class<?> lineClass, String lineType)  {
             return ofClass(lineClass,
                     lineType,
                     makeFieldEntryStream(lineClass, "")
                     .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue)));
     }
 
-    private static Stream< Map.Entry<String, String> > makeFieldEntryStream(Class c, String prefix) {
+    private static Stream< Map.Entry<String, String> > makeFieldEntryStream(Class<?> c, String prefix) {
         return Arrays.stream(c.getDeclaredFields())
                 .filter(f->f.isAnnotationPresent(JSaParCell.class) || (f.isAnnotationPresent(JSaParContainsCells.class) && !f.getType().isPrimitive()))
                 .flatMap(f-> f.isAnnotationPresent(JSaParCell.class)
@@ -104,7 +103,7 @@ public class BeanPropertyMap {
                         : makeFieldEntryStream(f.getType(), prefix + f.getName() + '.'));
     }
 
-    public static BeanPropertyMap ofClass(Class lineClass, String lineType, Map<String, String> cellNamesOfProperty)  {
+    public static BeanPropertyMap ofClass(Class<?> lineClass, String lineType, Map<String, String> cellNamesOfProperty)  {
         BeanPropertyMap beanPropertyMap = new BeanPropertyMap(lineType, lineClass);
 
         Map<String, PropertyDescriptor> descriptors = beanPropertyMap.beanInfo.getPropertyDescriptorsByName();
@@ -143,7 +142,7 @@ public class BeanPropertyMap {
 
     private static Bean2Cell cellOfChildObject(String cellName, String propertyName, PropertyDescriptor basePropertyDescriptor, Bean2Cell baseBean2Cell)  {
         if(baseBean2Cell == null) {
-            Class childClass = basePropertyDescriptor.getReadMethod().getReturnType();
+            Class<?> childClass = basePropertyDescriptor.getReadMethod().getReturnType();
             baseBean2Cell = Bean2Cell.ofBaseProperty(basePropertyDescriptor, new BeanPropertyMap(basePropertyDescriptor.getName(), childClass));
         }
         BeanPropertyMap beanPropertyMap = baseBean2Cell.getChildren();
@@ -168,7 +167,7 @@ public class BeanPropertyMap {
         putBean2Cell(propertyName, bean2Cell.getCellName(), bean2Cell);
     }
 
-    public Class getLineClass() {
+    public Class<?> getLineClass() {
         return lineClass;
     }
 

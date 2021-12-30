@@ -33,7 +33,7 @@ public class Text2SAXReaderTest {
 
             StringWriter w = new StringWriter();
             transformer.transform(new SAXSource(saxReader, new InputSource(fileReader)), new StreamResult(w));
-            System.out.print(w.toString());
+            System.out.print(w);
         }
     }
 

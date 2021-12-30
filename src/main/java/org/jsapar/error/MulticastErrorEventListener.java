@@ -13,8 +13,8 @@ import java.util.List;
 @Deprecated
 public class MulticastErrorEventListener implements ErrorEventListener{
 
-    private List<ErrorEventListener> eventListeners = new ArrayList<>();
-    private ErrorEventListener defaultEventListener = new ExceptionErrorEventListener();
+    private final List<ErrorEventListener> eventListeners = new ArrayList<>();
+    private final ErrorEventListener defaultEventListener = new ExceptionErrorEventListener();
 
     /**
      * Adds an {@link ErrorEventListener}

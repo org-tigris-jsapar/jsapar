@@ -1,8 +1,6 @@
 package org.jsapar.parse.text;
 
-import org.jsapar.model.Line;
 import org.jsapar.parse.AbstractParseTask;
-import org.jsapar.parse.LineEventListener;
 import org.jsapar.parse.ParseTask;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaCell;
@@ -11,13 +9,13 @@ import org.jsapar.text.TextParseConfig;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.stream.Stream;
+import java.util.function.Consumer;
 
 /**
  * This class is used for a one-off parsing of a text source. You create an instance of this class, calls execute, then dispose it.. <br>
  * The instance of this class will produce events for each line that has been successfully parsed.
  * <p>
- * If you want to get the result back as a complete Document object, you should use the {@link org.jsapar.parse.DocumentBuilderLineEventListener}.
+ * If you want to get the result back as a complete list of lines, you should use the {@link org.jsapar.parse.CollectingConsumer}.
  * <ol>
  * <li>First, create an instance of TextParseTask.</li>
  * <li>Set event listeners for parse events and error events</li>
@@ -48,7 +46,7 @@ public class TextParseTask extends AbstractParseTask implements ParseTask, AutoC
      * Reads characters from the input and parses them into a Line. Once a Line is completed, a
      * LineParsedEvent is generated to all registered event listeners. If there is an error while
      * parsing a line, a CellErrorEvent or ErrorEvent is generated to all registered error event listeners <br>
-     * Before calling this method you have to call {@link #setLineEventListener(LineEventListener)} to be able to handle the
+     * Before calling this method you have to call {@link #setLineConsumer(Consumer)} to be able to handle the
      * result
      *
      * @throws IOException If there is an error reading the input

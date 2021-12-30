@@ -20,9 +20,9 @@ import java.util.Map;
  */
 public class EnumFormat<E extends Enum<E>> implements Format<E> {
     private final boolean        ignoreCase;
-    private       Map<String, E> enumByValue  = new HashMap<>();
-    private       Map<String, E> enumByUValue = new HashMap<>();
-    private       Map<E, String> valueByEnum  = new HashMap<>();
+    private final Map<String, E> enumByValue  = new HashMap<>();
+    private final Map<String, E> enumByUValue = new HashMap<>();
+    private final Map<E, String> valueByEnum  = new HashMap<>();
     private final Class<E>       enumClass;
 
     /**
@@ -62,7 +62,7 @@ public class EnumFormat<E extends Enum<E>> implements Format<E> {
     public static class Builder<E extends Enum<E> >{
         private final Class<E> enumClass;
         private boolean ignoreCase;
-        private Map<String, E> enumByValue=new HashMap<>();
+        private final Map<String, E> enumByValue=new HashMap<>();
 
         private Builder(Class<E> enumClass) {
             this.enumClass = enumClass;

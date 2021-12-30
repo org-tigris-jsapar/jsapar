@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractSchemaComposer implements SchemaComposer{
     private final Writer writer;
     private final Schema<? extends SchemaLine<? extends SchemaCell>> schema;
-    private Map<String, LineComposer> lineComposers;
+    private final Map<String, LineComposer> lineComposers;
 
     /**
      * @param writer The writer to write output to

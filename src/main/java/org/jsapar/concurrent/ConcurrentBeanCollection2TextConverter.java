@@ -24,7 +24,7 @@ import java.util.stream.Stream;
  * @param <T> The base class for the beans to convert.
  */
 public class ConcurrentBeanCollection2TextConverter<T> extends BeanCollection2TextConverter<T> implements ConcurrentStartStop{
-    private ConcurrentConvertTaskFactory convertTaskFactory = new ConcurrentConvertTaskFactory();
+    private final ConcurrentConvertTaskFactory convertTaskFactory = new ConcurrentConvertTaskFactory();
 
     public ConcurrentBeanCollection2TextConverter(Schema composerSchema) {
         super(composerSchema);

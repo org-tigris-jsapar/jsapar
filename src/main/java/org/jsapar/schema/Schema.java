@@ -42,7 +42,7 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
     @SuppressWarnings("unchecked")
     public abstract static class Builder<L extends SchemaLine<? extends SchemaCell>, S extends Schema<L>, B extends Schema.Builder<L, S, B>> {
         private String lineSeparator = System.getProperty("line.separator");
-        private List<L> schemaLines = new ArrayList<>();
+        private final List<L> schemaLines = new ArrayList<>();
         private Locale defaultLocale = SchemaCellFormat.defaultLocale;
 
         protected Builder() {

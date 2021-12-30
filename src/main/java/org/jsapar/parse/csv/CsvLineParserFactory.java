@@ -14,7 +14,7 @@ import java.util.List;
  */
 class CsvLineParserFactory {
 
-    private List<CsvLineParserMatcher> lineParserMatchers;
+    private final List<CsvLineParserMatcher> lineParserMatchers;
 
     CsvLineParserFactory(CsvSchema schema, TextParseConfig config) {
         lineParserMatchers = new LinkedList<>();

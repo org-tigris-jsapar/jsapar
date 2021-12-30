@@ -12,7 +12,7 @@ import java.util.List;
 @Deprecated
 public class MulticastLineEventListener implements LineEventListener {
 
-    private List<LineEventListener> lineEventListeners = new LinkedList<>();
+    private final List<LineEventListener> lineEventListeners = new LinkedList<>();
 
     public void addLineEventListener(LineEventListener eventListener) {
         if (eventListener == null)

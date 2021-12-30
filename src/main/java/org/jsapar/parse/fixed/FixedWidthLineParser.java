@@ -20,11 +20,11 @@ import java.util.stream.Collectors;
 final class FixedWidthLineParser {
 
     private static final String EMPTY_STRING = "";
-    private FixedWidthSchemaLine lineSchema;
-    private List<FixedWidthCellParser> cellParsers;
-    private ValidationHandler    validationHandler = new ValidationHandler();
-    private TextParseConfig            config;
-    private LineDecoratorErrorConsumer lineDecoratorErrorConsumer = new LineDecoratorErrorConsumer();
+    private final FixedWidthSchemaLine lineSchema;
+    private final List<FixedWidthCellParser> cellParsers;
+    private final ValidationHandler    validationHandler = new ValidationHandler();
+    private final TextParseConfig            config;
+    private final LineDecoratorErrorConsumer lineDecoratorErrorConsumer = new LineDecoratorErrorConsumer();
 
     FixedWidthLineParser(FixedWidthSchemaLine lineSchema, TextParseConfig config) {
         this.lineSchema = lineSchema;

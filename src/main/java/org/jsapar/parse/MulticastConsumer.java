@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  */
 public class MulticastConsumer<T> implements Consumer<T> {
 
-    private List<Consumer<T> > lineEventListeners = new LinkedList<>();
+    private final List<Consumer<T> > lineEventListeners = new LinkedList<>();
 
 
     public void addConsumer(Consumer<T> eventListener) {

@@ -13,8 +13,8 @@ import java.util.List;
  */
 class CsvLineParserMatcher {
     private final CsvSchemaLine schemaLine;
-    private List<CsvControlCell> controlCells = new ArrayList<>();
-    private CsvLineParser lineParser;
+    private final List<CsvControlCell> controlCells = new ArrayList<>();
+    private final CsvLineParser lineParser;
     private int occursLeft;
     private int maxControlPos;
 

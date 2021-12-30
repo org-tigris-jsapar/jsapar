@@ -111,7 +111,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
     @SuppressWarnings("unchecked")
     public abstract static class Builder<C extends SchemaCell, L extends SchemaLine<C>, B extends Builder<C, L, B>> {
         private final String lineType;
-        private List<C> schemaCells = new ArrayList<>();
+        private final List<C> schemaCells = new ArrayList<>();
         private int occurs = OCCURS_INFINITE;
         private boolean ignoreRead;
         private boolean ignoreWrite;

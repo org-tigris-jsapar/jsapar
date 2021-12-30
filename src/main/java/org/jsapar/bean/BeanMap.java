@@ -31,8 +31,8 @@ import java.util.function.Function;
 @SuppressWarnings("ClassEscapesDefinedScope")
 public class BeanMap {
 
-    private Map<Class<?>, BeanPropertyMap>  beanPropertyMap           = new HashMap<>();
-    private Map<String, BeanPropertyMap> beanPropertyMapByLineType = new HashMap<>();
+    private final Map<Class<?>, BeanPropertyMap>  beanPropertyMap           = new HashMap<>();
+    private final Map<String, BeanPropertyMap> beanPropertyMapByLineType = new HashMap<>();
 
     private BeanMap() {
     }
@@ -102,7 +102,7 @@ public class BeanMap {
     public static <C> BeanMap ofClasses(List<Class<C> > classes) {
         BeanMap beanMap = new BeanMap();
 
-        for (Class<?> c : classes) {
+        for (Class<C> c : classes) {
             if (!c.isAnnotationPresent(JSaParLine.class))
                 throw new BeanException(
                         "The class " + c.getName() + " needs to have the annotation " + JSaParLine.class.getSimpleName()

@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("deprecation")
 public class ConcurrentLineEventListenerTest {
     private AtomicInteger count;
     private boolean started = false;

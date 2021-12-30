@@ -15,7 +15,7 @@ final class ReadBuffer {
     private static final String     EMPTY_STRING  = "";
     private final        Reader     reader;
     private final        LineLoader lineLoader;
-    private              int        maxLoadSize;
+    private final int        maxLoadSize;
     private              int        lineMark      = 0;
     private              int        lineEnd;
     private              int        nextLineBegin = 0;
@@ -414,7 +414,7 @@ final class ReadBuffer {
     }
 
     private final class LineLoaderCustom implements LineLoader {
-        private       String lineSeparator;
+        private final String lineSeparator;
         private final char   lastCharOfSeparator;
 
         LineLoaderCustom(String lineSeparator) {

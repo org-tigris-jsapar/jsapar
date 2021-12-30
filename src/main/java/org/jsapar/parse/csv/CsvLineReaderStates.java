@@ -18,14 +18,14 @@ final class CsvLineReaderStates implements CsvLineReader {
     private static final String EMPTY_CELL = "";
     private final int maxLineLength;
 
-    private State beginCellState;
-    private State foundEndQuoteState;
-    private State foundEndQuoteWithinState;
-    private State quotedCellState;
-    private State unquotedCellState;
+    private final State beginCellState;
+    private final State foundEndQuoteState;
+    private final State foundEndQuoteWithinState;
+    private final State quotedCellState;
+    private final State unquotedCellState;
     private State state;
-    private List<String> currentLine;
-    private EolCheck eolCheck;
+    private final List<String> currentLine;
+    private final EolCheck eolCheck;
     private final char lastEolChar;
 
     private boolean eof;
@@ -38,7 +38,7 @@ final class CsvLineReaderStates implements CsvLineReader {
 
     private final ReadBuffer buffer;
 
-    private CellCreator currentCellCreator = new CellCreator();
+    private final CellCreator currentCellCreator = new CellCreator();
     /**
      * @param lineSeparator  The line separator to use
      * @param reader The reader to read characters from.
@@ -217,8 +217,8 @@ final class CsvLineReaderStates implements CsvLineReader {
         private int currentCellOffset =0;
         private int offsetFromEndQuote =0;
         private int ignoresCount = 0;
-        private int[] ignoresAt = new int[128];
-        private StringBuilder stringBuilder = new StringBuilder();
+        private final int[] ignoresAt = new int[128];
+        private final StringBuilder stringBuilder = new StringBuilder();
 
         private void addToLine(){
             addToLineExcept(offsetFromEndQuote);
@@ -446,8 +446,8 @@ final class CsvLineReaderStates implements CsvLineReader {
      * Checking end of line with custom arbitrary character sequence.
      */
     final class EolCheckCustom implements EolCheck {
-        private String lineSeparator;
-        private char lastLineSeparatorChar;
+        private final String lineSeparator;
+        private final char lastLineSeparatorChar;
 
         EolCheckCustom(String lineSeparator) {
             this.lineSeparator = lineSeparator;

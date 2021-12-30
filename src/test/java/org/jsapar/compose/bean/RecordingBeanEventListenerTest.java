@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("deprecation")
 public class RecordingBeanEventListenerTest {
 
     @Test

@@ -22,7 +22,7 @@ import java.util.function.Function;
  * type that does not exist in the output schema will be discarded in the output.
  */
 public class ConvertTask {
-    private ParseTask parseTask;
+    private final ParseTask parseTask;
 
     /**
      * Creates a convert task with supplied parse task and composer.

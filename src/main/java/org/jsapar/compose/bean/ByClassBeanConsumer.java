@@ -14,7 +14,7 @@ import java.util.function.BiConsumer;
  * The default listener will be called if no consumer was registered for the class.
  */
 public class ByClassBeanConsumer<T> implements BiConsumer<T, Line> {
-    private Map<Class<?>, BiConsumer<T, Line>> beanEventListeners = new HashMap<>();
+    private final Map<Class<?>, BiConsumer<T, Line>> beanEventListeners = new HashMap<>();
 
     /**
      * The default consumer that gets called if no other consumer was registered for the class. If no default

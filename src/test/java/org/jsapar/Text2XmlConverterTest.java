@@ -28,7 +28,7 @@ public class Text2XmlConverterTest {
 
             StringWriter w = new StringWriter();
             converter.convert(fileReader, w);
-            System.out.print(w.toString());
+            System.out.print(w);
         }
 
     }

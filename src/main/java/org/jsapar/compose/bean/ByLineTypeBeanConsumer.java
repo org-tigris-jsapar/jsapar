@@ -16,7 +16,7 @@ import java.util.function.Consumer;
  */
 @SuppressWarnings("WeakerAccess")
 public class ByLineTypeBeanConsumer<T> implements BiConsumer<T, Line> {
-    private Map<String, BiConsumer<T, Line>> beanConsumers = new HashMap<>();
+    private final Map<String, BiConsumer<T, Line>> beanConsumers = new HashMap<>();
     /**
      * The default consumer that gets called if no other consumer was registered for the line type. If no default
      * consumer is explicitly set, the default behavior is to simply do nothing.

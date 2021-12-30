@@ -9,7 +9,7 @@ import java.util.List;
  * number has been reached will cause a {@link MaxErrorsExceededException} instead.
  */
 public class ThresholdCollectingErrorConsumer extends CollectingConsumer<JSaParException> {
-    private int maxNumberOfErrors;
+    private final int maxNumberOfErrors;
 
     /**
      * Creates an error consumer where the error list needs to be fetched with

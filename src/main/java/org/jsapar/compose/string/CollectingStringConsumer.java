@@ -10,7 +10,7 @@ import java.util.stream.Stream;
  * when done composing.
  */
 public class CollectingStringConsumer implements StringComposedConsumer {
-    private List< List <String> > collected = new ArrayList<>();
+    private final List< List <String> > collected = new ArrayList<>();
 
     /**
      * @return All composed lines.

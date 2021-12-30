@@ -6,7 +6,7 @@ import java.io.Writer;
 /**
  */
 public class MaxLengthComposer implements ValueComposer {
-    private int maxLength;
+    private final int maxLength;
 
     public MaxLengthComposer(int maxLength) {
         this.maxLength = Math.max(0, maxLength);

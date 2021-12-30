@@ -8,7 +8,7 @@ import java.text.ParsePosition;
  * @param <T>
  */
 class JavaTextFormat<T> implements Format<T>{
-    private java.text.Format format;
+    private final java.text.Format format;
 
     JavaTextFormat(java.text.Format format) {
         this.format = format;

@@ -1,8 +1,6 @@
 package org.jsapar.compose.line;
 
 import org.jsapar.compose.ComposeException;
-import org.jsapar.error.ErrorEvent;
-import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.error.ValidationAction;
 import org.jsapar.model.Line;
@@ -27,7 +25,7 @@ public class ValidationHandler {
      *                      EXCEPTION will throw a LineComposeException immediately.
      *                      NONE will simply ignore the validation and continue without action, if possible.
      *                      OMIT_LINE will omit the current line from the composing context.
-     * @param eventListener An {@link ErrorEventListener} to use in case an error event should be fired.
+     * @param eventListener An {@link Consumer} to use in case an error event should be fired as a callback.
      * @return True if the line should be processed, false otherwise.
      * @throws ComposeException if the action is {@link ValidationAction#EXCEPTION}
      */

@@ -13,8 +13,8 @@ import java.util.List;
  */
 class FWLineParserMatcher {
     private final FixedWidthSchemaLine schemaLine;
-    private List<FWControlCell> controlCells =new ArrayList<>();
-    private FixedWidthLineParser lineParser;
+    private final List<FWControlCell> controlCells =new ArrayList<>();
+    private final FixedWidthLineParser lineParser;
     private int occursLeft;
 
     FWLineParserMatcher(FixedWidthSchemaLine schemaLine, TextParseConfig config) {

@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 public class EnumFormatTest {
     private enum TestEnum{
-        A, BB, CCC, DDDD;
+        A, BB, CCC, DDDD
     }
 
     @Test

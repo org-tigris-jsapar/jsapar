@@ -2,11 +2,14 @@ package org.jsapar.parse;
 
 import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;
+import org.jsapar.model.Line;
 import org.jsapar.parse.xml.XmlParseTask;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.function.Consumer;
 
 import static org.junit.Assert.assertEquals;
 
@@ -23,17 +26,17 @@ public class XMLDocumentParseTaskTest {
 
         java.io.Reader reader = new java.io.StringReader(sXml);
         ParseTask parseTask = new XmlParseTask(reader);
-        DocumentBuilderLineEventListener listener = new DocumentBuilderLineEventListener();
-        parseTask.setLineEventListener(listener);
+        CollectingConsumer<Line> listener = new CollectingConsumer<>();
+        parseTask.setLineConsumer(listener);
         parseTask.execute();
-        Document document = listener.getDocument();
+        List<Line> lines = listener.getCollected();
 
         // System.out.println("Errors: " + parseErrors.toString());
 
-        assertEquals(1, document.size());
-        assertEquals("Hans", document.getLine(0).getCell("FirstName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
-        assertEquals("Hugge", document.getLine(0).getCell("LastName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
-        assertEquals(48, ((IntegerCell) document.getLine(0).getCell("ShoeSize").orElseThrow(() -> new AssertionError("Should be set"))).getValue().intValue());
+        assertEquals(1, lines.size());
+        assertEquals("Hans", lines.get(0).getCell("FirstName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
+        assertEquals("Hugge", lines.get(0).getCell("LastName").orElseThrow(() -> new AssertionError("Should be set")).getStringValue());
+        assertEquals(48, ((IntegerCell) lines.get(0).getCell("ShoeSize").orElseThrow(() -> new AssertionError("Should be set"))).getValue().intValue());
     }
 
 }

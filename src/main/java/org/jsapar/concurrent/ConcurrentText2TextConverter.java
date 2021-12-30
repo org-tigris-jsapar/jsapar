@@ -21,7 +21,7 @@ import org.jsapar.schema.Schema;
  * @see org.jsapar.Text2TextConverter
  */
 public class ConcurrentText2TextConverter extends Text2TextConverter implements ConcurrentStartStop{
-    private ConcurrentConvertTaskFactory convertTaskFactory = new ConcurrentConvertTaskFactory();
+    private final ConcurrentConvertTaskFactory convertTaskFactory = new ConcurrentConvertTaskFactory();
 
     /**
      * Creates a concurrent text to text converter that can be used to convert between different text based formats.

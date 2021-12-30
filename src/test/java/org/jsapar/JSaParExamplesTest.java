@@ -32,15 +32,16 @@ import static org.junit.Assert.*;
  * below show how JSaPar can be used to parse files.
  * 
  */
+@SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored"})
 public class JSaParExamplesTest {
-    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Test
     public final void testExampleCsv01_parse()
             throws IOException, JSaParException {
         try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
              Reader fileReader = new FileReader("examples/01_Names.csv")) {
-            Schema schema = Schema.ofXml(schemaReader);
+            Schema<?> schema = Schema.ofXml(schemaReader);
             TextParser parser = new TextParser(schema);
             DocumentBuilderLineConsumer listener = new DocumentBuilderLineConsumer();
             parser.parseForEach(fileReader, listener);
@@ -71,7 +72,7 @@ public class JSaParExamplesTest {
             throws SchemaException, IOException{
         try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
              StringWriter writer = new StringWriter()) {
-            Schema schema = Schema.ofXml(schemaReader);
+            Schema<?> schema = Schema.ofXml(schemaReader);
             TextComposer composer = new TextComposer(schema, writer);
             Line line1 = new Line("Person")
                     .addCell(new StringCell("First name", "Erik"))
@@ -240,7 +241,7 @@ public class JSaParExamplesTest {
         try(Writer w = new StringWriter()) {
             TextComposer composer = new TextComposer(schemaBuilder.build(schemaReader), w);
             composer.compose(document);
-            System.out.println(w.toString());
+            System.out.println(w);
             String[] strings=w.toString().split("\n");
             assertEquals(4, strings.length);
             assertEquals("H04_Names.txt   2017-07-07", strings[0]);
@@ -327,6 +328,7 @@ public class JSaParExamplesTest {
         Assert.assertTrue(outFile.isFile());
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     public final void testExampleCsvToJava07()
             throws IOException, JSaParException, ParseException {
@@ -442,6 +444,7 @@ public class JSaParExamplesTest {
         assertEquals("B;\"Jonathan\";;Lionheart;M", resultLines[1]);
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     public final void testExampleCsvToBean06_beanMap()
             throws IOException, JSaParException, ClassNotFoundException {
@@ -497,6 +500,7 @@ public class JSaParExamplesTest {
         assertEquals("B;\"Jonathan\";;Lionheart;M", resultLines[1]);
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     public final void testExampleCsvToBean06_annotated()
             throws IOException, JSaParException {
@@ -523,7 +527,7 @@ public class JSaParExamplesTest {
         try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
                 Reader fileReader = new FileReader("examples/06_NamesControlCell.csv")) {
             final BeanMap overrideBeanMap = BeanMap.ofClass(TstPersonAnnotated.class);
-            final Schema parseSchema = Schema.ofXml(schemaReader);
+            final Schema<?> parseSchema = Schema.ofXml(schemaReader);
             BeanMap beanMap = BeanMap.ofSchema(parseSchema, overrideBeanMap);
             Text2BeanConverter<TstPersonAnnotated> converter = new Text2BeanConverter<>(parseSchema, beanMap);
             converter.getComposeConfig().setOnUndefinedLineType(ValidationAction.OMIT_LINE);
@@ -548,7 +552,7 @@ public class JSaParExamplesTest {
              Reader fileReader = new FileReader("examples/06_NamesControlCellEnum.csv");
              Reader beanMapReader = new FileReader("examples/06_BeanMapOverride.xml")) {
             final BeanMap overrideBeanMap = BeanMap.ofXml(beanMapReader);
-            final Schema parseSchema = Schema.ofXml(schemaReader);
+            final Schema<?> parseSchema = Schema.ofXml(schemaReader);
             BeanMap beanMap = BeanMap.ofSchema(parseSchema, overrideBeanMap);
             Text2BeanConverter<TstPerson> converter = new Text2BeanConverter<>(parseSchema, beanMap);
             converter.getComposeConfig().setOnUndefinedLineType(ValidationAction.OMIT_LINE);
@@ -569,7 +573,7 @@ public class JSaParExamplesTest {
             throws IOException, JSaParException {
         try (Reader schemaReader = new FileReader("examples/08_CsvFirstLineAsSchema.xml");
                 Reader fileReader = new FileReader("examples/08_NamesWithHeader.csv")) {
-            Schema schema = Schema.ofXml(schemaReader);
+            Schema<?> schema = Schema.ofXml(schemaReader);
             DocumentBuilderLineConsumer documentBuilder = new DocumentBuilderLineConsumer();
             TextParser.parseForEach(schema, fileReader, documentBuilder);
             Document document = documentBuilder.getDocument();
@@ -600,7 +604,7 @@ public class JSaParExamplesTest {
         try (Reader schemaReader = new FileReader("examples/08_CsvFirstLineAsSchema.xml");
                 Writer writer = new StringWriter())
         {
-            Schema schema = Schema.ofXml(schemaReader);
+            Schema<?> schema = Schema.ofXml(schemaReader);
             Composer composer = new TextComposer(schema, writer);
 
             Line line1 = new Line("Person");

@@ -18,7 +18,7 @@ import java.util.Date;
 
 public class Bean2Cell {
 
-    private String             cellName;
+    private final String             cellName;
     private BeanPropertyMap    children;
     private PropertyDescriptor propertyDescriptor;
     private CellCreator        cellCreator;

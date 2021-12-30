@@ -24,10 +24,10 @@ import java.util.stream.Stream;
  */
 class BooleanFormat implements Format<Boolean> {
 
-    private String trueValue;
-    private String falseValue;
-    private String[] optionalTrue;
-    private String[] optionalFalse;
+    private final String trueValue;
+    private final String falseValue;
+    private final String[] optionalTrue;
+    private final String[] optionalFalse;
     private boolean ignoreCase;
 
     /**

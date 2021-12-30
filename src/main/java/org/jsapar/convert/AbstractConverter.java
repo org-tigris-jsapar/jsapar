@@ -38,7 +38,7 @@ import java.util.function.Function;
  */
 public abstract class AbstractConverter {
 
-    private List<LineManipulator>      manipulators  = new java.util.LinkedList<>();
+    private final List<LineManipulator>      manipulators  = new java.util.LinkedList<>();
     private Consumer<JSaParException>  errorConsumer = new ExceptionErrorConsumer();
     private Function<Line, List<Line>> transformer;
 

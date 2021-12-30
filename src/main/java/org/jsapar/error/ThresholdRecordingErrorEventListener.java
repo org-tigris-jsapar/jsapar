@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Deprecated
 public class ThresholdRecordingErrorEventListener extends RecordingErrorEventListener {
-    private int maxNumberOfErrors;
+    private final int maxNumberOfErrors;
 
     /**
      * Creates an error event listener where the error list needs to be fetched with

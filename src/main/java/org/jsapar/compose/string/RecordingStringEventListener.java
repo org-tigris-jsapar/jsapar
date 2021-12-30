@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  */
 @Deprecated
 public class RecordingStringEventListener implements StringComposedEventListener {
-    private List< List <String> > lines = new ArrayList<>();
+    private final List< List <String> > lines = new ArrayList<>();
 
     /**
      * @return All composed lines.

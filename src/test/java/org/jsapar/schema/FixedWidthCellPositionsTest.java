@@ -11,7 +11,7 @@ public class FixedWidthCellPositionsTest {
      */
     @Test
     public void testIncrement() {
-        FixedWidthSchemaCell cell = new FixedWidthSchemaCell("test", 17);
+        FixedWidthSchemaCell cell = FixedWidthSchemaCell.builder("test", 17).build();
         FixedWidthCellPositions pos = new FixedWidthCellPositions();
         pos.increment(cell);
         assertEquals(1, pos.getFirst());

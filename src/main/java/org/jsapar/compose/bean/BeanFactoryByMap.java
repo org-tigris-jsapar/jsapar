@@ -14,7 +14,7 @@ import java.lang.reflect.InvocationTargetException;
  * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.
  */
 public class BeanFactoryByMap<T> implements BeanFactory<T>{
-    private BeanMap beanMap;
+    private final BeanMap beanMap;
 
     public BeanFactoryByMap(BeanMap beanMap) {
         this.beanMap = beanMap;
