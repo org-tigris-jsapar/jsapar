@@ -2,8 +2,6 @@ package org.jsapar.model;
 
 import org.jsapar.parse.CellParseException;
 import org.jsapar.schema.SchemaCellFormat;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

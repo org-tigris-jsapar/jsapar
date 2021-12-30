@@ -69,8 +69,7 @@ public class FixedWidthSchema extends Schema<FixedWidthSchemaLine> {
 
     @Override
     public FixedWidthSchema clone() {
-        FixedWidthSchema schema = (FixedWidthSchema) super.clone();
-        return schema;
+        return (FixedWidthSchema) super.clone();
     }
 
     /*

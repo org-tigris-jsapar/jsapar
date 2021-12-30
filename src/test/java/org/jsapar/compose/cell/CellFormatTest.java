@@ -8,7 +8,6 @@ import org.jsapar.schema.StringSchemaCell;
 import org.junit.Test;
 
 import java.text.ParseException;
-import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -22,7 +21,7 @@ public class CellFormatTest {
                 .withDefaultValue("TheDefault")
                 .build();
 
-        Cell cell = new StringCell("Test", "");
+        Cell<String> cell = new StringCell("Test", "");
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
         assertEquals("TheDefault", format.format(cell));
     }
@@ -33,7 +32,7 @@ public class CellFormatTest {
                 .withDefaultValue("TheDefault")
                 .build();
 
-        Cell cell = new EmptyCell("Test", CellType.STRING);
+        Cell<String> cell = new EmptyCell("Test", CellType.STRING);
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
         assertEquals("TheDefault", format.format(cell));
     }
@@ -42,7 +41,7 @@ public class CellFormatTest {
     public void testFormat_empty_no_default()  {
         SchemaCell schemaCell = StringSchemaCell.builder("test").build();
 
-        Cell cell = new EmptyCell("Test", CellType.STRING);
+        Cell<String> cell = new EmptyCell("Test", CellType.STRING);
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
         assertEquals("", format.format(cell));
     }

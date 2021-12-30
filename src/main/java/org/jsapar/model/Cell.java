@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Base interface which represents a parsable item on a line in the original document. A cell has a
  * name, a value and a type. The type of the value denotes which sub-class to use.
  */
-public interface Cell<T> extends Serializable, Comparable<Cell> {
+public interface Cell<T> extends Serializable, Comparable<Cell<T>> {
 
     /**
      * Gets the name of the cell.
@@ -60,9 +60,8 @@ public interface Cell<T> extends Serializable, Comparable<Cell> {
      * @param right The value to compare against.
      * @return a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object.
      */
-    @SuppressWarnings({ "NullableProblems", "unchecked" })
     @Override
-    default int compareTo(Cell right) {
+    default int compareTo(Cell<T> right) {
         assert right!=null : "Cannot compare a null value.";
         int rc = this.getName().compareTo(right.getName());
         if (rc != 0)

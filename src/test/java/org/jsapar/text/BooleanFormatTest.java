@@ -4,7 +4,6 @@ import org.jsapar.text.BooleanFormat;
 import org.junit.Test;
 
 import java.text.ParseException;
-import java.text.ParsePosition;
 
 import static org.junit.Assert.*;
 

@@ -1,7 +1,5 @@
 package org.jsapar.text;
 
-import org.jsapar.model.CharacterCell;
-
 import java.text.ParseException;
 
 public class CharacterFormat implements Format<Character> {

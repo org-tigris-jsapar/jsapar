@@ -1,6 +1,5 @@
 package org.jsapar.bean;
 
-import org.jsapar.error.BeanException;
 import org.jsapar.error.JSaParException;
 import org.jsapar.parse.bean.BeanPropertyMap;
 import org.jsapar.schema.SchemaException;

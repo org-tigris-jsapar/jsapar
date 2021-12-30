@@ -77,7 +77,7 @@ final class FixedWidthLineParser {
                     continue;
                 }
             } else {
-                Cell cell = cellParser.parse(lineReader, lineDecoratorErrorConsumer);
+                Cell<?> cell = cellParser.parse(lineReader, lineDecoratorErrorConsumer);
                 if (cell == null) {
                     if (oneRead) {
                         setDefaultsOnly = true;
@@ -110,6 +110,7 @@ final class FixedWidthLineParser {
         return line;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean lineValidationInsufficient(ReadBuffer lineReader, Consumer<JSaParException> errorListener) {
         return validationHandler.lineValidation(lineReader.getLineNumber(), config.getOnLineInsufficient(),
                 errorListener, () -> "Insufficient number of characters for line of type " + lineSchema.getLineType()

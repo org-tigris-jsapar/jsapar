@@ -1,10 +1,6 @@
 package org.jsapar.schema;
 
 import org.jsapar.TstGender;
-import org.jsapar.model.CellType;
-import org.jsapar.text.EnumFormat;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.StringReader;
@@ -42,7 +38,7 @@ public class Schema2XmlExtractorTest {
         assertNotNull(sXml);
         Xml2SchemaBuilder xml2SchemaBuilder = new Xml2SchemaBuilder();
         // Validating while building
-        Schema builtSchema = xml2SchemaBuilder.build(new StringReader(sXml));
+        Schema<? extends SchemaLine<? extends SchemaCell>> builtSchema = xml2SchemaBuilder.build(new StringReader(sXml));
         assertEquals(FixedWidthSchema.class, builtSchema.getClass());
     }
 
@@ -73,7 +69,7 @@ public class Schema2XmlExtractorTest {
         assertNotNull(sXml);
         Xml2SchemaBuilder xml2SchemaBuilder = new Xml2SchemaBuilder();
         // Validating while building
-        Schema builtSchema = xml2SchemaBuilder.build(new StringReader(sXml));
+        Schema<? extends SchemaLine<? extends SchemaCell>> builtSchema = xml2SchemaBuilder.build(new StringReader(sXml));
         assertEquals(CsvSchema.class, builtSchema.getClass());
     }
 

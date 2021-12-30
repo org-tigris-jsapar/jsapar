@@ -3,7 +3,6 @@ package org.jsapar.compose.string;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
-import org.jsapar.parse.CollectingConsumer;
 import org.jsapar.schema.*;
 import org.junit.Test;
 

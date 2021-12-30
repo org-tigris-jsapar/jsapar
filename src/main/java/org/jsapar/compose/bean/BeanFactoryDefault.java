@@ -113,7 +113,7 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
      * @param sName          The name of the field
      * @param objectToAssign The object to assign to
      */
-    private void assignAttribute(Cell cell, String sName, Object objectToAssign) throws BeanComposeException, InvocationTargetException, IllegalAccessException {
+    private void assignAttribute(Cell<?> cell, String sName, Object objectToAssign) throws BeanComposeException, InvocationTargetException, IllegalAccessException {
         if (cell.isEmpty())
             return;
 
@@ -134,7 +134,7 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
      * @throws IllegalAccessException if this Method object is enforcing Java language access control and the underlying method is inaccessible.
      * @throws IllegalArgumentException if the method is an instance method and the specified object argument is not an instance of the class or interface declaring the underlying method (or of a subclass or implementor thereof); if the number of actual and formal parameters differ; if an unwrapping conversion for primitive arguments fails; or if, after possible unwrapping, a parameter value cannot be converted to the corresponding formal parameter type by a method invocation conversion.
      */
-    private <B> boolean assignParameterBySignature(B objectToAssign, String sSetMethodName, Cell cell)
+    private <B> boolean assignParameterBySignature(B objectToAssign, String sSetMethodName, Cell<?> cell)
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
         if (cell.getValue() == null)
@@ -163,7 +163,7 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
      * @throws BeanComposeException In case of unable to create or assign bean.
      */
     @SuppressWarnings("unchecked")
-    private <B> void assignParameterByName(B objectToAssign, String sSetMethodName, Cell cell)
+    private <B> void assignParameterByName(B objectToAssign, String sSetMethodName, Cell<?> cell)
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, BeanComposeException {
 
         try {
@@ -187,7 +187,7 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
                     // Will squeeze in first character of any datatype's string representation.
                 else if (paramType == Character.TYPE) {
                     if (value instanceof Character) {
-                        f.invoke(objectToAssign, (Character) value);
+                        f.invoke(objectToAssign, value);
                     } else {
                         String sValue = value.toString();
                         if (!sValue.isEmpty())

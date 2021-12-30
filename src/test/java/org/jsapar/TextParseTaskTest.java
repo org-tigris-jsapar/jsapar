@@ -11,8 +11,6 @@ import org.jsapar.parse.DocumentBuilderLineConsumer;
 import org.jsapar.parse.CollectingConsumer;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.FixedWidthSchema;
-import org.jsapar.schema.FixedWidthSchemaCell;
-import org.jsapar.schema.FixedWidthSchemaLine;
 import org.junit.Assert;
 import org.junit.Test;
 

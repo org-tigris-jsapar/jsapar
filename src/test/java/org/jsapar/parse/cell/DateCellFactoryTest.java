@@ -12,13 +12,13 @@ import static org.junit.Assert.assertEquals;
 
 public class DateCellFactoryTest {
 
-    DateCellFactory cellFactory = new DateCellFactory();
+    final DateCellFactory cellFactory = new DateCellFactory();
 
 
     @Test
     public final void testDateCellStringStringFormat() throws ParseException {
         Locale locale = Locale.GERMANY;
-        Format format = cellFactory.makeFormat(locale, "yyyy-MM-dd HH:mm");
+        Format<?> format = cellFactory.makeFormat(locale, "yyyy-MM-dd HH:mm");
         DateCell cell = (DateCell) cellFactory.makeCell("Name", "2007-10-01 14:13", format);
         assertEquals("Name", cell.getName());
         assertEquals(format.parse("2007-10-01 14:13"), cell.getValue());
@@ -31,7 +31,7 @@ public class DateCellFactoryTest {
     @Test
     public final void testGetStringValue() throws ParseException {
         Locale locale = Locale.GERMANY;
-        Format format = cellFactory.makeFormat(locale, "yyyy-MM-dd HH:mm");
+        Format<?> format = cellFactory.makeFormat(locale, "yyyy-MM-dd HH:mm");
         DateCell cell = (DateCell) cellFactory.makeCell("Name", "2007-10-01 14:13", format);
 
         // Compare without the zone part

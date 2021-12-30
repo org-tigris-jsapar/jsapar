@@ -14,6 +14,7 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings("ALL")
 public class BeanMarshallerTest {
     static final Date birthTime = new Date();
 

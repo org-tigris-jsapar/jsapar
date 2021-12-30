@@ -4,7 +4,6 @@ import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.FixedWidthSchemaCell;
-import org.jsapar.schema.SchemaException;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -23,7 +22,7 @@ public class FixedWidthCellComposerTest {
                 .build();
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("First name","Jonas");
+        Cell<String> cell = new StringCell("First name","Jonas");
         FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
         composer.compose(writer, cell);
 
@@ -37,7 +36,7 @@ public class FixedWidthCellComposerTest {
                 .build();
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("First name","000Jonas000");
+        Cell<String> cell = new StringCell("First name","000Jonas000");
         FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
         composer.compose(writer, cell);
 
@@ -54,7 +53,7 @@ public class FixedWidthCellComposerTest {
                 .build();
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("First name","000Jonas000");
+        Cell<String> cell = new StringCell("First name","000Jonas000");
         FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
         composer.compose(writer, cell);
 
@@ -68,7 +67,7 @@ public class FixedWidthCellComposerTest {
                 .build();
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("First name","Jonas");
+        Cell<String> cell = new StringCell("First name","Jonas");
         FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
         composer.compose(writer, cell);
 
@@ -81,7 +80,7 @@ public class FixedWidthCellComposerTest {
                 .build();
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("First name","Jonas");
+        Cell<String> cell = new StringCell("First name","Jonas");
         FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
         composer.compose(writer, cell);
 
@@ -96,7 +95,7 @@ public class FixedWidthCellComposerTest {
                 .build();
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("First name","Jonas");
+        Cell<String> cell = new StringCell("First name","Jonas");
         FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
         composer.compose(writer, cell);
 
@@ -111,7 +110,7 @@ public class FixedWidthCellComposerTest {
                 .build();
 
         Writer writer = new StringWriter();
-        Cell cell = new StringCell("First name","0000Jonas");
+        Cell<String> cell = new StringCell("First name","0000Jonas");
         FixedWidthCellComposer composer = new FixedWidthCellComposer(schemaCell);
         composer.compose(writer, cell);
 

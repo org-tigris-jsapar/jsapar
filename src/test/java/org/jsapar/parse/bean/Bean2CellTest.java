@@ -13,7 +13,6 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -42,7 +41,7 @@ public class Bean2CellTest {
     }
 
     @SuppressWarnings("unused")
-    private class LocalDateTimeHolder{
+    private static class LocalDateTimeHolder{
          private LocalDateTime dateTime;
 
         public LocalDateTime getDateTime() {
@@ -53,6 +52,7 @@ public class Bean2CellTest {
             this.dateTime = dateTime;
         }
     }
+
     @Test
     public void makeCell_LocalDateTime() throws InvocationTargetException, IllegalAccessException {
         Bean2Cell bean2Cell = makeBean2CellOfPropertyName(LocalDateTimeHolder.class, "dateTime");

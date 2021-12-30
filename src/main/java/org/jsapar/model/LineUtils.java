@@ -631,7 +631,7 @@ public class LineUtils {
             return numberCell.getBigDecimalValue();
         }
         else if (cell instanceof NumberCell) {
-            return new BigDecimal(((FloatCell) cell).getValue().doubleValue());
+            return BigDecimal.valueOf(((FloatCell) cell).getValue().doubleValue());
         }
 
         try {

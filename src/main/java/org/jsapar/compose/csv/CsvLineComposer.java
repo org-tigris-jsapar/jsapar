@@ -3,13 +3,9 @@ package org.jsapar.compose.csv;
 import org.jsapar.compose.csv.quote.*;
 import org.jsapar.compose.line.LineComposer;
 import org.jsapar.model.Cell;
-import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
-import org.jsapar.schema.CsvSchemaCell;
-import org.jsapar.schema.CsvSchemaLine;
-import org.jsapar.schema.QuoteBehavior;
-import org.jsapar.schema.QuoteSyntax;
+import org.jsapar.schema.*;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -118,13 +114,12 @@ class CsvLineComposer implements LineComposer {
      * Writes header line if first line is schema.
      */
     private void composeHeaderLine() {
-        CsvSchemaLine unformattedSchemaLine = schemaLine.clone();
-        unformattedSchemaLine.setFirstLineAsSchema(false);
-        for (CsvSchemaCell schemaCell : unformattedSchemaLine) {
-            schemaCell.setCellFormat(CellType.STRING);
-        }
-        CsvLineComposer headerLineComposer = new CsvLineComposer(writer, unformattedSchemaLine, lineSeparator, quoteSyntax);
-        headerLineComposer.compose(this.buildHeaderLineFromSchema(unformattedSchemaLine));
+        CsvSchemaLine headerLineSchema = CsvSchemaLine.builder("<schema>", schemaLine)
+                .withCells(schemaLine.stream().map(SchemaCell::getName).toArray(String[]::new)) // Just use the names, not the format.
+                .withFirstLineAsSchema(false)
+                .build();
+        CsvLineComposer headerLineComposer = new CsvLineComposer(writer, headerLineSchema, lineSeparator, quoteSyntax);
+        headerLineComposer.compose(this.buildHeaderLineFromSchema(headerLineSchema));
     }
 
     /**

@@ -1,13 +1,11 @@
 package org.jsapar.parse.fixed;
 
-import org.jsapar.error.ErrorEventListener;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.parse.cell.CellParser;
 import org.jsapar.schema.FixedWidthSchemaCell;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.util.function.Consumer;
 
 /**

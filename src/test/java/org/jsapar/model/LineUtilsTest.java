@@ -1,7 +1,6 @@
 package org.jsapar.model;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -186,9 +185,9 @@ public class LineUtilsTest {
         LineUtils.setDoubleCellValue(line, "pi", 3.14159265358979D);
         LineUtils.setDecimalCellValue(line, "e", new BigDecimal("2.718"));
         line.addCell(BigDecimalCell.emptyOf("empty"));
-        assertEquals(new BigDecimal(3.14159265358979D), LineUtils.getDecimalCellValue(line,"pi").orElse(null));
+        assertEquals(new BigDecimal("3.14159265358979"), LineUtils.getDecimalCellValue(line,"pi").orElse(null));
         assertEquals(new BigDecimal("2.718"), LineUtils.getDecimalCellValue(line,"e").orElse(null));
-        assertEquals(new BigDecimal(3.14159265358979D), LineUtils.getDecimalCellValue(line,"pi").orElse(new BigDecimal(2.71D)));
+        assertEquals(new BigDecimal("3.14159265358979"), LineUtils.getDecimalCellValue(line,"pi").orElse(new BigDecimal("2.71")));
         assertEquals(new BigDecimal("23.14"), LineUtils.getDecimalCellValue(line,"empty").orElse(new BigDecimal("23.14")));
     }
 

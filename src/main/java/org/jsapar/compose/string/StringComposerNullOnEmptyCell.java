@@ -3,7 +3,6 @@ package org.jsapar.compose.string;
 import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
-import org.jsapar.schema.StringSchema;
 
 import java.util.stream.Collectors;
 

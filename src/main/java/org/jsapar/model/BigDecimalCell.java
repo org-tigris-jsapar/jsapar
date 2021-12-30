@@ -60,7 +60,7 @@ public final class BigDecimalCell extends NumberCell  {
             return getBigDecimalValue().compareTo(bdRight);
         }
         assert right instanceof NumberCell : "Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType();
-        BigDecimal bdRight = new BigDecimal(right.getValue().doubleValue());
+        BigDecimal bdRight = BigDecimal.valueOf(right.getValue().doubleValue());
         return getBigDecimalValue().compareTo(bdRight);
     }
 
@@ -68,7 +68,7 @@ public final class BigDecimalCell extends NumberCell  {
      * @param name The name of the empty cell.
      * @return A new Empty cell of supplied name.
      */
-    public static Cell emptyOf(String name) {
+    public static EmptyCell emptyOf(String name) {
         return new EmptyCell(name, CellType.DECIMAL);
     }
 

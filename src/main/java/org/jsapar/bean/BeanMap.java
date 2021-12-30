@@ -191,9 +191,8 @@ public class BeanMap {
      * @param reader The reader to read xml from.
      * @return A newly created instance
      * @throws IOException In case of io error
-     * @throws ClassNotFoundException If one of the classes specified in the xml does not exist in the classpath.
      */
-    public static BeanMap ofXml(Reader reader) throws IOException, ClassNotFoundException {
+    public static BeanMap ofXml(Reader reader) throws IOException {
         Xml2BeanMapBuilder builder = new Xml2BeanMapBuilder();
         return builder.build(reader);
     }
@@ -209,7 +208,7 @@ public class BeanMap {
      * Builder class that builds BeanMap instances.
      */
     public static class Builder{
-        List<BeanPropertyMap> beanPropertyMaps = new ArrayList<>();
+        final List<BeanPropertyMap> beanPropertyMaps = new ArrayList<>();
         private Builder() {
         }
 

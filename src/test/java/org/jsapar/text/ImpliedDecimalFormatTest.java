@@ -1,7 +1,6 @@
 package org.jsapar.text;
 
 import org.jsapar.text.Format;
-import org.jsapar.text.ImpliedDecimalFormat;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -17,7 +16,7 @@ public class ImpliedDecimalFormatTest {
         Format<BigDecimal> format = Format.ofImpliedDecimalInstance(2);
         assertEquals("0", format.format(0));
         assertEquals("100", format.format(1L));
-        assertEquals("314", format.format(new BigDecimal(3.14)));
+        assertEquals("314", format.format(new BigDecimal("3.14")));
         assertEquals("100", format.format(new BigInteger("1")));
         assertEquals("314", format.format(3.14D));
         assertEquals("500", format.format("5"));

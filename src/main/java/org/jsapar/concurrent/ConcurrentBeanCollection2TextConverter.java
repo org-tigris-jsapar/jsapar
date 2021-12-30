@@ -8,11 +8,6 @@ import org.jsapar.convert.ConvertTask;
 import org.jsapar.parse.ParseTask;
 import org.jsapar.schema.Schema;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Iterator;
-import java.util.stream.Stream;
-
 /**
  * A multi threaded version of {@link BeanCollection2TextConverter} where the composer is started in a separate worker
  * thread.

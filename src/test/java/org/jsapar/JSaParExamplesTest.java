@@ -416,7 +416,7 @@ public class JSaParExamplesTest {
      */
     @Test
     public final void testExampleBeanToCsv06_beanMap()
-            throws SchemaException, IOException, ParseException, ClassNotFoundException {
+            throws SchemaException, IOException, ParseException {
 
         List<TstPerson> people = new LinkedList<>();
         TstPerson testPerson1 = new TstPerson("Nils", "Holgersson", (short) 4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9, 'A');
@@ -447,7 +447,7 @@ public class JSaParExamplesTest {
     @SuppressWarnings("rawtypes")
     @Test
     public final void testExampleCsvToBean06_beanMap()
-            throws IOException, JSaParException, ClassNotFoundException {
+            throws IOException, JSaParException {
         try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml");
                 Reader fileReader = new FileReader("examples/06_NamesControlCell.csv");
                 Reader beanMapReader = new FileReader("examples/06_BeanMap.xml")) {
@@ -547,7 +547,7 @@ public class JSaParExamplesTest {
 
     @Test
     public final void testExampleCsvToBean06_beanMapOverrideEnum()
-            throws IOException, JSaParException, ClassNotFoundException {
+            throws IOException, JSaParException {
         try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCellEnum.xml");
              Reader fileReader = new FileReader("examples/06_NamesControlCellEnum.csv");
              Reader beanMapReader = new FileReader("examples/06_BeanMapOverride.xml")) {

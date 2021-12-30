@@ -103,7 +103,7 @@ public class TstPersonAnnotated {
     }
 
     public void setLuckyNumber(String theNumber) {
-        this.luckyNumber = Long.valueOf(theNumber);
+        this.luckyNumber = Long.parseLong(theNumber);
     }
 
     /**

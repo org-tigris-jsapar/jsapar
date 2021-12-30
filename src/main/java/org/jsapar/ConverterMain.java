@@ -125,6 +125,7 @@ public class ConverterMain {
     }
 
 
+    @SuppressWarnings("SameParameterValue")
     private void printUsage(Exception e, PrintStream out) {
         out.println(e.getClass().getSimpleName() + ": " + e.getMessage());
         printUsage(out);

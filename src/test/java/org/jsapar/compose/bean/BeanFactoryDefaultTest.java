@@ -20,7 +20,8 @@ public class BeanFactoryDefaultTest {
         assertNotNull(person);
     }
 
-    public class NoDefault {
+    @SuppressWarnings("unused")
+    public static class NoDefault {
         public NoDefault(String someValue) {
         }
     }

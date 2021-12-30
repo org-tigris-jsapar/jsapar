@@ -1,6 +1,8 @@
 package org.jsapar;
 
 import org.jsapar.schema.Schema;
+import org.jsapar.schema.SchemaCell;
+import org.jsapar.schema.SchemaLine;
 import org.jsapar.schema.Xml2SchemaBuilder;
 import org.junit.Test;
 
@@ -23,7 +25,7 @@ public class Text2XmlConverterTest {
         try (Reader fileReader = new FileReader("examples/01_Names.csv");
                 Reader schemaReader = new FileReader("examples/01_CsvSchema.xml")) {
             Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-            Schema schema = xmlBuilder.build(schemaReader);
+            Schema<? extends SchemaLine<? extends SchemaCell>> schema = xmlBuilder.build(schemaReader);
             Text2XmlConverter converter = new Text2XmlConverter(schema);
 
             StringWriter w = new StringWriter();
@@ -53,7 +55,7 @@ public class Text2XmlConverterTest {
                 Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
                 Reader xsltReader = new StringReader(xslt)) {
             Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-            Schema schema = xmlBuilder.build(schemaReader);
+            Schema<? extends SchemaLine<? extends SchemaCell>> schema = xmlBuilder.build(schemaReader);
             Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(xsltReader));
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty(OutputKeys.METHOD, "html");
@@ -85,7 +87,7 @@ public class Text2XmlConverterTest {
              Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
              Reader xsltReader = new StringReader(xslt)) {
             Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-            Schema schema = xmlBuilder.build(schemaReader);
+            Schema<? extends SchemaLine<? extends SchemaCell>> schema = xmlBuilder.build(schemaReader);
             Text2XmlConverter converter = new Text2XmlConverter(schema);
 
             StringWriter w = new StringWriter();
@@ -114,7 +116,7 @@ public class Text2XmlConverterTest {
              Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
              Reader xsltReader = new StringReader(xslt)) {
             Xml2SchemaBuilder xmlBuilder = new Xml2SchemaBuilder();
-            Schema schema = xmlBuilder.build(schemaReader);
+            Schema<? extends SchemaLine<? extends SchemaCell>> schema = xmlBuilder.build(schemaReader);
             Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(xsltReader));
             transformer.setOutputProperty(OutputKeys.METHOD, "text");
 

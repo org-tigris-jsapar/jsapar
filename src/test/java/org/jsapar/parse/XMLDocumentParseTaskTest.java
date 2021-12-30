@@ -1,15 +1,12 @@
 package org.jsapar.parse;
 
-import org.jsapar.model.Document;
 import org.jsapar.model.IntegerCell;
 import org.jsapar.model.Line;
 import org.jsapar.parse.xml.XmlParseTask;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static org.junit.Assert.assertEquals;
 

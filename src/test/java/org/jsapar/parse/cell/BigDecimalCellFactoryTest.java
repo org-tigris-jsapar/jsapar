@@ -11,12 +11,12 @@ import static org.junit.Assert.assertEquals;
 
 public class BigDecimalCellFactoryTest {
 
-    BigDecimalCellFactory cellFactory = new BigDecimalCellFactory();
+    final BigDecimalCellFactory cellFactory = new BigDecimalCellFactory();
 
     @Test
     public void testSetValue() throws Exception {
         BigDecimalCell cell;
-        Format format = Format.ofDecimalInstance("#.#",Locale.GERMAN);
+        Format<BigDecimal> format = Format.ofDecimalInstance("#.#",Locale.GERMAN);
         cell = (BigDecimalCell) cellFactory.makeCell("test", "3,14", format);
         assertEquals(new BigDecimal("3.14"), cell.getValue());
     }

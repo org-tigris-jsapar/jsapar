@@ -29,7 +29,7 @@ public class Xml2SchemaBuilderTest {
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
         java.io.Reader reader = new java.io.StringReader(sXmlSchema);
-        Schema schema = builder.build(reader);
+        Schema<? extends SchemaLine<? extends SchemaCell>> schema = builder.build(reader);
         FixedWidthSchema fwSchema = (FixedWidthSchema) schema;
 
         assertEquals("\r\n", fwSchema.getLineSeparator());
@@ -72,7 +72,7 @@ public class Xml2SchemaBuilderTest {
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
         java.io.Reader reader = new java.io.StringReader(sXmlSchema);
-        Schema schema = builder.build(reader);
+        Schema<? extends SchemaLine<? extends SchemaCell>> schema = builder.build(reader);
         CsvSchema csvSchema = (CsvSchema) schema;
 
         Collection<CsvSchemaCell> schemaCells = csvSchema.getSchemaLine("P").orElseThrow(AssertionError::new)
@@ -96,7 +96,7 @@ public class Xml2SchemaBuilderTest {
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
         java.io.Reader reader = new java.io.StringReader(sXmlSchema);
-        Schema schema = builder.build(reader);
+        Schema<? extends SchemaLine<? extends SchemaCell>> schema = builder.build(reader);
         CsvSchema csvSchema = (CsvSchema) schema;
 
         Collection<CsvSchemaCell> schemaCells = csvSchema.getSchemaLines().iterator().next().getSchemaCells();
@@ -121,7 +121,7 @@ public class Xml2SchemaBuilderTest {
 
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
         java.io.Reader reader = new java.io.StringReader(sXmlSchema);
-        Schema schema = builder.build(reader);
+        Schema<? extends SchemaLine<? extends SchemaCell>> schema = builder.build(reader);
         CsvSchema csvSchema = (CsvSchema) schema;
 
         assertEquals(true, csvSchema.getSchemaLines().iterator().next().isFirstLineAsSchema());
@@ -142,7 +142,7 @@ public class Xml2SchemaBuilderTest {
         Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
         java.io.Reader reader = new java.io.StringReader(sXmlSchema);
         @SuppressWarnings("unused")
-        Schema schema = builder.build(reader);
+        Schema<? extends SchemaLine<? extends SchemaCell>> schema = builder.build(reader);
     }
 
 }

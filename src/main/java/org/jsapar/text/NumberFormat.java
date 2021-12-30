@@ -2,7 +2,6 @@ package org.jsapar.text;
 
 import org.jsapar.utils.StringUtils;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
