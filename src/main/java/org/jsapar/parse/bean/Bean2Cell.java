@@ -59,7 +59,7 @@ public class Bean2Cell {
         return propertyDescriptor;
     }
 
-    public Cell makeCell(Object object) throws InvocationTargetException, IllegalAccessException {
+    public Cell<?> makeCell(Object object) throws InvocationTargetException, IllegalAccessException {
         return cellCreator.makeCell(object);
     }
 
@@ -68,13 +68,12 @@ public class Bean2Cell {
      *
      * @return a cell creator best fitted for the job depending on the return type of the bean property.
      */
-    @SuppressWarnings("unchecked")
     private CellCreator makeCellCreator() {
         Method f = propertyDescriptor.getReadMethod();
         if (f == null)
             throw new JSaParException("The property " + propertyDescriptor.getName() + " has no getter method.");
 
-        Class returnType = f.getReturnType();
+        Class<?> returnType = f.getReturnType();
 
         if (returnType.isAssignableFrom(String.class)) {
             return (bean) -> {
@@ -154,9 +153,9 @@ public class Bean2Cell {
             return (bean) -> new BigDecimalCell(cellName, (BigInteger) f.invoke(bean));
         } else if (Enum.class.isAssignableFrom(returnType)){
             return (bean) -> {
-                Enum value = (Enum) f.invoke(bean);
+                Enum<?> value = (Enum<?>) f.invoke(bean);
                 if (value != null)
-                    return new EnumCell(cellName, value);
+                    return new EnumCell<>(cellName, value);
                 else
                     return EnumCell.emptyOf(cellName);
             };
@@ -174,7 +173,7 @@ public class Bean2Cell {
      * Cell creator interface. Needed to be able to let makeCell method throw exception.
      */
     private interface CellCreator {
-        Cell makeCell(Object o) throws InvocationTargetException, IllegalAccessException;
+        Cell<?> makeCell(Object o) throws InvocationTargetException, IllegalAccessException;
     }
 
     private void assignProperty(Object bean, Cell<?> cell)
@@ -184,13 +183,13 @@ public class Bean2Cell {
             throw new BeanComposeException(
                     "The property " + propertyDescriptor.getName() + " of class " + children.getLineClass().getName()
                             + " has no setter method.");
-        Class paramType = setter.getParameterTypes()[0];
+        Class<?> paramType = setter.getParameterTypes()[0];
         setter.invoke(bean, customCast(paramType, cell));
     }
 
     @SuppressWarnings("unchecked")
-    private Object customCast(Class paramType, Cell<?> cell) throws BeanComposeException {
-        Class valueType = cell.getValue().getClass();
+    private Object customCast(Class<?> paramType, Cell<?> cell) throws BeanComposeException {
+        Class<?> valueType = cell.getValue().getClass();
         Object value = cell.getValue();
         if (paramType.isAssignableFrom(valueType))
             return value;
@@ -227,6 +226,7 @@ public class Bean2Cell {
                 return value;
             }
         } else if (Enum.class.isAssignableFrom(paramType)) {
+            //noinspection rawtypes
             return Enum.valueOf((Class<Enum>) paramType, cell.getStringValue());
         }
         throw new BeanComposeException(
@@ -234,8 +234,7 @@ public class Bean2Cell {
                         + " could not be used to assign cell");
     }
 
-    @SuppressWarnings("unchecked")
-    public void assign(Object bean, Cell cell)
+    public void assign(Object bean, Cell<?> cell)
             throws BeanComposeException, InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
         if(cell.isEmpty()) {
             return;
