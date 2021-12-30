@@ -28,8 +28,8 @@ public class CSVSchemaLineTest  {
                 .withCells("First Name", "Last Name")
                 .build();
         
-        assertNull(schemaLine.getSchemaCell("Does not exist"));
-        assertNotNull(schemaLine.getSchemaCell("First Name"));
+        assertTrue(schemaLine.findSchemaCell("Does not exist").isEmpty());
+        assertTrue(schemaLine.findSchemaCell("First Name").isPresent());
         
     }
 }

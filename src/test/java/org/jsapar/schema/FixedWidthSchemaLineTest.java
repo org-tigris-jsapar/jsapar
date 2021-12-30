@@ -91,8 +91,8 @@ public class FixedWidthSchemaLineTest {
                 .withCell("Last name", 8)
                 .build();
 
-        assertNull(schemaLine.getSchemaCell("Does not exist"));
-        assertSame(cell1, schemaLine.getSchemaCell("First name"));
+        assertTrue(schemaLine.findSchemaCell("Does not exist").isEmpty());
+        assertTrue(schemaLine.findSchemaCell("First name").isPresent());
         
     }
     

@@ -14,6 +14,7 @@ import org.jsapar.text.TextParseConfig;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -130,17 +131,16 @@ class CsvLineParser {
 
         CsvSchemaLine.Builder schemaLineBuilder = CsvSchemaLine.builder(masterLineSchema.getLineType(), masterLineSchema);
         schemaLineBuilder.withoutAnyCells();
-        int ignoreCellCount=1;
+        AtomicInteger ignoreCellCount=new AtomicInteger(1);
         for (String cellName : cellNames) {
-            CsvSchemaCell schemaCell = masterLineSchema.getSchemaCell(cellName);
-            if (schemaCell == null) {
+            CsvSchemaCell schemaCell = masterLineSchema.findSchemaCell(cellName).orElseGet(()->{
                 if(cellName.isEmpty()){
-                    schemaCell = CsvSchemaCell.builder("@@"+ ignoreCellCount++ + "@@").withIgnoreRead(true).build();
+                    return CsvSchemaCell.builder("@@"+ ignoreCellCount.getAndIncrement() + "@@").withIgnoreRead(true).build();
                 }
                 else {
-                    schemaCell = CsvSchemaCell.builder(cellName).build();
+                    return CsvSchemaCell.builder(cellName).build();
                 }
-            }
+            });
             schemaLineBuilder.withCell(schemaCell);
         }
         addMissingDefaultValuesFromMaster(schemaLineBuilder, masterLineSchema);
