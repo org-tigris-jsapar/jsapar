@@ -4,7 +4,9 @@ import org.jsapar.TstPerson;
 import org.jsapar.model.Line;
 import org.junit.Test;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 
 import static org.junit.Assert.*;
 
@@ -60,10 +62,11 @@ public class ByClassBeanConsumerTest {
         ByClassBeanConsumer<TstPerson> lineEventListener = new ByClassBeanConsumer<>();
         AtomicBoolean called = new AtomicBoolean(false);
         AtomicBoolean defaultCalled = new AtomicBoolean(false);
-        lineEventListener.put(TstEmployee.class, (bean, line) -> {
+        Optional<BiConsumer<TstPerson, Line>> old = lineEventListener.put(TstEmployee.class, (bean, line) -> {
             assertEquals(TstEmployee.class, bean.getClass());
             called.set(true);
         });
+        assertTrue(old.isEmpty());
         lineEventListener.setDefault((bean, line)->defaultCalled.set(true));
         lineEventListener.accept(new TstAuthor(), new Line("test0"));
         assertFalse(called.get());
