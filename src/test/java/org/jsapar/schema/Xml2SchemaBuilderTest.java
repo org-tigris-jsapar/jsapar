@@ -124,7 +124,7 @@ public class Xml2SchemaBuilderTest {
         Schema<? extends SchemaLine<? extends SchemaCell>> schema = builder.build(reader);
         CsvSchema csvSchema = (CsvSchema) schema;
 
-        assertEquals(true, csvSchema.getSchemaLines().iterator().next().isFirstLineAsSchema());
+        assertTrue(csvSchema.getSchemaLines().iterator().next().isFirstLineAsSchema());
 
     }
 

@@ -372,7 +372,7 @@ public class LineUtils {
      */
     public static char getCharCellValue(Line line, String cellName, char defaultValue) throws NumberFormatException {
         Optional<Cell> cell = line.getNonEmptyCell(cellName);
-        if (!cell.isPresent())
+        if (cell.isEmpty())
             return defaultValue;
         if (cell.get() instanceof CharacterCell) {
             CharacterCell chCell = (CharacterCell) cell.get();
@@ -414,7 +414,7 @@ public class LineUtils {
      */
     public static boolean getBooleanCellValue(Line line, String cellName, boolean defaultValue) {
         Optional<Cell> cell = line.getNonEmptyCell(cellName);
-        if (!cell.isPresent())
+        if (cell.isEmpty())
             return defaultValue;
         if (cell.get() instanceof BooleanCell) {
             BooleanCell booleanCell = (BooleanCell) cell.get();

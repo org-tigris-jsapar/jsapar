@@ -78,7 +78,7 @@ public class BooleanFormatTest {
     @Test(expected = ParseException.class)
     public void testParseFailed() throws ParseException {
         BooleanFormat f = new BooleanFormat("true", "false", true);
-        assertEquals(null, f.parse("something different"));
+        assertNull(f.parse("something different"));
     }
 
     /**

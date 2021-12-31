@@ -25,6 +25,7 @@ public class StringCellTest {
         StringCell c1 = new StringCell("name1", "value");
         StringCell c2 = new StringCell("name1", "value");
         StringCell c3 = new StringCell("name3", "another");
+        //noinspection EqualsWithItself
         assertEquals(0, c1.compareTo(c1));
         assertEquals(0, c1.compareTo(c2));
         assertEquals(0, c2.compareTo(c1));

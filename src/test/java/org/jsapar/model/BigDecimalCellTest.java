@@ -34,7 +34,7 @@ public class BigDecimalCellTest {
     public void testCompareValueTo() {
         assertTrue( new BigDecimalCell("test", BigDecimal.ZERO).compareValueTo(new BigDecimalCell("test", BigDecimal.ONE)) < 0) ;
         assertTrue( new BigDecimalCell("test", BigDecimal.ONE).compareValueTo(new BigDecimalCell("test", BigDecimal.ZERO)) > 0) ;
-        assertTrue( new BigDecimalCell("test", BigDecimal.ONE).compareValueTo(new BigDecimalCell("test", BigDecimal.ONE)) == 0) ;
+        assertEquals(0, new BigDecimalCell("test", BigDecimal.ONE).compareValueTo(new BigDecimalCell("test", BigDecimal.ONE)));
 
     }
 }

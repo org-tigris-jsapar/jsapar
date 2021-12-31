@@ -26,6 +26,7 @@ public class FloatCellTest {
         assertTrue(c3.compareTo(c1) > 0);
         assertTrue(c2.compareTo(c3) > 0);
         assertTrue(c3.compareTo(c2) < 0);
+        //noinspection EqualsWithItself
         assertEquals(0, c1.compareTo(c1));
     }
 }

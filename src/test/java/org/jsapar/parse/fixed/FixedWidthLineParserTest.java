@@ -109,7 +109,7 @@ public class FixedWidthLineParserTest {
         });
 
         assertNotNull(line);
-        assertEquals(true, foundError);
+        assertTrue(foundError);
     }
 
     @Test
@@ -132,7 +132,7 @@ public class FixedWidthLineParserTest {
         });
 
         assertNotNull(line);
-        assertEquals(true, foundError);
+        assertTrue(foundError);
     }
 
     @Test(expected = CellParseException.class)
