@@ -53,7 +53,6 @@ instance of the `TextParser` by supplying a schema.
 ```
 The schema is used for describing the text format. [See Basics of Schemas](basics_schema) for information about schemas. After that we start the parsing by calling the parse method.
 The supplied line consumer is the class that gets called for each line that is parsed.
-
 ## Consumer gets called for each line
 For very large data sources there can be a problem to build the complete `org.jsapar.model.Document` in the memory before further processing.
 It may simply take up to much memory. There are other situations where you may prefer to handle one line at a time instead of getting all
@@ -79,6 +78,29 @@ The JSaPar library contains some convenient implementations of the `java.util.fu
 
 These implementations only demonstrates what can be done in a `java.util.function.Consumer` implementation. Feel free to create
 your own implementation for instance if you need to feed the result to a database or any other scenario.
+## Parsing into stream
+The consequence of using the `parseForEach()` method that we saw in previous section is that the whole input source (file) 
+will be scanned whether you need it or not. In cases when you only need to find a defined number of lines or search
+for a particular line, that can be very inefficient. Using the `stream()` method will pull characters from the reader
+when needed as lines are consumed from the stream. In the example below, only the first 10 lines of the input source
+will be read, even though the input source might be huge.
+```java
+...
+     TextParser parser = new TextParser(schema, config);
+     try(Reader reader = new StringReader(text)){
+        List<Line> result=parser.stream(reader).limit(10).collect(Collectors.toList());
+     }
+...    
+```
+Another advantage of the `stream()` method is that you might already be familiar with the `java.util.stream.Stream` interface
+and how to map, aggregate, and so on the result. There are plenty of tutorials online for how to work with Java streams.
+
+You can still use the pre-defined collectors described above if you terminate the stream with a `forEach()` at the end.
+```java
+...
+    parser.stream(reader).limit(10).forEach(myAwsomeCollector);
+...    
+```
 ## Configuration
 The parser behavior can be configured in some cases, for instance:
  * What should happen if none of the schema lines can be used?
@@ -255,6 +277,14 @@ The java code needed for this to work:
     Schema parseSchema = Schema.ofXml(inputSchemaReader);
     Text2BeanConverter<Employee> converter = new Text2BeanConverter<>(parseSchema);
     converter.convertForEach(fileReader, employee->{
+        // Handle each emplyee here...
+    });
+    
+```
+When converting into beans there is also the alternative of using the `Text2BeanConverter.stream()` method. This method
+pulls characters from the input reader when needed for parsing as beans are pulled from the parser.
+```java
+    converter.stream(fileReader).forEach(employee->{
         // Handle each emplyee here...
     });
     

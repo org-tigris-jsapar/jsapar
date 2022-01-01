@@ -1,5 +1,6 @@
 package org.jsapar.model;
 
+import java.io.Reader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -90,6 +91,11 @@ public class Document implements Serializable, Iterable<Line> {
     }
 
     /**
+     * Returns a stream of all lines within this document. The stream is populated from lines already contained within
+     * the document instance. This means that all the lines needs to all fit in the memory when building the document.
+     * If you want a stream that is lazily populated during parsing you will need to retrieve the
+     * stream directly from the parser by using for instance {@link org.jsapar.TextParser#stream(Reader)}. That way
+     * lines will be pulled/parsed from the source when requested instead.
      * @return A stream of all lines within this document.
      */
     public Stream<Line> stream(){
