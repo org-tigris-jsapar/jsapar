@@ -276,6 +276,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
      *
      * @param cellName The name of the schema cell to find.
      * @return The optional schema cell with the supplied name or Optional.empty if no such cell was found.
+     * @since 2.3
      */
     public Optional<C> findSchemaCell(String cellName){
         return Optional.ofNullable(schemaCells.get(cellName));
