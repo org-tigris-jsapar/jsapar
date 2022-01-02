@@ -24,11 +24,11 @@ import java.util.Objects;
  * <li>If the type is of a date or time type, the pattern should be described according to {@link java.text.SimpleDateFormat}</li>
  * </ul>
  */
-public class SchemaCellFormat implements Cloneable {
+public class SchemaCellFormat<T> implements Cloneable {
     public final static Locale defaultLocale= Locale.US;
 
     private final CellType cellType;
-    private final Format format;
+    private final Format<T> format;
     private final String pattern;
 
 
@@ -45,7 +45,7 @@ public class SchemaCellFormat implements Cloneable {
      * @param cellType The type of the cell
      * @param format The format class to use.
      */
-    public SchemaCellFormat(CellType cellType, Format format) {
+    public SchemaCellFormat(CellType cellType, Format<T> format) {
         this(cellType, format, null);
     }
 
@@ -58,7 +58,7 @@ public class SchemaCellFormat implements Cloneable {
         this(cellType, pattern, defaultLocale);
     }
 
-    SchemaCellFormat(CellType cellType, Format format, String pattern) {
+    SchemaCellFormat(CellType cellType, Format<T> format, String pattern) {
         this.cellType = cellType;
         this.format = format;
         this.pattern = pattern;
@@ -91,7 +91,7 @@ public class SchemaCellFormat implements Cloneable {
     /**
      * @return the format
      */
-    public Format getFormat() {
+    public Format<T> getFormat() {
         return format;
     }
 
@@ -117,7 +117,7 @@ public class SchemaCellFormat implements Cloneable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof SchemaCellFormat)) return false;
-        SchemaCellFormat that = (SchemaCellFormat) o;
+        SchemaCellFormat<T> that = (SchemaCellFormat<T>) o;
         return cellType == that.cellType &&
                 Objects.equals(format, that.format) &&
                 Objects.equals(pattern, that.pattern);

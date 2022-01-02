@@ -41,7 +41,7 @@ public class BigDecimalCellFactory implements CellFactory {
      * @return A {@link java.text.NumberFormat} instance to use while parsing decimal values.
      */
     @Override
-    public Format makeFormat(Locale locale, String pattern) {
+    public Format<BigDecimal> makeFormat(Locale locale, String pattern) {
         if (locale == null)
             locale = SchemaCellFormat.defaultLocale;
         return Format.ofDecimalInstance(pattern, locale);

@@ -36,7 +36,7 @@ public class BooleanCellFactory implements CellFactory {
      * @return A format object to use for the boolean type cells.
      */
     @Override
-    public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
+    public org.jsapar.text.Format<Boolean> makeFormat(Locale locale, String pattern) {
         return Format.ofBooleanInstance(pattern, true);
     }
 

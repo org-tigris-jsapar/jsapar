@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -269,6 +270,24 @@ public class JSaParExamplesTest {
         assertEquals("Greta", LineUtils.getStringCellValue(document.getLine(1), "FirstName"));
         assertEquals("Skog", LineUtils.getStringCellValue(document.getLine(1), "LastName"));
         assertEquals(31, LineUtils.getIntCellValue(document.getLine(1), "ShoeSize", 0));
+    }
+
+    @Test
+    public final void testExampleXml05_stream() throws IOException, JSaParException {
+        Reader fileReader = new FileReader("examples/05_Names.xml");
+        XmlParser parser = new XmlParser();
+        List<Line> lines = parser.stream(fileReader).collect(Collectors.toList());
+        fileReader.close();
+
+        // System.out.println("Errors: " + parseErrors.toString());
+
+        assertEquals(2, lines.size());
+        assertEquals("Hans", LineUtils.getStringCellValue(lines.get(0), "FirstName"));
+        assertEquals("Hugge", LineUtils.getStringCellValue(lines.get(0), "LastName"));
+        assertEquals(48, LineUtils.getIntCellValue(lines.get(0), "ShoeSize", 0));
+        assertEquals("Greta", LineUtils.getStringCellValue(lines.get(1), "FirstName"));
+        assertEquals("Skog", LineUtils.getStringCellValue(lines.get(1), "LastName"));
+        assertEquals(31, LineUtils.getIntCellValue(lines.get(1), "ShoeSize", 0));
     }
 
     @Test
