@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jsp:document xmlns:jsp="http://jsapar.tigris.org/XMLDocumentFormat/2.0">
 	<jsp:line linetype="Person">
-		<jsp:cell name="FirstName" type="string">Hans</jsp:cell>
+		<jsp:cell name="FirstName">Hans</jsp:cell>
 		<jsp:cell name="LastName" type="string">Hugge</jsp:cell>
 		<jsp:cell name="ShoeSize" type="integer">48</jsp:cell>
 		<jsp:cell name="LastSeen" type="date">2007-12-03T12:48:00</jsp:cell>

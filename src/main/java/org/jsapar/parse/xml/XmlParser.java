@@ -8,6 +8,8 @@ import org.jsapar.parse.LineEventListenerLineConsumer;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Parses xml text of the internal xml format and produces parse events. The xml needs to conform to the internal XML schema XMLDocumentFormat.xsd (http://jsapar.tigris.org/XMLDocumentFormat/2.0)
@@ -45,4 +47,8 @@ public class XmlParser extends AbstractParser {
         return execute(parseTask, lineConsumer);
     }
 
+    public Stream<Line> stream(Reader reader){
+        XmlParseSpliterator spliterator = new XmlParseSpliterator(reader);
+        return StreamSupport.stream(spliterator, false);
+    }
 }

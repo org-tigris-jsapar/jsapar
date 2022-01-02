@@ -24,7 +24,7 @@ public class CharacterCellFactory implements CellFactory {
     }
 
     @Override
-    public Format makeFormat(Locale locale, String pattern) {
+    public Format<Character> makeFormat(Locale locale, String pattern) {
         return Format.ofCharacterInstance();
     }
 }

@@ -45,7 +45,7 @@ public interface CellFactory {
      * @param pattern A pattern to use for the format object. If null or empty, default format will be returned.
      * @return A format object for the current cell type.
      */
-    Format makeFormat(Locale locale, String pattern);
+    <T> Format<T> makeFormat(Locale locale, String pattern);
 
     /**
      * For some types of cells, the actual cache max size can be different than configured, for instance boolean can

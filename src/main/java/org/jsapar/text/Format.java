@@ -208,7 +208,7 @@ public interface Format<T> {
     /**
      * @return An instance that formats characters.
      */
-    static Format ofCharacterInstance() {
+    static Format<Character> ofCharacterInstance() {
         return new CharacterFormat();
     }
 
