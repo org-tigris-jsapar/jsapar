@@ -58,8 +58,6 @@ public class XmlParseSpliterator implements Spliterator<Line> {
                             case "line":
                                 if (currentLine != null) {
                                     action.accept(currentLine);
-                                    //noinspection UnusedAssignment
-                                    currentLine = null;
                                     return true;
                                 }
                                 break;
