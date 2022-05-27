@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 /**
- * Concurrent version of the {@link ConvertTask}. The composer is executed in a separate worker thread. Also the line
+ * Concurrent version of the {@link ConvertTask}. The composer is executed in a separate worker thread. Also, the line
  * manipulators are all executed in the worker thread.
  * <p>
  * Reads from supplied parser and outputs each line to the composer. By adding
@@ -22,7 +22,7 @@ import java.util.function.Consumer;
  * considered when choosing the line type of the output schema line. This means that lines with a
  * type that does not exist in the output schema will be discarded in the output.
  * <p>
- * If your want lines to be discarded from the output depending of their contents, add a LineManipulator that returns
+ * If your want lines to be discarded from the output depending on their contents, add a LineManipulator that returns
  * false for the lines that should not be composed.
  *
  */

@@ -54,7 +54,7 @@ public class ComposeException extends JSaParException {
     }
 
     /**
-     * @return A simple message describing the error and it's location.
+     * @return A simple message describing the error, and it's location.
      */
     @Override
     public String getMessage() {

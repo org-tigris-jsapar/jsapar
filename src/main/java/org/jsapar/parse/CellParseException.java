@@ -76,7 +76,7 @@ public final class CellParseException extends LineParseException {
     }
 
     /**
-     * @return A simple message describing the error and it's location.
+     * @return A simple message describing the error, and it's location.
      */
     public String getMessage() {
         StringBuilder sb = new StringBuilder();

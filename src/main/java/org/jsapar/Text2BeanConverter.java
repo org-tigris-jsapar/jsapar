@@ -117,9 +117,10 @@ public class Text2BeanConverter<T> extends AbstractConverter {
      * @throws IOException If there is an error reading from the input reader.
      */
     public Stream<T> stream(Reader reader) throws IOException {
-        BeanComposer<T> composer = new BeanComposer<>(composeConfig, beanFactory);
-        TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
-        return parser.stream(getErrorConsumer()).flatMap(line->composer.toBean(line).stream());
+        try(BeanComposer<T> composer = new BeanComposer<>(composeConfig, beanFactory)) {
+            TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
+            return parser.stream(getErrorConsumer()).flatMap(line -> composer.toBean(line).stream());
+        }
     }
 
     /**

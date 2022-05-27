@@ -46,7 +46,7 @@ public class DocumentBuilderLineEventListener implements LineEventListener, Auto
 
     /**
      * Closes this instance and detaches all internal storage. After calling this method on an instance, the instance cannot be
-     * used as event listener any more and {@link #getDocument()} will return null.
+     * used as event listener anymore and {@link #getDocument()} will return null.
      */
     @Override
     public void close()  {

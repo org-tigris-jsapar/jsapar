@@ -13,16 +13,16 @@ There are three different tasks that the JSaPar library can be used for:
 2. **Composing** - Compose text output by feeding data of the internal data model in java code. 
 3. **Converting**  - Convert one source into an output on a different format.
 
-All parsers produces output represented by the internal data model described below and all the composers accepts that data model as input.
+All parsers produce output represented by the internal data model described below and all the composers accepts that data model as input.
 When it comes to other data forms, for instance parsing text into Java beans, that is instead considered converting.    
 # The model
 ## org.jsapar.model.Cell
 A `Cell` represents one table data field.
 
-The `Cell` class is the base class for all type of cells where sub-classes handles different primary types.
-All cells has a name that is matched with the name specified by the schema. You can query the type of a cell and you can always get a string value of a cell but for numbers and dates the string value is
+The `Cell` class is the base class for all type of cells where subclasses handles different primary types.
+All cells have a name that is matched with the name specified by the schema. You can query the type of a cell and you can always get a string value of a cell but for numbers and dates the string value is
 always converted to java native string representation. When parsing, if the text input
-does not contain any value for the cell, an `EmptyCell` instance takes it's place.
+does not contain any value for the cell, an `EmptyCell` instance takes its place.
 ## org.jsapar.model.Line
 The `Line` class represents one line in the text and contains a collection of `Cells`. You can find cells in a line by
 cell name (specified by schema) or you can iterate all cells. See [api docs](api) for more details.
@@ -35,7 +35,7 @@ It is the container of all the following `Lines`. The `Document` class should on
 data since it stores all the lines in memory. When dealing with larger data inputs or outputs you should use the `Line`
 directly, using consumer while parsing or feeding lines one-by-one while composing.
 
-You can add lines to a document and you can iterate existing lines.
+You can add lines to a document, and you can iterate existing lines.
 
 # Parsing
 When we talk about parsing below, we mean parsing a text source into the internal data model described above. A text source can be for instance either a delimited file such as CSV or a 
@@ -55,7 +55,7 @@ The schema is used for describing the text format. [See Basics of Schemas](basic
 The supplied line consumer is the class that gets called for each line that is parsed.
 ## Consumer gets called for each line
 For very large data sources there can be a problem to build the complete `org.jsapar.model.Document` in the memory before further processing.
-It may simply take up to much memory. There are other situations where you may prefer to handle one line at a time instead of getting all
+It may simply take up too much memory. There are other situations where you may prefer to handle one line at a time instead of getting all
 lines in a `Document` when parsing is complete.
 
 All parsers in this library requires that you provide a `java.util.function.Consumer<Line>` while parsing.
@@ -154,7 +154,7 @@ by supplying a schema and a writer. The schema is used to format the output.
 ```
 Then we feed the composer with lines. There are some options when it comes to feeding data to the composer. You may:
 
-* Feed lines one by one by calling `composeLine()` method for each line
+* Feed lines one-by-one by calling `composeLine()` method for each line
 * Feed an entire `Document` instance  
 * Provide a `java.util.stream.Stream<Line>` with lines
 * Provide a `java.util.Iterator<Line>` with lines
@@ -164,13 +164,13 @@ All the formatting information is described by the schema. [See Basics of Schema
 See [API docs](api) for class `TextComposer` for more details.
 ## Error handling 
 IOErrors and other serious runtime errors are thrown immediately as exceptions and should be dealt with by the caller. 
-These type of errors indicate a bug or maybe a error writing to the output.
+These type of errors indicate a bug or maybe an error writing to the output.
 # Converting
 Converting is when you have one data source and want to produce a different output. The internal data model is still used internally
 as an intermediate data format but input and output are of different type. All the converters uses the event 
 mechanism under the hood, thus it reads, converts and writes one line at a time. This means it is very lean regarding memory usage.
 ## Converting text to text
-If you are only interesting in converting a file of one format into another, you can use the `org.jsapar.Text2TextConverter` 
+If you are only interested in converting a file of one format into another, you can use the `org.jsapar.Text2TextConverter` 
 where you specify the input and the output schema for the conversion.
 
 *You can find a version of [this example in the jsapar-examples project](https://github.com/org-tigris-jsapar/jsapar-examples/tree/master/src/main/java/org/jsapar/examples/basics/b1)*
@@ -195,7 +195,7 @@ When converting it is important that the line types and cell names matches betwe
 1. For each cell in the parsed line, the converter uses the name of the cell to find a cell in the output schema to use. 
 Cells that are not matched are omitted. Cells in the output schema that was not provided in the data source are left empty.
  
-All line types and cell names are case sensitive so be thorough.  
+All line types and cell names are case-sensitive so be thorough.  
   
 Almost all the job lies in defining the schemas. You can even run the text to text converter directly from the command line without coding. [See below](#Running text to text conversion from command line). 
 ## Converting text to Java beans
@@ -209,7 +209,7 @@ The [advanced](advanced) section will describe how to handle the case that you w
 
 The following of the [java bean requirements](https://en.wikipedia.org/wiki/JavaBeans) apply for the bean class:
 * There has to be a constructor with no arguments.
-* There have be both getter and setter methods for all bean properties.
+* There have to be both getter and setter methods for all bean properties.
 
 As with the parser the `Text2BeanConverter` calls a consumer for each bean that has been parsed. You need to provide an implementation
 of the `java.util.function.BiConsumer<T, Line>` or `java.util.function.Consumer<T>` which will be called for each bean that is parsed. 
@@ -367,7 +367,7 @@ For example, if you may need to convert a cost contained in a cell between curre
         
     converter.convert(inReader, outWriter);
 ```
-You can add multiple line manipulators to a converter and they will be called in the same order as they were added. 
+You can add multiple line manipulators to a converter, and they will be called in the same order as they were added. 
 Returning false from a manipulator indicates that the line should be omitted completely from the output.
 
 You can both add and remove cells in a line manipulator.

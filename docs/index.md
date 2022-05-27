@@ -46,11 +46,11 @@ parsing to be able to deal with them later.
 into any markup language by the use of xslt.
 ### Bean mapping features
 * Support converting Java objects to or from any of the other supported input or output formats.
-* Supports natively all primitive types, Number types, String, BigDecimal, BigInteger, Enum, java.util.Date and the java.time types.
+* Supports natively all primitive types, `Number`, `String`, `BigDecimal`, `BigInteger`, `Enum`, `java.util.Date` and the `java.time` types.
 * It is possible to programmatically make manipulations and transformations between parsing and the bean is created which makes it possible to 
-join and split cells that does not fit a bean property one-to-one.
+join and split cells that do not fit a bean property one-to-one.
 ### CSV features
-* Support for CSV and all other delimited files such as TAB-separated or multi character separated.
+* Support for CSV and all other kinds delimited files such as TAB-separated or multi character separated.
 * Configurable line separator character sequence.
 * Handles quoted cells with configurable quote character.
 * Can handle quotes both according to [RFC4180](https://tools.ietf.org/html/rfc4180) and naive quoting first and last.
@@ -81,11 +81,11 @@ join and split cells that does not fit a bean property one-to-one.
 ## Dependencies
 This project has no dependencies to other external libraries in runtime.
 
-However if you plan to build and test the source consider the following:
+However, if you plan to build and test the source consider the following:
 
 * To build the source it is recommended to use <a href="https://maven.apache.org/">Maven</a>. A Maven pom.xml is provided. As of version 1.6, the library is published in the public <a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">Maven repository</a>.
 * The provided test classes require JUnit4 in order to run.
-* JSaPar version 2.1 requires Java JDK 11 or later to build but the official binaries are built for release 8 so they will work for Java 8 or later.
+* JSaPar version 2.1 requires Java JDK 11 or later to build but the official binaries are built for release 8, so they will work for Java 8 or later.
 * JSaPar version 2.0 requires Java 8 or later.
 * JSaPar version 1.5-1.8 are built with Java 7. 
 * Earlier versions of the library in the download packages are built with Java 6 but with target compatibility level 1.5. It is no guarantee that the library will work for earlier version of Java.

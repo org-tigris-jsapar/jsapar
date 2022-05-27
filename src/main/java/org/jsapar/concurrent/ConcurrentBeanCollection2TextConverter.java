@@ -9,7 +9,7 @@ import org.jsapar.parse.ParseTask;
 import org.jsapar.schema.Schema;
 
 /**
- * A multi threaded version of {@link BeanCollection2TextConverter} where the composer is started in a separate worker
+ * A multi-threaded version of {@link BeanCollection2TextConverter} where the composer is started in a separate worker
  * thread.
  * See {@link AbstractConverter} for details about error handling and manipulating data.
  * <p>

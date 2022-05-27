@@ -34,7 +34,7 @@ public class Bean2Cell {
 
     static Bean2Cell ofCellName(String cellName, PropertyDescriptor propertyDescriptor) {
         Bean2Cell bean2Cell = new Bean2Cell(cellName, propertyDescriptor);
-        // Prepare best way to create cell depending on return type
+        // Prepare the best way to create cell depending on return type
         bean2Cell.cellCreator = bean2Cell.makeCellCreator();
         return bean2Cell;
     }

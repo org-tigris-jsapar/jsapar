@@ -27,7 +27,7 @@ public class CsvParserTest {
         CsvParser parser = new CsvParser(new StringReader(text), schema);
         AtomicInteger errorCount = new AtomicInteger(0);
         parser.parse(line -> {
-                    assertEquals(1, errorCount.get()); // "Should report an error before first line is parsed.
+                    assertEquals(1, errorCount.get()); // Should report an error before first line is parsed.
                     assertEquals(1, line.size());
                     assertEquals("john", line.getCell("firstName").map(Cell::getStringValue).orElse(null));
                 },
@@ -83,7 +83,7 @@ public class CsvParserTest {
         CsvParser parser = new CsvParser(new StringReader(text), schema);
         AtomicInteger errorCount = new AtomicInteger(0);
         parser.parse(line -> {
-                    assertEquals(0, errorCount.get()); // "Should report an error before first line is parsed.
+                    assertEquals(0, errorCount.get()); // Should report an error before first line is parsed.
                     assertEquals(2, line.size());
                     assertEquals("john", line.getCell("firstName").map(Cell::getStringValue).orElse(null));
                     assertEquals("doe", line.getCell("lastName").map(Cell::getStringValue).orElse(null));

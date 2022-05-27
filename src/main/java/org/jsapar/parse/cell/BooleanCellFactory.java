@@ -28,9 +28,9 @@ public class BooleanCellFactory implements CellFactory {
      * Create a {@link Format} instance for the boolean cell type given the locale and a specified pattern.
      * @param locale  For boolean cell type, the locale is insignificant.
      * @param pattern A pattern to use for the format object. If null or empty, default format will be returned.
-     *                The pattern should contain the true and false values separated with a ; character.
+     *                The pattern should contain the true and false values separated with a ';' character.
      * Example: pattern="Y;N" will imply that Y represents true and N to represents false.
-     * Comparison while parsing is not case sensitive.
+     * Comparison while parsing is not case-sensitive.
      * Multiple true or false values can be specified, separated with the | character but the first value is always the
      * one used while composing. Example: pattern="Y|YES;N|NO"
      * @return A format object to use for the boolean type cells.

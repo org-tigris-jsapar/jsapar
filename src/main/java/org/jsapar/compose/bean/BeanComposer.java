@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 /**
  * Composer class that composes java beans based on a document or by single lines. The result is that for each bean that
- * was successfully composed, registered bean consumer will be called..
+ * was successfully composed, registered bean consumer will be called.
  * You can register a consumer by calling {@link #setBeanConsumer(Consumer)} or {@link #setBeanConsumer(BiConsumer)}
  *
  * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.

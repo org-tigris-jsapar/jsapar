@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Base interface which represents a parsable item on a line in the original document. A cell has a
- * name, a value and a type. The type of the value denotes which sub-class to use.
+ * name, a value and a type. The type of the value denotes which subclass to use.
  */
 public interface Cell<T> extends Serializable, Comparable<Cell<T>> {
 

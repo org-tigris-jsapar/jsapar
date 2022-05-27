@@ -23,7 +23,7 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
 
     /**
      * Creates an empty schema line which will occur nOccurs times within the file. When the line
-     * has occured nOccurs times this schema-line will not be used any more.
+     * has occured nOccurs times this schema-line will not be used anymore.
      *
      * <p>
      * Deprecated since 2.2. Use builder instead.

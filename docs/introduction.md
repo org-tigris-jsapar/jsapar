@@ -8,10 +8,11 @@ title: JSaPar Introduction
 # Java Schema Parser
 The <a href="api/index.html">javadoc</a> contains more comprehensive documentation regarding the classes mentioned below. <br/><br/>
 The JSaPar is a java library that provides a parser for flat and CSV (Comma Separated Values) files.
-The concept is that a schema denotes the way text data should be parsed or composed. The schema instance to be used can be built by specifying a xml-document or it can be constructed programmatically by using java code.
+The concept is that a schema denotes the way text data should be parsed or composed. The schema instance to be used can 
+be built by specifying a xml-document, or it can be constructed programmatically by using java code.
 The parser is consumer driven, meaning that you need to provide a consumer while parsing that can handle each line. For convenience there are some
-consumers provided but you may also implement your own. For instance, the org.jsapar.parse.DocumentBuilderLineConsumer
-builds a  a org.jsapar.model.Document object that contains a list of org.jsapar.model.Line objects which contains a list
+consumers provided but you may also implement your own. For instance, the `org.jsapar.parse.DocumentBuilderLineConsumer`
+builds a `org.jsapar.model.Document` object that contains a list of org.jsapar.model.Line objects which contains a list
 of org.jsapar.model.Cell objects.
 
 Supported file formats:
@@ -34,7 +35,7 @@ want to download the binaries and install them locally in your project classpath
 ## Simple example of parsing CSV file
 *You can find a version of [this example in the jsapar-examples project](https://github.com/org-tigris-jsapar/jsapar-examples/tree/master/src/main/java/org/jsapar/examples/introduction/a1)*
 
-Let us say that we have a CSV (or rather a semi colon separated) file that we need to parse. In this example the file contains lines that all have the same type. They each contain four cells (columns). Here is an example of the content of such a file.
+Let us say that we have a CSV (or rather a semicolon separated) file that we need to parse. In this example the file contains lines that all have the same type. They each contain four cells (columns). Here is an example of the content of such a file.
 ```csv
 Erik;Vidfare;Svensson;yes
 Fredrik;Allvarlig;Larsson;no
@@ -74,7 +75,7 @@ try (Reader schemaReader = new FileReader("examples/01_CsvSchema.xml");
 In this example we
 1. Load the Schema from a file by using a FileReader for the schema file.
 1. Then we use that schema to create a TextParser.
-1. We then create a DocumentBuilderLineConsumer that is a pre defined consumer that consumes all
+1. We then create a DocumentBuilderLineConsumer that is a pre-defined consumer that consumes all
 the lines and adds them to a Document object that will eventually contain all the lines that can be fetched when done parsing.
 1. The resulting document instance contains a list of Line objects where each Line represent a line in the input file. 
 Now, depending on what we want to do
@@ -118,7 +119,7 @@ to the composer by using a java `Stream<Line>` or an `Iterator<Line>`.
 The advantage of this schema approach is that if you parse or compose a large number of similar files you can adapt the 
 schema file if the file format changes instead of making changes within your code.
 
-There is also the option to create the schema instance within the code instead of loading an xml file.
+There is also the option to create the schema instance within the code instead of loading a xml file.
 
 ## Simple example of parsing and composing fixed width file
 As long as only the file format differs, only the schema needs to change. That is the whole idea of working with schemas.

@@ -7,7 +7,7 @@ import java.util.Locale;
 
 /**
  * Formats and parses decimal numbers.
- * As of JDK 9 some locales have got new decimal symbols. This is implementation has a work around to also still be
+ * As of JDK 9 some locales have got new decimal symbols. This is implementation has a workaround to also still be
  * able to parse the old format since they are still widely used.
  */
 class DecimalFormat implements Format<BigDecimal> {

@@ -54,7 +54,7 @@ public class CellParser<S extends SchemaCell> {
 
     /**
      * Creates a cell with a parsed value according to the schema specification for this cell. This
-     * method does not throw exception of mandatory cell does not exist. Instead it reports an error
+     * method does not throw exception if mandatory cell does not exist. Instead, it reports an error
      * event and continues and may then return null.
      *
      * @param sValue             The value of the cell

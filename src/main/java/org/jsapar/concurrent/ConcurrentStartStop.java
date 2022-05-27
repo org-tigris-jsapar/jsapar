@@ -6,7 +6,7 @@ package org.jsapar.concurrent;
 public interface ConcurrentStartStop {
     /**
      * Each registered onStart runnable will be called in the same order that they were registered by consumer thread
-     * when it starts up but before it starts handling any event. Use this in order to
+     * when it starts up, but before it starts handling any event. Use this in order to
      * implement initialization needed for the new
      * thread.
      *

@@ -84,7 +84,7 @@ public enum CellType {
     }
 
     /**
-     * @return True if this type is numeric, that is if the content can be seen as a sub type of {@link Number}
+     * @return True if this type is numeric, that is if the content can be seen as a subtype of {@link Number}
      */
     public boolean isNumber(){
         return number;

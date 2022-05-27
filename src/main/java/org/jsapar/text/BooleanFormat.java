@@ -69,8 +69,8 @@ class BooleanFormat implements Format<Boolean> {
      *     <li>The rest of the true values are tested in supplied order.</li>
      *     <li>The rest of the false values are tested in supplied order.</li>
      * </ol>
-     *  @param trueValues  An array of all of the strings that represents the true value. The first item in the array is used when formatting.
-     * @param falseValues An array of all of the strings that represents the false value. The first item in the array is used when formatting.
+     *  @param trueValues  An array of all the strings that represents the true value. The first item in the array is used when formatting.
+     * @param falseValues An array of all the strings that represents the false value. The first item in the array is used when formatting.
      * @param ignoreCase If true, ignore case while parsing.
      */
     BooleanFormat(String[] trueValues, String[] falseValues, boolean ignoreCase) {

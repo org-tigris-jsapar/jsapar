@@ -9,7 +9,7 @@ import java.io.Reader;
 import java.io.Writer;
 
 /**
- * Converts an xml input to a text output. For instance converting from xml to a CSV format.
+ * Converts a xml input to a text output. For instance converting from xml to a CSV format.
  * See {@link AbstractConverter} for details about error handling and manipulating data.
  * @see org.jsapar.parse.xml.XmlParser
  */

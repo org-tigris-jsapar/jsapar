@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * A simple implementation of BeanInfo interface that uses reflection instead of java.beans since java.beans package
- * belongs to java.desktop module and would impose dependency to all desktop packages.
+ * A simple implementation of BeanInfo interface that uses reflection instead of `java.beans` since `java.beans` package
+ * belongs to `java.desktop` module and would impose dependency to all desktop packages.
  */
 public final class BeanInfoReflection implements BeanInfo {
     private static final String GET_PREFIX = "get";
@@ -55,7 +55,7 @@ public final class BeanInfoReflection implements BeanInfo {
             Method setter = setters.remove(property); // Might be null
             descriptors.put(property, new PropertyDescriptorSimple(property, getter, setter));
         });
-        // Add all setters that does not have any getter
+        // Add all setters that do not have any getter
         setters.forEach((property, setter)->
                 descriptors.put(property, new PropertyDescriptorSimple(property, null, setter)));
         return descriptors;

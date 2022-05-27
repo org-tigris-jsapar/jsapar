@@ -18,7 +18,7 @@ public class CsvSchemaCell extends SchemaCell {
 
     /**
      * The maximum number of characters that are read or written to/from the cell. Input and output
-     * value will be silently truncated to this length. If you want to get an error when field is to
+     * value will be silently truncated to this length. If you want to get an error when field is too
      * long, use the format regexp pattern instead.
      * <p>
      * A negative value indicates that max length will not be checked.
@@ -109,7 +109,7 @@ public class CsvSchemaCell extends SchemaCell {
 
         /**
          * @param maxLength The maximum number of characters that are read or written to/from the cell. Input and output
-         *                  value will be silently truncated to this length. If you want to get an error when field is to
+         *                  value will be silently truncated to this length. If you want to get an error when field is too
          *                  long, use the format regexp pattern instead.
          *                  <p>
          *                  A negative value indicates that max length will not be checked.
@@ -146,7 +146,7 @@ public class CsvSchemaCell extends SchemaCell {
 
     /**
      * @return The maximum number of characters that are read or written to/from the cell. Input and output
-     * value will be silently truncated to this length. If you want to get an error when field is to
+     * value will be silently truncated to this length. If you want to get an error when field is too
      * long, use the format regexp pattern instead.
      * <p>
      * A negative value indicates that max length will not be checked.
@@ -157,7 +157,7 @@ public class CsvSchemaCell extends SchemaCell {
 
     /**
      * @param maxLength The maximum number of characters that are read or written to/from the cell. Input and output
-     *                  value will be silently truncated to this length. If you want to get an error when field is to
+     *                  value will be silently truncated to this length. If you want to get an error when field is too
      *                  long, use the format regexp pattern instead.
      *                  <p>
      *                  A negative value indicates that max length will not be checked.

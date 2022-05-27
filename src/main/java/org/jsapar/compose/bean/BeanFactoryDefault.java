@@ -69,7 +69,7 @@ public class BeanFactoryDefault<T> implements BeanFactory<T> {
         Method getterMethod = parentBean.getClass().getMethod(getterMethodName);
         Object childBean = getterMethod.invoke(parentBean);
         if (childBean == null) {
-            // If there was no object we have to create it..
+            // If there was no object we have to create it.
             Class<?> nextClass = getterMethod.getReturnType();
             childBean = nextClass.getConstructor().newInstance();
             // And assign it by using the setter.

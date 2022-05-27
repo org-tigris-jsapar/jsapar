@@ -214,7 +214,7 @@ public class ConverterMain {
     }
 
     /**
-     * Starts stand alone text to text converter.
+     * Starts stand-alone text to text converter.
      * @param args The main program arguments
      */
     public static void main(String[] args) {

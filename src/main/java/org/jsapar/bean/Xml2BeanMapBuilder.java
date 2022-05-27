@@ -13,6 +13,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -61,6 +62,7 @@ public class Xml2BeanMapBuilder implements XmlTypes {
 
     /**
      * Loads a bean map from specified resource using default character encoding.
+     * Deprecated since 2.3. Use {@link #loadBeanMapFromXmlResource(Class, String, Charset)} instead.
      *
      * @param resourceBaseClass
      *            A class that specifies the base for the relative location of the resource. If this parameter is null,
@@ -71,15 +73,15 @@ public class Xml2BeanMapBuilder implements XmlTypes {
      * @throws SchemaException  When there is an error in the bean map
      * @throws UncheckedIOException      When there is an error reading from input
      */
-    @SuppressWarnings("unused")
-    public static BeanMap loadBeanMapFromXmlResource(Class<?> resourceBaseClass, String resourceName)
+    @Deprecated
+    public static <T> BeanMap loadBeanMapFromXmlResource(Class<T> resourceBaseClass, String resourceName)
             throws UncheckedIOException{
         return loadBeanMapFromXmlResource(resourceBaseClass, resourceName, Charset.defaultCharset().name());
     }
 
     /**
      * Loads a bean map from specified resource using supplied character encoding.
-     *
+     * Deprecated since 2.3. Use {@link #loadBeanMapFromXmlResource(Class, String, Charset)} instead.
      * @param resourceBaseClass
      *            A class that specifies the base for the relative location of the resource. If this parameter is null,
      *            the resource name has to specify the resource with an absolute path.
@@ -90,11 +92,31 @@ public class Xml2BeanMapBuilder implements XmlTypes {
      * @return A newly created bean map from the supplied xml resource.
      * @throws UncheckedIOException      When there is an error reading from input
      */
-    @SuppressWarnings("WeakerAccess")
-    public static BeanMap loadBeanMapFromXmlResource(Class<?> resourceBaseClass, String resourceName, String encoding)
+    @Deprecated
+    public static <T> BeanMap loadBeanMapFromXmlResource(Class<T> resourceBaseClass, String resourceName, String encoding)
             throws UncheckedIOException{
-        if (resourceBaseClass == null)
-            resourceBaseClass = Xml2BeanMapBuilder.class;
+        if(resourceBaseClass == null)
+            return loadBeanMapFromXmlResource(Xml2BeanMapBuilder.class, resourceName, Charset.forName(encoding));
+        return  loadBeanMapFromXmlResource(resourceBaseClass, resourceName, Charset.forName(encoding));
+    }
+
+    /**
+     * Loads a bean map from specified resource using supplied character encoding.
+     *
+     * @param resourceBaseClass
+     *            A class that specifies the base for the relative location of the resource. Cannot be null.
+     * @param resourceName
+     *            The name of the resource to load.
+     * @param encoding
+     *            The character encoding to use while reading resource.
+     * @return A newly created bean map from the supplied xml resource.
+     * @throws UncheckedIOException      When there is an error reading from input
+     * @since 2.3
+     */
+    public static <T> BeanMap loadBeanMapFromXmlResource(Class<T> resourceBaseClass, String resourceName, Charset encoding)
+            throws UncheckedIOException{
+        Objects.requireNonNull(resourceBaseClass, "The resource base class cannot be null.");
+        Objects.requireNonNull(resourceName, "The resource name cannot be null when trying to load xml resource.");
         try (InputStream is = resourceBaseClass.getResourceAsStream(resourceName)) {
             if (is == null) {
                 throw new IOException(

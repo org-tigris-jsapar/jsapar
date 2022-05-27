@@ -68,7 +68,7 @@ public class BeanMarshaller<T>  {
                     Object subObject = pd.getReadMethod().invoke(object);
                     if (subObject == null)
                         continue;
-                    // Recursively add sub classes.
+                    // Recursively add subclasses.
                     this.marshal(line, subObject, children, errorListener);
                 } else {
                     line.addCell(bean2Cell.makeCell(object));

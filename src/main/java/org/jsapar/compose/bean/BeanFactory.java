@@ -7,7 +7,7 @@ import org.jsapar.model.Line;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Interface for a bean factory that creates bean instances based on line content. Create your own implementation of this
+ * Interface for a bean factory that creates bean instances based on the line content. Create your own implementation of this
  * interface if you need to be able to control how beans are created in more details.
  * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.
  * @see BeanFactoryDefault

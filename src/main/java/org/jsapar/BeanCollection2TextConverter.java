@@ -12,14 +12,14 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 
 /**
- * Converts from a collection or a stream of beans to text output. Pulls beans from the provided source and converts to
+ * Converts from a collection or a stream of beans to text output. Pull beans from the provided source and converts to
  * text. See {@link Bean2TextConverter} for an implementation where you can push bean instances one by one instead.
  * <p>
  * The Generic type T should be set to a common base class of all the expected beans. Use Object as
  * base class if there is no common base class for all beans.
  * <p>
  * The difference compared to {@link Bean2TextConverter} is that instances of this class can be used multiple times for
- * different writers by calling one of the convert methods where as {@link Bean2TextConverter} only can be used once and
+ * different writers by calling one of the convert methods, whereas {@link Bean2TextConverter} only can be used once and
  * the writer needs to be supplied in the constructor.
  * <p>
  * ExampleUsage:

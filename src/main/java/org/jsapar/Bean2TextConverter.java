@@ -61,7 +61,8 @@ public class Bean2TextConverter<T> implements AutoCloseable{
      * Creates a converter with supplied composer schema.
      *
      * @param composerSchema The schema to use while composing text output.
-     * @param beanMap        The bean map to use to map schema names to bean properties. This {@link BeanMap} instance will be used as is so it needs to contain
+     * @param beanMap        The bean map to use to map schema names to bean properties. This {@link BeanMap} instance will be used as is,
+     *                       so it needs to contain
      *                       mapping for all values that should be converted to text. If you want to use a {@link BeanMap} that is created
      *                       from a combination of the schema and an additional override {@link BeanMap} you can use the method {@link BeanMap#ofSchema(Schema, BeanMap)} to create such combined instance.
      * @param writer         The writer to write text output to. Caller is responsible for either closing the writer or call the close method of the created instance.
@@ -100,7 +101,7 @@ public class Bean2TextConverter<T> implements AutoCloseable{
     }
 
     /**
-     * @param errorConsumer The error consumer that will handle errors. By default an exception is thrown.
+     * @param errorConsumer The error consumer that will handle errors. By default, an exception is thrown.
      */
     public void setErrorConsumer(Consumer<JSaParException> errorConsumer) {
         this.errorConsumer = errorConsumer;

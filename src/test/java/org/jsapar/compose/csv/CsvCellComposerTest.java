@@ -109,7 +109,7 @@ public class CsvCellComposerTest {
         CsvCellComposer composer = new CsvCellComposer(schemaElement, new NeverQuote(33));
         composer.compose(writer, cell);
 
-        // Non breakable space as grouping character.
+        // Non-breakable space as grouping character.
         assertEquals("123\u00A0456,59", writer.toString());
     }
 
@@ -124,7 +124,7 @@ public class CsvCellComposerTest {
         CsvCellComposer composer = new CsvCellComposer(schemaElement, new NeverQuote(33));
         composer.compose(writer, cell);
 
-        // Non breakable space as grouping character.
+        // Non-breakable space as grouping character.
         assertEquals("123456", writer.toString());
     }
 
@@ -186,7 +186,7 @@ public class CsvCellComposerTest {
         CsvCellComposer composer = new CsvCellComposer(schemaCell, new NeverQuoteButReplace(4, ";-)", "\n", "*"));
         composer.compose(writer, cell);
 
-        // Replaces ; with non breaking space.
+        // Replaces ; with non-breaking space.
         assertEquals("J*on", writer.toString());
     }
 

@@ -100,9 +100,10 @@ public class Text2StringConverter extends AbstractConverter {
      * @throws IOException If there is an error reading from the input reader.
      */
     public Stream<Stream<String>> stream(Reader reader) throws IOException {
-        StringComposer composer = new StringComposer(composeSchema, (c,l,n)->{});
-        TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
-        return parser.stream(getErrorConsumer()).flatMap(line->composer.toStringLine(line).stream());
+        try(StringComposer composer = new StringComposer(composeSchema, (c,l,n)->{})) {
+            TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
+            return parser.stream(getErrorConsumer()).flatMap(line -> composer.toStringLine(line).stream());
+        }
     }
 
     /**

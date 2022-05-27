@@ -23,7 +23,7 @@ import java.util.function.Function;
  *     <li>From an xml file, see {@link #ofXml(Reader)}</li>
  *     <li>From an annotated class, see {@link #ofClass(Class)}, and {@link #ofClasses(List)}</li>
  * </ol>
- * either from a schema, from an xml file or from one or several annotated classes.
+ * either from a schema, from a xml file or from one or several annotated classes.
  * @see JSaParLine
  * @see JSaParCell
  * @see JSaParContainsCells
@@ -215,7 +215,7 @@ public class BeanMap {
         /**
          * Maps a line type to a bean class but completely without cells. This is only useful if this BeanMap instance
          * is to be used as override values for another BeanMap instance by using {@link BeanMap#ofSchema(Schema, BeanMap)}.
-         * @param lineType  The line type type map to.
+         * @param lineType  The line type to map to.
          * @param beanClass The bean class to map to.
          * @return This builder instance.
          */
@@ -225,7 +225,7 @@ public class BeanMap {
 
         /**
          * Maps a line type to a bean class.
-         * @param lineType  The line type type map to.
+         * @param lineType  The line type to map to.
          * @param beanClass The bean class to map to.
          * @param builderHandler A function that should prepare a {@link BeanPropertyMapBuilder} instance with cells.
          * @return This builder instance.

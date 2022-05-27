@@ -8,7 +8,7 @@ title: Basics of JSaPar Schemas
 
 # The schema
 The schema is what describes the structure of the input or output data. The same schema can be used for both parsing and composing.
-Usually the easiest way to work with a schema is to use the XML format but you may also create a schema directly in java code.
+Usually the easiest way to work with a schema is to use the XML format, but you may also create a schema directly in java code.
 The documentation below is however based on the XML form.
 The example below describes a simple schema for a CSV file taken from the first example above.
 ```xml
@@ -25,7 +25,7 @@ The example below describes a simple schema for a CSV file taken from the first 
   </csvschema>
 </schema>
 ```
-The same schema can also be created in java code but then you tie the format to your compiled code and will need to update the source code if the format changes.
+The same schema can also be created in java code, but then you tie the format to your compiled code and will need to update the source code if the format changes.
 ```java
 CsvSchema schema = CsvSchema.builder()
         .withLine("Person", line ->
@@ -46,7 +46,7 @@ of the schema is located at.
 
 [http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd](http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd)
 
-If you want to download the XSD as a file, you will probably need to right click on the link above and choose *"Save link as..."* depending on your browser.
+If you want to download the XSD as a file, you will probably need to right-click on the link above and choose *"Save link as..."* depending on your browser.
 
 ## The Schema xml
 After the leading root `<schema>` element you need to define what type of input or output you have. There are two choices:
@@ -94,7 +94,7 @@ This also means that when
 converting from one format to another, the line type names of the input and the output schemas needs to match. 
 
 On this level you need to specify the `cellseparator` attribute which should describe how cells/columns are separated 
-within the input/output. You can use any character sequence 
+within the input/output. You can use any character sequence, 
 and you can use the same escaped characters as with the line separator described above. Please note that if the cell 
 separator may occur as valid text also within a value of a cell, you will need to quote the cell. See chapter about Quoted values below.
 
@@ -160,7 +160,7 @@ void accept(Line line){
 You may add a line condition on any cell within your schema. If you add more than one line condition on the same line, 
 all of them need to comply in order for the line type to be used.
  
-You may combine the a line condition with the `occurs` attribute. In this case, the `occurs` value indicates the maximum number
+You may combine the line condition with the `occurs` attribute. In this case, the `occurs` value indicates the maximum number
 of times that a line type is used when parsing.
 
 When composing, you set the value of the line condition cell as with any other cell so the line condition as no effect 
@@ -169,7 +169,7 @@ to explicitly assign any value to that cell while composing.
 
 *See [this example in the jsapar-examples project](https://github.com/org-tigris-jsapar/jsapar-examples/tree/master/src/main/java/org/jsapar/examples/schemabasics/c1)*
 ### Cell
-The `<cell>` element describes the format of a particular cell or column. Each cell needs to have a name. By default the 
+The `<cell>` element describes the format of a particular cell or column. Each cell needs to have a name. By default, the 
 cell type is string so if you do not want the library to do any type conversion, the minimal configuration for a cell is:
 
 ```xml
@@ -185,7 +185,7 @@ As with lines, you can use `ignoreread` and `ignorewrite` on cell level to skip 
 a cell value while composing. If `ignorewrite=true`, an empty cell will be written as if it contained an empty string. 
 
 You can specify a maximum length to read or write to a cell value with the `maxlenght` attribute. Input and output
-value will then be silently truncated to this length. If you want to get an error when field is to
+value will then be silently truncated to this length. If you want to get an error when field is too
 long, use the format regexp pattern described below instead.
 #### Cell formats
 If you want the library to do type conversion while parsing or composing, you need to specify the format of a cell. For 
@@ -213,7 +213,7 @@ The `pattern` attribute behaves differently depending on the type:
 * If the type is string then the pattern should contain a regular expression to which the value is validated against. See [java.util.regex.Pattern](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) This only works while parsing.
 * If the type is any of the numerical types, then the pattern should be described according to the [java.text.DecimalFormat](https://docs.oracle.com/javase/8/docs/api/java/text/DecimalFormat.html). See chapter Internationalization below to be able to handle locale specific formatting of numerical values.
 * If the type is date, then the pattern should be described according to [java.text.SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html).
-* If the type is boolean, the pattern should contain the true and false values separated with a `;` character. Example: `pattern="Y;N"` will imply that `Y` represents true and `N` to represents false. Comparison while parsing is not case sensitive. Multiple true or false values can be specified, separated with the `|` character but the first value is always the one used while composing. Example: `pattern="Y|YES;N|NO"`
+* If the type is boolean, the pattern should contain the true and false values separated with a `;` character. Example: `pattern="Y;N"` will imply that `Y` represents true and `N` to represents false. Comparison while parsing is not case-sensitive. Multiple true or false values can be specified, separated with the `|` character but the first value is always the one used while composing. Example: `pattern="Y|YES;N|NO"`
 * If the type is enum, the pattern should contain the full class name of the enum class. See chapter below about how to handle different cases while parsing and composing enums.   
 
 If the `pattern` attribute is omitted, the default system pattern is used.
@@ -240,14 +240,15 @@ but you want to parse a text source that contains the text values `male` or `man
 </cell>
 ``` 
 
-* By setting `ignorecase` to true, the case of the text value becomes insignificant while parsing but it also has negative impact on performance. While 
+* By setting `ignorecase` to true, the case of the text value becomes insignificant while parsing, but it also has negative impact on performance. While 
 composing, this attribute has no impact.
 * You don't have to specify mapping for values that has the same text value as the enum value name.   
-* You can add any number of different text representation for the same value but you can only have one enum name for each text representation.
+* You can add any number of different text representation for the same value, but you can only have one enum name for each text representation.
 * While composing, the first text representation for each enum name will be used. In this case `"male"` and `"female"` will be used. 
 
 ##### Implied decimal
-In fixed width files with its origin in COBOL it is quite common that decimals are implied instead of explicitly specified. The decimal point is omitted in the file and it is assumed that you should add a decimal point at a specific position while parsing. For instance the number 123 in the file should be interpreted as 1.23 if there are 2 implied decimals.   
+In fixed width files with its origin in COBOL it is quite common that decimals are implied instead of explicitly specified. 
+The decimal point is omitted in the file, and it is assumed that you should add a decimal point at a specific position while parsing. For instance the number 123 in the file should be interpreted as 1.23 if there are 2 implied decimals.   
 This is called [implied decimal](https://www.ibm.com/support/knowledgecenter/en/SSLVMB_24.0.0/spss/base/syn_data_list_implied_decimal_positions.html) format.
 You can specify a cell to be of type implied decimal by adding `<implieddecimal>` element instead of the `<format>`. For example:
 
@@ -286,7 +287,7 @@ you may specify an empty pattern that matches any number of white space characte
 The problem with delimited (CSV) data is that the value of a specific cell may also contain the delimiter character or even the line separator. 
 In order to handle this scenario the JSaPar library is capable of handling quoted cells. 
 
-The support for quoted quoted values is activated by default and the default quote character is the standard double quote character("). 
+The support for quoted values is activated by default and the default quote character is the standard double quote character("). 
 You can specify a different quote character with the `quotechar` attribute:
 ```xml
 ...
@@ -369,9 +370,9 @@ There are several options:
 1. **AUTOMATIC** (default) - Quotes the cell only if needed, i.e. only if there is a cell separator, a line separator or a quote character 
 present in the data. This is the default. 
 1. **NEVER** - Never quote this cell. This may lead to invalid delimited 
-output if the cell or line separator is present in the cell value but you could benefit from slightly faster execution 
+output if the cell or line separator is present in the cell value, but you could benefit from slightly faster execution 
 time if you are 100% sure that there can be no illegal characters in the content. This is the default for atomic types such as integer, boolean and enum.
-1. **REPLACE** - No quoting is done, instead it replaces all illegal characters with non breakable space in order to always 
+1. **REPLACE** - No quoting is done, instead it replaces all illegal characters with non-breakable space in order to always 
 guarantee consistency of the delimited output. Can be used if the consumer of the output does not support quoted cells. 
 This is the default if no quote character is specified on the line. 
 
@@ -394,9 +395,9 @@ Erik;Vidfare;Svensson;yes
 Fredrik;Allvarlig;Larsson;no
 "Alfred";"Stark";Nilsson;yes
 ```
-This type of format is supported by the library out-of-the-box. All you need to do is to is to set the attribute 
+This type of format is supported by the library out-of-the-box. All you need to do is to set the attribute 
 `firstlineasschema="true"` on the `<line>` element. Then the order of the cell while parsing is no longer denoted by the 
-order of the `<cell>` elements in the schema. Instead the order is fetched from the first header row. It is important though that 
+order of the `<cell>` elements in the schema. Instead, the order is fetched from the first header row. It is important though that 
 the name of the cells within the schema matches the names in the header. The advantage of using such a format is that the
 producer of the CSV file can choose to re-arrange, add or remove columns without impacts on neither the code nor the schema.   
 
@@ -413,14 +414,14 @@ Here is a schema that could be used to parse the file above:
 </schema>
 ```   
 As you can see in this example, not all cells are described in the schema. Only those cells, where additional information 
-is needed from the schema, needs to be present. By default a string cell is otherwise expected. For instance the values of the 
+is needed from the schema, needs to be present. By default, a string cell is otherwise expected. For instance the values of the 
 `First name` column will still be parsed as if they are string value cells. This means that we could have omitted all the `<cell>` elements
 from the schema above but then the parser would have parsed also the `Middle name` cells which we have no interest in 
 and the `Has dog` cell would have
 been parsed as string values `"yes"` and `"no"` instead of true boolean values. 
 
 It is important though that if you provide `<cell>` elements for such a schema, the cell names need to match exactly what 
-is specified in the header line. Matching is case sensitive.
+is specified in the header line. Matching is case-sensitive.
 
 You may for instance provide default values for missing columns or specify that a cell is mandatory by adding a `<cell>` element for that column.   
 

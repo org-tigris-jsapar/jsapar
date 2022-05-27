@@ -49,7 +49,7 @@ public class CsvParser implements TextSchemaParser {
             CsvLineParser lineParser = lineParserFactory.makeLineParser(lineReader);
             if(lineParser == null) {
                 if(lineParserFactory.isEmpty())
-                    return lineNumber; // No more parsers. We should not read any more. Leave rest of input as is.
+                    return lineNumber; // No more parsers. We should not read anymore. Leave rest of input as is.
                 if(lineReader.eofReached())
                     return lineNumber;
                 handleNoParser(lineReader, errorListener);

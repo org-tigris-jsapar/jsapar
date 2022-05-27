@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Saves all lines that was composed into a list of list of strings that can be retrieved by calling {@link #getCollected()}
+ * Saves all lines that was composed into a list of strings that can be retrieved by calling {@link #getCollected()}
  * when done composing.
  */
 public class CollectingStringConsumer implements StringComposedConsumer {
