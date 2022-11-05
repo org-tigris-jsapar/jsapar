@@ -5,7 +5,7 @@ import java.io.Writer;
 
 /**
  */
-public class MaxLengthComposer implements ValueComposer {
+final public class MaxLengthComposer implements ValueComposer {
     private final int maxLength;
 
     public MaxLengthComposer(int maxLength) {

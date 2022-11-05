@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 /**
  * Internal utility class for handling validation error.
  */
-public class ValidationHandler {
+public final class ValidationHandler {
 
     public ValidationHandler() {
     }

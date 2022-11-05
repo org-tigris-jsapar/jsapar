@@ -12,7 +12,7 @@ import java.io.Writer;
 /**
  * Composes fixed width output on cell level.
  */
-class FixedWidthCellComposer {
+final class FixedWidthCellComposer {
 
     private final CellFormat           cellFormat;
     private final FixedWidthSchemaCell schemaCell;

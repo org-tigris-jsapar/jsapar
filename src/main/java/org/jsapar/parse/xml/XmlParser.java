@@ -18,7 +18,7 @@ import java.util.stream.StreamSupport;
  * <p>
  * See {@link AbstractParser} about error handling.
  */
-public class XmlParser extends AbstractParser {
+public final class XmlParser extends AbstractParser {
 
     /**
      * Reads xml from supplied reader and parses each line. Each parsed line generates a call-back to the lineEventListener.

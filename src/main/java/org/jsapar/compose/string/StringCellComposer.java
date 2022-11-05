@@ -5,7 +5,7 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.EmptyCell;
 import org.jsapar.schema.SchemaCell;
 
-class StringCellComposer {
+final class StringCellComposer {
     private final SchemaCell schemaCell;
     private final CellFormat cellFormat;
 

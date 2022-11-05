@@ -9,7 +9,7 @@ import java.util.stream.Stream;
  * Saves all lines that was composed into a list of strings that can be retrieved by calling {@link #getCollected()}
  * when done composing.
  */
-public class CollectingStringConsumer implements StringComposedConsumer {
+public final class CollectingStringConsumer implements StringComposedConsumer {
     private final List< List <String> > collected = new ArrayList<>();
 
     /**

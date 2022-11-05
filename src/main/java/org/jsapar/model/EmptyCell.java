@@ -4,7 +4,7 @@ package org.jsapar.model;
  * This class is a special case where an empty value has been parsed from a source. It can be used as a type independent
  * placeholder of an empty value.
  */
-public class EmptyCell extends AbstractCell<String> {
+public final class EmptyCell extends AbstractCell<String> {
     /**
      *
      */
@@ -13,7 +13,7 @@ public class EmptyCell extends AbstractCell<String> {
 
     /**
      * @param name The name of the empty cell to create.
-     * @param cellType The type of the cell if one is present. If null, the type will be CellType.STRING
+     * @param cellType The type of the cell if one is present. If null, the type will be {@link CellType#STRING}
      */
     public EmptyCell(String name, CellType cellType) {
         super(name, STRING_VALUE, ((cellType == null) ? CellType.STRING : cellType));

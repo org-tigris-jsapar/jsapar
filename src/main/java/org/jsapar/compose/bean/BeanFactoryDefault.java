@@ -6,7 +6,7 @@ import org.jsapar.model.Line;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class BeanFactoryDefault<T> implements BeanFactory<T> {
+public final class BeanFactoryDefault<T> implements BeanFactory<T> {
     private static final String GET_PREFIX = "get";
     private static final String SET_PREFIX = "set";
 

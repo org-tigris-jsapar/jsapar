@@ -17,7 +17,7 @@ import java.util.stream.Stream;
  * 
  */
 @SuppressWarnings({"WeakerAccess", "UnusedReturnValue"})
-public class Document implements Serializable, Iterable<Line> {
+public final class Document implements Serializable, Iterable<Line> {
 
     /**
      *

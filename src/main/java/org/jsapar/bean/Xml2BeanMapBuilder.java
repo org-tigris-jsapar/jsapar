@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Class for building {@link BeanMap} instances based on xml.
  */
-public class Xml2BeanMapBuilder implements XmlTypes {
+public final class Xml2BeanMapBuilder implements XmlTypes {
     private final static String NAMESPACE = "http://jsapar.tigris.org/BeanMapSchema/2.0";
 
     /**
@@ -92,6 +92,7 @@ public class Xml2BeanMapBuilder implements XmlTypes {
      * @return A newly created bean map from the supplied xml resource.
      * @throws UncheckedIOException      When there is an error reading from input
      */
+    @SuppressWarnings("ReplaceNullCheck")
     @Deprecated
     public static <T> BeanMap loadBeanMapFromXmlResource(Class<T> resourceBaseClass, String resourceName, String encoding)
             throws UncheckedIOException{

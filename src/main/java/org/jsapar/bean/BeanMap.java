@@ -29,7 +29,7 @@ import java.util.function.Function;
  * @see JSaParContainsCells
  */
 @SuppressWarnings("ClassEscapesDefinedScope")
-public class BeanMap {
+public final class BeanMap {
 
     private final Map<Class<?>, BeanPropertyMap>  beanPropertyMap           = new HashMap<>();
     private final Map<String, BeanPropertyMap> beanPropertyMapByLineType = new HashMap<>();
@@ -207,7 +207,7 @@ public class BeanMap {
     /**
      * Builder class that builds BeanMap instances.
      */
-    public static class Builder{
+    public static final class Builder{
         final List<BeanPropertyMap> beanPropertyMaps = new ArrayList<>();
         private Builder() {
         }
@@ -248,7 +248,7 @@ public class BeanMap {
     /**
      * Builder class that associates cells with bean properties.
      */
-    public static class BeanPropertyMapBuilder {
+    public static final class BeanPropertyMapBuilder {
         private final String lineType;
         private final Class<?> beanClass;
         private final Map<String, String> cellNamesOfProperty = new HashMap<>();

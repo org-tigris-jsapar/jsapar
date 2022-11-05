@@ -5,7 +5,7 @@ import java.io.Writer;
 /**
  * Never writes anything to writer.
  */
-public class PadNone implements Pad {
+final public class PadNone implements Pad {
 
     @Override
     public void fit(Writer writer, String value) {

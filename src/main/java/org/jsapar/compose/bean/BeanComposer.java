@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.
  */
 @SuppressWarnings("UnusedReturnValue")
-public class BeanComposer<T> implements Composer{
+public final class BeanComposer<T> implements Composer{
     private BiConsumer<T, Line> beanLineConsumer;
     private Consumer<JSaParException> errorConsumer = new ExceptionErrorConsumer();
     private BeanFactory<T>            beanFactory;

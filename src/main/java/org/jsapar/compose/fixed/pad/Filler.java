@@ -6,7 +6,7 @@ import java.io.Writer;
 /**
  * Writes same character specified number of times.
  */
-public class Filler {
+final public class Filler {
     /**
      * Prepare a buffer, makes faster writing.
      */

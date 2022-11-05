@@ -8,7 +8,7 @@ import java.io.Writer;
 /**
  * Always quotes supplied value and limits length to supplied max length.
  */
-public class AlwaysQuote implements Quoter {
+final public class AlwaysQuote implements Quoter {
     private final ValueComposer valueComposer;
     private final char quoteChar;
 

@@ -5,7 +5,7 @@ import java.io.Writer;
 
 /**
  */
-public class AtomicValueComposer implements ValueComposer {
+final public class AtomicValueComposer implements ValueComposer {
 
     @Override
     public void writeValue(Writer writer, String value) throws IOException {

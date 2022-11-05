@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 /**
  * Will never quote the cell but instead replaces cellSeparator or lineSeparator within a cell with supplied replace string.
  */
-public class NeverQuoteButReplace implements Quoter {
+final public class NeverQuoteButReplace implements Quoter {
     private final NeverQuote neverQuote;
     private final char cellSeparatorFirst;
     private final char lineSeparatorFirst;

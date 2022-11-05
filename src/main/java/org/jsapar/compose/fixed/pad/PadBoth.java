@@ -3,7 +3,7 @@ package org.jsapar.compose.fixed.pad;
 import java.io.IOException;
 import java.io.Writer;
 
-public class PadBoth implements Pad {
+final public class PadBoth implements Pad {
     private final int length;
     private final Filler filler;
 

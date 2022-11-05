@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 /**
  * Composes csv line output based on schema and provided line.
  */
-class CsvLineComposer implements LineComposer {
+final class CsvLineComposer implements LineComposer {
 
     private final Writer        writer;
     private final CsvSchemaLine schemaLine;

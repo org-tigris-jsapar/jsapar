@@ -8,7 +8,7 @@ import java.io.Writer;
 /**
  * Quotes cell only if needed because it contains either cellSeparator, quote character or lineSeparator.
  */
-public class QuoteIfNeeded implements Quoter {
+final public class QuoteIfNeeded implements Quoter {
     private final char quoteChar;
     private final Quoter alwaysQuote;
     private final Quoter neverQuote;

@@ -5,7 +5,7 @@ import org.jsapar.model.Cell;
 /**
  * CellFormat that uses the {@link Cell#getStringValue()}
  */
-class StringValueFormat implements CellFormat {
+final class StringValueFormat implements CellFormat {
     private final String defaultValue;
 
     StringValueFormat(String defaultValue) {

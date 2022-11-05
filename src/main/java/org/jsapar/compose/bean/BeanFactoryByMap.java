@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
  * should be created and how properties can be assigned.
  * @param <T> common base class of all the expected beans. Use Object as base class if there is no common base class for all beans.
  */
-public class BeanFactoryByMap<T> implements BeanFactory<T>{
+public final class BeanFactoryByMap<T> implements BeanFactory<T>{
     private final BeanMap beanMap;
 
     public BeanFactoryByMap(BeanMap beanMap) {

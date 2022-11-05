@@ -594,7 +594,8 @@ public class JSaParExamplesTest {
                 Reader fileReader = new FileReader("examples/08_NamesWithHeader.csv")) {
             Schema<?> schema = Schema.ofXml(schemaReader);
             DocumentBuilderLineConsumer documentBuilder = new DocumentBuilderLineConsumer();
-            TextParser.parseForEach(schema, fileReader, documentBuilder);
+            long lineCount = TextParser.parseForEach(schema, fileReader, documentBuilder);
+            assertEquals(4, lineCount);
             Document document = documentBuilder.getDocument();
 
             assertEquals(3, document.size());

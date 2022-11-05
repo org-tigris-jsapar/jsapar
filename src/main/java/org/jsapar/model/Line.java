@@ -99,7 +99,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @see #putCell(Cell)
      */
     public Line addCell(Cell cell) {
-        Cell oldCell = cells.get(cell.getName());
+        Cell<?> oldCell = cells.get(cell.getName());
         if (oldCell != null)
             throw new IllegalStateException(
                     "A cell with the name '" + cell.getName() + "' already exists. Failed to add cell.");

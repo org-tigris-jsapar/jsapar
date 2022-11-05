@@ -6,7 +6,7 @@ import java.io.Writer;
 /**
  * Never quotes and never alters the value except for limiting number of characters written.
  */
-public class NeverQuote implements Quoter {
+final public class NeverQuote implements Quoter {
     private final ValueComposer valueComposer;
 
     public NeverQuote(int maxLength) {

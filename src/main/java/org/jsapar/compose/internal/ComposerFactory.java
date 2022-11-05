@@ -15,5 +15,5 @@ public interface ComposerFactory {
      * @return a {@link SchemaComposer} instance that is suitable to compose using provided schema
      *
      */
-    SchemaComposer makeComposer(Schema schema, Writer writer) ;
+    SchemaComposer makeComposer(Schema<?> schema, Writer writer) ;
 }

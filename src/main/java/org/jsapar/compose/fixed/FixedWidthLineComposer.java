@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Composes line to a fixed width format based on line schema.
  */
-class FixedWidthLineComposer implements LineComposer {
+final class FixedWidthLineComposer implements LineComposer {
 
     private final Writer                       writer;
     private final FixedWidthSchemaLine         lineSchema;

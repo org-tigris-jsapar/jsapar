@@ -16,7 +16,7 @@ import java.util.Optional;
  * Utility functions for {@link Line} that simplifies to get and set primitive types from line cells.
  */
 @SuppressWarnings("WeakerAccess")
-public class LineUtils {
+public final class LineUtils {
 
     /**
      * Just to avoid that anyone creates an instance.

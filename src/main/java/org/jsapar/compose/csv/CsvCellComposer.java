@@ -12,7 +12,7 @@ import java.io.Writer;
 /**
  * Composes cell values based on the schema of the cell.
  */
-class CsvCellComposer {
+final class CsvCellComposer {
     private final CsvSchemaCell schemaCell;
     private final Quoter quoter;
     private final CellFormat cellFormat;

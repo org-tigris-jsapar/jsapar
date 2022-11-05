@@ -104,7 +104,7 @@ public class TextParser extends AbstractParser {
      * @param schema       The schema to use for parsing.
      * @param reader       The reader to read text from.
      * @param lineConsumer The line consumer that will be called for each line.
-     * @return Number of parsed lines.
+     * @return The total number of parsed lines, including header lines.
      * @see #parseForEach(Reader, Consumer)
      * @since 2.2
      * @throws IOException In case of IO error

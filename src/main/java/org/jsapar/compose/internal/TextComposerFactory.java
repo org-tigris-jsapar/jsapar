@@ -11,7 +11,7 @@ import java.io.Writer;
 /**
  * Factory for creating schema composer based on schema.
  */
-public class TextComposerFactory implements ComposerFactory {
+final public class TextComposerFactory implements ComposerFactory {
 
     /**
      * Creates {@link SchemaComposer} based on the schema.
@@ -20,7 +20,7 @@ public class TextComposerFactory implements ComposerFactory {
      * @return A newly created {@link SchemaComposer}
      * @throws IllegalArgumentException In case the schema is not of any type that is handled by this class.
      */
-    public SchemaComposer makeComposer(Schema schema, Writer writer)  {
+    public SchemaComposer makeComposer(Schema<?> schema, Writer writer)  {
         if(schema instanceof CsvSchema){
             return new CsvComposer(writer, (CsvSchema)schema);
         }

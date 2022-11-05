@@ -6,7 +6,7 @@ import org.jsapar.text.Format;
 /**
  * Cell format that uses a {@link Format}
  */
-class FormatCellFormat implements CellFormat {
+final class FormatCellFormat implements CellFormat {
     private final Format format;
     private final String defaultValue;
 
