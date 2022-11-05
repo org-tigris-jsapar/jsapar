@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * string is matches the cell in a schema. Each cell is formatted according to provided
  * {@link org.jsapar.schema.Schema}.
  */
-public class StringComposerNullOnEmptyCell extends StringComposer {
+public final class StringComposerNullOnEmptyCell extends StringComposer {
 
     @Deprecated
     public StringComposerNullOnEmptyCell(Schema<? extends SchemaLine<? extends SchemaCell>>  schema, StringComposedEventListener composedEventListener) {

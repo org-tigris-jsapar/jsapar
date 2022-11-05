@@ -6,7 +6,7 @@ import org.jsapar.schema.SchemaLine;
 
 import java.util.stream.Stream;
 
-public class StringLineComposerNullOnEmptyCell extends StringLineComposer {
+public final class StringLineComposerNullOnEmptyCell extends StringLineComposer {
     StringLineComposerNullOnEmptyCell(SchemaLine<? extends SchemaCell> schemaLine) {
         super(schemaLine);
     }
