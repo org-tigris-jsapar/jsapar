@@ -8,7 +8,6 @@ import org.jsapar.error.JSaParException;
 import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.schema.Schema;
-import org.jsapar.schema.SchemaLine;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
