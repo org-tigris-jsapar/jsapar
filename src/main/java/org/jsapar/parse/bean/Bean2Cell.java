@@ -68,6 +68,7 @@ public class Bean2Cell {
      *
      * @return a cell creator best fitted for the job depending on the return type of the bean property.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private CellCreator makeCellCreator() {
         Method f = propertyDescriptor.getReadMethod();
         if (f == null)
@@ -153,9 +154,9 @@ public class Bean2Cell {
             return (bean) -> new BigDecimalCell(cellName, (BigInteger) f.invoke(bean));
         } else if (Enum.class.isAssignableFrom(returnType)){
             return (bean) -> {
-                Enum<?> value = (Enum<?>) f.invoke(bean);
+                Enum value = (Enum) f.invoke(bean);
                 if (value != null)
-                    return new EnumCell<>(cellName, value);
+                    return new EnumCell(cellName, value);
                 else
                     return EnumCell.emptyOf(cellName);
             };

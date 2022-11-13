@@ -20,7 +20,7 @@ public final class BooleanCell extends AbstractCell<Boolean> implements Comparab
 	 * @param name The name of the empty cell.
 	 * @return A newly created empty cell of type boolean with supplied name.
 	 */
-	public static Cell emptyOf(String name) {
-		return new EmptyCell(name, CellType.BOOLEAN);
+	public static Cell<Boolean> emptyOf(String name) {
+		return new EmptyCell<>(name, CellType.BOOLEAN);
 	}
 }

@@ -86,7 +86,7 @@ public class LineUtilsTest {
         Line line = new Line("TestLine");
         line.addCell(new IntegerCell("shoeSize", 42));
         line.addCell(new StringCell("stringInt", "17"));
-        line.addCell(new EmptyCell("empty", CellType.INTEGER));
+        line.addCell(IntegerCell.emptyOf("empty"));
         line.addCell(new FloatCell("pi", 3.141));
         LineUtils.setIntCellValue(line, "anIntValue", 4711);
 

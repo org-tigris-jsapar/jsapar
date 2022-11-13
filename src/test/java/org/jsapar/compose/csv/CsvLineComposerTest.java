@@ -103,7 +103,7 @@ public class CsvLineComposerTest {
         Line line = new Line("");
         line.addCell(new StringCell("First Name", "Jonas"));
         line.addCell(new StringCell("Last Name", "Stenberg"));
-        line.addCell(new EmptyCell("Shoe size", CellType.STRING));
+        line.addCell(StringCell.emptyOf("Shoe size"));
         StringWriter writer = new StringWriter();
 
         CsvLineComposer lineComposer = new CsvLineComposer(writer, schemaLine, "\n", QuoteSyntax.FIRST_LAST);

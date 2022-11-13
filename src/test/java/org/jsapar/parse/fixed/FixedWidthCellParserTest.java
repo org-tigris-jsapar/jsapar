@@ -79,7 +79,8 @@ public class FixedWidthCellParserTest {
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
         cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer());
         assertTrue(cell.isEmpty());
-        assertEquals("", cell.getValue());
+        assertEquals("", cell.getStringValue());
+        assertNull(cell.getValue());
     }
 
     @Test
@@ -93,7 +94,8 @@ public class FixedWidthCellParserTest {
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
         cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer());
         assertTrue(cell.isEmpty());
-        assertEquals("", cell.getValue());
+        assertEquals("", cell.getStringValue());
+        assertNull(cell.getValue());
     }
 
     @Test
@@ -129,6 +131,9 @@ public class FixedWidthCellParserTest {
         assertEquals("           ", cell.getValue());
     }
 
+    /**
+     * @throws IOException
+     */
     @Test
     public final void testBuild_empty() throws IOException {
         String toParse = "           ";
@@ -137,8 +142,9 @@ public class FixedWidthCellParserTest {
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
         Cell<?>  cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer());
 
-        assertEquals("", cell.getValue());
+        assertTrue(cell.isEmpty());
         assertEquals("", cell.getStringValue());
+        assertNull(cell.getValue());
     }
 
     @Test

@@ -34,8 +34,8 @@ public final class StringCell extends AbstractCell<String> implements Comparable
      * @param name The name of the empty cell.
      * @return A new Empty cell of supplied name.
      */
-    public static Cell emptyOf(String name) {
-        return new EmptyCell(name, CellType.STRING);
+    public static Cell<String> emptyOf(String name) {
+        return new EmptyCell<>(name, CellType.STRING);
     }
 
     @Override

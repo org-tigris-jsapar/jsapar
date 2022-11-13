@@ -43,7 +43,7 @@ public final class IntegerCell extends NumberCell {
 
     @Override
     public int compareValueTo(Cell<Number> right) {
-        if(right instanceof IntegerCell)
+        if(!(right instanceof IntegerCell))
             return Long.compare(getValue().longValue(), right.getValue().longValue());
         return super.compareValueTo(right);
     }
@@ -52,8 +52,8 @@ public final class IntegerCell extends NumberCell {
      * @param name The name of the empty cell.
      * @return A new Empty cell of supplied name.
      */
-    public static Cell emptyOf(String name) {
-        return new EmptyCell(name, CellType.INTEGER);
+    public static Cell<Long> emptyOf(String name) {
+        return new EmptyCell<>(name, CellType.INTEGER);
     }
 
 }

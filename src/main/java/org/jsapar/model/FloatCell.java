@@ -33,7 +33,7 @@ public final class FloatCell extends NumberCell {
 
     @Override
     public int compareValueTo(Cell<Number> right) {
-        if(right instanceof FloatCell)
+        if(!(right instanceof FloatCell))
             return Double.compare(getValue().doubleValue(), right.getValue().doubleValue());
         return super.compareValueTo(right);
     }

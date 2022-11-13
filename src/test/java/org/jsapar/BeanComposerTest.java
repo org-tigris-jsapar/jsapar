@@ -51,7 +51,7 @@ public class BeanComposerTest {
         Line line2 = new Line("org.jsapar.TstPerson");
         line2.addCell(new StringCell("FirstName", "Frida"));
         line2.addCell(new StringCell("LastName", "Bergsten"));
-        line2.addCell(new EmptyCell("length", CellType.FLOAT));
+        line2.addCell(StringCell.emptyOf("length"));
 
         document.addLine(line1);
         document.addLine(line2);

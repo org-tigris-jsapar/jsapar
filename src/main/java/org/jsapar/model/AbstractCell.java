@@ -37,7 +37,7 @@ abstract class AbstractCell<T> implements Cell<T> {
     AbstractCell(String name, T value, CellType cellType) {
         assert name != null : "Cell name cannot be null.";
         assert cellType != null : "Cell type cannot be null.";
-        assert value != null : "Cell value cannot be null, use EmptyCell for empty values.";
+//        assert value != null : "Cell value cannot be null, use EmptyCell for empty values.";
         this.name = name;
         this.cellType = cellType;
         this.value = value;

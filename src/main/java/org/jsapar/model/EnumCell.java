@@ -1,6 +1,6 @@
 package org.jsapar.model;
 
-public final class EnumCell<E extends Enum<E>> extends AbstractCell<E> {
+public final class EnumCell<E extends Enum<E>> extends AbstractCell<E> implements ComparableCell<E>{
 
     /**
      * Creates a cell with a name and value.
@@ -12,18 +12,13 @@ public final class EnumCell<E extends Enum<E>> extends AbstractCell<E> {
         super(name, value, CellType.ENUM);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public int compareValueTo(Cell<E> right) {
-        return this.getValue().compareTo(right.getValue());
-    }
-
     /**
      * @param name The name of the empty cell.
      * @return A new Empty cell of supplied name.
      */
-    public static Cell emptyOf(String name) {
-        return new EmptyCell(name, CellType.ENUM);
+    @SuppressWarnings("rawtypes")
+    public static Cell<Enum> emptyOf(String name) {
+        return new EmptyCell<>(name, CellType.ENUM);
     }
 
     @Override

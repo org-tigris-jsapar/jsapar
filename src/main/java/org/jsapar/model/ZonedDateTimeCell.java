@@ -16,7 +16,7 @@ public final class ZonedDateTimeCell extends TemporalCell<ZonedDateTime> impleme
         super(name, value, CellType.ZONED_DATE_TIME);
     }
 
-    public static Cell emptyOf(String name) {
-        return new EmptyCell(name, CellType.ZONED_DATE_TIME);
+    public static Cell<ZonedDateTime> emptyOf(String name) {
+        return new EmptyCell<>(name, CellType.ZONED_DATE_TIME);
     }
 }

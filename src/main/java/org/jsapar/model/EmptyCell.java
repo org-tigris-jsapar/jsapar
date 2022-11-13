@@ -4,7 +4,7 @@ package org.jsapar.model;
  * This class is a special case where an empty value has been parsed from a source. It can be used as a type independent
  * placeholder of an empty value.
  */
-public final class EmptyCell extends AbstractCell<String> {
+public final class EmptyCell<T> extends AbstractCell<T> {
     /**
      *
      */
@@ -16,7 +16,7 @@ public final class EmptyCell extends AbstractCell<String> {
      * @param cellType The type of the cell if one is present. If null, the type will be {@link CellType#STRING}
      */
     public EmptyCell(String name, CellType cellType) {
-        super(name, STRING_VALUE, ((cellType == null) ? CellType.STRING : cellType));
+        super(name, null, ((cellType == null) ? CellType.STRING : cellType));
     }
 
     @Override
@@ -25,8 +25,8 @@ public final class EmptyCell extends AbstractCell<String> {
     }
 
     @Override
-    public int compareValueTo(Cell<String> right) {
-        return STRING_VALUE.compareTo(right.getValue());
+    public int compareValueTo(Cell<T> right) {
+        return right.isEmpty() ? 0 : -1;
     }
 
     /**

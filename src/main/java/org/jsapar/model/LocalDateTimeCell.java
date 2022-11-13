@@ -16,7 +16,7 @@ public final class LocalDateTimeCell extends TemporalCell<LocalDateTime> impleme
         super(name, value, CellType.LOCAL_DATE_TIME);
     }
 
-    public static Cell emptyOf(String name) {
-        return new EmptyCell(name, CellType.LOCAL_DATE_TIME);
+    public static Cell<LocalDateTime> emptyOf(String name) {
+        return new EmptyCell<>(name, CellType.LOCAL_DATE_TIME);
     }
 }

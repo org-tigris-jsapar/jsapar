@@ -10,10 +10,13 @@ public class FloatCellTest {
     public void compareValueTo() {
         FloatCell c1 = new FloatCell("test", 123.45f);
         FloatCell c2 = new FloatCell("test2", 123.45f);
-        FloatCell c3 = new FloatCell("test2", 20.1d);
+        FloatCell c3 = new FloatCell("test3", 20.1d);
+        IntegerCell c4 = new IntegerCell("test4", 20);
+
         assertEquals(0, c1.compareValueTo(c2));
         assertTrue(c1.compareValueTo(c3) >0);
         assertTrue(c3.compareValueTo(c1) <0);
+        assertTrue(c3.compareValueTo(c4) > 0);
     }
 
     @Test

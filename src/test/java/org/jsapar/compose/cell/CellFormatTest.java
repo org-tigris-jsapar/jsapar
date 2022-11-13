@@ -68,7 +68,7 @@ public class CellFormatTest {
                 .build();
 
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
-        String value = format.format(new EmptyCell("test", CellType.INTEGER));
+        String value = format.format(IntegerCell.emptyOf("test"));
         assertEquals("", value);
     }
 

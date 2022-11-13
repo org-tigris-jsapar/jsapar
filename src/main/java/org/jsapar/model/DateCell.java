@@ -31,8 +31,8 @@ public final class DateCell extends AbstractCell<Date> implements ComparableCell
         super(sName, ISO_DATE_FORMAT.parse(isoDate), CellType.DATE);
     }
 
-    public static Cell emptyOf(String name) {
-        return new EmptyCell(name, CellType.DATE);
+    public static Cell<Date> emptyOf(String name) {
+        return new EmptyCell<>(name, CellType.DATE);
     }
 
     /**

@@ -68,8 +68,8 @@ public final class BigDecimalCell extends NumberCell  {
      * @param name The name of the empty cell.
      * @return A new Empty cell of supplied name.
      */
-    public static EmptyCell emptyOf(String name) {
-        return new EmptyCell(name, CellType.DECIMAL);
+    public static EmptyCell<BigDecimal> emptyOf(String name) {
+        return new EmptyCell<>(name, CellType.DECIMAL);
     }
 
 }

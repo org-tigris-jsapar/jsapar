@@ -25,7 +25,8 @@ public interface Cell<T> extends Serializable, Comparable<Cell<T>> {
     }
 
     /**
-     * @return The value of the cell.
+     * @return The value of the cell. If the cell is empty as checked with {@link #isEmpty()}, then the return value is
+     * unknown and may be null.
      */
     T getValue();
 

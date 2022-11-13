@@ -16,7 +16,7 @@ public final class LocalDateCell extends TemporalCell<LocalDate> implements Comp
         super(name, value, CellType.LOCAL_DATE);
     }
 
-    public static Cell emptyOf(String name) {
-        return new EmptyCell(name, CellType.LOCAL_DATE);
+    public static Cell<LocalDate> emptyOf(String name) {
+        return new EmptyCell<>(name, CellType.LOCAL_DATE);
     }
 }

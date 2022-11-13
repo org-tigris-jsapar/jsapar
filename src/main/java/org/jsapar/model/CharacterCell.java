@@ -19,7 +19,7 @@ public final class CharacterCell extends AbstractCell<Character> implements Comp
      * @param name The name of the empty cell.
      * @return A new Empty cell of supplied name.
      */
-    public static Cell emptyOf(String name) {
-        return new EmptyCell(name, CellType.CHARACTER);
+    public static Cell<Character> emptyOf(String name) {
+        return new EmptyCell<>(name, CellType.CHARACTER);
     }
 }
