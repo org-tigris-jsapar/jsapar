@@ -1,7 +1,5 @@
-package org.jsapar.parse.cell;
+package org.jsapar.model;
 
-import org.jsapar.model.Cell;
-import org.jsapar.model.CellType;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.text.Format;
 

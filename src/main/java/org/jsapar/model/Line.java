@@ -98,7 +98,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @return This line. Makes it possible to chain calls to addCell.
      * @see #putCell(Cell)
      */
-    public Line addCell(Cell cell) {
+    public Line addCell(Cell<?> cell) {
         Cell<?> oldCell = cells.get(cell.getName());
         if (oldCell != null)
             throw new IllegalStateException(
@@ -124,7 +124,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @return Optional containing the replaced cell if there was one within the line with the same name.
      * @see #addCell(Cell)
      */
-    public Optional<Cell> putCell(Cell cell) {
+    public Optional<Cell> putCell(Cell<?> cell) {
         return Optional.ofNullable(this.cells.put(cell.getName(), cell));
     }
 
@@ -138,7 +138,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @param <T> The value type of the cell.
      *           @see #addCell(Cell)
      */
-    public <T> void putCellValue(String cellName, T value, BiFunction<String, T, Cell> cellCreator) {
+    public <T> void putCellValue(String cellName, T value, BiFunction<String, T, Cell<? super T>> cellCreator) {
         if (value == null)
             this.cells.remove(cellName);
         else
@@ -169,7 +169,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
     }
 
     /**
-     * Gets a non empty cell with specified name. Name is specified by the schema.
+     * Gets a non-empty cell with specified name. Name is specified by the schema.
      *
      * @param name The name of the cell to get
      * @return Optional cell that is set if there is a cell with specified name and that cell is not empty.
@@ -177,6 +177,29 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
     public Optional<Cell> getNonEmptyCell(String name) {
         return getCell(name).filter(c->!c.isEmpty());
     }
+
+    /**
+     * Gets the non-empty value of a cell with specified name and with the value of specified type. Name is specified by the schema.
+     *
+     * @param name The name of the cell to get
+     * @param valueType The class type of the value to expect.
+     * @return Optional cell that is set if there is a cell with specified name and that cell is not empty.
+     * @param <T> The type of the value.
+     * @throws ClassCastException If the value of the cell cannot be safely cast into the valueType.
+     */
+    public <T> Optional<T> getNonEmptyCellValue(String name, Class<T> valueType) throws ClassCastException {
+        //noinspection unchecked
+        Cell<T> uncheckedCell = (Cell<T>) this.cells.get(name);
+        if(uncheckedCell == null || uncheckedCell.isEmpty())
+            return Optional.empty();
+
+        try {
+            return Optional.of(valueType.cast(uncheckedCell.getValue()));
+        } catch (ClassCastException e) {
+            throw new IllegalStateException("The value of the cell " + uncheckedCell + " cannot be cast to " + valueType, e);
+        }
+    }
+
     /**
      * Gets the number of cells that this line contains.
      *
@@ -325,6 +348,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
 
     /**
      * Returns a stream of all cells within this line.
+     *
      * @return A stream of all cells within this line.
      */
     public Stream<Cell> stream() {

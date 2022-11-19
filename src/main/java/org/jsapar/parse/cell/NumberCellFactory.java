@@ -1,6 +1,7 @@
 package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
+import org.jsapar.model.CellFactory;
 import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.text.Format;
 
@@ -10,7 +11,7 @@ import java.util.Locale;
 /**
  * Abstract base class for parsing number values into {@link Cell} objects
  */
-public abstract class NumberCellFactory implements CellFactory{
+public abstract class NumberCellFactory implements CellFactory {
 
     @Override
     public Format makeFormat(Locale locale) {

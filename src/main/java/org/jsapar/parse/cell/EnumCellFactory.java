@@ -1,6 +1,7 @@
 package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
+import org.jsapar.model.CellFactory;
 import org.jsapar.model.EnumCell;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
@@ -13,7 +14,7 @@ import java.util.Locale;
 /**
  * Parses string values into {@link Cell} objects
  */
-public class EnumCellFactory implements CellFactory{
+public class EnumCellFactory implements CellFactory {
 
     @SuppressWarnings("unchecked")
     @Override

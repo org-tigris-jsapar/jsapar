@@ -2,6 +2,7 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
+import org.jsapar.model.CellFactory;
 import org.jsapar.model.CellType;
 import org.jsapar.model.EmptyCell;
 import org.jsapar.parse.CellParseException;

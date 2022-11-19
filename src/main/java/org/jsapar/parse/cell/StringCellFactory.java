@@ -1,6 +1,7 @@
 package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
+import org.jsapar.model.CellFactory;
 import org.jsapar.model.StringCell;
 import org.jsapar.text.Format;
 
@@ -10,7 +11,7 @@ import java.util.Locale;
 /**
  * Parses string values into {@link Cell} objects
  */
-public class StringCellFactory implements CellFactory{
+public class StringCellFactory implements CellFactory {
 
     @Override
     public Cell makeCell(String name, String value, Format format) throws ParseException {

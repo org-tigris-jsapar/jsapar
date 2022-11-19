@@ -112,11 +112,10 @@ public class LineUtilsTest {
         Assert.fail("Should throw exception");
     }
 
-    @Test(expected=NumberFormatException.class)
+    @Test(expected=IllegalStateException.class)
     public void testGetNumberCellValue_string() {
         Line line = new Line("TestLine");
         LineUtils.setStringCellValue(line,"aStringValue", "17");
-
         LineUtils.getNumberCellValue(line,"aStringValue");
         Assert.fail("Should throw exception");
     }

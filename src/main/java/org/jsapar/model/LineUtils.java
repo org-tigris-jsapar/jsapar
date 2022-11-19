@@ -212,7 +212,7 @@ public final class LineUtils {
     }
 
     /**
-     * Utility function that gets a non empty string cell value of the specified cell.
+     * Utility function that gets a non-empty string cell value of the specified cell.
      *
      * @param line     The line to get value from
      * @param cellName The name of the cell to get
@@ -234,17 +234,11 @@ public final class LineUtils {
      * @param line     The line to get from
      * @param cellName The name of the cell to get.
      * @return The integer value of the cell with the specified name or optional empty if the cell is empty or does not exist.
-     * @throws NumberFormatException If the cell could not be converted into an integer value
+     * @throws IllegalStateException If the value of the cell could not be cast to a Number
      */
     public static Optional<Number> getNumberCellValue(Line line, String cellName)
-            throws NumberFormatException {
-        return line.getNonEmptyCell(cellName).map(cell -> {
-            if (cell instanceof NumberCell) {
-                NumberCell numberCell = (NumberCell) cell;
-                return numberCell.getValue();
-            }
-            throw new NumberFormatException("The cell [" + cell + "] is not a number cell.");
-        });
+            throws IllegalStateException {
+        return line.getNonEmptyCellValue(cellName, Number.class);
     }
 
 
@@ -280,7 +274,7 @@ public final class LineUtils {
         return line.getNonEmptyCell(cellName).map(LineUtils::intCellValue);
     }
 
-    private static int intCellValue(Cell cell) {
+    private static int intCellValue(Cell<?> cell) {
         if (cell instanceof NumberCell) {
             NumberCell numberCell = (NumberCell) cell;
             return numberCell.getValue().intValue();
@@ -324,7 +318,7 @@ public final class LineUtils {
         return line.getNonEmptyCell(cellName).map(LineUtils::longCellValue);
     }
 
-    private static long longCellValue(Cell cell) {
+    private static long longCellValue(Cell<?> cell) {
         if (cell instanceof NumberCell) {
             NumberCell numberCell = (NumberCell) cell;
             return numberCell.getValue().longValue();
@@ -433,19 +427,9 @@ public final class LineUtils {
      * @throws IllegalStateException If the cell is not of type {@link DateCell}.
      */
     public static Optional<Date> getDateCellValue(Line line, String cellName)
-            throws IllegalStateException, NumberFormatException {
-        return line.getNonEmptyCell(cellName).map(LineUtils::dateOfCell);
+            throws IllegalStateException {
+        return line.getNonEmptyCellValue(cellName, Date.class);
     }
-
-    private static Date dateOfCell(Cell cell) {
-        if (cell instanceof DateCell) {
-            DateCell dateCell = (DateCell) cell;
-            return dateCell.getValue();
-        }
-
-        throw new IllegalStateException("The cell " + cell + " is not of type DateCell.");
-    }
-
 
     /**
      * Utility function that gets the local date cell value of the specified cell.
@@ -458,7 +442,7 @@ public final class LineUtils {
      */
     public static Optional<LocalDate> getLocalDateCellValue(Line line, String cellName)
             throws IllegalStateException{
-        return line.getNonEmptyCell(cellName).map(LineUtils::temporalOfCell).map(LocalDate::from);
+        return line.getNonEmptyCellValue(cellName, Temporal.class).map(LocalDate::from);
     }
 
     /**
@@ -472,7 +456,7 @@ public final class LineUtils {
      */
     public static Optional<LocalDateTime> getLocalDateTimeCellValue(Line line, String cellName)
             throws IllegalStateException{
-        return line.getNonEmptyCell(cellName).map(LineUtils::temporalOfCell).map(LocalDateTime::from);
+        return line.getNonEmptyCellValue(cellName, Temporal.class).map(LocalDateTime::from);
     }
 
     /**
@@ -486,7 +470,7 @@ public final class LineUtils {
      */
     public static Optional<LocalTime> getLocalTimeCellValue(Line line, String cellName)
             throws IllegalStateException{
-        return line.getNonEmptyCell(cellName).map(LineUtils::temporalOfCell).map(LocalTime::from);
+        return line.getNonEmptyCellValue(cellName, Temporal.class).map(LocalTime::from);
     }
 
     /**
@@ -500,17 +484,7 @@ public final class LineUtils {
      */
     public static Optional<ZonedDateTime> getZonedDateTimeCellValue(Line line, String cellName)
             throws IllegalStateException{
-        return line.getNonEmptyCell(cellName).map(LineUtils::temporalOfCell).map(ZonedDateTime::from);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Temporal temporalOfCell(Cell cell) {
-        if (cell instanceof TemporalCell) {
-            TemporalCell<Temporal> temporalCell = (TemporalCell<Temporal>) cell;
-            return temporalCell.getValue();
-        }
-
-        throw new IllegalStateException("The cell " + cell + " is not of type TemporalCell.");
+        return line.getNonEmptyCellValue(cellName, Temporal.class).map(ZonedDateTime::from);
     }
 
     /**
@@ -531,7 +505,7 @@ public final class LineUtils {
     }
 
     @SuppressWarnings("unchecked")
-    private static <E extends Enum<E>> E enumOfCell(Cell cell, Class<E> enumClass) {
+    private static <E extends Enum<E>> E enumOfCell(Cell<?> cell, Class<E> enumClass) {
         if(cell instanceof EnumCell)
             return (E) cell.getValue();
         String s = cell.getStringValue();
@@ -597,7 +571,7 @@ public final class LineUtils {
         return line.getNonEmptyCell(cellName).map(LineUtils::doubleCellValue);
     }
 
-    private static double doubleCellValue(Cell cell) {
+    private static double doubleCellValue(Cell<?> cell) {
         if (cell instanceof NumberCell) {
             NumberCell numberCell = (NumberCell) cell;
             return numberCell.getValue().doubleValue();
@@ -625,7 +599,7 @@ public final class LineUtils {
         return line.getNonEmptyCell(cellName).map(LineUtils::bigDecimalOfCell);
     }
 
-    private static BigDecimal bigDecimalOfCell(Cell cell) {
+    private static BigDecimal bigDecimalOfCell(Cell<?> cell) {
         if (cell instanceof BigDecimalCell) {
             BigDecimalCell numberCell = (BigDecimalCell) cell;
             return numberCell.getBigDecimalValue();
@@ -658,7 +632,7 @@ public final class LineUtils {
 
     }
 
-    private static BigInteger bigIntegerOfCell(Cell cell) {
+    private static BigInteger bigIntegerOfCell(Cell<?> cell) {
         if (cell instanceof BigDecimalCell) {
             BigDecimalCell numberCell = (BigDecimalCell) cell;
             return numberCell.getBigIntegerValue();
