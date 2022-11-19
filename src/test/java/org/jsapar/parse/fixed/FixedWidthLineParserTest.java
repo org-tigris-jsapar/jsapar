@@ -52,6 +52,48 @@ public class FixedWidthLineParserTest {
         assertEquals("Huddinge", LineUtils.getStringCellValue(line,"City"));
     }
 
+    @Test
+    public void testParse_hangul() throws IOException, JSaParException {
+        String toParse = "서화가람큰길19141 59강남";
+        FixedWidthSchemaLine schemaLine =FixedWidthSchemaLine.builder("Person")
+                .withOccurs(1)
+                .withCell("First name", 2)
+                .withCell("Last name", 2)
+                .withCell("Street address", 4)
+                .withCell("Zip code", 6)
+                .withCell("City", 2)
+                .build();
+
+        TextParseConfig config = new TextParseConfig();
+        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
+        Line line = parser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer() );
+        assertNotNull(line);
+        assertEquals("서화", LineUtils.getStringCellValue(line, "First name"));
+        assertEquals("가람", LineUtils.getStringCellValue(line, "Last name"));
+        assertEquals("강남", LineUtils.getStringCellValue(line,"City"));
+    }
+
+    @Test
+    public void testParse_simplified_chinese() throws IOException, JSaParException {
+        String toParse = "强尼加拉姆主要街道19141 59北京";
+        FixedWidthSchemaLine schemaLine =FixedWidthSchemaLine.builder("Person")
+                .withOccurs(1)
+                .withCell("First name", 2)
+                .withCell("Last name", 4)
+                .withCell("Street address", 5)
+                .withCell("Zip code", 6)
+                .withCell("City", 2)
+                .build();
+
+        TextParseConfig config = new TextParseConfig();
+        FixedWidthLineParser parser = new FixedWidthLineParser(schemaLine, config);
+        Line line = parser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer() );
+        assertNotNull(line);
+        assertEquals("强尼", LineUtils.getStringCellValue(line, "First name"));
+        assertEquals("加拉姆主", LineUtils.getStringCellValue(line, "Last name"));
+        assertEquals("北京", LineUtils.getStringCellValue(line,"City"));
+    }
+
 
     @Test
     public void testParse_defaultLast() throws IOException, JSaParException {
