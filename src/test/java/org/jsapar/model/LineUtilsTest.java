@@ -144,7 +144,7 @@ public class LineUtilsTest {
     public void testGetSetDoubleCellValue() {
         Line line = new Line("TestLine");
         LineUtils.setDoubleCellValue(line, "Value", 3.14159265358979D);
-        line.addCell(new EmptyCell("empty", CellType.FLOAT));
+        line.addCell(FloatCell.emptyOf("empty"));
         assertEquals(3.14159265358979D, LineUtils.getNumberCellValue(line,"Value").orElse( -1.0).doubleValue(), 0.0000000001);
         assertEquals(3.14159265358979D, LineUtils.getDoubleCellValue(line,"Value", 2.71D), 0.0000000001);
         assertEquals(3.14159265358979D, LineUtils.getDoubleCellValue(line,"Value").orElse(2.71D), 0.0000000001);

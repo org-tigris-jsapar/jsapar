@@ -37,4 +37,13 @@ public final class FloatCell extends NumberCell {
             return Double.compare(getValue().doubleValue(), right.getValue().doubleValue());
         return super.compareValueTo(right);
     }
+
+    /**
+     * @param name The name of the empty cell.
+     * @return A new Empty cell of supplied name.
+     */
+    public static Cell<Double> emptyOf(String name) {
+        return new EmptyCell<>(name, CellType.FLOAT);
+    }
+
 }
