@@ -1,7 +1,6 @@
 package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
-import org.jsapar.model.CellFactory;
 import org.jsapar.model.EnumCell;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;

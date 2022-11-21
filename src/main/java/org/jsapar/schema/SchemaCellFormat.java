@@ -1,7 +1,7 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
-import org.jsapar.model.CellFactory;
+import org.jsapar.parse.cell.CellFactory;
 import org.jsapar.text.Format;
 
 import java.util.Locale;

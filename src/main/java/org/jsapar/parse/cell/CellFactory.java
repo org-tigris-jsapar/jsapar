@@ -1,5 +1,7 @@
-package org.jsapar.model;
+package org.jsapar.parse.cell;
 
+import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.text.Format;
 
@@ -28,7 +30,7 @@ public interface CellFactory {
      * @return A new cell.
      * @throws ParseException If parsing could not be done with the given format object.
      */
-    Cell makeCell(String name, String value, Format format) throws ParseException;
+    <T> Cell<T> makeCell(String name, String value, Format<T> format) throws ParseException;
 
     /**
      * Create a default format object for the current cell type given the locale.
