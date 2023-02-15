@@ -7,7 +7,6 @@ import org.jsapar.parse.cell.CellFactory;
 import org.jsapar.parse.cell.CellParser;
 import org.jsapar.text.EnumFormat;
 import org.jsapar.text.Format;
-import org.jsapar.text.ImpliedDecimalFormat;
 
 import java.text.ParseException;
 import java.util.Locale;
@@ -38,7 +37,7 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * If parsing an empty value this cell can be used, avoiding a lot of object creation.
      */
-    private final EmptyCell emptyCell;
+    private final EmptyCell<? extends Enum<?>> emptyCell;
     private String defaultValue = null;
     private Locale locale;
     private Predicate<String> emptyCondition = null;
@@ -47,7 +46,7 @@ public abstract class SchemaCell implements Cloneable {
 
     /**
      * Creates a string cell with specified name. The format can be added after creation by using the {@link #setCellFormat(CellType, String)} method.
-     *
+     * <p>
      * Deprecated. Use builder instead.
      * @param sName The name of the cell.
      */
@@ -58,7 +57,7 @@ public abstract class SchemaCell implements Cloneable {
 
     /**
      * Creates a schema cell with the specified name and format parameters.
-     *
+     * <p>
      * Deprecated. Use builder instead.
      * @param sName The name of the cell.
      * @param type  The type of the cell.
@@ -70,7 +69,7 @@ public abstract class SchemaCell implements Cloneable {
 
     /**
      * Creates a schema cell with the specified name and format parameters.
-     *
+     * <p>
      * Deprecated. Use builder instead.
      * @param sName  The name of the cell.
      * @param type   The type of the cell.
@@ -84,7 +83,7 @@ public abstract class SchemaCell implements Cloneable {
 
     /**
      * Creates a schema cell with the specified name and format parameters.
-     *
+     * <p>
      * Deprecated. Use builder instead.
      * @param sName   The name of the cell.
      * @param type    The type of the cell.
@@ -102,7 +101,7 @@ public abstract class SchemaCell implements Cloneable {
             throw new IllegalArgumentException("SchemaCell.name cannot be null or empty.");
         this.cellFormat = cellFormat;
         this.name = name;
-        this.emptyCell = new EmptyCell(name, cellFormat.getCellType());
+        this.emptyCell = new EmptyCell<>(name, cellFormat.getCellType());
         this.locale = (locale != null) ? locale : DEFAULT_LOCALE;
     }
 
@@ -132,7 +131,7 @@ public abstract class SchemaCell implements Cloneable {
             throw new SchemaException("Failed to parse min or max value from string according to format.", e);
         }
         this.mandatory = builder.mandatory;
-        this.emptyCell = new EmptyCell(name, cellFormat.getCellType());
+        this.emptyCell = new EmptyCell<>(name, cellFormat.getCellType());
     }
 
     /**

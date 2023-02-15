@@ -5,6 +5,7 @@ import org.jsapar.parse.cell.DateCellFactory;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.StringSchemaCell;
+import org.jsapar.text.Format;
 import org.junit.Test;
 
 import java.text.ParseException;
@@ -32,7 +33,7 @@ public class CellFormatTest {
                 .withDefaultValue("TheDefault")
                 .build();
 
-        Cell<String> cell = new EmptyCell("Test", CellType.STRING);
+        Cell<String> cell = new EmptyCell<>("Test", CellType.STRING);
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
         assertEquals("TheDefault", format.format(cell));
     }
@@ -41,7 +42,7 @@ public class CellFormatTest {
     public void testFormat_empty_no_default()  {
         SchemaCell schemaCell = StringSchemaCell.builder("test").build();
 
-        Cell<String> cell = new EmptyCell("Test", CellType.STRING);
+        Cell<String> cell = new EmptyCell<>("Test", CellType.STRING);
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
         assertEquals("", format.format(cell));
     }
@@ -57,7 +58,7 @@ public class CellFormatTest {
                 .build();
 
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
-        String value = format.format(new EmptyCell("test", CellType.FLOAT));
+        String value = format.format(new EmptyCell<>("test", CellType.FLOAT));
         assertEquals("123456,78901", value);
     }
 
@@ -100,9 +101,7 @@ public class CellFormatTest {
     @Test
     public void testFormat_Regexp() throws SchemaException {
         SchemaCell schemaCell = StringSchemaCell.builder("test")
-                .withType(CellType.STRING)
-                .withPattern("A|B")
-                .withLocale("sv", "SE")
+                .withFormat(Format.ofStringInstance("A|B"))
                 .build();
 
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);

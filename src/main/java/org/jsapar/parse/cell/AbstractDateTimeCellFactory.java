@@ -1,5 +1,6 @@
 package org.jsapar.parse.cell;
 
+import org.jsapar.model.CellType;
 import org.jsapar.text.Format;
 
 import java.time.format.DateTimeFormatter;
@@ -16,8 +17,8 @@ public abstract class AbstractDateTimeCellFactory implements CellFactory {
         this.defaultFormat = defaultFormat;
     }
 
-    AbstractDateTimeCellFactory(DateTimeFormatter defaultFormatter) {
-        this(Format.ofDateTimeInstance(defaultFormatter));
+    AbstractDateTimeCellFactory(DateTimeFormatter defaultFormatter, CellType cellType) {
+        this(Format.ofDateTimeInstance(defaultFormatter, cellType));
     }
 
     Format<TemporalAccessor> getDefaultFormat() {

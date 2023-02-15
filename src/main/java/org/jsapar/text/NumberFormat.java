@@ -25,6 +25,9 @@ class NumberFormat extends JavaTextFormat<Number> implements Format<Number> {
 
     NumberFormat(java.text.NumberFormat numberFormat, CellType cellType) {
         super(numberFormat, cellType);
+        if(!cellType.isNumber())
+            throw new IllegalArgumentException("Only number cell types are allowed in NumberFormat. " + cellType + " does not parse or" +
+                    " compose objects of type Number");
         if(numberFormat instanceof java.text.DecimalFormat) {
             DecimalFormat decimalFormat = (DecimalFormat) numberFormat;
 

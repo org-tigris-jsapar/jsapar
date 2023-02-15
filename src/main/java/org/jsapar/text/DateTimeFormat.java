@@ -8,10 +8,13 @@ import java.util.Date;
 
 class DateTimeFormat implements Format<TemporalAccessor> {
     private final DateTimeFormatter formatter;
-    private CellType cellType;
+    private final CellType cellType;
 
     DateTimeFormat(DateTimeFormatter formatter, CellType cellType) {
         this.formatter = formatter;
+        if(cellType!=null && !cellType.isTemporal())
+            throw new IllegalArgumentException("Only temporal cell types are allowed in DateTimeFormat. " + cellType + " does not parse or" +
+                    " compose objects that implements java.time.temporal.Temporal");
         this.cellType = cellType;
     }
 

@@ -1,6 +1,7 @@
 package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
 import org.jsapar.model.LocalDateCell;
 import org.jsapar.text.Format;
 
@@ -15,7 +16,7 @@ import java.time.temporal.TemporalAccessor;
 public class LocalDateCellFactory extends AbstractDateTimeCellFactory {
 
     public LocalDateCellFactory() {
-        super(DateTimeFormatter.ISO_DATE);
+        super(DateTimeFormatter.ISO_DATE, CellType.LOCAL_DATE);
     }
 
     @Override
