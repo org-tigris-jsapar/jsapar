@@ -123,13 +123,13 @@ public class CsvParseTaskTest {
                 .withLine(CsvSchemaLine.builder("Person")
                         .withFirstLineAsSchema(true)
                         .withCell("Shoe Size", c->c.withType(CellType.INTEGER).withDefaultValue("43"))
-                        .withCell("HasDog", c->c.withType(CellType.BOOLEAN).withFormat(Format.ofBooleanInstance("YES", "NO", true)).withDefaultValue("YES"))
+                        .withCell("HasDog", c->c.withType(CellType.BOOLEAN).withFormat(Format.ofBooleanInstance("YES", "NO", true)).withDefaultValue("NO"))
                         .build())
                 .build();
 
 
         String sLineSep = System.getProperty("line.separator");
-        String sToParse = "First Name;Last Name;Shoe Size;HasDog" + sLineSep + "Jonas;Stenberg;41;No" + sLineSep
+        String sToParse = "First Name;Last Name;Shoe Size;HasDog" + sLineSep + "Jonas;Stenberg;41;Yes" + sLineSep
                 + "Nils;Nilsson;";
         java.io.Reader reader = new java.io.StringReader(sToParse);
         Document doc = build(schema, reader,3);
@@ -138,13 +138,13 @@ public class CsvParseTaskTest {
         assertEquals("Jonas", LineUtils.getStringCellValue(line, "First Name"));
         assertEquals("Stenberg", LineUtils.getStringCellValue(line, "Last Name"));
         assertEquals(41, LineUtils.getIntCellValue(line,"Shoe Size", -1));
-        assertEquals(Boolean.FALSE, LineUtils.getBooleanCellValue(line, "HasDog").orElseThrow(AssertionError::new));
+        assertEquals(Boolean.TRUE, LineUtils.getBooleanCellValue(line, "HasDog").orElseThrow(AssertionError::new));
 
         line = doc.getLine(1);
         assertEquals("Nils", LineUtils.getStringCellValue(line, "First Name"));
         assertEquals("Nilsson", LineUtils.getStringCellValue(line, "Last Name"));
         assertEquals(43, LineUtils.getIntCellValue(line,"Shoe Size", -1));
-        assertEquals(Boolean.TRUE, LineUtils.getBooleanCellValue(line, "HasDog").orElseThrow(AssertionError::new));
+        assertEquals(Boolean.FALSE, LineUtils.getBooleanCellValue(line, "HasDog").orElseThrow(AssertionError::new));
     }
 
     @Test
