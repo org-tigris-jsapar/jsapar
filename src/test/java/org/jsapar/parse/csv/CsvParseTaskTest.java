@@ -117,13 +117,13 @@ public class CsvParseTaskTest {
 
 
     @Test
-    public final void testParse_firstLineAsHeader()
+    public final void testParse_firstLineAsHeader_booleanWithFormat()
             throws IOException, JSaParException {
         CsvSchema schema = CsvSchema.builder()
                 .withLine(CsvSchemaLine.builder("Person")
                         .withFirstLineAsSchema(true)
                         .withCell("Shoe Size", c->c.withType(CellType.INTEGER).withDefaultValue("43"))
-                        .withCell("HasDog", c->c.withType(CellType.BOOLEAN).withFormat(Format.ofBooleanInstance("YES", "NO", true)).withDefaultValue("NO"))
+                        .withCell("HasDog", c->c.withFormat(Format.ofBooleanInstance("YES", "NO", true)).withDefaultValue("NO"))
                         .build())
                 .build();
 

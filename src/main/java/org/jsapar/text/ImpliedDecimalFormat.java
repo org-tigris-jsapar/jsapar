@@ -1,5 +1,7 @@
 package org.jsapar.text;
 
+import org.jsapar.model.CellType;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -53,6 +55,11 @@ public class ImpliedDecimalFormat implements Format<BigDecimal> {
     @Override
     public String toString() {
         return "Implied decimal with " + decimals + " decimals";
+    }
+
+    @Override
+    public CellType cellType() {
+        return CellType.DECIMAL;
     }
 
     @Override

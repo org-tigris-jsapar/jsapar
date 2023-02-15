@@ -1,5 +1,6 @@
 package org.jsapar.text;
 
+import org.jsapar.model.CellType;
 import org.jsapar.utils.StringUtils;
 
 import java.text.DecimalFormat;
@@ -12,18 +13,18 @@ import java.util.function.Function;
 
 /**
  * Formats and parses number objects.
- * As of JDK 9 some locales have got new decimal symbols. This is implementation has a work around to also still be
+ * As of JDK 9 some locales have got new decimal symbols. This is implementation has a work-around to also still be
  * able to parse the old format since they are still widely used.
  */
 class NumberFormat extends JavaTextFormat<Number> implements Format<Number> {
     private final List<Function<String, String>> mappers = new ArrayList<>(3);
 
-    NumberFormat(String pattern, Locale locale) {
-        this(new java.text.DecimalFormat(pattern, new DecimalFormatSymbols(locale)));
+    NumberFormat(String pattern, Locale locale, CellType cellType) {
+        this(new java.text.DecimalFormat(pattern, new DecimalFormatSymbols(locale)), cellType);
     }
 
-    NumberFormat(java.text.NumberFormat numberFormat) {
-        super(numberFormat);
+    NumberFormat(java.text.NumberFormat numberFormat, CellType cellType) {
+        super(numberFormat, cellType);
         if(numberFormat instanceof java.text.DecimalFormat) {
             DecimalFormat decimalFormat = (DecimalFormat) numberFormat;
 
@@ -38,7 +39,6 @@ class NumberFormat extends JavaTextFormat<Number> implements Format<Number> {
                 mappers.add(s -> replaceNegativePrefix(s, minusPrefix));
             }
 
-
             String exp = decimalFormat.getDecimalFormatSymbols().getExponentSeparator();
             if (!exp.equals("E")) {
                 mappers.add(s -> replaceExponent(s, exp));
@@ -46,8 +46,8 @@ class NumberFormat extends JavaTextFormat<Number> implements Format<Number> {
         }
     }
 
-    NumberFormat(Locale locale) {
-        this(java.text.NumberFormat.getInstance(locale));
+    NumberFormat(Locale locale, CellType cellType) {
+        this(java.text.NumberFormat.getInstance(locale), cellType);
     }
 
     private static String replaceNegativePrefix(String value, String minusPrefix) {

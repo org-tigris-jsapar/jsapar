@@ -1,5 +1,7 @@
 package org.jsapar.text;
 
+import org.jsapar.model.CellType;
+
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Optional;
@@ -111,6 +113,11 @@ class BooleanFormat implements Format<Boolean> {
      */
     public String format(boolean value) {
         return value ? trueValue : falseValue;
+    }
+
+    @Override
+    public CellType cellType() {
+        return CellType.BOOLEAN;
     }
 
     /* (non-Javadoc)

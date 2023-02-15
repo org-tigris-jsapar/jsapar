@@ -1,8 +1,15 @@
 package org.jsapar.text;
 
+import org.jsapar.model.CellType;
+
 import java.text.ParseException;
 
 public class USDoubleFormat implements Format<Number>  {
+    @Override
+    public CellType cellType() {
+        return CellType.FLOAT;
+    }
+
     @Override
     public Number parse(String stringValue) throws ParseException {
         try {

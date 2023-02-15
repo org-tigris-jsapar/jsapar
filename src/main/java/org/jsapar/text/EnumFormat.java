@@ -1,5 +1,7 @@
 package org.jsapar.text;
 
+import org.jsapar.model.CellType;
+
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -151,6 +153,10 @@ public class EnumFormat<E extends Enum<E>> implements Format<E> {
     }
 
 
+    @Override
+    public CellType cellType() {
+        return CellType.ENUM;
+    }
 
     /**
      * @param toParse The value to parse

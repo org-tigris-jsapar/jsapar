@@ -1,5 +1,7 @@
 package org.jsapar.text;
 
+import org.jsapar.model.CellType;
+
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +15,11 @@ import java.util.Locale;
  * @param <T>
  */
 public interface Format<T> {
+
+    /**
+     * @return The type of cell parsed and produced by this format by default.
+     */
+    CellType cellType();
 
     /**
      * Parses an instance of type T from the supplied string.
@@ -37,7 +44,7 @@ public interface Format<T> {
      * @return An instance that formats and parses using a java.text.Format instance.
      */
     static <T> Format<T>  ofJavaTextFormat(java.text.Format format){
-        return new JavaTextFormat<>(format);
+        return new JavaTextFormat<>(format, CellType.STRING);
     }
 
     /**
@@ -104,20 +111,39 @@ public interface Format<T> {
     /**
      * @param pattern The parse pattern to use as in {@link java.text.DecimalFormat}. If null, only the locale is uses.
      * @param locale The locale to use.
+     * @param cellType The type of cell to produce and parse.
      * @return An instance that formats and parses numbers.
      */
-    static  Format<Number> ofNumberInstance(String pattern, Locale locale){
+    static  Format<Number> ofNumberInstance(String pattern, Locale locale, CellType cellType){
         if(pattern == null || pattern.isEmpty())
             return ofNumberInstance(locale);
-        return new NumberFormat(pattern, locale);
+        return new NumberFormat(pattern, locale, cellType);
+    }
+
+    /**
+     * @param pattern The parse pattern to use as in {@link java.text.DecimalFormat}. If null, only the locale is uses.
+     * @param locale The locale to use.
+     * @return An instance that formats and parses float and double numbers.
+     */
+    static  Format<Number> ofNumberInstance(String pattern, Locale locale){
+        return ofNumberInstance(pattern, locale, CellType.FLOAT);
     }
 
     /**
      * @param locale The locale to use.
+     * @param cellType The type of cell to produce and parse.
      * @return An instance that formats and parses numbers.
      */
+    static  Format<Number> ofNumberInstance(Locale locale, CellType cellType){
+        return new NumberFormat(locale, cellType);
+    }
+
+    /**
+     * @param locale The locale to use.
+     * @return An instance that formats and parses float and double numbers.
+     */
     static  Format<Number> ofNumberInstance(Locale locale){
-        return new NumberFormat(locale);
+        return ofNumberInstance(locale, CellType.FLOAT);
     }
 
     /**
@@ -139,24 +165,39 @@ public interface Format<T> {
             return new USIntegerFormat();
         final java.text.NumberFormat intFormat = java.text.NumberFormat.getIntegerInstance(locale);
         intFormat.setGroupingUsed(false);
-        return new NumberFormat(intFormat);
+        return new NumberFormat(intFormat, CellType.FLOAT);
     }
 
     /**
      * @param formatter  The formatter to use while formatting and parsing.
+     * @param cellType The type of cell to parse and produce
      * @return An instance that formats and parses date time objects.
      */
+    static  Format<TemporalAccessor>  ofDateTimeInstance(DateTimeFormatter formatter, CellType cellType){
+        return new DateTimeFormat(formatter, cellType);
+    }    /**
+     * @param formatter  The formatter to use while formatting and parsing.
+     * @return An instance that formats and parses date time objects of type local date time.
+     */
     static  Format<TemporalAccessor>  ofDateTimeInstance(DateTimeFormatter formatter){
-        return new DateTimeFormat(formatter);
+        return ofDateTimeInstance(formatter, CellType.LOCAL_DATE_TIME);
     }
 
     /**
      * @param locale  The locale to use
      * @param pattern The date pattern to use according to {@link DateTimeFormatter}. Required.
+     * @param cellType The type of cell to parse and produce.
      * @return An instance that formats and parses date time objects.
      */
+    static  Format<TemporalAccessor>  ofDateTimeInstance(Locale locale, String pattern, CellType cellType){
+        return ofDateTimeInstance(DateTimeFormatter.ofPattern(pattern, locale), cellType);
+    }    /**
+     * @param locale  The locale to use
+     * @param pattern The date pattern to use according to {@link DateTimeFormatter}. Required.
+     * @return An instance that formats and parses date time objects of type local date time.
+     */
     static  Format<TemporalAccessor>  ofDateTimeInstance(Locale locale, String pattern){
-        return new DateTimeFormat(DateTimeFormatter.ofPattern(pattern, locale));
+        return ofDateTimeInstance(locale, pattern, CellType.LOCAL_DATE_TIME);
     }
 
     /**

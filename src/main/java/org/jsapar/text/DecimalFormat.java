@@ -1,5 +1,7 @@
 package org.jsapar.text;
 
+import org.jsapar.model.CellType;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
@@ -24,7 +26,12 @@ class DecimalFormat implements Format<BigDecimal> {
     DecimalFormat(String pattern, DecimalFormatSymbols decimalFormatSymbols) {
         java.text.DecimalFormat textFormat = new java.text.DecimalFormat(pattern, decimalFormatSymbols);
         textFormat.setParseBigDecimal(true);
-        this.numberFormat = new NumberFormat(textFormat);
+        this.numberFormat = new NumberFormat(textFormat, CellType.FLOAT);
+    }
+
+    @Override
+    public CellType cellType() {
+        return CellType.DECIMAL;
     }
 
     @Override

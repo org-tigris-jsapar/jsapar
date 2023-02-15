@@ -1,5 +1,7 @@
 package org.jsapar.text;
 
+import org.jsapar.model.CellType;
+
 import java.text.ParseException;
 import java.util.regex.Pattern;
 
@@ -31,6 +33,11 @@ class RegExpFormat implements Format<String> {
             throw new IllegalArgumentException(
                     "Value [" + sValue + "] does not match regular expression [" + this.pattern.pattern() + "].");
         return sValue;
+    }
+
+    @Override
+    public CellType cellType() {
+        return CellType.STRING;
     }
 
     /**

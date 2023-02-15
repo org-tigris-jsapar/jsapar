@@ -1,8 +1,15 @@
 package org.jsapar.text;
 
+import org.jsapar.model.CellType;
+
 import java.text.ParseException;
 
 public class USIntegerFormat implements Format<Number> {
+
+    @Override
+    public CellType cellType() {
+        return CellType.INTEGER;
+    }
 
     @Override
     public Number parse(String stringValue) throws ParseException {

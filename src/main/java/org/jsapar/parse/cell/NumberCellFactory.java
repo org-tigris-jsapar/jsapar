@@ -1,6 +1,7 @@
 package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
+import org.jsapar.model.CellType;
 import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.text.Format;
 
@@ -27,6 +28,6 @@ public abstract class NumberCellFactory implements CellFactory {
             locale = SchemaCellFormat.defaultLocale;
         if(pattern == null || pattern.isEmpty())
             return makeFormat(locale);
-        return Format.ofNumberInstance(pattern, locale);
+        return Format.ofNumberInstance(pattern, locale, CellType.FLOAT);
     }
 }

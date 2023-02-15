@@ -1,5 +1,7 @@
 package org.jsapar.text;
 
+import org.jsapar.model.CellType;
+
 import java.text.ParseException;
 import java.text.ParsePosition;
 
@@ -9,9 +11,16 @@ import java.text.ParsePosition;
  */
 class JavaTextFormat<T> implements Format<T>{
     private final java.text.Format format;
+    private final CellType cellType;
 
-    JavaTextFormat(java.text.Format format) {
+    JavaTextFormat(java.text.Format format, CellType cellType) {
+        this.cellType = cellType;
         this.format = format;
+    }
+
+    @Override
+    public CellType cellType() {
+        return cellType;
     }
 
     @SuppressWarnings("unchecked")

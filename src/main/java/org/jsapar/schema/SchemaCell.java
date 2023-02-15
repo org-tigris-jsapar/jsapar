@@ -110,6 +110,8 @@ public abstract class SchemaCell implements Cloneable {
         this.name = builder.name;
         Format<?> format = builder.format;
         this.locale = builder.locale;
+        if(builder.cellType == null)
+            builder.cellType = CellType.STRING;
         if(format == null)
             format = CellFactory.getInstance(builder.cellType).makeFormat(locale, builder.pattern);
         Objects.requireNonNull(format, "Format is required for SchemaCell. A CellFactory instance returned a null value.");
@@ -150,7 +152,7 @@ public abstract class SchemaCell implements Cloneable {
         private String defaultValue;
         private Predicate<String> emptyCondition;
         private Predicate<String> lineCondition;
-        private CellType cellType = CellType.STRING;
+        private CellType cellType = null;
         private Format<?> format;
         private String pattern;
         private Locale locale=Locale.US;
@@ -172,7 +174,7 @@ public abstract class SchemaCell implements Cloneable {
             emptyCondition = schemaCell.emptyCondition;
             lineCondition = schemaCell.lineCondition;
             cellType  = schemaCell.cellFormat.getCellType();
-            format = (Format<T>) schemaCell.cellFormat.getFormat();
+            format = schemaCell.cellFormat.getFormat();
             pattern = schemaCell.cellFormat.getPattern();
             locale= schemaCell.locale;
         }
@@ -192,10 +194,8 @@ public abstract class SchemaCell implements Cloneable {
          */
         public B withFormat(Format<?> format) {
             this.format = format;
-            if(format instanceof EnumFormat)
-                return withType(CellType.ENUM);
-            if(format instanceof ImpliedDecimalFormat)
-                return withType(CellType.DECIMAL);
+            if(this.cellType == null)
+                return withType(format.cellType());
             return (B) this;
         }
 

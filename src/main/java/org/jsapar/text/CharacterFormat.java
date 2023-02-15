@@ -1,8 +1,15 @@
 package org.jsapar.text;
 
+import org.jsapar.model.CellType;
+
 import java.text.ParseException;
 
 public class CharacterFormat implements Format<Character> {
+
+    @Override
+    public CellType cellType() {
+        return CellType.CHARACTER;
+    }
 
     @Override
     public Character parse(String value) throws ParseException {
