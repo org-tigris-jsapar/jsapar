@@ -180,7 +180,7 @@ public abstract class SchemaCell implements Cloneable {
         }
 
         /**
-         * @param cellType The type of the cell.
+         * @param cellType The type of the cell. Default is STRING. Not needed if format is specified.
          * @return This builder.
          */
         public B withType(CellType cellType) {
@@ -189,7 +189,9 @@ public abstract class SchemaCell implements Cloneable {
         }
 
         /**
-         * @param format A format instance that can be used to parse and compose to this cell type.
+         * @param format A format instance that can be used to parse and compose to this cell type. If format is 
+         *               specified by using this method, you do not need to specify cell type explicitly but if you
+         *               do anyway, the type that you specify will be the one used.
          * @return This builder
          */
         public B withFormat(Format<?> format) {
