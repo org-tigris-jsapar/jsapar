@@ -24,7 +24,7 @@ import java.util.function.Predicate;
  */
 public abstract class SchemaCell implements Cloneable {
 
-    private final static SchemaCellFormat<String> CELL_FORMAT_PROTOTYPE = new SchemaCellFormat<>(CellType.STRING);
+             private final static SchemaCellFormat<String> CELL_FORMAT_PROTOTYPE = new SchemaCellFormat<>(CellType.STRING);
     private final static Locale DEFAULT_LOCALE = Locale.US;
 
     private final String name;
@@ -108,7 +108,7 @@ public abstract class SchemaCell implements Cloneable {
 
     protected <T, C extends SchemaCell, B extends Builder<T, C, B>> SchemaCell(Builder<T, C, B> builder) {
         this.name = builder.name;
-        Format<T> format = builder.format;
+        Format<?> format = builder.format;
         this.locale = builder.locale;
         if(format == null)
             format = CellFactory.getInstance(builder.cellType).makeFormat(locale, builder.pattern);
@@ -151,7 +151,7 @@ public abstract class SchemaCell implements Cloneable {
         private Predicate<String> emptyCondition;
         private Predicate<String> lineCondition;
         private CellType cellType = CellType.STRING;
-        private Format<T> format;
+        private Format<?> format;
         private String pattern;
         private Locale locale=Locale.US;
 
@@ -190,7 +190,7 @@ public abstract class SchemaCell implements Cloneable {
          * @param format A format instance that can be used to parse and compose to this cell type.
          * @return This builder
          */
-        public B withFormat(Format<T> format) {
+        public B withFormat(Format<?> format) {
             this.format = format;
             if(format instanceof EnumFormat)
                 return withType(CellType.ENUM);
