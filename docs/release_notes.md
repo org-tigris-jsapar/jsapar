@@ -10,12 +10,13 @@ title: Release notes
 1. Built with and for Java 11. Support for Java 8 and below is dropped. 
 2. Added methods to `TextParser` to get stream of lines while parsing. This makes parsing lazy, i.e. lines are pulled from the source `Reader` upon requested.
 3. Added methods to `Text2BeanConverter` to get stream of beans while parsing. This makes parsing lazy, i.e. lines are pulled from the source `Reader` upon requested.
-4. The return value of method `Cell.getValue()` is now undefined if the cell is empty and may return null. 
+4. The return value of method `Cell.getValue()` is now undefined if the cell is empty and may return null.
+5. When header line is used as schema, the cell names in that header line are now trimmed from leading and trailing whitespaces. This eliminates the hard detected error of having trailing white space characters on the first line.   
 ## 2.2
 ### 2.2.0
 There are two main focus areas of this release:
 1. Improve composing performance, both for delimited and fixed width target. Also parsing performance
-benefits from some of the changes.
+benefits from some of these changes.
 2. Make it easier to create Schema and BeanMap objects in Java code.
 
 These are the specific changes:
