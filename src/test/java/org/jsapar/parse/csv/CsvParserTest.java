@@ -55,6 +55,28 @@ public class CsvParserTest {
     }
 
     @Test
+    public void parse_CommaAsSeparator_defaultBySchema() throws IOException {
+        CsvSchema schema = CsvSchema.builder()
+                .withDefaultCellSeparator(",")
+                .withLine("a", l->l
+                        .withFirstLineAsSchema(true)
+                        .withCell("type")
+                        .withCell("gg"))
+                .build();
+
+        String text = "type,gg\nx,yyy\nA,BBB\nX,YYY";
+        TextParseConfig config = new TextParseConfig();
+        CsvParser parser = new CsvParser(new StringReader(text), schema, config);
+        parser.parse(line -> {
+                    if(line.getLineNumber() == 2)
+                        assertEquals("yyy", line.getCell("gg").map(Cell::getStringValue).orElse(null));
+                    if(line.getLineNumber() == 3)
+                        assertEquals("BBB", line.getCell("gg").map(Cell::getStringValue).orElse(null));
+                },
+                e -> {throw e;});
+    }
+
+    @Test
     public void stream_IgnoreUndefinedLine() throws IOException {
         CsvSchema schema = CsvSchema.builder()
                 .withLine("a", l->l
