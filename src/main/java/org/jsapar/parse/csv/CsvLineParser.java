@@ -132,7 +132,8 @@ class CsvLineParser {
         CsvSchemaLine.Builder schemaLineBuilder = CsvSchemaLine.builder(masterLineSchema.getLineType(), masterLineSchema);
         schemaLineBuilder.withoutAnyCells();
         AtomicInteger ignoreCellCount=new AtomicInteger(1);
-        for (String cellName : cellNames) {
+        for (String rawCellName : cellNames) {
+            String cellName = rawCellName.trim();
             CsvSchemaCell schemaCell = masterLineSchema.findSchemaCell(cellName).orElseGet(()->{
                 if(cellName.isEmpty()){
                     return CsvSchemaCell.builder("@@"+ ignoreCellCount.getAndIncrement() + "@@").withIgnoreRead(true).build();

@@ -60,11 +60,12 @@ public class CsvParserTest {
                 .withDefaultCellSeparator(",")
                 .withLine("a", l->l
                         .withFirstLineAsSchema(true)
+                        .withCell("gg")
                         .withCell("type")
-                        .withCell("gg"))
+                )
                 .build();
 
-        String text = "type,gg\nx,yyy\nA,BBB\nX,YYY";
+        String text = "type,gg  \nx,yyy\nA,BBB\nX,YYY";
         TextParseConfig config = new TextParseConfig();
         CsvParser parser = new CsvParser(new StringReader(text), schema, config);
         parser.parse(line -> {
