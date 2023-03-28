@@ -12,6 +12,7 @@ import java.util.Date;
  * @author Jonas Stenberg
  * 
  */
+@SuppressWarnings("unused")
 @JSaParLine(lineType = "Person")
 public class TstPersonAnnotated {
 

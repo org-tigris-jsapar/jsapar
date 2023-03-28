@@ -36,7 +36,7 @@ public abstract class AbstractSchemaComposer implements SchemaComposer{
     }
 
     /**
-     * This implementation composes line separator accoring to schema.
+     * @implNote This implementation composes line separator accoring to schema.
      * @throws UncheckedIOException when an IO error occurs
      */
     @Override

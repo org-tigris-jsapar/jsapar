@@ -52,7 +52,7 @@ public interface Cell<T> extends Serializable, Comparable<Cell<T>> {
     }
 
     /**
-     * This implementation orders cells by
+     * @implNote This implementation  orders cells by
      * <ol>
      * <li> The name</li>
      * <li> The type (order in {@link CellType} enum)</li>

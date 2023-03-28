@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * This implementation simply removes the oldest element when the max size is exceeded.
+ * @implNote This implementation  simply removes the oldest element when the max size is exceeded.
  */
 public class LimitedSizeCache<K, V> implements Cache<K, V> {
     private final LinkedHashMap<K, V> elements;

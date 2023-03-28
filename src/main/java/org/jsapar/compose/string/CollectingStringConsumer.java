@@ -21,7 +21,7 @@ public final class CollectingStringConsumer implements StringComposedConsumer {
 
     /**
      * Called every time that a string, is successfully composed.
-     * This implementation saves the composed strings to an internal list to be retrieved later by calling
+     * @implNote This implementation  saves the composed strings to an internal list to be retrieved later by calling
      * {@link #getCollected()}
      */
     @Override

@@ -23,7 +23,7 @@ public class RecordingStringEventListener implements StringComposedEventListener
 
     /**
      * Called every time that a bean, on root level, is successfully composed. Child lines do not generate events.
-     * This implementation saves the composed bean into an internal list to be retrieved later by calling
+     * @implNote This implementation  saves the composed bean into an internal list to be retrieved later by calling
      * {@link #getLines()}
      * @param event The event that contains the composed bean.
      */

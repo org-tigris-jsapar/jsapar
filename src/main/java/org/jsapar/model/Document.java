@@ -117,7 +117,7 @@ public final class Document implements Serializable, Iterable<Line> {
     }
 
     /**
-     * This implementation is quite slow if there are a lot of lines and the line type asked for is not among the top
+     * @implNote This implementation  is quite slow if there are a lot of lines and the line type asked for is not among the top
      * lines. It will iterate through all lines in order to find supplied line type.
      * 
      * @param lineType
@@ -129,7 +129,7 @@ public final class Document implements Serializable, Iterable<Line> {
     }
 
     /**
-     * This implementation is quite slow if there are a lot of lines and the line type asked for is not among the top
+     * @implNote This implementation  is quite slow if there are a lot of lines and the line type asked for is not among the top
      * lines. It will iterate through all lines in order to find supplied line type.
      * 
      * @param lineType

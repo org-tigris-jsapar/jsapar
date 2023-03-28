@@ -15,7 +15,7 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
     }
 
     /**
-     * This implementation creates the bean by using Class.forName method on the line type.
+     * @implNote This implementation creates the bean by using Class.forName method on the line type.
      * @see BeanFactory#createBean(Line)
      */
     @SuppressWarnings("unchecked")
@@ -57,7 +57,7 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
     }
 
     /**
-     * This implementation uses reflection methods to assign correct object.
+     * @implNote This implementation uses reflection methods to assign correct object.
      * @param parentBean The parent to create child of
      * @param childBeanName The name of the child property.
      * @return A newly created instance of the child bean

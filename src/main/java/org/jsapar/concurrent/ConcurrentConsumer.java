@@ -17,9 +17,9 @@ import java.util.function.Consumer;
  * listeners needs to be synchronized on
  * the event object. As long as you have only one event listener registered, no external synchronization is needed.
  * <p>
- * This implementation can actually be used as any type of consumer so also errors can be handled asynchronous this way.
+ * @implNote This implementation  can actually be used as any type of consumer so also errors can be handled asynchronous this way.
  * <p>
- * This implementation acts as a decorator which means that you initialize it with an actual consumer that
+ * @implNote This implementation  acts as a decorator which means that you initialize it with an actual consumer that
  * gets called from the consumer thread each time there is a line in the producer thread.
  * <p>
  * If a worker thread event listener should throw an exception, the worker thread is immediately terminated and the

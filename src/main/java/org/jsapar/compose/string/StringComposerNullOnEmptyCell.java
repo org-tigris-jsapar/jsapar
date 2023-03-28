@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 /**
  * Composer that calls a  {@link StringComposedConsumer} for each line that is composed.
  * <p>
- * This implementation will return null for all cells of type EmptyCell from the parsed input and
+ * @implNote This implementation  will return null for all cells of type EmptyCell from the parsed input and
  * where there is no default value.
  * <p>
  * The {@link StringComposedConsumer} provides a
