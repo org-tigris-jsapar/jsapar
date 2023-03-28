@@ -36,7 +36,6 @@ public class Bean2TextConverterTest {
             String[] lines = result.split(Pattern.quote(composeSchema.getLineSeparator()));
             assertEquals(2, lines.length);
         }
-
     }
 
     @Test

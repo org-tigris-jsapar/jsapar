@@ -61,6 +61,20 @@ public class Bean2TextConverter<T> implements AutoCloseable{
      * Creates a converter with supplied composer schema.
      *
      * @param composerSchema The schema to use while composing text output.
+     * @param annotatedBeanClass The annotated bean class to use to create an overriding bean map. This means that
+     *                           the schema attributes are used as property names unless there is an  annotation in the
+     *                           class. In that case the annotation is considered.
+     * @param writer         The writer to write text output to. Caller is responsible for either closing the writer or call the close method of the created instance.
+     * @since 2.3
+     */
+    public Bean2TextConverter(Schema<?> composerSchema, Class<T> annotatedBeanClass, Writer writer) {
+        this(composerSchema, BeanMap.ofSchema(composerSchema, BeanMap.ofClass(annotatedBeanClass)), writer);
+    }
+
+    /**
+     * Creates a converter with supplied composer schema.
+     *
+     * @param composerSchema The schema to use while composing text output.
      * @param beanMap        The bean map to use to map schema names to bean properties. This {@link BeanMap} instance will be used as is,
      *                       so it needs to contain
      *                       mapping for all values that should be converted to text. If you want to use a {@link BeanMap} that is created

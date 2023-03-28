@@ -26,7 +26,7 @@ import java.util.stream.Stream;
  * class that provides a default constructor. By supplying a {@link BeanMap} instance to the constructor you can map
  * different line and cell names to property names. {@link BeanMap} instance can be created form an xml input by using
  * the {@link BeanMap#ofXml(Reader)} method.
- *
+ * <p>
  * See {@link AbstractConverter} for details about error handling and manipulating data.
  * @see AbstractConverter
  */
@@ -53,8 +53,21 @@ public class Text2BeanConverter<T> extends AbstractConverter {
     }
 
     /**
+     * Creates a converter with supplied composer schema.
+     * @param parseSchema The schema to use while reading the text input.
+     * @param annotatedBeanClass The annotated bean class to use to create an overriding bean map. This means that
+     *                           the schema attributes are used as property names unless there is an  annotation in the
+     *                           class. In that case the annotation is considered.
+     * @since 2.3
+     */
+    public Text2BeanConverter(Schema<? extends SchemaLine<? extends SchemaCell>> parseSchema, Class<T> annotatedBeanClass) {
+        this(parseSchema, BeanMap.ofSchema(parseSchema, BeanMap.ofClass(annotatedBeanClass)));
+    }
+
+    /**
      * The default behavior is to use the schema names where the line type name needs to match the class
      * name of the class to create and the cell names needs to match bean property names.
+     *
      * @param parseSchema The schema to use while reading the text input.
      * @throws BeanException In case of error when instantiating bean.
      */
