@@ -8,10 +8,7 @@ import org.jsapar.model.*;
 import org.jsapar.parse.CollectingConsumer;
 import org.jsapar.parse.DocumentBuilderLineConsumer;
 import org.jsapar.parse.xml.XmlParser;
-import org.jsapar.schema.CsvSchema;
-import org.jsapar.schema.Schema;
-import org.jsapar.schema.SchemaException;
-import org.jsapar.schema.Xml2SchemaBuilder;
+import org.jsapar.schema.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -498,25 +495,35 @@ public class JSaParExamplesTest {
         TstPersonAnnotated testPerson1 = new TstPersonAnnotated("Nils", "Holgersson", (short) 4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9, 'A');
         testPerson1.setGender(TstGender.M);
         testPerson1.setAddress(new TstPostAddress("Track", "Village"));
+        testPerson1.setWorkAddress(new TstPostAddress("Highway", "Town"));
         people.add(testPerson1);
 
         TstPersonAnnotated testPerson2 = new TstPersonAnnotated("Jonathan", "Lionheart", (short) 37, 17, dateFormat.parse("1955-03-17 12:33:12"), 123456, 'C');
         testPerson2.setAddress(new TstPostAddress("Path", "City"));
+        testPerson2.setWorkAddress(new TstPostAddress("Road", "Metropolis"));
         testPerson2.setGender(TstGender.M);
         people.add(testPerson2);
 
-        BeanCollection2TextConverter<TstPersonAnnotated> converter;
-        try (Reader schemaReader = new FileReader("examples/06_CsvSchemaControlCell.xml")) {
-            converter = new BeanCollection2TextConverter<>(Schema.ofXml(schemaReader), BeanMap.ofClasses(Collections.singletonList(TstPersonAnnotated.class)));
-        }
+        CsvSchema schema = CsvSchema.builder()
+                .withLine("Person",
+                        l -> l.withCell("Type", c -> c.withDefaultValue("B").withLineCondition(v -> v.equals("B")))
+                                .withCell("First name", c -> c.withQuoteBehavior(QuoteBehavior.ALWAYS))
+                                .withCell("Middle name")
+                                .withCell("Last name")
+                                .withCell("gender", c -> c.withEnumFormat(TstGender.class))
+                                .withCell("Street")
+                                .withCell("Work address.Street")
+                )
+                .build();
         StringWriter writer = new StringWriter();
-        converter.convert(people, writer);
+        Bean2TextConverter<TstPersonAnnotated> converter= new Bean2TextConverter<>(schema, BeanMap.ofClass(TstPersonAnnotated.class), writer);
+        people.forEach(converter::convert);
 
         String result = writer.toString();
         String[] resultLines = result.split("\n");
 //        System.out.println(result);
-        assertEquals("B;\"Nils\";;Holgersson;M", resultLines[0]);
-        assertEquals("B;\"Jonathan\";;Lionheart;M", resultLines[1]);
+        assertEquals("B;\"Nils\";;Holgersson;M;Track;Highway", resultLines[0]);
+        assertEquals("B;\"Jonathan\";;Lionheart;M;Path;Road", resultLines[1]);
     }
 
     @SuppressWarnings("rawtypes")

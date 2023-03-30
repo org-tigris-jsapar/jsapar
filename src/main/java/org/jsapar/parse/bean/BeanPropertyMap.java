@@ -91,16 +91,24 @@ public class BeanPropertyMap {
     public static BeanPropertyMap ofClass(Class<?> lineClass, String lineType)  {
             return ofClass(lineClass,
                     lineType,
-                    makeFieldEntryStream(lineClass, "")
+                    makeFieldEntryStream(lineClass, "", "")
                     .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue)));
     }
 
-    private static Stream< Map.Entry<String, String> > makeFieldEntryStream(Class<?> c, String prefix) {
+    private static Stream< Map.Entry<String, String> > makeFieldEntryStream(Class<?> c, String propertyPrefix,
+                                                                            String cellNamePrefix) {
         return Arrays.stream(c.getDeclaredFields())
                 .filter(f->f.isAnnotationPresent(JSaParCell.class) || (f.isAnnotationPresent(JSaParContainsCells.class) && !f.getType().isPrimitive()))
-                .flatMap(f-> f.isAnnotationPresent(JSaParCell.class)
-                        ? Stream.of(new AbstractMap.SimpleEntry<>(prefix + f.getName(), f.getAnnotation(JSaParCell.class).name()))
-                        : makeFieldEntryStream(f.getType(), prefix + f.getName() + '.'));
+                .flatMap(f-> {
+                    if (f.isAnnotationPresent(JSaParCell.class)) {
+                        return Stream.of(new AbstractMap.SimpleEntry<>(propertyPrefix + f.getName(),
+                                cellNamePrefix + f.getAnnotation(JSaParCell.class).name()));
+                    }
+                    else if (f.isAnnotationPresent(JSaParContainsCells.class) && !f.getAnnotation(JSaParContainsCells.class).name().isEmpty()){
+                        return makeFieldEntryStream(f.getType(), propertyPrefix + f.getName() + '.', f.getAnnotation(JSaParContainsCells.class).name()+".");
+                    }
+                    return makeFieldEntryStream(f.getType(), propertyPrefix + f.getName() + '.', "");
+                });
     }
 
     public static BeanPropertyMap ofClass(Class<?> lineClass, String lineType, Map<String, String> cellNamesOfProperty)  {
