@@ -121,7 +121,7 @@ public class Text2BeanConverter<T> extends AbstractConverter {
     /**
      * Returns a stream of beans that are lazily populated by lines when pulled from the stream. The reader is consumed
      * on the fly upon pulling items from the stream.
-     * <p/>
+     * <br/>
      * This method is particularly efficient if you don't want to scan through the whole source since it will abort
      * parsing as soon as you stop pulling items from the stream.
      * @param reader The reader to parse from.

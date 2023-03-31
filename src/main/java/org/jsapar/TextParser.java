@@ -81,7 +81,7 @@ public class TextParser extends AbstractParser {
     /**
      * Returns a stream of lines that are lazily populated by lines when pulled from the stream. The reader is consumed
      * on the fly upon pulling items from the stream.
-     * <p/>
+     * <br/>
      * This method is particularly efficient if you don't want to scan through the whole source since it will abort
      * parsing as soon as you stop pulling items from the stream.
      * @param reader The reader to parse from.
@@ -97,7 +97,7 @@ public class TextParser extends AbstractParser {
 
     /**
      * Reads text from supplied reader and parses each line. Each parsed line generates a call-back to the lineConsumer.
-     * <p>
+     * <br/>
      * Convenience method that both create a parser instance and performs the parsing in one call. This method can only be used
      * if there are no requirements to configure anything apart from the default behavior.
      *

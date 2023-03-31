@@ -75,7 +75,7 @@ final class CsvLineComposer implements LineComposer {
     }
 
     /**
-     * @implNote This implementation composes a csv output based on the line schema and provided line.
+     * This implementation composes a csv output based on the line schema and provided line.
      * @param line The line to compose output of.
      * @throws UncheckedIOException If there is an error writing line to writer.
      */

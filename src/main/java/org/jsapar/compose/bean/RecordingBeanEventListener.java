@@ -27,7 +27,7 @@ public class RecordingBeanEventListener<T> implements BeanEventListener<T>, Iter
 
     /**
      * Called every time that a bean, on root level, is successfully composed. Child beans do not generate events.
-     * @implNote This implementation saves the composed bean into an internal list to be retrieved later by calling
+     * This implementation saves the composed bean into an internal list to be retrieved later by calling
      * {@link #getBeans()}
      * @param event The event that contains the composed bean.
      */

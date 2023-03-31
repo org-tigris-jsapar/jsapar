@@ -115,30 +115,31 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
+				<version>3.11.0</version>
 				<configuration>
+					<target>${java.release}</target>
+					<source>${java.release}</source>
 					<release>${java.release}</release>
 				</configuration>
 			</plugin>
       
           <!-- Java docs jar file while building-->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.2.0</version>
-			<configuration>
-				<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-<!--				<doclint>false</doclint>-->
-			</configuration>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-		  </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.5.0</version>
+				<configuration>
+<!--					<doclint>none</doclint>-->
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
           <!-- Adds source jar file -->
           <plugin>
@@ -159,7 +160,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>3.2.0</version>
+            <version>3.3.0</version>
             <configuration>
               <archive>
                 <manifest>
@@ -192,32 +193,6 @@
 		</plugins>
 		<pluginManagement>
 		  <plugins>
-		    <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-		    <plugin>
-		      <groupId>org.eclipse.m2e</groupId>
-		      <artifactId>lifecycle-mapping</artifactId>
-		      <version>1.0.0</version>
-		      <configuration>
-		        <lifecycleMappingMetadata>
-		          <pluginExecutions>
-		            <pluginExecution>
-		              <pluginExecutionFilter>
-		                <groupId>org.apache.maven.plugins</groupId>
-		                <artifactId>maven-compiler-plugin</artifactId>
-		                <versionRange>[2.3,)</versionRange>
-		                <goals>
-		                  <goal>testCompile</goal>
-		                  <goal>compile</goal>
-		                </goals>
-		              </pluginExecutionFilter>
-		              <action>
-		                <ignore />
-		              </action>
-		            </pluginExecution>
-		          </pluginExecutions>
-		        </lifecycleMappingMetadata>
-		      </configuration>
-		    </plugin>
 		  </plugins>
 		</pluginManagement>
 	</build>

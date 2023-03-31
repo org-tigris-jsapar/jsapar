@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 
 /**
  * Composer that calls a  {@link StringComposedConsumer} for each line that is composed.
- * <p>
- * @implNote This implementation  will return null for all cells of type EmptyCell from the parsed input and
+ * <br/>
+ * This implementation  will return null for all cells of type EmptyCell from the parsed input and
  * where there is no default value.
- * <p>
+ * <br/>
  * The {@link StringComposedConsumer} provides a
  * {@link java.util.stream.Stream} of {@link java.lang.String} for the current {@link org.jsapar.model.Line} where each
  * string is matches the cell in a schema. Each cell is formatted according to provided

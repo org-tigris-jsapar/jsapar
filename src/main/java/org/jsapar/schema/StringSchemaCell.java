@@ -11,7 +11,7 @@ public class StringSchemaCell extends SchemaCell {
 
     /**
      * Builder class. Created by static method {@link #builder(String)}
-     * @param <T>
+     * @param <T> The value type of the cells of this cell.
      */
     public static class Builder<T> extends SchemaCell.Builder<T, StringSchemaCell, StringSchemaCell.Builder<T>> {
 
@@ -28,7 +28,7 @@ public class StringSchemaCell extends SchemaCell {
     /**
      * Creates a builder for a {@link StringSchemaCell} with a name.
      * @param name  The name of the schema cell to build.
-     * @param <T> The type of the cell.
+     * @param <T> The value type of the cells of this cell.
      * @return A builder that can be used to build {@link StringSchemaCell} instances.
      */
     public static <T> Builder<T> builder(String name) {

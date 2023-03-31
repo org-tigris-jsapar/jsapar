@@ -2,8 +2,8 @@ package org.jsapar.schema;
 
 /**
  * Interface for cell validation.
- *
- * Deprecated since 2.2. Use Predicate<String>
+ * <br/>
+ * Deprecated since 2.2. Use {@code Predicate<String>}
  */
 @FunctionalInterface
 @Deprecated

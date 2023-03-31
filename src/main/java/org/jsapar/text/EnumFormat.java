@@ -11,13 +11,13 @@ import java.util.Map;
 /**
  * Format class that can be used to parse or format enum values based on the value.
  * Use builder class to build instances.
- * <p>
+ * <br/>
  * Example 1:
- * <p>
+ * <br/>
  * {@code EnumFormat.builder(MyEnum.class).build();}
- * <p>
+ * <br/>
  * Example 2:
- * <p>
+ * <br/>
  * {@code EnumFormat.builder(Weekdays.class).withIgnoreCase(true).withValue("fr", Weekdays.FRIDAY).build();}
  */
 public class EnumFormat<E extends Enum<E>> implements Format<E> {
@@ -59,7 +59,7 @@ public class EnumFormat<E extends Enum<E>> implements Format<E> {
 
     /**
      * Builder that builds EnumFormat instances.
-     * @param <E>
+     * @param <E> The enum type
      */
     public static class Builder<E extends Enum<E> >{
         private final Class<E> enumClass;
@@ -177,10 +177,17 @@ public class EnumFormat<E extends Enum<E>> implements Format<E> {
         throw new ParseException("There is no enum constant matching the value '" + toParse + "' for  enum class " + enumClass.getName(), 0 );
     }
 
+    /**
+     * @return A collection of all the text values of this enum format.
+     */
     public Collection<String> textValues(){
         return enumByValue.keySet();
     }
 
+    /**
+     * @param value The value to find enum for.
+     * @return The enum representation of the value or null if no such value exist.
+     */
     public E enumByTextValue(String value){
         return enumByValue.get(value);
     }
@@ -192,10 +199,16 @@ public class EnumFormat<E extends Enum<E>> implements Format<E> {
         return enumByValue.size();
     }
 
+    /**
+     * @return The enum class of this format.
+     */
     public Class<? extends E> getEnumClass() {
         return enumClass;
     }
 
+    /**
+     * @return True if case is ignored while parsing.
+     */
     public boolean isIgnoreCase() {
         return ignoreCase;
     }

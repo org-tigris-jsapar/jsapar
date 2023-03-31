@@ -1,7 +1,7 @@
 package org.jsapar.utils.cache;
 
 /**
- * @implNote This implementation  does not cache anything.
+ * This implementation  does not cache anything.
  * @param <K> Key type
  * @param <V> Value type
  */

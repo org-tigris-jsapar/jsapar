@@ -11,7 +11,7 @@ import java.util.List;
 
 
 /**
- * @implNote This implementation  uses state pattern. It loads characters into a buffer and creates cell value strings from that
+ * This implementation  uses state pattern. It loads characters into a buffer and creates cell value strings from that
  * buffer.
  */
 final class CsvLineReaderStates implements CsvLineReader {

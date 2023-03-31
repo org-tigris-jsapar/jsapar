@@ -12,7 +12,7 @@ import java.util.Locale;
  * Interface for parsing and formatting objects from and to String. Use one of the static factory methods of this interface
  * to create an instance that fits the purpose. For instance, you can use {@link #ofJavaTextFormat(java.text.Format)} in order
  * to wrap a java.text.Format instance.
- * @param <T>
+ * @param <T> The value type to format/parse into.
  */
 public interface Format<T> {
 

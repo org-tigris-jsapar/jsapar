@@ -1,7 +1,7 @@
 package org.jsapar.utils.cache;
 
 /**
- * @implNote This implementation  takes at most two items in the cache.
+ * This implementation  takes at most two items in the cache.
  * @param <K> The key type
  * @param <V> The value type
  */

@@ -19,15 +19,15 @@ import java.util.stream.Stream;
 
 /**
  * Converts a text input to  {@link Stream} of {@link String} for each line that is parsed.
- * <p>
+ * <br/>
  * The {@link StringComposedConsumer} provides a
  * {@link java.util.stream.Stream} of {@link java.lang.String} for the current {@link org.jsapar.model.Line} where each
  * string is matches the cell in a schema. Each cell is formatted according to provided
  * {@link org.jsapar.schema.Schema}.
- * <p>
+ * <br/>
  * The schema can be of either CSV or FixedWith, the only thing that is significant is the order of the cells and the
  * cell formatting.
- * <p>
+ * <br/>
  * See {@link AbstractConverter} for details about error handling and manipulating data.
  * @see org.jsapar.schema.StringSchema
  */
@@ -91,7 +91,7 @@ public class Text2StringConverter extends AbstractConverter {
     /**
      * Returns a stream of lines consisting of stream of cell values that are lazily populated by lines when pulled from the stream. The reader is consumed
      * on the fly upon pulling items from the stream.
-     * <p/>
+     * <br/>
      * This method is particularly efficient if you don't want to scan through the whole source since it will abort
      * parsing as soon as you stop pulling items from the stream.
      * @param reader The reader to parse from.
