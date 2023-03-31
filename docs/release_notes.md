@@ -11,7 +11,8 @@ title: Release notes
 2. Added methods to `TextParser` to get stream of lines while parsing. This makes parsing lazy, i.e. lines are pulled from the source `Reader` upon requested.
 3. Added methods to `Text2BeanConverter` to get stream of beans while parsing. This makes parsing lazy, i.e. lines are pulled from the source `Reader` upon requested.
 4. The return value of method `Cell.getValue()` is now undefined if the cell is empty and may return null.
-5. When header line is used as schema, the cell names in that header line are now trimmed from leading and trailing whitespaces. This eliminates the hard detected error of having trailing white space characters on the first line.   
+5. When header line is used as schema, the cell names in that header line are now trimmed from leading and trailing whitespaces. This eliminates the hard detected error of having trailing white space characters on the first line.
+6. Made it possible to specify a level label in the `@JSaParContainsCells` annotation.
 ## 2.2
 ### 2.2.0
 There are two main focus areas of this release:

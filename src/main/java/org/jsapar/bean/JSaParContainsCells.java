@@ -16,6 +16,7 @@ public @interface JSaParContainsCells {
      * @return Appends a level within the schema for this attribute. E.g. the cell name 'address.streetName' relies on the first
      * level 'address'.
      * If no name is provided, sub entries are flattened without dot-notation in the schema cell name.
+     * @since 2.3
      */
     String name() default "";
 
