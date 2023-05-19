@@ -1,7 +1,6 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.tigris.jsapar/jsapar/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.tigris.jsapar/jsapar)
 [![Javadocs](https://javadoc.io/badge/org.tigris.jsapar/jsapar.svg)](https://javadoc.io/doc/org.tigris.jsapar/jsapar)
-[![Build Status](https://travis-ci.com/org-tigris-jsapar/jsapar.png?branch=master)](https://travis-ci.com/org-tigris-jsapar/jsapar)
 
 [![Java 11-ea](https://img.shields.io/badge/java-11-brightgreen.svg)](#java-11)
 [![Java 12-ea](https://img.shields.io/badge/java-12-brightgreen.svg)](#java-12)
