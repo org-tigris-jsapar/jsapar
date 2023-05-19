@@ -14,7 +14,7 @@
 		Publish your public gpg key:
 		https://central.sonatype.org/pages/working-with-pgp-signatures.html
 
-		mvn release:prepare release:perform -P release-profile
+		mvn release:prepare release:perform
 
 		No longer necessary to close staging bundle at  https://oss.sonatype.org/. This is now handled automatically.
 
