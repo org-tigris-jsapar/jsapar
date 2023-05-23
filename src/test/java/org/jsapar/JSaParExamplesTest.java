@@ -9,8 +9,6 @@ import org.jsapar.parse.CollectingConsumer;
 import org.jsapar.parse.DocumentBuilderLineConsumer;
 import org.jsapar.parse.xml.XmlParser;
 import org.jsapar.schema.*;
-import org.jsapar.text.DateTimeFormat;
-import org.jsapar.text.Format;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,9 +18,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;

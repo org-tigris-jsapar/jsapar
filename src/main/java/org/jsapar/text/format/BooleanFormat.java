@@ -1,6 +1,7 @@
-package org.jsapar.text;
+package org.jsapar.text.format;
 
 import org.jsapar.model.CellType;
+import org.jsapar.text.Format;
 
 import java.text.ParseException;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ import java.util.stream.Stream;
  * are used when formatting.
  *
  */
-class BooleanFormat implements Format<Boolean> {
+public class BooleanFormat implements Format<Boolean> {
 
     private final String trueValue;
     private final String falseValue;
@@ -40,7 +41,7 @@ class BooleanFormat implements Format<Boolean> {
      * </ul>
      * @param ignoreCase If true, ignores upper/lower case.
      */
-    BooleanFormat(boolean ignoreCase) {
+    public BooleanFormat(boolean ignoreCase) {
         this(new String[]{"true", "on", "1", "yes", "y"}, new String[]{"false", "off", "0", "no", "n"}, true);
         this.ignoreCase = ignoreCase;
     }
@@ -51,7 +52,7 @@ class BooleanFormat implements Format<Boolean> {
      * @param falseValue The string that represents the false value.
      * @param ignoreCase If true, ignores upper/lower case.
      */
-    BooleanFormat(String trueValue, String falseValue, boolean ignoreCase) {
+    public BooleanFormat(String trueValue, String falseValue, boolean ignoreCase) {
         this.trueValue = trueValue;
         this.falseValue = falseValue;
         this.ignoreCase = ignoreCase;
@@ -75,7 +76,7 @@ class BooleanFormat implements Format<Boolean> {
      * @param falseValues An array of all the strings that represents the false value. The first item in the array is used when formatting.
      * @param ignoreCase If true, ignore case while parsing.
      */
-    BooleanFormat(String[] trueValues, String[] falseValues, boolean ignoreCase) {
+    public BooleanFormat(String[] trueValues, String[] falseValues, boolean ignoreCase) {
         assert trueValues != null: "trueValues parameter cannot be null";
         assert falseValues != null: "falseValues parameter cannot be null";
         assert trueValues.length > 0: "trueValues needs to contain at least one value";

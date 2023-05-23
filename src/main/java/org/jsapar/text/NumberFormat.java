@@ -1,6 +1,7 @@
 package org.jsapar.text;
 
 import org.jsapar.model.CellType;
+import org.jsapar.text.format.JavaTextFormat;
 import org.jsapar.utils.StringUtils;
 
 import java.text.DecimalFormat;

@@ -1,6 +1,7 @@
-package org.jsapar.text;
+package org.jsapar.text.format;
 
 import org.jsapar.model.CellType;
+import org.jsapar.text.Format;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -13,7 +14,7 @@ public class DateTimeFormat implements Format<TemporalAccessor> {
     private final CellType cellType;
     private final ZoneId zoneId;
 
-    DateTimeFormat(DateTimeFormatter formatter, CellType cellType, ZoneId zoneId) {
+    public DateTimeFormat(DateTimeFormatter formatter, CellType cellType, ZoneId zoneId) {
         this.formatter = formatter;
         this.zoneId = zoneId;
         if(cellType!=null && !cellType.isTemporal())

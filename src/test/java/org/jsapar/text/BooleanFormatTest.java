@@ -1,6 +1,6 @@
 package org.jsapar.text;
 
-import org.jsapar.text.BooleanFormat;
+import org.jsapar.text.format.BooleanFormat;
 import org.junit.Test;
 
 import java.text.ParseException;

@@ -1,6 +1,7 @@
-package org.jsapar.text;
+package org.jsapar.text.format;
 
 import org.jsapar.model.CellType;
+import org.jsapar.text.Format;
 
 import java.text.ParseException;
 import java.text.ParsePosition;
@@ -9,11 +10,11 @@ import java.text.ParsePosition;
  * Formats and parses using a java.text.Format. Requires that all characters are parsed from the supplied value.
  * @param <T>
  */
-class JavaTextFormat<T> implements Format<T>{
+public class JavaTextFormat<T> implements Format<T> {
     private final java.text.Format format;
     private final CellType cellType;
 
-    JavaTextFormat(java.text.Format format, CellType cellType) {
+    public JavaTextFormat(java.text.Format format, CellType cellType) {
         this.cellType = cellType;
         this.format = format;
     }

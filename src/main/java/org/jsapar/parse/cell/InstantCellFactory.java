@@ -3,7 +3,7 @@ package org.jsapar.parse.cell;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.InstantCell;
-import org.jsapar.text.DateTimeFormat;
+import org.jsapar.text.format.DateTimeFormat;
 import org.jsapar.text.Format;
 
 import java.text.ParseException;
