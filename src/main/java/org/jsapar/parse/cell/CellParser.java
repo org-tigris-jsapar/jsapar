@@ -22,7 +22,7 @@ public class CellParser<S extends SchemaCell> {
     private final S schemaCell;
     private final Cell<?> defaultCell;
     private final EmptyCell<?> emptyCell;
-    private final CellFactory<?> cellFactory;
+    private final CellFactory cellFactory;
     private Format<?> format;
     private final Cache<String, Cell<?>> cellCache ;
     private static final String EMPTY_STRING = "";
