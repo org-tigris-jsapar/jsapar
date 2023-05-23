@@ -8,6 +8,9 @@ public class TstPostAddress {
     private String town;
     private TstPostAddress subAddress;
 
+    @JSaParCell(name = "Street number")
+    private int streetNumber;
+
     public TstPostAddress() {
         super();
     }
@@ -40,5 +43,13 @@ public class TstPostAddress {
 
     public TstPostAddress getSubAddress() {
         return subAddress;
+    }
+
+    public int getStreetNumber() {
+        return streetNumber;
+    }
+
+    public void setStreetNumber(int streetNumber) {
+        this.streetNumber = streetNumber;
     }
 }
