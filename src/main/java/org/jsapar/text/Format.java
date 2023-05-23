@@ -100,11 +100,11 @@ public interface Format<T> {
     static Format<Boolean> ofBooleanInstance(String pattern, boolean ignoreCase){
         if(pattern == null || pattern.isEmpty())
             return ofBooleanInstance(ignoreCase);
-        String[] aTrueFalse = pattern.trim().split("\\s*;\\s*");
+        String[] aTrueFalse = pattern.trim().split("\\h*;\\h*");
         if (aTrueFalse.length < 1 || aTrueFalse.length > 2)
             throw new IllegalArgumentException(
                     "Boolean format pattern should only contain two fields separated with ; character");
-        return ofBooleanInstance(aTrueFalse[0].split("\\s*\\|\\s*"), aTrueFalse.length == 2 ? aTrueFalse[1].split("\\s*\\|\\s*") : new String[]{""}, ignoreCase);
+        return ofBooleanInstance(aTrueFalse[0].split("\\h*\\|\\h*"), aTrueFalse.length == 2 ? aTrueFalse[1].split("\\h*\\|\\h*") : new String[]{""}, ignoreCase);
     }
 
 
