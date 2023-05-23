@@ -517,7 +517,8 @@ public class JSaParExamplesTest {
                                 .withCell("Middle name")
                                 .withCell("Last name")
                                 .withCell("gender", c -> c.withEnumFormat(TstGender.class))
-                                .withCell("Street")
+                                .withCell("Home address.Street")
+                                .withCell("Home address.Street number", c->c.withType(CellType.INTEGER).withPattern("00"))
                                 .withCell("Work address.Street")
                                 .withCell("Work address.Street number", c->c.withType(CellType.INTEGER).withPattern("00"))
                                 .withCell("Created at", c->c.withType(CellType.INSTANT).withPattern("yyyy-MM-dd HH:mm@Europe/Stockholm"))
@@ -525,13 +526,14 @@ public class JSaParExamplesTest {
                 .build();
         StringWriter writer = new StringWriter();
         Bean2TextConverter<TstPersonAnnotated> converter= new Bean2TextConverter<>(schema, BeanMap.ofClass(TstPersonAnnotated.class), writer);
+//        Bean2TextConverter<TstPersonAnnotated> converter= new Bean2TextConverter<>(schema, BeanMap.ofSchema(schema, BeanMap.ofClass(TstPersonAnnotated.class)), writer);
         people.forEach(converter::convert);
 
         String result = writer.toString();
         String[] resultLines = result.split("\n");
 //        System.out.println(result);
-        assertEquals("B;\"Nils\";;Holgersson;M;Track;Highway;17;2023-05-22 18:35", resultLines[0]);
-        assertEquals("B;\"Jonathan\";;Lionheart;M;Path;Road;08;2023-05-22 18:35", resultLines[1]);
+        assertEquals("B;\"Nils\";;Holgersson;M;Track;00;Highway;17;2023-05-22 18:35", resultLines[0]);
+        assertEquals("B;\"Jonathan\";;Lionheart;M;Path;00;Road;08;2023-05-22 18:35", resultLines[1]);
     }
 
     @SuppressWarnings("rawtypes")

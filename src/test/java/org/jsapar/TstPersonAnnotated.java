@@ -26,7 +26,7 @@ public class TstPersonAnnotated {
     private int            streetNumber;
     private char           door;
     private boolean        adult;
-    @JSaParContainsCells() // Flattens subclass entries
+    @JSaParContainsCells(name = "Home address") // Flattens subclass entries
     private TstPostAddress    address;
     @JSaParContainsCells(name = "Work address")
     private TstPostAddress    workAddress;
