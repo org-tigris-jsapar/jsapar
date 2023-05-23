@@ -44,6 +44,7 @@ public class InstantCellFactory extends AbstractDateTimeCellFactory {
 
     @Override
     public Format<TemporalAccessor> makeFormat(Locale locale, String pattern) {
+        // TODO When not given time zone explicitly, it should be given by the parser/composer instead of system default
         if(pattern==null)
             return Format.ofInstantInstance(DateTimeFormatter.ISO_INSTANT, ZoneId.systemDefault());
         String[] parts = pattern.split("\\h*[@|]\\h*");
