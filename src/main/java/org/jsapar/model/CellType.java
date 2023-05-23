@@ -60,7 +60,7 @@ public enum CellType {
     /**
      * Cell contains an enumerated set of values.
      */
-    ENUM(new EnumCellFactory(), true, false, false);
+    ENUM(new EnumCellFactory(), true, false, false), INSTANT(new InstantCellFactory(), false, false ,true );
 
     private final CellFactory cellFactory;
     private final boolean atomic;
@@ -74,7 +74,7 @@ public enum CellType {
         this.temporal = temporal;
     }
 
-    public CellFactory getCellFactory() {
+    public CellFactory<?> getCellFactory() {
         return cellFactory;
     }
 

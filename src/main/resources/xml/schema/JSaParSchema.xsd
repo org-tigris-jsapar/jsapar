@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <xsd:schema elementFormDefault="qualified" targetNamespace="http://jsapar.tigris.org/JSaParSchema/2.0"
             xmlns="http://jsapar.tigris.org/JSaParSchema/2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            version="2.1">
+            version="2.3">
     <xsd:element name="schema">
         <xsd:complexType>
             <xsd:choice>
@@ -162,6 +162,7 @@
                local_time
                local_date_time
                zoned_date_time
+               instant
                decimal
                integer
                float
@@ -177,6 +178,7 @@
       		<xsd:enumeration value="local_time" />
       		<xsd:enumeration value="local_date_time" />
       		<xsd:enumeration value="zoned_date_time" />
+      		<xsd:enumeration value="instant" />
       		<xsd:enumeration value="decimal" />
       		<xsd:enumeration value="integer" />
       		<xsd:enumeration value="float" />
@@ -190,8 +192,9 @@
       <xsd:annotation>
          <xsd:documentation>* If the type is string then the pattern should contain a regular expression to which the value is validated against. This only works while parsing.
 * If the type is any of the numerical types, then the pattern should be described according to the java.text.DecimalFormat (http://java.sun.com/javase/6/docs/api/java/text/DecimalFormat.html).
-* If the type is date, then the pattern should be described according to java.text.SimpleDateFormat (http://java.sun.com/javase/6/docs/api/java/text/SimpleDateFormat.html).
-* If the type is boolean, the pattern should contain the true and false values separated with a ; character. Example: pattern="Y;N" will imply that Y represents true and N to represents false. Comparison while parsing is not case sensitive. Multiple true or false values can be specified, separated with the | character but the first value is always the one used while composing. Example: pattern="Y|YES;N|NO"
+* If the type is date, then the pattern should be described according to java.text.SimpleDateFormat (https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/SimpleDateFormat.html).
+* If the type is one of the new java.time types such as local_date, local_date_time, zoned_date_time or instant, then the pattern should be described according to java.time.format.DateTimeFormatter (https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/format/DateTimeFormatter.html).
+* If the type is boolean, the pattern should contain the true and false values separated with a ; character. Example: pattern="Y;N" will imply that Y represents true and N to represents false. Comparison while parsing is not case-sensitive. Multiple true or false values can be specified, separated with the | character but the first value is always the one used while composing. Example: pattern="Y|YES;N|NO"
 * If the type is enum, the pattern should contain the fully qualified class name of the enum class to use.</xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>

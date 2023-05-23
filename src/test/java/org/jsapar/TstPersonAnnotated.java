@@ -4,6 +4,7 @@ import org.jsapar.bean.JSaParCell;
 import org.jsapar.bean.JSaParContainsCells;
 import org.jsapar.bean.JSaParLine;
 
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -34,6 +35,8 @@ public class TstPersonAnnotated {
     private TstGender      gender;
 
     private Date birthTime;
+    @JSaParCell(name = "Created at")
+    private Instant created;
 
     public TstPersonAnnotated(String firstName, String lastName, short shoeSize, long luckyNumber, Date birthTime, int streetNumber, char door) {
         super();
@@ -203,5 +206,13 @@ public class TstPersonAnnotated {
 
     public void setAdult(boolean adult) {
         this.adult = adult;
+    }
+
+    public Instant getCreated() {
+        return created;
+    }
+
+    public void setCreated(Instant created) {
+        this.created = created;
     }
 }

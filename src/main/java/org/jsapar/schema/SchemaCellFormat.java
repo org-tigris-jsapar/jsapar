@@ -37,7 +37,7 @@ public class SchemaCellFormat<T> implements Cloneable {
      * @param cellType The expected data type of the cell.
      */
     public SchemaCellFormat(CellType cellType) {
-        this(cellType, CellFactory.getInstance(cellType).makeFormat(defaultLocale, null), null);
+        this(cellType, getMakeFormat(cellType, null, defaultLocale), null);
     }
 
     /**
@@ -77,7 +77,12 @@ public class SchemaCellFormat<T> implements Cloneable {
             this.format = null;
             return;
         }
-        this.format = CellFactory.getInstance(cellType).makeFormat(locale, pattern);
+        this.format = getMakeFormat(cellType, pattern, locale);
+    }
+
+    @SuppressWarnings("unchecked")
+    private  static <T> Format<T> getMakeFormat(CellType cellType, String pattern, Locale locale) {
+        return (Format<T>) CellFactory.getInstance(cellType).makeFormat(locale, pattern);
     }
 
 

@@ -15,6 +15,7 @@
       <cell name="Last name" />
 <!--      <cell name="gender" ><format type="string" pattern="M|F"/> </cell>-->
       <cell name="gender" ><format type="enum" pattern="org.jsapar.TstGender"/> </cell>
+      <cell name="Created at"><format type="instant" pattern="yyyy-MM-dd HH:mm@Europe/Stockholm"/> </cell>
     </line>
     <line linetype="Footer" >
       <cell name="Type" default="F"><linecondition><equals value="F" ignorecase="true"/></linecondition></cell>

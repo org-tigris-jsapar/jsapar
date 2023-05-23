@@ -2,6 +2,7 @@ package org.jsapar.model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -29,6 +30,10 @@ public final class DateCell extends AbstractCell<Date> implements ComparableCell
      */
     public DateCell(String sName, String isoDate) throws ParseException {
         super(sName, ISO_DATE_FORMAT.parse(isoDate), CellType.DATE);
+    }
+
+    public DateCell(String cellName, Instant value) {
+        this(cellName, Date.from(value));
     }
 
     public static Cell<Date> emptyOf(String name) {

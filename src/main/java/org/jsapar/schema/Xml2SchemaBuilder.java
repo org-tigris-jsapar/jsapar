@@ -499,6 +499,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
                 return CellType.CHARACTER;
             case "enum":
                 return CellType.ENUM;
+            case "instant":
+                return CellType.INSTANT;
             default:
                 throw new SchemaException("Unknown cell format type: " + sType);
         }

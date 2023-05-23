@@ -9,10 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -117,6 +114,14 @@ public class Bean2Cell {
                     return new ZonedDateTimeCell(cellName, value);
                 else
                     return ZonedDateTimeCell.emptyOf(cellName);
+            };
+        } else if (returnType.isAssignableFrom(Instant.class)) {
+            return (bean) -> {
+                Instant value = (Instant) f.invoke(bean);
+                if (value != null)
+                    return new InstantCell(cellName, value);
+                else
+                    return DateCell.emptyOf(cellName);
             };
         } else if (returnType.isAssignableFrom(Date.class)) {
             return (bean) -> {

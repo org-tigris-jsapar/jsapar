@@ -21,8 +21,8 @@ public class CellParser<S extends SchemaCell> {
 
     private final S schemaCell;
     private final Cell<?> defaultCell;
-    private final EmptyCell emptyCell;
-    private final CellFactory cellFactory;
+    private final EmptyCell<?> emptyCell;
+    private final CellFactory<?> cellFactory;
     private Format<?> format;
     private final Cache<String, Cell<?>> cellCache ;
     private static final String EMPTY_STRING = "";
@@ -87,7 +87,6 @@ public class CellParser<S extends SchemaCell> {
      * @return A new cell of a type according to the schema specified. Returns null if an error occurs.
      */
     private Cell<?> doParse(String sValue, Consumer<JSaParException> errorEventListener) {
-
         try {
             Cell<?> cell = makeCell(sValue);
             validateRange(cell);
@@ -97,7 +96,6 @@ public class CellParser<S extends SchemaCell> {
                     new CellParseException(schemaCell.getName(), sValue, schemaCell.getCellFormat(), e));
             return null;
         }
-
     }
 
     /**

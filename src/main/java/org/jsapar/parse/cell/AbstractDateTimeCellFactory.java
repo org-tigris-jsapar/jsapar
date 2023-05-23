@@ -9,7 +9,7 @@ import java.util.Locale;
 
 /**
  */
-public abstract class AbstractDateTimeCellFactory implements CellFactory {
+public abstract class AbstractDateTimeCellFactory implements CellFactory<TemporalAccessor> {
 
     private final Format<TemporalAccessor> defaultFormat;
 

@@ -4,6 +4,7 @@ import org.jsapar.model.CellType;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
@@ -168,13 +169,16 @@ public interface Format<T> {
         return new NumberFormat(intFormat, CellType.FLOAT);
     }
 
+    static  Format<TemporalAccessor>  ofInstantInstance(DateTimeFormatter formatter, ZoneId zoneId){
+        return new DateTimeFormat(formatter, CellType.INSTANT, zoneId);
+    }    
     /**
      * @param formatter  The formatter to use while formatting and parsing.
      * @param cellType The type of cell to parse and produce
      * @return An instance that formats and parses date time objects.
      */
-    static  Format<TemporalAccessor>  ofDateTimeInstance(DateTimeFormatter formatter, CellType cellType){
-        return new DateTimeFormat(formatter, cellType);
+    static Format<TemporalAccessor>  ofDateTimeInstance(DateTimeFormatter formatter, CellType cellType){
+        return new DateTimeFormat(formatter, cellType, ZoneId.systemDefault());
     }    /**
      * @param formatter  The formatter to use while formatting and parsing.
      * @return An instance that formats and parses date time objects of type local date time.

@@ -9,6 +9,8 @@ import org.jsapar.parse.CollectingConsumer;
 import org.jsapar.parse.DocumentBuilderLineConsumer;
 import org.jsapar.parse.xml.XmlParser;
 import org.jsapar.schema.*;
+import org.jsapar.text.DateTimeFormat;
+import org.jsapar.text.Format;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,6 +19,9 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -456,8 +461,8 @@ public class JSaParExamplesTest {
         String result = writer.toString();
         String[] resultLines = result.split("\n");
 //        System.out.println(result);
-        assertEquals("B;\"Nils\";;Holgersson;M", resultLines[0]);
-        assertEquals("B;\"Jonathan\";;Lionheart;M", resultLines[1]);
+        assertEquals("B;\"Nils\";;Holgersson;M;", resultLines[0]);
+        assertEquals("B;\"Jonathan\";;Lionheart;M;", resultLines[1]);
     }
 
     @SuppressWarnings("rawtypes")
@@ -496,12 +501,14 @@ public class JSaParExamplesTest {
         testPerson1.setGender(TstGender.M);
         testPerson1.setAddress(new TstPostAddress("Track", "Village"));
         testPerson1.setWorkAddress(new TstPostAddress("Highway", "Town"));
+        testPerson1.setCreated(Instant.ofEpochSecond(1684773318));
         people.add(testPerson1);
 
         TstPersonAnnotated testPerson2 = new TstPersonAnnotated("Jonathan", "Lionheart", (short) 37, 17, dateFormat.parse("1955-03-17 12:33:12"), 123456, 'C');
         testPerson2.setAddress(new TstPostAddress("Path", "City"));
         testPerson2.setWorkAddress(new TstPostAddress("Road", "Metropolis"));
         testPerson2.setGender(TstGender.M);
+        testPerson2.setCreated(Instant.ofEpochSecond(1684773319));
         people.add(testPerson2);
 
         CsvSchema schema = CsvSchema.builder()
@@ -513,6 +520,7 @@ public class JSaParExamplesTest {
                                 .withCell("gender", c -> c.withEnumFormat(TstGender.class))
                                 .withCell("Street")
                                 .withCell("Work address.Street")
+                                .withCell("Created at", c->c.withType(CellType.INSTANT).withPattern("yyyy-MM-dd HH:mm@Europe/Stockholm"))
                 )
                 .build();
         StringWriter writer = new StringWriter();
@@ -522,8 +530,8 @@ public class JSaParExamplesTest {
         String result = writer.toString();
         String[] resultLines = result.split("\n");
 //        System.out.println(result);
-        assertEquals("B;\"Nils\";;Holgersson;M;Track;Highway", resultLines[0]);
-        assertEquals("B;\"Jonathan\";;Lionheart;M;Path;Road", resultLines[1]);
+        assertEquals("B;\"Nils\";;Holgersson;M;Track;Highway;2023-05-22 18:35", resultLines[0]);
+        assertEquals("B;\"Jonathan\";;Lionheart;M;Path;Road;2023-05-22 18:35", resultLines[1]);
     }
 
     @SuppressWarnings("rawtypes")
@@ -541,9 +549,11 @@ public class JSaParExamplesTest {
             assertEquals(2, people.size());
             assertEquals("Erik", people.get(0).getFirstName());
             assertEquals("Svensson", people.get(0).getLastName());
+            assertEquals(Instant.ofEpochSecond(1684773300), people.get(0).getCreated());
 
             assertEquals("Fredrik", people.get(1).getFirstName());
             assertEquals("Larsson", people.get(1).getLastName());
+            assertEquals(Instant.ofEpochSecond(1684773300), people.get(1).getCreated());
         }
     }
 
