@@ -174,6 +174,7 @@ public interface Format<T> {
      * @param formatter The date formatter to format with
      * @param zoneId The time zone id that is used when parsing and composing from an Instant.
      * @return An instance that formats and parses Instant objects.
+     * @since 2.3
      */
     static  Format<TemporalAccessor>  ofInstantInstance(DateTimeFormatter formatter, ZoneId zoneId){
         return new DateTimeFormat(formatter, CellType.INSTANT, zoneId);
