@@ -1,6 +1,7 @@
-package org.jsapar.text;
+package org.jsapar.text.format;
 
 import org.jsapar.model.CellType;
+import org.jsapar.text.Format;
 
 import java.text.ParseException;
 import java.util.regex.Pattern;
@@ -9,14 +10,14 @@ import java.util.regex.Pattern;
  * A formatter that while both parsing and formatting, checks that the value matches supplied regex pattern.
  *
  */
-class RegExpFormat implements Format<String> {
+public class RegExpFormat implements Format<String> {
 
     private final Pattern pattern;
 
     /**
      * @param pattern The regex pattern to match while parsing and formatting.
      */
-    RegExpFormat(String pattern) {
+    public RegExpFormat(String pattern) {
         this.pattern = Pattern.compile(pattern);
     }
 

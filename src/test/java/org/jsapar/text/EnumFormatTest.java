@@ -1,6 +1,6 @@
 package org.jsapar.text;
 
-import org.jsapar.text.EnumFormat;
+import org.jsapar.text.format.EnumFormat;
 import org.junit.Test;
 
 import java.text.ParseException;

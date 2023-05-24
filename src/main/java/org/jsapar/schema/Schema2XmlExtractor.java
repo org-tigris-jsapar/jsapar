@@ -2,8 +2,8 @@ package org.jsapar.schema;
 
 import org.jsapar.compose.cell.CellFormat;
 import org.jsapar.model.CellType;
-import org.jsapar.text.EnumFormat;
-import org.jsapar.text.ImpliedDecimalFormat;
+import org.jsapar.text.format.EnumFormat;
+import org.jsapar.text.format.ImpliedDecimalFormat;
 import org.jsapar.utils.StringUtils;
 import org.jsapar.utils.XmlTypes;
 import org.w3c.dom.Document;

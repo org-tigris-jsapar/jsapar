@@ -1,6 +1,7 @@
-package org.jsapar.text;
+package org.jsapar.text.format;
 
 import org.jsapar.model.CellType;
+import org.jsapar.text.Format;
 
 import java.text.ParseException;
 

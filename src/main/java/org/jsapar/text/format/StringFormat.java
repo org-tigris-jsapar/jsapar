@@ -1,11 +1,12 @@
-package org.jsapar.text;
+package org.jsapar.text.format;
 
 import org.jsapar.model.CellType;
+import org.jsapar.text.Format;
 
 /**
  * Just passes the string value through untouched while parsing or formatting.
  */
-class StringFormat implements Format<String> {
+public class StringFormat implements Format<String> {
 
     @Override
     public CellType cellType() {

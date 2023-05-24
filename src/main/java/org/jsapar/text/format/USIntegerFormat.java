@@ -1,26 +1,33 @@
-package org.jsapar.text;
+package org.jsapar.text.format;
 
 import org.jsapar.model.CellType;
+import org.jsapar.text.Format;
 
 import java.text.ParseException;
 
-public class USDoubleFormat implements Format<Number>  {
+public class USIntegerFormat implements Format<Number> {
+
     @Override
     public CellType cellType() {
-        return CellType.FLOAT;
+        return CellType.INTEGER;
     }
 
     @Override
     public Number parse(String stringValue) throws ParseException {
         try {
-            return Double.valueOf(stringValue);
+            return Long.valueOf(stringValue);
         }catch (NumberFormatException e){
-            throw new ParseException("Failed to parse float number from value [" + stringValue+"]", 0);
+            throw new ParseException("Failed to parse integer from value [" + stringValue+"]", 0);
         }
     }
 
     @Override
     public String format(Object value) throws IllegalArgumentException {
         return value.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "USIntegerFormat";
     }
 }

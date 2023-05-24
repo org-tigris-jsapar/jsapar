@@ -1,6 +1,7 @@
-package org.jsapar.text;
+package org.jsapar.text.format;
 
 import org.jsapar.model.CellType;
+import org.jsapar.text.Format;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormatSymbols;
@@ -12,14 +13,14 @@ import java.util.Locale;
  * As of JDK 9 some locales have got new decimal symbols. This is implementation has a workaround to also still be
  * able to parse the old format since they are still widely used.
  */
-class DecimalFormat implements Format<BigDecimal> {
+public class DecimalFormat implements Format<BigDecimal> {
     private final NumberFormat numberFormat;
 
-    DecimalFormat(String pattern, Locale locale) {
+    public DecimalFormat(String pattern, Locale locale) {
         this(pattern, DecimalFormatSymbols.getInstance(locale));
     }
 
-    DecimalFormat(Locale locale) {
+    public DecimalFormat(Locale locale) {
         this("0.#", locale);
     }
 

@@ -5,7 +5,7 @@ import org.jsapar.model.CellType;
 import org.jsapar.model.EmptyCell;
 import org.jsapar.parse.cell.CellFactory;
 import org.jsapar.parse.cell.CellParser;
-import org.jsapar.text.EnumFormat;
+import org.jsapar.text.format.EnumFormat;
 import org.jsapar.text.Format;
 
 import java.text.ParseException;
