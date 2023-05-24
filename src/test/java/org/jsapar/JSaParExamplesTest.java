@@ -512,6 +512,8 @@ public class JSaParExamplesTest {
         testPerson2.setCreated(Instant.ofEpochSecond(1684773319));
         people.add(testPerson2);
 
+        TstCompanyAnnotated tstCompanyAnnotated = new TstCompanyAnnotated("theFactory", new TstPostAddress("Industryroad", "Somewhere"), Instant.ofEpochSecond(1684773319));
+
         CsvSchema schema = CsvSchema.builder()
                 .withLine("Person",
                         l -> l.withCell("Type", c -> c.withDefaultValue("B").withLineCondition(v -> v.equals("B")))
@@ -525,17 +527,27 @@ public class JSaParExamplesTest {
                                 .withCell("Work address.Street number", c->c.withType(CellType.INTEGER).withPattern("00"))
                                 .withCell("Created at", c->c.withType(CellType.INSTANT).withPattern("yyyy-MM-dd HH:mm@Europe/Stockholm"))
                 )
+                .withLine("Company",
+                        l -> l.withCell("Type", c -> c.withDefaultValue("C").withLineCondition(v -> v.equals("C")))
+                                .withCell("Name", c -> c.withQuoteBehavior(QuoteBehavior.ALWAYS))
+                                .withCell("Address.Street")
+                                .withCell("Address.Street number", c->c.withType(CellType.INTEGER).withPattern("00"))
+                                .withCell("Created at", c->c.withType(CellType.INSTANT).withPattern("yyyy-MM-dd HH:mm@Europe/Stockholm"))
+                )
                 .build();
         StringWriter writer = new StringWriter();
-        Bean2TextConverter<TstPersonAnnotated> converter= new Bean2TextConverter<>(schema, BeanMap.ofClass(TstPersonAnnotated.class), writer);
+        Bean2TextConverter<Object> converter= new Bean2TextConverter<>(schema, BeanMap.ofClasses(TstPersonAnnotated.class, TstCompanyAnnotated.class), writer);
 //        Bean2TextConverter<TstPersonAnnotated> converter= new Bean2TextConverter<>(schema, BeanMap.ofSchema(schema, BeanMap.ofClass(TstPersonAnnotated.class)), writer);
         people.forEach(converter::convert);
+        converter.convert(tstCompanyAnnotated);
 
         String result = writer.toString();
         String[] resultLines = result.split("\n");
 //        System.out.println(result);
+        assertEquals(3, resultLines.length);
         assertEquals("B;\"Nils\";;Holgersson;M;Track;;Highway;17;2023-05-22 18:35", resultLines[0]);
         assertEquals("B;\"Jonathan\";;Lionheart;M;Path;;Road;08;2023-05-22 18:35", resultLines[1]);
+        assertEquals("C;\"theFactory\";Industryroad;;2023-05-22 18:35", resultLines[2]);
     }
 
     @SuppressWarnings("rawtypes")

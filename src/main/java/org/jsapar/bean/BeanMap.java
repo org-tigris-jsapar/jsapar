@@ -21,7 +21,7 @@ import java.util.function.Function;
  *     <li>From a schema if schema already contains class names and correct property names, see {@link #ofSchema(Schema)}</li>
  *     <li>From a schema but with overridden values if any of the class names or properties differs from the schema, see {@link #ofSchema(Schema, BeanMap)}</li>
  *     <li>From an xml file, see {@link #ofXml(Reader)}</li>
- *     <li>From an annotated class, see {@link #ofClass(Class)}, and {@link #ofClasses(List)}</li>
+ *     <li>From an annotated class, see {@link #ofClass(Class)}, and {@link #ofClasses(Iterable)}</li>
  * </ol>
  * either from a schema, from a xml file or from one or several annotated classes.
  * @see JSaParLine
@@ -96,13 +96,24 @@ public final class BeanMap {
      * Creates a BeanMap instance based on a list of annotated classes. All classes provided need to have the
      * annotation {@link JSaParLine} and only attributes annotated with {@link JSaParCell} will be mapped to the schema
      * values.
+     * @param classes An array of annotated classes.
+     * @return A newly created BeanMap instance.
+     */
+    public static <C> BeanMap ofClasses(Class<?>... classes) {
+        return ofClasses(List.of(classes));
+    }
+
+    /**
+     * Creates a BeanMap instance based on a list of annotated classes. All classes provided need to have the
+     * annotation {@link JSaParLine} and only attributes annotated with {@link JSaParCell} will be mapped to the schema
+     * values.
      * @param classes A list of annotated classes.
      * @return A newly created BeanMap instance.
      */
-    public static <C> BeanMap ofClasses(List<Class<C> > classes) {
+    public static BeanMap ofClasses(Iterable<Class<?> > classes) {
         BeanMap beanMap = new BeanMap();
 
-        for (Class<C> c : classes) {
+        for (Class<?> c : classes) {
             if (!c.isAnnotationPresent(JSaParLine.class))
                 throw new BeanException(
                         "The class " + c.getName() + " needs to have the annotation " + JSaParLine.class.getSimpleName()
@@ -120,8 +131,8 @@ public final class BeanMap {
      * @param lineClass The annotated class.
      * @return A newly created BeanMap instance.
      */
-    public static <C> BeanMap ofClass(Class<C> lineClass) {
-        return ofClasses(Collections.singletonList(lineClass));
+    public static BeanMap ofClass(Class<?> lineClass) {
+        return ofClasses(lineClass);
     }
 
     /**
