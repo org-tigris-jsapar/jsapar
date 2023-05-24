@@ -138,6 +138,9 @@ public class FixedWidthSchemaCell extends SchemaCell {
         return new Builder<>(name, length, schemaCell);
     }
 
+    /**
+     * A builder that creates instances of FixedWidthSchemaCell
+     */
     public static class Builder<T> extends SchemaCell.Builder<T, FixedWidthSchemaCell, Builder<T>> {
         private final int length;
         private Alignment alignment;
@@ -150,7 +153,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
             this.length = length;
         }
 
-        public Builder(String name, int length, FixedWidthSchemaCell schemaCell) {
+        private Builder(String name, int length, FixedWidthSchemaCell schemaCell) {
             super(name, schemaCell);
             this.length = length;
             this.alignment = schemaCell.alignment;
@@ -199,7 +202,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
             return this;
         }
 
-        public Builder<T> applyDefaultsFrom(FixedWidthSchemaLine.Builder schemaLineBuilder) {
+        Builder<T> applyDefaultsFrom(FixedWidthSchemaLine.Builder schemaLineBuilder) {
             super.applyDefaultsFrom(schemaLineBuilder);
             return withPadCharacter(schemaLineBuilder.getPadCharacter());
         }
@@ -236,7 +239,6 @@ public class FixedWidthSchemaCell extends SchemaCell {
 
     /**
      * The alignment of the cell content within the allocated space. Default is Alignment.LEFT.
-     *
      * @param alignment the alignment to set
      */
     public void setAlignment(Alignment alignment) {
@@ -272,26 +274,44 @@ public class FixedWidthSchemaCell extends SchemaCell {
                 this.alignment;
     }
 
+    /**
+     * @return The pad character to use to fill cell according to alignment to its defined fix size.
+     */
     public char getPadCharacter() {
         return padCharacter;
     }
 
+    /**
+     * @param padCharacter The pad character to use to fill cell according to alignment to its defined fix size.
+     */
     public void setPadCharacter(char padCharacter) {
         this.padCharacter = padCharacter;
     }
 
+    /**
+     * @return True if pad character should be trimmed while parsing.
+     */
     public boolean isTrimPadCharacter() {
         return trimPadCharacter;
     }
 
+    /**
+     * @param trimPadCharacter True if pad character should be trimmed while parsing.
+     */
     public void setTrimPadCharacter(boolean trimPadCharacter) {
         this.trimPadCharacter = trimPadCharacter;
     }
 
+    /**
+     * @return True if leading space characters should be removed while parsing.
+     */
     public boolean isTrimLeadingSpaces() {
         return trimLeadingSpaces;
     }
 
+    /**
+     * @param trimLeadingSpaces True if leading space characters should be removed while parsing.
+     */
     public void setTrimLeadingSpaces(boolean trimLeadingSpaces) {
         this.trimLeadingSpaces = trimLeadingSpaces;
     }
