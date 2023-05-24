@@ -492,19 +492,21 @@ public class JSaParExamplesTest {
             throws SchemaException, IOException, ParseException {
 
         List<TstPersonAnnotated> people = new LinkedList<>();
-        TstPersonAnnotated testPerson1 = new TstPersonAnnotated("Nils", "Holgersson", (short) 4, 4711, dateFormat.parse("1902-08-07 12:43:22"), 9, 'A');
+        TstPersonAnnotated testPerson1 = new TstPersonAnnotated("Nils", "Holgersson", (short) 43, 4711, dateFormat.parse("1902-08-07 12:43:22"),
+                'A');
         testPerson1.setGender(TstGender.M);
         testPerson1.setAddress(new TstPostAddress("Track", "Village"));
         TstPostAddress workAddress1 = new TstPostAddress("Highway", "Town");
-        workAddress1.setStreetNumber(17);
+        workAddress1.setStreetNumber((short) 17);
         testPerson1.setWorkAddress(workAddress1);
         testPerson1.setCreated(Instant.ofEpochSecond(1684773318));
         people.add(testPerson1);
 
-        TstPersonAnnotated testPerson2 = new TstPersonAnnotated("Jonathan", "Lionheart", (short) 37, 17, dateFormat.parse("1955-03-17 12:33:12"), 123456, 'C');
+        TstPersonAnnotated testPerson2 = new TstPersonAnnotated("Jonathan", "Lionheart", (short) 37, 17, dateFormat.parse("1955-03-17 12:33:12"),
+                'C');
         testPerson2.setAddress(new TstPostAddress("Path", "City"));
         TstPostAddress workAddress2 = new TstPostAddress("Road", "Metropolis");
-        workAddress2.setStreetNumber(8);
+        workAddress2.setStreetNumber((short) 8);
         testPerson2.setWorkAddress(workAddress2);
         testPerson2.setGender(TstGender.M);
         testPerson2.setCreated(Instant.ofEpochSecond(1684773319));
@@ -532,8 +534,8 @@ public class JSaParExamplesTest {
         String result = writer.toString();
         String[] resultLines = result.split("\n");
 //        System.out.println(result);
-        assertEquals("B;\"Nils\";;Holgersson;M;Track;00;Highway;17;2023-05-22 18:35", resultLines[0]);
-        assertEquals("B;\"Jonathan\";;Lionheart;M;Path;00;Road;08;2023-05-22 18:35", resultLines[1]);
+        assertEquals("B;\"Nils\";;Holgersson;M;Track;;Highway;17;2023-05-22 18:35", resultLines[0]);
+        assertEquals("B;\"Jonathan\";;Lionheart;M;Path;;Road;08;2023-05-22 18:35", resultLines[1]);
     }
 
     @SuppressWarnings("rawtypes")

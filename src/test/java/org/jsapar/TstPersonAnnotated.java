@@ -23,7 +23,6 @@ public class TstPersonAnnotated {
     private String         lastName = "Nobody";
     private short          shoeSize;
     private long           luckyNumber;
-    private int            streetNumber;
     private char           door;
     private boolean        adult;
     @JSaParContainsCells(name = "Home address") // Flattens subclass entries
@@ -38,12 +37,11 @@ public class TstPersonAnnotated {
     @JSaParCell(name = "Created at")
     private Instant created;
 
-    public TstPersonAnnotated(String firstName, String lastName, short shoeSize, long luckyNumber, Date birthTime, int streetNumber, char door) {
+    public TstPersonAnnotated(String firstName, String lastName, short shoeSize, long luckyNumber, Date birthTime, char door) {
         super();
         this.firstName = firstName;
         this.lastName = lastName;
         this.shoeSize = shoeSize;
-        this.setStreetNumber(streetNumber);
         this.luckyNumber = luckyNumber;
         this.birthTime = birthTime;
         this.door = door;
@@ -134,19 +132,6 @@ public class TstPersonAnnotated {
         this.birthTime = birthTime;
     }
 
-    /**
-     * @param streetNumber the streetNumber to set
-     */
-    public void setStreetNumber(int streetNumber) {
-        this.streetNumber = streetNumber;
-    }
-
-    /**
-     * @return the streetNumber
-     */
-    public int getStreetNumber() {
-        return streetNumber;
-    }
 
     /**
      * @param door the door to set

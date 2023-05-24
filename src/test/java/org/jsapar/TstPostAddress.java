@@ -9,7 +9,7 @@ public class TstPostAddress {
     private TstPostAddress subAddress;
 
     @JSaParCell(name = "Street number")
-    private int streetNumber;
+    private Short streetNumber;
 
     public TstPostAddress() {
         super();
@@ -45,11 +45,12 @@ public class TstPostAddress {
         return subAddress;
     }
 
-    public int getStreetNumber() {
+
+    public Short getStreetNumber() {
         return streetNumber;
     }
 
-    public void setStreetNumber(int streetNumber) {
+    public void setStreetNumber(Short streetNumber) {
         this.streetNumber = streetNumber;
     }
 }
