@@ -16,6 +16,10 @@ public final class LocalTimeCell extends TemporalCell<LocalTime> implements Comp
         super(name, value, CellType.LOCAL_TIME);
     }
 
+    /**
+     * @param name The name of the cell
+     * @return An empty cell of this type.
+     */
     public static Cell<LocalTime> emptyOf(String name) {
         return new EmptyCell<>(name, CellType.LOCAL_TIME);
     }

@@ -19,8 +19,7 @@ public class BeanEventTest {
     @Test
     public void getLineNumber() {
         TstPerson person = new TstPerson();
-        Line line = new Line("test");
-        line.setLineNumber(17);
+        Line line = new Line("test", 16, 17);
         BeanEvent<TstPerson> beanEvent = new BeanEvent<>(person, line);
         assertEquals(17, beanEvent.getLineNumber());
     }

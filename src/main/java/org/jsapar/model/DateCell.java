@@ -36,6 +36,10 @@ public final class DateCell extends AbstractCell<Date> implements ComparableCell
         this(cellName, Date.from(value));
     }
 
+    /**
+     * @param name The name of the cell
+     * @return An empty cell of this type.
+     */
     public static Cell<Date> emptyOf(String name) {
         return new EmptyCell<>(name, CellType.DATE);
     }

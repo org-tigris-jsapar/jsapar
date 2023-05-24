@@ -19,6 +19,10 @@ public class LineParseException extends JSaParException {
         this.lineNumber = lineNumber;
     }
 
+    /** Creates a new line parse exception.
+     * @param lineNumber The line number where the error occured
+     * @param cause      Caused by exception
+     */
     public LineParseException(long lineNumber, Throwable cause) {
         super(cause);
 
@@ -47,10 +51,16 @@ public class LineParseException extends JSaParException {
         return sb.toString();
     }
 
+    /**
+     * @return The original exception message without the line information.
+     */
     protected String getOriginalMessage(){
         return super.getMessage();
     }
 
+    /**
+     * @param lineNumber The line number where the error was found.
+     */
     public void setLineNumber(long lineNumber) {
         this.lineNumber = lineNumber;
     }

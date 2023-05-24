@@ -95,11 +95,11 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
         private int minLength = -1;
 
 
-        public Builder(String lineType) {
+        private Builder(String lineType) {
             super(lineType);
         }
 
-        public Builder(String lineType, FixedWidthSchemaLine schemaLine) {
+        private Builder(String lineType, FixedWidthSchemaLine schemaLine) {
             super(lineType, schemaLine);
             this.padCharacter = schemaLine.padCharacter;
             this.minLength = schemaLine.minLength;
@@ -155,6 +155,9 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
             return new FixedWidthSchemaLine(this);
         }
 
+        /**
+         * @return The character to pad with.
+         */
         public char getPadCharacter() {
             return this.padCharacter;
         }

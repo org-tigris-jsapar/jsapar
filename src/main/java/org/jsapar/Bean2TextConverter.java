@@ -38,6 +38,7 @@ import java.util.function.Consumer;
  * {@link org.jsapar.error.ThresholdCollectingErrorConsumer}, or you may implement your own.
  *
  * @see BeanCollection2TextConverter
+ * @param <T> The base class that should be allowed to convert. Use {@code <Object>} in case you want to allow all types.
  */
 public class Bean2TextConverter<T> implements AutoCloseable{
 

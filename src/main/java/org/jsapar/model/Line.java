@@ -57,10 +57,12 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @param sLineType       The type of the line.
      * @param initialCapacity The initial capacity. Used only to reserve space. If capacity is exceeded, the
      *                        capacity grows automatically.
+     * @param lineNumber      The line number of this line.
      */
-    public Line(String sLineType, int initialCapacity) {
+    public Line(String sLineType, int initialCapacity, long lineNumber) {
         lineType = sLineType;
         cells = new LinkedHashMap<>((initialCapacity * 4/3)+1);
+        this.lineNumber = lineNumber;
     }
 
     /**
@@ -252,11 +254,14 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
         return this.getCell(cellName).isPresent();
     }
 
+    /**
+     * @return The current line number of this line
+     */
     public long getLineNumber() {
         return lineNumber;
     }
 
-    public void setLineNumber(long lineNumber) {
+    void setLineNumber(long lineNumber) {
         this.lineNumber = lineNumber;
     }
 

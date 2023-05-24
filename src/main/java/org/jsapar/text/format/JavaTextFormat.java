@@ -14,6 +14,10 @@ public class JavaTextFormat<T> implements Format<T> {
     private final java.text.Format format;
     private final CellType cellType;
 
+    /**
+     * @param format The text format to format with
+     * @param cellType The type of cells to create while parsing.
+     */
     public JavaTextFormat(java.text.Format format, CellType cellType) {
         this.cellType = cellType;
         this.format = format;

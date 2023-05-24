@@ -89,8 +89,7 @@ class CsvLineParser {
             return true;
 
         // Create with same size as schema plus 1 to handle trailing cell separator which is quite common.
-        Line line = new Line(lineSchema.getLineType(), 1 + lineSchema.size());
-        line.setLineNumber(lineReader.currentLineNumber());
+        Line line = new Line(lineSchema.getLineType(), 1 + lineSchema.size(), lineReader.currentLineNumber());
         lineDecoratorErrorConsumer.initialize(errorListener, line);
 
         java.util.Iterator<CellParser<CsvSchemaCell>> itParser = cellParsers.iterator();

@@ -20,6 +20,9 @@ import java.util.Locale;
  */
 public class InstantCellFactory extends AbstractDateTimeCellFactory {
 
+    /**
+     * Creates an instance.
+     */
     public InstantCellFactory() {
         super(DateTimeFormatter.ISO_INSTANT, CellType.INSTANT);
     }

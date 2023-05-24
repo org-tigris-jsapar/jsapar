@@ -127,7 +127,7 @@ final class CsvLineComposer implements LineComposer {
      *
      */
     private Line buildHeaderLineFromSchema(CsvSchemaLine headerSchemaLine)  {
-        Line line = new Line(headerSchemaLine.getLineType(), headerSchemaLine.size());
+        Line line = new Line(headerSchemaLine.getLineType(), headerSchemaLine.size(), 0L);
 
         for (CsvSchemaCell schemaCell : headerSchemaLine) {
             line.addCell(new StringCell(schemaCell.getName(), schemaCell.getName()));

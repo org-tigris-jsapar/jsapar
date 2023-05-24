@@ -17,7 +17,7 @@ public class LineTest {
 
     @Test
     public void testLineInt() {
-        Line line = new Line("", 3);
+        Line line = new Line("");
         assertEquals(0, line.size());
         assertEquals("", line.getLineType());
     }
@@ -31,7 +31,7 @@ public class LineTest {
 
     @Test
     public void testLineStringInt() {
-        Line line = new Line("Shoe", 3);
+        Line line = new Line("Shoe");
         assertEquals(0, line.size());
         assertEquals("Shoe", line.getLineType());
     }
@@ -130,8 +130,7 @@ public class LineTest {
     }
 
     private Line makeTestLine() {
-        Line line = new Line("TestLine");
-        line.setLineNumber(1);
+        Line line = new Line("TestLine", 3, 1);
         line.addCell(new StringCell("FirstName", "Nils"));
         line.addCell(new StringCell("LastName", "Svensson"));
         return line;

@@ -49,8 +49,7 @@ public class BeanMarshaller<T>  {
      */
     public Optional<Line> marshal(T bean, Consumer<JSaParException> errorListener, long lineNumber) {
         return beanMap.getBeanPropertyMap(bean.getClass()).map(beanPropertyMap -> {
-            Line line = new Line(beanPropertyMap.getLineType(), beanPropertyMap.size());
-            line.setLineNumber(lineNumber);
+            Line line = new Line(beanPropertyMap.getLineType(), beanPropertyMap.size(), lineNumber);
             this.marshal(line, bean, beanPropertyMap, errorListener);
             return line;
         });

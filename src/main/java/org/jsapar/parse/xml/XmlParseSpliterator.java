@@ -41,8 +41,7 @@ public class XmlParseSpliterator implements Spliterator<Line> {
                     case XMLStreamReader.START_ELEMENT:
                         switch (streamReader.getName().getLocalPart()) {
                             case "line":
-                                currentLine = new Line(streamReader.getAttributeValue(null, "linetype"));
-                                currentLine.setLineNumber(currentLineNumber++);
+                                currentLine = new Line(streamReader.getAttributeValue(null, "linetype"), 16, currentLineNumber++);
                                 break;
                             case "cell":
                                 currentCell = handleCellStart();

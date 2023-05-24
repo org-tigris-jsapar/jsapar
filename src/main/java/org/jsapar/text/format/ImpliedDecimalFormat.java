@@ -22,6 +22,9 @@ public class ImpliedDecimalFormat implements Format<BigDecimal> {
         this.decimals = decimals;
     }
 
+    /**
+     * @return The number of decimals to imply.
+     */
     public int getDecimals() {
         return decimals;
     }

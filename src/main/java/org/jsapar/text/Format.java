@@ -170,6 +170,11 @@ public interface Format<T> {
         return new NumberFormat(intFormat, CellType.FLOAT);
     }
 
+    /**
+     * @param formatter The date formatter to format with
+     * @param zoneId The time zone id that is used when parsing and composing from an Instant.
+     * @return An instance that formats and parses Instant objects.
+     */
     static  Format<TemporalAccessor>  ofInstantInstance(DateTimeFormatter formatter, ZoneId zoneId){
         return new DateTimeFormat(formatter, CellType.INSTANT, zoneId);
     }    

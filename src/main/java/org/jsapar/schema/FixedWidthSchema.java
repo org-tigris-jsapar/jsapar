@@ -17,6 +17,9 @@ import java.util.function.Function;
  */
 public class FixedWidthSchema extends Schema<FixedWidthSchemaLine> {
 
+    /**
+     * Don't use this anymore. Use builder instead.
+     */
     @Deprecated
     public FixedWidthSchema() {
     }
@@ -46,7 +49,7 @@ public class FixedWidthSchema extends Schema<FixedWidthSchemaLine> {
         private Builder(){
         }
 
-        public Builder(FixedWidthSchema schema) {
+        private Builder(FixedWidthSchema schema) {
             super(schema);
         }
 

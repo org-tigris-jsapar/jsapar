@@ -134,9 +134,9 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
                     this.currentCellType = CellType.STRING;
                 break;
             case "line":
-                this.currentLine = new Line(attributes.getValue("linetype"));
                 String sLineNumber = attributes.getValue("number");
-                this.currentLine.setLineNumber(sLineNumber != null ? (Long.parseLong(sLineNumber)) : currentLineNumber);
+                long lineNumber = sLineNumber != null ? (Long.parseLong(sLineNumber)) : currentLineNumber;
+                this.currentLine = new Line(attributes.getValue("linetype"), 16, lineNumber);
                 this.currentLineNumber++;
                 break;
             case "document":
