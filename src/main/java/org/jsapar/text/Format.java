@@ -227,7 +227,7 @@ public interface Format<T> {
 
     /**
      * @param decimals The number of decimals to imply
-     * @return An instance that can be used to parse and format <a href="https://www.ibm.com/support/knowledgecenter/en/SSLVMB_24.0.0/spss/base/syn_data_list_implied_decimal_positions.html">implied decimals</a>.
+     * @return An instance that can be used to parse and format <a href="http://www.3480-3590-data-conversion.com/article-implied-decimal.html">implied decimals</a>.
      * The text representation is always an integer but when parsing the decimal point is shifted left and when composing it is shifted right.
      */
     static Format<BigDecimal> ofImpliedDecimalInstance(int decimals){
