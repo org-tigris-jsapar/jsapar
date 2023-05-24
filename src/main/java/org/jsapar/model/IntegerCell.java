@@ -12,31 +12,7 @@ public final class IntegerCell extends NumberCell {
      * @param name The name of the cell
      * @param value The value
      */
-    public IntegerCell(String name, Integer value) {
-	super(name, value, CellType.INTEGER);
-    }
-
-    /**
-     * @param name The name of the cell
-     * @param value The value
-     */
-    public IntegerCell(String name, Long value) {
-	super(name, value, CellType.INTEGER);
-    }
-
-    /**
-     * @param name The name of the cell
-     * @param value The value
-     */
-    public IntegerCell(String name, Short value) {
-        super(name, value, CellType.INTEGER);
-    }
-
-    /**
-     * @param name The name of the cell
-     * @param value The value
-     */
-    public IntegerCell(String name, Byte value) {
+    public IntegerCell(String name, Number value) {
         super(name, value, CellType.INTEGER);
     }
 

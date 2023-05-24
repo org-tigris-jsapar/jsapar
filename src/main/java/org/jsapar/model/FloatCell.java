@@ -12,23 +12,14 @@ public final class FloatCell extends NumberCell {
     /**
      * Creates a float number cell with supplied name. Converts the float value
      * into a double precision float value.
-     * 
-     * @param name The name of the cell
+     *
+     * @param name  The name of the cell
      * @param value The value
      */
-    public FloatCell(String name, Float value) {
-	super(name, value, CellType.FLOAT);
+    public FloatCell(String name, Number value) {
+        super(name, value, CellType.FLOAT);
     }
 
-    /**
-     * Creates a float number cell with supplied name.
-     * 
-     * @param name The name of the cell
-     * @param value The value
-     */
-    public FloatCell(String name, Double value) {
-	super(name, value, CellType.FLOAT);
-    }
 
 
     @Override

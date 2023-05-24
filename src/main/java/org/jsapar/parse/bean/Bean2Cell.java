@@ -12,6 +12,8 @@ import java.math.BigInteger;
 import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class Bean2Cell {
 
@@ -74,97 +76,38 @@ public class Bean2Cell {
         Class<?> returnType = f.getReturnType();
 
         if (returnType.isAssignableFrom(String.class)) {
-            return (bean) -> {
-                String value = (String) f.invoke(bean);
-                if (value != null)
-                    return new StringCell(cellName, value);
-                else
-                    return StringCell.emptyOf(cellName);
-            };
-        } else if (returnType.isAssignableFrom(Character.TYPE) || returnType.isAssignableFrom(Character.class)) {
-            return (bean) -> new StringCell(cellName, (Character) f.invoke(bean));
+            return (bean) -> this.<String>makeCellByInvocation(bean, f, CellType.STRING, StringCell::new);
         } else if (returnType.isAssignableFrom(LocalDate.class)) {
-            return (bean) -> {
-                LocalDate value = (LocalDate) f.invoke(bean);
-                if (value != null)
-                    return new LocalDateCell(cellName, value);
-                else
-                    return LocalDateCell.emptyOf(cellName);
-            };
+            return (bean) -> this.makeCellByInvocation(bean, f, CellType.LOCAL_DATE, LocalDateCell::new);
         } else if (returnType.isAssignableFrom(LocalDateTime.class)) {
-            return (bean) -> {
-                LocalDateTime value = (LocalDateTime) f.invoke(bean);
-                if (value != null)
-                    return new LocalDateTimeCell(cellName, value);
-                else
-                    return LocalDateTimeCell.emptyOf(cellName);
-            };
+            return (bean) -> this.makeCellByInvocation(bean, f, CellType.LOCAL_DATE_TIME, LocalDateTimeCell::new);
         } else if (returnType.isAssignableFrom(LocalTime.class)) {
-            return (bean) -> {
-                LocalTime value = (LocalTime) f.invoke(bean);
-                if (value != null)
-                    return new LocalTimeCell(cellName, value);
-                else
-                    return LocalTimeCell.emptyOf(cellName);
-            };
+            return (bean) -> this.makeCellByInvocation(bean, f, CellType.LOCAL_TIME, LocalTimeCell::new);
         } else if (returnType.isAssignableFrom(ZonedDateTime.class)) {
-            return (bean) -> {
-                ZonedDateTime value = (ZonedDateTime) f.invoke(bean);
-                if (value != null)
-                    return new ZonedDateTimeCell(cellName, value);
-                else
-                    return ZonedDateTimeCell.emptyOf(cellName);
-            };
+            return (bean) -> this.makeCellByInvocation(bean, f, CellType.ZONED_DATE_TIME, ZonedDateTimeCell::new);
         } else if (returnType.isAssignableFrom(Instant.class)) {
-            return (bean) -> {
-                Instant value = (Instant) f.invoke(bean);
-                if (value != null)
-                    return new InstantCell(cellName, value);
-                else
-                    return DateCell.emptyOf(cellName);
-            };
+            return (bean) -> this.makeCellByInvocation(bean, f, CellType.INSTANT, InstantCell::new);
         } else if (returnType.isAssignableFrom(Date.class)) {
-            return (bean) -> {
-                Date value = (Date) f.invoke(bean);
-                if (value != null)
-                    return new DateCell(cellName, value);
-                else
-                    return DateCell.emptyOf(cellName);
-            };
+            return (bean) -> this.<Date>makeCellByInvocation(bean, f, CellType.DATE, DateCell::new);
         } else if (returnType.isAssignableFrom(Calendar.class)) {
-            return (bean) -> {
-                Calendar value = (Calendar) f.invoke(bean);
-                if (value != null)
-                    return new DateCell(cellName, value.getTime());
-                else
-                    return DateCell.emptyOf(cellName);
-            };
-        } else if (returnType.isAssignableFrom(Integer.TYPE) || returnType.isAssignableFrom(Integer.class)) {
-            return (bean) -> new IntegerCell(cellName, (Integer) f.invoke(bean));
-        } else if (returnType.isAssignableFrom(Byte.TYPE) || returnType.isAssignableFrom(Byte.class)) {
-            return (bean) -> new IntegerCell(cellName, (Byte) f.invoke(bean));
-        } else if (returnType.isAssignableFrom(Short.TYPE) || returnType.isAssignableFrom(Short.class)) {
-            return (bean) -> new IntegerCell(cellName, (Short) f.invoke(bean));
-        } else if (returnType.isAssignableFrom(Long.TYPE) || returnType.isAssignableFrom(Long.class)) {
-            return (bean) -> new IntegerCell(cellName, (Long) f.invoke(bean));
+            return (bean) -> this.<Calendar>makeCellByInvocation(bean, f, CellType.DATE, (n, v)->new DateCell(n, v.getTime()));
+        } else if (returnType.isAssignableFrom(Integer.TYPE) || returnType.isAssignableFrom(Integer.class) || returnType.isAssignableFrom(
+                Byte.TYPE) || returnType.isAssignableFrom(Byte.class) || returnType.isAssignableFrom(Short.TYPE) || returnType.isAssignableFrom(
+                Short.class) || returnType.isAssignableFrom(Long.TYPE) || returnType.isAssignableFrom(Long.class)) {
+            return (bean) -> makeCellByInvocation(bean, f, CellType.INTEGER, IntegerCell::new);
         } else if (returnType.isAssignableFrom(Boolean.TYPE) || returnType.isAssignableFrom(Boolean.class)) {
-            return (bean) -> new BooleanCell(cellName, (Boolean) f.invoke(bean));
-        } else if (returnType.isAssignableFrom(Float.TYPE) || returnType.isAssignableFrom(Float.class)) {
-            return (bean) -> new FloatCell(cellName, (Float) f.invoke(bean));
-        } else if (returnType.isAssignableFrom(Double.TYPE) || returnType.isAssignableFrom(Double.class)) {
-            return (bean) -> new FloatCell(cellName, (Double) f.invoke(bean));
+            return (bean) -> makeCellByInvocation(bean, f, CellType.BOOLEAN, BooleanCell::new);
+        } else if (returnType.isAssignableFrom(Float.TYPE) || returnType.isAssignableFrom(Float.class) || returnType.isAssignableFrom(
+                Double.TYPE) || returnType.isAssignableFrom(Double.class)) {
+            return (bean) -> makeCellByInvocation(bean, f, CellType.FLOAT, FloatCell::new);
         } else if (returnType.isAssignableFrom(BigDecimal.class)) {
-            return (bean) -> new BigDecimalCell(cellName, (BigDecimal) f.invoke(bean));
+            return (bean) -> this.<BigDecimal>makeCellByInvocation(bean, f, CellType.DECIMAL, BigDecimalCell::new);
         } else if (returnType.isAssignableFrom(BigInteger.class)) {
-            return (bean) -> new BigDecimalCell(cellName, (BigInteger) f.invoke(bean));
+            return (bean) -> this.<BigInteger>makeCellByInvocation(bean, f, CellType.DECIMAL, BigDecimalCell::new);
+        } else if (returnType.isAssignableFrom(Character.TYPE) || returnType.isAssignableFrom(Character.class)) {
+            return (bean) -> this.makeCellByInvocation(bean, f, CellType.CHARACTER, CharacterCell::new);
         } else if (Enum.class.isAssignableFrom(returnType)){
-            return (bean) -> {
-                Enum value = (Enum) f.invoke(bean);
-                if (value != null)
-                    return new EnumCell(cellName, value);
-                else
-                    return EnumCell.emptyOf(cellName);
-            };
+            return (bean) -> this.<Enum>makeCellByInvocation(bean, f, CellType.ENUM, EnumCell::new);
         }
         return (bean) -> {
             Object value = f.invoke(bean);
@@ -173,6 +116,15 @@ public class Bean2Cell {
             else
                 return StringCell.emptyOf(cellName);
         };
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> Cell<?> makeCellByInvocation(Object o, Method f, CellType cellType, BiFunction<String, T, Cell<?>> cellByValue) throws
+            InvocationTargetException, IllegalAccessException {
+        T value = (T) f.invoke(o);
+        if(value == null)
+            return new EmptyCell<>(cellName, cellType);
+        return cellByValue.apply(cellName, value);
     }
 
     /**
