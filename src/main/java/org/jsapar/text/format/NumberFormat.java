@@ -20,10 +20,21 @@ import java.util.function.Function;
 public class NumberFormat extends JavaTextFormat<Number> implements Format<Number> {
     private final List<Function<String, String>> mappers = new ArrayList<>(3);
 
+    /**
+     * Creates an instance
+     * @param pattern  The pattern suited for number format.
+     * @param locale The locale to use
+     * @param cellType The type of cell to create
+     */
     public NumberFormat(String pattern, Locale locale, CellType cellType) {
         this(new java.text.DecimalFormat(pattern, new DecimalFormatSymbols(locale)), cellType);
     }
 
+    /**
+     * Creates an instance
+     * @param numberFormat The number format to use while paring and formatting.
+     * @param cellType The type of cell to create
+     */
     public NumberFormat(java.text.NumberFormat numberFormat, CellType cellType) {
         super(numberFormat, cellType);
         if(!cellType.isNumber())

@@ -15,6 +15,9 @@ import java.time.temporal.TemporalAccessor;
  */
 public class LocalTimeCellFactory extends AbstractDateTimeCellFactory {
 
+    /**
+     * Creates an instance
+     */
     public LocalTimeCellFactory() {
         super(DateTimeFormatter.ISO_TIME, CellType.LOCAL_TIME);
     }

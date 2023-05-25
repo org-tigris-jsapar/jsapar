@@ -1,7 +1,7 @@
 package org.jsapar.schema;
 
 /**
- * Packet private constants to be used while reading and writing xml.
+ * Package private constants to be used while reading and writing xml.
  */
 interface SchemaXmlTypes {
     String ELEMENT_ROOT                             = "schema";

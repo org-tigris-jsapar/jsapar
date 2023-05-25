@@ -113,6 +113,9 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
         return new Builder(lineType, schemaLine);
     }
 
+    /**
+     * A builder class that creates CsvSchemaLine instances
+     */
     public static class Builder extends SchemaLine.Builder<CsvSchemaCell, CsvSchemaLine, Builder>{
         private boolean firstLineAsSchema = false;
         private String cellSeparator = ";";
@@ -120,11 +123,11 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
         private QuoteBehavior defaultQuoteBehavior = QuoteBehavior.AUTOMATIC;
 
 
-        public Builder(String lineType) {
+        private Builder(String lineType) {
             super(lineType);
         }
 
-        public Builder(String lineType, CsvSchemaLine schemaLine) {
+        private Builder(String lineType, CsvSchemaLine schemaLine) {
             super(lineType, schemaLine);
             this.quoteChar = schemaLine.quoteChar;
             this.cellSeparator = schemaLine.cellSeparator;
@@ -236,6 +239,9 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
     }
 
 
+    /**
+     * @return The cell separator to use for this line type
+     */
     public String getCellSeparator() {
         return cellSeparator;
     }
@@ -252,11 +258,6 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
         this.cellSeparator = cellSeparator;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#clone()
-     */
     @Override
     public CsvSchemaLine clone() {
         CsvSchemaLine line;
@@ -264,11 +265,6 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
         return line;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -285,14 +281,25 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
         return sb.toString();
     }
 
+    /**
+     * @return True if the order of the first line determines the order of cells while parsing and
+     * produces an additional header row while composing
+     */
     public boolean isFirstLineAsSchema() {
         return firstLineAsSchema;
     }
 
+    /**
+     * @param firstLineAsSchema If true, the order of the first line determines the order of cells while parsing and
+     *                          produces an additional header row while composing.
+     */
     public void setFirstLineAsSchema(boolean firstLineAsSchema) {
         this.firstLineAsSchema = firstLineAsSchema;
     }
 
+    /**
+     * @return The quote character for this line type
+     */
     public char getQuoteChar() {
         return quoteChar;
     }
@@ -304,10 +311,16 @@ public class CsvSchemaLine extends SchemaLine<CsvSchemaCell> {
         return this.quoteChar != NO_QUOTING;
     }
 
+    /**
+     * Disables quote character for the whole line.
+     */
     public void disableQuoteChar() {
         this.quoteChar = NO_QUOTING;
     }
 
+    /**
+     * @param quoteChar The quote character to use for this line
+     */
     public void setQuoteChar(char quoteChar) {
         this.quoteChar = quoteChar;
     }

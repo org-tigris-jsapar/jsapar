@@ -18,7 +18,7 @@ public abstract class NumberCellFactory implements CellFactory {
         return Format.ofNumberInstance(locale);
     }
 
-    protected Number parseNumber(Format format, String value) throws ParseException {
+    Number parseNumber(Format format, String value) throws ParseException {
         return  (Number) format.parse(value);
     }
 

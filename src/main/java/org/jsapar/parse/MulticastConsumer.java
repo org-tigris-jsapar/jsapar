@@ -13,12 +13,19 @@ public class MulticastConsumer<T> implements Consumer<T> {
     private final List<Consumer<T> > lineEventListeners = new LinkedList<>();
 
 
+    /**
+     * Adds a consumer
+     * @param eventListener The consumer that should be called
+     */
     public void addConsumer(Consumer<T> eventListener) {
         if (eventListener == null)
             return;
         this.lineEventListeners.add(eventListener);
     }
 
+    /**
+     * @param lineEventListener Remove the supplied event listener.
+     */
     public void removeLineEventListener(Consumer<T> lineEventListener){
         this.lineEventListeners.remove(lineEventListener);
     }

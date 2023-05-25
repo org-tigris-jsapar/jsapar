@@ -272,6 +272,7 @@ public abstract class SchemaCell implements Cloneable {
 
         /**
          * @param ignoreWrite If true, this cell will be blank while writing.
+         * @return This instance
          */
         public B withIgnoreWrite(boolean ignoreWrite) {
             this.ignoreWrite = ignoreWrite;
@@ -281,6 +282,7 @@ public abstract class SchemaCell implements Cloneable {
         /**
          * @param mandatory Indicates if the corresponding cell is mandatory, that is an error will be
          *                  reported if it does not exist while parsing.
+         * @return This instance
          */
         public B withMandatory(boolean mandatory) {
             this.mandatory = mandatory;
@@ -289,6 +291,7 @@ public abstract class SchemaCell implements Cloneable {
 
         /**
          * @param minValue The string representation of the min value as it would be presented in the text input.
+         * @return This builder instance
          */
         public B withMinValue(String minValue) {
             this.minValue = minValue;
@@ -297,6 +300,7 @@ public abstract class SchemaCell implements Cloneable {
 
         /**
          * @param maxValue The string representation of the max value as it would be presented in the text input.
+         * @return This builder instance
          */
         public B withMaxValue(String maxValue) {
             this.maxValue = maxValue;
@@ -310,6 +314,7 @@ public abstract class SchemaCell implements Cloneable {
          *
          * @param defaultValue The default value formatted according to this schema. Will be used if input/output
          *                      is missing for this cell.
+         * @return This builder instance
          */
         public B withDefaultValue(String defaultValue) {
             this.defaultValue = defaultValue;
@@ -322,6 +327,7 @@ public abstract class SchemaCell implements Cloneable {
          * field. In that case a {@link MatchingCellValueCondition} can be used to match the pattern "NULL".
          *
          * @param emptyCondition the condition that needs to be satisfied if this cell is to be considered empty
+         * @return This builder instance
          */
         public B withEmptyCondition(Predicate<String> emptyCondition) {
             this.emptyCondition = emptyCondition;
@@ -334,6 +340,7 @@ public abstract class SchemaCell implements Cloneable {
          * field. In that case the pattern "NULL" can be used.
          *
          * @param pattern The regex pattern to match against
+         * @return This builder instance
          */
         public B withEmptyPattern(String pattern) {
             this.emptyCondition = new MatchingCellValueCondition(pattern);
@@ -343,6 +350,7 @@ public abstract class SchemaCell implements Cloneable {
 
         /**
          * @param lineCondition A predicate that needs to be satisfied for this cell if the parser is going to use this line type.
+         * @return This builder instance
          */
         public B withLineCondition(Predicate<String> lineCondition) {
             this.lineCondition = lineCondition;
