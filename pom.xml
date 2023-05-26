@@ -129,6 +129,8 @@
 				<version>3.5.0</version>
 				<configuration>
 <!--					<doclint>none</doclint>-->
+					<!-- Suppress "no comment" doclint warning-->
+					<doclint>accessibility,html,reference,syntax</doclint>
 				</configuration>
 				<executions>
 					<execution>
