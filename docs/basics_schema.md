@@ -250,7 +250,7 @@ composing, this attribute has no impact.
 ##### Implied decimal
 In fixed width files with its origin in COBOL it is quite common that decimals are implied instead of explicitly specified. 
 The decimal point is omitted in the file, and it is assumed that you should add a decimal point at a specific position while parsing. For instance the number 123 in the file should be interpreted as 1.23 if there are 2 implied decimals.   
-This is called [implied decimal](https://www.ibm.com/support/knowledgecenter/en/SSLVMB_24.0.0/spss/base/syn_data_list_implied_decimal_positions.html) format.
+This is called [implied decimal](http://www.3480-3590-data-conversion.com/article-implied-decimal.html) format.
 You can specify a cell to be of type implied decimal by adding `<implieddecimal>` element instead of the `<format>`. For example:
 
 ```xml

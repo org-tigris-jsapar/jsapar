@@ -70,7 +70,7 @@ join and split cells that does not fit a bean property one-to-one.
 * Can both parse and compose flat files with fixed positions with or without line separator characters.
 * Custom fill character
 * Custom cell alignment
-* [Implied decimal](https://www.ibm.com/support/knowledgecenter/en/SSLVMB_24.0.0/spss/base/syn_data_list_implied_decimal_positions.html)
+* [Implied decimal](http://www.3480-3590-data-conversion.com/article-implied-decimal.html)
 
 ## Quality goals
 * All features fully documented, discussed and demonstrated.
