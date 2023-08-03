@@ -10,6 +10,7 @@ import org.jsapar.parse.bean.BeanMarshaller;
 import org.jsapar.schema.Schema;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.List;
 import java.util.function.Consumer;
@@ -94,8 +95,9 @@ public class Bean2TextConverter<T> implements AutoCloseable{
      *
      * @param bean The bean to convert
      * @return True if successfully composed an output line. False if no line was composed.
+     * @throws UncheckedIOException In case it was not possible to write to the attached writer.
      */
-    public boolean convert(T bean) {
+    public boolean convert(T bean) throws UncheckedIOException {
         return beanMarshaller.marshal(bean, errorConsumer, lineNumber++).map(line -> {
             for (LineManipulator manipulator : manipulators) {
                 if (!manipulator.manipulate(line))
@@ -106,6 +108,14 @@ public class Bean2TextConverter<T> implements AutoCloseable{
         }).orElse(false);
     }
 
+    /**
+     * Writes an additional line separator to the attached writer if the line separator is not an empty string.
+     * @throws UncheckedIOException In case it was not possible to write to the attached writer.
+     * @since 2.3.4
+     */
+    public void composeEmptyLine() throws UncheckedIOException {
+        textComposer.composeEmptyLine();
+    }
     /**
      * Use {@link #setErrorConsumer(Consumer) instead!}
      * @param errorEventListener The error event listener to send error events to.
