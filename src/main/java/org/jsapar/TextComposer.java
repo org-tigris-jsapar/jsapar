@@ -61,9 +61,10 @@ public final class TextComposer implements Composer, AutoCloseable {
      *
      * @throws UncheckedIOException if io-error occurs.
      * @return True if the line was written, false if there was no matching line type in the schema.
+     * @throws UncheckedIOException In case it was not possible to write to the attached writer.
      */
     @Override
-    public boolean composeLine(Line line) {
+    public boolean composeLine(Line line) throws UncheckedIOException{
         try {
             if (breakBefore) {
                 writer.write(schema.getLineSeparator());
@@ -76,8 +77,12 @@ public final class TextComposer implements Composer, AutoCloseable {
         }
     }
 
+    /**
+     * Writes an additional line separator to the attached writer if the line separator is not an empty string.
+     * @throws UncheckedIOException In case it was not possible to write to the attached writer.
+     */
     @Override
-    public boolean composeEmptyLine() {
+    public boolean composeEmptyLine() throws UncheckedIOException{
         try {
             this.writer.write(schema.getLineSeparator());
         } catch (IOException e) {

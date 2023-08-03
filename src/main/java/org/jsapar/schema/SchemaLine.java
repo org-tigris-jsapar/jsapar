@@ -266,7 +266,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
      * @param cellName The name of the schema cell to find.
      * @return The schema cell with the supplied name or null if no such cell was found.
      */
-    @Deprecated
+    @Deprecated(since = "2.3")
     public C getSchemaCell(String cellName){
         return schemaCells.get(cellName);
     }

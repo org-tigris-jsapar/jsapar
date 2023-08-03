@@ -10,7 +10,7 @@ import java.util.List;
  *
  * Deprecated since 2.2. Use {@link org.jsapar.parse.MulticastConsumer} instead.
  */
-@Deprecated
+@Deprecated(since = "2.2")
 public class MulticastErrorEventListener implements ErrorEventListener{
 
     private final List<ErrorEventListener> eventListeners = new ArrayList<>();

@@ -59,7 +59,7 @@ public class TextParser extends AbstractParser {
      * @return Number of parsed lines.
      * @throws IOException In case of IO error
      */
-    @Deprecated
+    @Deprecated(since = "2.2")
     public long parse(Reader reader, LineEventListener lineEventListener) throws IOException {
         return parseForEach(reader, new LineEventListenerLineConsumer(lineEventListener));
     }

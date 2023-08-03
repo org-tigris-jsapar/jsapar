@@ -16,7 +16,7 @@ public class FixedWidthSchemaLine extends SchemaLine<FixedWidthSchemaCell> {
      * <p>
      * Deprecated since 2.2. Use builder instead.
      */
-    @Deprecated
+    @Deprecated(since = "2.2")
     public FixedWidthSchemaLine() {
         super();
     }
