@@ -85,7 +85,7 @@ public class BeanPropertyMap {
         if(className==null || className.isEmpty()){
             return new BeanPropertyMap(lineType);
         }
-        return ofClass(Class.forName(className), lineType, cellNamesOfProperty);
+        return ofClass(Class.forName(className, false, Thread.currentThread().getContextClassLoader()), lineType, cellNamesOfProperty);
     }
 
     public static BeanPropertyMap ofClass(Class<?> lineClass, String lineType)  {
