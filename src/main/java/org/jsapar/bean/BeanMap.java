@@ -62,7 +62,7 @@ public final class BeanMap {
 
     @SuppressWarnings("WeakerAccess")
     public void putBean2Line(String className, BeanPropertyMap beanPropertyMap) throws ClassNotFoundException {
-        putBean2Line(Class.forName(className), beanPropertyMap);
+        putBean2Line(Class.forName(className, false, Thread.currentThread().getContextClassLoader()), beanPropertyMap);
     }
 
     private void putBean2Line(Class<?> aClass, BeanPropertyMap beanPropertyMap) {
@@ -177,7 +177,7 @@ public final class BeanMap {
      */
     private static boolean classExists(String className) {
         try {
-            Class.forName(className);
+            Class.forName(className, false, Thread.currentThread().getContextClassLoader());
             return true;
         } catch (ClassNotFoundException e) {
             return false;
