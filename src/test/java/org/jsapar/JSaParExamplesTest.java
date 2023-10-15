@@ -489,7 +489,7 @@ public class JSaParExamplesTest {
      */
     @Test
     public final void testExampleBeanToCsv06_annotated()
-            throws SchemaException, IOException, ParseException {
+            throws SchemaException, ParseException {
 
         List<TstPersonAnnotated> people = new LinkedList<>();
         TstPersonAnnotated testPerson1 = new TstPersonAnnotated("Nils", "Holgersson", (short) 43, 4711, dateFormat.parse("1902-08-07 12:43:22"),
@@ -537,7 +537,7 @@ public class JSaParExamplesTest {
                 .build();
         StringWriter writer = new StringWriter();
         Bean2TextConverter<Object> converter= new Bean2TextConverter<>(schema, BeanMap.ofClasses(TstPersonAnnotated.class, TstCompanyAnnotated.class), writer);
-//        Bean2TextConverter<TstPersonAnnotated> converter= new Bean2TextConverter<>(schema, BeanMap.ofSchema(schema, BeanMap.ofClass(TstPersonAnnotated.class)), writer);
+//        Bean2TextConverter<Object> converter= new Bean2TextConverter<>(schema, BeanMap.ofSchema(schema, BeanMap.ofClass(TstPersonAnnotated.class)), writer);
         people.forEach(converter::convert);
         converter.convert(tstCompanyAnnotated);
 

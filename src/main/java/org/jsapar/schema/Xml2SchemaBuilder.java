@@ -405,7 +405,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
                 .map(xmlFormat -> {
                     String sEnumClass = getAttributeValue(xmlFormat, "class");
                     try {
-                        final Class<Enum> enumClass = (Class<Enum>) Class.forName(sEnumClass);
+                        final Class<Enum> enumClass = (Class<Enum>) Class.forName(sEnumClass, false, Thread.currentThread().getContextClassLoader());
                         cellBuilder.withEnumFormat(enumClass, e->{
                             EnumFormat.Builder builder = (EnumFormat.Builder) e;
                             parseBooleanAttribute(xmlFormat, "ignorecase").ifPresent(builder::withIgnoreCase);

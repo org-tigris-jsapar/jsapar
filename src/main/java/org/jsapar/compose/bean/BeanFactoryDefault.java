@@ -21,7 +21,7 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException, NoSuchMethodException, InvocationTargetException {
-        Class<?> c = Class.forName(line.getLineType());
+        Class<?> c = Class.forName(line.getLineType(),false, Thread.currentThread().getContextClassLoader());
         return (T) c.getConstructor().newInstance();
     }
 
@@ -194,6 +194,7 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
                             f.invoke(objectToAssign, sValue.charAt(0));
                     }
                 } else if (Enum.class.isAssignableFrom(paramType) && value instanceof String) {
+                    //noinspection rawtypes
                     f.invoke(objectToAssign, Enum.valueOf((Class<Enum>) paramType, String.valueOf(value)));
                 } else {
                     try {

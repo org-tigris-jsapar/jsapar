@@ -13,17 +13,16 @@ import java.util.Locale;
 /**
  * Parses string values into {@link Cell} objects
  */
-public class EnumCellFactory implements CellFactory {
+public class EnumCellFactory<E extends Enum<E>> implements CellFactory<E> {
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
-        Enum enumValue = (Enum) format.parse(value);
-        return new EnumCell(name, enumValue);
+    public Cell<E> makeCell(String name, String value, Format<E> format) throws ParseException {
+        E enumValue = format.parse(value);
+        return new EnumCell<>(name, enumValue);
     }
 
     @Override
-    public Format makeFormat(Locale locale) {
+    public Format<E> makeFormat(Locale locale) {
         return null;
     }
 
@@ -38,9 +37,9 @@ public class EnumCellFactory implements CellFactory {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Format makeFormat(Locale locale, String pattern) {
+    public Format<E> makeFormat(Locale locale, String pattern) {
         try {
-            Class<Enum> enumClass = (Class<Enum>) Class.forName(pattern);
+            Class<E> enumClass = (Class<E>) Class.forName(pattern,false, Thread.currentThread().getContextClassLoader());
             return EnumFormat.builder(enumClass).build();
         } catch (ClassNotFoundException e) {
             throw new SchemaException("There is no Enum class with class name: " + pattern);
@@ -49,9 +48,10 @@ public class EnumCellFactory implements CellFactory {
 
     @Override
     public int actualCacheMaxSize(SchemaCell schemaCell, int configuredCacheMaxSize) {
-        Format format = schemaCell.getFormat();
+        Format<?> format = schemaCell.getFormat();
         if(format instanceof EnumFormat){
-            EnumFormat enumFormat = (EnumFormat) format;
+            @SuppressWarnings("unchecked")
+            EnumFormat<E> enumFormat = (EnumFormat<E>) format;
             return enumFormat.numberOfTextValues();
         }
         return configuredCacheMaxSize;
