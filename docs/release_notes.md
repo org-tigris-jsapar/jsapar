@@ -53,6 +53,7 @@ and format that does not conform to the java.text.Format contract.
 * Convert classes such as Text2TextConverter now supports that you supply a transformer Function<Line, List<Line>> that 
 allows one line from the parser to split into several lines before forwarding to the composer during converting.
 * ConvertTask class has been re-written with a new interface, constructed by static constructors that provides Consumer with the behavior instead of LineManipulator. 
+
 ## 2.1
 ### 2.1.1
 * Fixed problem that insufficient-error was not signaled correctly as en error when parsing an "ignoreread" cell.
@@ -81,6 +82,7 @@ implementing an interface that imposed a getter or a setter.
 obtained by setting the schema cell property to not trim leading spaces. See documentation page [Basics of Schema](basics_schema). 
 * Added some checks for null values in constructors thus finding errors during initialization instead of while parsing/composing.
 * The interfaces LineEventListener and ErrorEventListener are now marked with annotation @FunctionalInterface. 
+
 ## 2.0
 ### 2.0.1
 1. Performance improvements while parsing delimited (CSV) sources and fixed width sources where lines are separated. 
