@@ -60,7 +60,7 @@ join and split cells that do not fit a bean property one-to-one.
 * Can both parse and compose flat files with fixed positions with or without line separator characters.
 * Custom fill character
 * Custom cell alignment
-* [Implied decimal](http://www.3480-3590-data-conversion.com/article-implied-decimal.html)
+* Implied decimal
 
 ## Documentation
 * [Release notes](release_notes)

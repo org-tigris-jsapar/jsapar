@@ -6,6 +6,15 @@ title: Release notes
 * TOC
 {:toc}
 ## 2.3
+### 2.3.5
+1. Fixed problem with subclasses when creating bean map from schema with overrides.
+2. Added support for assigning java.nio.file.Path in a class from a string cell value.
+### 2.3.4
+1. Changed Class.forName to use current thread class loader instead of default class loader
+### 2.3.3
+1. Fixed problem with generics creating a bean map of multiple classes of different types.
+### 2.3.2
+1. Fixed problem with Integer/Short/Float/Double null values caused NPE instead of mapping to EmptyCell
 ### 2.3.1
 1. Support for parsing and composing java.time.Instant
 ### 2.3.0

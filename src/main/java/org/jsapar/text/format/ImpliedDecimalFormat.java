@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * Class that can be used to parse and format <a href="http://www.3480-3590-data-conversion.com/article-implied-decimal.html">implied decimals</a>.
+ * Class that can be used to parse and format <i>implied decimals</i>.
  * The text representation is always an integer but when parsing the decimal point is shifted left and when composing it is shifted right.
  */
 public class ImpliedDecimalFormat implements Format<BigDecimal> {
