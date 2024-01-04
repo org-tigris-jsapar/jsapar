@@ -9,11 +9,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.Path;
 import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class Bean2Cell {
 
@@ -67,7 +67,7 @@ public class Bean2Cell {
      *
      * @return a cell creator best fitted for the job depending on the return type of the bean property.
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes"})
     private CellCreator makeCellCreator() {
         Method f = propertyDescriptor.getReadMethod();
         if (f == null)
@@ -112,7 +112,7 @@ public class Bean2Cell {
         return (bean) -> {
             Object value = f.invoke(bean);
             if (value != null)
-                return new StringCell(cellName, String.valueOf(value));
+                return new StringCell(cellName, value.toString());
             else
                 return StringCell.emptyOf(cellName);
         };
@@ -186,6 +186,8 @@ public class Bean2Cell {
         } else if (Enum.class.isAssignableFrom(paramType)) {
             //noinspection rawtypes
             return Enum.valueOf((Class<Enum>) paramType, cell.getStringValue());
+        } else if(paramType.isAssignableFrom(Path.class)){
+            return Path.of(cell.getStringValue());
         }
         throw new BeanComposeException(
                 "Skipped assigning cell - The setter for property " + this.propertyDescriptor.getName()

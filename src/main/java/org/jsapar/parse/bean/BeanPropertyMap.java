@@ -63,18 +63,35 @@ public class BeanPropertyMap {
 
             Map<String, String> cellNamesOfProperty = new HashMap<>(
                     schemaLine.stream().collect(Collectors.toMap(SchemaCell::getName, SchemaCell::getName)));
-            overrideValues.bean2CellByCellName
-                    .forEach((key, value) -> cellNamesOfProperty.put(value.getPropertyDescriptor().getName(), key));
+            putOverrideValues(cellNamesOfProperty, overrideValues, "");
 
-            return ofPropertyNames(overrideValues.getLineClass().getName(), schemaLine.getLineType(), cellNamesOfProperty);
+            return ofPropertyNames(overrideValues.getLineClass().getName(),
+                    schemaLine.getLineType(),
+                    cellNamesOfProperty);
         } catch (ClassNotFoundException e) {
             throw new BeanException("Failed to create bean mapping based on schema", e);
         }
     }
 
+    private static void putOverrideValues(Map<String, String> cellNamesOfProperty,
+                                          BeanPropertyMap overrideValues,
+                                          String propertyPrefix) {
+        overrideValues.bean2CellByCellName
+                .forEach((key, value) -> {
+                    if(value.getChildren() != null){
+                        putOverrideValues(cellNamesOfProperty, value.getChildren(), propertyPrefix + value.getPropertyDescriptor().getName() + ".");
+                    }
+                    else {
+                        cellNamesOfProperty.put(propertyPrefix + value.getPropertyDescriptor().getName(), key);
+                    }
+                });
+    }
+
     public static BeanPropertyMap ofSchemaLine(SchemaLine<? extends SchemaCell> schemaLine) throws BeanException {
         try {
-            return ofPropertyNames(schemaLine.getLineType(), schemaLine.getLineType(), schemaLine.stream().collect(Collectors.toMap(SchemaCell::getName, SchemaCell::getName)));
+            return ofPropertyNames(schemaLine.getLineType(),
+                    schemaLine.getLineType(),
+                    schemaLine.stream().collect(Collectors.toMap(SchemaCell::getName, SchemaCell::getName)));
         } catch (ClassNotFoundException  e) {
             throw new BeanException("Failed to create bean mapping based on schema", e);
         }

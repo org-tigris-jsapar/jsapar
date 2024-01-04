@@ -536,8 +536,8 @@ public class JSaParExamplesTest {
                 )
                 .build();
         StringWriter writer = new StringWriter();
-        Bean2TextConverter<Object> converter= new Bean2TextConverter<>(schema, BeanMap.ofClasses(TstPersonAnnotated.class, TstCompanyAnnotated.class), writer);
-//        Bean2TextConverter<Object> converter= new Bean2TextConverter<>(schema, BeanMap.ofSchema(schema, BeanMap.ofClass(TstPersonAnnotated.class)), writer);
+//        Bean2TextConverter<Object> converter= new Bean2TextConverter<>(schema, BeanMap.ofClasses(TstPersonAnnotated.class, TstCompanyAnnotated.class), writer);
+        Bean2TextConverter<Object> converter= new Bean2TextConverter<>(schema, BeanMap.ofSchema(schema, BeanMap.ofClasses(TstPersonAnnotated.class, TstCompanyAnnotated.class)), writer);
         people.forEach(converter::convert);
         converter.convert(tstCompanyAnnotated);
 
