@@ -9,14 +9,19 @@ title: Release notes
 ### 2.3.5
 * Fixed problem with subclasses when creating bean map from schema with overrides.
 * Added support for assigning java.nio.file.Path property in a class from a string cell value.
+
 ### 2.3.4
 * Changed Class.forName to use current thread class loader instead of default class loader
+
 ### 2.3.3
 * Fixed problem with generics creating a bean map of multiple classes of different types.
+
 ### 2.3.2
 * Fixed problem with Integer/Short/Float/Double null values caused NPE instead of mapping to EmptyCell
+
 ### 2.3.1
 * Support for parsing and composing java.time.Instant
+
 ### 2.3.0
 1. Built with and for Java 11. Support for Java 8 and below is dropped. 
 2. Added methods to `TextParser` to get stream of lines while parsing. This makes parsing lazy, i.e. lines are pulled from the source `Reader` upon requested.
@@ -24,6 +29,7 @@ title: Release notes
 4. The return value of method `Cell.getValue()` is now undefined if the cell is empty and may return null.
 5. When header line is used as schema, the cell names in that header line are now trimmed from leading and trailing whitespaces. This eliminates the hard detected error of having trailing white space characters on the first line.
 6. Made it possible to specify a level label in the `@JSaParContainsCells` annotation.
+
 ## 2.2
 ### 2.2.0
 There are two main focus areas of this release:
