@@ -18,7 +18,7 @@ import java.util.Locale;
 /**
  * Parses instant time values into {@link Cell} objects
  */
-public class InstantCellFactory extends AbstractDateTimeCellFactory {
+public class InstantCellFactory extends AbstractTemporalAccessorCellFactory {
 
     /**
      * Creates an instance.

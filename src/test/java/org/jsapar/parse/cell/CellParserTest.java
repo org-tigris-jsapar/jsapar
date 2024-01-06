@@ -264,6 +264,18 @@ public class CellParserTest {
         assertEquals(ZonedDateTime.of(2000, 1, 1, 0, 0, 0, 0, ZoneId.of("+00:00")), ((ZonedDateTimeCell)cell).getValue());
     }
 
+    @Test
+    public void testMakeCell_Duration() throws SchemaException, java.text.ParseException {
+        SchemaCell schemaCell = StringSchemaCell.builder("test")
+                .withType(CellType.DURATION)
+                .withLocale("sv","SE")
+                .build();
+        CellParser<?> cellParser = new CellParser<>(schemaCell, 0);
+
+        Cell<?> cell = cellParser.makeCell("PT12H15M");
+        assertEquals(Duration.ofHours(12).plus(Duration.ofMinutes(15)), cell.getValue());
+    }
+
     /**
      *
      */

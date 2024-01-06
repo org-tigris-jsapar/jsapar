@@ -5,6 +5,7 @@ import org.jsapar.text.format.*;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.Duration;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
@@ -184,15 +185,9 @@ public interface Format<T> {
      * @param cellType The type of cell to parse and produce
      * @return An instance that formats and parses date time objects.
      */
-    static Format<TemporalAccessor>  ofDateTimeInstance(DateTimeFormatter formatter, CellType cellType){
+    static Format<TemporalAccessor> ofTemporalAccessorInstance(DateTimeFormatter formatter, CellType cellType){
         // TODO When not given time zone explicitly, it should be given by the parser instead of system default
         return new DateTimeFormat(formatter, cellType, ZoneId.systemDefault());
-    }    /**
-     * @param formatter  The formatter to use while formatting and parsing.
-     * @return An instance that formats and parses date time objects of type local date time.
-     */
-    static  Format<TemporalAccessor>  ofDateTimeInstance(DateTimeFormatter formatter){
-        return ofDateTimeInstance(formatter, CellType.LOCAL_DATE_TIME);
     }
 
     /**
@@ -201,15 +196,28 @@ public interface Format<T> {
      * @param cellType The type of cell to parse and produce.
      * @return An instance that formats and parses date time objects.
      */
-    static  Format<TemporalAccessor>  ofDateTimeInstance(Locale locale, String pattern, CellType cellType){
-        return ofDateTimeInstance(DateTimeFormatter.ofPattern(pattern, locale), cellType);
-    }    /**
+    static  Format<TemporalAccessor> ofTemporalAccessorInstance(Locale locale, String pattern, CellType cellType){
+        return ofTemporalAccessorInstance(DateTimeFormatter.ofPattern(pattern, locale), cellType);
+    }
+
+    /**
      * @param locale  The locale to use
      * @param pattern The date pattern to use according to {@link DateTimeFormatter}. Required.
      * @return An instance that formats and parses date time objects of type local date time.
      */
-    static  Format<TemporalAccessor>  ofDateTimeInstance(Locale locale, String pattern){
-        return ofDateTimeInstance(locale, pattern, CellType.LOCAL_DATE_TIME);
+    static  Format<TemporalAccessor> ofTemporalAccessorInstance(Locale locale, String pattern){
+        return ofTemporalAccessorInstance(locale, pattern, CellType.LOCAL_DATE_TIME);
+    }
+
+    /**
+     * @param locale  The locale to use
+     * @param pattern The date pattern to use according to {@link DateTimeFormatter}. Required.
+     * @return An instance that formats and parses date time objects of type local date time.
+     */
+    static  Format<Duration> ofDurationInstance(Locale locale, String pattern){
+        if(pattern == null || pattern.isEmpty())
+            return new DurationDefalultFormat();
+        throw new UnsupportedOperationException("Duration with pattern is not yet supported");
     }
 
     /**

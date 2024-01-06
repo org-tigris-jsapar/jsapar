@@ -13,7 +13,7 @@ import java.time.temporal.TemporalAccessor;
 /**
  * Parses zoned date time values into {@link Cell} objects
  */
-public class ZonedDateTimeCellFactory extends AbstractDateTimeCellFactory {
+public class ZonedDateTimeCellFactory extends AbstractTemporalAccessorCellFactory {
 
     public ZonedDateTimeCellFactory() {
         super(DateTimeFormatter.ISO_OFFSET_DATE_TIME, CellType.ZONED_DATE_TIME);

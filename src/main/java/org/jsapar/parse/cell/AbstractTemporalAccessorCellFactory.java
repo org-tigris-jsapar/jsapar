@@ -9,16 +9,16 @@ import java.util.Locale;
 
 /**
  */
-public abstract class AbstractDateTimeCellFactory implements CellFactory<TemporalAccessor> {
+abstract class AbstractTemporalAccessorCellFactory implements CellFactory<TemporalAccessor> {
 
     private final Format<TemporalAccessor> defaultFormat;
 
-    private AbstractDateTimeCellFactory(Format<TemporalAccessor> defaultFormat) {
+    private AbstractTemporalAccessorCellFactory(Format<TemporalAccessor> defaultFormat) {
         this.defaultFormat = defaultFormat;
     }
 
-    AbstractDateTimeCellFactory(DateTimeFormatter defaultFormatter, CellType cellType) {
-        this(Format.ofDateTimeInstance(defaultFormatter, cellType));
+    AbstractTemporalAccessorCellFactory(DateTimeFormatter defaultFormatter, CellType cellType) {
+        this(Format.ofTemporalAccessorInstance(defaultFormatter, cellType));
     }
 
     Format<TemporalAccessor> getDefaultFormat() {
@@ -34,7 +34,7 @@ public abstract class AbstractDateTimeCellFactory implements CellFactory<Tempora
     public Format<TemporalAccessor> makeFormat(Locale locale, String pattern) {
         if (pattern == null || pattern.isEmpty())
             return makeFormat(locale);
-        return Format.ofDateTimeInstance(locale, pattern);
+        return Format.ofTemporalAccessorInstance(locale, pattern);
     }
 
 

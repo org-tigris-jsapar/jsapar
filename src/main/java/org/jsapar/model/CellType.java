@@ -60,14 +60,15 @@ public enum CellType {
     /**
      * Cell contains an enumerated set of values.
      */
-    ENUM(new EnumCellFactory(), true, false, false), INSTANT(new InstantCellFactory(), false, false ,true );
+    ENUM(new EnumCellFactory<>(), true, false, false), INSTANT(new InstantCellFactory(), false, false ,true ),
+    DURATION(new DurationCellFactory(), false, false, false);
 
-    private final CellFactory cellFactory;
+    private final CellFactory<?> cellFactory;
     private final boolean atomic;
     private final boolean number;
     private final boolean temporal;
 
-    CellType(CellFactory cellFactory, boolean atomic, boolean number, boolean temporal) {
+    CellType(CellFactory<?> cellFactory, boolean atomic, boolean number, boolean temporal) {
         this.cellFactory = cellFactory;
         this.atomic = atomic;
         this.number = number;

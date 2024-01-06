@@ -13,7 +13,7 @@ import java.time.temporal.TemporalAccessor;
 /**
  * Parses date values into {@link Cell} objects
  */
-public class LocalDateTimeCellFactory extends AbstractDateTimeCellFactory{
+public class LocalDateTimeCellFactory extends AbstractTemporalAccessorCellFactory {
 
     public LocalDateTimeCellFactory() {
         super(DateTimeFormatter.ISO_DATE_TIME, CellType.LOCAL_DATE_TIME);
