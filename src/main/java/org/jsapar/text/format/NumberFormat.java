@@ -4,6 +4,7 @@ import org.jsapar.model.CellType;
 import org.jsapar.text.Format;
 import org.jsapar.utils.StringUtils;
 
+import java.nio.CharBuffer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
@@ -67,11 +68,14 @@ public class NumberFormat extends JavaTextFormat<Number> implements Format<Numbe
 
     private static CharSequence replaceNegativePrefix(CharSequence value, String minusPrefix) {
         if( !value.isEmpty() && value.charAt(0)=='-') {
-            return minusPrefix + value.substring(1);
+            CharBuffer charBuffer = CharBuffer.allocate(value.length() +1);
+            charBuffer.append(minusPrefix);
+            charBuffer.append(value.subSequence(1, value.length()));
+            return charBuffer;
         }
         return value;
     }
-    private static String replaceExponent(String value, String exp) {
+    private static String replaceExponent(CharSequence value, String exp) {
         int pos = value.indexOf('E');
         if(pos > 0)
             return value.substring(0, pos) + exp + value.substring(pos+1);
@@ -80,7 +84,7 @@ public class NumberFormat extends JavaTextFormat<Number> implements Format<Numbe
 
     @Override
     public Number parse(CharSequence csValue) throws ParseException {
-        for (Function<String, String> mapper : mappers) {
+        for (Function<CharSequence, CharSequence> mapper : mappers) {
             csValue = mapper.apply(csValue);
         }
         return super.parse(csValue);
