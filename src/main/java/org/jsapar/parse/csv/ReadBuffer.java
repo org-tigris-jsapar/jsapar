@@ -19,7 +19,7 @@ final class ReadBuffer {
     /**
      * @param reader The reader to read from
      * @param bufferSize The buffer size to use.
-     * @param maxLoadSize The maximum number of characters to load a a time to the buffer.
+     * @param maxLoadSize The maximum number of characters to load at a time to the buffer.
      */
     ReadBuffer(Reader reader, int bufferSize, int maxLoadSize) {
         this.reader = reader;

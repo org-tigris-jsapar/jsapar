@@ -142,7 +142,7 @@ final class CsvLineReaderStates implements CsvLineReader {
                     return lineComplete();
                 }
             }
-            if(state.processChar(buffer.nextCharacter()))
+            if(state.processCharAndCheckEol(buffer.nextCharacter()))
                 return lineComplete();
         }
     }
@@ -209,7 +209,11 @@ final class CsvLineReaderStates implements CsvLineReader {
      * Interface for states
      */
     private interface State {
-        boolean processChar(final char c);
+        /**
+         * @param c The character to process
+         * @return True if end of line has been reached after processing the character, false otherwise.
+         */
+        boolean processCharAndCheckEol(final char c);
     }
 
 
@@ -282,7 +286,7 @@ final class CsvLineReaderStates implements CsvLineReader {
      */
     private final class BeginCellState implements State {
         @Override
-        public boolean processChar(final char c) {
+        public boolean processCharAndCheckEol(final char c) {
             if (c == quoteChar) {
                 state = quotedCellState;
                 currentCellCreator.currentCellOffset++;
@@ -305,7 +309,7 @@ final class CsvLineReaderStates implements CsvLineReader {
      */
     private final class UnquotedCellState implements State {
         @Override
-        public boolean processChar(final char c) {
+        public boolean processCharAndCheckEol(final char c) {
             if( c==lastCellSeparatorChar && tailOfCellMatches(cellSeparator)){
                 currentCellCreator.addToLineExcept(cellSeparator.length());
                 beginCellState();
@@ -320,7 +324,7 @@ final class CsvLineReaderStates implements CsvLineReader {
      */
     private final class QuotedCellState implements State {
         @Override
-        public boolean processChar(final char c) {
+        public boolean processCharAndCheckEol(final char c) {
             if (c == quoteChar) {
                 currentCellCreator.offsetFromEndQuote=1;
                 state = foundEndQuoteState;
@@ -334,7 +338,7 @@ final class CsvLineReaderStates implements CsvLineReader {
      */
     private final class FoundEndQuoteStateFirstLast implements State {
         @Override
-        public boolean processChar(final char c) {
+        public boolean processCharAndCheckEol(final char c) {
             if (c==lastCellSeparatorChar && cellSeparator.length()==1) {
                 currentCellCreator.addToLineExcept(2);
                 beginCellState();
@@ -359,7 +363,7 @@ final class CsvLineReaderStates implements CsvLineReader {
      */
     private final class FoundEndQuoteStateRfc implements State {
         @Override
-        public boolean processChar(final char c) {
+        public boolean processCharAndCheckEol(final char c) {
             if (c==lastCellSeparatorChar && cellSeparator.length()==1) {
                 currentCellCreator.addToLineExcept(2);
                 beginCellState();
@@ -385,7 +389,7 @@ final class CsvLineReaderStates implements CsvLineReader {
      */
     private final class FoundEndQuoteWithinState implements State {
         @Override
-        public boolean processChar(final char c) {
+        public boolean processCharAndCheckEol(final char c) {
             if (c == quoteChar) {
                 state = foundEndQuoteState;
                 currentCellCreator.offsetFromEndQuote=1;
