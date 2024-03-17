@@ -446,7 +446,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
     }
 
 
-    private Predicate<String> extractCellValueCondition(Element xmlCellValueCondition) throws SchemaException {
+    private Predicate<CharSequence> extractCellValueCondition(Element xmlCellValueCondition) throws SchemaException {
         Element xmlMatch = getChild(xmlCellValueCondition, ELEMENT_MATCH);
         if(xmlMatch != null){
             String pattern = getAttributeValue(xmlMatch, ATTRIB_PATTERN);
@@ -456,7 +456,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         if(xmlEqual != null){
             boolean ignoreCase = parseBooleanAttribute(xmlEqual, "ignorecase").orElse(false);
             String value = getAttributeValue(xmlEqual, "value");
-            return ignoreCase ? value::equalsIgnoreCase : value::equals;
+            return ignoreCase ? cs->value.equalsIgnoreCase(cs.toString()) : cs->value.equals(cs.toString());
         }
         throw new SchemaException("Expected line condition is missing");
     }

@@ -30,7 +30,7 @@ public interface CellFactory<T> {
      * @return A new cell.
      * @throws ParseException If parsing could not be done with the given format object.
      */
-    Cell<? extends T> makeCell(String name, String value, Format<T> format) throws ParseException;
+    Cell<? extends T> makeCell(String name, CharSequence value, Format format) throws ParseException;
 
     /**
      * Create a default format object for the current cell type given the locale.

@@ -14,8 +14,8 @@ public class StringFormat implements Format<String> {
     }
 
     @Override
-    public String parse(String stringValue) {
-        return stringValue;
+    public String parse(CharSequence csValue) {
+        return csValue.toString();
     }
 
     @Override

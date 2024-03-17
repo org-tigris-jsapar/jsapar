@@ -18,7 +18,7 @@ import java.util.function.Function;
  * able to parse the old format since they are still widely used.
  */
 public class NumberFormat extends JavaTextFormat<Number> implements Format<Number> {
-    private final List<Function<String, String>> mappers = new ArrayList<>(3);
+    private final List<Function<CharSequence, CharSequence>> mappers = new ArrayList<>(3);
 
     /**
      * Creates an instance
@@ -65,7 +65,7 @@ public class NumberFormat extends JavaTextFormat<Number> implements Format<Numbe
         this(java.text.NumberFormat.getInstance(locale), cellType);
     }
 
-    private static String replaceNegativePrefix(String value, String minusPrefix) {
+    private static CharSequence replaceNegativePrefix(CharSequence value, String minusPrefix) {
         if( !value.isEmpty() && value.charAt(0)=='-') {
             return minusPrefix + value.substring(1);
         }
@@ -79,11 +79,11 @@ public class NumberFormat extends JavaTextFormat<Number> implements Format<Numbe
     }
 
     @Override
-    public Number parse(String stringValue) throws ParseException {
+    public Number parse(CharSequence csValue) throws ParseException {
         for (Function<String, String> mapper : mappers) {
-            stringValue = mapper.apply(stringValue);
+            csValue = mapper.apply(csValue);
         }
-        return super.parse(stringValue);
+        return super.parse(csValue);
     }
 
     @Override

@@ -47,11 +47,11 @@ public class RegExpFormat implements Format<String> {
      * @throws ParseException If regex pattern does not match.
      */
     @Override
-    public String parse(String source) throws ParseException {
+    public String parse(CharSequence source) throws ParseException {
         if (!this.pattern.matcher(source).matches())
             throw new ParseException(
                     "Value [" + source + "] does not match regular expression [" + this.pattern.pattern() + "].", 0);
-        return source;
+        return source.toString();
     }
 
     /* (non-Javadoc)

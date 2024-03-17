@@ -36,8 +36,8 @@ public class DecimalFormat implements Format<BigDecimal> {
     }
 
     @Override
-    public BigDecimal parse(String stringValue) throws ParseException {
-        return (BigDecimal) numberFormat.parse(stringValue);
+    public BigDecimal parse(CharSequence csValue) throws ParseException {
+        return (BigDecimal) numberFormat.parse(csValue);
     }
 
     @Override

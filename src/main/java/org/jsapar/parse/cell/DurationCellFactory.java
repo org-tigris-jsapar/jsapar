@@ -9,7 +9,7 @@ import java.util.Locale;
 
 public class DurationCellFactory implements CellFactory<Duration> {
     @Override
-    public DurationCell makeCell(String name, String value, Format<Duration> format) throws ParseException {
+    public DurationCell makeCell(String name, CharSequence value, Format format) throws ParseException {
         return new DurationCell(name, Duration.parse(value));
     }
 

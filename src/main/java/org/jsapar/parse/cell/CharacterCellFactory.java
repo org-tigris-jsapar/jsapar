@@ -13,7 +13,7 @@ import java.util.Locale;
 public class CharacterCellFactory implements CellFactory {
 
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
+    public Cell makeCell(String name, CharSequence value, Format format) throws ParseException {
         final Character characterValue = (Character) format.parse(value);
         return new CharacterCell(name, characterValue);
     }

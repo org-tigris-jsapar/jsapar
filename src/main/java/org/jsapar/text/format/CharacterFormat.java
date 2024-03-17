@@ -13,7 +13,7 @@ public class CharacterFormat implements Format<Character> {
     }
 
     @Override
-    public Character parse(String value) throws ParseException {
+    public Character parse(CharSequence value) throws ParseException {
         if (value.length() > 1) {
             throw new java.text.ParseException("Invalid characters found while parsing single character.", 1);
         } else if (value.length() == 1)

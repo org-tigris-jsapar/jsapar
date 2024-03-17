@@ -8,7 +8,6 @@ import org.jsapar.text.Format;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 
 /**
  * Parses date values into {@link Cell} objects
@@ -23,7 +22,7 @@ public class LocalDateCellFactory extends AbstractTemporalAccessorCellFactory {
     }
 
     @Override
-    public LocalDateCell makeCell(String name, String value, Format<TemporalAccessor> format) throws ParseException {
+    public LocalDateCell makeCell(String name, CharSequence value, Format format) throws ParseException {
         return new LocalDateCell(name, LocalDate.from(format.parse(value)));
     }
 

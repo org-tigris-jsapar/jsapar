@@ -12,7 +12,7 @@ import java.util.Locale;
  */
 public class IntegerCellFactory extends NumberCellFactory {
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
+    public Cell makeCell(String name, CharSequence value, Format format) throws ParseException {
         Number number = super.parseNumber(format, value);
         return new IntegerCell(name, number.longValue());
     }

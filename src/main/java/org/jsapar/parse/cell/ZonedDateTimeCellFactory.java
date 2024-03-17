@@ -20,7 +20,7 @@ public class ZonedDateTimeCellFactory extends AbstractTemporalAccessorCellFactor
     }
 
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
+    public Cell makeCell(String name, CharSequence value, Format format) throws ParseException {
         if (format == null)
             format = getDefaultFormat();
 

@@ -35,7 +35,7 @@ public interface CsvLineReader {
      * list may result in unexpected behavior.
      * @throws IOException In case of an error in underlying IO.
      */
-    List<String> readLine(String cellSeparator, char quoteChar) throws IOException;
+    List<CharSequence> readLine(String cellSeparator, char quoteChar) throws IOException;
 
     /**
      * @return True if the last call to readLine resulted in end of input. A call to reset will reset also this flag to

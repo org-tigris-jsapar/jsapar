@@ -28,7 +28,7 @@ public class InstantCellFactory extends AbstractTemporalAccessorCellFactory {
     }
 
     @Override
-    public Cell makeCell(String name, String value, Format<TemporalAccessor> format) throws ParseException {
+    public Cell makeCell(String name, CharSequence value, Format format) throws ParseException {
         if (format == null)
             format = getDefaultFormat();
         if(format instanceof DateTimeFormat){

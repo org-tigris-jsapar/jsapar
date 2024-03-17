@@ -125,25 +125,26 @@ public class BooleanFormat implements Format<Boolean> {
      * @see java.text.Format#parseNumber(java.lang.String, java.text.ParsePosition)
      */
     @Override
-    public Boolean parse(String toParse) throws ParseException {
-        if(toParse.equals(trueValue))
+    public Boolean parse(CharSequence toParse) throws ParseException {
+        String value = toParse.toString();
+        if(value.equals(trueValue))
             return Boolean.TRUE;
-        if(toParse.equals(falseValue))
+        if(value.equals(falseValue))
             return Boolean.FALSE;
 
         if(ignoreCase) {
-            if (toParse.regionMatches(true, 0, trueValue, 0, trueValue.length())) {
+            if (value.regionMatches(true, 0, trueValue, 0, trueValue.length())) {
                 return Boolean.TRUE;
             }
-            if (toParse.regionMatches(true, 0, falseValue, 0, falseValue.length())) {
+            if (value.regionMatches(true, 0, falseValue, 0, falseValue.length())) {
                 return Boolean.FALSE;
             }
         }
-        Boolean theValue = matchValue(Arrays.stream(optionalTrue), Boolean.TRUE, toParse, ignoreCase)
-                .orElseGet(() -> matchValue(Arrays.stream(optionalFalse), Boolean.FALSE, toParse, ignoreCase)
+        Boolean theValue = matchValue(Arrays.stream(optionalTrue), Boolean.TRUE, value, ignoreCase)
+                .orElseGet(() -> matchValue(Arrays.stream(optionalFalse), Boolean.FALSE, value, ignoreCase)
                         .orElse(null));
         if(theValue == null)
-            throw new ParseException("The value " + toParse + " could not be parsed into a boolean value.", 0);
+            throw new ParseException("The value " + value + " could not be parsed into a boolean value.", 0);
         return theValue;
     }
 

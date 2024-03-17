@@ -26,11 +26,12 @@ public interface Format<T> {
 
     /**
      * Parses an instance of type T from the supplied string.
-     * @param stringValue The string value to parse from.
+     *
+     * @param csValue The string value to parse from.
      * @return A parsed object.
      * @throws ParseException If parsing fails for any reason.
      */
-    T parse(String stringValue) throws ParseException;
+    T parse(CharSequence csValue) throws ParseException;
 
     /**
      * Formats supplied object into string.

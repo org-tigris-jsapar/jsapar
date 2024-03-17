@@ -5,6 +5,7 @@ import org.jsapar.schema.QuoteSyntax;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +25,7 @@ final class CsvLineReaderStates implements CsvLineReader {
     private final State quotedCellState;
     private final State unquotedCellState;
     private State state;
-    private final List<String> currentLine;
+    private final List<CharSequence> currentLine = new ArrayList<>();
     private final EolCheck eolCheck;
     private final char lastEolChar;
 
@@ -66,7 +67,6 @@ final class CsvLineReaderStates implements CsvLineReader {
         quotedCellState = new QuotedCellState();
         unquotedCellState = new UnquotedCellState();
 
-        currentLine = new ArrayList<>();
         this.maxLineLength = maxLineLength;
         buffer = new ReadBuffer(reader, maxLineLength, (allowReadAhead ? maxLineLength : 1));
 
@@ -104,7 +104,7 @@ final class CsvLineReaderStates implements CsvLineReader {
     }
 
     @Override
-    public List<String> readLine(String cellSeparator, char quoteChar) throws IOException {
+    public List<CharSequence> readLine(String cellSeparator, char quoteChar) throws IOException {
         if(reset)
             return lastLine(cellSeparator, quoteChar);
         setLineCharacteristics(cellSeparator, quoteChar);
@@ -119,11 +119,12 @@ final class CsvLineReaderStates implements CsvLineReader {
         this.quoteChar = quoteChar;
     }
 
-    private List<String> processLine() throws IOException {
+    private List<CharSequence> processLine() throws IOException {
         currentLine.clear();
 
         while (true) {
             if(buffer.cursor >= buffer.bufferSize){
+                shieldCurrentLine();
                 final int count = buffer.load();
                 if(count<1){
                     if(state == quotedCellState){
@@ -147,9 +148,22 @@ final class CsvLineReaderStates implements CsvLineReader {
         }
     }
 
-    private List<String> lineComplete() {
+    // Current line points to characters in buffer that is about to be overwritten. Shield each value in its own memory
+    // buffer.
+    private void shieldCurrentLine() {
+        List<CharSequence> shieldedLine = new ArrayList<>(currentLine.size());
+        for (CharSequence value : currentLine) {
+            CharBuffer b = CharBuffer.allocate(value.length());
+            b.append(value);
+            shieldedLine.add(b);
+        }
+        currentLine.clear();
+        currentLine.addAll(shieldedLine);
+    }
+
+    private List<CharSequence> lineComplete() {
         beginCellState();
-        if(currentLine.size() == 1 && currentLine.get(0).trim().isEmpty())
+        if(currentLine.size() == 1 && currentLine.get(0).isEmpty())
             currentLine.clear();
         return currentLine;
     }
@@ -161,7 +175,7 @@ final class CsvLineReaderStates implements CsvLineReader {
      * @return A line
      * @throws IOException In case of underlying io error.
      */
-    private List<String> lastLine(String cellSeparator, char quoteChar) throws IOException {
+    private List<CharSequence> lastLine(String cellSeparator, char quoteChar) throws IOException {
         reset=false;
         if(quoteChar==this.quoteChar && cellSeparator.equals(this.cellSeparator))
             return currentLine;
@@ -249,7 +263,7 @@ final class CsvLineReaderStates implements CsvLineReader {
             if(count==0)
                 currentLine.add(EMPTY_CELL);
             else if (ignoresCount==0)
-                currentLine.add(new String(buffer.buffer, offset, count));
+                currentLine.add(CharBuffer.wrap(buffer.buffer, offset, count));
             else{
                 stringBuilder.delete(0, stringBuilder.length()); // Reset stringBuilder
                 for (int i = 0; i<ignoresCount; i++) {

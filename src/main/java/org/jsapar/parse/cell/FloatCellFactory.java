@@ -13,7 +13,7 @@ import java.util.Locale;
 public class FloatCellFactory extends NumberCellFactory {
 
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
+    public Cell makeCell(String name, CharSequence value, Format format) throws ParseException {
         final Number number = super.parseNumber(format, value);
         return new FloatCell(name, number instanceof Double ? (Double) number : number.doubleValue());
     }

@@ -22,7 +22,7 @@ public class BigDecimalCellFactory implements CellFactory {
      * @throws ParseException If there is an error parsing
      */
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
+    public Cell makeCell(String name, CharSequence value, Format format) throws ParseException {
         return new BigDecimalCell(name, (BigDecimal) format.parse(value));
     }
 

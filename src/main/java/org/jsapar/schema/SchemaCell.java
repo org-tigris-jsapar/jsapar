@@ -40,8 +40,8 @@ public abstract class SchemaCell implements Cloneable {
     private final EmptyCell<? extends Enum<?>> emptyCell;
     private String defaultValue = null;
     private Locale locale;
-    private Predicate<String> emptyCondition = null;
-    private Predicate<String> lineCondition = null;
+    private Predicate<CharSequence> emptyCondition = null;
+    private Predicate<CharSequence> lineCondition = null;
 
 
     /**
@@ -149,8 +149,8 @@ public abstract class SchemaCell implements Cloneable {
         private String minValue;
         private String maxValue;
         private String defaultValue;
-        private Predicate<String> emptyCondition;
-        private Predicate<String> lineCondition;
+        private Predicate<CharSequence> emptyCondition;
+        private Predicate<CharSequence> lineCondition;
         private CellType cellType = null;
         private Format<?> format;
         private String pattern;
@@ -329,7 +329,7 @@ public abstract class SchemaCell implements Cloneable {
          * @param emptyCondition the condition that needs to be satisfied if this cell is to be considered empty
          * @return This builder instance
          */
-        public B withEmptyCondition(Predicate<String> emptyCondition) {
+        public B withEmptyCondition(Predicate<CharSequence> emptyCondition) {
             this.emptyCondition = emptyCondition;
             return (B) this;
         }
@@ -352,7 +352,7 @@ public abstract class SchemaCell implements Cloneable {
          * @param lineCondition A predicate that needs to be satisfied for this cell if the parser is going to use this line type.
          * @return This builder instance
          */
-        public B withLineCondition(Predicate<String> lineCondition) {
+        public B withLineCondition(Predicate<CharSequence> lineCondition) {
             this.lineCondition = lineCondition;
             return (B) this;
         }
@@ -651,23 +651,10 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * @return the emptyCondition
      */
-    public Predicate<String> getEmptyCondition() {
+    public Predicate<CharSequence> getEmptyCondition() {
         return emptyCondition;
     }
 
-    /**
-     * A condition that if satisfied for a specific text input, indicates that the cell is actually empty. For instance
-     * the cell might contain the text NULL to indicate that there is no value even though this is a date or a numeric
-     * field. In that case a {@link MatchingCellValueCondition} can be used to match the pattern "NULL".
-     * <p>
-     * Deprecated since 2.2. Use {@link #setEmptyCondition(Predicate)} instead
-     *
-     * @param emptyCondition the cell value condition that needs to be satisfied if this cell is to be considered empty
-     */
-    @Deprecated
-    public void setEmptyCondition(CellValueCondition emptyCondition) {
-        this.emptyCondition = emptyCondition::satisfies;
-    }
 
     /**
      * A condition that if satisfied for a specific text input, indicates that the cell is actually empty. For instance
@@ -676,7 +663,7 @@ public abstract class SchemaCell implements Cloneable {
      *
      * @param emptyCondition the cell value condition that needs to be satisfied if this cell is to be considered empty
      */
-    public void setEmptyCondition(Predicate<String> emptyCondition) {
+    public void setEmptyCondition(Predicate<CharSequence> emptyCondition) {
         this.emptyCondition = emptyCondition;
     }
 
@@ -695,24 +682,14 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * @return A condition that needs to be satisfied if the parser is going to use this line type.
      */
-    public Predicate<String> getLineCondition() {
+    public Predicate<CharSequence> getLineCondition() {
         return lineCondition;
-    }
-
-    /**
-     * Deprecated since 2.2. Use {@link #setLineCondition(Predicate)} instead
-     *
-     * @param lineCondition A condition that needs to be satisfied if the parser is going to use this line type.
-     */
-    @Deprecated
-    public void setLineCondition(CellValueCondition lineCondition) {
-        this.lineCondition = lineCondition::satisfies;
     }
 
     /**
      * @param lineCondition A predicate that needs to be satisfied if the parser is going to use this line type.
      */
-    public void setLineCondition(Predicate<String> lineCondition) {
+    public void setLineCondition(Predicate<CharSequence> lineCondition) {
         this.lineCondition = lineCondition;
     }
 

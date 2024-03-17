@@ -18,9 +18,9 @@ public class DurationDefalultFormat implements Format<Duration> {
     }
 
     @Override
-    public Duration parse(String stringValue) throws ParseException {
+    public Duration parse(CharSequence csValue) throws ParseException {
         
-        return Duration.parse(stringValue);
+        return Duration.parse(csValue);
     }
 
     @Override

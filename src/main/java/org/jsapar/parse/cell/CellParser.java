@@ -24,7 +24,7 @@ public class CellParser<S extends SchemaCell> {
     private final EmptyCell<?> emptyCell;
     private final CellFactory cellFactory;
     private Format<?> format;
-    private final Cache<String, Cell<?>> cellCache ;
+    private final Cache<CharSequence, Cell<?>> cellCache ;
     private static final String EMPTY_STRING = "";
 
 
@@ -61,7 +61,7 @@ public class CellParser<S extends SchemaCell> {
      * @param errorEventListener Error event listener to deliver errors to.
      * @return A new cell of a type according to the schema specified. Returns null if there was en error while parsing.
      */
-    public Cell<?> parse(String sValue, Consumer<JSaParException> errorEventListener) {
+    public Cell<?> parse(CharSequence sValue, Consumer<JSaParException> errorEventListener) {
         if (sValue.isEmpty()) {
             checkIfMandatory(errorEventListener);
 
@@ -86,14 +86,14 @@ public class CellParser<S extends SchemaCell> {
      * @param errorEventListener Error event listener to deliver errors to.
      * @return A new cell of a type according to the schema specified. Returns null if an error occurs.
      */
-    private Cell<?> doParse(String sValue, Consumer<JSaParException> errorEventListener) {
+    private Cell<?> doParse(CharSequence sValue, Consumer<JSaParException> errorEventListener) {
         try {
             Cell<?> cell = makeCell(sValue);
             validateRange(cell);
             return cell;
         } catch (java.text.ParseException e) {
             errorEventListener.accept(
-                    new CellParseException(schemaCell.getName(), sValue, schemaCell.getCellFormat(), e));
+                    new CellParseException(schemaCell.getName(), sValue.toString(), schemaCell.getCellFormat(), e));
             return null;
         }
     }
@@ -107,7 +107,7 @@ public class CellParser<S extends SchemaCell> {
      *         value.
      * @throws ParseException If the value cannot be parsed according to the format of this cell schema.
      */
-    Cell<?> makeCell(String sValue) throws ParseException {
+    Cell<?> makeCell(CharSequence sValue) throws ParseException {
 
         // If the cell is empty, check if default value exists.
         if (sValue.isEmpty() || (schemaCell.hasEmptyCondition() && schemaCell.getEmptyCondition().test(sValue))) {

@@ -13,11 +13,11 @@ public class USIntegerFormat implements Format<Number> {
     }
 
     @Override
-    public Number parse(String stringValue) throws ParseException {
+    public Number parse(CharSequence csValue) throws ParseException {
         try {
-            return Long.valueOf(stringValue);
+            return Long.parseLong(csValue, 0, csValue.length(), 10);
         }catch (NumberFormatException e){
-            throw new ParseException("Failed to parse integer from value [" + stringValue+"]", 0);
+            throw new ParseException("Failed to parse integer from value [" + csValue +"]", 0);
         }
     }
 

@@ -67,7 +67,7 @@ public class ImpliedDecimalFormat implements Format<BigDecimal> {
     }
 
     @Override
-    public BigDecimal parse(String s) {
+    public BigDecimal parse(CharSequence s) {
         return new BigDecimal(s).movePointLeft(decimals);
     }
 

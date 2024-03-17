@@ -164,13 +164,13 @@ public class EnumFormat<E extends Enum<E>> implements Format<E> {
      * @return true or false depending on value to parse.
      */
     @Override
-    public E parse(String toParse) throws ParseException {
+    public E parse(CharSequence toParse) throws ParseException {
         E enumValue = enumByValue.get(toParse);
         if(enumValue != null)
             return enumValue;
 
         if(ignoreCase){
-            enumValue = enumByUValue.get(toParse.toUpperCase());
+            enumValue = enumByUValue.get(toParse.toString().toUpperCase());
             if(enumValue != null)
                 return enumValue;
         }

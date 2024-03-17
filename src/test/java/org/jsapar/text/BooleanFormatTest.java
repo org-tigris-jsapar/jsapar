@@ -82,7 +82,7 @@ public class BooleanFormatTest {
     }
 
     /**
-     * Test method for {@link BooleanFormat#parse(java.lang.String)}.
+     * Test method for {@link Format#parse(CharSequence)}.
      */
     @Test
     public void testParseObjectString() throws ParseException {
@@ -95,7 +95,7 @@ public class BooleanFormatTest {
 
 
     /**
-     * Test method for {@link BooleanFormat#parse(java.lang.String)}.
+     * Test method for {@link Format#parse(CharSequence)}.
      */
     @Test
     public void testParse() throws ParseException {

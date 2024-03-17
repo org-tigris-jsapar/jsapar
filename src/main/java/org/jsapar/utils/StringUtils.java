@@ -13,7 +13,7 @@ public class StringUtils {
      * @param s The string to remove all white-spaces from
      * @return A string without any white-space characters.
      */
-    public static String removeAllWhitespaces(String s) {
+    public static CharSequence removeAllWhitespaces(CharSequence s) {
         return removeAll(s, Character::isWhitespace);
     }
 
@@ -24,7 +24,7 @@ public class StringUtils {
      * @param s The string to remove all spaces from
      * @return A string without any space characters.
      */
-    public static String removeAllSpaces(String s) {
+    public static CharSequence removeAllSpaces(CharSequence s) {
         return removeAll(s, Character::isSpaceChar);
     }
 
@@ -33,13 +33,13 @@ public class StringUtils {
      * Removes all characters that matches
      * provided check
      *
-     * @param s        String to remove from.
-     * @param check    Check lambda, if returns true, character will be removed.
+     * @param s     String to remove from.
+     * @param check Check lambda, if returns true, character will be removed.
      * @return A string without any characters matching the check.
      */
-    private static String removeAll(String s, IntPredicate check) {
+    private static CharSequence removeAll(CharSequence s, IntPredicate check) {
         for(int i=0; i<s.length(); i++){
-            if(check.test(s.codePointAt(i))){
+            if(check.test(s.charAt(i))){
                 return removeAll(s, check, i);
             }
         }
@@ -54,17 +54,17 @@ public class StringUtils {
      * @param firstFound The position of the first confirmed match.
      * @return A string without any characters matching the check.
      */
-    private static String removeAll(String s, IntPredicate check, int firstFound) {
+    private static CharSequence removeAll(CharSequence s, IntPredicate check, int firstFound) {
         StringBuilder sb = new StringBuilder(s.length()-1);
         sb.append(s, 0, firstFound);
 
         for(int i=firstFound+1; i<s.length(); i++){
-            int codePoint = s.codePointAt(i);
-            if(!check.test(codePoint)){
-                sb.appendCodePoint(codePoint);
+            char character = s.charAt(i);
+            if(!check.test(character)){
+                sb.append(character);
             }
         }
-        return sb.toString();
+        return sb;
     }
 
     /**

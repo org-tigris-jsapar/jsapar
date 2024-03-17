@@ -18,7 +18,7 @@ DateCellFactory implements CellFactory {
     private static final SimpleDateFormat ISO_DATE_FORMAT = DateCell.ISO_DATE_FORMAT;
 
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
+    public Cell makeCell(String name, CharSequence value, Format format) throws ParseException {
         return new DateCell(name, (Date) format.parse(value));
     }
 

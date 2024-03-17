@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * A {@link Predicate} that matches based on a regex expression. The whole expression needs to match.
  * @see Pattern
  */
-public class MatchingCellValueCondition implements Predicate<String> {
+public class MatchingCellValueCondition implements Predicate<CharSequence> {
     private final Pattern pattern;
 
     /**
@@ -28,7 +28,7 @@ public class MatchingCellValueCondition implements Predicate<String> {
     }
 
     @Override
-    public boolean test(String value) {
+    public boolean test(CharSequence value) {
         Matcher m = pattern.matcher(value);
         return m.matches();
     }

@@ -23,7 +23,7 @@ public class LocalTimeCellFactory extends AbstractTemporalAccessorCellFactory {
     }
 
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
+    public Cell makeCell(String name, CharSequence value, Format format) throws ParseException {
         return new LocalTimeCell(name, LocalTime.from((TemporalAccessor) format.parse(value)));
     }
 

@@ -73,7 +73,7 @@ class CsvLineParser {
 
         if(lineReader.eofReached())
             return false;
-        List<String> rawCells = lineReader.readLine(lineSchema.getCellSeparator(), lineSchema.getQuoteChar());
+        List<CharSequence> rawCells = lineReader.readLine(lineSchema.getCellSeparator(), lineSchema.getQuoteChar());
 
         if (rawCells.isEmpty())
             return handleEmptyLine(lineReader.currentLineNumber(), errorListener);
@@ -93,11 +93,11 @@ class CsvLineParser {
         lineDecoratorErrorConsumer.initialize(errorListener, line);
 
         java.util.Iterator<CellParser<CsvSchemaCell>> itParser = cellParsers.iterator();
-        for (String sCell : rawCells) {
+        for (CharSequence csCell : rawCells) {
             if (itParser.hasNext()) {
-                addCellToLineBySchema(line, itParser.next(), sCell, lineDecoratorErrorConsumer);
+                addCellToLineBySchema(line, itParser.next(), csCell, lineDecoratorErrorConsumer);
             } else {
-                if(!addCellToLineWithoutSchema(line, sCell, errorListener))
+                if(!addCellToLineWithoutSchema(line, csCell, errorListener))
                     return true;
             }
         }
@@ -126,13 +126,13 @@ class CsvLineParser {
      * @return A CsvSchemaLine created from the header line.
      *
      */
-    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, List<String> cellNames, Consumer<JSaParException> errorListener) {
+    private CsvSchemaLine buildSchemaFromHeader(CsvSchemaLine masterLineSchema, List<CharSequence> cellNames, Consumer<JSaParException> errorListener) {
 
         CsvSchemaLine.Builder schemaLineBuilder = CsvSchemaLine.builder(masterLineSchema.getLineType(), masterLineSchema);
         schemaLineBuilder.withoutAnyCells();
         AtomicInteger ignoreCellCount=new AtomicInteger(1);
-        for (String rawCellName : cellNames) {
-            String cellName = rawCellName.trim();
+        for (CharSequence rawCellName : cellNames) {
+            String cellName = rawCellName.toString().trim();
             CsvSchemaCell schemaCell = masterLineSchema.findSchemaCell(cellName).orElseGet(()->{
                 if(cellName.isEmpty()){
                     return CsvSchemaCell.builder("@@"+ ignoreCellCount.getAndIncrement() + "@@").withIgnoreRead(true).build();
@@ -150,7 +150,7 @@ class CsvLineParser {
         return schemaLine;
     }
 
-    private void checkMissingMandatoryValues(List<String> cells,
+    private void checkMissingMandatoryValues(List<CharSequence> cells,
                                              CsvSchemaLine masterLineSchema,
                                              Consumer<JSaParException> errorListener) {
         masterLineSchema.stream()
@@ -192,16 +192,16 @@ class CsvLineParser {
 
     /**
      * Adds a cell to the line according to the schema.
+     *
      * @param line               The line to add a cell to
      * @param cellParser         The cell parser
-     * @param sCell              The string value of the cell
+     * @param csCell             The string value of the cell
      * @param errorEventListener The error event listener to report errors to.
-     *
      */
     @SuppressWarnings("rawtypes")
     private void addCellToLineBySchema(Line line,
                                        CellParser<CsvSchemaCell> cellParser,
-                                       String sCell,
+                                       CharSequence csCell,
                                        Consumer<JSaParException> errorEventListener) {
 
         CsvSchemaCell cellSchema = cellParser.getSchemaCell();
@@ -210,9 +210,9 @@ class CsvLineParser {
                 line.addCell(cellParser.makeDefaultCell());
             return;
         }
-        if (cellSchema.isMaxLength() && sCell.length() > cellSchema.getMaxLength())
-            sCell = sCell.substring(0, cellSchema.getMaxLength());
-        Cell cell = cellParser.parse(sCell, errorEventListener);
+        if (cellSchema.isMaxLength() && csCell.length() > cellSchema.getMaxLength())
+            csCell = csCell.subSequence(0, cellSchema.getMaxLength());
+        Cell cell = cellParser.parse(csCell, errorEventListener);
         if(cell != null){
             line.addCell(cell);
         }
@@ -226,7 +226,7 @@ class CsvLineParser {
      *
      */
     @SuppressWarnings("rawtypes")
-    private boolean addCellToLineWithoutSchema(Line line, String sCell, Consumer<JSaParException> errorListener)
+    private boolean addCellToLineWithoutSchema(Line line, CharSequence sCell, Consumer<JSaParException> errorListener)
             {
 
         if (!validationHandler.lineValidation(line.getLineNumber(), config.getOnLineOverflow(), errorListener,
@@ -234,7 +234,7 @@ class CsvLineParser {
             return false;
         }
         Cell cell;
-        cell = new StringCell("@@cell-" + (1 + line.size()), sCell);
+        cell = new StringCell("@@cell-" + (1 + line.size()), sCell.toString());
         line.addCell(cell);
         return true;
     }

@@ -62,7 +62,7 @@ public class CsvLineParserMatcherTest {
         }
 
         @Override
-        public List<String> readLine(String cellSeparator, char quoteChar) {
+        public List<CharSequence> readLine(String cellSeparator, char quoteChar) {
             return nextLine;
         }
 

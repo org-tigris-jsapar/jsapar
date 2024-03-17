@@ -317,11 +317,10 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
         }
     }
 
-    private Element extractCellValueCondition(Document xmlDocument, Predicate<String> lineCondition, String elementName)
+    private Element extractCellValueCondition(Document xmlDocument, Predicate<CharSequence> lineCondition, String elementName)
             throws SchemaException {
         Element xmlLineCondition = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, elementName);
-        if (lineCondition instanceof MatchingCellValueCondition){
-            MatchingCellValueCondition match = (MatchingCellValueCondition) lineCondition;
+        if (lineCondition instanceof MatchingCellValueCondition match){
             Element xmlMatch = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_MATCH);
             xmlMatch.setAttribute(ATTRIB_PATTERN, match.getPattern());
             return xmlLineCondition;

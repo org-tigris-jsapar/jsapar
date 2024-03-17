@@ -33,8 +33,8 @@ public class DateTimeFormat implements Format<TemporalAccessor> {
     }
 
     @Override
-    public TemporalAccessor parse(String stringValue) {
-        return formatter.parse(stringValue);
+    public TemporalAccessor parse(CharSequence csValue) {
+        return formatter.parse(csValue);
     }
 
     @Override

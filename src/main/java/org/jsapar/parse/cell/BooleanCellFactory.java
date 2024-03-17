@@ -15,7 +15,7 @@ public class BooleanCellFactory implements CellFactory {
     private final static Format<Boolean> defaultFormat = Format.ofBooleanInstance(true);
 
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
+    public Cell makeCell(String name, CharSequence value, Format format) throws ParseException {
         return new BooleanCell(name, (Boolean) format.parse(value));
     }
 
