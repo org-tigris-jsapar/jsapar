@@ -156,21 +156,21 @@ public class Bean2Cell {
         }
         if (value instanceof Number) {
             Number number = (Number) value;
-            if (paramType == Integer.TYPE)
+            if (paramType == Integer.TYPE || paramType == Integer.class)
                 return number.intValue();
-            else if (paramType == Long.TYPE)
+            else if (paramType == Long.TYPE || paramType == Long.class)
                 return number.longValue();
-            else if (paramType == Double.TYPE)
+            else if (paramType == Double.TYPE || paramType==Double.class)
                 return number.doubleValue();
-            else if (paramType == Float.TYPE)
+            else if (paramType == Float.TYPE || paramType==Float.class)
                 return number.floatValue();
-            else if (paramType == Short.TYPE)
+            else if (paramType == Short.TYPE || paramType==Short.class)
                 return number.shortValue();
-            else if (paramType == Byte.TYPE)
+            else if (paramType == Byte.TYPE || paramType==Byte.class)
                 return number.byteValue();
-            else if (paramType == Boolean.TYPE)
+            else if (paramType == Boolean.TYPE || paramType==Boolean.class)
                 return number.intValue() != 0;
-            else if (paramType == Character.TYPE)
+            else if (paramType == Character.TYPE || paramType==Character.class)
                 return number.intValue();
 
         }

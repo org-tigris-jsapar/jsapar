@@ -2,10 +2,7 @@ package org.jsapar.parse.bean;
 
 import org.jsapar.TstPerson;
 import org.jsapar.compose.bean.BeanComposeException;
-import org.jsapar.model.BooleanCell;
-import org.jsapar.model.Cell;
-import org.jsapar.model.LocalDateTimeCell;
-import org.jsapar.model.StringCell;
+import org.jsapar.model.*;
 import org.jsapar.parse.bean.reflect.BeanInfo;
 import org.jsapar.parse.bean.reflect.PropertyDescriptor;
 import org.junit.Test;
@@ -77,6 +74,19 @@ public class Bean2CellTest {
         assertTrue(tstPerson.isAdult());
         bean2Cell.assign(tstPerson, new BooleanCell("adult", false));
         assertFalse(tstPerson.isAdult());
+    }
+
+    @Test
+    public void assign_Integer_from_Long_value()
+            throws InvocationTargetException, InstantiationException, IllegalAccessException,
+            BeanComposeException, NoSuchMethodException {
+        Bean2Cell bean2Cell = makeBean2CellOfPropertyName(TstPerson.class, "optionalInt");
+        TstPerson tstPerson = new TstPerson();
+        assertNull(tstPerson.getOptionalInt());
+        bean2Cell.assign(tstPerson, IntegerCell.emptyOf("optionalInt"));
+        assertNull(tstPerson.getOptionalInt());
+        bean2Cell.assign(tstPerson, new IntegerCell("optionalInt", 42L));
+        assertEquals(Integer.valueOf(42), tstPerson.getOptionalInt());
     }
 
     @Test

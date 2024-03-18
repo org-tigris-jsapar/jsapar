@@ -15,6 +15,7 @@ public class TstPerson {
     private short          shoeSize;
     private long           luckyNumber;
     private int            streetNumber;
+    private Integer        optionalInt;
     private char           door;
     private boolean        adult;
     private TstPostAddress    address;
@@ -192,5 +193,13 @@ public class TstPerson {
 
     public void setAdult(boolean adult) {
         this.adult = adult;
+    }
+
+    public Integer getOptionalInt() {
+        return optionalInt;
+    }
+
+    public void setOptionalInt(Integer optionalInt) {
+        this.optionalInt = optionalInt;
     }
 }
