@@ -77,7 +77,7 @@ public class Bean2CellTest {
     }
 
     @Test
-    public void assign_Integer_from_Long_value()
+    public void assign_Integer_from_Number_value()
             throws InvocationTargetException, InstantiationException, IllegalAccessException,
             BeanComposeException, NoSuchMethodException {
         Bean2Cell bean2Cell = makeBean2CellOfPropertyName(TstPerson.class, "optionalInt");
@@ -85,8 +85,14 @@ public class Bean2CellTest {
         assertNull(tstPerson.getOptionalInt());
         bean2Cell.assign(tstPerson, IntegerCell.emptyOf("optionalInt"));
         assertNull(tstPerson.getOptionalInt());
-        bean2Cell.assign(tstPerson, new IntegerCell("optionalInt", 42L));
+        bean2Cell.assign(tstPerson, new IntegerCell("optionalInt", (short) 17));
+        assertEquals(Integer.valueOf(17), tstPerson.getOptionalInt());
+        bean2Cell.assign(tstPerson, new IntegerCell("optionalInt", 42));
         assertEquals(Integer.valueOf(42), tstPerson.getOptionalInt());
+        bean2Cell.assign(tstPerson, new IntegerCell("optionalInt", 4711L));
+        assertEquals(Integer.valueOf(4711), tstPerson.getOptionalInt());
+        bean2Cell.assign(tstPerson, new FloatCell("optionalInt", 3.14159));
+        assertEquals(Integer.valueOf(3), tstPerson.getOptionalInt());
     }
 
     @Test
