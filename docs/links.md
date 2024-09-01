@@ -82,6 +82,11 @@ FixedFormat4J - <a href="https://jeyben.github.io/fixedformat4j/" rel="nofollow"
 Fixed Format Output - <a href="https://sourceforge.net/projects/ffo/" target="_blank">https://sourceforge.net/projects/ffo/</a>&nbsp; <br />
 Fixed-Length - <a href="https://github.com/atais/Fixed-Length" rel="nofollow" target="_blank">https://github.com/atais/Fixed-Length</a> (Scala) <br />
 FixedWidth-HS - <a href="https://github.com/michaelochurch/fixedwidth-hs" rel="nofollow" target="_blank">https://github.com/michaelochurch/fixedwidth-hs</a> (Haskell) <br />
+* [FixedWidthLineParser](https://github.com/conperio/FixedWidthLineParser) - _Library (C# .NET) for Parsing fixed-width (.txt, others)._
+* [FixedWidthParser](https://github.com/SoftCircuits/SoftCircuits.FixedWidthParser) -_SoftCircuits.FixedWidthParser is a lightweight .NET class for reading and writing fixed-width data files._ 
+* [FixedWidthParserWriter](https://github.com/borisdj/FixedWidthParserWriter) - _Library (C# .NET) for Parsing(Reading) & Writing fixed-width/flat data files (.txt, others)._
+* [Fixy](https://github.com/SteveyPugs/fixy) - _Fixy is an npm module for parsing fixed formatted strings/files and unparsing an Array of Objects._
+
 Flapjack - <a href="http://code.google.com/p/flapjack/" target="_blank">http://code.google.com/p/flapjack/</a><br />
 Flapjack - <a href="https://github.com/mike706574/flapjack" rel="nofollow" target="_blank">https://github.com/mike706574/flapjack</a><br />
 FlatBean - <a href="http://sourceforge.net/projects/flat-bean/" rel="nofollow" target="_blank">http://sourceforge.net/projects/flat-bean/</a><br />
@@ -177,6 +182,7 @@ QuickOCM - <a href="http://mkhanal.github.io/quickocm/" target="_blank">http://m
 Quick-CSV-Streamer - <a href="https://github.com/titorenko/quick-csv-streamer" rel="nofollow" target="_blank">https://github.com/titorenko/quick-csv-streamer</a><br />
 <br />
 <b>R</b><br />
+[React papaparse](https://github.com/drilus/react-papaparse) - _Fast and powerful CSV (delimited text) parser that gracefully handles large files and malformed input for using with React._<br/>
 <span class="col-11 text-gray-dark mr-2" itemprop="about">Really simple csv library -&nbsp;<a href="https://github.com/stevehansen/csv/" rel="nofollow" target="_blank">https://github.com/stevehansen/csv/</a> (.Net)</span><br />
 RecordMapper - <a href="https://github.com/debmalya/RecordMapper" rel="nofollow" target="_blank">https://github.com/debmalya/RecordMapper</a> <br />
 Row-Bean - <a href="http://sourceforge.net/projects/csv-bean/" rel="nofollow" target="_blank">http://sourceforge.net/projects/csv-bean/</a><br />
