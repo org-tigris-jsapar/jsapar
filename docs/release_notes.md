@@ -6,7 +6,8 @@ title: Release notes
 * TOC
 {:toc}
 ## 2.4
-* Added method `Cell.cloneWithName(String)` to make it easier to create a new copy of a cell with a different name without
+1. Built with and for Java 17. Support for Java 11 and below is dropped.
+2. Added method `Cell.cloneWithName(String)` to make it easier to create a new copy of a cell with a different name without
 knowing it's type.
 ## 2.3
 ### 2.3.5

@@ -38,7 +38,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.scm.id>github.com</project.scm.id>
 		<gpg.skip>false</gpg.skip>
-		<java.release>11</java.release>
+		<java.release>17</java.release>
 	</properties>
 
 	<developers>
