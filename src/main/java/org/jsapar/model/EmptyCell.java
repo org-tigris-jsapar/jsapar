@@ -37,4 +37,9 @@ public final class EmptyCell<T> extends AbstractCell<T> {
         return true;
     }
 
+    @Override
+    public Cell<T> cloneWithName(String newName) {
+        return new EmptyCell<>(newName, getCellType());
+    }
+
 }

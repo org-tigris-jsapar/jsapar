@@ -23,4 +23,9 @@ public final class ZonedDateTimeCell extends TemporalCell<ZonedDateTime> impleme
     public static Cell<ZonedDateTime> emptyOf(String name) {
         return new EmptyCell<>(name, CellType.ZONED_DATE_TIME);
     }
+
+    @Override
+    public Cell<ZonedDateTime> cloneWithName(String newName) {
+        return new ZonedDateTimeCell(newName, getValue());
+    }
 }

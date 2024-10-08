@@ -64,6 +64,11 @@ public final class BigDecimalCell extends NumberCell  {
         return getBigDecimalValue().compareTo(bdRight);
     }
 
+    @Override
+    public Cell<Number> cloneWithName(String newName) {
+        return new BigDecimalCell(newName, getBigDecimalValue());
+    }
+
     /**
      * @param name The name of the empty cell.
      * @return A new Empty cell of supplied name.

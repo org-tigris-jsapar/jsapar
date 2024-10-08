@@ -23,4 +23,9 @@ public final class LocalDateCell extends TemporalCell<LocalDate> implements Comp
     public static Cell<LocalDate> emptyOf(String name) {
         return new EmptyCell<>(name, CellType.LOCAL_DATE);
     }
+
+    @Override
+    public Cell<LocalDate> cloneWithName(String newName) {
+        return new LocalDateCell(newName, getValue());
+    }
 }

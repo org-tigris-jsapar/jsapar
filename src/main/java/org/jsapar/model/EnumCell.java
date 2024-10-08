@@ -25,4 +25,9 @@ public final class EnumCell<E extends Enum<E>> extends AbstractCell<E> implement
     public String getStringValue() {
         return getValue().name();
     }
+
+    @Override
+    public Cell<E> cloneWithName(String newName) {
+        return new EnumCell<>(newName, getValue());
+    }
 }

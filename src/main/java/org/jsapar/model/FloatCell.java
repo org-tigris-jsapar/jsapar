@@ -29,6 +29,11 @@ public final class FloatCell extends NumberCell {
         return super.compareValueTo(right);
     }
 
+    @Override
+    public Cell<Number> cloneWithName(String newName) {
+        return new FloatCell(newName, getValue());
+    }
+
     /**
      * @param name The name of the empty cell.
      * @return A new Empty cell of supplied name.

@@ -2,7 +2,7 @@ package org.jsapar.model;
 
 import java.time.Instant;
 
-public class InstantCell extends TemporalCell<Instant> implements ComparableCell<Instant> {
+public final class InstantCell extends TemporalCell<Instant> implements ComparableCell<Instant> {
 
     /**
      * Creates a cell with a name.
@@ -12,5 +12,10 @@ public class InstantCell extends TemporalCell<Instant> implements ComparableCell
      */
     public InstantCell(String name, Instant value) {
         super(name, value, CellType.INSTANT);
+    }
+
+    @Override
+    public Cell<Instant> cloneWithName(String newName) {
+        return new InstantCell(newName, getValue());
     }
 }

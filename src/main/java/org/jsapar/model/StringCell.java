@@ -44,6 +44,11 @@ public final class StringCell extends AbstractCell<String> implements Comparable
     }
 
     @Override
+    public Cell<String> cloneWithName(String newName) {
+        return new StringCell(newName, getValue());
+    }
+
+    @Override
     public String getStringValue() {
         return getValue();
     }

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 /**
  * @author Jonas Stenberg
@@ -53,5 +54,14 @@ public class DateCellTest {
         DateCell cell = new DateCell("Name", date);
         assertEquals(date, cell.getValue());
 
+    }
+
+    @Test
+    public void testCloneWithName() {
+        DateCell cell = new DateCell("Name", aDate);
+        Cell<Date> clone = cell.cloneWithName("NewName");
+        assertEquals("NewName", clone.getName());
+        assertEquals(aDate, clone.getValue());
+        assertNotSame(cell.getValue(), clone.getValue());
     }
 }

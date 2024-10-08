@@ -22,4 +22,9 @@ public final class CharacterCell extends AbstractCell<Character> implements Comp
     public static Cell<Character> emptyOf(String name) {
         return new EmptyCell<>(name, CellType.CHARACTER);
     }
+
+    @Override
+    public Cell<Character> cloneWithName(String newName) {
+        return new CharacterCell(newName, getValue());
+    }
 }

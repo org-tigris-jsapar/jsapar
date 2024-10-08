@@ -5,8 +5,10 @@ import java.io.Serializable;
 /**
  * Base interface which represents a parsable item on a line in the original document. A cell has a
  * name, a value and a type. The type of the value denotes which subclass to use.
+ * The cell is intended to be immutable, but it depends on the value type. As of now, all cell implementations are
+ * immutable except DateCell since Date is a mutable class.
  */
-public interface Cell<T> extends Serializable, Comparable<Cell<T>> {
+public interface Cell<T> extends Serializable, Comparable<Cell<T>>, Cloneable {
 
     /**
      * Gets the name of the cell.
@@ -72,4 +74,13 @@ public interface Cell<T> extends Serializable, Comparable<Cell<T>> {
             return rc;
         return this.compareValueTo(right);
     }
+
+    /**
+     * Returns a new cell with the same type and value but with a new name. Performs a deep copy of the value in case
+     * the value is mutable.
+     * @param newName The new name of the cell.
+     * @return A deep copy of this cell but with a new name.
+     * @since 2.4
+     */
+    Cell<T> cloneWithName(String newName);
 }

@@ -24,6 +24,11 @@ public final class IntegerCell extends NumberCell {
         return super.compareValueTo(right);
     }
 
+    @Override
+    public Cell<Number> cloneWithName(String newName) {
+        return new IntegerCell(newName, getValue());
+    }
+
     /**
      * @param name The name of the empty cell.
      * @return A new Empty cell of supplied name.

@@ -23,4 +23,9 @@ public final class BooleanCell extends AbstractCell<Boolean> implements Comparab
 	public static Cell<Boolean> emptyOf(String name) {
 		return new EmptyCell<>(name, CellType.BOOLEAN);
 	}
+
+	@Override
+	public Cell<Boolean> cloneWithName(String newName) {
+		return new BooleanCell(newName, getValue());
+	}
 }

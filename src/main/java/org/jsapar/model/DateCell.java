@@ -7,6 +7,8 @@ import java.util.Date;
 
 /**
  * {@link Cell} implementation carrying a date value of a cell.
+ * @implNote Be aware that since Date is a mutable class, the value of a DateCell is not immutable. Tampering with the
+ * Date value returned by {@link #getValue()} will affect the value of the cell and might lead to unexpected behavior.
  * 
  */
 public final class DateCell extends AbstractCell<Date> implements ComparableCell<Date> {
@@ -52,4 +54,11 @@ public final class DateCell extends AbstractCell<Date> implements ComparableCell
     public String getStringValue() {
         return ISO_DATE_FORMAT.format(getValue());
     }
+
+    @Override
+    public Cell<Date> cloneWithName(String newName) {
+        // We need to clone the date as well since it is mutable.
+        return new DateCell(newName, new Date(getValue().getTime()));
+    }
+
 }

@@ -23,4 +23,9 @@ public final class LocalTimeCell extends TemporalCell<LocalTime> implements Comp
     public static Cell<LocalTime> emptyOf(String name) {
         return new EmptyCell<>(name, CellType.LOCAL_TIME);
     }
+
+    @Override
+    public Cell<LocalTime> cloneWithName(String newName) {
+        return new LocalTimeCell(newName, getValue());
+    }
 }

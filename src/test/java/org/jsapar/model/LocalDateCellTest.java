@@ -20,4 +20,12 @@ public class LocalDateCellTest {
         Cell c = LocalDateCell.emptyOf("test");
         assertTrue(c.isEmpty());
     }
+
+    @Test
+    public void testCloneWithName() {
+        LocalDateCell c1 = new LocalDateCell("test1", LocalDate.of(2018, 11, 10));
+        Cell<LocalDate> c2 = c1.cloneWithName("test2");
+        assertEquals("test2", c2.getName());
+        assertEquals(c1.getValue(), c2.getValue());
+    }
 }

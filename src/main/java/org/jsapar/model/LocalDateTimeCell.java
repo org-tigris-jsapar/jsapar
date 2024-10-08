@@ -23,4 +23,9 @@ public final class LocalDateTimeCell extends TemporalCell<LocalDateTime> impleme
     public static Cell<LocalDateTime> emptyOf(String name) {
         return new EmptyCell<>(name, CellType.LOCAL_DATE_TIME);
     }
+
+    @Override
+    public Cell<LocalDateTime> cloneWithName(String newName) {
+        return new LocalDateTimeCell(newName, getValue());
+    }
 }

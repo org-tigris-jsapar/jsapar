@@ -5,6 +5,9 @@ title: Release notes
 # Release notes
 * TOC
 {:toc}
+## 2.4
+* Added method `Cell.cloneWithName(String)` to make it easier to create a new copy of a cell with a different name without
+knowing it's type.
 ## 2.3
 ### 2.3.5
 * Fixed problem with subclasses when creating bean map from schema with overrides.
