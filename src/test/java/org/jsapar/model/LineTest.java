@@ -126,7 +126,7 @@ public class LineTest {
     @Test
     public void testToString() {
         Line line = makeTestLine();
-        assertEquals("Line type=[TestLine] number=1 {FirstName=Nils[STRING], LastName=Svensson[STRING]}", line.toString());
+        assertEquals("Line type=[TestLine] number=1 {FirstName=Nils [STRING], LastName=Svensson [STRING]}", line.toString());
     }
 
     private Line makeTestLine() {

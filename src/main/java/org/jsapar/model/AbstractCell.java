@@ -68,7 +68,7 @@ abstract class AbstractCell<T> implements Cell<T> {
      */
     @Override
     public String toString() {
-        return this.name + "=" + getStringValue() + "["+ getCellType() + "]";
+        return this.name + "=" + getStringValue() + " ["+ getCellType() + "]";
     }
 
     /**
