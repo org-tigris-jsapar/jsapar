@@ -186,6 +186,7 @@ Quick-CSV-Streamer - <a href="https://github.com/titorenko/quick-csv-streamer" r
 <span class="col-11 text-gray-dark mr-2" itemprop="about">Really simple csv library -&nbsp;<a href="https://github.com/stevehansen/csv/" rel="nofollow" target="_blank">https://github.com/stevehansen/csv/</a> (.Net)</span><br />
 RecordMapper - <a href="https://github.com/debmalya/RecordMapper" rel="nofollow" target="_blank">https://github.com/debmalya/RecordMapper</a> <br />
 Row-Bean - <a href="http://sourceforge.net/projects/csv-bean/" rel="nofollow" target="_blank">http://sourceforge.net/projects/csv-bean/</a><br />
+RSaPar - <a href="https://github.com/dertin/rsapar" rel="nofollow" target="_blank">https://github.com/dertin/rsapar</a> (Rust)<br />
 <br />
 <b>S</b><br />
 Scala-CSV -&nbsp; <a href="https://github.com/tototoshi/scala-csv" rel="nofollow" target="_blank">https://github.com/tototoshi/scala-csv</a><br />
