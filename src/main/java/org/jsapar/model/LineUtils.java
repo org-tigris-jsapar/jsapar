@@ -275,8 +275,7 @@ public final class LineUtils {
     }
 
     private static int intCellValue(Cell<?> cell) {
-        if (cell instanceof NumberCell) {
-            NumberCell numberCell = (NumberCell) cell;
+        if (cell instanceof NumberCell numberCell) {
             return numberCell.getValue().intValue();
         }
 
@@ -319,8 +318,7 @@ public final class LineUtils {
     }
 
     private static long longCellValue(Cell<?> cell) {
-        if (cell instanceof NumberCell) {
-            NumberCell numberCell = (NumberCell) cell;
+        if (cell instanceof NumberCell numberCell) {
             return numberCell.getValue().longValue();
         }
 
@@ -344,8 +342,7 @@ public final class LineUtils {
      */
     public static Optional<Character> getCharCellValue(Line line, String cellName) throws NumberFormatException {
         return line.getNonEmptyCell(cellName).map(cell -> {
-            if (cell instanceof CharacterCell) {
-                CharacterCell chCell = (CharacterCell) cell;
+            if (cell instanceof CharacterCell chCell) {
                 return chCell.getValue();
             }
 
@@ -365,16 +362,13 @@ public final class LineUtils {
      * @throws NumberFormatException If cell value is empty.
      */
     public static char getCharCellValue(Line line, String cellName, char defaultValue) throws NumberFormatException {
-        Optional<Cell> cell = line.getNonEmptyCell(cellName);
-        if (cell.isEmpty())
-            return defaultValue;
-        if (cell.get() instanceof CharacterCell) {
-            CharacterCell chCell = (CharacterCell) cell.get();
-            return chCell.getValue();
-        }
-
-        final String s = cell.get().getStringValue();
-        return s.charAt(0);
+        return line.getNonEmptyCell(cellName).map(value->{
+            if (value instanceof CharacterCell chCell) {
+                return chCell.getValue();
+            }
+            final String s = value.getStringValue();
+            return s.charAt(0);
+        }).orElse(defaultValue);
     }
 
     /**
@@ -388,8 +382,7 @@ public final class LineUtils {
      */
     public static Optional<Boolean> getBooleanCellValue(Line line, String cellName) throws IllegalStateException {
         return line.getNonEmptyCell(cellName).map(cell -> {
-            if (cell instanceof BooleanCell) {
-                BooleanCell booleanCell = (BooleanCell) cell;
+            if (cell instanceof BooleanCell booleanCell) {
                 return booleanCell.getValue();
             }
             return Boolean.valueOf(cell.getStringValue());
@@ -407,15 +400,12 @@ public final class LineUtils {
      * @return The boolean value of the cell with the supplied name.
      */
     public static boolean getBooleanCellValue(Line line, String cellName, boolean defaultValue) {
-        Optional<Cell> cell = line.getNonEmptyCell(cellName);
-        if (cell.isEmpty())
-            return defaultValue;
-        if (cell.get() instanceof BooleanCell) {
-            BooleanCell booleanCell = (BooleanCell) cell.get();
-            return booleanCell.getValue();
-        }
-
-        return Boolean.parseBoolean(cell.get().getStringValue());
+        return line.getNonEmptyCell(cellName).map(value -> {
+            if (value instanceof BooleanCell booleanCell) {
+                return booleanCell.getValue();
+            }
+            return Boolean.parseBoolean(value.getStringValue());
+        }).orElse(defaultValue);
     }
 
     /**
@@ -501,11 +491,11 @@ public final class LineUtils {
      */
     public static <E extends Enum<E>> Optional<E> getEnumCellValue(Line line, String cellName, Class<E> enumClass)
             throws IllegalArgumentException, IllegalStateException {
-        return line.getNonEmptyCell(cellName).map( it -> enumOfCell(it, enumClass));
+        return line.getNonEmptyCell(cellName).map( it -> enumOfCell(it, enumClass, line.getLineNumber()));
     }
 
     @SuppressWarnings("unchecked")
-    private static <E extends Enum<E>> E enumOfCell(Cell<?> cell, Class<E> enumClass) {
+    private static <E extends Enum<E>> E enumOfCell(Cell<?> cell, Class<E> enumClass, long lineNumber) {
         if(cell instanceof EnumCell)
             return (E) cell.getValue();
         String s = cell.getStringValue();
@@ -514,7 +504,7 @@ public final class LineUtils {
             return Enum.valueOf(enumClass, s);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(
-                    "Error while trying to convert cell [" + cell + "] to an enum value of type " + enumClass
+                    "Error at line "+lineNumber+" while trying to convert cell [" + cell + "] to an enum value of type " + enumClass
                             .getSimpleName() + ".", e);
         }
     }
@@ -535,7 +525,8 @@ public final class LineUtils {
     @SuppressWarnings("unchecked")
     public static <E extends Enum<E>> E getEnumCellValue(Line line, String cellName, E defaultValue)
             throws IllegalArgumentException {
-        Optional<E> optionalEnum = line.getNonEmptyCell(cellName).map(it -> (E)enumOfCell(it, defaultValue.getClass()));
+        Optional<E> optionalEnum = line.getNonEmptyCell(cellName).map(it -> (E)enumOfCell(it, defaultValue.getClass(),
+                line.getLineNumber()));
         return optionalEnum.orElse(defaultValue);
     }
 
@@ -572,8 +563,7 @@ public final class LineUtils {
     }
 
     private static double doubleCellValue(Cell<?> cell) {
-        if (cell instanceof NumberCell) {
-            NumberCell numberCell = (NumberCell) cell;
+        if (cell instanceof NumberCell numberCell) {
             return numberCell.getValue().doubleValue();
         }
 
@@ -600,8 +590,7 @@ public final class LineUtils {
     }
 
     private static BigDecimal bigDecimalOfCell(Cell<?> cell) {
-        if (cell instanceof BigDecimalCell) {
-            BigDecimalCell numberCell = (BigDecimalCell) cell;
+        if (cell instanceof BigDecimalCell numberCell) {
             return numberCell.getBigDecimalValue();
         }
         else if (cell instanceof NumberCell) {
@@ -633,8 +622,7 @@ public final class LineUtils {
     }
 
     private static BigInteger bigIntegerOfCell(Cell<?> cell) {
-        if (cell instanceof BigDecimalCell) {
-            BigDecimalCell numberCell = (BigDecimalCell) cell;
+        if (cell instanceof BigDecimalCell numberCell) {
             return numberCell.getBigIntegerValue();
         }
         try {
