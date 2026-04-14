@@ -9,6 +9,7 @@ import org.jsapar.parse.CollectingConsumer;
 import org.jsapar.parse.DocumentBuilderLineConsumer;
 import org.jsapar.parse.xml.XmlParser;
 import org.jsapar.schema.*;
+import org.jsapar.text.TextParseConfig;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -273,13 +273,13 @@ public class JSaParExamplesTest {
     public final void testExampleXml05_stream() throws IOException, JSaParException {
         Reader fileReader = new FileReader("examples/05_Names.xml");
         XmlParser parser = new XmlParser();
-        List<Line> lines = parser.stream(fileReader).collect(Collectors.toList());
+        List<Line> lines = parser.stream(fileReader).toList();
         fileReader.close();
 
         // System.out.println("Errors: " + parseErrors.toString());
 
         assertEquals(2, lines.size());
-        assertEquals("Hans", LineUtils.getStringCellValue(lines.get(0), "FirstName"));
+        assertEquals("Hans", LineUtils.getStringCellValue(lines.getFirst(), "FirstName"));
         assertEquals("Hugge", LineUtils.getStringCellValue(lines.get(0), "LastName"));
         assertEquals(48, LineUtils.getIntCellValue(lines.get(0), "ShoeSize", 0));
         assertEquals("Greta", LineUtils.getStringCellValue(lines.get(1), "FirstName"));
@@ -356,12 +356,12 @@ public class JSaParExamplesTest {
             List<TstPerson> people = beanConsumer.getCollected();
 
             assertEquals(2, people.size());
-            assertEquals("Erik", people.get(0).getFirstName());
-            assertEquals("Svensson", people.get(0).getLastName());
-            assertEquals(45, people.get(0).getShoeSize());
+            assertEquals("Erik", people.getFirst().getFirstName());
+            assertEquals("Svensson", people.getFirst().getLastName());
+            assertEquals(45, people.getFirst().getShoeSize());
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            assertEquals(df.parse("1901-01-13 13:45"), people.get(0).getBirthTime());
-            assertEquals('A', people.get(0).getDoor());
+            assertEquals(df.parse("1901-01-13 13:45"), people.getFirst().getBirthTime());
+            assertEquals('A', people.getFirst().getDoor());
             assertEquals("Stigen", people.get(0).getAddress().getStreet());
             assertEquals("Staden", people.get(0).getAddress().getTown());
 
@@ -563,7 +563,7 @@ public class JSaParExamplesTest {
             List<TstPersonAnnotated> people = beanConsumer.getCollected();
 
             assertEquals(2, people.size());
-            assertEquals("Erik", people.get(0).getFirstName());
+            assertEquals("Erik", people.getFirst().getFirstName());
             assertEquals("Svensson", people.get(0).getLastName());
             assertEquals(Instant.ofEpochSecond(1684773300), people.get(0).getCreated());
 
@@ -586,7 +586,7 @@ public class JSaParExamplesTest {
             List<TstPersonAnnotated> people = beanConsumer.getCollected();
 
             assertEquals(2, people.size());
-            assertEquals("Erik", people.get(0).getFirstName());
+            assertEquals("Erik", people.getFirst().getFirstName());
             assertEquals("Svensson", people.get(0).getLastName());
             assertEquals(TstGender.M, people.get(0).getGender());
 
@@ -625,7 +625,13 @@ public class JSaParExamplesTest {
                 Reader fileReader = new FileReader("examples/08_NamesWithHeader.csv")) {
             Schema<?> schema = Schema.ofXml(schemaReader);
             DocumentBuilderLineConsumer documentBuilder = new DocumentBuilderLineConsumer();
-            long lineCount = TextParser.parseForEach(schema, fileReader, documentBuilder);
+
+            TextParser parser = new TextParser(schema);
+            TextParseConfig textParseConfig = new TextParseConfig();
+            textParseConfig.setOnUndefinedLineType(ValidationAction.OMIT_LINE);
+            parser.setParseConfig(textParseConfig);
+
+            long lineCount = parser.parseForEach(fileReader, documentBuilder);
             assertEquals(4, lineCount);
             Document document = documentBuilder.getDocument();
 
@@ -674,9 +680,9 @@ public class JSaParExamplesTest {
             composer.composeLine(line2);
             String[] lines = writer.toString().split("\n");
             assertEquals(3, lines.length);
-            assertEquals("Middle name;Has dog;First name", lines[0]);
-            assertEquals("Jan;yes;Erik", lines[1]);
-            assertEquals("Göran;no;Sven", lines[2]);
+            assertEquals("Type;Middle name;Has dog;First name", lines[0]);
+            assertEquals("P;Jan;yes;Erik", lines[1]);
+            assertEquals("P;Göran;no;Sven", lines[2]);
         }
     }
 

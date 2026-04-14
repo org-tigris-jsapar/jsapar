@@ -40,7 +40,16 @@ public abstract class SchemaCell implements Cloneable {
     private final EmptyCell<? extends Enum<?>> emptyCell;
     private String defaultValue = null;
     private Locale locale;
+    /**
+     * If this predicate returns true when supplied with the value of the cell, the cell is also considered empty apart
+     * from the cell actually being empty.
+     *
+     */
     private Predicate<String> emptyCondition = null;
+    /**
+     * If this predicate returns true when supplied with the value of the cell, then the line type that this cell
+     * belongs to should be used while parsing the line.
+     */
     private Predicate<String> lineCondition = null;
 
 
@@ -212,7 +221,7 @@ public abstract class SchemaCell implements Cloneable {
          */
         public <E extends Enum<E>> B withEnumFormat(Class<E> enumClass, Function<EnumFormat.Builder<E>, EnumFormat.Builder<E>> enumFormatBuilderHandler){
             withType(CellType.ENUM);
-            return withFormat((Format<T>) enumFormatBuilderHandler.apply(EnumFormat.builder(enumClass)).build());
+            return withFormat(enumFormatBuilderHandler.apply(EnumFormat.builder(enumClass)).build());
         }
 
         /**
@@ -247,7 +256,7 @@ public abstract class SchemaCell implements Cloneable {
          * @return The builder instance.
          */
         public B withLocale(String language, String country) {
-            return withLocale(new Locale(language, country));
+            return withLocale(Locale.of(language, country));
         }
 
         /**
@@ -620,10 +629,8 @@ public abstract class SchemaCell implements Cloneable {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof SchemaCell))
+        if (!(o instanceof SchemaCell that))
             return false;
-
-        SchemaCell that = (SchemaCell) o;
 
         return name.equals(that.name);
 

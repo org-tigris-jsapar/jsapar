@@ -424,7 +424,7 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
                         });
                         return true;
                     } catch (ClassNotFoundException e) {
-                        throw new SchemaException("Unable to find enum class " + sEnumClass + " within classpath. Make sure that the class is fully qualified.");
+                        throw new SchemaException("Unable to find enum class " + sEnumClass + " within classpath. Make sure that the class is fully qualified.",e);
                     }
                 }).orElse(false);
     }

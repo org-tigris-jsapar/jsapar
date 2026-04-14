@@ -6,9 +6,10 @@
     <!--When firstlineasschema is true:
     While parsing, the order of the cells and what cells to expect are denoted by the first line within the input.
     Default values and other formatting information is defined in the schema below.
-
+    Cells with lineconditions do however be on the correct position in the schema compared to the file.
     While composing, the schema is used as usual but an additional header line with the name of each cell, is written first.-->
     <line occurs="*" linetype="Person" cellseparator=";" quotechar="&quot;" firstlineasschema="true">
+      <cell name="Type" default="P" ignoreread="true"><linecondition><equals value="P"/></linecondition></cell>
       <cell name="Middle name" ignoreread="true"/>
       <cell name="Has dog" default="no"><format type="boolean" pattern="yes;no"/></cell>
       <cell name="First name" />

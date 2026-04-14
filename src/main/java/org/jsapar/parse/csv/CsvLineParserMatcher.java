@@ -58,11 +58,14 @@ class CsvLineParserMatcher {
 
                 for (CsvControlCell controlCell : controlCells) {
 
-                    String value = cells.get(controlCell.pos);
+                    String value = cells.get(controlCell.pos());
                     if (value == null)
                         return null;
-                    if (!controlCell.schemaCell.getLineCondition().test(value))
+                    if (!controlCell.schemaCell().getLineCondition().test(value)
+                            && !(schemaLine.isFirstLineAsSchema()
+                            && controlCell.schemaCell().getName().equals(value))) {
                         return null;
+                    }
                 }
             }
             finally {
@@ -77,15 +80,7 @@ class CsvLineParserMatcher {
     /**
      * Private internal class used to point to a control cell within a schema line.
      */
-    private static class CsvControlCell {
-        final int           pos;
-        final CsvSchemaCell schemaCell;
-
-        CsvControlCell(int pos, CsvSchemaCell schemaCell) {
-            this.pos = pos;
-            this.schemaCell = schemaCell;
-        }
-    }
+    private record CsvControlCell (int pos, CsvSchemaCell schemaCell) {}
 
     /**
      * @return True if this line schema can be used regarding number of occurrences. False if number of occurrences are

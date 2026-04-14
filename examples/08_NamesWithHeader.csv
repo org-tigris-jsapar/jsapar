@@ -1,4 +1,5 @@
-First name;Middle name;Last name;Has dog
-Erik;Vidfare;Svensson;yes
-Fredrik;Allvarlig;Larsson;no
-"Alfred";"Stark";Nilsson;
+Type;First name;Middle name;Last name;Has dog
+P;Erik;Vidfare;Svensson;yes
+I;Ignore this line
+P;Fredrik;Allvarlig;Larsson;no
+P;"Alfred";"Stark";Nilsson;
