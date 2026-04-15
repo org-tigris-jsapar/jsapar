@@ -19,7 +19,11 @@ import java.util.stream.Collectors;
 /**
  * Class for building {@link BeanMap} instances based on xml.
  */
+@SuppressWarnings("exports")
 public final class Xml2BeanMapBuilder implements XmlTypes {
+
+    public Xml2BeanMapBuilder() {}
+
     private final static String NAMESPACE = "http://jsapar.tigris.org/BeanMapSchema/2.0";
 
     /**

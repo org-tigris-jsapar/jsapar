@@ -101,7 +101,7 @@ public class FixedWidthSchemaCell extends SchemaCell {
      * @param cellFormat The format of the cell
      */
     @Deprecated
-    public FixedWidthSchemaCell(String sName, int nLength, SchemaCellFormat cellFormat) {
+    public FixedWidthSchemaCell(String sName, int nLength, SchemaCellFormat<?> cellFormat) {
         super(sName, cellFormat, null);
         this.length = nLength;
     }

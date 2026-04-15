@@ -90,7 +90,7 @@ public class XmlParseSpliterator implements Spliterator<Line> {
 
     private Cell<?> makeCell(String cellName, CellType cellType, String cellContent) throws ParseException, DatatypeConfigurationException {
         if(cellContent.isEmpty())
-            return new EmptyCell(cellName, cellType);
+            return new EmptyCell<>(cellName, cellType);
 
         if (cellType == CellType.DATE) {
             XMLGregorianCalendar xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(cellContent);

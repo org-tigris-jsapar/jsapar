@@ -28,7 +28,7 @@ import java.util.function.Function;
  * @see JSaParCell
  * @see JSaParContainsCells
  */
-@SuppressWarnings("ClassEscapesDefinedScope")
+@SuppressWarnings({"ClassEscapesDefinedScope", "exports"})
 public final class BeanMap {
 
     private final Map<Class<?>, BeanPropertyMap>  beanPropertyMap           = new HashMap<>();

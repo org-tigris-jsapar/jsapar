@@ -5,10 +5,6 @@ package org.jsapar.model;
  * placeholder of an empty value.
  */
 public final class EmptyCell<T> extends AbstractCell<T> {
-    /**
-     *
-     */
-    private static final long   serialVersionUID = 36481831017227154L;
     private final static String STRING_VALUE     = "";
 
     /**

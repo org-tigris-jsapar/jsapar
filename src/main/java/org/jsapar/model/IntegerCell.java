@@ -6,8 +6,6 @@ package org.jsapar.model;
  */
 public final class IntegerCell extends NumberCell {
 
-    private static final long serialVersionUID = -6131249480571994885L;
-
     /**
      * @param name The name of the cell
      * @param value The value

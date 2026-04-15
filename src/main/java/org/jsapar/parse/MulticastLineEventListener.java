@@ -12,6 +12,8 @@ import java.util.List;
 @Deprecated
 public class MulticastLineEventListener implements LineEventListener {
 
+    public MulticastLineEventListener() {}
+
     private final List<LineEventListener> lineEventListeners = new LinkedList<>();
 
     public void addLineEventListener(LineEventListener eventListener) {

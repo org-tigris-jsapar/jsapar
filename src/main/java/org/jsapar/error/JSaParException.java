@@ -1,9 +1,13 @@
 package org.jsapar.error;
 
+import java.io.Serial;
+
 /**
  * Base class for all types of errors
  */
 public class JSaParException extends RuntimeException{
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * Creates a JSaParException

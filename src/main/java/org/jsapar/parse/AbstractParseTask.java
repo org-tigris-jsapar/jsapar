@@ -10,6 +10,9 @@ import java.util.function.Consumer;
  * error event listeners. Override this class to implement a specific parser.
  */
 public abstract class AbstractParseTask implements ParseTask {
+
+    protected AbstractParseTask() {}
+
     private Consumer<Line>            lineConsumer       = null;
     private Consumer<JSaParException> errorConsumer = new ExceptionErrorConsumer();
 

@@ -28,11 +28,10 @@ public class InstantCellFactory extends AbstractDateTimeCellFactory {
     }
 
     @Override
-    public Cell makeCell(String name, String value, Format<TemporalAccessor> format) throws ParseException {
+    public Cell<? extends TemporalAccessor> makeCell(String name, String value, Format<TemporalAccessor> format) throws ParseException {
         if (format == null)
             format = getDefaultFormat();
-        if(format instanceof DateTimeFormat){
-            DateTimeFormat dateTimeFormat = ((DateTimeFormat) format);
+        if(format instanceof DateTimeFormat dateTimeFormat){
             TemporalAccessor temporalValue = format.parse(value);
             if(temporalValue.isSupported(ChronoField.INSTANT_SECONDS))
                 return new InstantCell(name, Instant.from(temporalValue));

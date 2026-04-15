@@ -1,5 +1,7 @@
 package org.jsapar.parse;
 
+import java.io.Serial;
+
 import org.jsapar.model.Line;
 
 import java.util.EventObject;
@@ -10,11 +12,9 @@ import java.util.EventObject;
 @Deprecated
 public final class LineParsedEvent extends EventObject {
 
-    /**
-     *
-     */
+    @Serial
     private static final long serialVersionUID = 9009392654758990080L;
-    private final Line line;
+    private final transient Line line;
 
     /**
      * @param source The sending class.

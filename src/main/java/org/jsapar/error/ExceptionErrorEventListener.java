@@ -9,6 +9,8 @@ package org.jsapar.error;
 @Deprecated
 public class ExceptionErrorEventListener implements ErrorEventListener{
 
+    public ExceptionErrorEventListener() {}
+
     /**
      * This implementation  throws a {@link JSaParException} or any of its subclasses for every call. This means that parsing/composing will be
      * aborted upon the first error if this error event listener is registered.

@@ -8,6 +8,8 @@ import java.util.function.Consumer;
  */
 public class ExceptionErrorConsumer implements Consumer<JSaParException> {
 
+    public ExceptionErrorConsumer() {}
+
     /**
      * This implementation  throws a {@link JSaParException} or any of its subclasses for every call. This means that parsing/composing will be
      * aborted upon the first error if this error event listener is registered.

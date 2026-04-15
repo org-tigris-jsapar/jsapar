@@ -12,7 +12,7 @@ public class LimitedSizeCache<K, V> implements Cache<K, V> {
     public LimitedSizeCache(final int maxSize) {
         this.elements = new LinkedHashMap<>(Math.min((maxSize * 4 / 3) + 1, 1024)) {
             @Override
-            protected boolean removeEldestEntry(Map.Entry eldest) {
+            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
                 return size() > maxSize;
             }
         };

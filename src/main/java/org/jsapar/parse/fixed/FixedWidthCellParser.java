@@ -27,7 +27,7 @@ class FixedWidthCellParser extends CellParser<FixedWidthSchemaCell> {
      * @return A Cell filled with the parsed cell value and with the name of this schema cell.
      * @throws IOException In case there is an error reading from the reader.
      */
-    Cell parse(ReadBuffer lineReader, Consumer<JSaParException> errorEventListener) throws IOException {
+    Cell<?> parse(ReadBuffer lineReader, Consumer<JSaParException> errorEventListener) throws IOException {
         String sValue = lineReader.readToString(trimmer,  0, getSchemaCell().getLength());
         // If EOF
         if(sValue == null) {

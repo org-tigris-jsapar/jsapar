@@ -16,6 +16,8 @@ import java.util.Optional;
 @Deprecated
 public class ByLineTypeLineEventListener implements LineEventListener {
 
+    public ByLineTypeLineEventListener() {}
+
     /**
      * Current listeners
      */

@@ -6,9 +6,6 @@ package org.jsapar.model;
  */
 public final class StringCell extends AbstractCell<String> implements ComparableCell<String> {
 
-    private static final long serialVersionUID = -2776042954053921679L;
-
-
     /**
      * Creates a string cell with the supplied name and value.
      * 

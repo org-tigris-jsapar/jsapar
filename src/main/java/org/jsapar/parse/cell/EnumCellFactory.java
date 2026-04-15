@@ -15,6 +15,8 @@ import java.util.Locale;
  */
 public class EnumCellFactory<E extends Enum<E>> implements CellFactory<E> {
 
+    public EnumCellFactory() {}
+
     @Override
     public Cell<E> makeCell(String name, String value, Format<E> format) throws ParseException {
         E enumValue = format.parse(value);

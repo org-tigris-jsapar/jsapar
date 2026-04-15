@@ -15,11 +15,6 @@ public final class DateCell extends AbstractCell<Date> implements ComparableCell
 
     public static final SimpleDateFormat ISO_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS ZZZ");
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4950587241666521775L;
-
     public DateCell(String sName, Date value) {
         super(sName, value, CellType.DATE);
     }

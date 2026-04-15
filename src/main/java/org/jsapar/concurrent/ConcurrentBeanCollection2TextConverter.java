@@ -21,11 +21,11 @@ import org.jsapar.schema.Schema;
 public class ConcurrentBeanCollection2TextConverter<T> extends BeanCollection2TextConverter<T> implements ConcurrentStartStop{
     private final ConcurrentConvertTaskFactory convertTaskFactory = new ConcurrentConvertTaskFactory();
 
-    public ConcurrentBeanCollection2TextConverter(Schema composerSchema) {
+    public ConcurrentBeanCollection2TextConverter(Schema<?> composerSchema) {
         super(composerSchema);
     }
 
-    public ConcurrentBeanCollection2TextConverter(Schema composerSchema, BeanMap beanMap) {
+    public ConcurrentBeanCollection2TextConverter(Schema<?> composerSchema, BeanMap beanMap) {
         super(composerSchema, beanMap);
     }
 

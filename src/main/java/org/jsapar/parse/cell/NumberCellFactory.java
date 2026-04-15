@@ -11,19 +11,21 @@ import java.util.Locale;
 /**
  * Abstract base class for parsing number values into {@link Cell} objects
  */
-public abstract class NumberCellFactory implements CellFactory {
+public abstract class NumberCellFactory implements CellFactory<Number> {
+
+    protected NumberCellFactory() {}
 
     @Override
-    public Format makeFormat(Locale locale) {
+    public Format<Number> makeFormat(Locale locale) {
         return Format.ofNumberInstance(locale);
     }
 
-    Number parseNumber(Format format, String value) throws ParseException {
-        return  (Number) format.parse(value);
+    Number parseNumber(Format<Number> format, String value) throws ParseException {
+        return format.parse(value);
     }
 
     @Override
-    public Format makeFormat(Locale locale, String pattern) {
+    public Format<Number> makeFormat(Locale locale, String pattern) {
         if (locale == null)
             locale = SchemaCellFormat.defaultLocale;
         if(pattern == null || pattern.isEmpty())

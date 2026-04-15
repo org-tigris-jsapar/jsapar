@@ -11,16 +11,19 @@ import java.util.Locale;
 /**
  * Parses boolean values into {@link Cell} objects
  */
-public class BooleanCellFactory implements CellFactory {
+public class BooleanCellFactory implements CellFactory<Boolean> {
+
+    public BooleanCellFactory() {}
+
     private final static Format<Boolean> defaultFormat = Format.ofBooleanInstance(true);
 
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
-        return new BooleanCell(name, (Boolean) format.parse(value));
+    public Cell<Boolean> makeCell(String name, String value, Format<Boolean> format) throws ParseException {
+        return new BooleanCell(name, format.parse(value));
     }
 
     @Override
-    public Format makeFormat(Locale locale) {
+    public Format<Boolean> makeFormat(Locale locale) {
         return defaultFormat;
     }
 

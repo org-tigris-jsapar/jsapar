@@ -1,5 +1,7 @@
 package org.jsapar.parse;
 
+import java.io.Serial;
+
 import org.jsapar.schema.SchemaCellFormat;
 
 /**
@@ -8,10 +10,12 @@ import org.jsapar.schema.SchemaCellFormat;
  *
  */
 public final class CellParseException extends LineParseException {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private final String           cellName;
     private final String           cellValue;
-    private final SchemaCellFormat cellFormat;
+    private final transient SchemaCellFormat<?> cellFormat;
 
     /**
      * Creates a new cell parsing exception
@@ -24,7 +28,7 @@ public final class CellParseException extends LineParseException {
     public CellParseException(long lineNumber,
                               String cellName,
                               String cellValue,
-                              SchemaCellFormat cellFormat,
+                              SchemaCellFormat<?> cellFormat,
                               String errorDescription) {
         super(lineNumber, errorDescription);
         this.cellName = cellName;
@@ -39,14 +43,14 @@ public final class CellParseException extends LineParseException {
      * @param cellFormat Expected cell format. Can be null.
      * @param errorDescription Description of the error.
      */
-    public CellParseException(String cellName, String cellValue, SchemaCellFormat cellFormat, String errorDescription) {
+    public CellParseException(String cellName, String cellValue, SchemaCellFormat<?> cellFormat, String errorDescription) {
         super(0, errorDescription);
         this.cellName = cellName;
         this.cellValue = cellValue;
         this.cellFormat = cellFormat;
     }
 
-    public CellParseException(String cellName, String value, SchemaCellFormat cellFormat, Throwable cause) {
+    public CellParseException(String cellName, String value, SchemaCellFormat<?> cellFormat, Throwable cause) {
         super(0, cause);
         this.cellName = cellName;
         this.cellValue = value;
@@ -71,7 +75,7 @@ public final class CellParseException extends LineParseException {
     /**
      * @return the cellFormat
      */
-    public SchemaCellFormat getCellFormat() {
+    public SchemaCellFormat<?> getCellFormat() {
         return cellFormat;
     }
 

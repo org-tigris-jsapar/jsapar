@@ -17,7 +17,7 @@ public final class BeanInfoReflection implements BeanInfo {
 
     private final Map<String, PropertyDescriptor> propertyDescriptorsByName;
 
-    public BeanInfoReflection(Class c) {
+    public BeanInfoReflection(Class<?> c) {
         propertyDescriptorsByName = makePropertyDescriptors(c);
     }
 
@@ -26,7 +26,7 @@ public final class BeanInfoReflection implements BeanInfo {
         return propertyDescriptorsByName;
     }
 
-    private static Map<String, PropertyDescriptor> makePropertyDescriptors(Class c) {
+    private static Map<String, PropertyDescriptor> makePropertyDescriptors(Class<?> c) {
         Map<String, PropertyDescriptor> descriptors = new HashMap<>();
 
         Map<String, Method> getters = propertyMethodsStream(c, GET_PREFIX)
@@ -111,7 +111,7 @@ public final class BeanInfoReflection implements BeanInfo {
      * @param prefix The prefix to check.
      * @return A stream of all methods that could be a property
      */
-    private static Stream<Method> propertyMethodsStream(Class c, String prefix){
+    private static Stream<Method> propertyMethodsStream(Class<?> c, String prefix){
         return Arrays.stream(c.getMethods())
                 .filter(m->m.getName().startsWith(prefix)
                         && m.getName().length()>prefix.length()

@@ -1,5 +1,7 @@
 package org.jsapar.parse;
 
+import java.io.Serial;
+
 import org.jsapar.error.JSaParException;
 
 /**
@@ -7,6 +9,8 @@ import org.jsapar.error.JSaParException;
  */
 @SuppressWarnings("WeakerAccess")
 public class LineParseException extends JSaParException {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private long      lineNumber;
 
     /** Creates a new line parse exception.

@@ -12,7 +12,7 @@ public interface CellFormat {
      * @param cell  The cell to format.
      * @return The String value of the supplied cell.
      */
-    String format(Cell cell);
+    String format(Cell<?> cell);
 
 
     /**

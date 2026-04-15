@@ -18,9 +18,10 @@ import java.util.stream.Stream;
  * @see Schema2XmlExtractor
  * 
  */
+@SuppressWarnings("this-escape")
 public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> implements Cloneable, Iterable<L>{
 
-    private String lineSeparator = System.getProperty("line.separator");
+    private String lineSeparator = System.lineSeparator();
 
     @Deprecated
     public Schema() {
@@ -41,7 +42,7 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
 
     @SuppressWarnings("unchecked")
     public abstract static class Builder<L extends SchemaLine<? extends SchemaCell>, S extends Schema<L>, B extends Schema.Builder<L, S, B>> {
-        private String lineSeparator = System.getProperty("line.separator");
+        private String lineSeparator = System.lineSeparator();
         private final List<L> schemaLines = new ArrayList<>();
         private Locale defaultLocale = SchemaCellFormat.defaultLocale;
 
@@ -210,7 +211,7 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
      *             loading a schema.
      * @throws UncheckedIOException In case there was an error reading from the input.
      */
-    public static Schema ofXml(Reader reader)
+    public static Schema<?> ofXml(Reader reader)
             throws SchemaException, UncheckedIOException {
         Xml2SchemaBuilder schemaBuilder = new Xml2SchemaBuilder();
         return schemaBuilder.build(reader);

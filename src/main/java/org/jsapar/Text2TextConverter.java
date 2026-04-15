@@ -17,6 +17,7 @@ import java.io.Writer;
  *
  * @see org.jsapar.concurrent.ConcurrentText2TextConverter
  */
+@SuppressWarnings("exports")
 public class Text2TextConverter extends AbstractConverter {
     private final Schema<? extends SchemaLine<? extends SchemaCell>>          parseSchema;
     private final Schema<? extends SchemaLine<? extends SchemaCell>>          composeSchema;

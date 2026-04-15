@@ -66,7 +66,7 @@ final class FixedWidthCellComposer {
         return schemaCell.getName();
     }
 
-    public EmptyCell makeEmptyCell() {
+    public EmptyCell<?> makeEmptyCell() {
         return schemaCell.makeEmptyCell();
     }
 }

@@ -1,5 +1,6 @@
 package org.jsapar.error;
 
+import java.io.Serial;
 import java.util.List;
 
 /**
@@ -9,11 +10,9 @@ import java.util.List;
  */
 public class MaxErrorsExceededException extends JSaParException {
 
-    /**
-     * 
-     */
+    @Serial
     private static final long serialVersionUID = -8025034269584118995L;
-    private final List<JSaParException> errors;
+    private final transient List<JSaParException> errors;
 
     /**
      * Creates an exception.

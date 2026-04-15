@@ -28,6 +28,7 @@ import java.util.function.Consumer;
  * When the internal queue is full, the producing thread starts blocking. This means that it waits for an available slot
  * in the queue before it continues parsing.
  */
+@SuppressWarnings("this-escape")
 public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppable, ConcurrentStartStop {
 
     private final BlockingQueue<T> events;
@@ -150,11 +151,11 @@ public class ConcurrentConsumer<T> implements Consumer<T>, AutoCloseable, Stoppa
      * processed by the working thread will be completed but then the thread will terminate.
      * @throws JSaParException if the working thread has terminated due to an exception.
      */
+    @SuppressWarnings("unchecked")
     public void stop() throws JSaParException {
         this.shouldStop = true;
         try {
             if(isRunning()) {
-                //noinspection unchecked
                 events.put((T) new END()); // Make sure the blocking is released immediately
             }
         } catch (InterruptedException e) {

@@ -43,6 +43,9 @@ Probably one of xml, html or text>]
  * }</pre>
  */
 public class ConverterMain {
+
+    public ConverterMain() {}
+
     private static final String APP_NAME = "jsapar.jar";
     private String applicationName = APP_NAME;
 
@@ -80,9 +83,9 @@ public class ConverterMain {
 
             }
             List<JSaParException> parseErrors = errors.getCollected();
-            if (parseErrors.size() > 0)
+            if (!parseErrors.isEmpty())
                 System.out.println("===> Found errors while converting file " + inFileName + ": "
-                        + System.getProperty("line.separator") + parseErrors);
+                        + System.lineSeparator() + parseErrors);
             else
                 System.out.println("Successfully converted file " + inFileName);
 

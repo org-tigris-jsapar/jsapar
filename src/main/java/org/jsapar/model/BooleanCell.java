@@ -6,12 +6,6 @@ package org.jsapar.model;
  */
 public final class BooleanCell extends AbstractCell<Boolean> implements ComparableCell<Boolean> {
 
-	/**
-     * 
-     */
-	private static final long serialVersionUID = -6337207320287960296L;
-
-
 	public BooleanCell(String sName, Boolean value) {
 		super(sName, value, CellType.BOOLEAN);
 	}

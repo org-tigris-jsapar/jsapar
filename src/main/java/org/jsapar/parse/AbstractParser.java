@@ -18,6 +18,8 @@ import java.util.function.Consumer;
  */
 public class AbstractParser {
 
+    public AbstractParser() {}
+
     private Consumer<JSaParException> errorConsumer = new ExceptionErrorConsumer();
 
     /**

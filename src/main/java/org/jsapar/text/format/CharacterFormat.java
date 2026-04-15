@@ -7,6 +7,8 @@ import java.text.ParseException;
 
 public class CharacterFormat implements Format<Character> {
 
+    public CharacterFormat() {}
+
     @Override
     public CellType cellType() {
         return CellType.CHARACTER;

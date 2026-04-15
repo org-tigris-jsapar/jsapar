@@ -10,16 +10,18 @@ import java.util.Locale;
 /**
  * Parses character values into {@link Cell} objects
  */
-public class CharacterCellFactory implements CellFactory {
+public class CharacterCellFactory implements CellFactory<Character> {
+
+    public CharacterCellFactory() {}
 
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
-        final Character characterValue = (Character) format.parse(value);
+    public Cell<Character> makeCell(String name, String value, Format<Character> format) throws ParseException {
+        final Character characterValue = format.parse(value);
         return new CharacterCell(name, characterValue);
     }
 
     @Override
-    public Format makeFormat(Locale locale) {
+    public Format<Character> makeFormat(Locale locale) {
         return null;
     }
 

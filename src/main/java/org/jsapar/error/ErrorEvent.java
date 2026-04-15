@@ -1,5 +1,7 @@
 package org.jsapar.error;
 
+import java.io.Serial;
+
 import org.jsapar.convert.ConvertTask;
 import org.jsapar.parse.ParseTask;
 
@@ -13,6 +15,8 @@ import java.util.EventObject;
  */
 @Deprecated
 public final class ErrorEvent extends EventObject {
+    @Serial
+    private static final long serialVersionUID = 1L;
     final JSaParException error;
 
     /**

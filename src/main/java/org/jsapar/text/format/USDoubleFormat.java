@@ -6,6 +6,9 @@ import org.jsapar.text.Format;
 import java.text.ParseException;
 
 public class USDoubleFormat implements Format<Number> {
+
+    public USDoubleFormat() {}
+
     @Override
     public CellType cellType() {
         return CellType.FLOAT;

@@ -6,6 +6,14 @@ title: Release notes
 * TOC
 {:toc}
 
+## 2.5
+1. Built with and for Java 21. Support for Java 20 and below is dropped.
+2. Removed `Serializable` from `Cell`, `Line` and `Document`.
+3. Added proper generic type parameters throughout the codebase, eliminating raw type usage of `Cell`, `CellFactory`, `Format`, `SchemaCellFormat`, `Schema` and related classes.
+5. Added `requires transitive java.xml` to module descriptor.
+6. Eliminated all compiler warnings (raw types, unchecked casts, missing explicit constructors, non-serializable fields, module exports, this-escape, ambiguous overloads).
+7. Fixed problem with line condition in combination with first-line-as-schema.
+
 ## 2.4
 1. Built with and for Java 17. Support for Java 11 and below is dropped.
 2. Added method `Cell.cloneWithName(String)` to make it easier to create a new copy of a cell with a different name without

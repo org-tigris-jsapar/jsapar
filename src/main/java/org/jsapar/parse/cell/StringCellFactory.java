@@ -10,20 +10,22 @@ import java.util.Locale;
 /**
  * Parses string values into {@link Cell} objects
  */
-public class StringCellFactory implements CellFactory {
+public class StringCellFactory implements CellFactory<String> {
+
+    public StringCellFactory() {}
 
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
-        return new StringCell(name, (String) format.parse(value));
+    public Cell<String> makeCell(String name, String value, Format<String> format) throws ParseException {
+        return new StringCell(name, format.parse(value));
     }
 
     @Override
-    public Format makeFormat(Locale locale) {
+    public Format<String> makeFormat(Locale locale) {
         return Format.ofStringInstance();
     }
 
     @Override
-    public org.jsapar.text.Format makeFormat(Locale locale, String pattern) {
+    public Format<String> makeFormat(Locale locale, String pattern) {
         return pattern != null ? Format.ofStringInstance(pattern) : Format.ofStringInstance();
     }
 

@@ -6,11 +6,6 @@ package org.jsapar.model;
  */
 public final class CharacterCell extends AbstractCell<Character> implements ComparableCell<Character> {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 8442587766024601673L;
-
     public CharacterCell(String sName, Character value) {
         super(sName, value, CellType.CHARACTER);
     }

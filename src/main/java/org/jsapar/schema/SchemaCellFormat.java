@@ -121,8 +121,7 @@ public class SchemaCellFormat<T> implements Cloneable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SchemaCellFormat)) return false;
-        SchemaCellFormat<T> that = (SchemaCellFormat<T>) o;
+        if (!(o instanceof SchemaCellFormat<?> that)) return false;
         return cellType == that.cellType &&
                 Objects.equals(format, that.format) &&
                 Objects.equals(pattern, that.pattern);
@@ -133,11 +132,11 @@ public class SchemaCellFormat<T> implements Cloneable {
         return Objects.hash(cellType, format, pattern);
     }
 
-    @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
+    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "unchecked"})
     @Override
-    protected SchemaCellFormat clone() {
+    protected SchemaCellFormat<T> clone() {
         try {
-            return (SchemaCellFormat) super.clone();
+            return (SchemaCellFormat<T>) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError("Should never happen");
         }

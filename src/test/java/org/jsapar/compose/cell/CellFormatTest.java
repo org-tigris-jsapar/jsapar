@@ -9,6 +9,7 @@ import org.jsapar.text.Format;
 import org.junit.Test;
 
 import java.text.ParseException;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -81,7 +82,9 @@ public class CellFormatTest {
                 .build();
 
         DateCellFactory cellFactory = new DateCellFactory();
-        DateCell cell = (DateCell) cellFactory.makeCell("Name", "2007-10-01 14:13", schemaCell.getFormat());
+        @SuppressWarnings("unchecked")
+        Format<Date> dateFormat = (Format<Date>) schemaCell.getFormat();
+        DateCell cell = (DateCell) cellFactory.makeCell("Name", "2007-10-01 14:13", dateFormat);
         CellFormat format = CellFormat.ofSchemaCell(schemaCell);
         String value = format.format(cell);
 

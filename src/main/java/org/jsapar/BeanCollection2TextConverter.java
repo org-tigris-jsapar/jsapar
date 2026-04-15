@@ -30,6 +30,7 @@ import java.util.stream.Stream;
  *
  * @see Bean2TextConverter
  */
+@SuppressWarnings("exports")
 public class BeanCollection2TextConverter<T> extends AbstractConverter {
 
     private final Schema<?>  composerSchema;

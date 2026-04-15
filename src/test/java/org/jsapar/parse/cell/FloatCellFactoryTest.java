@@ -5,7 +5,6 @@ import org.jsapar.text.Format;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -21,7 +20,8 @@ public class FloatCellFactoryTest {
 
     @Test
     public void testSetValueStringFormat() throws ParseException {
-        Format<BigDecimal> format = Format.ofDecimalInstance("#,###.##", Locale.GERMANY);
+        @SuppressWarnings("unchecked")
+        Format<Number> format = (Format<Number>)(Format<?>) Format.ofDecimalInstance("#,###.##", Locale.GERMANY);
         FloatCell cell = (FloatCell) cellFactory.makeCell("test", "3.141,59", format);
 
         Assert.assertEquals(3141.59, cell.getValue().doubleValue(), 0.001);

@@ -8,6 +8,8 @@ import org.jsapar.text.Format;
  */
 public class StringFormat implements Format<String> {
 
+    public StringFormat() {}
+
     @Override
     public CellType cellType() {
         return CellType.STRING;

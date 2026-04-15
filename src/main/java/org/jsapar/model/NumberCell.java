@@ -7,12 +7,6 @@ package org.jsapar.model;
 abstract class NumberCell extends AbstractCell<Number> {
 
     /**
-     * 
-     */
-    private static final long serialVersionUID = -2103478512589522630L;
-
-
-    /**
      * @param name The name of the cell
      * @param value The value
      * @param cellType The type of the cell, from the sub-class.

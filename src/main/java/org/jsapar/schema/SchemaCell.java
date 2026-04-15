@@ -21,6 +21,7 @@ import java.util.function.Predicate;
  * @see SchemaLine
  * @see Schema
  */
+@SuppressWarnings("this-escape")
 public abstract class SchemaCell implements Cloneable {
 
              private final static SchemaCellFormat<String> CELL_FORMAT_PROTOTYPE = new SchemaCellFormat<>(CellType.STRING);
@@ -527,28 +528,28 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * @return the maxValue
      */
-    public Cell getMaxValue() {
+    public Cell<?> getMaxValue() {
         return maxValue;
     }
 
     /**
      * @param maxValue the maxValue to set
      */
-    public void setMaxValue(Cell maxValue) {
+    public void setMaxValue(Cell<?> maxValue) {
         this.maxValue = maxValue;
     }
 
     /**
      * @return the minValue
      */
-    public Cell getMinValue() {
+    public Cell<?> getMinValue() {
         return minValue;
     }
 
     /**
      * @param minValue the minValue to set
      */
-    public void setMinValue(Cell minValue) {
+    public void setMinValue(Cell<?> minValue) {
         this.minValue = minValue;
     }
 
@@ -576,11 +577,11 @@ public abstract class SchemaCell implements Cloneable {
      * @param defaultCell The default cell to use.
      * @throws SchemaException If validation fails.
      */
-    @SuppressWarnings("unchecked")
-    private void validateDefaultValueRange(Cell defaultCell) throws SchemaException {
-        if (this.minValue != null && defaultCell.compareValueTo(this.minValue) < 0) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void validateDefaultValueRange(Cell<?> defaultCell) throws SchemaException {
+        if (this.minValue != null && ((Cell)defaultCell).compareValueTo(this.minValue) < 0) {
             throw new SchemaException("The value is below minimum range limit.");
-        } else if (this.maxValue != null && defaultCell.compareValueTo(this.maxValue) > 0) {
+        } else if (this.maxValue != null && ((Cell)defaultCell).compareValueTo(this.maxValue) > 0) {
             throw new SchemaException("The value is above maximum range limit.");
         }
 
@@ -683,6 +684,7 @@ public abstract class SchemaCell implements Cloneable {
      *
      * @param emptyCondition the cell value condition that needs to be satisfied if this cell is to be considered empty
      */
+    @SuppressWarnings("overloads")
     public void setEmptyCondition(Predicate<String> emptyCondition) {
         this.emptyCondition = emptyCondition;
     }
@@ -719,6 +721,7 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * @param lineCondition A predicate that needs to be satisfied if the parser is going to use this line type.
      */
+    @SuppressWarnings("overloads")
     public void setLineCondition(Predicate<String> lineCondition) {
         this.lineCondition = lineCondition;
     }
@@ -733,14 +736,14 @@ public abstract class SchemaCell implements Cloneable {
     /**
      * @return An empty cell for this schema cell.
      */
-    public EmptyCell makeEmptyCell() {
+    public EmptyCell<?> makeEmptyCell() {
         return this.emptyCell;
     }
 
     /**
      * @return the format
      */
-    public Format getFormat(){
+    public Format<?> getFormat(){
         return this.cellFormat.getFormat();
     }
 }

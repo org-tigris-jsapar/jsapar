@@ -1,5 +1,7 @@
 package org.jsapar.schema;
 
+import java.io.Serial;
+
 import org.jsapar.error.JSaParException;
 
 /**
@@ -7,6 +9,7 @@ import org.jsapar.error.JSaParException;
  */
 public class SchemaException extends JSaParException {
 
+    @Serial
     private static final long serialVersionUID = 636516160510599949L;
 
     public SchemaException(String s) {

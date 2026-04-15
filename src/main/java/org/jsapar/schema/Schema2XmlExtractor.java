@@ -26,8 +26,10 @@ import java.util.function.Predicate;
 /**
  * Extracts xml representation for a {@link Schema} and writes it to a writer.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "exports"})
 public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
+
+    public Schema2XmlExtractor() {}
 
     /**
      * Writes supplied schema as xml to supplied writer.
@@ -38,7 +40,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
      *            The schema to extract.
      * @throws SchemaException If there is an error in the schema
      */
-    public void extractXml(Writer writer, Schema schema) throws SchemaException {
+    public void extractXml(Writer writer, Schema<?> schema) throws SchemaException {
         try {
 
             Document xmlDocument = extractXmlDocument(schema);
@@ -60,7 +62,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
      * @return The xml document
      * @throws SchemaException If there is an error in the schema
      */
-    private Document extractXmlDocument(Schema schema) throws SchemaException {
+    private Document extractXmlDocument(Schema<?> schema) throws SchemaException {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setIgnoringElementContentWhitespace(true);
@@ -256,7 +258,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
      * @param xmlSchema The schema xml element to assign to
      * @param schema The schema to extract
      */
-    private void assignSchemaBase(Document xmlDocument, Element xmlSchema, Schema schema) {
+    private void assignSchemaBase(Document xmlDocument, Element xmlSchema, Schema<?> schema) {
         String lineSeparator = schema.getLineSeparator();
         lineSeparator = StringUtils.replaceJava2Escapes(lineSeparator);
         xmlSchema.setAttribute(ATTRIB_SCHEMA_LINESEPARATOR, lineSeparator);
@@ -268,7 +270,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
      * @param xmlSchemaLine    The schema line xml element to assign to
      * @param schemaLine The schema line to extract
      */
-    private void assignSchemaLineBase(Element xmlSchemaLine, SchemaLine schemaLine) {
+    private void assignSchemaLineBase(Element xmlSchemaLine, SchemaLine<?> schemaLine) {
         String sOccurs = schemaLine.isOccursInfinitely() ? "*" : String.valueOf(schemaLine.getOccurs());
         xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_OCCURS, sOccurs);
 
@@ -320,8 +322,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
     private Element extractCellValueCondition(Document xmlDocument, Predicate<String> lineCondition, String elementName)
             throws SchemaException {
         Element xmlLineCondition = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, elementName);
-        if (lineCondition instanceof MatchingCellValueCondition){
-            MatchingCellValueCondition match = (MatchingCellValueCondition) lineCondition;
+        if (lineCondition instanceof MatchingCellValueCondition match){
             Element xmlMatch = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_MATCH);
             xmlMatch.setAttribute(ATTRIB_PATTERN, match.getPattern());
             return xmlLineCondition;
@@ -357,10 +358,9 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
      * @param format The format to extract
      * @return The format xml element
      */
-    @SuppressWarnings("unchecked")
-    private Element extractCellFormat(Document xmlDocument, SchemaCellFormat format) {
+    private Element extractCellFormat(Document xmlDocument, SchemaCellFormat<?> format) {
         if(format.getCellType() == CellType.ENUM){
-            EnumFormat enumFormat = (EnumFormat) format.getFormat();
+            EnumFormat<?> enumFormat = (EnumFormat<?>) format.getFormat();
             Element xmlFormat = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_ENUM_FORMAT);
             xmlFormat.setAttribute("class", enumFormat.getEnumClass().getName());
             xmlFormat.setAttribute("ignorecase", String.valueOf(enumFormat.isIgnoreCase()));
@@ -382,7 +382,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
         else{
             Element xmlFormat = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_FORMAT);
             xmlFormat.setAttribute("type", format.getCellType().toString().toLowerCase());
-            if (format.getPattern() != null && format.getPattern().length() > 0)
+            if (format.getPattern() != null && !format.getPattern().isEmpty())
                 xmlFormat.setAttribute("pattern", format.getPattern());
             return xmlFormat;
         }

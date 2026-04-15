@@ -16,7 +16,8 @@ public class BigDecimalCellFactoryTest {
     @Test
     public void testSetValue() throws Exception {
         BigDecimalCell cell;
-        Format<BigDecimal> format = Format.ofDecimalInstance("#.#",Locale.GERMAN);
+        @SuppressWarnings("unchecked")
+        Format<Number> format = (Format<Number>)(Format<?>) Format.ofDecimalInstance("#.#",Locale.GERMAN);
         cell = (BigDecimalCell) cellFactory.makeCell("test", "3,14", format);
         assertEquals(new BigDecimal("3.14"), cell.getValue());
     }

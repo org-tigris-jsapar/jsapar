@@ -17,12 +17,13 @@ import java.util.function.Consumer;
 /**
  * Internal class for parsing text on cell level.
  */
+@SuppressWarnings("this-escape")
 public class CellParser<S extends SchemaCell> {
 
     private final S schemaCell;
     private final Cell<?> defaultCell;
     private final EmptyCell<?> emptyCell;
-    private final CellFactory cellFactory;
+    private final CellFactory<?> cellFactory;
     private Format<?> format;
     private final Cache<String, Cell<?>> cellCache ;
     private static final String EMPTY_STRING = "";
@@ -119,11 +120,16 @@ public class CellParser<S extends SchemaCell> {
         }
         Cell<?> cell = cellCache.get(sValue);
         if(cell == null) {
-            cell = cellFactory.makeCell(schemaCell.getName(), sValue, format);
+            cell = makeCellUnchecked(cellFactory, schemaCell.getName(), sValue, format);
             cellCache.put(sValue, cell);
         }
         return cell;
 
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> Cell<? extends T> makeCellUnchecked(CellFactory<T> cellFactory, String name, String value, Format<?> format) throws ParseException {
+        return cellFactory.makeCell(name, value, (Format<T>) format);
     }
 
 
@@ -139,10 +145,10 @@ public class CellParser<S extends SchemaCell> {
      */
     public static Cell<?> makeCell(CellType cellType, String sName, String sValue, Locale locale)
             throws java.text.ParseException {
-        CellFactory cellFactory = CellFactory.getInstance(cellType);
+        CellFactory<?> cellFactory = CellFactory.getInstance(cellType);
 
         Format<?> format = cellFactory.makeFormat(locale);
-        return cellFactory.makeCell(sName, sValue, format);
+        return makeCellUnchecked(cellFactory, sName, sValue, format);
     }
     /**
      * Validates that the cell value is within the valid range. Throws a SchemaException if value is
@@ -151,11 +157,11 @@ public class CellParser<S extends SchemaCell> {
      * @param cell       The cell to validate
      * @throws ParseException If the value cannot be parsed according to the format of this cell schema.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private void validateRange(Cell<?> cell) throws ParseException {
-        if (schemaCell.getMinValue() != null && cell.compareValueTo(schemaCell.getMinValue()) < 0) {
+        if (schemaCell.getMinValue() != null && ((Cell)cell).compareValueTo(schemaCell.getMinValue()) < 0) {
             throw new ParseException("The value is below minimum range limit ("+schemaCell.getMinValue().getStringValue()+").", 0);
-        } else if (schemaCell.getMaxValue() != null && cell.compareValueTo(schemaCell.getMaxValue()) > 0)
+        } else if (schemaCell.getMaxValue() != null && ((Cell)cell).compareValueTo(schemaCell.getMaxValue()) > 0)
             throw new ParseException("The value is above maximum range limit ("+schemaCell.getMaxValue().getStringValue()+").", 0);
     }
 

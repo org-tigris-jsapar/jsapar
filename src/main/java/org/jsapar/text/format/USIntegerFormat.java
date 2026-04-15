@@ -7,6 +7,8 @@ import java.text.ParseException;
 
 public class USIntegerFormat implements Format<Number> {
 
+    public USIntegerFormat() {}
+
     @Override
     public CellType cellType() {
         return CellType.INTEGER;

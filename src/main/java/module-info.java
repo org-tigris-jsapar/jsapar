@@ -1,5 +1,5 @@
 module org.jsapar {
-    requires java.xml;
+    requires transitive java.xml;
     exports org.jsapar;
     exports org.jsapar.bean;
     exports org.jsapar.compose;

@@ -12,14 +12,16 @@ import java.util.Locale;
  */
 public class FloatCellFactory extends NumberCellFactory {
 
+    public FloatCellFactory() {}
+
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
+    public Cell<Number> makeCell(String name, String value, Format<Number> format) throws ParseException {
         final Number number = super.parseNumber(format, value);
-        return new FloatCell(name, number instanceof Double ? (Double) number : number.doubleValue());
+        return new FloatCell(name, number instanceof Double d ? d : number.doubleValue());
     }
 
     @Override
-    public Format makeFormat(Locale locale) {
+    public Format<Number> makeFormat(Locale locale) {
         return Format.ofDoubleInstance(locale);
     }
 }

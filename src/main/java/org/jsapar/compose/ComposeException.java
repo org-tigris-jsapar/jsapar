@@ -1,5 +1,7 @@
 package org.jsapar.compose;
 
+import java.io.Serial;
+
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 
@@ -7,11 +9,13 @@ import org.jsapar.model.Line;
  * Error that can happen when composing.
  */
 public class ComposeException extends JSaParException {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * A clone of the line that caused the error.
      */
-    private final Line line;
+    private final transient Line line;
 
     /**
      * Creates a new ComposeException

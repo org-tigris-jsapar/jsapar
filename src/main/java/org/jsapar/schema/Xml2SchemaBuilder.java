@@ -25,7 +25,10 @@ import java.util.function.Predicate;
 /**
  * Builds a {@link Schema} instance from xml that conforms to the JSaPar xsd.
  */
+@SuppressWarnings("exports")
 public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
+
+    public Xml2SchemaBuilder() {}
 
     /**
      * Utility function to retrieve first matching child element.
@@ -155,17 +158,10 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         Node xmlAlignment = xmlSchemaCell.getAttributeNode(ATTRIB_FW_SCHEMA_CELL_ALIGNMENT);
         if(xmlAlignment != null) {
             switch (getStringValue(xmlAlignment)) {
-            case "left":
-                cellBuilder.withAlignment(FixedWidthSchemaCell.Alignment.LEFT);
-                break;
-            case "center":
-                cellBuilder.withAlignment(FixedWidthSchemaCell.Alignment.CENTER);
-                break;
-            case "right":
-                cellBuilder.withAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
-                break;
-            default:
-                throw new SchemaException(
+                case "left" -> cellBuilder.withAlignment(FixedWidthSchemaCell.Alignment.LEFT);
+                case "center" -> cellBuilder.withAlignment(FixedWidthSchemaCell.Alignment.CENTER);
+                case "right" -> cellBuilder.withAlignment(FixedWidthSchemaCell.Alignment.RIGHT);
+                default -> throw new SchemaException(
                         "Invalid value for attribute: " + ATTRIB_FW_SCHEMA_CELL_ALIGNMENT + "=" + getStringValue(
                                 xmlAlignment));
             }
@@ -294,8 +290,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         NodeList nodes = xmlSchema.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE);
         for (int i = 0; i < nodes.getLength(); i++) {
             Node child = nodes.item(i);
-            if (child instanceof Element)
-                applyToEachLine.accept((Element) child);
+            if (child instanceof Element element)
+                applyToEachLine.accept(element);
         }
     }
 
@@ -330,8 +326,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         NodeList nodes = xmlSchemaLine.getElementsByTagNameNS(JSAPAR_XML_SCHEMA, ELEMENT_SCHEMA_LINE_CELL);
         for (int i = 0; i < nodes.getLength(); i++) {
             Node child = nodes.item(i);
-            if (child instanceof Element)
-                applyToEachCell.accept((Element) child);
+            if (child instanceof Element element)
+                applyToEachCell.accept(element);
         }
     }
 
@@ -474,37 +470,22 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
      * @throws SchemaException  When there is an error in the schema
      */
     private CellType makeCellType(String sType) throws SchemaException {
-        switch (sType) {
-            case "string":
-                return CellType.STRING;
-            case "integer":
-                return CellType.INTEGER;
-            case "date":
-                return CellType.DATE;
-            case "local_date":
-                return CellType.LOCAL_DATE;
-            case "local_date_time":
-                return CellType.LOCAL_DATE_TIME;
-            case "local_time":
-                return CellType.LOCAL_TIME;
-            case "zoned_date_time":
-                return CellType.ZONED_DATE_TIME;
-            case "float":
-                return CellType.FLOAT;
-            case "decimal":
-                return CellType.DECIMAL;
-            case "boolean":
-                return CellType.BOOLEAN;
-            case "character":
-                return CellType.CHARACTER;
-            case "enum":
-                return CellType.ENUM;
-            case "instant":
-                return CellType.INSTANT;
-            default:
-                throw new SchemaException("Unknown cell format type: " + sType);
-        }
-
+        return switch (sType) {
+            case "string" -> CellType.STRING;
+            case "integer" -> CellType.INTEGER;
+            case "date" -> CellType.DATE;
+            case "local_date" -> CellType.LOCAL_DATE;
+            case "local_date_time" -> CellType.LOCAL_DATE_TIME;
+            case "local_time" -> CellType.LOCAL_TIME;
+            case "zoned_date_time" -> CellType.ZONED_DATE_TIME;
+            case "float" -> CellType.FLOAT;
+            case "decimal" -> CellType.DECIMAL;
+            case "boolean" -> CellType.BOOLEAN;
+            case "character" -> CellType.CHARACTER;
+            case "enum" -> CellType.ENUM;
+            case "instant" -> CellType.INSTANT;
+            default -> throw new SchemaException("Unknown cell format type: " + sType);
+        };
     }
 
     /**
@@ -518,9 +499,9 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         String sLanguage = getMandatoryAttribute(xmlLocale, ATTRIB_LOCALE_LANGUAGE).getValue();
         String sCountry = getAttributeValue(xmlLocale, ATTRIB_LOCALE_COUNTRY);
         if (sCountry != null)
-            return new Locale(sLanguage, sCountry);
+            return Locale.of(sLanguage, sCountry);
         else
-            return new Locale(sLanguage);
+            return Locale.of(sLanguage);
     }
 
     /**

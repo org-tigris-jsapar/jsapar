@@ -40,7 +40,7 @@ public class LineTest {
     @Test
     public void testGetCells() {
         Line line = makeTestLine();
-        java.util.List<Cell> cells = line.getCells();
+        java.util.List<Cell<?>> cells = line.getCells();
         assertEquals(2, cells.size());
         assertEquals("Svensson", cells.get(1).getStringValue());
     }
@@ -64,7 +64,7 @@ public class LineTest {
     public void testGetCellIterator() {
         Line line = new Line("TestLine");
         line.addCell(new StringCell("FirstName", "Nils"));
-        java.util.Iterator<Cell> i = line.iterator();
+        java.util.Iterator<Cell<?>> i = line.iterator();
         assertNotNull(i);
     }
 
@@ -142,7 +142,7 @@ public class LineTest {
         assertFalse(line.hasCellErrors());
         assertEquals(0, line.getCellErrors().size());
         CellParseException theError = new CellParseException(17, "FirstName", "some value",
-                new SchemaCellFormat(CellType.STRING), "Testing error");
+                new SchemaCellFormat<>(CellType.STRING), "Testing error");
         line.addCellError(theError);
         assertTrue(line.hasCellErrors());
         assertEquals(1, line.getCellErrors().size());

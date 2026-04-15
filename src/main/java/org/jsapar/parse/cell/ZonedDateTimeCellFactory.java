@@ -20,11 +20,11 @@ public class ZonedDateTimeCellFactory extends AbstractDateTimeCellFactory {
     }
 
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
+    public Cell<? extends TemporalAccessor> makeCell(String name, String value, Format<TemporalAccessor> format) throws ParseException {
         if (format == null)
             format = getDefaultFormat();
 
-        return new ZonedDateTimeCell(name, ZonedDateTime.from((TemporalAccessor) format.parse(value)));
+        return new ZonedDateTimeCell(name, ZonedDateTime.from(format.parse(value)));
     }
 
 }

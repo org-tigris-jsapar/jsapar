@@ -12,7 +12,9 @@ import java.util.Locale;
 /**
  * Parses decimal values into {@link Cell} objects
  */
-public class BigDecimalCellFactory implements CellFactory {
+public class BigDecimalCellFactory implements CellFactory<Number> {
+
+    public BigDecimalCellFactory() {}
 
     /**
      * @param name   The name to give the newly created cell.
@@ -22,7 +24,7 @@ public class BigDecimalCellFactory implements CellFactory {
      * @throws ParseException If there is an error parsing
      */
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
+    public Cell<Number> makeCell(String name, String value, Format<Number> format) throws ParseException {
         return new BigDecimalCell(name, (BigDecimal) format.parse(value));
     }
 
@@ -31,8 +33,9 @@ public class BigDecimalCellFactory implements CellFactory {
      * @return A {@link java.text.NumberFormat} instance to use while parsing decimal values.
      */
     @Override
-    public Format makeFormat(Locale locale) {
-        return Format.ofDecimalInstance(locale);
+    @SuppressWarnings("unchecked")
+    public Format<Number> makeFormat(Locale locale) {
+        return (Format<Number>)(Format<?>) Format.ofDecimalInstance(locale);
     }
 
     /**
@@ -41,9 +44,10 @@ public class BigDecimalCellFactory implements CellFactory {
      * @return A {@link java.text.NumberFormat} instance to use while parsing decimal values.
      */
     @Override
-    public Format<BigDecimal> makeFormat(Locale locale, String pattern) {
+    @SuppressWarnings("unchecked")
+    public Format<Number> makeFormat(Locale locale, String pattern) {
         if (locale == null)
             locale = SchemaCellFormat.defaultLocale;
-        return Format.ofDecimalInstance(pattern, locale);
+        return (Format<Number>)(Format<?>) Format.ofDecimalInstance(pattern, locale);
     }
 }

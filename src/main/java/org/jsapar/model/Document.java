@@ -1,7 +1,6 @@
 package org.jsapar.model;
 
 import java.io.Reader;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,12 +16,7 @@ import java.util.stream.Stream;
  * 
  */
 @SuppressWarnings({"WeakerAccess", "UnusedReturnValue"})
-public final class Document implements Serializable, Iterable<Line> {
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = 6098681751483565286L;
+public final class Document implements Iterable<Line> {
 
     private final List<Line> lines;
 

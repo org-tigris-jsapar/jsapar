@@ -39,7 +39,7 @@ final class CsvCellComposer {
         return schemaCell.getName();
     }
 
-    EmptyCell makeEmptyCell() {
+    EmptyCell<?> makeEmptyCell() {
         return schemaCell.makeEmptyCell();
     }
 }

@@ -7,8 +7,6 @@ package org.jsapar.model;
  */
 public final class FloatCell extends NumberCell {
 
-    private static final long serialVersionUID = 2102712515168714171L;
-
     /**
      * Creates a float number cell with supplied name. Converts the float value
      * into a double precision float value.

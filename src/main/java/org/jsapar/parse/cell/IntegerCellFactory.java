@@ -11,14 +11,17 @@ import java.util.Locale;
  * Parses integer values into {@link Cell} objects
  */
 public class IntegerCellFactory extends NumberCellFactory {
+
+    public IntegerCellFactory() {}
+
     @Override
-    public Cell makeCell(String name, String value, Format format) throws ParseException {
+    public Cell<Number> makeCell(String name, String value, Format<Number> format) throws ParseException {
         Number number = super.parseNumber(format, value);
         return new IntegerCell(name, number.longValue());
     }
 
     @Override
-    public Format makeFormat(Locale locale) {
+    public Format<Number> makeFormat(Locale locale) {
         return Format.ofIntegerInstance(locale);
     }
 }

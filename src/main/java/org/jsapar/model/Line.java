@@ -2,7 +2,6 @@ package org.jsapar.model;
 
 import org.jsapar.parse.CellParseException;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -23,11 +22,9 @@ import java.util.stream.Stream;
  * @see Document
  */
 @SuppressWarnings("WeakerAccess")
-public class Line implements Serializable, Cloneable, Iterable<Cell> {
+public class Line implements Cloneable, Iterable<Cell<?>> {
 
-    private static final long   serialVersionUID = 6026541900371948403L;
-
-    private Map<String, Cell> cells;
+    private Map<String, Cell<?>> cells;
     private Map<String, CellParseException> cellErrors = new LinkedHashMap<>();
 
     /**
@@ -76,7 +73,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @see #iterator()
      * @see #stream()
      */
-    public List<Cell> getCells() {
+    public List<Cell<?>> getCells() {
         return new ArrayList<>(cells.values());
     }
 
@@ -86,7 +83,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @return An iterator that will iterate all the cells of this line.
      */
     @Override
-    public Iterator<Cell> iterator() {
+    public Iterator<Cell<?>> iterator() {
         return cells.values().iterator();
     }
 
@@ -115,7 +112,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @param sName The name of the cell to remove.
      * @return Optional that contains the removed cell if found
      */
-    public Optional<Cell> removeCell(String sName) {
+    public Optional<Cell<?>> removeCell(String sName) {
         return Optional.ofNullable(this.cells.remove(sName));
     }
 
@@ -126,7 +123,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @return Optional containing the replaced cell if there was one within the line with the same name.
      * @see #addCell(Cell)
      */
-    public Optional<Cell> putCell(Cell<?> cell) {
+    public Optional<Cell<?>> putCell(Cell<?> cell) {
         return Optional.ofNullable(this.cells.put(cell.getName(), cell));
     }
 
@@ -153,7 +150,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @param name The name of the cell to get
      * @return Optional cell that is set if there is a cell with specified name.
      */
-    public Optional<Cell> getCell(String name) {
+    public Optional<Cell<?>> getCell(String name) {
         return Optional.ofNullable(this.cells.get(name));
     }
 
@@ -164,7 +161,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @return A cell with the supplied name
      * @throws IllegalStateException if there is no cell with the specified name.
      */
-    public Cell getExistingCell(String name) {
+    public Cell<?> getExistingCell(String name) {
         return getCell(name).orElseThrow(() -> new IllegalStateException(
                 "The line " + lineNumber + " of type " + lineType + " does not contain any cell with name " + name
                         + " This could happen when: A. The line was prematurely truncated. B. The parsing schema does not contain any cell with that name."));
@@ -176,7 +173,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @param name The name of the cell to get
      * @return Optional cell that is set if there is a cell with specified name and that cell is not empty.
      */
-    public Optional<Cell> getNonEmptyCell(String name) {
+    public Optional<Cell<?>> getNonEmptyCell(String name) {
         return getCell(name).filter(c->!c.isEmpty());
     }
 
@@ -189,8 +186,8 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      * @param <T> The type of the value.
      * @throws ClassCastException If the value of the cell cannot be safely cast into the valueType.
      */
+    @SuppressWarnings("unchecked")
     public <T> Optional<T> getNonEmptyCellValue(String name, Class<T> valueType) throws ClassCastException {
-        //noinspection unchecked
         Cell<T> uncheckedCell = (Cell<T>) this.cells.get(name);
         if(uncheckedCell == null || uncheckedCell.isEmpty())
             return Optional.empty();
@@ -229,7 +226,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Line");
-        if (this.lineType != null && this.lineType.length() > 0) {
+        if (this.lineType != null && !this.lineType.isEmpty()) {
             sb.append(" type=[");
             sb.append(this.lineType);
             sb.append("]");
@@ -356,7 +353,7 @@ public class Line implements Serializable, Cloneable, Iterable<Cell> {
      *
      * @return A stream of all cells within this line.
      */
-    public Stream<Cell> stream() {
+    public Stream<Cell<?>> stream() {
         return this.cells.values().stream();
     }
 

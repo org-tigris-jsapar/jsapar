@@ -13,7 +13,7 @@ final class StringValueFormat implements CellFormat {
     }
 
     @Override
-    public String format(Cell cell) {
+    public String format(Cell<?> cell) {
         return cell.isEmpty() ? defaultValue : cell.getStringValue();
     }
 }

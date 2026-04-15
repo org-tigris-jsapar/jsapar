@@ -12,11 +12,6 @@ import java.math.BigInteger;
 public final class BigDecimalCell extends NumberCell  {
 
     /**
-     * 
-     */
-    private static final long serialVersionUID = -6337207320287960296L;
-
-    /**
      * Creates a new decimal cell.
      * @param sName    The name of the cell.
      * @param value The value of the cell.

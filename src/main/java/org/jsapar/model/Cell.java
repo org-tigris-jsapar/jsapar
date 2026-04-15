@@ -1,14 +1,12 @@
 package org.jsapar.model;
 
-import java.io.Serializable;
-
 /**
  * Base interface which represents a parsable item on a line in the original document. A cell has a
  * name, a value and a type. The type of the value denotes which subclass to use.
  * The cell is intended to be immutable, but it depends on the value type. As of now, all cell implementations are
  * immutable except DateCell since Date is a mutable class.
  */
-public interface Cell<T> extends Serializable, Comparable<Cell<T>>, Cloneable {
+public interface Cell<T> extends Comparable<Cell<T>>, Cloneable {
 
     /**
      * Gets the name of the cell.

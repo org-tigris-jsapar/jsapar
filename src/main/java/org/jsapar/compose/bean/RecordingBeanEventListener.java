@@ -16,6 +16,9 @@ import java.util.stream.Stream;
  */
 @Deprecated
 public class RecordingBeanEventListener<T> implements BeanEventListener<T>, Iterable<T> {
+
+    public RecordingBeanEventListener() {}
+
     private final List<T> beans = new ArrayList<>();
 
     /**

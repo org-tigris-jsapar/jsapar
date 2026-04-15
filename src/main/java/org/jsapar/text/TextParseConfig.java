@@ -7,6 +7,8 @@ import org.jsapar.error.ValidationAction;
  */
 public class TextParseConfig {
 
+    public TextParseConfig() {}
+
     /**
      * The action to take if the cell value conditions of the line does not match any of the defined line types
      * within the schema. Default is to throw exception.

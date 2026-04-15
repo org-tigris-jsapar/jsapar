@@ -13,6 +13,7 @@ import java.util.stream.Stream;
  * @see Schema
  * @see SchemaCell
  */
+@SuppressWarnings("this-escape")
 public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Iterable<C> {
     /**
      * Constant to be used in occurs attribute and that indicates that lines can occur infinite number of times.
@@ -181,7 +182,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
             return (B) this;
         }
 
-        public B applyDefaultsFrom(Schema.Builder schemaBuilder){
+        public B applyDefaultsFrom(Schema.Builder<?, ?, ?> schemaBuilder){
             return withDefaultLocale(schemaBuilder.getDefaultLocale());
         }
 
@@ -360,9 +361,8 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof SchemaLine))
+        if (!(o instanceof SchemaLine<?> that))
             return false;
-        SchemaLine that = (SchemaLine) o;
         return Objects.equals(lineType, that.lineType);
     }
 

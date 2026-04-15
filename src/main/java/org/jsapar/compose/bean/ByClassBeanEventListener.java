@@ -14,6 +14,9 @@ import java.util.Optional;
  */
 @Deprecated
 public class ByClassBeanEventListener<T> implements BeanEventListener<T> {
+
+    public ByClassBeanEventListener() {}
+
     private final Map<Class<?>, BeanEventListener<T>> beanEventListeners = new HashMap<>();
 
     /**
