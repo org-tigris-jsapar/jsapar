@@ -67,6 +67,18 @@ public final class LineUtils {
      *
      * @param line     The line to alter
      * @param cellName The name of the cell to add/replace.
+     * @param value    The Integer value to set. If null, existing value will be removed and no new value will be set.
+     */
+    public static void setIntCellValue(Line line, String cellName, Integer value) {
+        line.putCellValue(cellName, value, IntegerCell::new);
+    }
+
+    /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or
+     * replaces an existing cell if there already is one with the same name.
+     *
+     * @param line     The line to alter
+     * @param cellName The name of the cell to add/replace.
      * @param value    The long integer value to set.
      */
     public static void setLongCellValue(Line line, String cellName, long value) {
@@ -79,9 +91,33 @@ public final class LineUtils {
      *
      * @param line     The line to alter
      * @param cellName The name of the cell to add/replace.
+     * @param value    The Long value to set. If null, existing value will be removed and no new value will be set.
+     */
+    public static void setLongCellValue(Line line, String cellName, Long value) {
+        line.putCellValue(cellName, value, IntegerCell::new);
+    }
+
+    /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or
+     * replaces an existing cell if there already is one with the same name.
+     *
+     * @param line     The line to alter
+     * @param cellName The name of the cell to add/replace.
      * @param value    The double value to set.
      */
     public static void setDoubleCellValue(Line line, String cellName, double value) {
+        line.putCellValue(cellName, value, FloatCell::new);
+    }
+
+    /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or
+     * replaces an existing cell if there already is one with the same name.
+     *
+     * @param line     The line to alter
+     * @param cellName The name of the cell to add/replace.
+     * @param value    The Double value to set. If null, existing value will be removed and no new value will be set.
+     */
+    public static void setDoubleCellValue(Line line, String cellName, Double value) {
         line.putCellValue(cellName, value, FloatCell::new);
     }
 
@@ -103,9 +139,33 @@ public final class LineUtils {
      *
      * @param line     The line to alter
      * @param cellName The name of the cell to add/replace.
+     * @param value    The Boolean value to set. If null, existing value will be removed and no new value will be set.
+     */
+    public static void setBooleanCellValue(Line line, String cellName, Boolean value) {
+        line.putCellValue(cellName, value, BooleanCell::new);
+    }
+
+    /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or replaces an
+     * existing cell if there already is one with the same name.
+     *
+     * @param line     The line to alter
+     * @param cellName The name of the cell to add/replace.
      * @param value    The character value to set.
      */
     public static void setCharCellValue(Line line, String cellName, char value) {
+        line.putCellValue(cellName, value, CharacterCell::new);
+    }
+
+    /**
+     * Utility function that adds a cell with the specified name and value to the end of the line or replaces an
+     * existing cell if there already is one with the same name.
+     *
+     * @param line     The line to alter
+     * @param cellName The name of the cell to add/replace.
+     * @param value    The Character value to set. If null, existing value will be removed and no new value will be set.
+     */
+    public static void setCharCellValue(Line line, String cellName, Character value) {
         line.putCellValue(cellName, value, CharacterCell::new);
     }
 
