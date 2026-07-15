@@ -4,6 +4,7 @@
 
 [![Java 17-ea](https://img.shields.io/badge/java-17-brightgreen.svg)](#java-17)
 [![Java 21-ea](https://img.shields.io/badge/java-21-brightgreen.svg)](#java-21)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/org-tigris-jsapar/jsapar)
 
 # jsapar
 **JSaPar** stands for  **J**ava **S**chem**a** based **Par**ser
@@ -18,6 +19,7 @@ easier to maintain and increases flexibility.
 
 * [Announcements](https://github.com/org-tigris-jsapar/jsapar/wiki/Announcements)
 * [Documentation](https://org-tigris-jsapar.github.io/jsapar/)
+* [Deep Wiki - AI generated project overview](https://deepwiki.com/org-tigris-jsapar/jsapar)
 * [Release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes)
 * [Javadocs API documentation](https://javadoc.io/doc/org.tigris.jsapar/jsapar)
 * [Examples](https://github.com/org-tigris-jsapar/jsapar-examples)
