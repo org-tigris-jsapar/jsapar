@@ -2,7 +2,6 @@
 [![Maven Central](https://img.shields.io/maven-central/v/org.tigris.jsapar/jsapar.svg)](https://central.sonatype.com/artifact/org.tigris.jsapar/jsapar)
 [![Javadocs](https://javadoc.io/badge/org.tigris.jsapar/jsapar.svg)](https://javadoc.io/doc/org.tigris.jsapar/jsapar)
 
-[![Java 17-ea](https://img.shields.io/badge/java-17-brightgreen.svg)](#java-17)
 [![Java 21-ea](https://img.shields.io/badge/java-21-brightgreen.svg)](#java-21)
 [![Java 25-ea](https://img.shields.io/badge/java-25-brightgreen.svg)](#java-25)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/org-tigris-jsapar/jsapar)

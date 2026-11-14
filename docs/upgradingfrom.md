@@ -27,7 +27,7 @@ chapter will however try to help as much as possible.
 Almost all package names has changed in 2.0.
 ## Converter
 * The class `org.jsapar.io.Converter` is more or less replaced by `org.jsapar.Text2TextConverter`
-* It is no longer possible to get a list of errors as return value from the converter, instead use `org.jsapar.error.RecordingErrorConsumer` if you want to handle all errors when done parsing.
+* It is no longer possible to get a list of errors as return value from the converter, instead use `org.jsapar.parse.CollectingConsumer` or `org.jsapar.error.ThresholdCollectingErrorConsumer` as error consumer if you want to handle all errors when done parsing.
 
 ## Outputter
 * The class `org.jsapar.output.Outputter` is more or less replaced by `org.jsapar.TextComposer`

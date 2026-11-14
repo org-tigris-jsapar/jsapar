@@ -14,7 +14,7 @@ The example below describes a simple schema for a CSV file taken from the first 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd">
+   xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 https://raw.githubusercontent.com/org-tigris-jsapar/jsapar/master/src/main/resources/xml/schema/JSaParSchema.xsd">
    <csvschema lineseparator="\n">
     <line linetype="Person" cellseparator=";">
       <cell name="First name" />
@@ -33,7 +33,7 @@ CsvSchema schema = CsvSchema.builder()
                         .withCell("First name")
                         .withCell("Middle name", cell -> cell.withIgnoreRead(true))
                         .withCell("Last name")
-                        .withCell("Has dog", cell -> cell.withCellType(CellType.BOOLEAN).withPattern("yes;no"))
+                        .withCell("Has dog", cell -> cell.withType(CellType.BOOLEAN).withPattern("yes;no"))
         ).build();
 
 ```
@@ -41,10 +41,12 @@ CsvSchema schema = CsvSchema.builder()
 ## The schema of the schema
 In the xml schema above, I have added the xsi:schemaLocation which helps intelligent xml editors to find the
 <a href="https://en.wikipedia.org/wiki/XML_Schema_(W3C)">XSD</a> that is used for JSaPar schemas. The XSD itself provides
-a lot of documentation about the details of each allowed element and attribute within the schema xml. A published version
-of the schema is located at. 
+a lot of documentation about the details of each allowed element and attribute within the schema xml. The latest version
+of the schema is located here: 
 
-[http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd](http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd)
+[JSaParSchema.xsd](https://raw.githubusercontent.com/org-tigris-jsapar/jsapar/master/src/main/resources/xml/schema/JSaParSchema.xsd)
+
+Note that the namespace `http://jsapar.tigris.org/JSaParSchema/2.0` is only an identifier and is not a location where the XSD can be downloaded.
 
 If you want to download the XSD as a file, you will probably need to right-click on the link above and choose *"Save link as..."* depending on your browser.
 
@@ -184,14 +186,14 @@ This works both while parsing and while composing.
 As with lines, you can use `ignoreread` and `ignorewrite` on cell level to skip reading while parsing or to skip writing 
 a cell value while composing. If `ignorewrite=true`, an empty cell will be written as if it contained an empty string. 
 
-You can specify a maximum length to read or write to a cell value with the `maxlenght` attribute. Input and output
+You can specify a maximum length to read or write to a cell value with the `maxlength` attribute. Input and output
 value will then be silently truncated to this length. If you want to get an error when field is too
 long, use the format regexp pattern described below instead.
 #### Cell formats
 If you want the library to do type conversion while parsing or composing, you need to specify the format of a cell. For 
 example, by adding the format:
 ```xml
-<cell name="Birthdate"><format type="date" pattern="YYYY-mm-DD"/></cell>
+<cell name="Birthdate"><format type="date" pattern="yyyy-MM-dd"/></cell>
 ```
 The parser will convert string date values into `DateCell` containing a `java.util.Date` with the parsed date.
 
@@ -208,6 +210,7 @@ The following types are supported:
 * local_time
 * local_date_time
 * zoned_date_time
+* instant
 
 The `pattern` attribute behaves differently depending on the type: 
 * If the type is string then the pattern should contain a regular expression to which the value is validated against. See [java.util.regex.Pattern](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html) This only works while parsing.
@@ -217,7 +220,7 @@ The `pattern` attribute behaves differently depending on the type:
 * If the type is boolean, the pattern should contain the true and false values separated with a `;` character. Example: `pattern="Y;N"` will imply that `Y` represents true and `N` to represents false. Comparison while parsing is not case-sensitive. Multiple true or false values can be specified, separated with the `|` character but the first value is always the one used while composing. Example: `pattern="Y|YES;N|NO"`
 * If the type is enum, the pattern should contain the full class name of the enum class. See chapter below about how to handle different cases while parsing and composing enums.   
 
-If the `pattern` attribute is omitted, the default system pattern is used.
+If the `pattern` attribute is omitted, a default format is used: plain numbers with `.` as decimal separator (or according to the locale, see Internationalization below), ISO-8601 for `date` and the java.time types, and `true`/`false` for booleans. While parsing booleans, the values `on`/`off`, `1`/`0`, `yes`/`no` and `y`/`n` are also accepted, ignoring case. Decimal values are composed with all their decimals.
 ##### Enum format
 If the property that you want to parse or compose is of type enum, you have the following options:
 1. Use the cell type string and handle conversion to enum values programmatically. If the text that you are parsing contains exactly 
@@ -259,7 +262,7 @@ You can specify a cell to be of type implied decimal by adding `<implieddecimal>
 </cell>
 ```
 
-The resulting cell while parsing a cell of implied decimal is always a DecimalCell but when converting to bean it is perfectly fine to assign it to a
+The resulting cell while parsing a cell of implied decimal is always a `BigDecimalCell` but when converting to bean it is perfectly fine to assign it to a
 float or double property.
 
 #### Empty cell values while parsing
@@ -325,9 +328,12 @@ The different syntaxes are described in more details below.
 As long as you have activated quoting as described above, the parser will automatically detect if a cell is quoted or not. Not all cells needs quoting. 
 
 If the line separator or cell separator appears within the quotes of a cell it will be regarded as the content of the cell.
-A maximum of 25 line separators are allowed within the same cell. If that value is exceeded a JSaParException is thrown 
-since the input is probably invalid in some sense. This means that if a start quote is found but no end quote within the 
-following 25 lines or until the end of input data, it is considered an irreparable error.
+A quoted cell may span several lines, as long as the whole line including the quoted cell fits within the maximum line length
+(8192 characters by default, see `TextParseConfig.setMaxLineLength()`).
+
+If a start quote is found but no end quote is found within the maximum line length or before the end of the input, the cell is 
+not considered to be quoted. The start quote is then kept as part of the cell value and the cell ends at the next cell or line separator.
+No error is reported in this case.
 ##### Quote syntax RFC4180
 This mode complies to the CSV standard [RFC-4180](https://tools.ietf.org/html/rfc4180)
 which states that:
@@ -466,8 +472,8 @@ For instance in the example below, the decimal symbol `,` will be used instead o
     <locale language="sv" country="SE"/>
     <line occurs="*" linetype="City" cellseparator=";">
       <cell name="Name" />
-      <cell name="Latitude" /><format type="float" pattern="#.#####"/></cell>
-      <cell name="Longitude" /><format type="float" pattern="#.#####"/></cell>
+      <cell name="Latitude"><format type="float" pattern="#.#####"/></cell>
+      <cell name="Longitude"><format type="float" pattern="#.#####"/></cell>
     </line>
   </csvschema>
 </schema>

@@ -10,21 +10,21 @@ title: Release notes
 1. Built with and for Java 21. Support for Java 20 and below is dropped.
 2. Removed `Serializable` from `Cell`, `Line` and `Document`.
 3. Added proper generic type parameters throughout the codebase, eliminating raw type usage of `Cell`, `CellFactory`, `Format`, `SchemaCellFormat`, `Schema` and related classes.
-5. Added `requires transitive java.xml` to module descriptor.
-6. Eliminated all compiler warnings (raw types, unchecked casts, missing explicit constructors, non-serializable fields, module exports, this-escape, ambiguous overloads).
-7. Fixed problem with line condition in combination with first-line-as-schema.
-8. Fixed: Composing a `DECIMAL` cell without a pattern rounded the value to one decimal, e.g. `1234.56` was written as `1234.6`. All decimals are now kept.
-9. Fixed: `TextParseConfig.setMaxCellCacheSize()` always set the cache size to at least 100. The value is now limited to the documented range 0-100, where 0 (or negative) disables the cache.
-10. Performance improvements while parsing and composing:
+4. Added `requires transitive java.xml` to module descriptor.
+5. Eliminated all compiler warnings (raw types, unchecked casts, missing explicit constructors, non-serializable fields, module exports, this-escape, ambiguous overloads).
+6. Fixed problem with line condition in combination with first-line-as-schema.
+7. Fixed: Composing a `DECIMAL` cell without a pattern rounded the value to one decimal, e.g. `1234.56` was written as `1234.6`. All decimals are now kept.
+8. Fixed: `TextParseConfig.setMaxCellCacheSize()` always set the cache size to at least 100. The value is now limited to the documented range 0-100, where 0 (or negative) disables the cache.
+9. Performance improvements while parsing and composing:
     * Faster parsing of `LOCAL_DATE`, `LOCAL_TIME` and `LOCAL_DATE_TIME` cells with the default ISO format.
     * Faster parsing and composing of `DECIMAL` cells without pattern in locales that use `.` as decimal separator.
     * Faster splitting of CSV lines into cells, especially for quoted cells.
     * Less memory allocated per parsed line.
     * Each composed line is written to the `Writer` in one call instead of one or more calls per cell. If composing
       a line fails with an exception, nothing of that line is written.
-11. Added `Line.getCellOrDefault(String, Cell)` that returns a cell without wrapping it in an `Optional`.
-12. Fixed: Parsing `NaN` or infinity into a `DECIMAL` cell caused a `ClassCastException` instead of a cell parse error.
-13. Fixed: `LineUtils.getDecimalCellValue()` threw `ClassCastException` for integer cells. Integer values are now converted without loss of precision.
+10. Added `Line.getCellOrDefault(String, Cell)` that returns a cell without wrapping it in an `Optional`.
+11. Fixed: Parsing `NaN` or infinity into a `DECIMAL` cell caused a `ClassCastException` instead of a cell parse error.
+12. Fixed: `LineUtils.getDecimalCellValue()` threw `ClassCastException` for integer cells. Integer values are now converted without loss of precision.
 
 ## 2.4
 1. Built with and for Java 17. Support for Java 11 and below is dropped.

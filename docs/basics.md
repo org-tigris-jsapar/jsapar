@@ -48,7 +48,7 @@ instance of the `TextParser` by supplying a schema.
     TextParser parser = new TextParser(schema);
     DocumentBuilderLineConsumer documentBuilder = new DocumentBuilderLineConsumer();
     parser.parseForEach(fileReader, documentBuilder);
-    Document document = documentBuilder.getDocument()
+    Document document = documentBuilder.getDocument();
 ...    
 ```
 The schema is used for describing the text format. [See Basics of Schemas](basics_schema) for information about schemas. After that we start the parsing by calling the parse method.
@@ -102,9 +102,14 @@ You can still use the pre-defined collectors described above if you terminate th
 ...    
 ```
 ## Configuration
-The parser behavior can be configured in some cases, for instance:
+The parser behavior can be configured with the `TextParseConfig` class, for instance:
  * What should happen if none of the schema lines can be used?
  * What should happen if there are more or less cells on a line than described by the schema.
+ * The maximum length of a line, `setMaxLineLength()`. Default is 8192 characters. A quoted CSV cell that spans several 
+   lines must fit within this length.
+ * The maximum number of cell values to cache per column, `setMaxCellCacheSize()`. The value is limited to 0-100, where 0 
+   disables the cache. Default is 1. Caching can save memory and time for columns with few distinct values.
+
 See [api docs](api) for class `TextParseConfig` for more details.
 ## Error handling
 ### IOErrors and other serious errors
@@ -126,10 +131,6 @@ You may also use the more generic consumers in the `org.jsapar.parse` package:
 
 `CollectingConsumer` | Records all errors in a list and allows you to retrieve all errors when parsing is done.
 `MulticastConsumer` | Allows you to register multiple other error consumers that each will get called when an error occurs.
-
-|   |
-|---|
-|   |
 
 Each error contains detailed information about where in the input the error occurred and what was the cause of the errors. 
 
@@ -160,6 +161,10 @@ Then we feed the composer with lines. There are some options when it comes to fe
 * Provide a `java.util.Iterator<Line>` with lines
 
 All the formatting information is described by the schema. [See Basics of Schemas for information about schemas.](basics_schema) 
+
+Each line is written to the writer in one call before `composeLine()` returns. If composing a line fails with an exception, 
+nothing of that line is written. The composer does not buffer more than one line, so for best performance when writing to a
+file, use a `java.io.BufferedWriter`.
 
 See [API docs](api) for class `TextComposer` for more details.
 ## Error handling 
@@ -335,8 +340,9 @@ For example, if you may need to convert a cost contained in a cell between curre
             Schema.ofXml(outSchemaReader));
 
     converter.setTransformer(line -> {
-        LineUtils.setDecimalCellValue(line, "costInSEK", convertGBPtoSEK(LineUtils.getDecimalCellValue(line, "costInGBP"));
-        return Collections.singeltonList(line);
+        LineUtils.getDecimalCellValue(line, "costInGBP")
+                .ifPresent(gbp -> LineUtils.setDecimalCellValue(line, "costInSEK", convertGBPtoSEK(gbp)));
+        return List.of(line);
     });
         
     converter.convert(inReader, outWriter);
@@ -361,7 +367,8 @@ For example, if you may need to convert a cost contained in a cell between curre
             Schema.ofXml(outSchemaReader));
 
     converter.addLineManipulator(line -> {
-        LineUtils.setDecimalCellValue(line, "costInSEK", convertGBPtoSEK(LineUtils.getDecimalCellValue(line, "costInGBP"));
+        LineUtils.getDecimalCellValue(line, "costInGBP")
+                .ifPresent(gbp -> LineUtils.setDecimalCellValue(line, "costInSEK", convertGBPtoSEK(gbp)));
         return true;
     });
         
@@ -386,7 +393,7 @@ This means that you can run the converter without any coding at all.
 
 If you run it without any arguments you will get a help text with further instructions:
 ```bash
-$ java -jar jsapar-2.1.0.jar 
+$ java -jar jsapar-2.4.0.jar 
 IllegalArgumentException: Too few arguments
 
 Usage:
