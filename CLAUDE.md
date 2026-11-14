@@ -22,7 +22,7 @@ mvn javadoc:javadoc                              # doclint is enabled (accessibi
 
 ### Benchmarks
 
-JMH benchmarks live in `src/jmh/java` (`ParseBenchmark`, `ComposeBenchmark`, parameterized by `format` × `content`; score = lines/s). They are only compiled with the `bench` profile, so JMH never becomes a dependency of the normal build:
+JMH benchmarks live in `src/jmh/java` (`ParseBenchmark`, `ComposeBenchmark`, parameterized by `format` × `content` (STRINGS, TYPED, QUOTED, WIDE = 32 cells); score = lines/s). They are only compiled with the `bench` profile, so JMH never becomes a dependency of the normal build:
 
 ```bash
 mvn -Pbench test-compile exec:exec                                               # all benchmarks (~4 min)
