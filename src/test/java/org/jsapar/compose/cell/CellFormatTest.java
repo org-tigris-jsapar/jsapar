@@ -1,18 +1,19 @@
 package org.jsapar.compose.cell;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.jsapar.model.*;
 import org.jsapar.parse.cell.DateCellFactory;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.StringSchemaCell;
 import org.jsapar.text.Format;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CellFormatTest {
 
@@ -112,17 +113,19 @@ public class CellFormatTest {
         assertEquals("A", value);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test
     public void testFormat_Regexp_fail() throws SchemaException {
-        SchemaCell schemaCell = StringSchemaCell.builder("test")
-                .withType(CellType.STRING)
-                .withPattern("A|B")
-                .withLocale("sv", "SE")
-                .build();
+        assertThrows(IllegalArgumentException.class, () -> {
+            SchemaCell schemaCell = StringSchemaCell.builder("test")
+                    .withType(CellType.STRING)
+                    .withPattern("A|B")
+                    .withLocale("sv", "SE")
+                    .build();
 
-        CellFormat format = CellFormat.ofSchemaCell(schemaCell);
-        format.format(new StringCell("test","C"));
-        fail("Should throw exception");
+            CellFormat format = CellFormat.ofSchemaCell(schemaCell);
+            format.format(new StringCell("test","C"));
+            fail("Should throw exception");
+        });
     }
 
 }

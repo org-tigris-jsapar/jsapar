@@ -9,7 +9,7 @@ import org.jsapar.model.LineUtils;
 import org.jsapar.parse.DocumentBuilderLineConsumer;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.FixedWidthSchema;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -17,7 +17,7 @@ import java.io.StringReader;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FixedWidthParserTest {
 

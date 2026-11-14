@@ -5,9 +5,9 @@ import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.FixedWidthSchema;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FixedWidthComposerTest {
 

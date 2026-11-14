@@ -4,8 +4,8 @@ import org.jsapar.error.ExceptionErrorConsumer;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.*;
 import org.jsapar.schema.FixedWidthSchemaCell;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("ThrowablePrintedToSystemOut")
 public class FixedWidthCellParserTest {
@@ -328,8 +328,8 @@ public class FixedWidthCellParserTest {
         Cell<?> cell;
         FixedWidthCellParser cellParser = new FixedWidthCellParser(schemaCell, maxCacheSize);
         cell = cellParser.parse(makeReadBuffer(toParse), new ExceptionErrorConsumer());
-        Assert.assertNotNull(cell);
-        Assert.assertTrue(cell.isEmpty());
-        Assert.assertEquals("", cell.getStringValue());
+        Assertions.assertNotNull(cell);
+        Assertions.assertTrue(cell.isEmpty());
+        Assertions.assertEquals("", cell.getStringValue());
     }
 }

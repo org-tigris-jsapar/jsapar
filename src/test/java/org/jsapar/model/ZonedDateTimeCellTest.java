@@ -1,11 +1,11 @@
 package org.jsapar.model;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ZonedDateTimeCellTest {
 

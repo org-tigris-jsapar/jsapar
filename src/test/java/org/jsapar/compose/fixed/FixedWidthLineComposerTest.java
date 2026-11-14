@@ -4,12 +4,12 @@ import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.FixedWidthSchemaLine;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.StringWriter;
 import java.io.Writer;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FixedWidthLineComposerTest {
 

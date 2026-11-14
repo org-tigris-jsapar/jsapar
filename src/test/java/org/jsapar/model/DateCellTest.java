@@ -1,15 +1,15 @@
 package org.jsapar.model;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 /**
  * @author Jonas Stenberg
@@ -19,7 +19,7 @@ public class DateCellTest {
     Date now;
     Date aDate;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         now = new Date();
 

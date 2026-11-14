@@ -2,7 +2,7 @@ package org.jsapar.text;
 
 import org.jsapar.model.CellType;
 import org.jsapar.text.format.DateTimeFormat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DateTimeFormatTest {
 

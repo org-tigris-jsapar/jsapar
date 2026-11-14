@@ -7,12 +7,12 @@ import org.jsapar.error.JSaParException;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.FixedWidthSchema;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ConcurrentConvertTaskTest {
 

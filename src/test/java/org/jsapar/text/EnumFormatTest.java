@@ -1,11 +1,11 @@
 package org.jsapar.text;
 
 import org.jsapar.text.format.EnumFormat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EnumFormatTest {
     private enum TestEnum{
@@ -32,17 +32,21 @@ public class EnumFormatTest {
         assertEquals("xxxx", enumFormat.format(TestEnum.DDDD));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void format_object_invalid_class() {
-        EnumFormat<TestEnum> enumFormat = EnumFormat.builder(TestEnum.class).build();
-        enumFormat.format(this);
-        fail();
+        assertThrows(IllegalArgumentException.class, () -> {
+            EnumFormat<TestEnum> enumFormat = EnumFormat.builder(TestEnum.class).build();
+            enumFormat.format(this);
+            fail();
+        });
     }
 
-    @Test(expected = ParseException.class)
+    @Test
     public void parse_fail() throws ParseException {
-        EnumFormat<TestEnum> enumFormat = EnumFormat.builder(TestEnum.class).build();
-        assertEquals(TestEnum.A, enumFormat.parse("Q"));
+        assertThrows(ParseException.class, () -> {
+            EnumFormat<TestEnum> enumFormat = EnumFormat.builder(TestEnum.class).build();
+            assertEquals(TestEnum.A, enumFormat.parse("Q"));
+        });
     }
 
     @Test

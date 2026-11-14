@@ -4,7 +4,7 @@ import org.jsapar.model.BigDecimalCell;
 import org.jsapar.model.CellType;
 import org.jsapar.model.InstantCell;
 import org.jsapar.text.Format;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class InstantCellFactoryTest {
     final InstantCellFactory cellFactory = new InstantCellFactory();

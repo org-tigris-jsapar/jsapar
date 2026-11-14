@@ -1,8 +1,9 @@
 package org.jsapar.error;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SuppressWarnings("deprecation")
 public class SplitErrorEventListenerTest {
@@ -19,10 +20,12 @@ public class SplitErrorEventListenerTest {
         assertEquals(0, instance.size());
     }
 
-    @Test(expected = JSaParException.class)
+    @Test
     public void testErrorEvent_default() {
-        MulticastErrorEventListener instance = new MulticastErrorEventListener();
-        instance.errorEvent(new ErrorEvent(this, new JSaParException("test")));
+        assertThrows(JSaParException.class, () -> {
+            MulticastErrorEventListener instance = new MulticastErrorEventListener();
+            instance.errorEvent(new ErrorEvent(this, new JSaParException("test")));
+        });
     }
 
     @Test

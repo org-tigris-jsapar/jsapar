@@ -1,14 +1,14 @@
 package org.jsapar.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.*;
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LineUtilsTest {
 
@@ -35,11 +35,13 @@ public class LineUtilsTest {
         assertEquals("other", LineUtils.getNonEmptyStringCellValue(line,"empty").orElse("other"));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testGetStringCellValue_notExists(){
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        LineUtils.getStringCellValue(line,"Nothing");
+        assertThrows(IllegalStateException.class, () -> {
+            Line line = new Line("TestLine");
+            line.addCell(new StringCell("FirstName", "Nils"));
+            LineUtils.getStringCellValue(line,"Nothing");
+        });
     }
 
     private enum Testing{
@@ -66,12 +68,14 @@ public class LineUtilsTest {
         assertNull( LineUtils.getEnumCellValue(line, "TypeEmpty", (Testing)null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGetEnumCellValue_wrongValue() {
-        Line line = new Line("TestLine");
-        LineUtils.setStringCellValue(line, "Type", "not value");
-        LineUtils.getEnumCellValue(line, "Type", Testing.SECOND);
-        fail("Should throw exception");
+        assertThrows(IllegalArgumentException.class, () -> {
+            Line line = new Line("TestLine");
+            LineUtils.setStringCellValue(line, "Type", "not value");
+            LineUtils.getEnumCellValue(line, "Type", Testing.SECOND);
+            fail("Should throw exception");
+        });
     }
 
     @Test
@@ -103,30 +107,36 @@ public class LineUtilsTest {
 
     }
 
-    @Test(expected=NumberFormatException.class)
+    @Test
     public void testGetIntCellValue_not_parsable() {
-        Line line = new Line("TestLine");
-        LineUtils.setStringCellValue(line,"aStringValue", "seventeen");
+        assertThrows(NumberFormatException.class, () -> {
+            Line line = new Line("TestLine");
+            LineUtils.setStringCellValue(line,"aStringValue", "seventeen");
 
-        LineUtils.getIntCellValue(line,"aStringValue");
-        Assert.fail("Should throw exception");
+            LineUtils.getIntCellValue(line,"aStringValue");
+            Assertions.fail("Should throw exception");
+        });
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test
     public void testGetNumberCellValue_string() {
-        Line line = new Line("TestLine");
-        LineUtils.setStringCellValue(line,"aStringValue", "17");
-        LineUtils.getNumberCellValue(line,"aStringValue");
-        Assert.fail("Should throw exception");
+        assertThrows(IllegalStateException.class, () -> {
+            Line line = new Line("TestLine");
+            LineUtils.setStringCellValue(line,"aStringValue", "17");
+            LineUtils.getNumberCellValue(line,"aStringValue");
+            Assertions.fail("Should throw exception");
+        });
     }
 
-    @Test(expected=NumberFormatException.class)
+    @Test
     public void testGetLongCellValue_not_parsable() {
-        Line line = new Line("TestLine");
-        LineUtils.setStringCellValue(line,"aStringValue", "seventeen");
+        assertThrows(NumberFormatException.class, () -> {
+            Line line = new Line("TestLine");
+            LineUtils.setStringCellValue(line,"aStringValue", "seventeen");
 
-        LineUtils.getLongCellValue(line,"aStringValue");
-        Assert.fail("Should throw exception");
+            LineUtils.getLongCellValue(line,"aStringValue");
+            Assertions.fail("Should throw exception");
+        });
     }
 
     @Test
@@ -151,31 +161,37 @@ public class LineUtilsTest {
         assertEquals(2.718D, LineUtils.getDoubleCellValue(line,"empty", 2.718D), 0.0000000001);
     }
 
-    @Test(expected=NumberFormatException.class)
+    @Test
     public void testGetDoubleCellValue_not_parsable() {
-        Line line = new Line("TestLine");
-        LineUtils.setStringCellValue(line,"aStringValue", "seventeen");
+        assertThrows(NumberFormatException.class, () -> {
+            Line line = new Line("TestLine");
+            LineUtils.setStringCellValue(line,"aStringValue", "seventeen");
 
-        LineUtils.getDoubleCellValue(line,"aStringValue");
-        Assert.fail("Should throw exception");
+            LineUtils.getDoubleCellValue(line,"aStringValue");
+            Assertions.fail("Should throw exception");
+        });
     }
 
-    @Test(expected=NumberFormatException.class)
+    @Test
     public void testGetDecimalCellValue_not_parsable() {
-        Line line = new Line("TestLine");
-        LineUtils.setStringCellValue(line,"aStringValue", "seventeen");
+        assertThrows(NumberFormatException.class, () -> {
+            Line line = new Line("TestLine");
+            LineUtils.setStringCellValue(line,"aStringValue", "seventeen");
 
-        LineUtils.getDecimalCellValue(line,"aStringValue");
-        Assert.fail("Should throw exception");
+            LineUtils.getDecimalCellValue(line,"aStringValue");
+            Assertions.fail("Should throw exception");
+        });
     }
 
-    @Test(expected=NumberFormatException.class)
+    @Test
     public void testGetBigIntegerCellValue_not_parsable() {
-        Line line = new Line("TestLine");
-        LineUtils.setStringCellValue(line,"aStringValue", "seventeen");
+        assertThrows(NumberFormatException.class, () -> {
+            Line line = new Line("TestLine");
+            LineUtils.setStringCellValue(line,"aStringValue", "seventeen");
 
-        LineUtils.getBigIntegerCellValue(line,"aStringValue");
-        Assert.fail("Should throw exception");
+            LineUtils.getBigIntegerCellValue(line,"aStringValue");
+            Assertions.fail("Should throw exception");
+        });
     }
 
     @Test
@@ -215,12 +231,14 @@ public class LineUtilsTest {
         assertFalse(line.isCell("aDateValue"));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testGetDateCellValue_notADate() {
-        Line line = new Line("TestLine");
-        LineUtils.setStringCellValue(line,"aStringValue", "2018-04-07");
-        LineUtils.getDateCellValue(line, "aStringValue").orElseGet(Date::new);
-        fail("Should throw exception");
+        assertThrows(IllegalStateException.class, () -> {
+            Line line = new Line("TestLine");
+            LineUtils.setStringCellValue(line,"aStringValue", "2018-04-07");
+            LineUtils.getDateCellValue(line, "aStringValue").orElseGet(Date::new);
+            fail("Should throw exception");
+        });
     }
 
     @Test
@@ -233,12 +251,14 @@ public class LineUtilsTest {
         assertNotSame(date, LineUtils.getLocalDateCellValue(line,"empty").orElse(LocalDate.of(2017, Month.APRIL, 1)));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testGetSetLocalDate_notTemporal() {
-        Line line = new Line("TestLine");
-        LineUtils.setDateCellValue(line,"aDateValue", new Date());
-        LineUtils.getLocalDateCellValue(line, "aDateValue");
-        fail("Should throw exception");
+        assertThrows(IllegalStateException.class, () -> {
+            Line line = new Line("TestLine");
+            LineUtils.setDateCellValue(line,"aDateValue", new Date());
+            LineUtils.getLocalDateCellValue(line, "aDateValue");
+            fail("Should throw exception");
+        });
     }
 
     @Test

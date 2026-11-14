@@ -6,7 +6,7 @@ import org.jsapar.TstPostAddress;
 import org.jsapar.bean.BeanMap;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaLine;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.StringWriter;
 import java.text.DateFormat;
@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ConcurrentBeanCollection2TextConverterTest {
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

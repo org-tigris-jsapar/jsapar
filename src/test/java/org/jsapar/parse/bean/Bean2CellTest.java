@@ -5,13 +5,13 @@ import org.jsapar.compose.bean.BeanComposeException;
 import org.jsapar.model.*;
 import org.jsapar.parse.bean.reflect.BeanInfo;
 import org.jsapar.parse.bean.reflect.PropertyDescriptor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.Month;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Bean2CellTest {
 

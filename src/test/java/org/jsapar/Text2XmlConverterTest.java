@@ -4,7 +4,7 @@ import org.jsapar.schema.Schema;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
 import org.jsapar.schema.Xml2SchemaBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -13,7 +13,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  */

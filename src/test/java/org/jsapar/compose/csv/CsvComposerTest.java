@@ -6,11 +6,11 @@ import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaLine;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.StringWriter;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CsvComposerTest {
 

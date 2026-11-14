@@ -1,7 +1,7 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SchemaCellFormatTest {
 

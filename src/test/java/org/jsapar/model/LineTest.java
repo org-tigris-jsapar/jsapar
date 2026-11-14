@@ -2,9 +2,9 @@ package org.jsapar.model;
 
 import org.jsapar.parse.CellParseException;
 import org.jsapar.schema.SchemaCellFormat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LineTest {
 
@@ -75,12 +75,14 @@ public class LineTest {
         assertEquals("Svensson", LineUtils.getStringCellValue(line, "LastName"));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testAddCell_twice() {
-        Line line = new Line("TestLine");
-        line.addCell(new StringCell("FirstName", "Nils"));
-        line.addCell(new StringCell("FirstName", "Svensson"));
-        fail("Should throw exception for duplicate cell names.");
+        assertThrows(IllegalStateException.class, () -> {
+            Line line = new Line("TestLine");
+            line.addCell(new StringCell("FirstName", "Nils"));
+            line.addCell(new StringCell("FirstName", "Svensson"));
+            fail("Should throw exception for duplicate cell names.");
+        });
     }
 
 
@@ -181,12 +183,14 @@ public class LineTest {
         assertEquals("", line.getExistingCell("LastName").getStringValue());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testGetExistingCell_nonExisting() {
-        Line line = new Line("TestLine");
+        assertThrows(IllegalStateException.class, () -> {
+            Line line = new Line("TestLine");
 
-        line.getExistingCell("NonExisting");
-        fail("Should throw exception");
+            line.getExistingCell("NonExisting");
+            fail("Should throw exception");
+        });
     }
 
 }

@@ -4,13 +4,13 @@ import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaLine;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class StringComposerNullOnEmptyCellTest {
 

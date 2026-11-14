@@ -2,12 +2,12 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.BooleanCell;
 import org.jsapar.text.Format;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class BooleanCellFactoryTest {
     @Test

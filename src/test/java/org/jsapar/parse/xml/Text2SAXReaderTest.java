@@ -2,7 +2,7 @@ package org.jsapar.parse.xml;
 
 import org.jsapar.TextParser;
 import org.jsapar.schema.Xml2SchemaBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.InputSource;
 
 import javax.xml.transform.OutputKeys;

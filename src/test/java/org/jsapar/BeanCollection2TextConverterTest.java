@@ -2,7 +2,7 @@ package org.jsapar;
 
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaLine;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.StringWriter;
 import java.text.DateFormat;
@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  */

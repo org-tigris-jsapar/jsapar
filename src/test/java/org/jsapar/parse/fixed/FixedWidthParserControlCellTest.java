@@ -1,5 +1,6 @@
 package org.jsapar.parse.fixed;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.jsapar.error.ExceptionErrorConsumer;
 import org.jsapar.error.ValidationAction;
 import org.jsapar.model.Document;
@@ -8,13 +9,13 @@ import org.jsapar.parse.LineParseException;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.MatchingCellValueCondition;
 import org.jsapar.text.TextParseConfig;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FixedWidthParserControlCellTest {
 
@@ -101,15 +102,17 @@ public class FixedWidthParserControlCellTest {
         checkResult(doc);
     }
 
-    @Test(expected = LineParseException.class)
+    @Test
     public void testParse_errorOnUndefinedLineType() throws IOException {
-        String toParse = "X JonasStenberg   ";
-        FixedWidthSchema schema = schemaBuilderTwoCharsControl().withLineSeparator("\r\n").build();
+        assertThrows(LineParseException.class, () -> {
+            String toParse = "X JonasStenberg   ";
+            FixedWidthSchema schema = schemaBuilderTwoCharsControl().withLineSeparator("\r\n").build();
 
-        Reader reader = new StringReader(toParse);
-        TextParseConfig config = new TextParseConfig();
-        config.setOnUndefinedLineType(ValidationAction.EXCEPTION);
-        build(reader, schema, config);
+            Reader reader = new StringReader(toParse);
+            TextParseConfig config = new TextParseConfig();
+            config.setOnUndefinedLineType(ValidationAction.EXCEPTION);
+            build(reader, schema, config);
+        });
     }
 
     @Test

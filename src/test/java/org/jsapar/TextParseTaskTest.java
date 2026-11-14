@@ -1,5 +1,6 @@
 package org.jsapar;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.jsapar.error.JSaParException;
 import org.jsapar.error.MaxErrorsExceededException;
 import org.jsapar.error.ThresholdCollectingErrorConsumer;
@@ -11,8 +12,8 @@ import org.jsapar.parse.DocumentBuilderLineConsumer;
 import org.jsapar.parse.CollectingConsumer;
 import org.jsapar.parse.text.TextParseTask;
 import org.jsapar.schema.FixedWidthSchema;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -20,7 +21,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class TextParseTaskTest {
@@ -44,12 +45,14 @@ public class TextParseTaskTest {
                     ).build();
     }
 
-    @Test(expected=CellParseException.class)
+    @Test
     public void testBuild_error_throws() throws IOException {
-        String toParse = "JonasAAA";
-        FixedWidthSchema schema = makePersonShoeSchema();
+        assertThrows(CellParseException.class, () -> {
+            String toParse = "JonasAAA";
+            FixedWidthSchema schema = makePersonShoeSchema();
 
-        Document doc = build(toParse, schema);
+            Document doc = build(toParse, schema);
+        });
     }
 
     @Test
@@ -65,9 +68,9 @@ public class TextParseTaskTest {
         parser.setErrorConsumer(new CollectingConsumer<>(parseErrors));
         parser.execute();
         Document doc = listener.getDocument();
-        Assert.assertEquals(1, parseErrors.size());
-        Assert.assertEquals("Shoe size", ((CellParseException)parseErrors.get(0)).getCellName());
-        Assert.assertEquals(1, ((CellParseException)parseErrors.get(0)).getLineNumber());
+        Assertions.assertEquals(1, parseErrors.size());
+        Assertions.assertEquals("Shoe size", ((CellParseException)parseErrors.get(0)).getCellName());
+        Assertions.assertEquals(1, ((CellParseException)parseErrors.get(0)).getLineNumber());
     }
 
     public FixedWidthSchema makePersonShoeSchema() {
@@ -78,18 +81,20 @@ public class TextParseTaskTest {
                     ).build();
     }
 
-    @Test(expected=MaxErrorsExceededException.class)
+    @Test
     public void testBuild_error_list_max() throws IOException {
-        String toParse = "JonasAAA";
-        FixedWidthSchema schema = makePersonShoeSchema();
+        assertThrows(MaxErrorsExceededException.class, () -> {
+            String toParse = "JonasAAA";
+            FixedWidthSchema schema = makePersonShoeSchema();
 
-        Reader reader = new StringReader(toParse);
-        TextParseTask parser = new TextParseTask(schema, reader);
-        DocumentBuilderLineConsumer listener = new DocumentBuilderLineConsumer();
-        parser.setLineConsumer(listener);
-        parser.setErrorConsumer(new ThresholdCollectingErrorConsumer(0));
-        parser.execute();
-        Document doc = listener.getDocument();
+            Reader reader = new StringReader(toParse);
+            TextParseTask parser = new TextParseTask(schema, reader);
+            DocumentBuilderLineConsumer listener = new DocumentBuilderLineConsumer();
+            parser.setLineConsumer(listener);
+            parser.setErrorConsumer(new ThresholdCollectingErrorConsumer(0));
+            parser.execute();
+            Document doc = listener.getDocument();
+        });
     }
     
     

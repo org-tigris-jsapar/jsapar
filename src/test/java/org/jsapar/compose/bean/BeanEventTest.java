@@ -2,9 +2,9 @@ package org.jsapar.compose.bean;
 
 import org.jsapar.TstPerson;
 import org.jsapar.model.Line;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("deprecation")
 public class BeanEventTest {

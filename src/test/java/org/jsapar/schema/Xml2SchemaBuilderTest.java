@@ -1,13 +1,13 @@
 package org.jsapar.schema;
 
 import org.jsapar.model.CellType;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.Iterator;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Xml2SchemaBuilderTest {
 
@@ -51,7 +51,7 @@ public class Xml2SchemaBuilderTest {
                 .getCellFormat().getCellType());
 
         FixedWidthSchemaLine schemaLine = fwSchema.getSchemaLine("Person").orElse(null);
-        Assert.assertNotNull(schemaLine);
+        Assertions.assertNotNull(schemaLine);
         iterator = schemaLine.iterator();
         iterator.next();
         iterator.next();
@@ -130,19 +130,21 @@ public class Xml2SchemaBuilderTest {
 
 
 
-    @Test(expected = SchemaException.class)
+    @Test
     public final void testBuild_Csv_firstlineasschema_error()
             throws SchemaException {
+        assertThrows(SchemaException.class, () -> {
 
-        // "yes" is not a valid boolean value.
-        String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>\n"
-                + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/2.0' >\n"
-                + "<csvschema><line occurs='4' firstlineasschema='yes' >\n" + "</line></csvschema></schema>";
+            // "yes" is not a valid boolean value.
+            String sXmlSchema = "<?xml version='1.0' encoding='UTF-8'?>\n"
+                    + "<schema  xmlns='http://jsapar.tigris.org/JSaParSchema/2.0' >\n"
+                    + "<csvschema><line occurs='4' firstlineasschema='yes' >\n" + "</line></csvschema></schema>";
 
-        Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
-        java.io.Reader reader = new java.io.StringReader(sXmlSchema);
-        @SuppressWarnings("unused")
-        Schema<? extends SchemaLine<? extends SchemaCell>> schema = builder.build(reader);
+            Xml2SchemaBuilder builder = new Xml2SchemaBuilder();
+            java.io.Reader reader = new java.io.StringReader(sXmlSchema);
+            @SuppressWarnings("unused")
+            Schema<? extends SchemaLine<? extends SchemaCell>> schema = builder.build(reader);
+        });
     }
 
 }

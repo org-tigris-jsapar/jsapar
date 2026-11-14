@@ -8,16 +8,16 @@ import org.jsapar.compose.bean.BeanFactoryDefault;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.*;
 import org.jsapar.parse.CollectingConsumer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BeanComposerTest {
 
     private java.util.Date birthTime;
 
-    @Before
+    @BeforeEach
     public void setUp() throws java.text.ParseException {
 	java.text.DateFormat dateFormat=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	this.birthTime = dateFormat.parse("1971-03-25 23:04:24");
@@ -112,18 +112,20 @@ public class BeanComposerTest {
         assertEquals(1234, (objects.get(0)).getLuckyNumber());
     }
 
-    @Test(expected = ComposeException.class)
+    @Test
     public final void testCreateJavaObjects_wrongType() {
-        Document document = new Document();
-        Line line1 = new Line("org.jsapar.TstPerson");
-        line1.addCell(new IntegerCell("firstName", 1234));
+        assertThrows(ComposeException.class, () -> {
+            Document document = new Document();
+            Line line1 = new Line("org.jsapar.TstPerson");
+            line1.addCell(new IntegerCell("firstName", 1234));
 
-        document.addLine(line1);
+            document.addLine(line1);
 
-        BeanComposer<TstPerson> composer = new BeanComposer<>();
-        composer.setBeanConsumer(tstPerson -> {});
-        composer.compose(document);
-        fail("Should throw exception");
+            BeanComposer<TstPerson> composer = new BeanComposer<>();
+            composer.setBeanConsumer(tstPerson -> {});
+            composer.compose(document);
+            fail("Should throw exception");
+        });
     }
 
     /**

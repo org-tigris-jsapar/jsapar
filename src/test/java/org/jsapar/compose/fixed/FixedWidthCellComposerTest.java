@@ -4,13 +4,13 @@ import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.FixedWidthSchemaCell;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FixedWidthCellComposerTest {
 

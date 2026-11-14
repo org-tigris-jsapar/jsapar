@@ -1,11 +1,11 @@
 package org.jsapar.compose.fixed.pad;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FillerTest {
 
@@ -25,11 +25,13 @@ public class FillerTest {
         assertEquals("", writer.toString());
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void filler_ioobe() throws IOException {
-        Filler filler = new Filler('*', 4);
-        StringWriter writer = new StringWriter();
-        filler.fill(writer, 5);
+        assertThrows(IndexOutOfBoundsException.class, () -> {
+            Filler filler = new Filler('*', 4);
+            StringWriter writer = new StringWriter();
+            filler.fill(writer, 5);
+        });
     }
 
 }

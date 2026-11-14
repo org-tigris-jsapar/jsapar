@@ -2,14 +2,14 @@ package org.jsapar.parse.csv;
 
 import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.text.TextParseConfig;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class CsvLineParserMatcherTest {
 

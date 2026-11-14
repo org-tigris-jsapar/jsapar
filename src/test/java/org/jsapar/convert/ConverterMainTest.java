@@ -1,14 +1,14 @@
 package org.jsapar.convert;
 
 import org.jsapar.ConverterMain;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ConverterMainTest {
     private final ByteArrayOutputStream outContent  = new ByteArrayOutputStream();
@@ -16,13 +16,13 @@ public class ConverterMainTest {
     private final PrintStream           originalOut = System.out;
     private final PrintStream           originalErr = System.err;
 
-    @Before
+    @BeforeEach
     public void setUpStreams() {
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
     }
 
-    @After
+    @AfterEach
     public void restoreStreams() {
         System.setOut(originalOut);
         System.setErr(originalErr);

@@ -3,13 +3,13 @@ package org.jsapar.parse.cell;
 import org.jsapar.model.Cell;
 import org.jsapar.model.DateCell;
 import org.jsapar.text.Format;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DateCellFactoryTest {
 

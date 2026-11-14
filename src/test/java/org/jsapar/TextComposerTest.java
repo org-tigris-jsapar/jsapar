@@ -3,18 +3,18 @@ package org.jsapar;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.*;
 import org.jsapar.schema.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.StringWriter;
 import java.io.Writer;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TextComposerTest {
     private Document document;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         document = new Document();
         java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

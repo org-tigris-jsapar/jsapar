@@ -1,21 +1,22 @@
 package org.jsapar;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.jsapar.error.*;
 import org.jsapar.model.CellType;
 import org.jsapar.model.StringCell;
 import org.jsapar.parse.CollectingConsumer;
 import org.jsapar.text.TextParseConfig;
 import org.jsapar.schema.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Collections;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class Text2TextConverterTest {
 
@@ -114,25 +115,27 @@ public class Text2TextConverterTest {
                     .build();
     }
 
-    @Test(expected = MaxErrorsExceededException.class)
+    @Test
     public void testConvert_max_error() throws IOException, JSaParException {
-        String toParse = "Jonas 41       " + LN + "Frida ERROR    ";
-        FixedWidthSchema inputSchema = makeFixedWidthPersonShoeSchema();
+        assertThrows(MaxErrorsExceededException.class, () -> {
+            String toParse = "Jonas 41       " + LN + "Frida ERROR    ";
+            FixedWidthSchema inputSchema = makeFixedWidthPersonShoeSchema();
 
-        CsvSchema outputSchema = CsvSchema.builder()
-                .withLine( CsvSchemaLine.builder("Person")
-                        .withCells("First name","Shoe size")
-                        .withCellSeparator(";")
-                        .build())
-                .build();
+            CsvSchema outputSchema = CsvSchema.builder()
+                    .withLine( CsvSchemaLine.builder("Person")
+                            .withCells("First name","Shoe size")
+                            .withCellSeparator(";")
+                            .build())
+                    .build();
 
-        try (StringWriter writer = new StringWriter(); StringReader reader = new StringReader(toParse)) {
-            Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
-            ThresholdCollectingErrorConsumer errorEventListener = new ThresholdCollectingErrorConsumer(0);
-            converter.setErrorConsumer(errorEventListener);
-            converter.convert(reader, writer);
-        }
+            try (StringWriter writer = new StringWriter(); StringReader reader = new StringReader(toParse)) {
+                Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
+                ThresholdCollectingErrorConsumer errorEventListener = new ThresholdCollectingErrorConsumer(0);
+                converter.setErrorConsumer(errorEventListener);
+                converter.convert(reader, writer);
+            }
 
+        });
     }
 
     @Test

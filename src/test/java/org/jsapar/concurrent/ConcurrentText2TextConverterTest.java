@@ -2,8 +2,8 @@ package org.jsapar.concurrent;
 
 import org.jsapar.error.JSaParException;
 import org.jsapar.schema.*;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -38,7 +38,7 @@ public class ConcurrentText2TextConverterTest {
             converter.convert(reader, writer);
             String sResult = writer.getBuffer().toString();
             String sExpected = "Jonas;Stenberg|Frida;Bergsten";
-            Assert.assertEquals(sExpected, sResult);
+            Assertions.assertEquals(sExpected, sResult);
         }
 
     }

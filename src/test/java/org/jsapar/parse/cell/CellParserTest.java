@@ -7,20 +7,20 @@ import org.jsapar.schema.MatchingCellValueCondition;
 import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.schema.StringSchemaCell;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.*;
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CellParserTest {
     StringSchemaCell schemaCell;
 
-    @Before
+    @BeforeEach
     public void before() {
         schemaCell = StringSchemaCell.builder("test").build();
     }
@@ -110,15 +110,17 @@ public class CellParserTest {
         assertEquals("ABC123de", cell.getStringValue());
     }
 
-    @Test(expected=java.text.ParseException.class)
+    @Test
     public void testMakeCell_RegExp_fail() throws SchemaException, java.text.ParseException {
-        SchemaCell schemaCell = StringSchemaCell.builder("test")
-                .withPattern("[A-Z]{3}[0-9]{0,3}de")
-                .build();
-        CellParser<?> cellParser = new CellParser<>(schemaCell, 0);
+        assertThrows(java.text.ParseException.class, () -> {
+            SchemaCell schemaCell = StringSchemaCell.builder("test")
+                    .withPattern("[A-Z]{3}[0-9]{0,3}de")
+                    .build();
+            CellParser<?> cellParser = new CellParser<>(schemaCell, 0);
 
-        cellParser.makeCell("AB1C123de");
-        fail("Should throw ParseException for invalid RegExp validation.");
+            cellParser.makeCell("AB1C123de");
+            fail("Should throw ParseException for invalid RegExp validation.");
+        });
     }
 
     @Test
@@ -129,10 +131,12 @@ public class CellParserTest {
     }
 
 
-    @Test(expected = ParseException.class)
+    @Test
     public void testMakeCell_UnfinishedInteger() throws ParseException, SchemaException {
-        CellParser.makeCell(CellType.INTEGER, "number", "123A45", Locale.getDefault());
-        fail("Method should throw exception.");
+        assertThrows(ParseException.class, () -> {
+            CellParser.makeCell(CellType.INTEGER, "number", "123A45", Locale.getDefault());
+            fail("Method should throw exception.");
+        });
     }
 
 
@@ -158,11 +162,13 @@ public class CellParserTest {
         assertEquals("A number", cell.getName());
     }
 
-    @Test(expected = ParseException.class)
+    @Test
     public void testMakeCell_UnfinishedFloat() throws ParseException {
-        Locale locale = Locale.UK;
-        CellParser.makeCell(CellType.FLOAT, "number", "12.3A45", locale);
-        fail("Method should throw exception.");
+        assertThrows(ParseException.class, () -> {
+            Locale locale = Locale.UK;
+            CellParser.makeCell(CellType.FLOAT, "number", "12.3A45", locale);
+            fail("Method should throw exception.");
+        });
     }
 
     @Test

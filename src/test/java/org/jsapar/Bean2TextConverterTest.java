@@ -5,7 +5,7 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.CsvSchema;
 import org.jsapar.schema.CsvSchemaLine;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Bean2TextConverterTest {
 

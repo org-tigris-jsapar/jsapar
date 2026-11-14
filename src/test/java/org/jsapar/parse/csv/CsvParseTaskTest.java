@@ -12,12 +12,12 @@ import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.MatchingCellValueCondition;
 import org.jsapar.text.Format;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.Reader;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CsvParseTaskTest {
 

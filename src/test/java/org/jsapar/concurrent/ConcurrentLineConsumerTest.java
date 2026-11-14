@@ -2,19 +2,19 @@ package org.jsapar.concurrent;
 
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ConcurrentLineConsumerTest {
     private AtomicInteger count;
     private boolean started = false;
     private boolean stopped = false;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         count = new AtomicInteger(0);
         started = false;
@@ -97,33 +97,37 @@ public class ConcurrentLineConsumerTest {
         assertEquals(4, count.get());
     }
 
-    @Test(expected = JSaParException.class)
+    @Test
     public void testExceptionFromListener_slow() {
-        try (ConcurrentConsumer<Line> instance = new ConcurrentConsumer<>(event -> {
-            try {
-                Thread.sleep(10); // Do some work.
-                throw new AssertionError("Testing error");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        assertThrows(JSaParException.class, () -> {
+            try (ConcurrentConsumer<Line> instance = new ConcurrentConsumer<>(event -> {
+                try {
+                    Thread.sleep(10); // Do some work.
+                    throw new AssertionError("Testing error");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            })) {
+                instance.start();
+                instance.accept( new Line(""));
             }
-        })) {
-            instance.start();
-            instance.accept( new Line(""));
-        }
-        fail("Exception expected");
+            fail("Exception expected");
 
+        });
     }
 
-    @Test(expected = JSaParException.class)
+    @Test
     public void testExceptionFromListener_fast() {
-        try (ConcurrentConsumer<Line> instance = new ConcurrentConsumer<>(event -> {
-            throw new AssertionError("Testing error");
-        })) {
-            instance.start();
-            instance.accept( new Line(""));
-        }
-        fail("Exception expected");
+        assertThrows(JSaParException.class, () -> {
+            try (ConcurrentConsumer<Line> instance = new ConcurrentConsumer<>(event -> {
+                throw new AssertionError("Testing error");
+            })) {
+                instance.start();
+                instance.accept( new Line(""));
+            }
+            fail("Exception expected");
 
+        });
     }
 
 }

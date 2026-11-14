@@ -1,11 +1,12 @@
 package org.jsapar.error;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SuppressWarnings("deprecation")
 public class ThresholdRecordingErrorEventListenerTest {
@@ -19,11 +20,13 @@ public class ThresholdRecordingErrorEventListenerTest {
         assertEquals(1, errors.size());
     }
 
-    @Test(expected = MaxErrorsExceededException.class)
+    @Test
     public void testErrorEvent_exceeded() {
-        ThresholdRecordingErrorEventListener listener = new ThresholdRecordingErrorEventListener(1);
-        listener.errorEvent(new ErrorEvent(this, new JSaParException("testing 1")));
-        listener.errorEvent(new ErrorEvent(this, new JSaParException("testing 2")));
+        assertThrows(MaxErrorsExceededException.class, () -> {
+            ThresholdRecordingErrorEventListener listener = new ThresholdRecordingErrorEventListener(1);
+            listener.errorEvent(new ErrorEvent(this, new JSaParException("testing 1")));
+            listener.errorEvent(new ErrorEvent(this, new JSaParException("testing 2")));
+        });
     }
 
 }

@@ -1,11 +1,11 @@
 package org.jsapar.text;
 
 import org.jsapar.text.format.BooleanFormat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BooleanFormatTest {
 
@@ -75,10 +75,12 @@ public class BooleanFormatTest {
         assertEquals(Boolean.FALSE, f.parse("n"));
     }
 
-    @Test(expected = ParseException.class)
+    @Test
     public void testParseFailed() throws ParseException {
-        BooleanFormat f = new BooleanFormat("true", "false", true);
-        assertNull(f.parse("something different"));
+        assertThrows(ParseException.class, () -> {
+            BooleanFormat f = new BooleanFormat("true", "false", true);
+            assertNull(f.parse("something different"));
+        });
     }
 
     /**

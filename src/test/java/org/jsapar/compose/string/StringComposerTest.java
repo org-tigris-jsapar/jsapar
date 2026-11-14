@@ -4,9 +4,9 @@ import org.jsapar.model.Document;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.schema.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class StringComposerTest {
 

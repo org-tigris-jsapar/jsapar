@@ -7,12 +7,12 @@ import org.jsapar.bean.BeanMap;
 import org.jsapar.error.ExceptionErrorConsumer;
 import org.jsapar.model.*;
 import org.jsapar.schema.*;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SuppressWarnings("ALL")
 public class BeanMarshallerTest {
@@ -55,7 +55,7 @@ public class BeanMarshallerTest {
         assertEquals("Staden", LineUtils.getStringCellValue(line,"address.town"));
 
         // Make sure that loops are avoided.
-        Assert.assertFalse(line.containsNonEmptyCell("address.owner.firstName"));
+        Assertions.assertFalse(line.containsNonEmptyCell("address.owner.firstName"));
     }
 
     @Test

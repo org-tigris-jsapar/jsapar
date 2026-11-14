@@ -10,8 +10,8 @@ import org.jsapar.parse.DocumentBuilderLineConsumer;
 import org.jsapar.parse.xml.XmlParser;
 import org.jsapar.schema.*;
 import org.jsapar.text.TextParseConfig;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -22,7 +22,7 @@ import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * These tests are not unit tests!!<br>
@@ -327,7 +327,7 @@ public class JSaParExamplesTest {
             converter.convert(inReader, outWriter);
         }
 
-        Assert.assertTrue(outFile.isFile());
+        Assertions.assertTrue(outFile.isFile());
     }
 
     @Test
@@ -341,7 +341,7 @@ public class JSaParExamplesTest {
                 .main(new String[] { "-in.file", "examples/01_Names.csv", "-out.file", outFileName, "-in.schema",
                         "examples/01_CsvSchema.xml", "-out.schema", "examples/02_FixedWidthSchema.xml" });
 
-        Assert.assertTrue(outFile.isFile());
+        Assertions.assertTrue(outFile.isFile());
     }
 
     @SuppressWarnings("rawtypes")

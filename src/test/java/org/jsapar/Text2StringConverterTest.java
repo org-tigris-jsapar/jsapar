@@ -2,12 +2,12 @@ package org.jsapar;
 
 import org.jsapar.schema.*;
 import org.jsapar.text.TextParseConfig;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Text2StringConverterTest {
 

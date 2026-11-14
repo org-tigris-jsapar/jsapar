@@ -7,7 +7,7 @@ import org.jsapar.model.*;
 import org.jsapar.schema.CsvSchemaCell;
 import org.jsapar.schema.QuoteSyntax;
 import org.jsapar.schema.SchemaException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -15,7 +15,7 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SuppressWarnings("rawtypes")
 public class CsvCellComposerTest {

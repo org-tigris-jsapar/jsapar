@@ -10,19 +10,19 @@ import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.QuoteSyntax;
 import org.jsapar.schema.SchemaException;
 import org.jsapar.text.TextParseConfig;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CsvLineParserTest {
 
     private boolean foundError = false;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         foundError = false;
     }
@@ -182,22 +182,24 @@ public class CsvLineParserTest {
         assertTrue(rc);
     }
 
-    @Test(expected = JSaParException.class)
+    @Test
     public void testParse_quoted_line_break() throws IOException {
-        CsvSchemaLine schemaLine = makeCsvSchemaLine();
-        schemaLine.setQuoteChar('\"');
-        String sLine = "Jonas;Stenberg;\"";
-        TextParseConfig config = new TextParseConfig();
-        config.setOnLineInsufficient(ValidationAction.EXCEPTION);
-        boolean rc = new CsvLineParser(schemaLine, config).parse(makeCsvLineReaderForString(sLine), line -> {
+        assertThrows(JSaParException.class, () -> {
+            CsvSchemaLine schemaLine = makeCsvSchemaLine();
+            schemaLine.setQuoteChar('\"');
+            String sLine = "Jonas;Stenberg;\"";
+            TextParseConfig config = new TextParseConfig();
+            config.setOnLineInsufficient(ValidationAction.EXCEPTION);
+            boolean rc = new CsvLineParser(schemaLine, config).parse(makeCsvLineReaderForString(sLine), line -> {
             
-            assertEquals(7, line.size());
-            assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
-            assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1"));
-            assertEquals("\"", LineUtils.getStringCellValue(line, "2"));
-        }, new ExceptionErrorConsumer());
+                assertEquals(7, line.size());
+                assertEquals("Jonas", LineUtils.getStringCellValue(line, "0"));
+                assertEquals("Stenberg", LineUtils.getStringCellValue(line, "1"));
+                assertEquals("\"", LineUtils.getStringCellValue(line, "2"));
+            }, new ExceptionErrorConsumer());
 
-        assertTrue(rc);
+            assertTrue(rc);
+        });
     }
 
     @Test
@@ -334,52 +336,58 @@ public class CsvLineParserTest {
 
     }
 
-    @Test(expected = LineParseException.class)
+    @Test
     public void testParse_exceptionOnInsufficient() throws IOException {
-        CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
-                .withCellSeparator(";-)")
-                .withCells("First Name", "Last Name", "Happy")
-                .build();
+        assertThrows(LineParseException.class, () -> {
+            CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
+                    .withCellSeparator(";-)")
+                    .withCells("First Name", "Last Name", "Happy")
+                    .build();
 
-        String sLine = "Jonas;-)Stenberg";
-        TextParseConfig config = new TextParseConfig();
-        config.setOnLineInsufficient(ValidationAction.EXCEPTION);
-        new CsvLineParser(schemaLine, config)
-                .parse(makeCsvLineReaderForString(sLine), line -> fail("Should throw exception"),
-                        line -> fail("Should throw exception"));
-        fail("Should throw exception");
+            String sLine = "Jonas;-)Stenberg";
+            TextParseConfig config = new TextParseConfig();
+            config.setOnLineInsufficient(ValidationAction.EXCEPTION);
+            new CsvLineParser(schemaLine, config)
+                    .parse(makeCsvLineReaderForString(sLine), line -> fail("Should throw exception"),
+                            line -> fail("Should throw exception"));
+            fail("Should throw exception");
+        });
     }
 
-    @Test(expected = LineParseException.class)
+    @Test
     public void testParse_exceptionOnOverflow() throws IOException {
-        CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
-                .withCellSeparator(";-)")
-                .withCells("First Name", "Last Name")
-                .build();
+        assertThrows(LineParseException.class, () -> {
+            CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
+                    .withCellSeparator(";-)")
+                    .withCells("First Name", "Last Name")
+                    .build();
 
-        String sLine = "Jonas;-)Stenberg;-)Some other";
-        TextParseConfig config = new TextParseConfig();
-        config.setOnLineOverflow(ValidationAction.EXCEPTION);
-        new CsvLineParser(schemaLine, config)
-                .parse(makeCsvLineReaderForString(sLine), line -> fail("Should throw exception"),
-                        line -> fail("Should throw exception"));
-        fail("Should throw exception");
+            String sLine = "Jonas;-)Stenberg;-)Some other";
+            TextParseConfig config = new TextParseConfig();
+            config.setOnLineOverflow(ValidationAction.EXCEPTION);
+            new CsvLineParser(schemaLine, config)
+                    .parse(makeCsvLineReaderForString(sLine), line -> fail("Should throw exception"),
+                            line -> fail("Should throw exception"));
+            fail("Should throw exception");
 
+        });
     }
 
-    @Test(expected = CellParseException.class)
+    @Test
     public void testParse_withMandatoryLast() throws IOException {
-        CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
-                .withCellSeparator(";-)")
-                .withCell("First Name")
-                .withCell("Last Name")
-                .withCell("Happy", c->c.withMandatory(true))
-                .build();
+        assertThrows(CellParseException.class, () -> {
+            CsvSchemaLine schemaLine = CsvSchemaLine.builder("A")
+                    .withCellSeparator(";-)")
+                    .withCell("First Name")
+                    .withCell("Last Name")
+                    .withCell("Happy", c->c.withMandatory(true))
+                    .build();
 
-        String sLine = "Jonas;-)Stenberg";
-        new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), line -> fail("Expects an error"), new ExceptionErrorConsumer());
-        fail("Expects an error");
+            String sLine = "Jonas;-)Stenberg";
+            new CsvLineParser(schemaLine).parse(makeCsvLineReaderForString(sLine), line -> fail("Expects an error"), new ExceptionErrorConsumer());
+            fail("Expects an error");
 
+        });
     }
 
 }

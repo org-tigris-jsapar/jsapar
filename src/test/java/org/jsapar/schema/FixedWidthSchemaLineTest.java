@@ -1,16 +1,16 @@
 package org.jsapar.schema;
 
 import org.jsapar.error.JSaParException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FixedWidthSchemaLineTest {
     
     protected boolean foundError = false;
     
-    @Before
+    @BeforeEach
     public void setup(){
         foundError = false;
     }
