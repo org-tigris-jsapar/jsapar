@@ -65,7 +65,11 @@ public class DecimalFormat implements Format<BigDecimal> {
     public BigDecimal parse(String stringValue) throws ParseException {
         if (plain && isPlainDecimal(stringValue))
             return new BigDecimal(stringValue);
-        return (BigDecimal) numberFormat.parse(stringValue);
+        Number number = numberFormat.parse(stringValue);
+        if (number == null || number instanceof BigDecimal)
+            return (BigDecimal) number;
+        // java.text.DecimalFormat returns a Double for NaN and infinity even when parsing BigDecimal.
+        throw new ParseException("Value [" + stringValue + "] is not a valid decimal number.", 0);
     }
 
     /**
