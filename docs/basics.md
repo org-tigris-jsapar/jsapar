@@ -61,20 +61,13 @@ lines in a `Document` when parsing is complete.
 All parsers in this library requires that you provide a `java.util.function.Consumer<Line>` while parsing.
 
 The JSaPar library contains some convenient implementations of the `java.util.function.Consumer<Line>` interface:
-<table>
-    <tr><td><b>org.jsapar.parse. DocumentBuilderLineConsumer</b></td>
-        <td>For smaller files you may want to handle all
-        the lines after the parsing is complete. In that case you may choose to use this implementation.
-        This consumer acts as an [aggregator](http://www.enterpriseintegrationpatterns.com/patterns/messaging/Aggregator.html) and builds a `org.jsapar.model.Document` object containing all the parsed lines that you can iterate afterwards.</td></tr>
-    <tr><td><b>org.jsapar.parse. ByLineTypeLineConsumer</b></td>
-        <td>Allows you to register different line consumers for different line types. Use MulticastConsumer if you want to have multiple consumers for each line type.</td></tr>
-    <tr><td><b>org.jsapar.parse. MulticastConsumer</b></td>
-        <td>If you need to handle the lines in multiple consumer implementations, this implementation provides a
-            way to register multiple consumers which are called one by one for each line.</td></tr>
-    <tr><td><b>org.jsapar.concurrent. ConcurrentConsumer</b></td>
-        <td>This implementation separates the parsing thread from the consuming thread. It makes it possible for you to
-            register a consumer that is called from a separate consumer thread.</td></tr>
-</table>
+
+|Consumer Class name|Description|
+|---|---|
+|`org.jsapar.parse.DocumentBuilderLineConsumer`|For smaller files you may want to handle all the lines after the parsing is complete. In that case you may choose to use this implementation. This consumer acts as an [aggregator](http://www.enterpriseintegrationpatterns.com/patterns/messaging/Aggregator.html) and builds a `org.jsapar.model.Document` object containing all the parsed lines that you can iterate afterwards.|
+|`org.jsapar.parse.ByLineTypeLineConsumer`|Allows you to register different line consumers for different line types. Use `MulticastConsumer` if you want to have multiple consumers for each line type.|
+|`org.jsapar.parse.MulticastConsumer`|If you need to handle the lines in multiple consumer implementations, this implementation provides a way to register multiple consumers which are called one by one for each line.|
+|`org.jsapar.concurrent.ConcurrentConsumer`|This implementation separates the parsing thread from the consuming thread. It makes it possible for you to register a consumer that is called from a separate consumer thread.|
 
 These implementations only demonstrates what can be done in a `java.util.function.Consumer` implementation. Feel free to create
 your own implementation for instance if you need to feed the result to a database or any other scenario.
@@ -129,8 +122,10 @@ alternatives, in the `org.jsapar.error` package, to use if you don't want to imp
 
 You may also use the more generic consumers in the `org.jsapar.parse` package: 
 
-`CollectingConsumer` | Records all errors in a list and allows you to retrieve all errors when parsing is done.
-`MulticastConsumer` | Allows you to register multiple other error consumers that each will get called when an error occurs.
+|Consumer Class name|Description|
+|---|---|
+|`CollectingConsumer` | Records all errors in a list and allows you to retrieve all errors when parsing is done.|
+|`MulticastConsumer` | Allows you to register multiple other error consumers that each will get called when an error occurs.|
 
 Each error contains detailed information about where in the input the error occurred and what was the cause of the errors. 
 
@@ -202,15 +197,15 @@ Cells that are not matched are omitted. Cells in the output schema that was not 
  
 All line types and cell names are case-sensitive so be thorough.  
   
-Almost all the job lies in defining the schemas. You can even run the text to text converter directly from the command line without coding. [See below](#Running text to text conversion from command line). 
+Almost all the job lies in defining the schemas. You can even run the text to text converter directly from the command line without coding. [See below](#running-text-to-text-conversion-from-command-line). 
 ## Converting text to Java beans
 You can use the `org.jsapar.Text2BeanConverter` in order to build java objects directly for each line in the data source.
 For this to work, the line type of each line in the input schema needs to contain the full name of the java bean that 
 you want to create for that line and the cell name for each cell needs to match against the bean property that you want 
 to assign a value to. Use dot notation to separate sub properties. See example below.
 
-The [advanced](advanced) section will describe how to handle the case that you want to re-use an existing schema that does
- not conform to these rules or if you want to provide your own bean factory implementation. 
+The article about [bean mapping](bean_mapping) describes how to handle the case that you want to re-use an existing schema that does
+ not conform to these rules, for instance by using annotations, and how to provide your own bean factory implementation. 
 
 The following of the [java bean requirements](https://en.wikipedia.org/wiki/JavaBeans) apply for the bean class:
 * There has to be a constructor with no arguments.
@@ -299,7 +294,7 @@ pulls characters from the input reader when needed for parsing as beans are pull
 
 Use the class `org.jsapar.Bean2TextConverter` in order to convert java objects into an output text according to a schema. Basically
 it works the other way around compared to converting from text to java beans as described above. The same rules apply to both
-how the schema is created and to the java beans. You feed the converter with java beans and the schema will handle the 
+how the schema is created and to the java beans, and you can use the same [bean mapping](bean_mapping) in both directions. You feed the converter with java beans and the schema will handle the 
 formatting of the text output.
 
 The example code for converting employees to text as in previous example would be like this:
@@ -357,7 +352,7 @@ You can add line manipulators
 to all converters and thus tap into the stream of lines and manipulate them before they are processed further. By returning
 false from the `manipulate()` method, you can indicate that the line should be omitted from the output.
 
-It is a bit simpler to use than the [transformer](#Transformer) described above but does on the other hand not provide any
+It is a bit simpler to use than the [transformer](#transformer) described above but does on the other hand not provide any
 means of splitting into several lines.
 
 For example, if you may need to convert a cost contained in a cell between currencies. Then you can add a line manipulator to the converter like this:

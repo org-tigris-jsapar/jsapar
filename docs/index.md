@@ -67,28 +67,40 @@ join and split cells that do not fit a bean property one-to-one.
 * [Introduction](introduction)
 * [Basics](basics)
 * [Basics of Schema](basics_schema)
+* [Bean mapping](bean_mapping)
+* [Advanced](advanced)
 * [Javadocs API documentation](https://javadoc.io/doc/org.tigris.jsapar/jsapar)
-* [Upgrading from JSaPar 1.x versions](upgradingfrom)
+* [Upgrading from earlier versions of JSaPar](upgradingfrom)
 
 ## Resources
 * [Source code and issues](https://github.com/org-tigris-jsapar/jsapar)
 * [Examples](https://github.com/org-tigris-jsapar/jsapar-examples)
-* <a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">Maven coordinates and binaries download</a><br/>
-* <a href="http://jsapar.tigris.org/servlets/ProjectDocumentList">Download historical binaries</a><br/>
-* <a href="http://jsapar.tigris.org">The original project web page with historical archive.</a><br/>
+* [Maven coordinates and binaries download](https://central.sonatype.com/artifact/org.tigris.jsapar/jsapar)
 * For questions about usage, use [Stack overflow with the jsapar tag](https://stackoverflow.com/questions/tagged/jsapar)
 
 ## Dependencies
-This project has no dependencies to other external libraries in runtime.
+This project has no dependencies to other external libraries in runtime. The only Java module that is required, apart from 
+`java.base`, is `java.xml`. 
 
-However, if you plan to build and test the source consider the following:
+Required Java version in runtime:
 
-* To build the source it is recommended to use <a href="https://maven.apache.org/">Maven</a>. A Maven pom.xml is provided. As of version 1.6, the library is published in the public <a href="http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22">Maven repository</a>.
-* The provided test classes require JUnit4 in order to run.
-* JSaPar version 2.1 requires Java JDK 11 or later to build but the official binaries are built for release 8, so they will work for Java 8 or later.
-* JSaPar version 2.0 requires Java 8 or later.
-* JSaPar version 1.5-1.8 are built with Java 7. 
-* Earlier versions of the library in the download packages are built with Java 6 but with target compatibility level 1.5. It is no guarantee that the library will work for earlier version of Java.
+|JSaPar version|Java version|
+|---|---|
+|2.5|21 or later|
+|2.4|17 or later|
+|2.3|11 or later|
+|2.0 - 2.2|8 or later|
+|1.5 - 1.8|7 or later|
+
+The library is a named Java module. If your project uses modules, add this to your `module-info.java`:
+```java
+requires org.jsapar;
+```
+
+If you plan to build and test the source consider the following:
+
+* To build the source you need [Maven](https://maven.apache.org/) and a JDK of at least the version in the table above. 
+* The provided test classes require JUnit 6 (JUnit Jupiter) in order to run. It is only used while testing.
 
 ## Other sources of information
 * [Links to other related projects](links)

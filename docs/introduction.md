@@ -20,7 +20,7 @@ Supported file formats:
 * <b>CSV </b><i>- (Comma Separated Values) Each cell is limited by a separator character (or characters).</i>
 
 ## Installation
-The JSaPar library uses [Maven](https://maven.apache.org/) as build tool and the binaries are published to the [maven central repository](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22).
+The JSaPar library uses [Maven](https://maven.apache.org/) as build tool and the binaries are published to the [maven central repository](https://central.sonatype.com/artifact/org.tigris.jsapar/jsapar).
 If you also use maven, all you need to do is to add dependency JSaPar into your project pom-file:
 ```xml
 <dependency>
@@ -29,7 +29,7 @@ If you also use maven, all you need to do is to add dependency JSaPar into your 
     <version>2.4.0</version>
 </dependency>
 ```
-On the [maven central page for each version](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.tigris.jsapar%22%20AND%20a%3A%22jsapar%22) you will find instructions of how to add dependency in all the most common build tools and if you
+On the [maven central page for each version](https://central.sonatype.com/artifact/org.tigris.jsapar/jsapar) you will find instructions of how to add dependency in all the most common build tools and if you
 want to download the binaries and install them locally in your project classpath you also find download links there.
 
 ## Simple example of parsing CSV file

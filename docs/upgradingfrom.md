@@ -6,7 +6,26 @@ title: Upgrading from earlier versions of JSaPar
 * TOC
 {:toc}
 
+## Upgrading from version 2.4
+* Java 21 or later is required.
+* `Cell`, `Line` and `Document` no longer implement `java.io.Serializable`. If you relied on Java serialization of these
+classes you need to serialize the content in some other way, for instance by composing it as text.
+* Generic type parameters have been added to `Cell`, `CellFactory`, `Format`, `SchemaCellFormat`, `Schema` and related 
+classes. Code that uses these classes as raw types still compiles but gives compiler warnings. In most cases it is enough 
+to add `<?>`, for example `Schema<?> schema = Schema.ofXml(reader);`
+* Xml that contains a `DOCTYPE` declaration is no longer accepted, neither as schema or bean map xml nor as input to the 
+`XmlParser` and `Xml2TextConverter`. Remove the `DOCTYPE` declaration from the xml.
+* Composing a `DECIMAL` cell without a pattern no longer rounds the value to one decimal. Specify a pattern in the 
+schema if you need a fixed number of decimals in the output.
+
+## Upgrading from version 2.3
+* Java 17 or later is required.
+
+## Upgrading from version 2.2
+* Java 11 or later is required.
+
 ## Upgrading from version 2.1
+
 All the event based methods and classes have been replaced by corresponding Consumer based. The old methods and classes have been 
 marked as deprecated so they still work but it is recommended to switch 
 to the new methods. There should be a note in the javadoc for each deprecated method about how to switch to the new methods. 
