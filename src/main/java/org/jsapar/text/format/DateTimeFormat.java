@@ -49,14 +49,14 @@ public class DateTimeFormat implements Format<TemporalAccessor> {
 
     @Override
     public String format(Object value) {
-        if(value instanceof Instant)
-            return formatter.format(((Instant) value).atZone(zoneId));
+        if(value instanceof Instant instant)
+            return formatter.format(instant.atZone(zoneId));
         if(isoLocalDateFormatter && value instanceof LocalDate)
             return value.toString(); // Same output as the ISO formatter but much faster.
-        if(value instanceof TemporalAccessor)
-            return formatter.format((TemporalAccessor) value);
-        if(value instanceof Date)
-            return formatter.format(((Date)value).toInstant().atZone(zoneId));
+        if(value instanceof TemporalAccessor temporal)
+            return formatter.format(temporal);
+        if(value instanceof Date date)
+            return formatter.format(date.toInstant().atZone(zoneId));
         throw new IllegalArgumentException("Unable to format a datetime value from " + value + ". Unsupported type: " + value.getClass());
 
     }

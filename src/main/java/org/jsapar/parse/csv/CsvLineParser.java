@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * Responsible for parsing csv lines
@@ -52,7 +51,7 @@ class CsvLineParser {
     }
 
     private List<CellParser<CsvSchemaCell>> makeCellParsers(CsvSchemaLine lineSchema) {
-        return lineSchema.stream().map(this::makeCellParser).collect(Collectors.toList());
+        return lineSchema.stream().map(this::makeCellParser).toList();
     }
 
     private CellParser<CsvSchemaCell> makeCellParser(CsvSchemaCell schemaCell) {

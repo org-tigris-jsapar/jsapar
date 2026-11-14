@@ -21,11 +21,11 @@ final public class TextComposerFactory implements ComposerFactory {
      * @throws IllegalArgumentException In case the schema is not of any type that is handled by this class.
      */
     public SchemaComposer makeComposer(Schema<?> schema, Writer writer)  {
-        if(schema instanceof CsvSchema){
-            return new CsvComposer(writer, (CsvSchema)schema);
+        if(schema instanceof CsvSchema csvSchema){
+            return new CsvComposer(writer, csvSchema);
         }
-        if(schema instanceof FixedWidthSchema){
-            return new FixedWidthComposer(writer, (FixedWidthSchema)schema);
+        if(schema instanceof FixedWidthSchema fixedWidthSchema){
+            return new FixedWidthComposer(writer, fixedWidthSchema);
         }
 
         throw new IllegalArgumentException("Unknown schema type. Unable to create parser class for it.");

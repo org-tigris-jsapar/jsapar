@@ -13,18 +13,12 @@ final public class AlwaysQuote implements Quoter {
     private final char quoteChar;
 
     public AlwaysQuote(char quoteChar, int maxLength, QuoteSyntax quoteSyntax) {
-        switch (quoteSyntax) {
-        case FIRST_LAST:
-            valueComposer = (maxLength >= 0) ? new MaxLengthComposer(maxLength - 2) : new AtomicValueComposer();
-            break;
-        case RFC4180:
-            valueComposer = (maxLength >= 0) ?
+        valueComposer = switch (quoteSyntax) {
+            case FIRST_LAST -> (maxLength >= 0) ? new MaxLengthComposer(maxLength - 2) : new AtomicValueComposer();
+            case RFC4180 -> (maxLength >= 0) ?
                     new MaxLengthValueComposerRfc(maxLength - 2, quoteChar) :
                     new ValueComposerRfc(quoteChar);
-            break;
-        default:
-            throw new AssertionError("Unsupported quote syntax while composing: " + quoteSyntax);
-        }
+        };
         this.quoteChar = (quoteChar == 0 ? '"' : quoteChar);
     }
 

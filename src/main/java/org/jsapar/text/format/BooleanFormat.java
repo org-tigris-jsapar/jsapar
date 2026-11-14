@@ -99,8 +99,8 @@ public class BooleanFormat implements Format<Boolean> {
             return trueValue;
         else if (toFormat.equals(Boolean.FALSE))
             return falseValue;
-        else if(toFormat instanceof Number){
-            return ((Number) toFormat).longValue() == 0L ? falseValue : trueValue;
+        else if(toFormat instanceof Number number){
+            return number.longValue() == 0L ? falseValue : trueValue;
         }
         else
             throw new IllegalArgumentException("Only boolean objects can be formatted with this formatter.");

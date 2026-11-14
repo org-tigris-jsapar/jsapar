@@ -50,8 +50,8 @@ public final class BigDecimalCell extends NumberCell  {
      */
     @Override
     public int compareValueTo(Cell<Number> right) {
-        if(right instanceof BigDecimalCell){
-            BigDecimal bdRight = (((BigDecimalCell)right).getBigDecimalValue());
+        if(right instanceof BigDecimalCell bigDecimalRight){
+            BigDecimal bdRight = bigDecimalRight.getBigDecimalValue();
             return getBigDecimalValue().compareTo(bdRight);
         }
         assert right instanceof NumberCell : "Value of cell of type " + getCellType() + " can not be compared to value of cell of type " + right.getCellType();

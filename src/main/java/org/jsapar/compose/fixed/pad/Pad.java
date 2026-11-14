@@ -32,16 +32,10 @@ public interface Pad {
     static Pad ofAlignment(FixedWidthSchemaCell.Alignment alignment, char padCharacter, int length){
         if(length <=0 )
             return new PadNone();
-        switch (alignment) {
-        case LEFT:
-            return new PadRight(padCharacter, length);
-        case CENTER:
-            return new PadBoth(padCharacter, length);
-        case RIGHT:
-            return new PadLeft(padCharacter, length);
-        default:
-            throw new IllegalArgumentException("Unsupported alignment: " + alignment);
-        }
-
+        return switch (alignment) {
+            case LEFT -> new PadRight(padCharacter, length);
+            case CENTER -> new PadBoth(padCharacter, length);
+            case RIGHT -> new PadLeft(padCharacter, length);
+        };
     }
 }

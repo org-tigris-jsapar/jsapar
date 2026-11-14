@@ -55,7 +55,7 @@ public class ConvertTask {
             return composer::composeLine;
         }
         if(lineManipulators.size() == 1){
-            final LineManipulator manipulator = lineManipulators.get(0);
+            final LineManipulator manipulator = lineManipulators.getFirst();
             return line->{
                 if(manipulator.manipulate(line))
                     composer.composeLine(line);

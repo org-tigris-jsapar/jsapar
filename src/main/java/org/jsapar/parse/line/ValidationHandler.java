@@ -32,20 +32,15 @@ public class ValidationHandler {
                                   ValidationAction action,
                                   Consumer<JSaParException> eventListener,
                                   Supplier<String> messageSupplier) {
-        switch (action) {
-        case ERROR: {
-            LineParseException error = new LineParseException(lineNumber, messageSupplier.get());
-            eventListener.accept(error);
-            return true;
-        }
-        case EXCEPTION: {
-            throw new LineParseException(lineNumber, messageSupplier.get());
-        }
-        case NONE:
-            return true;
-        case OMIT_LINE:
-            return false;
-        }
-        return false;
+        return switch (action) {
+            case ERROR -> {
+                LineParseException error = new LineParseException(lineNumber, messageSupplier.get());
+                eventListener.accept(error);
+                yield true;
+            }
+            case EXCEPTION -> throw new LineParseException(lineNumber, messageSupplier.get());
+            case NONE -> true;
+            case OMIT_LINE -> false;
+        };
     }
 }

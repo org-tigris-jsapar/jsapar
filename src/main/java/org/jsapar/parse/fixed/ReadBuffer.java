@@ -165,19 +165,13 @@ final class ReadBuffer {
 
     private static Trimmer makeTrimmerByAlignment(FixedWidthSchemaCell schemaCell) {
         char padCharacter = schemaCell.getPadCharacter();
-        switch (schemaCell.getAlignment()) {
-            case LEFT:
-                return new AlignLeftTrimmer(padCharacter);
-            case RIGHT:
-                if(padCharacter== '0' && schemaCell.getCellFormat().getCellType().isNumber())
-                    return new NumericAlignRightTrimmer();
-                else
-                    return new AlignRightTrimmer(padCharacter);
-            case CENTER:
-                return new AlignCenterTrimmer(padCharacter);
-            default:
-                throw new IllegalArgumentException("Unsupported alignment type: " + schemaCell.getAlignment());
-        }
+        return switch (schemaCell.getAlignment()) {
+            case LEFT -> new AlignLeftTrimmer(padCharacter);
+            case RIGHT -> (padCharacter == '0' && schemaCell.getCellFormat().getCellType().isNumber())
+                    ? new NumericAlignRightTrimmer()
+                    : new AlignRightTrimmer(padCharacter);
+            case CENTER -> new AlignCenterTrimmer(padCharacter);
+        };
     }
 
     /**

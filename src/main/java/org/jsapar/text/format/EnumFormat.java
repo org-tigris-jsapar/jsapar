@@ -147,8 +147,8 @@ public class EnumFormat<E extends Enum<E>> implements Format<E> {
         if(value instanceof Enum){
             return valueByEnum.get(value);
         }
-        if(value instanceof String && enumByValue.containsKey(value)) {
-            return (String) value;
+        if(value instanceof String string && enumByValue.containsKey(string)) {
+            return string;
         }
         throw new IllegalArgumentException("Unable to format enum value from " + value + " of type " + value.getClass());
     }

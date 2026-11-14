@@ -154,8 +154,7 @@ public class Bean2Cell {
         if (paramType == String.class) {
             return cell.getStringValue();
         }
-        if (value instanceof Number) {
-            Number number = (Number) value;
+        if (value instanceof Number number) {
             if (paramType == Integer.TYPE || paramType == Integer.class)
                 return number.intValue();
             else if (paramType == Long.TYPE || paramType == Long.class)

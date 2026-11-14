@@ -47,7 +47,7 @@ class CsvLineParserFactory {
                 else if (!first) {
                     // Move current matching line first in list so that it is tested first next time.
                     iter.remove();
-                    lineParserMatchers.add(0, currentMatcher);
+                    lineParserMatchers.addFirst(currentMatcher);
                 }
                 return lineParser;
             }

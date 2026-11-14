@@ -51,10 +51,10 @@ public interface TextSchemaParser {
          * @return Create a schema based text parser.     *
          */
     static TextSchemaParser ofSchema(Schema<? extends SchemaLine<? extends SchemaCell>> schema, Reader reader, TextParseConfig parseConfig) {
-        if (schema instanceof CsvSchema)
-            return new CsvParser(reader, (CsvSchema) schema, parseConfig);
-        if (schema instanceof FixedWidthSchema)
-            return new FixedWidthParser(reader, (FixedWidthSchema) schema, parseConfig);
+        if (schema instanceof CsvSchema csvSchema)
+            return new CsvParser(reader, csvSchema, parseConfig);
+        if (schema instanceof FixedWidthSchema fixedWidthSchema)
+            return new FixedWidthParser(reader, fixedWidthSchema, parseConfig);
         throw new IllegalArgumentException("Unsupported schema type: " + schema.getClass() + " while parsing.");
     }
 }

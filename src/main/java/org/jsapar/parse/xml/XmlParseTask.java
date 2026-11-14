@@ -126,21 +126,22 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
         public void startElement(String uri, String localName, String name, Attributes attributes) {
 
             switch (localName) {
-            case "cell":
-                cellStarted = true;
-                this.currentCellName = attributes.getValue("name");
-                this.currentCellType = makeCellType(attributes.getValue("type"));
-                if (this.currentCellType == null)
-                    this.currentCellType = CellType.STRING;
-                break;
-            case "line":
-                String sLineNumber = attributes.getValue("number");
-                long lineNumber = sLineNumber != null ? (Long.parseLong(sLineNumber)) : currentLineNumber;
-                this.currentLine = new Line(attributes.getValue("linetype"), 16, lineNumber);
-                this.currentLineNumber++;
-                break;
-            case "document":
-                break;
+                case "cell" -> {
+                    cellStarted = true;
+                    this.currentCellName = attributes.getValue("name");
+                    this.currentCellType = makeCellType(attributes.getValue("type"));
+                    if (this.currentCellType == null)
+                        this.currentCellType = CellType.STRING;
+                }
+                case "line" -> {
+                    String sLineNumber = attributes.getValue("number");
+                    long lineNumber = sLineNumber != null ? (Long.parseLong(sLineNumber)) : currentLineNumber;
+                    this.currentLine = new Line(attributes.getValue("linetype"), 16, lineNumber);
+                    this.currentLineNumber++;
+                }
+                default -> {
+                    // "document" and unknown elements are ignored.
+                }
             }
         }
 

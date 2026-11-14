@@ -2,6 +2,7 @@ package org.jsapar.compose.fixed.pad;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
 
 /**
  * Writes same character specified number of times.
@@ -18,9 +19,7 @@ final public class Filler {
      */
     public Filler(char fillCharacter, int length) {
         fillBuffer = new char[Math.max(0,length)];
-        for(int i = 0; i<length; i++){
-            fillBuffer[i] = fillCharacter;
-        }
+        Arrays.fill(fillBuffer, fillCharacter);
     }
 
     /**

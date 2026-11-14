@@ -5,7 +5,6 @@ import org.jsapar.schema.SchemaCell;
 import org.jsapar.schema.SchemaLine;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 class StringLineComposer {
@@ -14,7 +13,7 @@ class StringLineComposer {
 
     StringLineComposer(SchemaLine<? extends SchemaCell> schemaLine) {
         this.schemaLine = schemaLine;
-        cellComposers = schemaLine.stream().map(StringCellComposer::new).collect(Collectors.toList());
+        cellComposers = schemaLine.stream().map(StringCellComposer::new).toList();
     }
 
     Stream<String> composeStringLine(Line line) {

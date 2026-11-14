@@ -33,20 +33,15 @@ public final class ValidationHandler {
                                        String message,
                                        ValidationAction action,
                                        Consumer<JSaParException> eventListener) {
-        switch (action) {
-        case ERROR: {
-            ComposeException error = new ComposeException(message, line);
-            eventListener.accept(error);
-            return true;
-        }
-        case EXCEPTION: {
-            throw new ComposeException(message, line);
-        }
-        case NONE:
-            return true;
-        case OMIT_LINE:
-            return false;
-        }
-        return false;
+        return switch (action) {
+            case ERROR -> {
+                ComposeException error = new ComposeException(message, line);
+                eventListener.accept(error);
+                yield true;
+            }
+            case EXCEPTION -> throw new ComposeException(message, line);
+            case NONE -> true;
+            case OMIT_LINE -> false;
+        };
     }
 }

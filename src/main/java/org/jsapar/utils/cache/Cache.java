@@ -33,15 +33,11 @@ public interface Cache<K, V> {
      */
     static <K, V> Cache<K, V> ofMaxSize(int maxSize) {
 
-        switch (maxSize) {
-            case 0:
-                return new DisabledCache<>();
-            case 1:
-                return new SingleItemCache<>();
-            case 2:
-                return new TwoItemsCache<>();
-            default:
-                return new LimitedSizeCache<>(maxSize);
-        }
+        return switch (maxSize) {
+            case 0 -> new DisabledCache<>();
+            case 1 -> new SingleItemCache<>();
+            case 2 -> new TwoItemsCache<>();
+            default -> new LimitedSizeCache<>(maxSize);
+        };
     }
 }

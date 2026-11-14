@@ -51,9 +51,7 @@ public class EnumCellFactory<E extends Enum<E>> implements CellFactory<E> {
     @Override
     public int actualCacheMaxSize(SchemaCell schemaCell, int configuredCacheMaxSize) {
         Format<?> format = schemaCell.getFormat();
-        if(format instanceof EnumFormat){
-            @SuppressWarnings("unchecked")
-            EnumFormat<E> enumFormat = (EnumFormat<E>) format;
+        if(format instanceof EnumFormat<?> enumFormat){
             return enumFormat.numberOfTextValues();
         }
         return configuredCacheMaxSize;

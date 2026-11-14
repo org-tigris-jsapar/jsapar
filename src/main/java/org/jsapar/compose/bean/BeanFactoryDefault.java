@@ -176,14 +176,14 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
                 Object value = cell.getValue();
                 // Casts between simple types does not work automatically
                 Class<?> paramType = paramTypes[0];
-                if (paramType == Integer.TYPE && value instanceof Number)
-                    f.invoke(objectToAssign, ((Number) value).intValue());
-                else if (paramType == Short.TYPE && value instanceof Number)
-                    f.invoke(objectToAssign, ((Number) value).shortValue());
-                else if (paramType == Byte.TYPE && value instanceof Number)
-                    f.invoke(objectToAssign, ((Number) value).byteValue());
-                else if (paramType == Float.TYPE && value instanceof Number)
-                    f.invoke(objectToAssign, ((Number) value).floatValue());
+                if (paramType == Integer.TYPE && value instanceof Number number)
+                    f.invoke(objectToAssign, number.intValue());
+                else if (paramType == Short.TYPE && value instanceof Number number)
+                    f.invoke(objectToAssign, number.shortValue());
+                else if (paramType == Byte.TYPE && value instanceof Number number)
+                    f.invoke(objectToAssign, number.byteValue());
+                else if (paramType == Float.TYPE && value instanceof Number number)
+                    f.invoke(objectToAssign, number.floatValue());
                     // Will squeeze in first character of any datatype's string representation.
                 else if (paramType == Character.TYPE) {
                     if (value instanceof Character) {

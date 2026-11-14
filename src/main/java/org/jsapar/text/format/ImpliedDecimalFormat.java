@@ -36,22 +36,14 @@ public class ImpliedDecimalFormat implements Format<BigDecimal> {
      */
     @Override
     public String format(Object o) {
-        BigDecimal value;
-        if(o instanceof BigDecimal){
-            value = (BigDecimal) o;
-        }
-        else if (o instanceof BigInteger){
-            value = new BigDecimal((BigInteger) o);
-        }
-        else if (o instanceof Number){
-            value = BigDecimal.valueOf(((Number) o).doubleValue());
-        }
-        else if (o instanceof String){
-            value = new BigDecimal((String)o);
-        }
-        else{
-            throw new IllegalArgumentException("Unable to format an implied decimal value from " + o + ". Unsupported type.");
-        }
+        BigDecimal value = switch (o) {
+            case BigDecimal bigDecimal -> bigDecimal;
+            case BigInteger bigInteger -> new BigDecimal(bigInteger);
+            case Number number -> BigDecimal.valueOf(number.doubleValue());
+            case String string -> new BigDecimal(string);
+            case null, default ->
+                    throw new IllegalArgumentException("Unable to format an implied decimal value from " + o + ". Unsupported type.");
+        };
         value = value.movePointRight(decimals);
         return integerFormat.format(value);
     }

@@ -24,12 +24,12 @@ public class LineDecoratorErrorConsumer implements Consumer<JSaParException> {
 
     @Override
     public void accept(JSaParException error) {
-        if(error instanceof CellParseException) {
-            ((CellParseException) error).setLineNumber(line.getLineNumber());
-            line.addCellError((CellParseException) error);
+        if(error instanceof CellParseException cellError) {
+            cellError.setLineNumber(line.getLineNumber());
+            line.addCellError(cellError);
         }
-        else if(error instanceof LineParseException) {
-            ((LineParseException) error).setLineNumber(line.getLineNumber());
+        else if(error instanceof LineParseException lineError) {
+            lineError.setLineNumber(line.getLineNumber());
         }
         errorListener.accept(error);
     }

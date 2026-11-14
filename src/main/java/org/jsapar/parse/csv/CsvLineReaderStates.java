@@ -52,16 +52,10 @@ final class CsvLineReaderStates implements CsvLineReader {
         lastEolChar = eolCheck.getLastEolChar();
 
         beginCellState = new BeginCellState();
-        switch (quoteSyntax) {
-        case FIRST_LAST:
-            foundEndQuoteState = new FoundEndQuoteStateFirstLast();
-            break;
-        case RFC4180:
-            foundEndQuoteState = new FoundEndQuoteStateRfc();
-            break;
-        default:
-            throw new AssertionError("Unsupported quote syntax while parsing: " + quoteSyntax);
-        }
+        foundEndQuoteState = switch (quoteSyntax) {
+            case FIRST_LAST -> new FoundEndQuoteStateFirstLast();
+            case RFC4180 -> new FoundEndQuoteStateRfc();
+        };
         foundEndQuoteWithinState = new FoundEndQuoteWithinState();
         quotedCellState = new QuotedCellState();
         unquotedCellState = new UnquotedCellState();
@@ -206,7 +200,7 @@ final class CsvLineReaderStates implements CsvLineReader {
 
     private List<String> lineComplete() {
         beginCellState();
-        if(currentLine.size() == 1 && currentLine.get(0).trim().isEmpty())
+        if(currentLine.size() == 1 && currentLine.getFirst().trim().isEmpty())
             currentLine.clear();
         return currentLine;
     }

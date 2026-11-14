@@ -32,8 +32,8 @@ public class BigDecimalCellFactory implements CellFactory<Number> {
      * Custom formats may return other number types than BigDecimal.
      */
     private static BigDecimal toBigDecimal(Number number, String value) throws ParseException {
-        if (number instanceof BigDecimal)
-            return (BigDecimal) number;
+        if (number instanceof BigDecimal bigDecimal)
+            return bigDecimal;
         if (number == null)
             return null;
         if (number instanceof Double || number instanceof Float) {
@@ -42,8 +42,8 @@ public class BigDecimalCellFactory implements CellFactory<Number> {
                 throw new ParseException("Value [" + value + "] is not a valid decimal number.", 0);
             return BigDecimal.valueOf(d);
         }
-        if (number instanceof java.math.BigInteger)
-            return new BigDecimal((java.math.BigInteger) number);
+        if (number instanceof java.math.BigInteger bigInteger)
+            return new BigDecimal(bigInteger);
         if (number instanceof Long || number instanceof Integer || number instanceof Short || number instanceof Byte)
             return BigDecimal.valueOf(number.longValue());
         return new BigDecimal(number.toString());

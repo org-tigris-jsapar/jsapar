@@ -38,33 +38,29 @@ public class XmlParseSpliterator implements Spliterator<Line> {
             while (streamReader.hasNext()) {
                 int type = streamReader.next();
                 switch (type) {
-                    case XMLStreamReader.START_ELEMENT:
+                    case XMLStreamReader.START_ELEMENT -> {
                         switch (streamReader.getName().getLocalPart()) {
-                            case "line":
-                                currentLine = new Line(streamReader.getAttributeValue(null, "linetype"), 16, currentLineNumber++);
-                                break;
-                            case "cell":
+                            case "line" -> currentLine = new Line(streamReader.getAttributeValue(null, "linetype"), 16, currentLineNumber++);
+                            case "cell" -> {
                                 currentCell = handleCellStart();
                                 // After getting element text we might already be at the end.
-                                if(streamReader.isEndElement()){
+                                if (streamReader.isEndElement()) {
                                     currentCell = handleCellEnd(currentLine, currentCell);
                                 }
-                                break;
+                            }
                         }
-                        break;
-                    case XMLStreamReader.END_ELEMENT:
+                    }
+                    case XMLStreamReader.END_ELEMENT -> {
                         switch (streamReader.getName().getLocalPart()) {
-                            case "line":
+                            case "line" -> {
                                 if (currentLine != null) {
                                     action.accept(currentLine);
                                     return true;
                                 }
-                                break;
-                            case "cell":
-                                currentCell = handleCellEnd(currentLine, currentCell);
-                                break;
+                            }
+                            case "cell" -> currentCell = handleCellEnd(currentLine, currentCell);
                         }
-                        break;
+                    }
                 }
             }
         } catch (XMLStreamException | ParseException | DatatypeConfigurationException e) {

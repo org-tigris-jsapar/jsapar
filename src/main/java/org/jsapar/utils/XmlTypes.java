@@ -36,8 +36,8 @@ public interface XmlTypes {
         NodeList nodes = parentElement.getElementsByTagNameNS(nameSpace, sChildName);
         for (int i = 0; i < nodes.getLength(); i++) {
             Node child = nodes.item(i);
-            if (child instanceof Element) {
-                return Optional.of((Element) child);
+            if (child instanceof Element element) {
+                return Optional.of(element);
             }
         }
         return Optional.empty();
@@ -71,16 +71,11 @@ public interface XmlTypes {
     }
 
     default boolean parseBoolean(String value) {
-        switch (value) {
-        case "true":
-        case "1":
-            return true;
-        case "false":
-        case "0":
-            return false;
-        default:
-            throw new NumberFormatException("Failed to parse boolean value: " + value);
-        }
+        return switch (value) {
+            case "true", "1" -> true;
+            case "false", "0" -> false;
+            default -> throw new NumberFormatException("Failed to parse boolean value: " + value);
+        };
     }
 
     default String getStringValue(Node node) {

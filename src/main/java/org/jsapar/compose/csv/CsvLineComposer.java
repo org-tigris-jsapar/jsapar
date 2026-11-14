@@ -12,7 +12,6 @@ import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Composes csv line output based on schema and provided line.
@@ -37,7 +36,7 @@ final class CsvLineComposer implements LineComposer {
     private List<CsvCellComposer> makeCellComposers(CsvSchemaLine schemaLine) {
         return schemaLine.stream()
                 .map(this::makeCellComposer)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private CsvCellComposer makeCellComposer(CsvSchemaCell schemaCell) {
@@ -47,24 +46,18 @@ final class CsvLineComposer implements LineComposer {
     private Quoter makeQuoter(CsvSchemaLine schemaLine, CsvSchemaCell schemaCell, String lineSeparator) {
         char quoteChar = schemaLine.getQuoteChar();
         QuoteBehavior quoteBehavior = schemaCell.getQuoteBehavior();
-        switch (quoteBehavior) {
-            case AUTOMATIC:
-                if (quoteChar != 0)
-                    if (schemaCell.getCellFormat().getCellType().isAtomic())
-                        return new NeverQuote(schemaCell.getMaxLength());
-                    else
-                        return new QuoteIfNeeded(quoteChar, schemaCell.getMaxLength(), schemaLine.getCellSeparator(), lineSeparator, quoteSyntax);
-                else
-                    return makeReplaceQuoter(schemaLine, schemaCell, lineSeparator);
-            case NEVER:
-                return new NeverQuote(schemaCell.getMaxLength());
-            case REPLACE:
-                return makeReplaceQuoter(schemaLine, schemaCell, lineSeparator);
-            case ALWAYS:
-                return new AlwaysQuote(quoteChar, schemaCell.getMaxLength(), quoteSyntax);
-            default:
-                throw new IllegalStateException("Unsupported quote behavior: " + quoteBehavior);
-        }
+        return switch (quoteBehavior) {
+            case AUTOMATIC -> {
+                if (quoteChar == 0)
+                    yield makeReplaceQuoter(schemaLine, schemaCell, lineSeparator);
+                if (schemaCell.getCellFormat().getCellType().isAtomic())
+                    yield new NeverQuote(schemaCell.getMaxLength());
+                yield new QuoteIfNeeded(quoteChar, schemaCell.getMaxLength(), schemaLine.getCellSeparator(), lineSeparator, quoteSyntax);
+            }
+            case NEVER -> new NeverQuote(schemaCell.getMaxLength());
+            case REPLACE -> makeReplaceQuoter(schemaLine, schemaCell, lineSeparator);
+            case ALWAYS -> new AlwaysQuote(quoteChar, schemaCell.getMaxLength(), quoteSyntax);
+        };
     }
 
     private Quoter makeReplaceQuoter(CsvSchemaLine schemaLine, CsvSchemaCell schemaCell, String lineSeparator) {

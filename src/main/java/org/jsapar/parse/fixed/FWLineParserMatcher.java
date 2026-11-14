@@ -39,13 +39,13 @@ class FWLineParserMatcher {
             try {
                 int read = 0;
                 for (FWControlCell controlCell : controlCells) {
-                    int offset = controlCell.beginPos - read;
-                    String value = lineReader.readToString(controlCell.trimmer, offset, controlCell.schemaCell.getLength());
+                    int offset = controlCell.beginPos() - read;
+                    String value = lineReader.readToString(controlCell.trimmer(), offset, controlCell.schemaCell().getLength());
                     if (value == null)
                         return LineParserMatcherResult.EOF; // EOF reached
-                    if (!controlCell.schemaCell.getLineCondition().test(value))
+                    if (!controlCell.schemaCell().getLineCondition().test(value))
                         return LineParserMatcherResult.NOT_MATCHING; // Not matching criteria.
-                    read = controlCell.beginPos + controlCell.schemaCell.getLength();
+                    read = controlCell.beginPos() + controlCell.schemaCell().getLength();
                 }
             } finally {
                 lineReader.resetLine();
@@ -60,16 +60,7 @@ class FWLineParserMatcher {
         return lineParser;
     }
 
-    private static class FWControlCell{
-        final int beginPos;
-        final FixedWidthSchemaCell schemaCell;
-        final ReadBuffer.Trimmer trimmer;
-
-        FWControlCell(int beginPos, FixedWidthSchemaCell schemaCell, ReadBuffer.Trimmer trimmer) {
-            this.beginPos = beginPos;
-            this.schemaCell = schemaCell;
-            this.trimmer = trimmer;
-        }
+    private record FWControlCell(int beginPos, FixedWidthSchemaCell schemaCell, ReadBuffer.Trimmer trimmer) {
     }
 
     boolean isOccursLeft() {

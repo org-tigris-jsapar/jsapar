@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Composes line to a fixed width format based on line schema.
@@ -28,7 +27,7 @@ final class FixedWidthLineComposer implements LineComposer {
             throw new IllegalArgumentException("Line schema of line composer cannot be null");
         this.writer = writer;
         this.lineSchema = lineSchema;
-        this.cellComposers = lineSchema.stream().map(FixedWidthCellComposer::new).collect(Collectors.toList());
+        this.cellComposers = lineSchema.stream().map(FixedWidthCellComposer::new).toList();
         filler = new Filler(lineSchema.getPadCharacter(), lineSchema.getMinLength());
     }
 

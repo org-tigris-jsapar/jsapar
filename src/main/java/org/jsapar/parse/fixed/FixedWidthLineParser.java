@@ -12,7 +12,6 @@ import org.jsapar.schema.FixedWidthSchemaLine;
 import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * Parses fixed width text source on line level.
@@ -33,7 +32,7 @@ final class FixedWidthLineParser {
     }
 
     private List<FixedWidthCellParser> makeCellParsers(FixedWidthSchemaLine lineSchema) {
-        return lineSchema.stream().map(this::makeCellParser).collect(Collectors.toList());
+        return lineSchema.stream().map(this::makeCellParser).toList();
     }
 
     private FixedWidthCellParser makeCellParser(FixedWidthSchemaCell fixedWidthSchemaCell) {

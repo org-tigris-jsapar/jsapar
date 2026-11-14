@@ -79,10 +79,10 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
             xmlDocument.appendChild(xmlRoot);
 
             Element xmlSchema;
-            if (schema instanceof FixedWidthSchema) {
-                xmlSchema = extractFixedWidthSchema(xmlDocument, (FixedWidthSchema) schema);
-            } else if (schema instanceof CsvSchema) {
-                xmlSchema = extractCsvSchema(xmlDocument, (CsvSchema) schema);
+            if (schema instanceof FixedWidthSchema fixedWidthSchema) {
+                xmlSchema = extractFixedWidthSchema(xmlDocument, fixedWidthSchema);
+            } else if (schema instanceof CsvSchema csvSchema) {
+                xmlSchema = extractCsvSchema(xmlDocument, csvSchema);
             } else
                 throw new SchemaException("Failed to generate xml. Unsupported schema type.");
 
@@ -373,8 +373,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
             });
             return xmlFormat;
         }
-        else if(format.getCellType() == CellType.DECIMAL && format.getFormat() instanceof ImpliedDecimalFormat){
-            ImpliedDecimalFormat f = (ImpliedDecimalFormat) format.getFormat();
+        else if(format.getCellType() == CellType.DECIMAL && format.getFormat() instanceof ImpliedDecimalFormat f){
             Element xmlFormat = xmlDocument.createElementNS(JSAPAR_XML_SCHEMA, ELEMENT_IMPLIED_DECIMALFORMAT);
             xmlFormat.setAttribute("decimals", String.valueOf(f.getDecimals()));
             return xmlFormat;
