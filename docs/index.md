@@ -70,6 +70,7 @@ join and split cells that do not fit a bean property one-to-one.
 * [Basics of Schema](basics_schema)
 * [Bean mapping](bean_mapping)
 * [Advanced](advanced)
+* [Security](security) - What to consider when handling untrusted data
 * [Javadocs API documentation](https://javadoc.io/doc/org.tigris.jsapar/jsapar)
 * [Upgrading from earlier versions of JSaPar](upgradingfrom)
 
