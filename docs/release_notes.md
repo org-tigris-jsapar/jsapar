@@ -24,6 +24,7 @@ title: Release notes
       a line fails with an exception, nothing of that line is written.
 11. Added `Line.getCellOrDefault(String, Cell)` that returns a cell without wrapping it in an `Optional`.
 12. Fixed: Parsing `NaN` or infinity into a `DECIMAL` cell caused a `ClassCastException` instead of a cell parse error.
+13. Fixed: `LineUtils.getDecimalCellValue()` threw `ClassCastException` for integer cells. Integer values are now converted without loss of precision.
 
 ## 2.4
 1. Built with and for Java 17. Support for Java 11 and below is dropped.

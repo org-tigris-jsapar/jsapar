@@ -649,12 +649,26 @@ public final class LineUtils {
         return line.getNonEmptyCell(cellName).map(LineUtils::bigDecimalOfCell);
     }
 
+    /**
+     * Converts without losing precision for integer types. Floating point values are converted via their decimal
+     * string representation, the same way as before for float cells.
+     */
+    private static BigDecimal bigDecimalOfNumber(Number number) {
+        if (number instanceof BigDecimal bigDecimal)
+            return bigDecimal;
+        if (number instanceof BigInteger bigInteger)
+            return new BigDecimal(bigInteger);
+        if (number instanceof Long || number instanceof Integer || number instanceof Short || number instanceof Byte)
+            return BigDecimal.valueOf(number.longValue());
+        return BigDecimal.valueOf(number.doubleValue());
+    }
+
     private static BigDecimal bigDecimalOfCell(Cell<?> cell) {
         if (cell instanceof BigDecimalCell numberCell) {
             return numberCell.getBigDecimalValue();
         }
-        else if (cell instanceof NumberCell) {
-            return BigDecimal.valueOf(((FloatCell) cell).getValue().doubleValue());
+        else if (cell instanceof NumberCell numberCell) {
+            return bigDecimalOfNumber(numberCell.getValue());
         }
 
         try {

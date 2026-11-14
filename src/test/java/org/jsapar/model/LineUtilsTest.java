@@ -207,6 +207,26 @@ public class LineUtilsTest {
     }
 
     @Test
+    public void testGetDecimalCellValue_fromIntegerCell() {
+        Line line = new Line("TestLine");
+        line.addCell(new IntegerCell("small", 42L));
+        line.addCell(new IntegerCell("max", Long.MAX_VALUE));
+        line.addCell(new IntegerCell("int", 7));
+        line.addCell(new IntegerCell("big", new BigInteger("123456789012345678901234567890")));
+        assertEquals(new BigDecimal("42"), LineUtils.getDecimalCellValue(line, "small").orElse(null));
+        assertEquals(new BigDecimal(Long.toString(Long.MAX_VALUE)), LineUtils.getDecimalCellValue(line, "max").orElse(null));
+        assertEquals(new BigDecimal("7"), LineUtils.getDecimalCellValue(line, "int").orElse(null));
+        assertEquals(new BigDecimal("123456789012345678901234567890"), LineUtils.getDecimalCellValue(line, "big").orElse(null));
+    }
+
+    @Test
+    public void testGetDecimalCellValue_fromFloatCell() {
+        Line line = new Line("TestLine");
+        line.addCell(new FloatCell("f", 2.5D));
+        assertEquals(new BigDecimal("2.5"), LineUtils.getDecimalCellValue(line, "f").orElse(null));
+    }
+
+    @Test
     public void testGetSetBigIntegerCellValue() {
         Line line = new Line("TestLine");
         LineUtils.setIntCellValue(line, "random", 4711);
