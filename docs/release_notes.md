@@ -40,6 +40,9 @@ title: Release notes
     now applies to all cell types, so 0 disables the cache also for boolean and enum cells.
 17. The package `org.jsapar.parse.xml` is now exported by the module so that `XmlParser` can be used by applications 
     that use Java modules.
+18. Fixed: When parsing CSV with several line types that are selected by line conditions, a valid line that followed
+    an empty line could be reported as not matching any line type, or be silently skipped if undefined line types
+    were ignored.
 
 ## 2.4
 1. Built with and for Java 17. Support for Java 11 and below is dropped.

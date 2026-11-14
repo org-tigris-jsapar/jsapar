@@ -37,7 +37,7 @@ class CsvLineParserFactory {
             CsvLineParserMatcher currentMatcher = iter.next();
             CsvLineParser lineParser = currentMatcher.makeLineParserIfMatching(lineReader);
             if (lineParser == null) {
-                if (lineReader.eofReached())
+                if (lineReader.eofReached() || currentMatcher.isEmptyLineConsumed())
                     return null;
             }
             else {

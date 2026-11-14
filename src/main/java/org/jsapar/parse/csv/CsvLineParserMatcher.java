@@ -17,6 +17,7 @@ class CsvLineParserMatcher {
     private final CsvLineParser lineParser;
     private int occursLeft;
     private int maxControlPos;
+    private boolean emptyLineConsumed;
 
     /**
      * Creates a line parser matcher
@@ -44,13 +45,17 @@ class CsvLineParserMatcher {
      * @throws IOException If there is an io error.
      */
     CsvLineParser makeLineParserIfMatching(CsvLineReader lineReader) throws IOException{
+        emptyLineConsumed = false;
         if (occursLeft <= 0)
             return null;
 
         if (!controlCells.isEmpty()) {
             List<String> cells = lineReader.readLine(schemaLine.getCellSeparator(), schemaLine.getQuoteChar());
-            if(null == cells || cells.isEmpty())
-                return null; // Empty line
+            if(null == cells || cells.isEmpty()) {
+                // Empty line. It is consumed here, without reset, so that it is skipped.
+                emptyLineConsumed = true;
+                return null;
+            }
             // We only peek into the line to follow.
             try {
                 if (cells.size() <= maxControlPos)
@@ -81,6 +86,15 @@ class CsvLineParserMatcher {
      * Private internal class used to point to a control cell within a schema line.
      */
     private record CsvControlCell (int pos, CsvSchemaCell schemaCell) {}
+
+    /**
+     * @return True if the last call to {@link #makeLineParserIfMatching(CsvLineReader)} returned null because the line
+     * was empty. In that case the empty line has been consumed from the reader, so no other matcher should be tested
+     * for it, since that would read the line that follows instead.
+     */
+    boolean isEmptyLineConsumed() {
+        return emptyLineConsumed;
+    }
 
     /**
      * @return True if this line schema can be used regarding number of occurrences. False if number of occurrences are
