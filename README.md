@@ -19,6 +19,7 @@ easier to maintain and increases flexibility.
 
 * [Announcements](https://github.com/org-tigris-jsapar/jsapar/wiki/Announcements)
 * [Documentation](https://org-tigris-jsapar.github.io/jsapar/)
+* [Why JSaPar](https://org-tigris-jsapar.github.io/jsapar/why_jsapar) - What makes it different and when to use something else
 * [Deep Wiki - AI generated project overview](https://deepwiki.com/org-tigris-jsapar/jsapar)
 * [Release notes](https://org-tigris-jsapar.github.io/jsapar/release_notes)
 * [Javadocs API documentation](https://javadoc.io/doc/org.tigris.jsapar/jsapar)

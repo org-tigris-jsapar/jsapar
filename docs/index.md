@@ -64,6 +64,7 @@ join and split cells that do not fit a bean property one-to-one.
 
 ## Documentation
 * [Release notes](release_notes)
+* [Why JSaPar](why_jsapar) - What makes it different and when to use something else
 * [Introduction](introduction)
 * [Basics](basics)
 * [Basics of Schema](basics_schema)
