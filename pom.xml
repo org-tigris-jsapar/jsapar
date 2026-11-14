@@ -214,6 +214,79 @@
 	</build>
 
 	<profiles>
+		<!--
+			JMH benchmarks in src/jmh/java. Not part of the normal build.
+
+			mvn -Pbench test-compile exec:exec
+			mvn -Pbench test-compile exec:exec -Djmh.args="ParseBenchmark -p format=CSV"
+		 -->
+		<profile>
+			<id>bench</id>
+			<properties>
+				<jmh.version>1.37</jmh.version>
+				<jmh.args/>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.openjdk.jmh</groupId>
+					<artifactId>jmh-core</artifactId>
+					<version>${jmh.version}</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.openjdk.jmh</groupId>
+					<artifactId>jmh-generator-annprocess</artifactId>
+					<version>${jmh.version}</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>3.8.0</version>
+						<executions>
+							<execution>
+								<id>add-jmh-sources</id>
+								<phase>generate-test-sources</phase>
+								<goals>
+									<goal>add-test-source</goal>
+								</goals>
+								<configuration>
+									<sources>
+										<source>src/jmh/java</source>
+									</sources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<annotationProcessorPaths>
+								<path>
+									<groupId>org.openjdk.jmh</groupId>
+									<artifactId>jmh-generator-annprocess</artifactId>
+									<version>${jmh.version}</version>
+								</path>
+							</annotationProcessorPaths>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>3.7.0</version>
+						<configuration>
+							<executable>java</executable>
+							<classpathScope>test</classpathScope>
+							<commandlineArgs>-cp %classpath org.openjdk.jmh.Main -rf json -rff ${project.build.directory}/jmh-result.json ${jmh.args}</commandlineArgs>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
   <scm>

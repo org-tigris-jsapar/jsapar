@@ -20,6 +20,17 @@ mvn test -Dtest=TextParserTest#testParse         # single test method
 mvn javadoc:javadoc                              # doclint is enabled (accessibility,html,reference,syntax) — broken javadoc fails the release build
 ```
 
+### Benchmarks
+
+JMH benchmarks live in `src/jmh/java` (`ParseBenchmark`, `ComposeBenchmark`, parameterized by `format` × `content`; score = lines/s). They are only compiled with the `bench` profile, so JMH never becomes a dependency of the normal build:
+
+```bash
+mvn -Pbench test-compile exec:exec                                               # all benchmarks (~4 min)
+mvn -Pbench test-compile exec:exec -Djmh.args="ParseBenchmark -p format=CSV -f 3"   # subset; -f 3 for before/after comparisons
+```
+
+Results are written to `target/jmh-result.json`. Single-fork compose results are noisy; use several forks when comparing.
+
 Tests use **JUnit 6** Jupiter (`org.junit.jupiter.api.Test`, `Assertions`; use `assertThrows` for expected exceptions). Some tests (e.g. `JSaParExamplesTest`) read files from `examples/` via relative paths, so tests must run with the project root as working directory.
 
 Releases: `mvn release:prepare release:perform` (tag format is the bare version, e.g. `2.5.0`). Branches: `master` = released, `develop` = next version; `X.Y` branches for older maintenance lines.
