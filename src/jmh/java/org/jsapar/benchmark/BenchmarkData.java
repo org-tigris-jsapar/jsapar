@@ -23,18 +23,52 @@ public final class BenchmarkData {
 
     private static final String[] CITIES = {"Stockholm", "Göteborg", "Malmö", "Uppsala", "Västerås"};
 
-    public enum Format {CSV, FIXED_WIDTH}
+    enum Format {CSV, FIXED_WIDTH}
 
     /**
      * <ul>
      *     <li>STRINGS - eight plain string cells, nothing to convert.</li>
      *     <li>TYPED - integer, decimal, local date and boolean cells mixed with strings.</li>
-     *     <li>QUOTED - string cells where every third value contains the cell separator or a quote. Only differs from
-     *     STRINGS for CSV.</li>
+     *     <li>QUOTED - string cells where every third value contains the cell separator or a quote. CSV only, since
+     *     fixed width has no quoting.</li>
      *     <li>WIDE - the TYPED cells repeated four times, 32 cells per line.</li>
      * </ul>
      */
-    public enum Content {STRINGS, TYPED, QUOTED, WIDE}
+    enum Content {STRINGS, TYPED, QUOTED, WIDE}
+
+    /**
+     * The format and content combinations to benchmark. A single parameter instead of one for format and one for
+     * content, since JMH runs every combination of parameters and quoted content only makes sense for CSV.
+     */
+    public enum Data {
+        CSV_STRINGS(Format.CSV, Content.STRINGS),
+        CSV_TYPED(Format.CSV, Content.TYPED),
+        CSV_QUOTED(Format.CSV, Content.QUOTED),
+        CSV_WIDE(Format.CSV, Content.WIDE),
+        FIXED_WIDTH_STRINGS(Format.FIXED_WIDTH, Content.STRINGS),
+        FIXED_WIDTH_TYPED(Format.FIXED_WIDTH, Content.TYPED),
+        FIXED_WIDTH_WIDE(Format.FIXED_WIDTH, Content.WIDE);
+
+        final Format format;
+        final Content content;
+
+        Data(Format format, Content content) {
+            this.format = format;
+            this.content = content;
+        }
+
+        Schema<?> schema() {
+            return BenchmarkData.schema(format, content);
+        }
+
+        String input() throws IOException {
+            return BenchmarkData.input(format, content);
+        }
+
+        List<Line> lines(String input) throws IOException {
+            return BenchmarkData.lines(format, content, input);
+        }
+    }
 
     private BenchmarkData() {
     }

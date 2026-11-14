@@ -28,18 +28,15 @@ import java.util.concurrent.TimeUnit;
 public class ComposeBenchmark {
 
     @Param
-    public BenchmarkData.Format format;
-
-    @Param
-    public BenchmarkData.Content content;
+    public BenchmarkData.Data data;
 
     private Schema<?> schema;
     private List<Line> lines;
 
     @Setup
     public void setup() throws IOException {
-        schema = BenchmarkData.schema(format, content);
-        lines = BenchmarkData.lines(format, content, BenchmarkData.input(format, content));
+        schema = data.schema();
+        lines = data.lines(data.input());
     }
 
     @Benchmark

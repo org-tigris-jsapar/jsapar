@@ -22,19 +22,16 @@ import java.util.concurrent.TimeUnit;
 public class ParseBenchmark {
 
     @Param
-    public BenchmarkData.Format format;
-
-    @Param
-    public BenchmarkData.Content content;
+    public BenchmarkData.Data data;
 
     private Schema<?> schema;
     private String input;
 
     @Setup
     public void setup() throws IOException {
-        schema = BenchmarkData.schema(format, content);
-        input = BenchmarkData.input(format, content);
-        BenchmarkData.lines(format, content, input); // Verifies that the input parses as expected.
+        schema = data.schema();
+        input = data.input();
+        data.lines(input); // Verifies that the input parses as expected.
     }
 
     @Benchmark

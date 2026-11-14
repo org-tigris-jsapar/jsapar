@@ -22,11 +22,11 @@ mvn javadoc:javadoc                              # doclint is enabled (accessibi
 
 ### Benchmarks
 
-JMH benchmarks live in `src/jmh/java` (`ParseBenchmark`, `ComposeBenchmark`, parameterized by `format` × `content` (STRINGS, TYPED, QUOTED, WIDE = 32 cells); score = lines/s). They are only compiled with the `bench` profile, so JMH never becomes a dependency of the normal build:
+JMH benchmarks live in `src/jmh/java` (`ParseBenchmark`, `ComposeBenchmark`, parameterized by `data`: `CSV_` or `FIXED_WIDTH_` + `STRINGS`, `TYPED`, `WIDE` (32 cells), plus `CSV_QUOTED`; score = lines/s). They are only compiled with the `bench` profile, so JMH never becomes a dependency of the normal build:
 
 ```bash
 mvn -Pbench test-compile exec:exec                                               # all benchmarks (~4 min)
-mvn -Pbench test-compile exec:exec -Djmh.args="ParseBenchmark -p format=CSV -f 3"   # subset; -f 3 for before/after comparisons
+mvn -Pbench test-compile exec:exec -Djmh.args="ParseBenchmark -p data=CSV_TYPED,CSV_WIDE -f 3"   # subset; -f 3 for before/after comparisons
 ```
 
 Results are written to `target/jmh-result.json`. Single-fork compose results are noisy; use several forks when comparing.
