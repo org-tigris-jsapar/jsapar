@@ -13,7 +13,7 @@ import java.io.Writer;
 final public class FixedWidthComposer extends AbstractSchemaComposer implements SchemaComposer {
 
     public FixedWidthComposer(Writer writer, FixedWidthSchema schema) {
-        super(writer, schema, schemaLine -> new FixedWidthLineComposer(writer, (FixedWidthSchemaLine) schemaLine));
+        super(writer, schema, (lineWriter, schemaLine) -> new FixedWidthLineComposer(lineWriter, (FixedWidthSchemaLine) schemaLine));
     }
 
 

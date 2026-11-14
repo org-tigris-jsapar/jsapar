@@ -17,7 +17,8 @@ public class IntegerCellFactory extends NumberCellFactory {
     @Override
     public Cell<Number> makeCell(String name, String value, Format<Number> format) throws ParseException {
         Number number = super.parseNumber(format, value);
-        return new IntegerCell(name, number.longValue());
+        // Avoid boxing a second time if it already is a Long.
+        return new IntegerCell(name, number instanceof Long ? number : Long.valueOf(number.longValue()));
     }
 
     @Override

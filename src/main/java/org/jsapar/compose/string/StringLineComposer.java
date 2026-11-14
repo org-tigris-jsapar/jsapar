@@ -18,7 +18,7 @@ class StringLineComposer {
     }
 
     Stream<String> composeStringLine(Line line) {
-        return cellComposers.stream().map(f -> f.compose(line.getCell(f.getName()).orElse(f.makeEmptyCell())));
+        return cellComposers.stream().map(f -> f.compose(line.getCellOrDefault(f.getName(), f.makeEmptyCell())));
     }
 
     boolean isIgnoreWrite(){

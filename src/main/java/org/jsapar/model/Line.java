@@ -25,7 +25,8 @@ import java.util.stream.Stream;
 public class Line implements Cloneable, Iterable<Cell<?>> {
 
     private Map<String, Cell<?>> cells;
-    private Map<String, CellParseException> cellErrors = new LinkedHashMap<>();
+    /** Created lazily since most lines never get any errors. */
+    private Map<String, CellParseException> cellErrors;
 
     /**
      * Line type.
@@ -98,11 +99,10 @@ public class Line implements Cloneable, Iterable<Cell<?>> {
      * @see #putCell(Cell)
      */
     public Line addCell(Cell<?> cell) {
-        Cell<?> oldCell = cells.get(cell.getName());
+        Cell<?> oldCell = cells.putIfAbsent(cell.getName(), cell);
         if (oldCell != null)
             throw new IllegalStateException(
                     "A cell with the name '" + cell.getName() + "' already exists. Failed to add cell.");
-        this.cells.put(cell.getName(), cell);
         return this;
     }
 
@@ -152,6 +152,20 @@ public class Line implements Cloneable, Iterable<Cell<?>> {
      */
     public Optional<Cell<?>> getCell(String name) {
         return Optional.ofNullable(this.cells.get(name));
+    }
+
+    /**
+     * Same as {@link #getCell(String)} but without wrapping the result in an {@link Optional}. Useful in performance
+     * critical loops.
+     *
+     * @param name        The name of the cell to get
+     * @param defaultCell The cell to return if there is no cell with specified name. May be null.
+     * @return The cell with specified name or defaultCell if there is no such cell within this line.
+     * @since 2.5
+     */
+    public Cell<?> getCellOrDefault(String name, Cell<?> defaultCell) {
+        Cell<?> cell = this.cells.get(name);
+        return cell != null ? cell : defaultCell;
     }
 
     /**
@@ -277,7 +291,7 @@ public class Line implements Cloneable, Iterable<Cell<?>> {
 
         // No need to make a deep copy since cells are all final.
         clone.cells = new LinkedHashMap<>(this.cells);
-        clone.cellErrors  = new LinkedHashMap<>(this.cellErrors);
+        clone.cellErrors = this.cellErrors == null ? null : new LinkedHashMap<>(this.cellErrors);
 
         return clone;
     }
@@ -286,6 +300,8 @@ public class Line implements Cloneable, Iterable<Cell<?>> {
      * @param error The cell error to add.
      */
     public void addCellError(CellParseException error) {
+        if (this.cellErrors == null)
+            this.cellErrors = new LinkedHashMap<>();
         this.cellErrors.put(error.getCellName(), error);
     }
 
@@ -293,7 +309,7 @@ public class Line implements Cloneable, Iterable<Cell<?>> {
      * @return True if the line has errors on any of the cells.
      */
     public boolean hasCellErrors(){
-        return !this.cellErrors.isEmpty();
+        return this.cellErrors != null && !this.cellErrors.isEmpty();
     }
 
     /**
@@ -301,7 +317,7 @@ public class Line implements Cloneable, Iterable<Cell<?>> {
      * @return If there is an error for the given cell name, that error is returned.The error with the given cell name.
      */
     public Optional<CellParseException> getCellError(String cellName){
-        return Optional.ofNullable(cellErrors.get(cellName));
+        return cellErrors == null ? Optional.empty() : Optional.ofNullable(cellErrors.get(cellName));
     }
 
     /**
@@ -309,7 +325,7 @@ public class Line implements Cloneable, Iterable<Cell<?>> {
      * @return All cell errors of this line.
      */
     public Collection<CellParseException> getCellErrors(){
-        return cellErrors.values();
+        return cellErrors == null ? Collections.emptyList() : cellErrors.values();
     }
 
     /**

@@ -11,7 +11,7 @@ import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -22,6 +22,7 @@ public abstract class AbstractSchemaComposer implements SchemaComposer{
     private final Writer writer;
     private final Schema<? extends SchemaLine<? extends SchemaCell>> schema;
     private final Map<String, LineComposer> lineComposers;
+    private final LineBuffer lineBuffer = new LineBuffer();
 
     /**
      * @param writer The writer to write output to
@@ -29,10 +30,17 @@ public abstract class AbstractSchemaComposer implements SchemaComposer{
      * @param lineComposerCreator A {@link Function} that takes a {@link SchemaLine} as argument and returns a newly created
      *                            {@link LineComposer} that uses that schema line.
      */
-    public AbstractSchemaComposer(Writer writer, Schema<? extends SchemaLine<? extends SchemaCell>> schema, Function<SchemaLine<? extends SchemaCell>, LineComposer> lineComposerCreator) {
+    /**
+     * @param writer              The writer to write composed lines to.
+     * @param schema              The schema.
+     * @param lineComposerCreator Creates a line composer for a schema line. The line composer must write to the writer
+     *                            supplied to this function, which buffers each line before it is written to the
+     *                            actual writer.
+     */
+    public AbstractSchemaComposer(Writer writer, Schema<? extends SchemaLine<? extends SchemaCell>> schema, BiFunction<Writer, SchemaLine<? extends SchemaCell>, LineComposer> lineComposerCreator) {
         this.writer = writer;
         this.schema = schema;
-        lineComposers = schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, lineComposerCreator));
+        lineComposers = schema.stream().collect(Collectors.toMap(SchemaLine::getLineType, schemaLine -> lineComposerCreator.apply(lineBuffer, schemaLine)));
     }
 
     /**
@@ -67,7 +75,14 @@ public abstract class AbstractSchemaComposer implements SchemaComposer{
         LineComposer lineComposer = lineComposers.get(line.getLineType());
         if (lineComposer == null || lineComposer.ignoreWrite())
             return false;
-        lineComposer.compose(line);
+        try {
+            lineComposer.compose(line);
+            lineBuffer.writeTo(writer);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        } finally {
+            lineBuffer.clear(); // Discard any partial line if composing failed.
+        }
         return true;
     }
 

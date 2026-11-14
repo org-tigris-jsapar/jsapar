@@ -15,6 +15,13 @@ title: Release notes
 7. Fixed problem with line condition in combination with first-line-as-schema.
 8. Fixed: Composing a `DECIMAL` cell without a pattern rounded the value to one decimal, e.g. `1234.56` was written as `1234.6`. All decimals are now kept.
 9. Fixed: `TextParseConfig.setMaxCellCacheSize()` always set the cache size to at least 100. The value is now limited to the documented range 0-100, where 0 (or negative) disables the cache.
+10. Performance improvements while parsing and composing:
+    * Faster parsing of `LOCAL_DATE`, `LOCAL_TIME` and `LOCAL_DATE_TIME` cells with the default ISO format.
+    * Faster parsing and composing of `DECIMAL` cells without pattern in locales that use `.` as decimal separator.
+    * Less memory allocated per parsed line.
+    * Each composed line is written to the `Writer` in one call instead of one or more calls per cell. If composing
+      a line fails with an exception, nothing of that line is written.
+11. Added `Line.getCellOrDefault(String, Cell)` that returns a cell without wrapping it in an `Optional`.
 
 ## 2.4
 1. Built with and for Java 17. Support for Java 11 and below is dropped.

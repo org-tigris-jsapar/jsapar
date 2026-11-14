@@ -94,7 +94,7 @@ final class CsvLineComposer implements LineComposer {
             Iterator<CsvCellComposer> iter = cellComposers.iterator();
             while (iter.hasNext()) {
                 CsvCellComposer cellComposer = iter.next();
-                Cell<?> cell = line.getCell(cellComposer.getName()).orElse(cellComposer.makeEmptyCell());
+                Cell<?> cell = line.getCellOrDefault(cellComposer.getName(), cellComposer.makeEmptyCell());
                 cellComposer.compose(writer, cell);
 
                 if (iter.hasNext())

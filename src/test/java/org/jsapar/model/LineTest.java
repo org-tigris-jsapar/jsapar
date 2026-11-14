@@ -193,4 +193,46 @@ public class LineTest {
         });
     }
 
+
+    @Test
+    public void testGetCellOrDefault() {
+        Line line = new Line("TestLine");
+        StringCell cell = new StringCell("a", "value");
+        line.addCell(cell);
+        StringCell defaultCell = new StringCell("b", "default");
+        assertSame(cell, line.getCellOrDefault("a", defaultCell));
+        assertSame(defaultCell, line.getCellOrDefault("b", defaultCell));
+        assertNull(line.getCellOrDefault("b", null));
+    }
+
+    @Test
+    public void testCellErrors_noErrors() {
+        Line line = new Line("TestLine");
+        assertFalse(line.hasCellErrors());
+        assertTrue(line.getCellErrors().isEmpty());
+        assertFalse(line.getCellError("a").isPresent());
+        Line clone = line.clone();
+        assertFalse(clone.hasCellErrors());
+        assertTrue(clone.getCellErrors().isEmpty());
+    }
+
+    @Test
+    public void testCellErrors_cloneIsIndependent() {
+        Line line = new Line("TestLine");
+        line.addCellError(new CellParseException("a", "x", null, "error a"));
+        Line clone = line.clone();
+        clone.addCellError(new CellParseException("b", "y", null, "error b"));
+        assertEquals(1, line.getCellErrors().size());
+        assertEquals(2, clone.getCellErrors().size());
+        assertTrue(line.getCellError("a").isPresent());
+    }
+
+    @Test
+    public void testAddCell_duplicateKeepsOriginal() {
+        Line line = new Line("TestLine");
+        StringCell first = new StringCell("a", "first");
+        line.addCell(first);
+        assertThrows(IllegalStateException.class, () -> line.addCell(new StringCell("a", "second")));
+        assertSame(first, line.getExistingCell("a"));
+    }
 }
