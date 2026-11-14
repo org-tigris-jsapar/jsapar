@@ -4,6 +4,7 @@ import org.jsapar.error.JSaParException;
 import org.jsapar.model.*;
 import org.jsapar.parse.cell.CellParser;
 import org.jsapar.schema.SchemaCellFormat;
+import org.jsapar.utils.XmlTypes;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -23,7 +24,7 @@ public class XmlParseSpliterator implements Spliterator<Line> {
 
     public XmlParseSpliterator(Reader reader) {
         try {
-            XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+            XMLInputFactory inputFactory = XmlTypes.secure(XMLInputFactory.newInstance());
             streamReader = inputFactory.createXMLStreamReader(reader);
         } catch (XMLStreamException e) {
             throw new JSaParException("Failed to initialize xml stream reader", e);

@@ -16,6 +16,11 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
 
     /**
      * This implementation creates the bean by using Class.forName method on the line type.
+     * <p>
+     * Since any class with a public default constructor can be instantiated this way, this factory should only be
+     * used when the line types originate from a trusted source such as a schema. Use {@link BeanFactoryByMap} or
+     * your own implementation of {@link BeanFactory} if line types originate from untrusted input, for instance
+     * when parsing xml documents with {@code org.jsapar.parse.xml.XmlParser}.
      * @see BeanFactory#createBean(Line)
      */
     @SuppressWarnings("unchecked")
@@ -67,6 +72,7 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
             InvocationTargetException {
         String getterMethodName = createGetMethodName(childBeanName);
         Method getterMethod = parentBean.getClass().getMethod(getterMethodName);
+        denyObjectMethod(getterMethod, childBeanName);
         Object childBean = getterMethod.invoke(parentBean);
         if (childBean == null) {
             // If there was no object we have to create it.
@@ -77,6 +83,17 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
             parentBean.getClass().getMethod(setterMethodName, nextClass).invoke(parentBean, childBean);
         }
         return childBean;
+    }
+
+    /**
+     * Denies access to methods declared by {@link Object}, such as {@code getClass()}. Otherwise, a cell name such as
+     * {@code class.classLoader.x} could be used to reach and alter objects outside the bean.
+     * @param method The method to check
+     * @param propertyName The property name that resolved to the method.
+     */
+    private static void denyObjectMethod(Method method, String propertyName) throws NoSuchMethodException {
+        if (method.getDeclaringClass() == Object.class)
+            throw new NoSuchMethodException("The property '" + propertyName + "' is not a bean property");
     }
 
     /**

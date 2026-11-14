@@ -25,6 +25,15 @@ title: Release notes
 10. Added `Line.getCellOrDefault(String, Cell)` that returns a cell without wrapping it in an `Optional`.
 11. Fixed: Parsing `NaN` or infinity into a `DECIMAL` cell caused a `ClassCastException` instead of a cell parse error.
 12. Fixed: `LineUtils.getDecimalCellValue()` threw `ClassCastException` for integer cells. Integer values are now converted without loss of precision.
+13. Security: All xml parsing (`XmlParser`, `Xml2TextConverter`, loading of schemas and bean maps from xml) now rejects
+    xml that contains a `DOCTYPE` declaration and no longer resolves external entities or loads external DTDs. This
+    protects against XML external entity (XXE) attacks where a crafted xml could read local files or make network
+    requests. Xml input that contains a `DOCTYPE` declaration is no longer accepted.
+14. Security: `BeanFactoryDefault` no longer allows cell names that navigate through methods of `java.lang.Object`,
+    such as `class.classLoader.xxx`. Note that `BeanFactoryDefault` still creates beans by using the line type as class
+    name, so it should only be used when line types originate from a trusted source such as a schema.
+15. Fixed: `XmlParser.parse()` and `XmlParser.parseForEach()` failed with a `NullPointerException` or truncated the cell
+    value when the text of a cell contained entity references such as `&lt;` or `&amp;`.
 
 ## 2.4
 1. Built with and for Java 17. Support for Java 11 and below is dropped.

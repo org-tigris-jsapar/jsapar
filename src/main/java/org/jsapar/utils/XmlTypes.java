@@ -7,9 +7,13 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.validation.SchemaFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -23,6 +27,72 @@ public interface XmlTypes {
     String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
     String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
     String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
+    /**
+     * Parser feature that makes the parser reject any xml that contains a DOCTYPE declaration.
+     */
+    String FEATURE_DISALLOW_DOCTYPE = "http://apache.org/xml/features/disallow-doctype-decl";
+
+    /**
+     * Protects against XML external entity (XXE) attacks by rejecting DOCTYPE declarations and denying access to
+     * external DTDs. None of the xml formats used by this library needs a DTD.
+     * <p>
+     * Access to external schemas is deliberately not restricted here, since that makes the parser reject every
+     * document that has a {@code xsi:schemaLocation} hint for the name space of the schema that is already
+     * supplied, even though that location is never loaded.
+     *
+     * @param factory The factory to make secure.
+     * @return The supplied factory.
+     * @throws ParserConfigurationException If the parser does not support the required features.
+     */
+    static DocumentBuilderFactory secure(DocumentBuilderFactory factory) throws ParserConfigurationException {
+        factory.setFeature(FEATURE_DISALLOW_DOCTYPE, true);
+        factory.setXIncludeAware(false);
+        factory.setExpandEntityReferences(false);
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        return factory;
+    }
+
+    /**
+     * Protects against XML external entity (XXE) attacks by rejecting DOCTYPE declarations.
+     *
+     * @param factory The factory to make secure.
+     * @return The supplied factory.
+     * @throws ParserConfigurationException If the parser does not support the required features.
+     * @throws SAXException                 If the parser does not support the required features.
+     */
+    static SAXParserFactory secure(SAXParserFactory factory) throws ParserConfigurationException, SAXException {
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        factory.setFeature(FEATURE_DISALLOW_DOCTYPE, true);
+        factory.setXIncludeAware(false);
+        return factory;
+    }
+
+    /**
+     * Protects against XML external entity (XXE) attacks by denying access to external DTDs and schemas while
+     * loading an xml schema.
+     *
+     * @param factory The factory to make secure.
+     * @return The supplied factory.
+     * @throws SAXException If the factory does not support the required properties.
+     */
+    static SchemaFactory secure(SchemaFactory factory) throws SAXException {
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        return factory;
+    }
+
+    /**
+     * Protects against XML external entity (XXE) attacks by disabling DTD support and external entities.
+     *
+     * @param factory The factory to make secure.
+     * @return The supplied factory.
+     */
+    static XMLInputFactory secure(XMLInputFactory factory) {
+        factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+        factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+        return factory;
+    }
 
     /**
      * Utility function to retrieve first matching child element.
@@ -127,8 +197,8 @@ public interface XmlTypes {
 
     }
 
-    default DocumentBuilderFactory makeDocumentBuilderFactory(InputStream schemaStream) {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    default DocumentBuilderFactory makeDocumentBuilderFactory(InputStream schemaStream) throws ParserConfigurationException {
+        DocumentBuilderFactory factory = secure(DocumentBuilderFactory.newInstance());
         factory.setIgnoringElementContentWhitespace(true);
         factory.setIgnoringComments(true);
         factory.setCoalescing(true);

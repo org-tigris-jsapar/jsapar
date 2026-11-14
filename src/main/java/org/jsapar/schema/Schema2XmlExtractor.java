@@ -64,7 +64,7 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
      */
     private Document extractXmlDocument(Schema<?> schema) throws SchemaException {
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory factory = XmlTypes.secure(DocumentBuilderFactory.newInstance());
             factory.setIgnoringElementContentWhitespace(true);
             factory.setIgnoringComments(true);
             factory.setCoalescing(true);

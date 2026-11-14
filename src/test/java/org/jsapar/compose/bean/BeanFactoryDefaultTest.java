@@ -1,6 +1,7 @@
 package org.jsapar.compose.bean;
 
 import org.jsapar.TstPerson;
+import org.jsapar.model.BooleanCell;
 import org.jsapar.model.IntegerCell;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
@@ -45,6 +46,20 @@ public class BeanFactoryDefaultTest {
         assertEquals("Nils", person.getFirstName());
         beanFactory.assignCellToBean(lineType, person, new IntegerCell("luckyNumber", 4711));
         assertEquals(4711, person.getLuckyNumber());
+    }
+
+    @Test
+    public void assignCellToBean_classPropertyIsDenied() {
+        String lineType = "org.jsapar.TstPerson";
+        BeanFactoryDefault<TstPerson> beanFactory = new BeanFactoryDefault<>();
+        TstPerson person = new TstPerson();
+
+        for (String name : new String[]{"class.classLoader.defaultAssertionStatus", "Class.classLoader.defaultAssertionStatus",
+                "address.class.classLoader.defaultAssertionStatus"}) {
+            BeanComposeException e = assertThrows(BeanComposeException.class,
+                    () -> beanFactory.assignCellToBean(lineType, person, new BooleanCell(name, true)), name);
+            assertInstanceOf(NoSuchMethodException.class, e.getCause(), name);
+        }
     }
 
     @Test

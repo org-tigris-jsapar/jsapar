@@ -11,6 +11,7 @@ import org.jsapar.parse.ParseTask;
 import org.jsapar.parse.cell.CellParser;
 import org.jsapar.schema.SchemaCellFormat;
 import org.jsapar.schema.Xml2SchemaBuilder;
+import org.jsapar.utils.XmlTypes;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -53,11 +54,11 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
             throw new FileNotFoundException("Could not find schema resource: " + schemaFileName);
 
         try {
-            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            SchemaFactory schemaFactory = XmlTypes.secure(SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI));
             StreamSource ss = new StreamSource(schemaStream);
             Schema schema = schemaFactory.newSchema(ss);
 
-            SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+            SAXParserFactory parserFactory = XmlTypes.secure(SAXParserFactory.newInstance());
             parserFactory.setNamespaceAware(true);
             parserFactory.setSchema(schema);
 
@@ -84,6 +85,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
         private String   currentCellName;
         private Cell<?>     currentCell;
         private boolean            cellStarted = false;
+        private final StringBuilder cellText = new StringBuilder();
         private final Consumer<Line>            listener;
         private final Consumer<JSaParException> errorEventListener;
         private long                      currentLineNumber = 1;
@@ -103,6 +105,8 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
         public void endElement(String uri, String localName, String name) throws SAXException {
             try {
                 if (localName.equals("cell")) {
+                    if (!this.cellText.isEmpty())
+                        makeCurrentCell(this.cellText.toString());
                     this.currentLine.addCell(this.currentCell);
                     this.currentCell = null;
                     this.cellStarted = false;
@@ -128,6 +132,7 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
             switch (localName) {
                 case "cell" -> {
                     cellStarted = true;
+                    this.cellText.setLength(0);
                     this.currentCellName = attributes.getValue("name");
                     this.currentCellType = makeCellType(attributes.getValue("type"));
                     if (this.currentCellType == null)
@@ -151,21 +156,25 @@ public class XmlParseTask extends AbstractParseTask implements ParseTask {
          * @see org.xml.sax.helpers.DefaultHandler#characters(char[], int, int)
          */
         @Override
-        public void characters(char[] ch, int start, int length) throws SAXException {
-            if (this.cellStarted) {
-                String sValue = new String(ch, start, length);
-                try {
-                    if (this.currentCellType == CellType.DATE) {
-                        this.makeDateCell(sValue);
-                    } else {
-                        this.currentCell = CellParser
-                                .makeCell(this.currentCellType, this.currentCellName, sValue, SchemaCellFormat.defaultLocale);
-                    }
-                    this.currentCellType = null;
-                    this.currentCellName = null;
-                } catch (Exception e) {
-                    throw new SAXException("Failed to parse cell value", e);
+        public void characters(char[] ch, int start, int length) {
+            // The parser may deliver the text of one cell in several chunks, for instance when it contains
+            // entity references such as "&lt;", so the cell cannot be created until the end of the element.
+            if (this.cellStarted)
+                this.cellText.append(ch, start, length);
+        }
+
+        private void makeCurrentCell(String sValue) throws SAXException {
+            try {
+                if (this.currentCellType == CellType.DATE) {
+                    this.makeDateCell(sValue);
+                } else {
+                    this.currentCell = CellParser
+                            .makeCell(this.currentCellType, this.currentCellName, sValue, SchemaCellFormat.defaultLocale);
                 }
+                this.currentCellType = null;
+                this.currentCellName = null;
+            } catch (Exception e) {
+                throw new SAXException("Failed to parse cell value", e);
             }
         }
 
