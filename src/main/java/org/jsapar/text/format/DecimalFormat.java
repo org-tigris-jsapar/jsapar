@@ -21,13 +21,25 @@ public class DecimalFormat implements Format<BigDecimal> {
     }
 
     public DecimalFormat(Locale locale) {
-        this("0.#", locale);
+        this(unlimitedFractionDigits(new java.text.DecimalFormat("0.#", DecimalFormatSymbols.getInstance(locale))));
     }
 
     DecimalFormat(String pattern, DecimalFormatSymbols decimalFormatSymbols) {
-        java.text.DecimalFormat textFormat = new java.text.DecimalFormat(pattern, decimalFormatSymbols);
+        this(new java.text.DecimalFormat(pattern, decimalFormatSymbols));
+    }
+
+    private DecimalFormat(java.text.DecimalFormat textFormat) {
         textFormat.setParseBigDecimal(true);
         this.numberFormat = new NumberFormat(textFormat, CellType.FLOAT);
+    }
+
+    /**
+     * Without an explicit pattern, all decimals of the value must be kept when composing. The pattern "0.#" alone would
+     * round to one decimal.
+     */
+    private static java.text.DecimalFormat unlimitedFractionDigits(java.text.DecimalFormat textFormat) {
+        textFormat.setMaximumFractionDigits(Integer.MAX_VALUE);
+        return textFormat;
     }
 
     @Override

@@ -13,6 +13,8 @@ title: Release notes
 5. Added `requires transitive java.xml` to module descriptor.
 6. Eliminated all compiler warnings (raw types, unchecked casts, missing explicit constructors, non-serializable fields, module exports, this-escape, ambiguous overloads).
 7. Fixed problem with line condition in combination with first-line-as-schema.
+8. Fixed: Composing a `DECIMAL` cell without a pattern rounded the value to one decimal, e.g. `1234.56` was written as `1234.6`. All decimals are now kept.
+9. Fixed: `TextParseConfig.setMaxCellCacheSize()` always set the cache size to at least 100. The value is now limited to the documented range 0-100, where 0 (or negative) disables the cache.
 
 ## 2.4
 1. Built with and for Java 17. Support for Java 11 and below is dropped.

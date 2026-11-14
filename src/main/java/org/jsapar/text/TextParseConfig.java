@@ -152,7 +152,7 @@ public class TextParseConfig {
      *                         where each cell on each line contains a unique value, you may gain some speed by disabling the cache.
      */
     public void setMaxCellCacheSize(int maxCellCacheSize) {
-        this.maxCellCacheSize = Math.max(maxCellCacheSize, 100);
+        this.maxCellCacheSize = Math.max(0, Math.min(maxCellCacheSize, 100));
     }
 
     /**
