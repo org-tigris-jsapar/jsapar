@@ -52,7 +52,7 @@ public class EnumCellFactory<E extends Enum<E>> implements CellFactory<E> {
     public int actualCacheMaxSize(SchemaCell schemaCell, int configuredCacheMaxSize) {
         Format<?> format = schemaCell.getFormat();
         if(format instanceof EnumFormat<?> enumFormat){
-            return enumFormat.numberOfTextValues();
+            return Math.min(configuredCacheMaxSize, enumFormat.numberOfTextValues());
         }
         return configuredCacheMaxSize;
     }

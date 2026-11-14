@@ -32,9 +32,11 @@ public final class BenchmarkData {
      *     <li>QUOTED - string cells where every third value contains the cell separator or a quote. CSV only, since
      *     fixed width has no quoting.</li>
      *     <li>WIDE - the TYPED cells repeated four times, 32 cells per line.</li>
+     *     <li>REPEATING - the TYPED cells but with values that repeat as in many real files: dates and cities in
+     *     sorted blocks, a few distinct amounts and mostly the same note. Id and first name are still unique.</li>
      * </ul>
      */
-    enum Content {STRINGS, TYPED, QUOTED, WIDE}
+    enum Content {STRINGS, TYPED, QUOTED, WIDE, REPEATING}
 
     /**
      * The format and content combinations to benchmark. A single parameter instead of one for format and one for
@@ -45,6 +47,7 @@ public final class BenchmarkData {
         CSV_TYPED(Format.CSV, Content.TYPED),
         CSV_QUOTED(Format.CSV, Content.QUOTED),
         CSV_WIDE(Format.CSV, Content.WIDE),
+        CSV_REPEATING(Format.CSV, Content.REPEATING),
         FIXED_WIDTH_STRINGS(Format.FIXED_WIDTH, Content.STRINGS),
         FIXED_WIDTH_TYPED(Format.FIXED_WIDTH, Content.TYPED),
         FIXED_WIDTH_WIDE(Format.FIXED_WIDTH, Content.WIDE);
@@ -81,7 +84,7 @@ public final class BenchmarkData {
     }
 
     private static boolean typed(Content content) {
-        return content == Content.TYPED || content == Content.WIDE;
+        return content == Content.TYPED || content == Content.WIDE || content == Content.REPEATING;
     }
 
     private static int groups(Content content) {
@@ -147,6 +150,10 @@ public final class BenchmarkData {
     private static String csvInput(Content content) {
         StringBuilder sb = new StringBuilder(LINES * 90 * groups(content));
         for (int i = 0; i < LINES; i++) {
+            if (content == Content.REPEATING) {
+                appendRepeatingLine(sb, i);
+                continue;
+            }
             for (int g = 0; g < groups(content); g++) {
                 if (g > 0)
                     sb.append(';');
@@ -165,6 +172,19 @@ public final class BenchmarkData {
             sb.append('\n');
         }
         return sb.toString();
+    }
+
+    private static void appendRepeatingLine(StringBuilder sb, int i) {
+        int day = i / 200; // 200 lines per date, as in a file sorted by date.
+        sb.append(i).append(';')
+                .append("Name").append(i % 977).append(';')
+                .append("Surname").append((i / 7) % 313).append(';')
+                .append(CITIES[(i / 50) % CITIES.length]).append(';')
+                .append((i % 20) * 25).append(".00").append(';')
+                .append("2024-").append(twoDigits(1 + (day / 28) % 12)).append('-').append(twoDigits(1 + day % 28)).append(';')
+                .append(i % 10 != 0).append(';')
+                .append(i % 10 == 0 ? "check " + i : "OK")
+                .append('\n');
     }
 
     private static String twoDigits(int i) {

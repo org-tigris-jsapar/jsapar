@@ -34,6 +34,12 @@ title: Release notes
     name, so it should only be used when line types originate from a trusted source such as a schema.
 15. Fixed: `XmlParser.parse()` and `XmlParser.parseForEach()` failed with a `NullPointerException` or truncated the cell
     value when the text of a cell contained entity references such as `&lt;` or `&amp;`.
+16. Changed default cell cache while parsing: string and character cells are no longer cached by default, which makes 
+    parsing of string cells faster. Other cell types still cache the last value, boolean cells 2 values. 
+    `TextParseConfig.getMaxCellCacheSize()` returns `AUTOMATIC_CELL_CACHE_SIZE` (-1) if not set. A configured cache size 
+    now applies to all cell types, so 0 disables the cache also for boolean and enum cells.
+17. The package `org.jsapar.parse.xml` is now exported by the module so that `XmlParser` can be used by applications 
+    that use Java modules.
 
 ## 2.4
 1. Built with and for Java 17. Support for Java 11 and below is dropped.

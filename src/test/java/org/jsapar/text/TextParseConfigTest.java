@@ -8,7 +8,7 @@ class TextParseConfigTest {
 
     @Test
     void maxCellCacheSize_default() {
-        assertEquals(1, new TextParseConfig().getMaxCellCacheSize());
+        assertEquals(TextParseConfig.AUTOMATIC_CELL_CACHE_SIZE, new TextParseConfig().getMaxCellCacheSize());
     }
 
     @Test

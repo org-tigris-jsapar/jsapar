@@ -2,6 +2,7 @@ package org.jsapar.parse.cell;
 
 import org.jsapar.model.Cell;
 import org.jsapar.model.StringCell;
+import org.jsapar.schema.SchemaCell;
 import org.jsapar.text.Format;
 
 import java.text.ParseException;
@@ -29,4 +30,12 @@ public class StringCellFactory implements CellFactory<String> {
         return pattern != null ? Format.ofStringInstance(pattern) : Format.ofStringInstance();
     }
 
+    /**
+     * @param schemaCell The schema cell to use.
+     * @return 0 since parsing is cheap and a cache hit only saves creating a small cell object.
+     */
+    @Override
+    public int defaultCacheMaxSize(SchemaCell schemaCell) {
+        return 0;
+    }
 }

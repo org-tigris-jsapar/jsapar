@@ -3,6 +3,7 @@ package org.jsapar.parse.fixed;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
+import org.jsapar.parse.line.CellCacheSize;
 import org.jsapar.parse.line.LineDecoratorErrorConsumer;
 import org.jsapar.parse.line.ValidationHandler;
 import org.jsapar.text.TextParseConfig;
@@ -36,7 +37,8 @@ final class FixedWidthLineParser {
     }
 
     private FixedWidthCellParser makeCellParser(FixedWidthSchemaCell fixedWidthSchemaCell) {
-        return FixedWidthCellParser.ofSchemaCell(fixedWidthSchemaCell, Math.min(config.getMaxCellCacheSize(), lineSchema.getOccurs() - 1));
+        return FixedWidthCellParser.ofSchemaCell(fixedWidthSchemaCell,
+                CellCacheSize.of(config.getMaxCellCacheSize(), lineSchema.getOccurs()));
     }
 
     boolean isIgnoreRead(){

@@ -13,5 +13,6 @@ module org.jsapar {
     exports org.jsapar.schema;
     exports org.jsapar.text;
     exports org.jsapar.parse.cell;
+    exports org.jsapar.parse.xml;
     exports org.jsapar.text.format;
 }

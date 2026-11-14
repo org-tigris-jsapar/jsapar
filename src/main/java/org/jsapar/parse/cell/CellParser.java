@@ -25,7 +25,12 @@ public class CellParser<S extends SchemaCell> {
     private final EmptyCell<?> emptyCell;
     private final CellFactory<?> cellFactory;
     private Format<?> format;
-    private final Cache<String, Cell<?>> cellCache ;
+    /**
+     * Null if caching is disabled. Then the cache is not called at all, which keeps the call site in
+     * {@link #makeCell(String)} limited to the two cache implementations that are actually in use, so that the JIT can
+     * inline them.
+     */
+    private final Cache<String, Cell<?>> cellCache;
     private static final String EMPTY_STRING = "";
 
 
@@ -40,7 +45,10 @@ public class CellParser<S extends SchemaCell> {
         CellType cellType = schemaCell.getCellFormat().getCellType();
         cellFactory = CellFactory.getInstance(cellType);
         assert cellFactory != null;
-        cellCache = Cache.ofMaxSize(cellFactory.actualCacheMaxSize(schemaCell, maxCacheSize));
+        int cacheSize = maxCacheSize < 0
+                ? cellFactory.defaultCacheMaxSize(schemaCell)
+                : cellFactory.actualCacheMaxSize(schemaCell, maxCacheSize);
+        cellCache = cacheSize > 0 ? Cache.ofMaxSize(cacheSize) : null;
         format = schemaCell.getFormat();
         if(format == null)
             format  = cellFactory.makeFormat(schemaCell.getLocale());
@@ -118,6 +126,8 @@ public class CellParser<S extends SchemaCell> {
                 return emptyCell;
             }
         }
+        if (cellCache == null)
+            return makeCellUnchecked(cellFactory, schemaCell.getName(), sValue, format);
         Cell<?> cell = cellCache.get(sValue);
         if(cell == null) {
             cell = makeCellUnchecked(cellFactory, schemaCell.getName(), sValue, format);

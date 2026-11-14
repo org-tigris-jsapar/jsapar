@@ -29,30 +29,15 @@ public class TextParseConfig {
     private ValidationAction onLineOverflow = ValidationAction.NONE;
 
     /**
-     * The maximum number of cell values that are cached while parsing. 0 or negative value means that caching is disabled. For inputs
-     * where each cell on each line contains a unique value, you may gain some speed by disabling the cache.
-     * <p>
-     * The default max cache size is 1 and the maximum value is 100. Setting a higher value will not have any further
-     * effect.
-     * <p>
-     * For each column or schema-cell the library knows that a distinct string value will always result in exactly the same cell value.
-     * <p>
-     * For example:
-     * <ul>
-     * <li>The string "2018-09-29" in a local-date cell will always be parsed as the same date and with a cell with the same name.</li>
-     * <li>The string "true" in a boolean cell will always be parsed to a cell with the same boolean value.</li>
-     * </ul>
-     * This means that the library can cache the last x number of read cell string values and map them to what cell was
-     * created and re-use that instance. The cell is immutable so it cannot be altered after creation.
-     * <p>
-     * In a normal scenario when parsing fixed width or CSV-files, many columns contain only a fix number of values. For
-     * those scenarios the library only have to create one distinct cell instance for every occurring value as long as it hits
-     * the cache. It reduces a lot of calls to new.
-     * <p>
-     * As usual when caching; some will gain and some will lose. In this case we gain a lot for columns where value does
-     * not change a lot but loose some for columns where each value is unique.
+     * @see #setMaxCellCacheSize(int)
      */
-    private int maxCellCacheSize = 1;
+    private int maxCellCacheSize = AUTOMATIC_CELL_CACHE_SIZE;
+
+    /**
+     * Value of {@link #getMaxCellCacheSize()} when no cache size is set and a default is chosen per cell type.
+     * @since 2.5
+     */
+    public static final int AUTOMATIC_CELL_CACHE_SIZE = -1;
 
     /**
      * The maximum number of characters that can occur on one line. Default is 8k. Since this size is used to allocate
@@ -116,8 +101,8 @@ public class TextParseConfig {
     }
 
     /**
-     * @return The maximum number of cell values that are cached while parsing. 0 or negative value means that caching is disabled. For inputs
-     * where each cell on each line contains a unique value, you may gain some speed by disabling the cache.
+     * @return The maximum number of cell values that are cached per cell while parsing, 0 if caching is disabled or
+     * {@link #AUTOMATIC_CELL_CACHE_SIZE} if not set, in which case a default is chosen per cell type.
      * @see #setMaxCellCacheSize(int)
      */
     public int getMaxCellCacheSize() {
@@ -125,31 +110,25 @@ public class TextParseConfig {
     }
 
     /**
-     * The maximum number of cell values that are cached while parsing. 0 or negative value means that caching is disabled. For inputs
-     * where each cell on each line contains a unique value, you may gain some speed by disabling the cache.
+     * The maximum number of cell values that are cached per cell (column) while parsing.
      * <p>
-     * The default max cache size is 1 and the maximum value is 100. Setting a higher value will not have any further
-     * effect.
+     * For each cell, the same text always results in the same cell value, so the library can remember the last parsed
+     * values of a cell and re-use those cell instances instead of parsing again. The cell is immutable so it cannot be
+     * altered after creation.
      * <p>
-     * For each column or schema-cell the library knows that a distinct string value will always result in exactly the same cell value.
+     * If not set, a default is chosen per cell type: 0 (no cache) for string and character cells, where parsing is
+     * cheap, 2 for boolean cells and 1 for all other cell types. Caching the last value only is cheap and pays off for
+     * columns where the same value often occurs on consecutive lines, for instance dates in a sorted file.
      * <p>
-     * For example:
-     * <ul>
-     * <li>The string "2018-09-29" in a local-date cell will always be parsed as the same date and with a cell with the same name.</li>
-     * <li>The string "true" in a boolean cell will always be parsed to a cell with the same boolean value.</li>
-     * </ul>
-     * This means that the library can cache the last x number of read cell string values and map them to what cell was
-     * created and re-use that instance. The cell is immutable so it cannot be altered after creation.
+     * A set value applies to all cell types, except that boolean cells never use more than 2 and enum cells never more
+     * than the number of enum text values. 0 disables the cache for all cell types. The maximum value is 100.
      * <p>
-     * In a normal scenario when parsing fixed width or CSV-files, many columns contain only a fix number of values. For
-     * those scenarios the library only have to create one distinct cell instance for every occurring value as long as it hits
-     * the cache. It reduces a lot of calls to new.
-     * <p>
-     * As usual when caching; some will gain and some will lose. In this case we gain a lot for columns where value does
-     * not change a lot but loose some for columns where each value is unique.
+     * Larger values do not make parsing faster, measurements show the opposite. They can however reduce memory usage
+     * when all parsed lines are kept in memory, for instance in a {@link org.jsapar.model.Document}, and the same
+     * values occur repeatedly but not on consecutive lines, since lines will then share the same cell instances.
      *
-     * @param maxCellCacheSize The maximum number of cell values that are cached while parsing. 0 or negative value means that caching is disabled. For inputs
-     *                         where each cell on each line contains a unique value, you may gain some speed by disabling the cache.
+     * @param maxCellCacheSize The maximum number of cell values that are cached per cell while parsing. Limited to the
+     *                         range 0-100 where 0 disables caching.
      */
     public void setMaxCellCacheSize(int maxCellCacheSize) {
         this.maxCellCacheSize = Math.clamp(maxCellCacheSize, 0, 100);

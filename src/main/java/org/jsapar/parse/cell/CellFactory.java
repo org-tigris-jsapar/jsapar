@@ -57,4 +57,15 @@ public interface CellFactory<T> {
     default int actualCacheMaxSize(SchemaCell schemaCell, int configuredCacheMaxSize){
         return configuredCacheMaxSize;
     }
+
+    /**
+     * The cache max size to use when no cache size is configured. Default is 1, which pays off for values that are
+     * expensive to parse and often repeated on consecutive lines. Cell types that are cheap to parse should return 0.
+     * @param schemaCell The schema cell to use.
+     * @return The cache max size to use when not configured.
+     * @since 2.5
+     */
+    default int defaultCacheMaxSize(SchemaCell schemaCell){
+        return 1;
+    }
 }

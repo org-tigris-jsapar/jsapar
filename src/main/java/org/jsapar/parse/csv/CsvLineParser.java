@@ -6,6 +6,7 @@ import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.parse.LineParseException;
 import org.jsapar.parse.cell.CellParser;
+import org.jsapar.parse.line.CellCacheSize;
 import org.jsapar.parse.line.LineDecoratorErrorConsumer;
 import org.jsapar.parse.line.ValidationHandler;
 import org.jsapar.schema.CsvSchemaCell;
@@ -55,7 +56,7 @@ class CsvLineParser {
     }
 
     private CellParser<CsvSchemaCell> makeCellParser(CsvSchemaCell schemaCell) {
-        return CellParser.ofSchemaCell(schemaCell, Math.min(config.getMaxCellCacheSize(), lineSchema.getOccurs() - 1));
+        return CellParser.ofSchemaCell(schemaCell, CellCacheSize.of(config.getMaxCellCacheSize(), lineSchema.getOccurs()));
     }
 
     /**

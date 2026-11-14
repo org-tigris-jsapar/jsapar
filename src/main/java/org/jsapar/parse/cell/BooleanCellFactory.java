@@ -48,10 +48,19 @@ public class BooleanCellFactory implements CellFactory<Boolean> {
      * boolean cells may contain more than two different values, we will suffer some cache misses but that is an
      * acceptable trade of.
      * @param configuredCacheMaxSize The cache max size in configuration.
-     * @return Always returns 2.
+     * @return The configured value but never more than 2.
      */
     @Override
     public int actualCacheMaxSize(SchemaCell schemaCell, int configuredCacheMaxSize) {
+        return Math.min(configuredCacheMaxSize, 2);
+    }
+
+    /**
+     * @param schemaCell The schema cell to use.
+     * @return 2 since boolean cells most likely only contain two different values.
+     */
+    @Override
+    public int defaultCacheMaxSize(SchemaCell schemaCell) {
         return 2;
     }
 }

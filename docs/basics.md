@@ -101,7 +101,10 @@ The parser behavior can be configured with the `TextParseConfig` class, for inst
  * The maximum length of a line, `setMaxLineLength()`. Default is 8192 characters. A quoted CSV cell that spans several 
    lines must fit within this length.
  * The maximum number of cell values to cache per column, `setMaxCellCacheSize()`. The value is limited to 0-100, where 0 
-   disables the cache. Default is 1. Caching can save memory and time for columns with few distinct values.
+   disables the cache. If not set, string and character cells are not cached, boolean cells cache 2 values and all 
+   other cell types cache the last value, which is fast for values that repeat on consecutive lines. Larger values do 
+   not make parsing faster but can save memory when all parsed lines are kept, for instance in a `Document`, and 
+   values repeat.
 
 See [api docs](api) for class `TextParseConfig` for more details.
 ## Error handling
