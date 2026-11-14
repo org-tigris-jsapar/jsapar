@@ -18,6 +18,7 @@ title: Release notes
 10. Performance improvements while parsing and composing:
     * Faster parsing of `LOCAL_DATE`, `LOCAL_TIME` and `LOCAL_DATE_TIME` cells with the default ISO format.
     * Faster parsing and composing of `DECIMAL` cells without pattern in locales that use `.` as decimal separator.
+    * Faster splitting of CSV lines into cells, especially for quoted cells.
     * Less memory allocated per parsed line.
     * Each composed line is written to the `Writer` in one call instead of one or more calls per cell. If composing
       a line fails with an exception, nothing of that line is written.

@@ -142,9 +142,66 @@ final class CsvLineReaderStates implements CsvLineReader {
                     return lineComplete();
                 }
             }
+            // Most characters are within cells. Scan those in tight loops instead of one virtual call per character.
+            if (state == unquotedCellState) {
+                if (scanUnquotedCell())
+                    return lineComplete();
+                continue;
+            }
+            if (state == quotedCellState) {
+                scanQuotedCell();
+                continue;
+            }
             if(state.processChar(buffer.nextCharacter()))
                 return lineComplete();
         }
+    }
+
+    /**
+     * Scans forward within an unquoted cell until a character that may end the cell or the line is found. Only then
+     * is the state logic invoked, so the result is the same as calling {@link UnquotedCellState#processChar(char)}
+     * for every character.
+     *
+     * @return True if the line is complete.
+     */
+    private boolean scanUnquotedCell() {
+        final char[] chars = buffer.buffer;
+        final int end = buffer.bufferSize;
+        final char separatorChar = lastCellSeparatorChar;
+        final char eolChar = lastEolChar;
+        int i = buffer.cursor;
+        while (i < end) {
+            final char c = chars[i++];
+            if (c == separatorChar || c == eolChar) {
+                buffer.cursor = i;
+                if (unquotedCellState.processChar(c))
+                    return true;
+                if (state != unquotedCellState)
+                    return false;
+            }
+        }
+        buffer.cursor = i;
+        return false;
+    }
+
+    /**
+     * Scans forward within a quoted cell until a quote character is found. Same result as calling
+     * {@link QuotedCellState#processChar(char)} for every character.
+     */
+    private void scanQuotedCell() {
+        final char[] chars = buffer.buffer;
+        final int end = buffer.bufferSize;
+        final char quote = quoteChar;
+        int i = buffer.cursor;
+        while (i < end) {
+            final char c = chars[i++];
+            if (c == quote) {
+                buffer.cursor = i;
+                quotedCellState.processChar(c);
+                return;
+            }
+        }
+        buffer.cursor = i;
     }
 
     private List<String> lineComplete() {
