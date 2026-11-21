@@ -75,6 +75,26 @@ class MasterDetailComposeTest {
         assertEquals("1\nA\nB\n3", writer.toString());
     }
 
+    @Test
+    void textComposer_noTrailingSeparatorWhenLastLineIsNotWritten() {
+        CsvSchema schema = CsvSchema.builder()
+                .withLineSeparator("\n")
+                .withLine(CsvSchemaLine.builder("Order").withCells("id").build())
+                .withLine(CsvSchemaLine.builder("Audit").withParent("Order").withIgnoreWrite(true).withCells("text").build())
+                .withLine(CsvSchemaLine.builder("OrderLine").withParent("Order").withCells("sku").build())
+                .build();
+        StringWriter writer = new StringWriter();
+        TextComposer composer = new TextComposer(schema, writer);
+        composer.composeLine(new Line("Order").addCell(new StringCell("id", "1"))
+                .addDetail(new Line("Audit").addCell(new StringCell("text", "x")))
+                .addDetail(new Line("OrderLine").addCell(new StringCell("sku", "A")))
+                .addDetail(new Line("Audit").addCell(new StringCell("text", "y")))
+                .addDetail(new Line("Unknown")));
+        assertEquals("1\nA", writer.toString());
+        composer.composeLine(new Line("Order").addCell(new StringCell("id", "2")));
+        assertEquals("1\nA\n2", writer.toString());
+    }
+
     private static StringSchema stringSchema() {
         return StringSchema.builder()
                 .withLine(StringSchemaLine.builder("Order").withCells("orderId").build())

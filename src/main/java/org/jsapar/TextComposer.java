@@ -70,6 +70,10 @@ public final class TextComposer implements Composer, AutoCloseable {
     public boolean composeLine(Line line) throws UncheckedIOException{
         try {
             if (breakBefore) {
+                // Write the separator only for a line that will be written, so that there is no trailing separator
+                // when the last line, for instance a detail line, is not written.
+                if (!isWritable(line))
+                    return false;
                 writer.write(schema.getLineSeparator());
             }
             boolean written = writeLine(line);
@@ -115,6 +119,14 @@ public final class TextComposer implements Composer, AutoCloseable {
      */
     boolean writeLine(Line line) {
         return schemaComposer.composeLine(line);
+    }
+
+    /**
+     * @param line The line to check.
+     * @return True if the schema has a line type for the line that is not ignored when writing.
+     */
+    private boolean isWritable(Line line) {
+        return schema.getSchemaLine(line.getLineType()).filter(schemaLine -> !schemaLine.isIgnoreWrite()).isPresent();
     }
 
 

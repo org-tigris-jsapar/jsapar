@@ -111,9 +111,11 @@ still closes the open lines at its own level. Its detail lines are then orphans 
 master line. A line of an undefined line type has no known level, so it leaves the open lines as they are; its detail 
 lines are added to the previous open master line of their parent type.
 
-A line of a type with `ignoreread` closes the open lines at its own level too, but its detail lines, and their detail 
-lines, are ignored as well, without errors. This is the same as when composing, where the detail lines of a line that
-is not written are not written either. If you want to keep the detail lines of a line type that you ignore, remove the
+The detail lines of a line of a type with `ignoreread`, and their detail lines, are ignored as well, without errors. 
+This is the same as when composing, where the detail lines of a line that is not written are not written either. An 
+ignored detail line closes the open lines at its own level, just like an omitted line. An ignored top level line, for 
+instance a comment line, leaves the open lines as they are, so the detail lines that follow it are still added to the 
+current master line. If you want to keep the detail lines of a line type that you ignore, remove the
 `parent` attribute from the detail line types so that they become top level lines.
 
 The parent line types are checked when the schema is built and again when parsing starts, so a schema line added with
@@ -160,15 +162,20 @@ The classes of the detail lines need to be annotated with `@JSaParLine` too. The
 The element class is the last type argument of the attribute type, so `List<OrderLine>`, `List<? extends OrderLine>`
 and `Map<String, OrderLine>` all give `OrderLine`. If the element class cannot be found that way, for instance for an 
 interface, supply the detail classes too: `BeanMap.ofClasses(Order.class, OrderLineImpl.class)`. Creating the
-converter fails if a detail line type of the schema ends up without a class.
+converter fails if a detail line type of the schema ends up without a class. `BeanMap.ofClasses()` also fails if no
+class is mapped to the line type of a `@JSaParDetail` attribute, for instance because it differs from the line type in
+the `@JSaParLine` annotation of the element class.
 
 * The attribute can be a `List`, `Set`, any other `Collection` or a `Map`. 
 * For a `Map`, `keyCell` names the cell of the detail line whose value is used as key. The key is the typed value of 
-  the cell, so for an integer cell the key type is `Long`. A detail line without value in the key cell, or with a key 
-  that already exists in the map, is reported as an error and the first entry is kept.
-* If the attribute is null when the first detail bean is added, a new `ArrayList`, `LinkedHashSet` or `LinkedHashMap` 
-  is created and assigned with the setter. If the attribute type is a concrete class, such as `TreeMap`, an instance 
-  of that class is created instead.
+  the cell, converted to the declared key type of the map: a number is converted to another number type, for instance
+  `Integer` for `Map<Integer, OrderLine>`, if the value fits, and any value is converted to its text for a `String` 
+  key. A detail line without value in the key cell, with a key that cannot be converted, or with a key that already 
+  exists in the map, is reported as an error and the first entry is kept.
+* If the attribute is null when the first detail bean is added, a new `ArrayList`, `LinkedHashSet`, `TreeSet`, 
+  `ArrayDeque`, `LinkedHashMap`, `TreeMap`, `ConcurrentHashMap` or `ConcurrentSkipListMap`, the first that fits the 
+  attribute type, is created and assigned with the setter. If the attribute type is some other concrete class, an 
+  instance of that class is created instead. For other attribute types, initialize the attribute in the bean.
 * Detail lines of a type that is not mapped are ignored.
 
 The same mapping can be made with the [bean map builder](bean_mapping#bean-map-builder):

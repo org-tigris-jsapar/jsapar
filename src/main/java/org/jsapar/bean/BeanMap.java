@@ -115,6 +115,9 @@ public final class BeanMap {
      * type, need to be in the list of classes.
      * @param classes A list of annotated classes.
      * @return A newly created BeanMap instance.
+     * @throws BeanException If a class is not annotated with {@link JSaParLine}, or, since 2.5, if no class is mapped
+     * to the line type of a {@link JSaParDetail} attribute, for instance because the line type differs from the one
+     * in the {@link JSaParLine} annotation of the element class.
      */
     public static BeanMap ofClasses(Iterable<Class<?> > classes) {
         BeanMap beanMap = new BeanMap();
@@ -133,6 +136,7 @@ public final class BeanMap {
             beanMap.putBean2Line(c, BeanPropertyMap.ofClass(c, lineAnnotation.lineType()));
             remaining.addAll(detailElementClasses(c));
         }
+        beanMap.validateDetailLineTypes(lineType -> true);
         return beanMap;
     }
 
@@ -213,7 +217,7 @@ public final class BeanMap {
                         beanMap.putBean2Line(beanPropertyMap.getLineClass().getName(), beanPropertyMap);
                 }
             }
-            beanMap.validateDetailLineTypes(schema);
+            beanMap.validateDetailLineTypes(lineType -> schema.getSchemaLine(lineType).isPresent());
             return beanMap;
         } catch (ClassNotFoundException e) {
             throw new BeanException("Failed to build bean mapping based on schema", e);
@@ -221,16 +225,16 @@ public final class BeanMap {
     }
 
     /**
-     * Checks that each detail line type that is mapped to a property and that exists in the schema is mapped to a
+     * Checks that each detail line type that is mapped to a property, and that should be checked, is mapped to a
      * class too. Otherwise, no bean could ever be created for those detail lines.
-     * @param schema The schema.
+     * @param shouldCheck Tells if a detail line type should be checked, for instance only the ones in the schema.
      * @throws BeanException If a detail line type is not mapped to a class.
      */
-    private void validateDetailLineTypes(Schema<?> schema) throws BeanException {
+    private void validateDetailLineTypes(java.util.function.Predicate<String> shouldCheck) throws BeanException {
         for (BeanPropertyMap master : beanPropertyMapByLineType.values()) {
             for (org.jsapar.parse.bean.Bean2Detail detail : master.getBean2Details()) {
                 String detailLineType = detail.getDetailLineType();
-                if (schema.getSchemaLine(detailLineType).isPresent() && getBeanPropertyMap(detailLineType) == null)
+                if (shouldCheck.test(detailLineType) && getBeanPropertyMap(detailLineType) == null)
                     throw new BeanException("The detail line type " + detailLineType + " of property "
                             + detail.getPropertyName() + " in " + master.getLineClass().getName()
                             + " is not mapped to any class. Annotate the element class with "

@@ -30,8 +30,13 @@ import java.util.function.Consumer;
  * A line that is omitted, for instance because of a validation error, is reported with {@link #lineSkipped(String)}.
  * It closes the open lines at and below its own level, so the detail lines that follow it are orphans instead of being
  * added to a previous master line. A line of a line type with ignoreread is reported with
- * {@link #lineIgnored(String)}. It closes the open lines the same way, and its detail lines, recursively, are ignored
- * too, without errors. A line of an undefined line type has no known level and leaves the open lines as they are.
+ * {@link #lineIgnored(String)}. Its detail lines, recursively, are ignored too, without errors. An ignored detail line
+ * closes the open lines at and below its own level, the same way as a skipped line. An ignored top level line, for
+ * instance a comment line, leaves the open lines as they are, so the detail lines that follow it are still added to
+ * the current master line, unless they belong to the ignored line.
+ * <p>
+ * The text parsers never pass on lines of undefined line types, and those lines leave the open lines as they are. A
+ * line passed to {@link #accept(Line)} with a line type that is not in the schema is treated as a top level line.
  * <p>
  * A top level line is passed on to the downstream consumer when the next top level line arrives or when
  * {@link #flush()} is called, so {@link #flush()} must be called when there are no more lines, or the last top level
@@ -125,21 +130,40 @@ public final class MasterDetailLineConsumer implements Consumer<Line> {
     }
 
     /**
-     * Tells that a line of a line type with ignoreread was read. The open lines at and below the level of the line
-     * type are closed, as for {@link #lineSkipped(String)}, but the detail lines that follow it, and their detail lines,
-     * are ignored too, without being reported as orphans. This is the same as when composing, where the detail lines of
-     * a line that is not written are not written either.
+     * Tells that a line of a line type with ignoreread was read. The detail lines that follow it, and their detail
+     * lines, are ignored too, without being reported as orphans. This is the same as when composing, where the detail
+     * lines of a line that is not written are not written either.
+     * <p>
+     * For a detail line type, the open lines at and below the level of the line type are closed, as for
+     * {@link #lineSkipped(String)}. For a top level line type, for instance a comment line, the open lines are left as
+     * they are, so the current top level line is not completed and its detail lines that follow are still added to it.
      * @param lineType The line type of the ignored line. Line types that are not in the schema are ignored.
      */
     public void lineIgnored(String lineType) {
         if (!lineTypes.contains(lineType))
             return;
         String parent = parentOf.get(lineType);
-        if (parent == null)
-            flush();
-        else
+        if (parent != null)
             closeBelow(parent);
+        else
+            closeIgnoredTopLevelLine();
+        // For a top level line type, the ignored line is placed after the open lines. A detail line of the current
+        // master line closes it, see closeBelow(), while its own detail lines find it and are ignored.
         open.add(new IgnoredLine(lineType));
+    }
+
+    /**
+     * Closes a previous ignored top level line, and its ignored detail lines, if any, so that a sequence of ignored top
+     * level lines, for instance comment lines, does not make the open lines grow.
+     */
+    private void closeIgnoredTopLevelLine() {
+        for (int i = 0; i < open.size(); i++) {
+            Line line = open.get(i);
+            if (line instanceof IgnoredLine && !parentOf.containsKey(line.getLineType())) {
+                open.subList(i, open.size()).clear();
+                return;
+            }
+        }
     }
 
     /**

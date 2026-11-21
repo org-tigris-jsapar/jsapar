@@ -52,6 +52,8 @@ title: Release notes
     detail line without master line. A master line that is omitted while parsing makes its detail lines orphans,
     while the detail lines of a line type with `ignoreread` are ignored too.
     Line manipulators are called for detail lines too, and `Line.removeDetailsIf()` removes detail lines.
+20. Fixed: `TextComposer` wrote a trailing line separator when the last line was not written, for instance because
+    its line type has `ignorewrite` or is not in the schema.
 
 ## 2.4
 1. Built with and for Java 17. Support for Java 11 and below is dropped.

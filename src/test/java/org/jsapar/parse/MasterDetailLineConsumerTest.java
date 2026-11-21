@@ -220,7 +220,6 @@ class MasterDetailLineConsumerTest {
         Line item3 = line("OrderLine", 7);
         grouping.accept(order1);
         grouping.lineIgnored("Order");
-        assertEquals(List.of(order1), result);
         grouping.accept(line("OrderLine", 3));
         grouping.accept(line("Discount", 4));
         grouping.accept(line("HistoryLog", 5));
@@ -263,6 +262,28 @@ class MasterDetailLineConsumerTest {
         grouping.accept(line("OrderLine", 2));
         grouping.flush();
         assertTrue(result.isEmpty());
+        assertTrue(errors.isEmpty());
+    }
+
+    @Test
+    void lineIgnored_topLevelCommentLine_keepsMasterOpen() {
+        MasterDetailLineConsumer grouping = grouping(ValidationAction.ERROR);
+        Line order = line("Order", 1);
+        Line item = line("OrderLine", 2);
+        Line discount = line("Discount", 5);
+        Line log = line("HistoryLog", 7);
+        grouping.accept(order);
+        grouping.accept(item);
+        grouping.lineIgnored("Header"); // For instance a comment line between detail lines.
+        grouping.lineIgnored("Header");
+        grouping.accept(discount);
+        grouping.lineIgnored("Header");
+        grouping.accept(log);
+        assertTrue(result.isEmpty(), "An ignored top level line does not complete the current one");
+        grouping.flush();
+        assertEquals(List.of(order), result);
+        assertEquals(List.of(item, log), order.getDetails());
+        assertEquals(List.of(discount), item.getDetails());
         assertTrue(errors.isEmpty());
     }
 }

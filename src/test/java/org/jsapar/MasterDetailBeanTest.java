@@ -171,6 +171,72 @@ class MasterDetailBeanTest {
         public void setHistory(List<Object> history) { this.history = history; }
     }
 
+    /** Detail attribute of an interface type that is initialized by the bean. */
+    @JSaParLine(lineType = "Order")
+    public static class OrderWithSortedHistory {
+        @JSaParDetail(lineType = "HistoryLog")
+        private SortedSet<HistoryLog> history = new TreeSet<>(Comparator.comparing(HistoryLog::getText).reversed());
+
+        public SortedSet<HistoryLog> getHistory() { return history; }
+        public void setHistory(SortedSet<HistoryLog> history) { this.history = history; }
+    }
+
+    @JSaParLine(lineType = "Order")
+    public static class OrderWithQueue {
+        @JSaParDetail(lineType = "HistoryLog")
+        private Queue<HistoryLog> history;
+
+        public Queue<HistoryLog> getHistory() { return history; }
+        public void setHistory(Queue<HistoryLog> history) { this.history = history; }
+    }
+
+    /** Detail attribute of a type that cannot be created and that is not initialized. */
+    @JSaParLine(lineType = "Order")
+    public static class OrderWithBlockingQueue {
+        @JSaParDetail(lineType = "HistoryLog")
+        private java.util.concurrent.BlockingQueue<HistoryLog> history;
+
+        public java.util.concurrent.BlockingQueue<HistoryLog> getHistory() { return history; }
+        public void setHistory(java.util.concurrent.BlockingQueue<HistoryLog> history) { this.history = history; }
+    }
+
+    @JSaParLine(lineType = "Order")
+    public static class OrderByIntegerQuantity {
+        @JSaParDetail(lineType = "OrderLine", keyCell = "quantity")
+        private Map<Integer, OrderLine> lines;
+
+        public Map<Integer, OrderLine> getLines() { return lines; }
+        public void setLines(Map<Integer, OrderLine> lines) { this.lines = lines; }
+    }
+
+    @JSaParLine(lineType = "Order")
+    public static class OrderByQuantityText {
+        @JSaParDetail(lineType = "OrderLine", keyCell = "quantity")
+        private SortedMap<String, OrderLine> lines;
+
+        public SortedMap<String, OrderLine> getLines() { return lines; }
+        public void setLines(SortedMap<String, OrderLine> lines) { this.lines = lines; }
+    }
+
+    @JSaParLine(lineType = "Order")
+    public static class OrderBySkuAsDate {
+        @JSaParDetail(lineType = "OrderLine", keyCell = "sku")
+        private Map<LocalDate, OrderLine> lines;
+
+        public Map<LocalDate, OrderLine> getLines() { return lines; }
+        public void setLines(Map<LocalDate, OrderLine> lines) { this.lines = lines; }
+    }
+
+    /** The detail line type differs from the line type of the element class. */
+    @JSaParLine(lineType = "Order")
+    public static class OrderWithWrongDetailLineType {
+        @JSaParDetail(lineType = "History")
+        private List<HistoryLog> history;
+
+        public List<HistoryLog> getHistory() { return history; }
+        public void setHistory(List<HistoryLog> history) { this.history = history; }
+    }
+
     private static Schema<?> csvSchema() throws IOException {
         try (Reader reader = new FileReader("examples/09_CsvSchemaMasterDetail.xml", StandardCharsets.UTF_8)) {
             return Schema.ofXml(reader);
@@ -355,5 +421,66 @@ class MasterDetailBeanTest {
         assertTrue(e.getMessage().contains("HistoryLog") && e.getMessage().contains("history"), e.getMessage());
         // Fine when the class is given explicitly.
         new Text2BeanConverter<>(schema, BeanMap.ofSchema(schema, BeanMap.ofClasses(OrderWithUnmappedDetail.class, HistoryLog.class)));
+    }
+
+    @Test
+    void interfaceTypes_initializedByBeanOrCreated() throws IOException {
+        String text = "O;1001;2026-11-02;ACME\nH;a\nH;c\nH;b\n";
+        List<JSaParException> errors = new ArrayList<>();
+        List<OrderWithSortedHistory> sorted = convert(
+                new Text2BeanConverter<>(csvSchema(), OrderWithSortedHistory.class), new StringReader(text), errors);
+        assertEquals(List.of(), errors);
+        assertEquals(List.of("c", "b", "a"), sorted.getFirst().getHistory().stream().map(HistoryLog::getText).toList());
+
+        List<OrderWithQueue> queued = convert(
+                new Text2BeanConverter<>(csvSchema(), OrderWithQueue.class), new StringReader(text), errors);
+        assertEquals(List.of(), errors);
+        assertInstanceOf(ArrayDeque.class, queued.getFirst().getHistory());
+        assertEquals(List.of("a", "c", "b"), queued.getFirst().getHistory().stream().map(HistoryLog::getText).toList());
+
+        List<OrderByQuantityText> byText = convert(
+                new Text2BeanConverter<>(csvSchema(), OrderByQuantityText.class), ordersCsv(), errors);
+        assertEquals(List.of(), errors);
+        assertInstanceOf(TreeMap.class, byText.getFirst().getLines());
+        assertEquals(List.of("1", "2"), new ArrayList<>(byText.getFirst().getLines().keySet()));
+    }
+
+    @Test
+    void uninitializedTypeThatCannotBeCreated_isReportedToErrorConsumer() throws IOException {
+        List<JSaParException> errors = new ArrayList<>();
+        List<OrderWithBlockingQueue> orders = convert(
+                new Text2BeanConverter<>(csvSchema(), OrderWithBlockingQueue.class), ordersCsv(), errors);
+        assertEquals(2, orders.size());
+        assertEquals(1, errors.size());
+        assertTrue(errors.getFirst().getMessage().contains("Initialize the property"), errors.getFirst().getMessage());
+    }
+
+    @Test
+    void mapKey_convertedToDeclaredKeyType() throws IOException {
+        List<JSaParException> errors = new ArrayList<>();
+        List<OrderByIntegerQuantity> orders = convert(
+                new Text2BeanConverter<>(csvSchema(), OrderByIntegerQuantity.class), ordersCsv(), errors);
+        assertEquals(List.of(), errors);
+        Map<Integer, OrderLine> lines = orders.getFirst().getLines();
+        assertEquals("SKU-7", lines.get(1).getSku());
+        for (Integer key : lines.keySet())
+            assertNotNull(key);
+    }
+
+    @Test
+    void mapKey_notConvertible_isReportedToErrorConsumer() throws IOException {
+        List<JSaParException> errors = new ArrayList<>();
+        List<OrderBySkuAsDate> orders = convert(
+                new Text2BeanConverter<>(csvSchema(), OrderBySkuAsDate.class), ordersCsv(), errors);
+        assertEquals(2, orders.size());
+        assertEquals(3, errors.size(), "One per order line");
+        assertTrue(errors.getFirst().getMessage().contains("java.time.LocalDate"), errors.getFirst().getMessage());
+        assertTrue(orders.getFirst().getLines().isEmpty(), "The map is created but nothing is added");
+    }
+
+    @Test
+    void ofClasses_detailLineTypeWithoutClass_fails() {
+        BeanException e = assertThrows(BeanException.class, () -> BeanMap.ofClass(OrderWithWrongDetailLineType.class));
+        assertTrue(e.getMessage().contains("History") && e.getMessage().contains("history"), e.getMessage());
     }
 }
