@@ -65,6 +65,8 @@ title: Release notes
     bean map could fail with a `NullPointerException` or map the cell to the wrong property.
 23. Fixed: When a bean could not be created, for instance because the class has no default constructor, and the error
     consumer did not throw an exception, `null` was passed to the bean consumer. The line is now skipped.
+24. Fixed: Converting a numeric cell to a `char` or `Character` property failed with an argument type mismatch, and a
+    text cell could not be converted to a `Character` property. Both now work, a text cell gives its first character.
 
 ## 2.4
 1. Built with and for Java 17. Support for Java 11 and below is dropped.
