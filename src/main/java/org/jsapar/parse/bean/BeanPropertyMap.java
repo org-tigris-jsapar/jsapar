@@ -55,8 +55,31 @@ public class BeanPropertyMap {
     }
 
 
+    /**
+     * @return A new instance of the class of the line.
+     * @throws InstantiationException If the class is a record, since a record needs all its values when it is created.
+     * Use {@link #createObjectNode()} instead.
+     * @throws IllegalAccessException If the default constructor is not accessible.
+     * @throws NoSuchMethodException If there is no public default constructor.
+     * @throws InvocationTargetException If the default constructor fails.
+     */
     public Object createBean() throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        if (lineClass.isRecord())
+            throw new InstantiationException("The record " + lineClass.getName()
+                    + " cannot be created before its values are known.");
         return lineClass.getConstructor().newInstance();
+    }
+
+    /**
+     * @return A node that builds an instance of the class of the line, also if it is a record.
+     * @throws IllegalAccessException If the default constructor is not accessible.
+     * @throws InstantiationException If the class is abstract.
+     * @throws NoSuchMethodException If a class that is not a record has no public default constructor.
+     * @throws InvocationTargetException If the default constructor fails.
+     * @since 2.5
+     */
+    public ObjectNode createObjectNode() throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        return ObjectNode.ofClass(lineClass);
     }
 
     public static BeanPropertyMap ofSchemaLine(SchemaLine<? extends SchemaCell> schemaLine, BeanPropertyMap overrideValues) {
@@ -64,9 +87,17 @@ public class BeanPropertyMap {
             if(overrideValues.ignoreLine())
                 return overrideValues;
 
-            Map<String, String> cellNamesOfProperty = new HashMap<>(
-                    schemaLine.stream().collect(Collectors.toMap(SchemaCell::getName, SchemaCell::getName)));
-            putOverrideValues(cellNamesOfProperty, overrideValues, "");
+            Map<String, String> overriddenCellNames = new HashMap<>();
+            putOverrideValues(overriddenCellNames, overrideValues, "");
+            // A cell that is mapped by the override values is not also mapped to a property with the same name as
+            // the cell, for instance cell phone mapped to property phone.number.
+            Set<String> overriddenCells = new HashSet<>(overriddenCellNames.values());
+            Map<String, String> cellNamesOfProperty = new HashMap<>();
+            schemaLine.stream()
+                    .map(SchemaCell::getName)
+                    .filter(name -> !overriddenCells.contains(name))
+                    .forEach(name -> cellNamesOfProperty.put(name, name));
+            cellNamesOfProperty.putAll(overriddenCellNames);
 
             BeanPropertyMap beanPropertyMap = ofPropertyNames(overrideValues.getLineClass().getName(),
                     schemaLine.getLineType(),

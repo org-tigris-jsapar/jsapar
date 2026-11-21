@@ -198,7 +198,6 @@ public final class Bean2Detail {
      * @throws InvocationTargetException If the getter or setter fails.
      * @throws IllegalAccessException If the getter or setter cannot be accessed.
      */
-    @SuppressWarnings("unchecked")
     public void add(Object masterBean, Line detailLine, Object detailBean) throws BeanComposeException, InvocationTargetException, IllegalAccessException {
         Object container = propertyDescriptor.getReadMethod().invoke(masterBean);
         if (container == null) {
@@ -206,13 +205,36 @@ public final class Bean2Detail {
             if (setter == null)
                 throw new BeanComposeException("The property " + propertyDescriptor.getName() + " of "
                         + masterBean.getClass().getName() + " is null and has no setter method.");
-            if (containerFactory == null)
-                throw new BeanComposeException("The property " + propertyDescriptor.getName() + " of "
-                        + masterBean.getClass().getName() + " is null and no instance of " + containerType.getName()
-                        + " can be created. Initialize the property in the bean.");
-            container = containerFactory.get();
+            container = newContainer(masterBean.getClass());
             setter.invoke(masterBean, container);
         }
+        addTo(container, detailLine, detailBean, masterBean.getClass());
+    }
+
+    /**
+     * @param masterClass The class of the master bean, used in error messages.
+     * @return A new empty collection or map that can be assigned to the property.
+     * @throws BeanComposeException If no instance of the declared type of the property can be created.
+     */
+    Object newContainer(Class<?> masterClass) throws BeanComposeException {
+        if (containerFactory == null)
+            throw new BeanComposeException("The property " + propertyDescriptor.getName() + " of "
+                    + masterClass.getName() + " is null and no instance of " + containerType.getName()
+                    + " can be created. Initialize the property in the bean.");
+        return containerFactory.get();
+    }
+
+    /**
+     * Adds a detail bean to a collection or map.
+     * @param container   The collection or map of the property.
+     * @param detailLine  The detail line, used for the key of a map.
+     * @param detailBean  The bean of the detail line.
+     * @param masterClass The class of the master bean, used in error messages.
+     * @throws BeanComposeException If the key cell is missing, the key already exists in the map or the collection or
+     * map does not accept the detail bean.
+     */
+    @SuppressWarnings("unchecked")
+    void addTo(Object container, Line detailLine, Object detailBean, Class<?> masterClass) throws BeanComposeException {
         try {
             if (keyCellName == null) {
                 ((Collection<Object>) container).add(detailBean);
@@ -227,7 +249,7 @@ public final class Bean2Detail {
         } catch (UnsupportedOperationException | ClassCastException | NullPointerException e) {
             // For instance an immutable collection, or a sorted collection with elements that cannot be compared.
             throw new BeanComposeException("Unable to add the detail bean to property " + propertyDescriptor.getName()
-                    + " of " + masterBean.getClass().getName() + ": " + e, e);
+                    + " of " + masterClass.getName() + ": " + e, e);
         }
     }
 

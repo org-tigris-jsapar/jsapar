@@ -2,6 +2,7 @@ package org.jsapar.parse.bean.reflect;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.RecordComponent;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -58,7 +59,26 @@ public final class BeanInfoReflection implements BeanInfo {
         // Add all setters that do not have any getter
         setters.forEach((property, setter)->
                 descriptors.put(property, new PropertyDescriptorSimple(property, null, setter)));
+        if (c.isRecord())
+            putRecordComponents(c, descriptors);
         return descriptors;
+    }
+
+    /**
+     * Adds the components of a record as read only properties, with the accessor method as getter. A component takes
+     * precedence over a getter with the same property name.
+     * <p>
+     * The accessors are made accessible if possible, so that records that are not public, for instance records
+     * declared within a method or a class, can be used as long as their package is open to this module.
+     * @param c           The record class.
+     * @param descriptors The descriptors to add to.
+     */
+    private static void putRecordComponents(Class<?> c, Map<String, PropertyDescriptor> descriptors) {
+        for (RecordComponent component : c.getRecordComponents()) {
+            Method accessor = component.getAccessor();
+            accessor.trySetAccessible();
+            descriptors.put(component.getName(), new PropertyDescriptorSimple(component.getName(), accessor, null));
+        }
     }
 
     /**

@@ -30,6 +30,19 @@ public final class BeanFactoryByMap<T> implements BeanFactory<T>{
         return null;
     }
 
+    /**
+     * Creates a builder of the bean of the line. Supports records, which are created with their canonical
+     * constructor when all values are known, also as nested objects and detail beans.
+     * @see BeanFactory#createBeanBuilder(Line)
+     */
+    @Override
+    public BeanBuilder<T> createBeanBuilder(Line line) throws ReflectiveOperationException {
+        BeanPropertyMap beanPropertyMap = beanMap.getBeanPropertyMap(line.getLineType());
+        if (beanPropertyMap == null || beanPropertyMap.ignoreLine())
+            return null;
+        return new PropertyMapBeanBuilder<>(beanPropertyMap, false);
+    }
+
     @Override
     public void assignCellToBean(String lineType, T bean, Cell<?> cell) throws InvocationTargetException, InstantiationException, IllegalAccessException, BeanComposeException, NoSuchMethodException {
         BeanPropertyMap beanPropertyMap = beanMap.getBeanPropertyMap(lineType);

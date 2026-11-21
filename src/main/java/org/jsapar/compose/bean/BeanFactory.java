@@ -74,4 +74,43 @@ public interface BeanFactory<T> {
     default void assignDetailToBean(String lineType, T bean, Line detailLine, Object detailBean) throws BeanComposeException, InvocationTargetException, IllegalAccessException {
     }
 
+    /**
+     * Creates a builder of the bean of a line. This is what the {@link BeanComposer} uses to compose beans.
+     * <p>
+     * The default implementation calls {@link #createBean(Line)}, and the returned builder calls
+     * {@link #assignCellToBean(String, Object, Cell)}, {@link #assignDetailToBean(String, Object, Line, Object)} and
+     * returns the same bean when built. Override this method to support beans that cannot be changed after they are
+     * created, such as records, as {@link BeanFactoryByMap} and {@link BeanFactoryDefault} do.
+     * @param line The line to create a bean for.
+     * @return A builder of the bean of the line. If this method returns null, the behavior of the
+     * {@link BeanComposer} is denoted by the config parameter
+     * {@link BeanComposeConfig#setOnUndefinedLineType(ValidationAction)}.
+     * @throws ReflectiveOperationException In case the class of the bean cannot be found or the bean cannot be
+     *                                      created.
+     * @throws ClassCastException           In case the bean is not of the expected type.
+     * @since 2.5
+     */
+    default BeanBuilder<T> createBeanBuilder(Line line) throws ReflectiveOperationException {
+        T bean = createBean(line);
+        if (bean == null)
+            return null;
+        String lineType = line.getLineType();
+        return new BeanBuilder<>() {
+            @Override
+            public void assignCell(Cell<?> cell) throws BeanComposeException, ReflectiveOperationException {
+                assignCellToBean(lineType, bean, cell);
+            }
+
+            @Override
+            public void assignDetail(Line detailLine, Object detailBean) throws BeanComposeException, ReflectiveOperationException {
+                assignDetailToBean(lineType, bean, detailLine, detailBean);
+            }
+
+            @Override
+            public T build() {
+                return bean;
+            }
+        };
+    }
+
 }
