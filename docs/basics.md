@@ -214,6 +214,9 @@ The following of the [java bean requirements](https://en.wikipedia.org/wiki/Java
 * There has to be a constructor with no arguments.
 * There have to be both getter and setter methods for all bean properties.
 
+Since version 2.5, the class can also be a Java `record`, where the record components are the properties. See 
+[records](bean_mapping#records) in the bean mapping article.
+
 As with the parser the `Text2BeanConverter` calls a consumer for each bean that has been parsed. You need to provide an implementation
 of the `java.util.function.BiConsumer<T, Line>` or `java.util.function.Consumer<T>` which will be called for each bean that is parsed. 
 

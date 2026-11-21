@@ -54,6 +54,20 @@ title: Release notes
     Line manipulators are called for detail lines too, and `Line.removeDetailsIf()` removes detail lines.
 20. Fixed: `TextComposer` wrote a trailing line separator when the last line was not written, for instance because
     its line type has `ignorewrite` or is not in the schema.
+21. Added support for Java records when converting between text and beans, see 
+    [records](bean_mapping#records). Record components are read with their accessor methods, and a record is created 
+    with its canonical constructor when all cells and detail lines of the line have been assigned. Records can be 
+    nested within records and beans, and the other way around. The `BeanComposer` now creates beans with a new 
+    `BeanBuilder` returned by the new method `BeanFactory.createBeanBuilder()`, whose default implementation uses the 
+    existing methods of the bean factory.
+22. Fixed: When a cell was mapped to a property of a sub-property by annotations or other overrides, for instance cell
+    `phone` to property `phone.number`, and there also was a property with the same name as the cell, creating the 
+    bean map could fail with a `NullPointerException` or map the cell to the wrong property.
+23. Fixed: When a bean could not be created, for instance because the class has no default constructor, and the error
+    consumer did not throw an exception, `null` was passed to the bean consumer. The same happened for a line type
+    without class when `onUndefinedLineType` was `ERROR` or `NONE`. The line is now skipped in both cases.
+24. Fixed: Converting a numeric cell to a `char` or `Character` property failed with an argument type mismatch, and a
+    text cell could not be converted to a `Character` property. Both now work, a text cell gives its first character.
 
 ## 2.4
 1. Built with and for Java 17. Support for Java 11 and below is dropped.

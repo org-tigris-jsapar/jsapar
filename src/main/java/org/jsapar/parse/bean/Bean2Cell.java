@@ -134,19 +134,16 @@ public class Bean2Cell {
         Cell<?> makeCell(Object o) throws InvocationTargetException, IllegalAccessException;
     }
 
-    private void assignProperty(Object bean, Cell<?> cell)
-            throws InvocationTargetException, IllegalAccessException, BeanComposeException {
-        Method setter = this.propertyDescriptor.getWriteMethod();
-        if (setter == null)
-            throw new BeanComposeException(
-                    "The property " + propertyDescriptor.getName() + " of class " + children.getLineClass().getName()
-                            + " has no setter method.");
-        Class<?> paramType = setter.getParameterTypes()[0];
-        setter.invoke(bean, customCast(paramType, cell));
-    }
-
+    /**
+     * Converts the value of a cell to the type of the property.
+     * @param paramType The type of the property, i.e. the parameter type of the setter or the type of the record
+     *                  component.
+     * @param cell      A non-empty cell.
+     * @return The value to assign.
+     * @throws BeanComposeException If the value cannot be converted.
+     */
     @SuppressWarnings("unchecked")
-    private Object customCast(Class<?> paramType, Cell<?> cell) throws BeanComposeException {
+    Object toPropertyValue(Class<?> paramType, Cell<?> cell) throws BeanComposeException {
         Class<?> valueType = cell.getValue().getClass();
         Object value = cell.getValue();
         if (paramType.isAssignableFrom(valueType))
@@ -170,11 +167,11 @@ public class Bean2Cell {
             else if (paramType == Boolean.TYPE || paramType==Boolean.class)
                 return number.intValue() != 0;
             else if (paramType == Character.TYPE || paramType==Character.class)
-                return number.intValue();
+                return (char) number.intValue();
 
         }
         // Will squeeze in first character of any datatype's string representation.
-        else if (paramType == Character.TYPE) {
+        else if (paramType == Character.TYPE || paramType == Character.class) {
             if (value instanceof Character)
                 return value;
             return cell.getStringValue().charAt(0);
@@ -189,42 +186,30 @@ public class Bean2Cell {
             return Path.of(cell.getStringValue());
         }
         throw new BeanComposeException(
-                "Skipped assigning cell - The setter for property " + this.propertyDescriptor.getName()
-                        + " could not be used to assign cell");
+                "Skipped assigning cell - The value could not be assigned to property " + this.propertyDescriptor.getName()
+                        + " of type " + paramType.getName());
     }
 
+    /**
+     * Assigns the value of a cell to a mutable bean, possibly to a property of a nested object.
+     * <p>
+     * If the cell belongs to a record nested within the bean, the record is created again with the new value each time
+     * this method is called, while the other components keep their current values, or null if there was no record.
+     * A record whose constructor validates its values may therefore fail before all its cells have been assigned. Use
+     * {@link BeanPropertyMap#createObjectNode()} to assign all cells of a line before the records are created.
+     * @param bean The bean of the line.
+     * @param cell The cell.
+     * @throws BeanComposeException      If the value cannot be assigned.
+     * @throws InvocationTargetException If a getter, setter or constructor fails.
+     * @throws IllegalAccessException    If a getter, setter or constructor is not accessible.
+     * @throws InstantiationException    If a nested object cannot be created.
+     * @throws NoSuchMethodException     If a nested object has no public default constructor.
+     */
     public void assign(Object bean, Cell<?> cell)
             throws BeanComposeException, InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
-        if(cell.isEmpty()) {
-            return;
-        }
-        if (isLeaf()) {
-            assignProperty(bean, cell);
-            return;
-        }
-        Bean2Cell childBean2Cell = children.getBean2CellByName(cell.getName());
-        if (childBean2Cell != null) {
-            Method getter = this.propertyDescriptor.getReadMethod();
-            if (getter == null)
-                throw new BeanComposeException(
-                        "The property " + propertyDescriptor.getName() + " of class " + children.getLineClass()
-                                .getName() + " has no getter method.");
-            Object child = getter.invoke(bean);
-            if (child == null) {
-                child = children.getLineClass().getConstructor().newInstance();
-                Method setter = this.propertyDescriptor.getWriteMethod();
-                if (setter == null)
-                    throw new BeanComposeException(
-                            "The property " + propertyDescriptor.getName() + " of class " + children.getLineClass()
-                                    .getName() + " has no setter method.");
-                setter.invoke(bean, child);
-            }
-            childBean2Cell.assign(child, cell);
-        }
-    }
-
-    private boolean isLeaf() {
-        return this.children == null;
+        ObjectNode node = ObjectNode.ofBean(bean);
+        node.assign(this, cell);
+        node.build();
     }
 
 }

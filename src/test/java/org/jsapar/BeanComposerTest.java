@@ -6,6 +6,7 @@ import org.jsapar.compose.bean.BeanComposer;
 import org.jsapar.compose.bean.BeanFactory;
 import org.jsapar.compose.bean.BeanFactoryDefault;
 import org.jsapar.error.JSaParException;
+import org.jsapar.error.ValidationAction;
 import org.jsapar.model.*;
 import org.jsapar.parse.CollectingConsumer;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,6 +76,34 @@ public class BeanComposerTest {
         assertEquals(0.0D, secondPerson.getLength(), 0.01);
     }
 
+
+    @Test
+    public void testComposeLine_undefinedLineType_lineIsSkipped() {
+        for (ValidationAction action : new ValidationAction[]{ValidationAction.ERROR, ValidationAction.NONE}) {
+            BeanComposeConfig config = new BeanComposeConfig();
+            config.setOnUndefinedLineType(action);
+            BeanFactory<Object> noClassFactory = new BeanFactory<>() {
+                @Override
+                public Object createBean(Line line) {
+                    return null;
+                }
+
+                @Override
+                public void assignCellToBean(String lineType, Object bean, Cell<?> cell) {
+                }
+            };
+            BeanComposer<Object> composer = new BeanComposer<>(config, noClassFactory);
+            java.util.List<Object> beans = new java.util.ArrayList<>();
+            java.util.function.Consumer<Object> beanConsumer = beans::add;
+            composer.setBeanConsumer(beanConsumer);
+            java.util.List<JSaParException> errors = new java.util.ArrayList<>();
+            composer.setErrorConsumer(errors::add);
+
+            assertFalse(composer.composeLine(new Line("unknown")), action.toString());
+            assertTrue(beans.isEmpty(), action.toString());
+            assertEquals(action == ValidationAction.ERROR ? 1 : 0, errors.size(), action.toString());
+        }
+    }
 
     @Test
     public final void testCreateJavaObjects_Long_to_int() {

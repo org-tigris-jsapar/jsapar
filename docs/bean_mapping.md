@@ -36,9 +36,39 @@ convention, for example `getName()` and `setName()`.
 `null` while assigning one of its values, an instance is created with the constructor without arguments and assigned 
 with the setter.
 
-This means that Java `record` classes and other immutable classes cannot be used as beans. If you need to create such 
-objects, parse into [`Line` objects](basics#parsing) and create the objects from the lines in your own code, or 
-provide [your own bean factory](#providing-your-own-bean-factory).
+Java `record` classes are supported too, see [Records](#records) below. Other immutable classes cannot be used as 
+beans. If you need to create such objects, parse into [`Line` objects](basics#parsing) and create the objects from the 
+lines in your own code, or provide [your own bean factory](#providing-your-own-bean-factory).
+
+## Records
+*New since version 2.5*
+
+A Java `record` can be used instead of a bean class, in both directions. The components of the record are the 
+properties: values are read with the accessor methods, such as `name()`, and a record is created with its canonical 
+constructor when all cells of the line have been read. Everything else works as for bean classes, the mapping can be 
+described in any of the ways below and annotations are placed on the record components:
+```java
+@JSaParLine(lineType = "Customer")
+public record Customer(@JSaParCell(name = "Name") String name,
+                       @JSaParCell(name = "Born") LocalDate born,
+                       @JSaParContainsCells Address address) {
+}
+```
+* A component without a value, because the cell is empty or missing, gets `null`, or zero or `false` if it is of a 
+primitive type.
+* If the value of a cell cannot be converted to the type of the component, an error is reported and the component 
+gets no value, just as when a setter cannot be used for a bean.
+* If the constructor throws an exception, for instance because it validates the values, an error is reported for the 
+line and no record is created for it.
+* Records and beans can be nested within each other, for instance a record with a component that is a bean, or a bean 
+with a property that is a record. A record within a bean is assigned with the setter of the bean when all its values 
+are known.
+* Collection and map components that [detail lines](#detail-lines) are mapped to always get a collection or map, which 
+is empty if there are no detail lines. This makes it possible for the record to make immutable copies in its 
+constructor, such as `lines = List.copyOf(lines)`. Detail lines can only be mapped to record components, not to 
+other getter methods of the record.
+* The record does not need to be public. If the record or its package is not public, its package needs to be open to 
+the module `org.jsapar` when Java modules are used.
 
 ## Supported property types
 The type of the cell, as described by the schema, does not need to be exactly the same as the type of the property. 
@@ -138,7 +168,8 @@ With annotations, the mapping is described in the bean class itself. All annotat
 |`@JSaParContainsCells`|Field|Indicates that the class of the field contains fields that are annotated with `@JSaParCell`.|
 
 The annotations are placed on the fields, but the values are still read and assigned with the getter and setter 
-methods of the property with the same name as the field.
+methods of the property with the same name as the field. For a [record](#records), the annotations are placed on the 
+record components.
 
 With `@JSaParContainsCells(name = "Home")`, the name is used as a prefix followed by a dot for all cells within that 
 class. In the example above, the property `street` of the property `address` is thus mapped to the cell 
@@ -342,6 +373,14 @@ There are two implementations in the library:
 A bean factory decides with `hasDetail()` and `assignDetailToBean()` if and how detail beans are added to the bean of
 the master line. The default implementation of these methods ignores detail lines, and `BeanFactoryDefault` does not
 support detail lines.
+
+The `BeanComposer` creates each bean with a `BeanBuilder`, returned by the method `createBeanBuilder()` of the bean 
+factory. It first assigns all cells and detail beans of the line to the builder, then calls `build()`. The default 
+implementation of `createBeanBuilder()` uses `createBean()`, `assignCellToBean()` and `assignDetailToBean()`, so a bean 
+factory only needs to override it to support classes that need all values when they are created, such as 
+[records](#records). Both `BeanFactoryByMap` and `BeanFactoryDefault` support records this way. `BeanFactoryDefault` 
+does not support a record within a bean though, only a record as the class of the line, which may contain other 
+records and beans. *New since version 2.5*
 
 `BeanFactoryDefault` creates an instance of whatever class the line type denotes. Use it only when the line types 
 originate from a trusted source such as your own schema, never when they originate from the parsed input, 

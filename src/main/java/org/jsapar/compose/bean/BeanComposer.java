@@ -73,57 +73,50 @@ public final class BeanComposer<T> implements Composer{
      */
     public Optional<T> toBean(Line line){
         try {
-            T bean = beanFactory.createBean(line);
-            if (bean == null) {
-                validationHandler.lineValidationError(line,
-                        "BeanFactory failed to instantiate object for this line because there was no associated class. You can supress errors like this by setting config.onUndefinedLineType=OMIT_LINE",
-                        config.getOnUndefinedLineType(), errorConsumer);
+            BeanBuilder<T> builder = beanFactory.createBeanBuilder(line);
+            if (builder == null) {
+                validationHandler.lineValidationError(line, NO_CLASS_MESSAGE, config.getOnUndefinedLineType(), errorConsumer);
                 return Optional.empty();
-            } else {
-                assign(line, bean);
-                return Optional.of(bean);
             }
-        } catch (InstantiationException|NoSuchMethodException|InvocationTargetException e) {
-            generateErrorEvent(line, "Failed to instantiate object. Skipped creating bean", e);
-        } catch (IllegalAccessException e) {
-            generateErrorEvent(line, "Failed to call set method. Skipped creating bean", e);
-        } catch (ClassNotFoundException e) {
-            generateErrorEvent(line, "Class not found. Skipped creating bean", e);
-        } catch (ClassCastException e) {
-            generateErrorEvent(line,
-                    "Class of the created bean is not inherited from the generic type specified when creating the BeanComposer",
-                    e);
+            return Optional.of(build(line, builder));
+        } catch (ReflectiveOperationException | BeanComposeException | ClassCastException | IllegalArgumentException e) {
+            handleBeanError(line, e);
         }
         return Optional.empty();
     }
 
     @Override
     public boolean composeLine(Line line) {
-        T bean = null;
+        T bean;
         try {
-            bean = beanFactory.createBean(line);
-            if (bean == null) {
-                if (!validationHandler.lineValidationError(line,
-                        "BeanFactory failed to instantiate object for this line because there was no associated class. You can supress errors like this by setting config.onUndefinedLineType=OMIT_LINE",
-                        config.getOnUndefinedLineType(), errorConsumer)) {
-                    return false;
-                }
-            } else {
-                assign(line, bean);
+            BeanBuilder<T> builder = beanFactory.createBeanBuilder(line);
+            if (builder == null) {
+                // There is no bean to pass to the bean consumer, whatever the validation action.
+                validationHandler.lineValidationError(line, NO_CLASS_MESSAGE, config.getOnUndefinedLineType(), errorConsumer);
+                return false;
             }
-        } catch (InstantiationException|NoSuchMethodException|InvocationTargetException e) {
-            generateErrorEvent(line, "Failed to instantiate object. Skipped creating bean", e);
-        } catch (IllegalAccessException e) {
-            generateErrorEvent(line, "Failed to call set method. Skipped creating bean", e);
-        } catch (ClassNotFoundException e) {
-            generateErrorEvent(line, "Class not found. Skipped creating bean", e);
-        } catch (ClassCastException e) {
-            generateErrorEvent(line,
-                    "Class of the created bean is not inherited from the generic type specified when creating the BeanComposer",
-                    e);
+            bean = build(line, builder);
+        } catch (ReflectiveOperationException | BeanComposeException | ClassCastException | IllegalArgumentException e) {
+            handleBeanError(line, e);
+            return false;
         }
         beanLineConsumer.accept(bean, line);
         return true;
+    }
+
+    private static final String NO_CLASS_MESSAGE = "BeanFactory failed to instantiate object for this line because there was no associated class. You can supress errors like this by setting config.onUndefinedLineType=OMIT_LINE";
+
+    private void handleBeanError(Line line, Exception e) {
+        switch (e) {
+            case InstantiationException ignored -> generateErrorEvent(line, "Failed to instantiate object. Skipped creating bean", e);
+            case NoSuchMethodException ignored -> generateErrorEvent(line, "Failed to instantiate object. Skipped creating bean", e);
+            case InvocationTargetException ignored -> generateErrorEvent(line, "Failed to instantiate object. Skipped creating bean", e);
+            case IllegalAccessException ignored -> generateErrorEvent(line, "Failed to access a constructor or method. Skipped creating bean", e);
+            case ClassNotFoundException ignored -> generateErrorEvent(line, "Class not found. Skipped creating bean", e);
+            case ClassCastException ignored -> generateErrorEvent(line,
+                    "Class of the created bean is not inherited from the generic type specified when creating the BeanComposer", e);
+            default -> generateErrorEvent(line, "Failed to create bean. Skipped creating bean", e);
+        }
     }
 
     private void generateErrorEvent(Line line, String message, Throwable t) {
@@ -172,42 +165,39 @@ public final class BeanComposer<T> implements Composer{
 
 
     /**
-     * Assigns the cells of a line as attributes to an object.
+     * Assigns the cells and detail beans of a line to a bean builder and builds the bean. Errors while assigning a
+     * cell or a detail bean are passed to the error consumer, and the bean is built anyway.
      *
-     * @param line           The line to get parameters from.
-     * @param objectToAssign The object to assign cell attributes to. The object will be modified.
-     * @return The object that was assigned. The same object that was supplied as parameter.
+     * @param line    The line to get cells and details from.
+     * @param builder The builder of the bean.
+     * @return The built bean.
      */
-    private T assign(Line line, T objectToAssign) {
-
+    private T build(Line line, BeanBuilder<T> builder) throws ReflectiveOperationException, BeanComposeException {
         for (Cell<?> cell : line) {
             String sName = cell.getName();
             if (sName == null || sName.isEmpty() || cell.isEmpty())
                 continue;
 
             try {
-                beanFactory.assignCellToBean(line.getLineType(), objectToAssign, cell);
+                builder.assignCell(cell);
             } catch (BeanComposeException
                     | IllegalArgumentException
-                    | IllegalAccessException
-                    | InvocationTargetException
-                    | NoSuchMethodException
-                    | InstantiationException e) {
+                    | ReflectiveOperationException e) {
                 errorConsumer.accept( new ComposeException(e.getMessage() + " while handling cell " + cell, e));
             }
         }
         if (line.hasDetails())
-            assignDetails(line, objectToAssign);
-        return objectToAssign;
+            assignDetails(line, builder);
+        return builder.build();
     }
 
     /**
-     * Creates beans of the detail lines, recursively, and adds them to the master bean. Detail lines that are not
-     * mapped to a property of the master bean are ignored.
-     * @param line       The master line.
-     * @param masterBean The bean of the master line.
+     * Creates beans of the detail lines, recursively, and adds them to the builder of the master bean. Detail lines
+     * that are not mapped to a property of the master bean are ignored.
+     * @param line    The master line.
+     * @param builder The builder of the bean of the master line.
      */
-    private void assignDetails(Line line, T masterBean) {
+    private void assignDetails(Line line, BeanBuilder<T> builder) {
         for (Line detail : line.getDetails()) {
             if (!beanFactory.hasDetail(line.getLineType(), detail.getLineType()))
                 continue;
@@ -215,12 +205,11 @@ public final class BeanComposer<T> implements Composer{
             if (detailBean.isEmpty())
                 continue;
             try {
-                beanFactory.assignDetailToBean(line.getLineType(), masterBean, detail, detailBean.get());
+                builder.assignDetail(detail, detailBean.get());
             } catch (BeanComposeException
                     | BeanException
                     | IllegalArgumentException
-                    | IllegalAccessException
-                    | InvocationTargetException e) {
+                    | ReflectiveOperationException e) {
                 errorConsumer.accept(new ComposeException(e.getMessage() + " while handling detail line", detail, e));
             }
         }

@@ -2,13 +2,24 @@ package org.jsapar.compose.bean;
 
 import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
+import org.jsapar.parse.bean.BeanPropertyMap;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class BeanFactoryDefault<T> implements BeanFactory<T> {
     private static final String GET_PREFIX = "get";
     private static final String SET_PREFIX = "set";
+
+    /** Mappings of record classes by line type. */
+    private final Map<String, RecordMapping> recordMappings = new ConcurrentHashMap<>();
 
     @SuppressWarnings("WeakerAccess")
     public BeanFactoryDefault() {
@@ -23,11 +34,114 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
      * when parsing xml documents with {@code org.jsapar.parse.xml.XmlParser}.
      * @see BeanFactory#createBean(Line)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException, NoSuchMethodException, InvocationTargetException {
-        Class<?> c = Class.forName(line.getLineType(),false, Thread.currentThread().getContextClassLoader());
+        return newBean(lineClass(line));
+    }
+
+    @SuppressWarnings("unchecked")
+    private T newBean(Class<?> c) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        if (c.isRecord())
+            throw new InstantiationException("The record " + c.getName()
+                    + " cannot be created before its values are known. Use createBeanBuilder() instead.");
         return (T) c.getConstructor().newInstance();
+    }
+
+    /**
+     * Creates the bean by using Class.forName method on the line type, just as {@link #createBean(Line)}. If the
+     * class is a record, the cell names are mapped to the components of the record, where a cell name such as
+     * {@code address.street} denotes the component {@code street} of the nested record or bean in component
+     * {@code address}. The record is created with its canonical constructor when all cells are assigned.
+     * @see BeanFactory#createBeanBuilder(Line)
+     */
+    @Override
+    public BeanBuilder<T> createBeanBuilder(Line line) throws ReflectiveOperationException {
+        Class<?> c = lineClass(line);
+        if (!c.isRecord())
+            return new DefaultBeanBuilder<>(this, line.getLineType(), newBean(c));
+        RecordMapping mapping = recordMappings.get(line.getLineType());
+        if (mapping == null || mapping.c() != c || !mapping.hasAllCellNames(line)) {
+            // Atomic, so that cell names added by other threads at the same time are not lost.
+            mapping = recordMappings.compute(line.getLineType(), (lineType, current) ->
+                    current != null && current.c() == c && current.hasAllCellNames(line)
+                            ? current
+                            : RecordMapping.of(c, line, current));
+        }
+        return new PropertyMapBeanBuilder<>(mapping.beanPropertyMap(), true);
+    }
+
+    private static Class<?> lineClass(Line line) throws ClassNotFoundException {
+        return Class.forName(line.getLineType(), false, Thread.currentThread().getContextClassLoader());
+    }
+
+    /**
+     * The mapping of a record class, created from the cell names of the lines.
+     * @param c               The record class.
+     * @param cellNames       All cell names that have been seen, also those that do not match any component.
+     * @param mappedNames     The cell names that could be mapped, in the order they were mapped.
+     * @param beanPropertyMap The mapping.
+     */
+    private record RecordMapping(Class<?> c, Set<String> cellNames, List<String> mappedNames,
+                                 BeanPropertyMap beanPropertyMap) {
+
+        boolean hasAllCellNames(Line line) {
+            for (Cell<?> cell : line) {
+                if (hasName(cell) && !cellNames.contains(cell.getName()))
+                    return false;
+            }
+            return true;
+        }
+
+        private static boolean hasName(Cell<?> cell) {
+            return cell.getName() != null && !cell.getName().isEmpty();
+        }
+
+        /**
+         * @param c        The record class.
+         * @param line     The line with the cell names to map.
+         * @param previous The previous mapping of the line type, whose cell names are mapped too, or null.
+         * @return A new mapping. Cell names that cannot be mapped, for instance because they denote a property
+         * without getter, are left out, so that assigning such a cell is reported as an error for the cell.
+         */
+        static RecordMapping of(Class<?> c, Line line, RecordMapping previous) {
+            Set<String> cellNames = new HashSet<>();
+            // Kept in order, so that the mapping is created in the same order as when the names were tried.
+            Set<String> mappedNames = new LinkedHashSet<>();
+            if (previous != null && previous.c() == c) {
+                cellNames.addAll(previous.cellNames());
+                mappedNames.addAll(previous.mappedNames());
+            }
+            String lineType = line.getLineType();
+            for (Cell<?> cell : line) {
+                if (hasName(cell) && cellNames.add(cell.getName()))
+                    tryMap(c, lineType, mappedNames, cell.getName());
+            }
+            return new RecordMapping(c, Set.copyOf(cellNames), List.copyOf(mappedNames),
+                    BeanPropertyMap.ofClass(c, lineType, cellNameOfProperty(mappedNames)));
+        }
+
+        /**
+         * Adds a cell name to the mapped names if it can be mapped together with the names that are already mapped.
+         * Some names fail only together with others, for instance {@code phone} and {@code phone.number}.
+         * @param c           The record class.
+         * @param lineType    The line type.
+         * @param mappedNames The names that can be mapped so far. The cell name is added if it can be mapped.
+         * @param cellName    The cell name to try.
+         */
+        private static void tryMap(Class<?> c, String lineType, Set<String> mappedNames, String cellName) {
+            mappedNames.add(cellName);
+            try {
+                BeanPropertyMap.ofClass(c, lineType, cellNameOfProperty(mappedNames));
+            } catch (RuntimeException e) {
+                mappedNames.remove(cellName);
+            }
+        }
+
+        private static Map<String, String> cellNameOfProperty(Set<String> cellNames) {
+            Map<String, String> cellNameOfProperty = new LinkedHashMap<>();
+            cellNames.forEach(name -> cellNameOfProperty.put(name, name));
+            return cellNameOfProperty;
+        }
     }
 
     @Override
@@ -56,7 +170,7 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
         } catch (NoSuchMethodException e) {
             throw new BeanComposeException(
                     "Skipped assigning cell - Missing getter or setter method in class " + bean.getClass()
-                            .getName() + " or a sub class", e);
+                            .getName() + " or a sub class: " + e.getMessage(), e);
         }
 
     }
@@ -73,6 +187,9 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
         String getterMethodName = createGetMethodName(childBeanName);
         Method getterMethod = parentBean.getClass().getMethod(getterMethodName);
         denyObjectMethod(getterMethod, childBeanName);
+        if (getterMethod.getReturnType().isRecord())
+            throw new NoSuchMethodException("The property '" + childBeanName + "' of " + parentBean.getClass().getName()
+                    + " is a record. Records within beans are not supported by BeanFactoryDefault, use BeanFactoryByMap.");
         Object childBean = getterMethod.invoke(parentBean);
         if (childBean == null) {
             // If there was no object we have to create it.
