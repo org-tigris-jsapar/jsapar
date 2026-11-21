@@ -63,7 +63,8 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * @param stream The stream to get beans from.
      * @param writer The text writer to write text output to. Caller is responsible for closing the writer.
      * @throws IOException If there is an error writing text output.
-     * @return Number of actually composed lines.
+     * @return Number of beans converted. Detail lines composed from the collection and map properties of the beans are
+     * not counted.
      */
     public long convert(Stream<? extends T> stream, Writer writer) throws IOException {
         return execute(makeParseTask(stream), makeComposer(writer));
@@ -75,7 +76,8 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * @param iterator The iterator to get beans from.
      * @param writer   The text writer to write text output to. Caller is responsible for closing the writer.
      * @throws IOException If there is an error writing text output.
-     * @return Number of actually composed lines.
+     * @return Number of beans converted. Detail lines composed from the collection and map properties of the beans are
+     * not counted.
      */
     public long convert(Iterator<? extends T> iterator, Writer writer) throws IOException {
         return execute(makeParseTask(iterator), makeComposer(writer));
@@ -117,7 +119,8 @@ public class BeanCollection2TextConverter<T> extends AbstractConverter {
      * @param collection The collection of beans to convert
      * @param writer     The text writer to write text output to.
      * @throws IOException If there is an error writing text output.
-     * @return Number of actually composed lines.
+     * @return Number of beans converted. Detail lines composed from the collection and map properties of the beans are
+     * not counted.
      */
     public long convert(Collection<? extends T> collection, Writer writer) throws IOException {
         return convert(collection.stream(), writer);
