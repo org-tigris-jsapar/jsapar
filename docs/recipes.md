@@ -60,7 +60,7 @@ you skip it:
 ```java
 try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
     reader.mark(1);
-    if (reader.read() != '﻿')
+    if (reader.read() != '\uFEFF')
         reader.reset();
     parser.parseForEach(reader, line -> handle(line));
 }
@@ -197,7 +197,8 @@ Line 2, cell Amount: value 'abc' is not valid
 Line 3, cell Account: value '' is not valid
 Line 5, cell Count: value 'x' is not valid
 ```
-Note that a line with errors is still supplied to the line consumer, but without the cells that could not be parsed. Use 
+Note that a line with errors is still supplied to the line consumer. A cell whose value could not be parsed is left out, while an empty 
+mandatory cell is kept as an empty cell. Use 
 `line.hasCellErrors()` as in the example if you only want the lines that are correct.
 
 ## Read only the beginning of a file
@@ -265,7 +266,7 @@ characters outside ASCII get distorted.
 ```java
 try (Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8);
      TextComposer composer = new TextComposer(schema, writer)) {
-    writer.write('﻿'); // Byte order mark
+    writer.write('\uFEFF'); // Byte order mark
     Line line = new Line("Payment");
     LineUtils.setStringCellValue(line, "Account", "1234");
     LineUtils.setStringCellValue(line, "Note", "He said \"hi\"; twice");

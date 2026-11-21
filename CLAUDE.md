@@ -22,7 +22,7 @@ mvn javadoc:javadoc                              # doclint is enabled (accessibi
 
 ### Benchmarks
 
-JMH benchmarks live in `src/jmh/java` (`ParseBenchmark`, `ComposeBenchmark`, parameterized by `data`: `CSV_` or `FIXED_WIDTH_` + `STRINGS`, `TYPED`, `WIDE` (32 cells), plus `CSV_QUOTED`; score = lines/s). They are only compiled with the `bench` profile, so JMH never becomes a dependency of the normal build:
+JMH benchmarks live in `src/jmh/java` (`ParseBenchmark`, `ComposeBenchmark`, parameterized by `data`: `CSV_` or `FIXED_WIDTH_` + `STRINGS`, `TYPED`, `WIDE` (32 cells), plus `CSV_QUOTED` and `CSV_REPEATING` (values repeat as in real files, for cell cache measurements); score = lines/s. `ParseBenchmark` also has a `cacheSize` parameter, default `-1` = not set, e.g. `-p cacheSize=-1,0,1,100`). They are only compiled with the `bench` profile, so JMH never becomes a dependency of the normal build:
 
 ```bash
 mvn -Pbench test-compile exec:exec                                               # all benchmarks (~4 min)
