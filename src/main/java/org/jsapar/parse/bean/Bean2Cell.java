@@ -171,7 +171,7 @@ public class Bean2Cell {
 
         }
         // Will squeeze in first character of any datatype's string representation.
-        else if (paramType == Character.TYPE) {
+        else if (paramType == Character.TYPE || paramType == Character.class) {
             if (value instanceof Character)
                 return value;
             return cell.getStringValue().charAt(0);

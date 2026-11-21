@@ -32,7 +32,6 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
      * when parsing xml documents with {@code org.jsapar.parse.xml.XmlParser}.
      * @see BeanFactory#createBean(Line)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException, NoSuchMethodException, InvocationTargetException {
         return newBean(lineClass(line));

@@ -421,6 +421,16 @@ class RecordBeanTest {
         assertEquals(List.of(), errors);
     }
 
+    @Test
+    void stringToCharComponent() {
+        Line line = new Line(Tag.class.getName())
+                .addCell(new StringCell("code", "A"))
+                .addCell(new StringCell("mark", "B"));
+        List<JSaParException> errors = new ArrayList<>();
+        assertEquals(List.of(new Tag('A', 'B')), composeDefault(line, errors));
+        assertEquals(List.of(), errors);
+    }
+
     /** Has a derived getter that looks like a property but is not a record component. */
     public record OrderWithDerived(List<OrderLine> lines) {
         public List<OrderLine> getItems() {
