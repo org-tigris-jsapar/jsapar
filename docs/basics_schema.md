@@ -103,6 +103,10 @@ separator may occur as valid text also within a value of a cell, you will need t
 The attributes `ignoreread` and `ignorewrite` can be used to indicate that the line should be ignored while parsing or 
 composing.
 
+The attribute `parent` makes lines of this type detail lines of the line type it names. While parsing, each detail line
+is added to its master line and only lines without parent are passed on to the caller. See
+[Master and detail lines](advanced#master-and-detail-lines). *New since version 2.5*
+
 #### Line condition
 Sometimes the type of line is not determined by position but instead by the value of one of the cells. If you for instance have the following file to parse:
 ```csv

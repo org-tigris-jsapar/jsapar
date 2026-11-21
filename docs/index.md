@@ -31,6 +31,8 @@ The library should
 * Support for type conversion while parsing and composing.
 * Uses a schema to express the source or target format.
 * Support for different type of lines where line type is determined by the value of defined "condition cells". 
+* Lines can be grouped as [master and detail lines](advanced#master-and-detail-lines), for instance an order line
+followed by its order item lines, also in several levels. The consumer then gets each master line with its detail lines.
 * The schema can be expressed with xml notation or created directly within the java code.
 * Can handle internationalization of numbers and dates both while parsing and composing.
 * The parser can either produce a Document class, representing the content of the file, or you can choose to provide 
@@ -47,6 +49,7 @@ into any markup language by the use of xslt.
 ### Bean mapping features
 * Support converting Java objects to or from any of the other supported input or output formats.
 * Supports natively all primitive types, `Number`, `String`, `BigDecimal`, `BigInteger`, `Enum`, `java.util.Date` and the `java.time` types.
+* Detail lines can be mapped to `List`, `Set` or `Map` properties of the bean of their master line.
 * It is possible to programmatically make manipulations and transformations between parsing and the bean is created which makes it possible to 
 join and split cells that do not fit a bean property one-to-one.
 ### CSV features

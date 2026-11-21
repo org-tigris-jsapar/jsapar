@@ -321,6 +321,11 @@ make it explicit that there should be no class for a line type, even if the line
 <bean linetype="Header"/>
 ```
 
+# Detail lines
+When the schema groups lines as [master and detail lines](advanced#master-and-detail-lines), the beans of the detail 
+lines can be added to a collection or map property of the bean of the master line, using the annotation 
+`@JSaParDetail`, `withDetail()` of the bean map builder or a `<detail>` element in the bean map xml. *New since version 2.5*
+
 # Providing your own bean factory
 If none of the alternatives above is sufficient, you can take full control of how beans are created and how values 
 are assigned by implementing the interface `org.jsapar.compose.bean.BeanFactory` and assigning it to the converter with 
@@ -333,6 +338,10 @@ There are two implementations in the library:
 |---|---|
 |`BeanFactoryByMap`|The default for `Text2BeanConverter`. Creates beans and assigns values as described by a `BeanMap`.|
 |`BeanFactoryDefault`|Uses the line type as class name and cell names as property names, without any `BeanMap`.|
+
+A bean factory decides with `hasDetail()` and `assignDetailToBean()` if and how detail beans are added to the bean of
+the master line. The default implementation of these methods ignores detail lines, and `BeanFactoryDefault` does not
+support detail lines.
 
 `BeanFactoryDefault` creates an instance of whatever class the line type denotes. Use it only when the line types 
 originate from a trusted source such as your own schema, never when they originate from the parsed input, 
