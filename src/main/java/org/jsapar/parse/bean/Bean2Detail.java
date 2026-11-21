@@ -125,19 +125,54 @@ public final class Bean2Detail {
 
     /**
      * @param mapType The generic type of a map property.
-     * @return The class of the key type argument, or Object if it cannot be found, for instance for a raw Map or a
-     * subclass of Map without type arguments.
+     * @return The class of the key type argument of {@link Map}, also when it is given by a superclass or interface,
+     * for instance for {@code class OrderLines extends LinkedHashMap<Integer, OrderLine>}. Object if it cannot be
+     * found, for instance for a raw Map.
      */
     private static Class<?> mapKeyType(Type mapType) {
-        if (mapType instanceof ParameterizedType parameterizedType) {
-            Type[] typeArguments = parameterizedType.getActualTypeArguments();
-            if (typeArguments.length == 2) {
-                Class<?> keyClass = rawClass(typeArguments[0]);
-                if (keyClass != null)
-                    return keyClass;
+        Type keyType = typeArgument(mapType, Map.class, 0, Map.of());
+        Class<?> keyClass = keyType == null ? null : rawClass(keyType);
+        return keyClass == null ? Object.class : keyClass;
+    }
+
+    /**
+     * Finds the actual type argument of a generic class or interface that a type extends or implements.
+     * @param type      The type to search from.
+     * @param target    The generic class or interface whose type argument to find.
+     * @param index     The index of the type argument of the target.
+     * @param variables The actual types of the type variables that may occur in the type.
+     * @return The type argument, which may be an unresolved type variable, or null if the type does not extend the
+     * target or extends its raw type.
+     */
+    private static Type typeArgument(Type type, Class<?> target, int index, Map<TypeVariable<?>, Type> variables) {
+        Class<?> raw;
+        Map<TypeVariable<?>, Type> ownVariables = new HashMap<>();
+        if (type instanceof ParameterizedType parameterizedType && parameterizedType.getRawType() instanceof Class<?> c) {
+            raw = c;
+            TypeVariable<?>[] parameters = raw.getTypeParameters();
+            Type[] arguments = parameterizedType.getActualTypeArguments();
+            for (int i = 0; i < parameters.length && i < arguments.length; i++) {
+                Type argument = arguments[i];
+                ownVariables.put(parameters[i], argument instanceof TypeVariable<?> v ? variables.getOrDefault(v, v) : argument);
             }
+        } else if (type instanceof Class<?> c) {
+            raw = c;
+        } else {
+            return null;
         }
-        return Object.class;
+        if (!target.isAssignableFrom(raw))
+            return null;
+        if (raw == target)
+            return type instanceof ParameterizedType ? ownVariables.get(raw.getTypeParameters()[index]) : null;
+        List<Type> supertypes = new ArrayList<>(Arrays.asList(raw.getGenericInterfaces()));
+        if (raw.getGenericSuperclass() != null)
+            supertypes.addFirst(raw.getGenericSuperclass());
+        for (Type supertype : supertypes) {
+            Type argument = typeArgument(supertype, target, index, ownVariables);
+            if (argument != null)
+                return argument;
+        }
+        return null;
     }
 
     private static Class<?> rawClass(Type type) {

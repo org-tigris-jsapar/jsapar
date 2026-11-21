@@ -209,6 +209,19 @@ class MasterDetailBeanTest {
         public void setLines(Map<Integer, OrderLine> lines) { this.lines = lines; }
     }
 
+    /** A map class that gives the key type in its superclass. */
+    public static class OrderLinesByQuantity<V> extends LinkedHashMap<Integer, V> {
+    }
+
+    @JSaParLine(lineType = "Order")
+    public static class OrderByIntegerQuantityMapSubclass {
+        @JSaParDetail(lineType = "OrderLine", keyCell = "quantity")
+        private OrderLinesByQuantity<OrderLine> lines;
+
+        public OrderLinesByQuantity<OrderLine> getLines() { return lines; }
+        public void setLines(OrderLinesByQuantity<OrderLine> lines) { this.lines = lines; }
+    }
+
     @JSaParLine(lineType = "Order")
     public static class OrderByQuantityText {
         @JSaParDetail(lineType = "OrderLine", keyCell = "quantity")
@@ -465,6 +478,18 @@ class MasterDetailBeanTest {
         assertEquals("SKU-7", lines.get(1).getSku());
         for (Integer key : lines.keySet())
             assertNotNull(key);
+    }
+
+    @Test
+    void mapKey_keyTypeOfMapSubclass_convertedToDeclaredKeyType() throws IOException {
+        List<JSaParException> errors = new ArrayList<>();
+        List<OrderByIntegerQuantityMapSubclass> orders = convert(
+                new Text2BeanConverter<>(csvSchema(), OrderByIntegerQuantityMapSubclass.class), ordersCsv(), errors);
+        assertEquals(List.of(), errors);
+        OrderLinesByQuantity<OrderLine> lines = orders.getFirst().getLines();
+        assertEquals("SKU-7", lines.get(1).getSku());
+        for (Object key : lines.keySet())
+            assertInstanceOf(Integer.class, key);
     }
 
     @Test

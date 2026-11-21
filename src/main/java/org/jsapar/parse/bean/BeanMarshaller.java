@@ -42,14 +42,13 @@ public class BeanMarshaller<T>  {
      * be the java bean attribute name. This means that if there is a member
      * method called <code>getStreetAddress()</code>, the name of the cell will be
      * <code>streetAddress</code>. Only properties defined in the current {@link BeanMap} will be added to the created line.
-     *
-     * @param bean       The bean.
-     * @param errorListener The error listener to which error events are propagated.
      * <p>
      * Since 2.5, the beans in the collection and map properties that are mapped to detail lines, see
      * {@link org.jsapar.bean.JSaParDetail}, are added as detail lines of the line, recursively. Detail beans of a class
      * that is not in the {@link BeanMap} are ignored. Detail lines get the same line number as the line.
      *
+     * @param bean     The bean.
+     * @param errorListener The error listener to which error events are propagated.
      * @param lineNumber The number of the line being parsed. Numbering starts from 1.
      * @return A {@link Line} object containing cells according to the getter method of the supplied bean.
      */
