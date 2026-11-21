@@ -403,6 +403,19 @@ class RecordBeanTest {
     }
 
     @Test
+    void beanFactoryDefault_record_unknownNestedCell() {
+        Line line = new Line(Contact.class.getName())
+                .addCell(new StringCell("name", "Ann"))
+                .addCell(new StringCell("address.stret", "Main street 1"))
+                .addCell(new StringCell("address.city", "Springfield"));
+        List<JSaParException> errors = new ArrayList<>();
+        assertEquals(List.of(new Contact("Ann", 0, new Address(null, "Springfield"))), composeDefault(line, errors));
+        assertEquals(1, errors.size(), errors.toString());
+        assertTrue(errors.getFirst().getMessage().contains("There is no property address.stret"),
+                errors.getFirst().getMessage());
+    }
+
+    @Test
     void beanFactoryDefault_createBean_record_fails() {
         Line line = new Line(Contact.class.getName());
         assertThrows(InstantiationException.class, () -> new BeanFactoryDefault<>().createBean(line));

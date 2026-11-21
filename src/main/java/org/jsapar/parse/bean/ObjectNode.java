@@ -63,24 +63,27 @@ public abstract sealed class ObjectNode permits ObjectNode.Mutable, ObjectNode.R
      * cells are ignored.
      * @param bean2Cell The mapping of the cell, of this object.
      * @param cell      The cell.
+     * @return False if the cell name denotes a nested object but no property within it, so nothing was assigned.
+     * True otherwise, also for an empty cell.
      * @throws BeanComposeException      If the value cannot be assigned.
      * @throws InvocationTargetException If a getter, setter or constructor fails.
      * @throws IllegalAccessException    If a getter, setter or constructor is not accessible.
      * @throws InstantiationException    If a nested object cannot be created.
      * @throws NoSuchMethodException     If a nested object has no public default constructor.
      */
-    public void assign(Bean2Cell bean2Cell, Cell<?> cell) throws BeanComposeException, InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+    public boolean assign(Bean2Cell bean2Cell, Cell<?> cell) throws BeanComposeException, InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
         if (cell.isEmpty())
-            return;
+            return true;
         ObjectNode node = this;
         while (bean2Cell.getChildren() != null) {
             Bean2Cell child = bean2Cell.getChildren().getBean2CellByName(cell.getName());
             if (child == null)
-                return;
+                return false;
             node = node.child(bean2Cell);
             bean2Cell = child;
         }
         node.set(bean2Cell, cell);
+        return true;
     }
 
     /**

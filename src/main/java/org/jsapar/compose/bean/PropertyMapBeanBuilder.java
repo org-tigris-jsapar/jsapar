@@ -26,9 +26,9 @@ final class PropertyMapBeanBuilder<T> implements BeanBuilder<T> {
     @Override
     public void assignCell(Cell<?> cell) throws BeanComposeException, ReflectiveOperationException {
         Bean2Cell bean2Cell = beanPropertyMap.getBean2CellByName(cell.getName());
-        if (bean2Cell != null)
-            root.assign(bean2Cell, cell);
-        else if (failOnUnmappedCell)
+        // A nested cell name, such as address.street, can be mapped to the nested object without a property within it.
+        boolean assigned = bean2Cell != null && root.assign(bean2Cell, cell);
+        if (!assigned && failOnUnmappedCell)
             throw new BeanComposeException("Skipped assigning cell - There is no property " + cell.getName()
                     + " in " + beanPropertyMap.getLineClass().getName());
     }
