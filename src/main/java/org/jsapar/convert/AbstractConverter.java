@@ -98,6 +98,10 @@ public abstract class AbstractConverter {
      * be forwarded to the composer. Default is to iterate the line manipulators and use the result if all of them return true.
      * <p>
      * <b>Assigning a new line transformer will completely disable all registered line manipulators.</b>
+     * <p>
+     * The transformer is only called for top level lines. Detail lines, see
+     * {@link org.jsapar.schema.SchemaLine.Builder#withParent(String)}, are added to their master line before it is
+     * passed to the transformer.
      *
      * @param transformer The transformer to use.
      */

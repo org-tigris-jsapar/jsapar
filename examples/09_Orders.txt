@@ -1,0 +1,7 @@
+O10012026-11-02ACME      
+LSKU-1   2
+D 10
+HCreated by web shop 
+LSKU-7   1
+O10022026-11-03Globex    
+LSKU-3   5

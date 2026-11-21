@@ -13,6 +13,8 @@ off with something else.
 # In short
 Choose JSaPar when **the file format is the difficult part**:
 * The file has several types of lines, for instance a header, different kinds of detail lines and a footer.
+* Lines belong together, for instance an order line followed by its order item lines, and should be handled or mapped 
+to objects as one unit.
 * The file is fixed width, or you need to handle both fixed width and delimited files with the same code.
 * The format should be possible to change, or new formats added, without changing the code.
 * You need to both read and write the same format.
@@ -77,6 +79,26 @@ parser.parseForEach(reader, line -> {
 ```
 The same works for delimited files. See [line condition](basics_schema#line-condition) for details.
 
+## Lines that belong together
+In the file above, each address line belongs to the person line before it. By adding the attribute `parent` to the 
+line type in the schema, the address lines are added to their person line while parsing, and only the person lines 
+are passed on to your code:
+```xml
+    <line linetype="Address" parent="Person">
+```
+```java
+parser.parseForEach(reader, line -> {
+    if (line.getLineType().equals("Person")) {
+        List<Line> addresses = line.getDetails("Address");
+        ...
+    }
+});
+```
+A line type can have detail lines of several types, and detail lines can have detail lines of their own. When mapping 
+to [Java beans](bean_mapping), the detail lines become a `List`, a `Set` or a `Map` in the bean of the master line, 
+and when composing, the detail lines are written after their master line. See 
+[master and detail lines](advanced#master-and-detail-lines) for details.
+
 ## The format is not part of your code
 The schema can be loaded from a xml document, so it can be stored as a file, as a resource or in a database. 
 This means that:
@@ -113,7 +135,8 @@ Each error tells the line number, the name of the cell and what was expected.
 * JSaPar has no dependencies to other libraries. Apart from `java.base` it only requires the `java.xml` module, 
 and it is a named Java module of its own.
 * Parsing and composing is done one line at a time, so the size of the file does not affect the amount of memory 
-needed. Lines can be consumed with a `Consumer` or pulled lazily from a `java.util.stream.Stream`.
+needed. Lines can be consumed with a `Consumer` or pulled lazily from a `java.util.stream.Stream`. With master and
+detail lines, one master line at a time is kept in memory together with its detail lines.
 
 # Performance
 JSaPar is not built to win benchmarks, but it should never be the bottleneck in your application. As an indication, 
@@ -126,6 +149,10 @@ for version 2.5 with Java 25 on a laptop (Intel Core Ultra 7 155U), parsing text
 |8 string cells per line|2.8 million lines/s|2.4 million lines/s|
 |8 cells per line with integers, decimals, dates and booleans|2.0 million lines/s|1.9 million lines/s|
 |32 cells per line with integers, decimals, dates and booleans|0.45 million lines/s| |
+
+Grouping the lines as [master and detail lines](advanced#master-and-detail-lines), with one master line for every ten 
+lines, makes parsing about 5 % slower than for the 8 typed cells above. That includes the extra cell and line condition 
+that tell the two line types apart.
 
 The figures will be different on your hardware and with your data. You can run the benchmarks yourself with 
 `mvn -Pbench test-compile exec:exec`.
@@ -141,9 +168,10 @@ data binding such as Jackson CSV or OpenCSV require less set up.
 arguments and setter methods. You can still parse into `Line` objects and create the objects yourself, but libraries 
 such as Jackson CSV can create records directly.
 * **Raw speed on simple CSV is all that matters.** Use a library that is specialized in that, such as FastCSV.
-* **The lines form a hierarchy that should become nested objects.** JSaPar gives you the lines in order, one by one, 
-with their line types. Collecting for instance all address lines into the person they belong to is up to your code. 
-BeanIO can describe such groups of lines in its mapping.
+* **The order and number of lines within each group need to be validated.** JSaPar groups 
+[master and detail lines](advanced#master-and-detail-lines) but does not check, for instance, that each person has 
+exactly one address line or that the address line comes before other detail lines. BeanIO can describe such rules for 
+groups of lines in its mapping.
 * **You do not know the format beforehand.** JSaPar does not detect separators, quote characters or types automatically. 
 The exception is that the names and the order of the columns can be read from 
 [the first line of a CSV file](basics_schema#the-first-line-describes-cell-layout).
@@ -159,7 +187,7 @@ please check their documentation before you decide. Corrections are welcome as
 
 |Library|Delimited|Fixed width|Several line types in one file|Format described outside the code|Type conversion|Bean mapping|
 |---|---|---|---|---|---|---|
-|**JSaPar**|Yes|Yes|Yes|Yes, xml|Yes|Yes|
+|**JSaPar**|Yes|Yes|Yes, also nested groups|Yes, xml|Yes|Yes|
 |[BeanIO](https://github.com/beanio/beanio)|Yes|Yes|Yes, also nested groups|Yes, xml|Yes|Yes|
 |[univocity-parsers](https://github.com/uniVocity/univocity-parsers)|Yes|Yes|Partly|No|Yes|Yes|
 |[Jackson CSV](https://github.com/FasterXML/jackson-dataformats-text/tree/master/csv)|Yes|No|No|No|Yes|Yes, also records|
@@ -170,8 +198,9 @@ please check their documentation before you decide. Corrections are welcome as
 
 Some notes about the alternatives:
 * **BeanIO** is the library that is most similar to JSaPar. It also uses a mapping that can be loaded from xml and it 
-handles several types of lines. It is centered around mapping to beans and can build nested objects out of groups of 
-lines, which JSaPar cannot. JSaPar on the other hand has a model of lines and cells that can be used without any 
+handles several types of lines. Both can build nested objects out of groups of lines, but BeanIO 
+can also validate the order and number of lines within a group. BeanIO is centered around mapping to beans. JSaPar on 
+the other hand has a model of lines and cells that can be used without any 
 bean classes at all, can convert directly between two formats and has no dependencies. The original BeanIO project has not been released 
 since 2014 but it lives on as a fork with new maven coordinates.
 * **univocity-parsers** handles both delimited and fixed width files, is known for its speed and has a lot of 

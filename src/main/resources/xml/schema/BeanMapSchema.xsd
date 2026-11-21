@@ -13,6 +13,7 @@
   <xsd:complexType name="BeanType">
     <xsd:sequence>
       <xsd:element maxOccurs="unbounded" minOccurs="0" name="property" type="PropertyType"/>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="detail" type="DetailType"/>
     </xsd:sequence>
     <xsd:attribute name="name" type="xsd:string">
       <xsd:annotation>
@@ -26,5 +27,29 @@
   <xsd:complexType name="PropertyType">
     <xsd:attribute name="name" type="xsd:string"/>
     <xsd:attribute name="cellname" type="xsd:string"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="DetailType">
+    <xsd:annotation>
+      <xsd:documentation>Since 2.5. Adds detail lines of a line type to a collection or map property of the bean.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="linetype" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>The line type of the detail lines.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="name" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>The name of the collection or map property of the bean.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="keycell" type="xsd:string">
+      <xsd:annotation>
+        <xsd:documentation>The name of the cell in the detail line whose value is used as key. Required when the
+          property is a Map, not allowed otherwise.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
   </xsd:complexType>
 </xsd:schema>

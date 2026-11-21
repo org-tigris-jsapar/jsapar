@@ -1,5 +1,6 @@
 package org.jsapar;
 
+import org.jsapar.convert.ConvertTask;
 import org.jsapar.convert.LineManipulator;
 import org.jsapar.error.ErrorEvent;
 import org.jsapar.error.ErrorEventListener;
@@ -99,10 +100,8 @@ public class Bean2TextConverter<T> implements AutoCloseable{
      */
     public boolean convert(T bean) throws UncheckedIOException {
         return beanMarshaller.marshal(bean, errorConsumer, lineNumber++).map(line -> {
-            for (LineManipulator manipulator : manipulators) {
-                if (!manipulator.manipulate(line))
-                    return false;
-            }
+            if (!ConvertTask.manipulate(line, manipulators))
+                return false;
             textComposer.composeLine(line);
             return true;
         }).orElse(false);

@@ -37,6 +37,42 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
         for (L schemaLine : builder.schemaLines) {
             this.addSchemaLine(schemaLine);
         }
+        validateParentLineTypes();
+    }
+
+    /**
+     * Checks that each parent line type refers to a line type within this schema and that following the parents
+     * of a line type never ends up in a loop. This is done when the schema is built and again when parsing starts, so
+     * there is normally no need to call it. It can be called to get the error early after
+     * {@link #addSchemaLine(SchemaLine)} or {@link SchemaLine#setParentLineType(String)}.
+     * @throws SchemaException If a parent line type is not valid.
+     * @see SchemaLine.Builder#withParent(String)
+     * @since 2.5
+     */
+    public void validateParentLineTypes() throws SchemaException {
+        for (L schemaLine : schemaLines.values()) {
+            String parent = schemaLine.getParentLineType().orElse(null);
+            for (int depth = 0; parent != null; depth++) {
+                L parentLine = schemaLines.get(parent);
+                if (parentLine == null)
+                    throw new SchemaException("The line type '" + schemaLine.getLineType()
+                            + "' has parent line type '" + parent + "' which does not exist in the schema.");
+                if (parent.equals(schemaLine.getLineType()) || depth >= schemaLines.size())
+                    throw new SchemaException("The parent line types of line type '" + schemaLine.getLineType()
+                            + "' form a loop. A line type cannot be parent of itself, directly or indirectly.");
+                parent = parentLine.getParentLineType().orElse(null);
+            }
+        }
+    }
+
+    /**
+     * @return True if at least one line type of this schema has a parent line type, which means that lines are
+     * grouped as master and detail lines while parsing.
+     * @see SchemaLine.Builder#withParent(String)
+     * @since 2.5
+     */
+    public boolean hasDetailLines() {
+        return schemaLines.values().stream().anyMatch(l -> l.getParentLineType().isPresent());
     }
 
 
@@ -103,6 +139,8 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
         }
     }
     /**
+     * Adds a schema line. Its parent line type, if any, is not checked until parsing starts, see
+     * {@link #validateParentLineTypes()}, since the parent line may be added later.
      * @param schemaLine the schemaLine to add
      */
     public void addSchemaLine(L schemaLine) {

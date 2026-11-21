@@ -43,4 +43,35 @@ public interface BeanFactory<T> {
      */
     void assignCellToBean(String lineType, T bean, Cell<?> cell) throws BeanComposeException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException;
 
+    /**
+     * Tells if detail lines of a line type are mapped to a property of the bean of a master line type. Only then
+     * does the {@link BeanComposer} create a bean for the detail line and call
+     * {@link #assignDetailToBean(String, Object, Line, Object)}. The default implementation returns false, which means
+     * that detail lines are ignored.
+     * @param lineType       The line type of the master line.
+     * @param detailLineType The line type of the detail line.
+     * @return True if detail lines of the type should be assigned to the bean of the master line.
+     * @see org.jsapar.schema.SchemaLine.Builder#withParent(String)
+     * @since 2.5
+     */
+    default boolean hasDetail(String lineType, String detailLineType) {
+        return false;
+    }
+
+    /**
+     * Should add the bean of a detail line to the proper property of the bean of the master line. Called only if
+     * {@link #hasDetail(String, String)} returns true. The default implementation does nothing.
+     * @param lineType   The line type of the master line.
+     * @param bean       The bean of the master line.
+     * @param detailLine The detail line.
+     * @param detailBean The bean created for the detail line.
+     * @throws BeanComposeException In case there is an error assigning the detail bean. This exception will be caught
+     * by the calling {@link BeanComposer} and converted into a call to the assigned error consumer.
+     * @throws InvocationTargetException If not possible to invoke method.
+     * @throws IllegalAccessException In case a getter or setter method is not publicly accessible.
+     * @since 2.5
+     */
+    default void assignDetailToBean(String lineType, T bean, Line detailLine, Object detailBean) throws BeanComposeException, InvocationTargetException, IllegalAccessException {
+    }
+
 }

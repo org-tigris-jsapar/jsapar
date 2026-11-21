@@ -58,7 +58,23 @@ public class StringComposer implements Composer {
                 line.getLineType(),
                 line.getLineNumber()
         );
+        for (Line detail : line.getDetails()) {
+            composeLine(detail);
+        }
         return true;
+    }
+
+    /**
+     * @param line The line to compose.
+     * @return A stream with the composed line followed by its composed detail lines, recursively. Empty if the line
+     * is not written. Detail lines that are not written are left out together with their own detail lines.
+     * @since 2.5
+     */
+    public Stream<Stream<String>> toStringLines(Line line) {
+        Optional<Stream<String>> stringLine = toStringLine(line);
+        if (stringLine.isEmpty() || !line.hasDetails())
+            return stringLine.stream();
+        return Stream.concat(stringLine.stream(), line.getDetails().stream().flatMap(this::toStringLines));
     }
 
     public Optional<Stream<String>> toStringLine(Line line) {

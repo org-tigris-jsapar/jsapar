@@ -3,6 +3,7 @@ package org.jsapar.compose.bean;
 import org.jsapar.compose.ComposeException;
 import org.jsapar.compose.Composer;
 import org.jsapar.compose.line.ValidationHandler;
+import org.jsapar.error.BeanException;
 import org.jsapar.error.ExceptionErrorConsumer;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
@@ -195,7 +196,34 @@ public final class BeanComposer<T> implements Composer{
                 errorConsumer.accept( new ComposeException(e.getMessage() + " while handling cell " + cell, e));
             }
         }
+        if (line.hasDetails())
+            assignDetails(line, objectToAssign);
         return objectToAssign;
+    }
+
+    /**
+     * Creates beans of the detail lines, recursively, and adds them to the master bean. Detail lines that are not
+     * mapped to a property of the master bean are ignored.
+     * @param line       The master line.
+     * @param masterBean The bean of the master line.
+     */
+    private void assignDetails(Line line, T masterBean) {
+        for (Line detail : line.getDetails()) {
+            if (!beanFactory.hasDetail(line.getLineType(), detail.getLineType()))
+                continue;
+            Optional<T> detailBean = toBean(detail);
+            if (detailBean.isEmpty())
+                continue;
+            try {
+                beanFactory.assignDetailToBean(line.getLineType(), masterBean, detail, detailBean.get());
+            } catch (BeanComposeException
+                    | BeanException
+                    | IllegalArgumentException
+                    | IllegalAccessException
+                    | InvocationTargetException e) {
+                errorConsumer.accept(new ComposeException(e.getMessage() + " while handling detail line", detail, e));
+            }
+        }
     }
 
 

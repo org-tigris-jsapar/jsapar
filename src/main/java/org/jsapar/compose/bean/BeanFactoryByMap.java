@@ -38,4 +38,15 @@ public final class BeanFactoryByMap<T> implements BeanFactory<T>{
             bean2Cell.assign(bean, cell);
     }
 
+    @Override
+    public boolean hasDetail(String lineType, String detailLineType) {
+        BeanPropertyMap beanPropertyMap = beanMap.getBeanPropertyMap(lineType);
+        return beanPropertyMap != null && beanPropertyMap.getBean2Detail(detailLineType) != null;
+    }
+
+    @Override
+    public void assignDetailToBean(String lineType, T bean, Line detailLine, Object detailBean) throws BeanComposeException, InvocationTargetException, IllegalAccessException {
+        beanMap.getBeanPropertyMap(lineType).getBean2Detail(detailLine.getLineType()).add(bean, detailLine, detailBean);
+    }
+
 }

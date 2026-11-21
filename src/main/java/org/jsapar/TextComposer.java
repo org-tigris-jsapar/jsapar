@@ -56,6 +56,9 @@ public final class TextComposer implements Composer, AutoCloseable {
     /**
      * Writes the single line to a {@link java.io.Writer} according to the line type of the line.
      * The line is prefixed with the line separator unless it is the first line.
+     * <p>
+     * Since 2.5, the detail lines of the line, if any, are written after the line, recursively and in the order they
+     * were added. If the line itself is not written, neither are its detail lines.
      * 
      * @param line The line to write.
      *
@@ -67,10 +70,19 @@ public final class TextComposer implements Composer, AutoCloseable {
     public boolean composeLine(Line line) throws UncheckedIOException{
         try {
             if (breakBefore) {
+                // Write the separator only for a line that will be written, so that there is no trailing separator
+                // when the last line, for instance a detail line, is not written.
+                if (!isWritable(line))
+                    return false;
                 writer.write(schema.getLineSeparator());
             }
             boolean written = writeLine(line);
             breakBefore = written;
+            if (written && line.hasDetails()) {
+                for (Line detail : line.getDetails()) {
+                    composeLine(detail);
+                }
+            }
             return written;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -107,6 +119,14 @@ public final class TextComposer implements Composer, AutoCloseable {
      */
     boolean writeLine(Line line) {
         return schemaComposer.composeLine(line);
+    }
+
+    /**
+     * @param line The line to check.
+     * @return True if the schema has a line type for the line that is not ignored when writing.
+     */
+    private boolean isWritable(Line line) {
+        return schema.getSchemaLine(line.getLineType()).filter(schemaLine -> !schemaLine.isIgnoreWrite()).isPresent();
     }
 
 

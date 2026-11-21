@@ -4,6 +4,7 @@ import org.jsapar.TextParser;
 import org.jsapar.model.CellType;
 import org.jsapar.model.Line;
 import org.jsapar.schema.CsvSchema;
+import org.jsapar.schema.CsvSchemaLine;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell.Alignment;
 import org.jsapar.schema.Schema;
@@ -34,9 +35,12 @@ public final class BenchmarkData {
      *     <li>WIDE - the TYPED cells repeated four times, 32 cells per line.</li>
      *     <li>REPEATING - the TYPED cells but with values that repeat as in many real files: dates and cities in
      *     sorted blocks, a few distinct amounts and mostly the same note. Id and first name are still unique.</li>
+     *     <li>MASTER_DETAIL - the TYPED cells preceded by a line type cell. Every tenth line is a master line (O) and
+     *     the nine lines that follow are its detail lines (I), so detail lines are grouped under their master
+     *     line. CSV only. The score still counts every parsed or composed line.</li>
      * </ul>
      */
-    enum Content {STRINGS, TYPED, QUOTED, WIDE, REPEATING}
+    enum Content {STRINGS, TYPED, QUOTED, WIDE, REPEATING, MASTER_DETAIL}
 
     /**
      * The format and content combinations to benchmark. A single parameter instead of one for format and one for
@@ -48,6 +52,7 @@ public final class BenchmarkData {
         CSV_QUOTED(Format.CSV, Content.QUOTED),
         CSV_WIDE(Format.CSV, Content.WIDE),
         CSV_REPEATING(Format.CSV, Content.REPEATING),
+        CSV_MASTER_DETAIL(Format.CSV, Content.MASTER_DETAIL),
         FIXED_WIDTH_STRINGS(Format.FIXED_WIDTH, Content.STRINGS),
         FIXED_WIDTH_TYPED(Format.FIXED_WIDTH, Content.TYPED),
         FIXED_WIDTH_WIDE(Format.FIXED_WIDTH, Content.WIDE);
@@ -84,7 +89,8 @@ public final class BenchmarkData {
     }
 
     private static boolean typed(Content content) {
-        return content == Content.TYPED || content == Content.WIDE || content == Content.REPEATING;
+        return content == Content.TYPED || content == Content.WIDE || content == Content.REPEATING
+                || content == Content.MASTER_DETAIL;
     }
 
     private static int groups(Content content) {
@@ -96,22 +102,31 @@ public final class BenchmarkData {
     }
 
     private static CsvSchema csvSchema(Content content) {
+        if (content == Content.MASTER_DETAIL) {
+            return CsvSchema.builder()
+                    .withLine("order", l -> csvCells(l.withCellSeparator(";")
+                            .withCell("type", c -> c.withLineCondition("O"::equals)), content))
+                    .withLine("item", l -> csvCells(l.withCellSeparator(";").withParent("order")
+                            .withCell("type", c -> c.withLineCondition("I"::equals)), content))
+                    .build();
+        }
+        return CsvSchema.builder().withLine("person", l -> csvCells(l.withCellSeparator(";"), content)).build();
+    }
+
+    private static CsvSchemaLine.Builder csvCells(CsvSchemaLine.Builder l, Content content) {
         boolean typed = typed(content);
-        return CsvSchema.builder().withLine("person", l -> {
-            l.withCellSeparator(";");
-            for (int g = 0; g < groups(content); g++) {
-                String s = suffix(g);
-                l.withCell("id" + s, c -> typed ? c.withType(CellType.INTEGER) : c)
-                        .withCell("firstName" + s)
-                        .withCell("lastName" + s)
-                        .withCell("city" + s)
-                        .withCell("amount" + s, c -> typed ? c.withType(CellType.DECIMAL) : c)
-                        .withCell("date" + s, c -> typed ? c.withType(CellType.LOCAL_DATE) : c)
-                        .withCell("active" + s, c -> typed ? c.withType(CellType.BOOLEAN) : c)
-                        .withCell("note" + s);
-            }
-            return l;
-        }).build();
+        for (int g = 0; g < groups(content); g++) {
+            String s = suffix(g);
+            l.withCell("id" + s, c -> typed ? c.withType(CellType.INTEGER) : c)
+                    .withCell("firstName" + s)
+                    .withCell("lastName" + s)
+                    .withCell("city" + s)
+                    .withCell("amount" + s, c -> typed ? c.withType(CellType.DECIMAL) : c)
+                    .withCell("date" + s, c -> typed ? c.withType(CellType.LOCAL_DATE) : c)
+                    .withCell("active" + s, c -> typed ? c.withType(CellType.BOOLEAN) : c)
+                    .withCell("note" + s);
+        }
+        return l;
     }
 
     private static FixedWidthSchema fixedWidthSchema(Content content) {
@@ -154,6 +169,8 @@ public final class BenchmarkData {
                 appendRepeatingLine(sb, i);
                 continue;
             }
+            if (content == Content.MASTER_DETAIL)
+                sb.append(i % 10 == 0 ? "O;" : "I;");
             for (int g = 0; g < groups(content); g++) {
                 if (g > 0)
                     sb.append(';');
@@ -191,11 +208,19 @@ public final class BenchmarkData {
         return i < 10 ? "0" + i : Integer.toString(i);
     }
 
+    /**
+     * @return The parsed top level lines. Detail lines are within their master lines.
+     */
     static List<Line> lines(Format format, Content content, String input) throws IOException {
         List<Line> lines = new ArrayList<>(LINES);
         new TextParser(schema(format, content)).parseForEach(new StringReader(input), lines::add);
-        if (lines.size() != LINES)
-            throw new IllegalStateException("Expected " + LINES + " lines but parsed " + lines.size());
+        long count = lines.stream().mapToLong(BenchmarkData::countWithDetails).sum();
+        if (count != LINES)
+            throw new IllegalStateException("Expected " + LINES + " lines but parsed " + count);
         return lines;
+    }
+
+    private static long countWithDetails(Line line) {
+        return 1 + line.getDetails().stream().mapToLong(BenchmarkData::countWithDetails).sum();
     }
 }

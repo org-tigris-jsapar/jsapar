@@ -53,6 +53,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
      * If set to true, this type of line will not be written to the output.
      */
     private boolean ignoreWrite = false;
+    private String parentLineType = null;
 
     /**
      * Creates a SchemaLine that occurs infinite number of times.
@@ -107,6 +108,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
         this.lineType = builder.lineType;
         this.ignoreRead = builder.ignoreRead;
         this.ignoreWrite = builder.ignoreWrite;
+        this.parentLineType = builder.parentLineType;
     }
 
     @SuppressWarnings("unchecked")
@@ -116,6 +118,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
         private int occurs = OCCURS_INFINITE;
         private boolean ignoreRead;
         private boolean ignoreWrite;
+        private String parentLineType;
         private Locale defaultLocale = SchemaCellFormat.defaultLocale;
 
         public Builder(String lineType) {
@@ -128,6 +131,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
             this.occurs = schemaLine.occurs;
             this.ignoreRead = schemaLine.ignoreRead;
             this.ignoreWrite = schemaLine.ignoreWrite;
+            this.parentLineType = schemaLine.parentLineType;
         }
 
         /**
@@ -204,6 +208,23 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
          */
         public B withIgnoreWrite(boolean ignoreWrite) {
             this.ignoreWrite = ignoreWrite;
+            return (B) this;
+        }
+
+        /**
+         * Makes lines of this type detail lines of a master line. While parsing, each line of this type is attached
+         * to the closest preceding open line of the parent line type, see {@link org.jsapar.model.Line#getDetails()}, and
+         * only lines without a parent are passed on to the line consumer. Detail lines can themselves be parent of
+         * other detail lines. See {@link org.jsapar.parse.MasterDetailLineConsumer} for details about grouping.
+         * <p>
+         * Successive calls to this method for the same builder will replace previous value.
+         * @param parentLineType The line type of the master line that lines of this type belong to. null means that
+         *                       lines of this type have no parent, which is the default.
+         * @return This builder instance.
+         * @since 2.5
+         */
+        public B withParent(String parentLineType) {
+            this.parentLineType = parentLineType;
             return (B) this;
         }
 
@@ -334,6 +355,27 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
      */
     public void setIgnoreWrite(boolean ignoreWrite) {
         this.ignoreWrite = ignoreWrite;
+    }
+
+    /**
+     * @return The line type of the master line that lines of this type belong to, or empty if lines of this type
+     * have no parent.
+     * @see Builder#withParent(String)
+     * @since 2.5
+     */
+    public Optional<String> getParentLineType() {
+        return Optional.ofNullable(parentLineType);
+    }
+
+    /**
+     * The parent line type is checked when parsing starts, see {@link Schema#validateParentLineTypes()}.
+     * @param parentLineType The line type of the master line that lines of this type belong to. null means that
+     *                       lines of this type have no parent.
+     * @see Builder#withParent(String)
+     * @since 2.5
+     */
+    public void setParentLineType(String parentLineType) {
+        this.parentLineType = parentLineType;
     }
 
     /*

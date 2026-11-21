@@ -102,7 +102,7 @@ public class Text2StringConverter extends AbstractConverter {
     public Stream<Stream<String>> stream(Reader reader) throws IOException {
         try(StringComposer composer = new StringComposer(composeSchema, (c,l,n)->{})) {
             TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
-            return parser.stream(getErrorConsumer()).flatMap(line -> composer.toStringLine(line).stream());
+            return parser.stream(getErrorConsumer()).flatMap(composer::toStringLines);
         }
     }
 

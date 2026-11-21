@@ -3,6 +3,7 @@ package org.jsapar.parse.fixed;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Line;
 import org.jsapar.parse.line.ValidationHandler;
+import org.jsapar.parse.text.SkippedLineConsumer;
 import org.jsapar.parse.text.TextSchemaParser;
 import org.jsapar.schema.FixedWidthSchema;
 import org.jsapar.schema.FixedWidthSchemaCell;
@@ -70,12 +71,16 @@ public class FixedWidthParser implements TextSchemaParser {
                     return lineReader.getLineNumber()-1;
             }
             Line line = lineParser.parse(lineReader, errorListener);
-            if(lineParser.isIgnoreRead())
+            if(lineParser.isIgnoreRead()) {
+                SkippedLineConsumer.notifyIgnored(lineEventListener, lineParser.getLineType());
                 continue;
+            }
             if (line != null)
                 lineEventListener.accept( line );
             else if(lineReader.eofReached())
                 return lineReader.getLineNumber()-1; // End of stream.
+            else
+                SkippedLineConsumer.notifySkipped(lineEventListener, lineParser.getLineType());
         }
     }
 
@@ -103,13 +108,18 @@ public class FixedWidthParser implements TextSchemaParser {
                             return lineParserFactory.getLastResult() == LineParserMatcherResult.NOT_MATCHING;
                         }
                         Line line = lineParser.parse(lineReader, errorConsumer);
-                        if (lineParser.isIgnoreRead())
+                        if (lineParser.isIgnoreRead()) {
+                            SkippedLineConsumer.notifyIgnored(action, lineParser.getLineType());
                             return true;
+                        }
                         if (line != null) {
                             action.accept(line);
                             return true;
-                        } else
-                            return !lineReader.eofReached(); // End of stream.
+                        }
+                        if (lineReader.eofReached())
+                            return false; // End of stream.
+                        SkippedLineConsumer.notifySkipped(action, lineParser.getLineType());
+                        return true;
                     } catch (IOException e) {
                         throw new UncheckedIOException(e);
                     }

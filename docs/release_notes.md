@@ -43,6 +43,17 @@ title: Release notes
 18. Fixed: When parsing CSV with several line types that are selected by line conditions, a valid line that followed
     an empty line could be reported as not matching any line type, or be silently skipped if undefined line types
     were ignored.
+19. Added [master and detail lines](advanced#master-and-detail-lines). A schema line can name its master line type with
+    the new attribute `parent`, or `withParent()` in the builder. While parsing, detail lines are added to their
+    master line, see `Line.getDetails()`, and only top level lines are passed on to the line consumer or stream. 
+    Detail lines can be mapped to collection or map properties of beans with the new annotation `@JSaParDetail`,
+    `withDetail()` in the bean map builder or a `<detail>` element in the bean map xml. When composing, detail lines 
+    are written after their master line. New `TextParseConfig.setOnOrphanDetailLine()` controls what happens to a 
+    detail line without master line. A master line that is omitted while parsing makes its detail lines orphans,
+    while the detail lines of a line type with `ignoreread` are ignored too.
+    Line manipulators are called for detail lines too, and `Line.removeDetailsIf()` removes detail lines.
+20. Fixed: `TextComposer` wrote a trailing line separator when the last line was not written, for instance because
+    its line type has `ignorewrite` or is not in the schema.
 
 ## 2.4
 1. Built with and for Java 17. Support for Java 11 and below is dropped.

@@ -319,6 +319,8 @@ public class Xml2SchemaBuilder implements SchemaXmlTypes, XmlTypes {
         if (xmlIgnoreWrite != null)
             lineBuilder.withIgnoreWrite(getBooleanValue(xmlIgnoreWrite));
 
+        parseAttribute(xmlSchemaLine, ATTRIB_SCHEMA_LINE_PARENT).ifPresent(lineBuilder::withParent);
+
         forEachCell(xmlSchemaLine, applyToEachCell);
     }
 

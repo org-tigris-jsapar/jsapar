@@ -5,6 +5,7 @@ import org.jsapar.model.Cell;
 import org.jsapar.model.Line;
 import org.jsapar.model.StringCell;
 import org.jsapar.parse.LineParseException;
+import org.jsapar.parse.text.SkippedLineConsumer;
 import org.jsapar.parse.cell.CellParser;
 import org.jsapar.parse.line.CellCacheSize;
 import org.jsapar.parse.line.LineDecoratorErrorConsumer;
@@ -85,8 +86,10 @@ class CsvLineParser {
         }
 
         usedCount++;
-        if(lineSchema.isIgnoreRead())
+        if(lineSchema.isIgnoreRead()) {
+            SkippedLineConsumer.notifyIgnored(listener, lineSchema.getLineType());
             return true;
+        }
 
         // Create with same size as schema plus 1 to handle trailing cell separator which is quite common.
         Line line = new Line(lineSchema.getLineType(), 1 + lineSchema.size(), lineReader.currentLineNumber());
@@ -97,8 +100,10 @@ class CsvLineParser {
             if (itParser.hasNext()) {
                 addCellToLineBySchema(line, itParser.next(), sCell, lineDecoratorErrorConsumer);
             } else {
-                if(!addCellToLineWithoutSchema(line, sCell, errorListener))
+                if(!addCellToLineWithoutSchema(line, sCell, errorListener)) {
+                    SkippedLineConsumer.notifySkipped(listener, lineSchema.getLineType());
                     return true;
+                }
             }
         }
         if (line.size() <= 0)
@@ -108,6 +113,7 @@ class CsvLineParser {
         while (itParser.hasNext()) {
             if (!validationHandler.lineValidation(line.getLineNumber(), config.getOnLineInsufficient(), errorListener,
                     ()->"Insufficient number of cells could be read from the line of type " + lineSchema.getLineType())) {
+                SkippedLineConsumer.notifySkipped(listener, lineSchema.getLineType());
                 return true;
             }
             addCellToLineBySchema(line, itParser.next(), EMPTY_STRING, lineDecoratorErrorConsumer);

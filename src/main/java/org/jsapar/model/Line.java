@@ -17,6 +17,10 @@ import java.util.stream.Stream;
  * multiple threads access the same instance, external synchronization is required.
  * <p>
  * In order to make it easier to retrieve and alter cell values within a {@link org.jsapar.model.Line}, you may use the {@link org.jsapar.model.LineUtils} class.
+ * <p>
+ * A line can have detail lines, for instance an order line that has order item lines. When parsing with a schema
+ * where some line types have a parent line type, detail lines are added to their master line and only the top level
+ * lines are passed on to the caller. See {@link #getDetails()}.
  * @see LineUtils
  * @see Cell
  * @see Document
@@ -27,6 +31,8 @@ public class Line implements Cloneable, Iterable<Cell<?>> {
     private Map<String, Cell<?>> cells;
     /** Created lazily since most lines never get any errors. */
     private Map<String, CellParseException> cellErrors;
+    /** Detail lines in the order they were added. Created lazily since most lines never get any details. */
+    private List<Line> details;
 
     /**
      * Line type.
@@ -252,6 +258,10 @@ public class Line implements Cloneable, Iterable<Cell<?>> {
         sb.append(" {");
         sb.append(stream().map(Cell::toString).collect(Collectors.joining(", ")));
         sb.append("}");
+        if (hasDetails()) {
+            sb.append(" details=");
+            sb.append(details.size());
+        }
         return sb.toString();
     }
 
@@ -292,6 +302,8 @@ public class Line implements Cloneable, Iterable<Cell<?>> {
         // No need to make a deep copy since cells are all final.
         clone.cells = new LinkedHashMap<>(this.cells);
         clone.cellErrors = this.cellErrors == null ? null : new LinkedHashMap<>(this.cellErrors);
+        // Shallow copy, the detail lines themselves are shared with the original.
+        clone.details = this.details == null ? null : new ArrayList<>(this.details);
 
         return clone;
     }
@@ -380,6 +392,68 @@ public class Line implements Cloneable, Iterable<Cell<?>> {
      */
     public Object getProperty(String cellName){
         return getCell(cellName).map(Cell::getValue).orElse(null);
+    }
+
+    /**
+     * Adds a detail line to this line. Detail lines are kept in the order they are added, regardless of their line
+     * type.
+     * @param detail The detail line to add.
+     * @return This line.
+     * @since 2.5
+     */
+    public Line addDetail(Line detail) {
+        Objects.requireNonNull(detail, "Detail line cannot be null");
+        if (this.details == null)
+            this.details = new ArrayList<>(4);
+        this.details.add(detail);
+        return this;
+    }
+
+    /**
+     * @return An unmodifiable list of all detail lines of this line, of all line types, in the order they were added.
+     * An empty list if there are no detail lines.
+     * @see org.jsapar.schema.SchemaLine.Builder#withParent(String)
+     * @since 2.5
+     */
+    public List<Line> getDetails() {
+        return details == null ? Collections.emptyList() : Collections.unmodifiableList(details);
+    }
+
+    /**
+     * @param lineType The line type of the detail lines to return.
+     * @return A new list with the detail lines of this line that have the given line type, in the order they were
+     * added. An empty list if there are no such detail lines.
+     * @since 2.5
+     */
+    public List<Line> getDetails(String lineType) {
+        if (details == null)
+            return Collections.emptyList();
+        List<Line> result = new ArrayList<>();
+        for (Line detail : details) {
+            if (detail.getLineType().equals(lineType))
+                result.add(detail);
+        }
+        return result;
+    }
+
+    /**
+     * Removes the detail lines of this line that match a predicate. The predicate is called once for each detail
+     * line, in the order they were added. The detail lines of the detail lines are not affected.
+     * @param filter Returns true for the detail lines to remove.
+     * @return True if any detail line was removed.
+     * @since 2.5
+     */
+    public boolean removeDetailsIf(java.util.function.Predicate<? super Line> filter) {
+        Objects.requireNonNull(filter, "Filter cannot be null");
+        return details != null && details.removeIf(filter);
+    }
+
+    /**
+     * @return True if this line has at least one detail line.
+     * @since 2.5
+     */
+    public boolean hasDetails() {
+        return details != null && !details.isEmpty();
     }
 
 }

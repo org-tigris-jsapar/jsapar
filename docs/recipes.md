@@ -141,6 +141,49 @@ consumer.put("Trailer", line -> {
 parser.parseForEach(reader, consumer);
 ```
 The same schema is used in the recipe [Compose a file with header and trailer lines](#compose-a-file-with-header-and-trailer-lines) below.
+If the detail lines belong to the line before them rather than to the file as a whole, see the next recipe.
+
+## Parse lines that belong to the line before them
+In many files a line is followed by lines that belong to it, for instance an order followed by its order lines:
+```csv
+O;1001;ACME
+L;SKU-1;2
+L;SKU-7;1
+O;1002;Globex
+L;SKU-3;5
+```
+Add the attribute `parent` to the line type of the lines that belong to another line:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0">
+  <csvschema lineseparator="\n" cellseparator=";">
+    <line linetype="Order">
+      <cell name="Type" default="O"><linecondition><match pattern="O"/></linecondition></cell>
+      <cell name="Order id"><format type="integer"/></cell>
+      <cell name="Customer"/>
+    </line>
+    <line linetype="OrderLine" parent="Order">
+      <cell name="Type" default="L"><linecondition><match pattern="L"/></linecondition></cell>
+      <cell name="Sku"/>
+      <cell name="Quantity"><format type="integer"/></cell>
+    </line>
+  </csvschema>
+</schema>
+```
+The consumer is then called once for each order, and the order lines are available from the order:
+```java
+TextParser parser = new TextParser(schema);
+parser.parseForEach(reader, order -> {
+    long quantity = 0;
+    for (Line orderLine : order.getDetails("OrderLine"))
+        quantity += LineUtils.getLongCellValue(orderLine, "Quantity").orElseThrow();
+    System.out.println("Order " + LineUtils.getStringCellValue(order, "Order id") + " has " + quantity + " items");
+});
+```
+The order lines can also become a `List` or a `Map` in your own order class by annotating the attribute with 
+`@JSaParDetail(lineType = "OrderLine")`. An order line before the first order is reported as an error. See 
+[master and detail lines](advanced#master-and-detail-lines) for more levels, several types of detail lines, bean 
+mapping and error handling.
 
 ## Ignore lines that do not match any line type
 By default, it is an error if a line does not fulfill the line condition of any of the line types in the schema. If 
@@ -325,6 +368,22 @@ converter.addLineManipulator(line -> {
 converter.convert(reader, writer);
 ```
 The output schema needs to contain a cell with the name `Name`. Cells that are not present in the output schema are not written. 
+
+## Add a summary of the detail lines while converting
+When the schema has [master and detail lines](advanced#master-and-detail-lines), line manipulators and transformers 
+are only called for the master lines, which carry their detail lines. That makes it easy to add a summary to the 
+master line. With the schema of the recipe [Parse lines that belong to the line before them](#parse-lines-that-belong-to-the-line-before-them)
+as input, this adds the number of order lines to each order:
+```java
+Text2TextConverter converter = new Text2TextConverter(inputSchema, outputSchema);
+converter.addLineManipulator(order -> {
+    LineUtils.setIntCellValue(order, "Line count", order.getDetails("OrderLine").size());
+    return true;
+});
+converter.convert(reader, writer);
+```
+The output schema needs a cell `Line count` in the `Order` line. The detail lines are written after their order as in 
+the input. If the manipulator returns `false`, the order is omitted together with its order lines.
 
 ## Split one line into several while converting
 Use a transformer, which returns a list of lines for each line. In this example the input has a cell `Items` with a 

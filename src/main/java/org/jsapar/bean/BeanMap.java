@@ -107,21 +107,74 @@ public final class BeanMap {
      * Creates a BeanMap instance based on a list of annotated classes. All classes provided need to have the
      * annotation {@link JSaParLine} and only attributes annotated with {@link JSaParCell} will be mapped to the schema
      * values.
+     * <p>
+     * Since 2.5, the element classes of attributes annotated with {@link JSaParDetail} are also added, recursively, if
+     * they are annotated with {@link JSaParLine}. The element class is the last type argument of the attribute type,
+     * for instance {@code OrderLine} for {@code List<OrderLine>}, {@code List<? extends OrderLine>} or
+     * {@code Map<String, OrderLine>}. Element classes that cannot be found this way, for instance for an interface
+     * type, need to be in the list of classes.
      * @param classes A list of annotated classes.
      * @return A newly created BeanMap instance.
+     * @throws BeanException If a class is not annotated with {@link JSaParLine}, or, since 2.5, if no class is mapped
+     * to the line type of a {@link JSaParDetail} attribute, for instance because the line type differs from the one
+     * in the {@link JSaParLine} annotation of the element class.
      */
     public static BeanMap ofClasses(Iterable<Class<?> > classes) {
         BeanMap beanMap = new BeanMap();
 
-        for (Class<?> c : classes) {
+        Deque<Class<?>> remaining = new ArrayDeque<>();
+        classes.forEach(remaining::add);
+        while (!remaining.isEmpty()) {
+            Class<?> c = remaining.poll();
+            if (beanMap.beanPropertyMap.containsKey(c))
+                continue;
             if (!c.isAnnotationPresent(JSaParLine.class))
                 throw new BeanException(
                         "The class " + c.getName() + " needs to have the annotation " + JSaParLine.class.getSimpleName()
                                 + ". Unable to create bean map.");
             JSaParLine lineAnnotation = c.getAnnotation(JSaParLine.class);
             beanMap.putBean2Line(c, BeanPropertyMap.ofClass(c, lineAnnotation.lineType()));
+            remaining.addAll(detailElementClasses(c));
         }
+        beanMap.validateDetailLineTypes(lineType -> true);
         return beanMap;
+    }
+
+    /**
+     * @param c The class to look for {@link JSaParDetail} attributes in.
+     * @return The element classes, annotated with {@link JSaParLine}, of collection and map attributes annotated with
+     * {@link JSaParDetail}.
+     */
+    private static List<Class<?>> detailElementClasses(Class<?> c) {
+        List<Class<?>> elementClasses = new ArrayList<>();
+        for (java.lang.reflect.Field field : c.getDeclaredFields()) {
+            if (!field.isAnnotationPresent(JSaParDetail.class)
+                    || !(field.getGenericType() instanceof java.lang.reflect.ParameterizedType type))
+                continue;
+            java.lang.reflect.Type[] typeArguments = type.getActualTypeArguments();
+            // The element type is the last type argument, the value type for a Map.
+            Class<?> elementClass = rawClass(typeArguments[typeArguments.length - 1]);
+            if (elementClass != null && elementClass.isAnnotationPresent(JSaParLine.class))
+                elementClasses.add(elementClass);
+        }
+        return elementClasses;
+    }
+
+    /**
+     * @param type A type argument.
+     * @return The class of the type argument: the raw type of a generic type, or the upper bound of a wildcard or a
+     * type variable. Null if there is no such class.
+     */
+    private static Class<?> rawClass(java.lang.reflect.Type type) {
+        if (type instanceof Class<?> c)
+            return c;
+        if (type instanceof java.lang.reflect.ParameterizedType parameterizedType)
+            return rawClass(parameterizedType.getRawType());
+        if (type instanceof java.lang.reflect.WildcardType wildcardType)
+            return rawClass(wildcardType.getUpperBounds()[0]);
+        if (type instanceof java.lang.reflect.TypeVariable<?> typeVariable)
+            return rawClass(typeVariable.getBounds()[0]);
+        return null;
     }
 
     /**
@@ -164,9 +217,29 @@ public final class BeanMap {
                         beanMap.putBean2Line(beanPropertyMap.getLineClass().getName(), beanPropertyMap);
                 }
             }
+            beanMap.validateDetailLineTypes(lineType -> schema.getSchemaLine(lineType).isPresent());
             return beanMap;
         } catch (ClassNotFoundException e) {
             throw new BeanException("Failed to build bean mapping based on schema", e);
+        }
+    }
+
+    /**
+     * Checks that each detail line type that is mapped to a property, and that should be checked, is mapped to a
+     * class too. Otherwise, no bean could ever be created for those detail lines.
+     * @param shouldCheck Tells if a detail line type should be checked, for instance only the ones in the schema.
+     * @throws BeanException If a detail line type is not mapped to a class.
+     */
+    private void validateDetailLineTypes(java.util.function.Predicate<String> shouldCheck) throws BeanException {
+        for (BeanPropertyMap master : beanPropertyMapByLineType.values()) {
+            for (org.jsapar.parse.bean.Bean2Detail detail : master.getBean2Details()) {
+                String detailLineType = detail.getDetailLineType();
+                if (shouldCheck.test(detailLineType) && getBeanPropertyMap(detailLineType) == null)
+                    throw new BeanException("The detail line type " + detailLineType + " of property "
+                            + detail.getPropertyName() + " in " + master.getLineClass().getName()
+                            + " is not mapped to any class. Annotate the element class with "
+                            + JSaParLine.class.getSimpleName() + " and add it to the bean map.");
+            }
         }
     }
 
@@ -263,6 +336,7 @@ public final class BeanMap {
         private final String lineType;
         private final Class<?> beanClass;
         private final Map<String, String> cellNamesOfProperty = new HashMap<>();
+        private final List<DetailMapping> details = new ArrayList<>();
 
         private BeanPropertyMapBuilder(String lineType, Class<?> beanClass) {
             this.lineType = lineType;
@@ -291,8 +365,41 @@ public final class BeanMap {
             return withCell(propertyName, propertyName);
         }
 
+        /**
+         * Adds detail lines of a line type to a collection property of the bean, for instance a
+         * {@link java.util.List}. See {@link JSaParDetail}.
+         * @param detailLineType The line type of the detail lines.
+         * @param propertyName   The name of the collection property.
+         * @return This builder instance.
+         * @since 2.5
+         */
+        public BeanPropertyMapBuilder withDetail(String detailLineType, String propertyName){
+            return withDetail(detailLineType, propertyName, null);
+        }
+
+        /**
+         * Adds detail lines of a line type to a {@link java.util.Map} property of the bean, using the value of a cell
+         * of the detail line as key. See {@link JSaParDetail}.
+         * @param detailLineType The line type of the detail lines.
+         * @param propertyName   The name of the map property.
+         * @param keyCellName    The name of the cell in the detail line whose value is used as key.
+         * @return This builder instance.
+         * @since 2.5
+         */
+        public BeanPropertyMapBuilder withDetail(String detailLineType, String propertyName, String keyCellName){
+            details.add(new DetailMapping(detailLineType, propertyName, keyCellName));
+            return this;
+        }
+
         private BeanPropertyMap build(){
-            return BeanPropertyMap.ofClass(beanClass, lineType, cellNamesOfProperty);
+            BeanPropertyMap beanPropertyMap = BeanPropertyMap.ofClass(beanClass, lineType, cellNamesOfProperty);
+            for (DetailMapping detail : details) {
+                beanPropertyMap.withDetail(detail.lineType(), detail.propertyName(), detail.keyCellName());
+            }
+            return beanPropertyMap;
+        }
+
+        private record DetailMapping(String lineType, String propertyName, String keyCellName) {
         }
 
     }

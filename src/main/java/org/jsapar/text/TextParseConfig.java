@@ -29,6 +29,11 @@ public class TextParseConfig {
     private ValidationAction onLineOverflow = ValidationAction.NONE;
 
     /**
+     * The action to take when a detail line has no preceding master line to belong to. Default is ERROR.
+     */
+    private ValidationAction onOrphanDetailLine = ValidationAction.ERROR;
+
+    /**
      * @see #setMaxCellCacheSize(int)
      */
     private int maxCellCacheSize = AUTOMATIC_CELL_CACHE_SIZE;
@@ -98,6 +103,36 @@ public class TextParseConfig {
      */
     public void setOnLineOverflow(ValidationAction onLineOverflow) {
         this.onLineOverflow = onLineOverflow;
+    }
+
+    /**
+     * The action to take when a detail line has no preceding master line to belong to. This happens when a line of a
+     * line type that has a parent line type, see
+     * {@link org.jsapar.schema.SchemaLine.Builder#withParent(String)}, is not preceded by an open line of the
+     * parent line type, for instance when the input starts with a detail line. See
+     * {@link org.jsapar.parse.MasterDetailLineConsumer} about when a line is open. An orphan detail line is
+     * never passed on to the line consumer. Detail lines of a line of a type with ignoreread are not orphans; they are
+     * ignored too, without errors.
+     * <ul>
+     *     <li>ERROR - The error consumer is called and parsing continues. This is the default.</li>
+     *     <li>EXCEPTION - An exception is thrown and parsing stops.</li>
+     *     <li>NONE or OMIT_LINE - The line is silently skipped.</li>
+     * </ul>
+     *
+     * @return The action to take when a detail line has no preceding master line to belong to.
+     * @since 2.5
+     */
+    public ValidationAction getOnOrphanDetailLine() {
+        return onOrphanDetailLine;
+    }
+
+    /**
+     * @param onOrphanDetailLine The action to take when a detail line has no preceding master line to belong to.
+     *                           Default is ERROR. See {@link #getOnOrphanDetailLine()}.
+     * @since 2.5
+     */
+    public void setOnOrphanDetailLine(ValidationAction onOrphanDetailLine) {
+        this.onOrphanDetailLine = onOrphanDetailLine;
     }
 
     /**
