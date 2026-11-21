@@ -4,6 +4,8 @@ import org.jsapar.parse.CellParseException;
 import org.jsapar.schema.SchemaCellFormat;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LineTest {
@@ -234,5 +236,67 @@ public class LineTest {
         line.addCell(first);
         assertThrows(IllegalStateException.class, () -> line.addCell(new StringCell("a", "second")));
         assertSame(first, line.getExistingCell("a"));
+    }
+
+    @Test
+    public void testDetails_none() {
+        Line line = new Line("Order");
+        assertFalse(line.hasDetails());
+        assertTrue(line.getDetails().isEmpty());
+        assertTrue(line.getDetails("OrderLine").isEmpty());
+        assertFalse(line.toString().contains("details"));
+    }
+
+    @Test
+    public void testAddDetail_keepsOrderAcrossLineTypes() {
+        Line order = new Line("Order");
+        Line item1 = new Line("OrderLine");
+        Line log = new Line("HistoryLog");
+        Line item2 = new Line("OrderLine");
+        assertSame(order, order.addDetail(item1).addDetail(log).addDetail(item2));
+
+        assertTrue(order.hasDetails());
+        assertEquals(List.of(item1, log, item2), order.getDetails());
+        assertEquals(List.of(item1, item2), order.getDetails("OrderLine"));
+        assertEquals(List.of(log), order.getDetails("HistoryLog"));
+        assertTrue(order.getDetails("Unknown").isEmpty());
+        assertTrue(order.toString().endsWith(" details=3"), order.toString());
+    }
+
+    @Test
+    public void testAddDetail_nested() {
+        Line order = new Line("Order");
+        Line item = new Line("OrderLine");
+        Line discount = new Line("Discount");
+        order.addDetail(item);
+        item.addDetail(discount);
+        assertEquals(List.of(discount), order.getDetails().getFirst().getDetails());
+    }
+
+    @Test
+    public void testAddDetail_null() {
+        assertThrows(NullPointerException.class, () -> new Line("Order").addDetail(null));
+    }
+
+    @Test
+    public void testGetDetails_unmodifiable() {
+        Line order = new Line("Order").addDetail(new Line("OrderLine"));
+        assertThrows(UnsupportedOperationException.class, () -> order.getDetails().add(new Line("OrderLine")));
+        assertThrows(UnsupportedOperationException.class, () -> new Line("Order").getDetails().add(new Line("OrderLine")));
+    }
+
+    @Test
+    public void testClone_details() {
+        Line item = new Line("OrderLine");
+        Line order = new Line("Order").addDetail(item);
+        Line clone = order.clone();
+        assertEquals(List.of(item), clone.getDetails());
+        assertSame(item, clone.getDetails().getFirst());
+
+        clone.addDetail(new Line("OrderLine"));
+        assertEquals(1, order.getDetails().size());
+        assertEquals(2, clone.getDetails().size());
+
+        assertFalse(new Line("Order").clone().hasDetails());
     }
 }
