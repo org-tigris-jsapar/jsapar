@@ -408,6 +408,34 @@ class RecordBeanTest {
         assertThrows(InstantiationException.class, () -> new BeanFactoryDefault<>().createBean(line));
     }
 
+    public record ContactWithPhone(String name, Phone phone) {
+    }
+
+    @Test
+    void beanFactoryDefault_record_objectMethodDenied() {
+        Line line = new Line(ContactWithPhone.class.getName())
+                .addCell(new StringCell("name", "Ann"))
+                .addCell(new StringCell("phone.class.name", "x"));
+        List<JSaParException> errors = new ArrayList<>();
+        List<Object> beans = composeDefault(line, errors);
+        assertEquals(1, beans.size());
+        assertEquals("Ann", ((ContactWithPhone) beans.getFirst()).name());
+        assertEquals(1, errors.size());
+        assertTrue(errors.getFirst().getMessage().contains("is not a bean property"), errors.getFirst().getMessage());
+    }
+
+    @Test
+    void beanFactoryDefault_record_unmappableCell_reportedForCell() {
+        Line line = new Line(ContactWithPhone.class.getName())
+                .addCell(new StringCell("name", "Ann"))
+                .addCell(new StringCell("phone.class.classLoader.defaultAssertionStatus", "true"));
+        List<JSaParException> errors = new ArrayList<>();
+        List<Object> beans = assertDoesNotThrow(() -> composeDefault(line, errors));
+        assertEquals(List.of(new ContactWithPhone("Ann", null)), beans);
+        assertEquals(1, errors.size());
+        assertTrue(errors.getFirst().getMessage().contains("There is no property"), errors.getFirst().getMessage());
+    }
+
     public record Tag(char code, Character mark) {
     }
 

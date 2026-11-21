@@ -157,6 +157,9 @@ public abstract sealed class ObjectNode permits ObjectNode.Mutable, ObjectNode.R
             Method getter = propertyDescriptor.getReadMethod();
             if (getter == null)
                 throw new BeanComposeException(noMethodMessage(propertyDescriptor, bean.getClass(), "getter"));
+            if (getter.getDeclaringClass() == Object.class)
+                throw new BeanComposeException("The property " + propertyDescriptor.getName() + " of class "
+                        + bean.getClass().getName() + " is not a bean property.");
             Class<?> childClass = base.getChildren().getLineClass();
             Object existing = getter.invoke(bean);
             ObjectNode node;

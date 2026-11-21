@@ -72,10 +72,12 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
     /**
      * The mapping of a record class, created from the cell names of the lines.
      * @param c               The record class.
-     * @param cellNames       All cell names that have been mapped, also those that do not match any component.
+     * @param cellNames       All cell names that have been seen, also those that do not match any component.
+     * @param mappedNames     The cell names that could be mapped.
      * @param beanPropertyMap The mapping.
      */
-    private record RecordMapping(Class<?> c, Set<String> cellNames, BeanPropertyMap beanPropertyMap) {
+    private record RecordMapping(Class<?> c, Set<String> cellNames, Set<String> mappedNames,
+                                 BeanPropertyMap beanPropertyMap) {
 
         boolean hasAllCellNames(Line line) {
             for (Cell<?> cell : line) {
@@ -93,20 +95,38 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
          * @param c        The record class.
          * @param line     The line with the cell names to map.
          * @param previous The previous mapping of the line type, whose cell names are mapped too, or null.
-         * @return A new mapping.
+         * @return A new mapping. Cell names that cannot be mapped, for instance because they denote a property
+         * without getter, are left out, so that assigning such a cell is reported as an error for the cell.
          */
         static RecordMapping of(Class<?> c, Line line, RecordMapping previous) {
             Set<String> cellNames = new HashSet<>();
-            if (previous != null && previous.c() == c)
+            Set<String> mappedNames = new HashSet<>();
+            if (previous != null && previous.c() == c) {
                 cellNames.addAll(previous.cellNames());
-            for (Cell<?> cell : line) {
-                if (hasName(cell))
-                    cellNames.add(cell.getName());
+                mappedNames.addAll(previous.mappedNames());
             }
+            String lineType = line.getLineType();
+            for (Cell<?> cell : line) {
+                if (hasName(cell) && cellNames.add(cell.getName()) && canMap(c, lineType, cell.getName()))
+                    mappedNames.add(cell.getName());
+            }
+            return new RecordMapping(c, Set.copyOf(cellNames), Set.copyOf(mappedNames),
+                    BeanPropertyMap.ofClass(c, lineType, cellNameOfProperty(mappedNames)));
+        }
+
+        private static boolean canMap(Class<?> c, String lineType, String cellName) {
+            try {
+                BeanPropertyMap.ofClass(c, lineType, cellNameOfProperty(Set.of(cellName)));
+                return true;
+            } catch (RuntimeException e) {
+                return false;
+            }
+        }
+
+        private static Map<String, String> cellNameOfProperty(Set<String> cellNames) {
             Map<String, String> cellNameOfProperty = new HashMap<>();
             cellNames.forEach(name -> cellNameOfProperty.put(name, name));
-            return new RecordMapping(c, Set.copyOf(cellNames),
-                    BeanPropertyMap.ofClass(c, line.getLineType(), cellNameOfProperty));
+            return cellNameOfProperty;
         }
     }
 
