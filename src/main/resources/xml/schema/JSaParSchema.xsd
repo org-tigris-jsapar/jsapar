@@ -79,7 +79,7 @@
       <xsd:annotation>
           <xsd:documentation>
               Since 2.5. The line type of the master line that lines of this type belong to. While parsing, each line
-              of this type is added as a detail line to the closest preceding line of the parent line type, and only
+              of this type is added as a detail line to the closest preceding open line of the parent line type, and only
               lines without parent are passed on to the caller. Detail lines can themselves be parent of other
               detail lines. Default is no parent.
           </xsd:documentation>

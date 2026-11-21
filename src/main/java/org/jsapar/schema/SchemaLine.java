@@ -213,9 +213,9 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
 
         /**
          * Makes lines of this type detail lines of a master line. While parsing, each line of this type is attached
-         * to the closest preceding line of the parent line type, see {@link org.jsapar.model.Line#getDetails()}, and
+         * to the closest preceding open line of the parent line type, see {@link org.jsapar.model.Line#getDetails()}, and
          * only lines without a parent are passed on to the line consumer. Detail lines can themselves be parent of
-         * other detail lines.
+         * other detail lines. See {@link org.jsapar.parse.MasterDetailLineConsumer} for details about grouping.
          * <p>
          * Successive calls to this method for the same builder will replace previous value.
          * @param parentLineType The line type of the master line that lines of this type belong to. null means that

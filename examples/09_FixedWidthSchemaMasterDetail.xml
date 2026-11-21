@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://jsapar.tigris.org/JSaParSchema/2.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://jsapar.tigris.org/JSaParSchema/2.0 http://jsapar.tigris.org/JSaParSchema/2.1/JSaParSchema.xsd">
+  <fixedwidthschema lineseparator="\n">
+    <line linetype="Order">
+      <cell name="type" length="1" default="O"><linecondition><match pattern="O"/></linecondition></cell>
+      <cell name="orderId" length="4"><format type="integer"/></cell>
+      <cell name="date" length="10"><format type="local_date" pattern="yyyy-MM-dd"/></cell>
+      <cell name="customer" length="10"/>
+    </line>
+    <line linetype="OrderLine" parent="Order">
+      <cell name="type" length="1" default="L"><linecondition><match pattern="L"/></linecondition></cell>
+      <cell name="sku" length="6"/>
+      <cell name="quantity" length="3" alignment="right"><format type="integer"/></cell>
+    </line>
+    <line linetype="Discount" parent="OrderLine">
+      <cell name="type" length="1" default="D"><linecondition><match pattern="D"/></linecondition></cell>
+      <cell name="percent" length="3" alignment="right"><format type="integer"/></cell>
+    </line>
+    <line linetype="HistoryLog" parent="Order">
+      <cell name="type" length="1" default="H"><linecondition><match pattern="H"/></linecondition></cell>
+      <cell name="text" length="20"/>
+    </line>
+  </fixedwidthschema>
+</schema>

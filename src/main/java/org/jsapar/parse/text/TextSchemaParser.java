@@ -48,13 +48,17 @@ public interface TextSchemaParser {
          * @param schema The schema to create a parser for.
          * @param reader The reader to use for the parser.
          * @param parseConfig Current parse configuration.
-         * @return Create a schema based text parser.     *
+         * @return Create a schema based text parser. If the schema has detail lines, the parser groups detail lines
+         * under their master lines.
          */
     static TextSchemaParser ofSchema(Schema<? extends SchemaLine<? extends SchemaCell>> schema, Reader reader, TextParseConfig parseConfig) {
+        TextSchemaParser parser;
         if (schema instanceof CsvSchema csvSchema)
-            return new CsvParser(reader, csvSchema, parseConfig);
-        if (schema instanceof FixedWidthSchema fixedWidthSchema)
-            return new FixedWidthParser(reader, fixedWidthSchema, parseConfig);
-        throw new IllegalArgumentException("Unsupported schema type: " + schema.getClass() + " while parsing.");
+            parser = new CsvParser(reader, csvSchema, parseConfig);
+        else if (schema instanceof FixedWidthSchema fixedWidthSchema)
+            parser = new FixedWidthParser(reader, fixedWidthSchema, parseConfig);
+        else
+            throw new IllegalArgumentException("Unsupported schema type: " + schema.getClass() + " while parsing.");
+        return schema.hasDetailLines() ? new MasterDetailTextParser(parser, schema, parseConfig) : parser;
     }
 }
