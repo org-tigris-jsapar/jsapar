@@ -107,21 +107,50 @@ public final class BeanMap {
      * Creates a BeanMap instance based on a list of annotated classes. All classes provided need to have the
      * annotation {@link JSaParLine} and only attributes annotated with {@link JSaParCell} will be mapped to the schema
      * values.
+     * <p>
+     * Since 2.5, the element classes of attributes annotated with {@link JSaParDetail} are also added, recursively, if
+     * they are annotated with {@link JSaParLine}.
      * @param classes A list of annotated classes.
      * @return A newly created BeanMap instance.
      */
     public static BeanMap ofClasses(Iterable<Class<?> > classes) {
         BeanMap beanMap = new BeanMap();
 
-        for (Class<?> c : classes) {
+        Deque<Class<?>> remaining = new ArrayDeque<>();
+        classes.forEach(remaining::add);
+        while (!remaining.isEmpty()) {
+            Class<?> c = remaining.poll();
+            if (beanMap.beanPropertyMap.containsKey(c))
+                continue;
             if (!c.isAnnotationPresent(JSaParLine.class))
                 throw new BeanException(
                         "The class " + c.getName() + " needs to have the annotation " + JSaParLine.class.getSimpleName()
                                 + ". Unable to create bean map.");
             JSaParLine lineAnnotation = c.getAnnotation(JSaParLine.class);
             beanMap.putBean2Line(c, BeanPropertyMap.ofClass(c, lineAnnotation.lineType()));
+            remaining.addAll(detailElementClasses(c));
         }
         return beanMap;
+    }
+
+    /**
+     * @param c The class to look for {@link JSaParDetail} attributes in.
+     * @return The element classes, annotated with {@link JSaParLine}, of collection and map attributes annotated with
+     * {@link JSaParDetail}.
+     */
+    private static List<Class<?>> detailElementClasses(Class<?> c) {
+        List<Class<?>> elementClasses = new ArrayList<>();
+        for (java.lang.reflect.Field field : c.getDeclaredFields()) {
+            if (!field.isAnnotationPresent(JSaParDetail.class)
+                    || !(field.getGenericType() instanceof java.lang.reflect.ParameterizedType type))
+                continue;
+            java.lang.reflect.Type[] typeArguments = type.getActualTypeArguments();
+            // The element type is the last type argument, the value type for a Map.
+            if (typeArguments[typeArguments.length - 1] instanceof Class<?> elementClass
+                    && elementClass.isAnnotationPresent(JSaParLine.class))
+                elementClasses.add(elementClass);
+        }
+        return elementClasses;
     }
 
     /**
@@ -263,6 +292,7 @@ public final class BeanMap {
         private final String lineType;
         private final Class<?> beanClass;
         private final Map<String, String> cellNamesOfProperty = new HashMap<>();
+        private final List<DetailMapping> details = new ArrayList<>();
 
         private BeanPropertyMapBuilder(String lineType, Class<?> beanClass) {
             this.lineType = lineType;
@@ -291,8 +321,41 @@ public final class BeanMap {
             return withCell(propertyName, propertyName);
         }
 
+        /**
+         * Adds detail lines of a line type to a collection property of the bean, for instance a
+         * {@link java.util.List}. See {@link JSaParDetail}.
+         * @param detailLineType The line type of the detail lines.
+         * @param propertyName   The name of the collection property.
+         * @return This builder instance.
+         * @since 2.5
+         */
+        public BeanPropertyMapBuilder withDetail(String detailLineType, String propertyName){
+            return withDetail(detailLineType, propertyName, null);
+        }
+
+        /**
+         * Adds detail lines of a line type to a {@link java.util.Map} property of the bean, using the value of a cell
+         * of the detail line as key. See {@link JSaParDetail}.
+         * @param detailLineType The line type of the detail lines.
+         * @param propertyName   The name of the map property.
+         * @param keyCellName    The name of the cell in the detail line whose value is used as key.
+         * @return This builder instance.
+         * @since 2.5
+         */
+        public BeanPropertyMapBuilder withDetail(String detailLineType, String propertyName, String keyCellName){
+            details.add(new DetailMapping(detailLineType, propertyName, keyCellName));
+            return this;
+        }
+
         private BeanPropertyMap build(){
-            return BeanPropertyMap.ofClass(beanClass, lineType, cellNamesOfProperty);
+            BeanPropertyMap beanPropertyMap = BeanPropertyMap.ofClass(beanClass, lineType, cellNamesOfProperty);
+            for (DetailMapping detail : details) {
+                beanPropertyMap.withDetail(detail.lineType(), detail.propertyName(), detail.keyCellName());
+            }
+            return beanPropertyMap;
+        }
+
+        private record DetailMapping(String lineType, String propertyName, String keyCellName) {
         }
 
     }

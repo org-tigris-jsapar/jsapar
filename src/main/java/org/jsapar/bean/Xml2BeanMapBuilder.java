@@ -58,7 +58,10 @@ public final class Xml2BeanMapBuilder implements XmlTypes {
         Map<String, String> cellNamesOfProperty = getChildrenStream(xmlBean, "property")
                 .collect(Collectors.toMap(e -> e.getAttribute("name"), e -> e.getAttribute("cellname")));
         try {
-            return BeanPropertyMap.ofPropertyNames(className, lineType, cellNamesOfProperty);
+            BeanPropertyMap beanPropertyMap = BeanPropertyMap.ofPropertyNames(className, lineType, cellNamesOfProperty);
+            getChildrenStream(xmlBean, "detail").forEach(e -> beanPropertyMap.withDetail(
+                    e.getAttribute("linetype"), e.getAttribute("name"), e.getAttribute("keycell")));
+            return beanPropertyMap;
         } catch (ClassNotFoundException e) {
             throw new JSaParException("Failed to build property map", e);
         }

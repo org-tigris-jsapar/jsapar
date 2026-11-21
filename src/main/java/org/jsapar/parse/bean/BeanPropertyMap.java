@@ -2,6 +2,7 @@ package org.jsapar.parse.bean;
 
 import org.jsapar.bean.JSaParCell;
 import org.jsapar.bean.JSaParContainsCells;
+import org.jsapar.bean.JSaParDetail;
 import org.jsapar.error.BeanException;
 import org.jsapar.parse.bean.reflect.BeanInfo;
 import org.jsapar.parse.bean.reflect.PropertyDescriptor;
@@ -18,6 +19,8 @@ public class BeanPropertyMap {
 
     private final Map<String, Bean2Cell> bean2CellByProperty = new HashMap<>();
     private final Map<String, Bean2Cell> bean2CellByCellName = new HashMap<>();
+    /** In the order they were added, which is the order detail lines are composed in. */
+    private final Map<String, Bean2Detail> bean2DetailByLineType = new LinkedHashMap<>();
     private BeanInfo               beanInfo;
     private Class<?>                  lineClass;
 
@@ -65,9 +68,11 @@ public class BeanPropertyMap {
                     schemaLine.stream().collect(Collectors.toMap(SchemaCell::getName, SchemaCell::getName)));
             putOverrideValues(cellNamesOfProperty, overrideValues, "");
 
-            return ofPropertyNames(overrideValues.getLineClass().getName(),
+            BeanPropertyMap beanPropertyMap = ofPropertyNames(overrideValues.getLineClass().getName(),
                     schemaLine.getLineType(),
                     cellNamesOfProperty);
+            beanPropertyMap.bean2DetailByLineType.putAll(overrideValues.bean2DetailByLineType);
+            return beanPropertyMap;
         } catch (ClassNotFoundException e) {
             throw new BeanException("Failed to create bean mapping based on schema", e);
         }
@@ -106,10 +111,54 @@ public class BeanPropertyMap {
     }
 
     public static BeanPropertyMap ofClass(Class<?> lineClass, String lineType)  {
-            return ofClass(lineClass,
-                    lineType,
-                    makeFieldEntryStream(lineClass, "", "")
-                    .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue)));
+        BeanPropertyMap beanPropertyMap = ofClass(lineClass,
+                lineType,
+                makeFieldEntryStream(lineClass, "", "")
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        for (java.lang.reflect.Field field : lineClass.getDeclaredFields()) {
+            JSaParDetail detail = field.getAnnotation(JSaParDetail.class);
+            if (detail != null)
+                beanPropertyMap.withDetail(detail.lineType(), field.getName(), detail.keyCell());
+        }
+        return beanPropertyMap;
+    }
+
+    /**
+     * Maps detail lines of a line type to a collection or map property of the bean.
+     * @param detailLineType The line type of the detail lines.
+     * @param propertyName   The name of the collection or map property.
+     * @param keyCellName    The cell of the detail line to use as key for a map property. Null or empty for a
+     *                       collection property.
+     * @return This instance.
+     * @throws BeanException If the property does not exist or does not fit.
+     * @since 2.5
+     */
+    public BeanPropertyMap withDetail(String detailLineType, String propertyName, String keyCellName) {
+        if (ignoreLine())
+            throw new BeanException("Line type " + lineType + " has no class so it cannot have detail lines.");
+        PropertyDescriptor propertyDescriptor = beanInfo.getPropertyDescriptorsByName().get(propertyName);
+        if (propertyDescriptor == null)
+            throw new BeanException("There is no property " + propertyName + " in class " + lineClass.getName()
+                    + " for detail lines of type " + detailLineType + ".");
+        bean2DetailByLineType.put(detailLineType, Bean2Detail.of(detailLineType, propertyDescriptor, keyCellName));
+        return this;
+    }
+
+    /**
+     * @param detailLineType The line type of the detail lines.
+     * @return The mapping of detail lines of the given type, or null if there is none.
+     * @since 2.5
+     */
+    public Bean2Detail getBean2Detail(String detailLineType) {
+        return bean2DetailByLineType.get(detailLineType);
+    }
+
+    /**
+     * @return All detail line mappings in the order they were added.
+     * @since 2.5
+     */
+    public Collection<Bean2Detail> getBean2Details() {
+        return bean2DetailByLineType.values();
     }
 
     private static Stream< Map.Entry<String, String> > makeFieldEntryStream(Class<?> c, String propertyPrefix,
