@@ -277,6 +277,8 @@ public class Schema2XmlExtractor implements SchemaXmlTypes, XmlTypes {
         if (schemaLine.getLineType() != null && !schemaLine.getLineType().isEmpty())
             xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_LINETYPE, schemaLine.getLineType());
 
+        schemaLine.getParentLineType().ifPresent(parent -> xmlSchemaLine.setAttribute(ATTRIB_SCHEMA_LINE_PARENT, parent));
+
     }
 
     /**
