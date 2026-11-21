@@ -2,6 +2,7 @@ package org.jsapar.parse.bean;
 
 import org.jsapar.BeanCollection2TextConverter;
 import org.jsapar.bean.BeanMap;
+import org.jsapar.error.BeanException;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.Cell;
 import org.jsapar.model.CellType;
@@ -44,15 +45,39 @@ public class BeanMarshaller<T>  {
      *
      * @param bean       The bean.
      * @param errorListener The error listener to which error events are propagated.
+     * <p>
+     * Since 2.5, the beans in the collection and map properties that are mapped to detail lines, see
+     * {@link org.jsapar.bean.JSaParDetail}, are added as detail lines of the line, recursively. Detail beans of a class
+     * that is not in the {@link BeanMap} are ignored. Detail lines get the same line number as the line.
+     *
      * @param lineNumber The number of the line being parsed. Numbering starts from 1.
      * @return A {@link Line} object containing cells according to the getter method of the supplied bean.
      */
     public Optional<Line> marshal(T bean, Consumer<JSaParException> errorListener, long lineNumber) {
+        return marshalBean(bean, errorListener, lineNumber);
+    }
+
+    private Optional<Line> marshalBean(Object bean, Consumer<JSaParException> errorListener, long lineNumber) {
         return beanMap.getBeanPropertyMap(bean.getClass()).map(beanPropertyMap -> {
             Line line = new Line(beanPropertyMap.getLineType(), beanPropertyMap.size(), lineNumber);
             this.marshal(line, bean, beanPropertyMap, errorListener);
+            this.marshalDetails(line, bean, beanPropertyMap, errorListener);
             return line;
         });
+    }
+
+    private void marshalDetails(Line line, Object bean, BeanPropertyMap beanPropertyMap, Consumer<JSaParException> errorListener) {
+        for (Bean2Detail bean2Detail : beanPropertyMap.getBean2Details()) {
+            try {
+                for (Object detailBean : bean2Detail.elements(bean)) {
+                    if (detailBean != null)
+                        marshalBean(detailBean, errorListener, line.getLineNumber()).ifPresent(line::addDetail);
+                }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                errorListener.accept(new BeanException("Failed to get detail beans of line type "
+                        + bean2Detail.getDetailLineType() + " from " + bean.getClass().getName(), e));
+            }
+        }
     }
 
 

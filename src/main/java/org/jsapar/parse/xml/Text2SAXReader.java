@@ -34,7 +34,7 @@ public class Text2SAXReader implements XMLReader {
         contentHandler.startDocument();
         contentHandler.startElement(URI, "document", "document", new AttributesImpl());
 
-        textParser.parseForEach(inputSource.getCharacterStream(), this::handleLineParsed);
+        textParser.parseForEach(inputSource.getCharacterStream(), this::handleLineWithDetails);
         contentHandler.endElement(URI, "document", "document");
         contentHandler.endDocument();
     }
@@ -73,6 +73,17 @@ public class Text2SAXReader implements XMLReader {
             }
         } catch (SAXException e) {
             handleSAXException(e);
+        }
+    }
+
+    /**
+     * Writes the line followed by its detail lines, recursively, as sibling line elements.
+     * @param line The line to write.
+     */
+    private void handleLineWithDetails(Line line) {
+        handleLineParsed(line);
+        for (Line detail : line.getDetails()) {
+            handleLineWithDetails(detail);
         }
     }
 

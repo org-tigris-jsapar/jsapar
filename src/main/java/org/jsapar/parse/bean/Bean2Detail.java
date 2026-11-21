@@ -117,6 +117,20 @@ public final class Bean2Detail {
     }
 
     /**
+     * @param masterBean The bean of the master line.
+     * @return The detail beans of the master bean: the collection itself, or the values of the map, in their
+     * iteration order. Empty if the property is null.
+     * @throws InvocationTargetException If the getter fails.
+     * @throws IllegalAccessException If the getter cannot be accessed.
+     */
+    public Collection<?> elements(Object masterBean) throws InvocationTargetException, IllegalAccessException {
+        Object container = propertyDescriptor.getReadMethod().invoke(masterBean);
+        if (container == null)
+            return Collections.emptyList();
+        return keyCellName == null ? (Collection<?>) container : ((Map<?, ?>) container).values();
+    }
+
+    /**
      * @return The line type of the detail lines.
      */
     public String getDetailLineType() {

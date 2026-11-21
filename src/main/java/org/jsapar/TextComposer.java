@@ -56,6 +56,9 @@ public final class TextComposer implements Composer, AutoCloseable {
     /**
      * Writes the single line to a {@link java.io.Writer} according to the line type of the line.
      * The line is prefixed with the line separator unless it is the first line.
+     * <p>
+     * Since 2.5, the detail lines of the line, if any, are written after the line, recursively and in the order they
+     * were added. If the line itself is not written, neither are its detail lines.
      * 
      * @param line The line to write.
      *
@@ -71,6 +74,11 @@ public final class TextComposer implements Composer, AutoCloseable {
             }
             boolean written = writeLine(line);
             breakBefore = written;
+            if (written && line.hasDetails()) {
+                for (Line detail : line.getDetails()) {
+                    composeLine(detail);
+                }
+            }
             return written;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
