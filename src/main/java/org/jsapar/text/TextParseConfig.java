@@ -111,7 +111,8 @@ public class TextParseConfig {
      * {@link org.jsapar.schema.SchemaLine.Builder#withParent(String)}, is not preceded by an open line of the
      * parent line type, for instance when the input starts with a detail line. See
      * {@link org.jsapar.parse.MasterDetailLineConsumer} about when a line is open. An orphan detail line is
-     * never passed on to the line consumer.
+     * never passed on to the line consumer. Detail lines of a line of a type with ignoreread are not orphans; they are
+     * ignored too, without errors.
      * <ul>
      *     <li>ERROR - The error consumer is called and parsing continues. This is the default.</li>
      *     <li>EXCEPTION - An exception is thrown and parsing stops.</li>

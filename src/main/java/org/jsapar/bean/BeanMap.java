@@ -109,7 +109,10 @@ public final class BeanMap {
      * values.
      * <p>
      * Since 2.5, the element classes of attributes annotated with {@link JSaParDetail} are also added, recursively, if
-     * they are annotated with {@link JSaParLine}.
+     * they are annotated with {@link JSaParLine}. The element class is the last type argument of the attribute type,
+     * for instance {@code OrderLine} for {@code List<OrderLine>}, {@code List<? extends OrderLine>} or
+     * {@code Map<String, OrderLine>}. Element classes that cannot be found this way, for instance for an interface
+     * type, need to be in the list of classes.
      * @param classes A list of annotated classes.
      * @return A newly created BeanMap instance.
      */
@@ -146,11 +149,28 @@ public final class BeanMap {
                 continue;
             java.lang.reflect.Type[] typeArguments = type.getActualTypeArguments();
             // The element type is the last type argument, the value type for a Map.
-            if (typeArguments[typeArguments.length - 1] instanceof Class<?> elementClass
-                    && elementClass.isAnnotationPresent(JSaParLine.class))
+            Class<?> elementClass = rawClass(typeArguments[typeArguments.length - 1]);
+            if (elementClass != null && elementClass.isAnnotationPresent(JSaParLine.class))
                 elementClasses.add(elementClass);
         }
         return elementClasses;
+    }
+
+    /**
+     * @param type A type argument.
+     * @return The class of the type argument: the raw type of a generic type, or the upper bound of a wildcard or a
+     * type variable. Null if there is no such class.
+     */
+    private static Class<?> rawClass(java.lang.reflect.Type type) {
+        if (type instanceof Class<?> c)
+            return c;
+        if (type instanceof java.lang.reflect.ParameterizedType parameterizedType)
+            return rawClass(parameterizedType.getRawType());
+        if (type instanceof java.lang.reflect.WildcardType wildcardType)
+            return rawClass(wildcardType.getUpperBounds()[0]);
+        if (type instanceof java.lang.reflect.TypeVariable<?> typeVariable)
+            return rawClass(typeVariable.getBounds()[0]);
+        return null;
     }
 
     /**
@@ -193,9 +213,29 @@ public final class BeanMap {
                         beanMap.putBean2Line(beanPropertyMap.getLineClass().getName(), beanPropertyMap);
                 }
             }
+            beanMap.validateDetailLineTypes(schema);
             return beanMap;
         } catch (ClassNotFoundException e) {
             throw new BeanException("Failed to build bean mapping based on schema", e);
+        }
+    }
+
+    /**
+     * Checks that each detail line type that is mapped to a property and that exists in the schema is mapped to a
+     * class too. Otherwise, no bean could ever be created for those detail lines.
+     * @param schema The schema.
+     * @throws BeanException If a detail line type is not mapped to a class.
+     */
+    private void validateDetailLineTypes(Schema<?> schema) throws BeanException {
+        for (BeanPropertyMap master : beanPropertyMapByLineType.values()) {
+            for (org.jsapar.parse.bean.Bean2Detail detail : master.getBean2Details()) {
+                String detailLineType = detail.getDetailLineType();
+                if (schema.getSchemaLine(detailLineType).isPresent() && getBeanPropertyMap(detailLineType) == null)
+                    throw new BeanException("The detail line type " + detailLineType + " of property "
+                            + detail.getPropertyName() + " in " + master.getLineClass().getName()
+                            + " is not mapped to any class. Annotate the element class with "
+                            + JSaParLine.class.getSimpleName() + " and add it to the bean map.");
+            }
         }
     }
 

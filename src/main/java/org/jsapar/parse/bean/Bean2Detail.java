@@ -90,7 +90,8 @@ public final class Bean2Detail {
      * @param masterBean The bean of the master line.
      * @param detailLine The detail line, used for the key of a map.
      * @param detailBean The bean of the detail line.
-     * @throws BeanComposeException If the key cell is missing or the key already exists in the map.
+     * @throws BeanComposeException If the key cell is missing, the key already exists in the map or the collection or
+     * map does not accept the detail bean, for instance because it is immutable.
      * @throws InvocationTargetException If the getter or setter fails.
      * @throws IllegalAccessException If the getter or setter cannot be accessed.
      */
@@ -105,15 +106,21 @@ public final class Bean2Detail {
             container = containerFactory.get();
             setter.invoke(masterBean, container);
         }
-        if (keyCellName == null) {
-            ((Collection<Object>) container).add(detailBean);
-            return;
+        try {
+            if (keyCellName == null) {
+                ((Collection<Object>) container).add(detailBean);
+                return;
+            }
+            Object key = detailLine.getNonEmptyCell(keyCellName).map(Cell::getValue).orElseThrow(() ->
+                    new BeanComposeException("The detail line has no value in key cell " + keyCellName + "."));
+            if (((Map<Object, Object>) container).putIfAbsent(key, detailBean) != null)
+                throw new BeanComposeException("Duplicate key " + key + " in cell " + keyCellName + " for property "
+                        + propertyDescriptor.getName() + ". Only the first detail line is kept.");
+        } catch (UnsupportedOperationException | ClassCastException | NullPointerException e) {
+            // For instance an immutable collection, or a sorted collection with elements that cannot be compared.
+            throw new BeanComposeException("Unable to add the detail bean to property " + propertyDescriptor.getName()
+                    + " of " + masterBean.getClass().getName() + ": " + e, e);
         }
-        Object key = detailLine.getNonEmptyCell(keyCellName).map(Cell::getValue).orElseThrow(() ->
-                new BeanComposeException("The detail line has no value in key cell " + keyCellName + "."));
-        if (((Map<Object, Object>) container).putIfAbsent(key, detailBean) != null)
-            throw new BeanComposeException("Duplicate key " + key + " in cell " + keyCellName + " for property "
-                    + propertyDescriptor.getName() + ". Only the first detail line is kept.");
     }
 
     /**
@@ -135,6 +142,13 @@ public final class Bean2Detail {
      */
     public String getDetailLineType() {
         return detailLineType;
+    }
+
+    /**
+     * @return The name of the collection or map property of the master bean.
+     */
+    public String getPropertyName() {
+        return propertyDescriptor.getName();
     }
 
     PropertyDescriptor getPropertyDescriptor() {

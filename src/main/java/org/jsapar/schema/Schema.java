@@ -42,10 +42,14 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
 
     /**
      * Checks that each parent line type refers to a line type within this schema and that following the parents
-     * of a line type never ends up in a loop.
+     * of a line type never ends up in a loop. This is done when the schema is built and again when parsing starts, so
+     * there is normally no need to call it. It can be called to get the error early after
+     * {@link #addSchemaLine(SchemaLine)} or {@link SchemaLine#setParentLineType(String)}.
      * @throws SchemaException If a parent line type is not valid.
+     * @see SchemaLine.Builder#withParent(String)
+     * @since 2.5
      */
-    private void validateParentLineTypes() throws SchemaException {
+    public void validateParentLineTypes() throws SchemaException {
         for (L schemaLine : schemaLines.values()) {
             String parent = schemaLine.getParentLineType().orElse(null);
             for (int depth = 0; parent != null; depth++) {
@@ -135,6 +139,8 @@ public abstract class Schema<L extends SchemaLine<? extends SchemaCell>> impleme
         }
     }
     /**
+     * Adds a schema line. Its parent line type, if any, is not checked until parsing starts, see
+     * {@link #validateParentLineTypes()}, since the parent line may be added later.
      * @param schemaLine the schemaLine to add
      */
     public void addSchemaLine(L schemaLine) {

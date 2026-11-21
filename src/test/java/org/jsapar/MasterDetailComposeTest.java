@@ -166,4 +166,43 @@ class MasterDetailComposeTest {
             throw new UncheckedIOException(e);
         }
     }
+
+    @Test
+    void lineManipulators_seeDetailLinesInFileOrder() throws IOException {
+        Schema<?> schema = schema("09_CsvSchemaMasterDetail.xml");
+        Text2TextConverter converter = new Text2TextConverter(schema, schema);
+        List<String> seen = new ArrayList<>();
+        converter.addLineManipulator(line -> seen.add(line.getLineType()));
+        // Drops the order line with quantity 1, the second order with all its details, and changes the discounts.
+        converter.addLineManipulator(line -> !line.getLineType().equals("OrderLine")
+                || line.getNonEmptyCellValue("quantity", Long.class).orElseThrow() != 1L);
+        converter.addLineManipulator(line -> !line.getNonEmptyCellValue("orderId", Long.class).map(id -> id == 1002L).orElse(false));
+        converter.addLineManipulator(line -> {
+            if (line.getLineType().equals("Discount"))
+                line.putCell(new org.jsapar.model.IntegerCell("percent", 20));
+            return true;
+        });
+        StringWriter writer = new StringWriter();
+        converter.convert(new FileReader("examples/09_Orders.csv", StandardCharsets.UTF_8), writer);
+
+        assertEquals(List.of("Order", "OrderLine", "Discount", "HistoryLog", "OrderLine", "Order"), seen,
+                "Each line is manipulated once in file order, until a manipulator returns false for it or its master");
+        assertEquals("O;1001;2026-11-02;ACME\nL;SKU-1;2\nD;20\nH;Created by web shop", writer.toString());
+    }
+
+    @Test
+    void lineManipulators_beanToText() throws IOException {
+        Schema<?> schema = schema("09_CsvSchemaMasterDetail.xml");
+        BeanMap beanMap = BeanMap.ofSchema(schema, BeanMap.ofClass(MasterDetailBeanTest.Order.class));
+        List<MasterDetailBeanTest.Order> orders = new ArrayList<>();
+        Text2BeanConverter<MasterDetailBeanTest.Order> text2Bean = new Text2BeanConverter<>(schema, beanMap);
+        text2Bean.convertForEach(new FileReader("examples/09_Orders.csv", StandardCharsets.UTF_8), (MasterDetailBeanTest.Order order) -> orders.add(order));
+
+        StringWriter writer = new StringWriter();
+        Bean2TextConverter<MasterDetailBeanTest.Order> bean2Text = new Bean2TextConverter<>(schema, beanMap, writer);
+        bean2Text.addLineManipulator(line -> !line.getLineType().equals("Discount"));
+        orders.forEach(bean2Text::convert);
+        assertFalse(writer.toString().contains("\nD;"), writer.toString());
+        assertTrue(writer.toString().contains("L;SKU-1;2"), writer.toString());
+    }
 }

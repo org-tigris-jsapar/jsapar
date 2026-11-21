@@ -98,12 +98,26 @@ parser.parseForEach(reader, order -> {
 });
 ```
 This works the same way when parsing into a stream and when converting. A master line is passed on when the next top 
-level line is read or when the input ends, so the last one is not lost. The whole group, a master line together with 
-all its detail lines, is kept in memory until it is complete.
+level line is read or when the input ends, so the last one is not lost. If parsing stops with an exception, the current 
+master line is passed on, with the detail lines read so far, before the exception is thrown. The whole group, a master 
+line together with all its detail lines, is kept in memory until it is complete.
 
 The lines are read as a tree written from the top down: each detail line belongs to the closest preceding line of its 
 parent line type that is still open, and a line closes all open lines below its own level. In the sequence `O`, `L`,
 `H`, `D` above, the `H` line closes the `L` line, so the `D` line would have no master line to belong to.
+
+A line that is omitted, for instance because of `OMIT_LINE` on `setOnLineInsufficient()` or `setOnLineOverflow()`, 
+still closes the open lines at its own level. Its detail lines are then orphans and are not added to the previous 
+master line. A line of an undefined line type has no known level, so it leaves the open lines as they are; its detail 
+lines are added to the previous open master line of their parent type.
+
+A line of a type with `ignoreread` closes the open lines at its own level too, but its detail lines, and their detail 
+lines, are ignored as well, without errors. This is the same as when composing, where the detail lines of a line that
+is not written are not written either. If you want to keep the detail lines of a line type that you ignore, remove the
+`parent` attribute from the detail line types so that they become top level lines.
+
+The parent line types are checked when the schema is built and again when parsing starts, so a schema line added with
+`addSchemaLine()` or changed with `setParentLineType()` cannot have a missing parent or a loop of parents.
 
 A detail line without master line to belong to, for instance when the input starts with a detail line, is never 
 passed on. What else happens is controlled by `TextParseConfig.setOnOrphanDetailLine()`:
@@ -143,6 +157,10 @@ converter.convertForEach(reader, order -> ...);
 ```
 The classes of the detail lines need to be annotated with `@JSaParLine` too. The element classes of attributes with 
 `@JSaParDetail` are added to the bean map automatically, so it is enough to supply the class of the top level line.
+The element class is the last type argument of the attribute type, so `List<OrderLine>`, `List<? extends OrderLine>`
+and `Map<String, OrderLine>` all give `OrderLine`. If the element class cannot be found that way, for instance for an 
+interface, supply the detail classes too: `BeanMap.ofClasses(Order.class, OrderLineImpl.class)`. Creating the
+converter fails if a detail line type of the schema ends up without a class.
 
 * The attribute can be a `List`, `Set`, any other `Collection` or a `Map`. 
 * For a `Map`, `keyCell` names the cell of the detail line whose value is used as key. The key is the typed value of 
@@ -185,6 +203,15 @@ When converting beans to text, the beans in the attributes annotated with `@JSaP
 after the line of the master bean, one attribute after the other in the order they are declared, and for a map in the 
 iteration order of its values. Beans do not keep the order between detail lines of different types, so in the example
 above an order is written with all its order lines first and then its history log lines.
+
+## Line manipulators
+[Line manipulators](basics#manipulating-or-transforming-lines-while-converting) of a converter are called for each detail line too, after its master 
+line and in the same order as the lines were read, so a manipulator sees the same lines in the same order as without 
+master and detail lines. Returning false for a master line omits it together with all its detail lines. Returning false
+for a detail line removes it, and its own detail lines, from its master line. When a manipulator is called for a master
+line, its detail lines are already added to it, so it can for instance sum up values of the detail lines.
+
+A transformer, see `setTransformer()`, is only called for the top level lines, with their detail lines added.
 
 # Advanced converting
 ## Text to markup (XML or HTML)

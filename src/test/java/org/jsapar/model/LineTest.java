@@ -299,4 +299,19 @@ public class LineTest {
 
         assertFalse(new Line("Order").clone().hasDetails());
     }
+
+    @Test
+    void removeDetailsIf() {
+        Line master = new Line("Order");
+        Line a = new Line("OrderLine");
+        Line b = new Line("HistoryLog");
+        Line c = new Line("OrderLine");
+        a.addDetail(new Line("Discount"));
+        assertFalse(master.removeDetailsIf(d -> true), "No details");
+        master.addDetail(a).addDetail(b).addDetail(c);
+        assertTrue(master.removeDetailsIf(d -> d.getLineType().equals("OrderLine")));
+        assertEquals(List.of(b), master.getDetails());
+        assertFalse(master.removeDetailsIf(d -> false));
+        assertEquals(1, a.getDetails().size(), "Detail lines of removed lines are not changed");
+    }
 }

@@ -166,4 +166,103 @@ class MasterDetailLineConsumerTest {
         assertTrue(result.isEmpty());
         assertTrue(errors.isEmpty());
     }
+
+    @Test
+    void lineSkipped_topLevel_passesOnCurrentAndOrphansFollowing() {
+        MasterDetailLineConsumer grouping = grouping(ValidationAction.ERROR);
+        Line order = line("Order", 1);
+        grouping.accept(order);
+        grouping.lineSkipped("Order");
+        assertEquals(List.of(order), result);
+        grouping.accept(line("OrderLine", 3));
+        grouping.flush();
+        assertEquals(List.of(order), result);
+        assertFalse(order.hasDetails());
+        assertEquals(1, errors.size());
+    }
+
+    @Test
+    void lineSkipped_detail_closesItsLevelOnly() {
+        MasterDetailLineConsumer grouping = grouping(ValidationAction.ERROR);
+        Line order = line("Order", 1);
+        Line item = line("OrderLine", 2);
+        Line log = line("HistoryLog", 5);
+        grouping.accept(order);
+        grouping.accept(item);
+        grouping.lineSkipped("OrderLine");
+        grouping.accept(line("Discount", 4));
+        grouping.accept(log);
+        grouping.flush();
+        assertEquals(List.of(order), result);
+        assertEquals(List.of(item, log), order.getDetails());
+        assertFalse(item.hasDetails());
+        assertEquals(1, errors.size());
+    }
+
+    @Test
+    void lineSkipped_unknownLineType_isIgnored() {
+        MasterDetailLineConsumer grouping = grouping(ValidationAction.ERROR);
+        Line order = line("Order", 1);
+        Line item = line("OrderLine", 3);
+        grouping.accept(order);
+        grouping.lineSkipped("Comment");
+        grouping.accept(item);
+        grouping.flush();
+        assertEquals(List.of(item), order.getDetails());
+        assertTrue(errors.isEmpty());
+    }
+
+    @Test
+    void lineIgnored_topLevel_ignoresDetailsWithoutErrors() {
+        MasterDetailLineConsumer grouping = grouping(ValidationAction.ERROR);
+        Line order1 = line("Order", 1);
+        Line order3 = line("Order", 6);
+        Line item3 = line("OrderLine", 7);
+        grouping.accept(order1);
+        grouping.lineIgnored("Order");
+        assertEquals(List.of(order1), result);
+        grouping.accept(line("OrderLine", 3));
+        grouping.accept(line("Discount", 4));
+        grouping.accept(line("HistoryLog", 5));
+        grouping.accept(order3);
+        grouping.accept(item3);
+        grouping.flush();
+        assertEquals(List.of(order1, order3), result, "The ignored line is never passed on");
+        assertFalse(order1.hasDetails());
+        assertEquals(List.of(item3), order3.getDetails());
+        assertTrue(errors.isEmpty());
+    }
+
+    @Test
+    void lineIgnored_detail_ignoresItsDetailsOnly() {
+        MasterDetailLineConsumer grouping = grouping(ValidationAction.ERROR);
+        Line order = line("Order", 1);
+        Line item = line("OrderLine", 2);
+        Line log = line("HistoryLog", 5);
+        Line item2 = line("OrderLine", 6);
+        Line discount2 = line("Discount", 7);
+        grouping.accept(order);
+        grouping.accept(item);
+        grouping.lineIgnored("OrderLine");
+        grouping.accept(line("Discount", 4));
+        grouping.accept(log);
+        grouping.accept(item2);
+        grouping.accept(discount2);
+        grouping.flush();
+        assertEquals(List.of(order), result);
+        assertEquals(List.of(item, log, item2), order.getDetails());
+        assertFalse(item.hasDetails(), "The discount of the ignored order line is not added to the previous one");
+        assertEquals(List.of(discount2), item2.getDetails());
+        assertTrue(errors.isEmpty());
+    }
+
+    @Test
+    void lineIgnored_lastLine_isNotPassedOnByFlush() {
+        MasterDetailLineConsumer grouping = grouping(ValidationAction.ERROR);
+        grouping.lineIgnored("Order");
+        grouping.accept(line("OrderLine", 2));
+        grouping.flush();
+        assertTrue(result.isEmpty());
+        assertTrue(errors.isEmpty());
+    }
 }

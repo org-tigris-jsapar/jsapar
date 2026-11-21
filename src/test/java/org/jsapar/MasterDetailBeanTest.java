@@ -137,6 +137,40 @@ class MasterDetailBeanTest {
         public void setHistory(HistoryLog history) { this.history = history; }
     }
 
+    /** The history is an immutable list that cannot be added to. */
+    @JSaParLine(lineType = "Order")
+    public static class OrderWithImmutableHistory {
+        @JSaParCell(name = "orderId")
+        private long orderId;
+        @JSaParDetail(lineType = "HistoryLog")
+        private List<HistoryLog> history = List.of();
+
+        public long getOrderId() { return orderId; }
+        public void setOrderId(long orderId) { this.orderId = orderId; }
+        public List<HistoryLog> getHistory() { return history; }
+        public void setHistory(List<HistoryLog> history) { this.history = history; }
+    }
+
+    /** Detail attribute with a wildcard type. */
+    @JSaParLine(lineType = "Order")
+    public static class OrderWithWildcard {
+        @JSaParDetail(lineType = "HistoryLog")
+        private List<? extends HistoryLog> history;
+
+        public List<? extends HistoryLog> getHistory() { return history; }
+        public void setHistory(List<? extends HistoryLog> history) { this.history = history; }
+    }
+
+    /** Detail attribute whose element type is not annotated. */
+    @JSaParLine(lineType = "Order")
+    public static class OrderWithUnmappedDetail {
+        @JSaParDetail(lineType = "HistoryLog")
+        private List<Object> history;
+
+        public List<Object> getHistory() { return history; }
+        public void setHistory(List<Object> history) { this.history = history; }
+    }
+
     private static Schema<?> csvSchema() throws IOException {
         try (Reader reader = new FileReader("examples/09_CsvSchemaMasterDetail.xml", StandardCharsets.UTF_8)) {
             return Schema.ofXml(reader);
@@ -291,5 +325,35 @@ class MasterDetailBeanTest {
         assertThrows(BeanException.class, () -> BeanMap.builder()
                 .withLine("Order", Order.class, b -> b.withDetail("OrderLine", "doesNotExist"))
                 .build());
+    }
+
+    @Test
+    void immutableCollection_isReportedToErrorConsumer() throws IOException {
+        List<JSaParException> errors = new ArrayList<>();
+        List<OrderWithImmutableHistory> orders = convert(
+                new Text2BeanConverter<>(csvSchema(), OrderWithImmutableHistory.class), ordersCsv(), errors);
+        assertEquals(2, orders.size(), "Converting continues");
+        assertEquals(1, errors.size());
+        assertInstanceOf(ComposeException.class, errors.getFirst());
+        assertTrue(errors.getFirst().getMessage().contains("history"), errors.getFirst().getMessage());
+    }
+
+    @Test
+    void wildcardElementType_isAddedToBeanMap() throws IOException {
+        assertEquals(HistoryLog.class, BeanMap.ofClass(OrderWithWildcard.class).getBeanPropertyMap("HistoryLog").getLineClass());
+        List<JSaParException> errors = new ArrayList<>();
+        List<OrderWithWildcard> orders = convert(new Text2BeanConverter<>(csvSchema(), OrderWithWildcard.class), ordersCsv(), errors);
+        assertEquals(List.of(), errors);
+        assertEquals("Created by web shop", orders.getFirst().getHistory().getFirst().getText());
+    }
+
+    @Test
+    void unmappedDetailLineType_failsWhenCreatingConverter() throws IOException {
+        Schema<?> schema = csvSchema();
+        BeanException e = assertThrows(BeanException.class,
+                () -> new Text2BeanConverter<>(schema, OrderWithUnmappedDetail.class));
+        assertTrue(e.getMessage().contains("HistoryLog") && e.getMessage().contains("history"), e.getMessage());
+        // Fine when the class is given explicitly.
+        new Text2BeanConverter<>(schema, BeanMap.ofSchema(schema, BeanMap.ofClasses(OrderWithUnmappedDetail.class, HistoryLog.class)));
     }
 }

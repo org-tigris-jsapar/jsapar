@@ -9,9 +9,11 @@ import org.jsapar.schema.SchemaLine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -23,9 +25,17 @@ import java.util.function.Consumer;
  * line is added, see {@link Line#addDetail(Line)}, to the closest preceding line of its parent line type that is
  * still open. A line closes all open lines below the level it is added to, so in the sequence Order, OrderLine,
  * HistoryLog, Discount (where OrderLine and HistoryLog have parent Order and Discount has parent OrderLine) the
- * HistoryLog line closes the OrderLine line and the Discount line has no master to belong to. A top level line is passed on to the downstream consumer when the next top
- * level line arrives or when {@link #flush()} is called, so {@link #flush()} must be called when there are no more
- * lines, or the last top level line is never passed on.
+ * HistoryLog line closes the OrderLine line and the Discount line has no master to belong to.
+ * <p>
+ * A line that is omitted, for instance because of a validation error, is reported with {@link #lineSkipped(String)}.
+ * It closes the open lines at and below its own level, so the detail lines that follow it are orphans instead of being
+ * added to a previous master line. A line of a line type with ignoreread is reported with
+ * {@link #lineIgnored(String)}. It closes the open lines the same way, and its detail lines, recursively, are ignored
+ * too, without errors. A line of an undefined line type has no known level and leaves the open lines as they are.
+ * <p>
+ * A top level line is passed on to the downstream consumer when the next top level line arrives or when
+ * {@link #flush()} is called, so {@link #flush()} must be called when there are no more lines, or the last top level
+ * line is never passed on.
  * <p>
  * The text parsers use this class automatically when the schema has detail lines, so normally there is no need to
  * use it directly.
@@ -40,6 +50,8 @@ public final class MasterDetailLineConsumer implements Consumer<Line> {
     private final ValidationAction onOrphanDetailLine;
     /** Parent line type by detail line type. */
     private final Map<String, String> parentOf = new HashMap<>();
+    /** All line types of the schema. */
+    private final Set<String> lineTypes = new HashSet<>();
     /** The open lines: index 0 is the current top level line, the last one is the deepest open detail line. */
     private final List<Line> open = new ArrayList<>(4);
     private final ValidationHandler validationHandler = new ValidationHandler();
@@ -50,6 +62,8 @@ public final class MasterDetailLineConsumer implements Consumer<Line> {
      * @param errorConsumer      The consumer that receives errors about detail lines without a master line.
      * @param onOrphanDetailLine The action to take when a detail line has no preceding master line to belong to.
      *                           See {@link org.jsapar.text.TextParseConfig#getOnOrphanDetailLine()}.
+     * @throws org.jsapar.schema.SchemaException If a parent line type does not exist in the schema or if parent line
+     *                           types form a loop, see {@link Schema#validateParentLineTypes()}.
      */
     public MasterDetailLineConsumer(Schema<? extends SchemaLine<?>> schema,
                                     Consumer<Line> downstream,
@@ -58,7 +72,9 @@ public final class MasterDetailLineConsumer implements Consumer<Line> {
         this.downstream = Objects.requireNonNull(downstream);
         this.errorConsumer = Objects.requireNonNull(errorConsumer);
         this.onOrphanDetailLine = Objects.requireNonNull(onOrphanDetailLine);
+        schema.validateParentLineTypes(); // Lines may have been added or changed after the schema was built.
         for (SchemaLine<?> schemaLine : schema) {
+            lineTypes.add(schemaLine.getLineType());
             schemaLine.getParentLineType().ifPresent(parent -> parentOf.put(schemaLine.getLineType(), parent));
         }
     }
@@ -76,18 +92,70 @@ public final class MasterDetailLineConsumer implements Consumer<Line> {
             open.add(line);
             return;
         }
-        for (int i = open.size() - 1; i >= 0; i--) {
-            Line master = open.get(i);
-            if (master.getLineType().equals(parent)) {
-                open.subList(i + 1, open.size()).clear(); // Deeper levels are complete.
-                master.addDetail(line);
-                open.add(line); // May become master of other detail lines.
-                return;
-            }
+        Line master = closeBelow(parent);
+        if (master instanceof IgnoredLine) {
+            open.add(new IgnoredLine(line.getLineType())); // Ignored together with its master, and so are its details.
+            return;
+        }
+        if (master != null) {
+            master.addDetail(line);
+            open.add(line); // May become master of other detail lines.
+            return;
         }
         validationHandler.lineValidation(line.getLineNumber(), onOrphanDetailLine, errorConsumer,
                 () -> "The detail line of type '" + line.getLineType() + "' has no preceding line of type '" + parent
                         + "' to belong to. The line is skipped.");
+    }
+
+    /**
+     * Tells that a line of a line type was read but not passed on, for instance because it was omitted due to a
+     * validation error. The open lines at and below the level of the line type are closed, so that its detail lines
+     * that follow become orphans instead of being added to a previous master line. If the line type is a top level
+     * line type, the current top level line is passed on to the downstream consumer.
+     * @param lineType The line type of the skipped line. Line types that are not in the schema are ignored.
+     */
+    public void lineSkipped(String lineType) {
+        if (!lineTypes.contains(lineType))
+            return;
+        String parent = parentOf.get(lineType);
+        if (parent == null)
+            flush();
+        else
+            closeBelow(parent);
+    }
+
+    /**
+     * Tells that a line of a line type with ignoreread was read. The open lines at and below the level of the line
+     * type are closed, as for {@link #lineSkipped(String)}, but the detail lines that follow it, and their detail lines,
+     * are ignored too, without being reported as orphans. This is the same as when composing, where the detail lines of
+     * a line that is not written are not written either.
+     * @param lineType The line type of the ignored line. Line types that are not in the schema are ignored.
+     */
+    public void lineIgnored(String lineType) {
+        if (!lineTypes.contains(lineType))
+            return;
+        String parent = parentOf.get(lineType);
+        if (parent == null)
+            flush();
+        else
+            closeBelow(parent);
+        open.add(new IgnoredLine(lineType));
+    }
+
+    /**
+     * Closes all open lines below the closest open line of the given line type.
+     * @param lineType The line type of the master line to find.
+     * @return The closest open line of the line type, or null if there is none, in which case nothing is closed.
+     */
+    private Line closeBelow(String lineType) {
+        for (int i = open.size() - 1; i >= 0; i--) {
+            Line master = open.get(i);
+            if (master.getLineType().equals(lineType)) {
+                open.subList(i + 1, open.size()).clear(); // Deeper levels are complete.
+                return master;
+            }
+        }
+        return null;
     }
 
     /**
@@ -99,6 +167,16 @@ public final class MasterDetailLineConsumer implements Consumer<Line> {
             return;
         Line topLevelLine = open.getFirst();
         open.clear();
-        downstream.accept(topLevelLine);
+        if (!(topLevelLine instanceof IgnoredLine))
+            downstream.accept(topLevelLine);
+    }
+
+    /**
+     * Holds the place of an ignored line among the open lines, so that its detail lines are ignored too.
+     */
+    private static final class IgnoredLine extends Line {
+        private IgnoredLine(String lineType) {
+            super(lineType);
+        }
     }
 }

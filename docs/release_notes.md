@@ -49,7 +49,9 @@ title: Release notes
     Detail lines can be mapped to collection or map properties of beans with the new annotation `@JSaParDetail`,
     `withDetail()` in the bean map builder or a `<detail>` element in the bean map xml. When composing, detail lines 
     are written after their master line. New `TextParseConfig.setOnOrphanDetailLine()` controls what happens to a 
-    detail line without master line.
+    detail line without master line. A master line that is omitted while parsing makes its detail lines orphans,
+    while the detail lines of a line type with `ignoreread` are ignored too.
+    Line manipulators are called for detail lines too, and `Line.removeDetailsIf()` removes detail lines.
 
 ## 2.4
 1. Built with and for Java 17. Support for Java 11 and below is dropped.

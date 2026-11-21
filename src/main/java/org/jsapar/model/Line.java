@@ -437,6 +437,18 @@ public class Line implements Cloneable, Iterable<Cell<?>> {
     }
 
     /**
+     * Removes the detail lines of this line that match a predicate. The predicate is called once for each detail
+     * line, in the order they were added. The detail lines of the detail lines are not affected.
+     * @param filter Returns true for the detail lines to remove.
+     * @return True if any detail line was removed.
+     * @since 2.5
+     */
+    public boolean removeDetailsIf(java.util.function.Predicate<? super Line> filter) {
+        Objects.requireNonNull(filter, "Filter cannot be null");
+        return details != null && details.removeIf(filter);
+    }
+
+    /**
      * @return True if this line has at least one detail line.
      * @since 2.5
      */

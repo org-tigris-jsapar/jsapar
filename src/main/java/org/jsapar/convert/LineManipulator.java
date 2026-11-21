@@ -8,6 +8,12 @@ import org.jsapar.model.Line;
  * line event from the parser, the method manipulate gets called with a Line object. You may now modify the Line object
  * within the method and the modified values are then the ones that are fed to the output schema. You can register more than
  * one LineManipulator to the same converter and they will get called in the same order as they were registered.
+ * <p>
+ * Since 2.5, a manipulator is also called for each detail line of a master line, see
+ * {@link org.jsapar.schema.SchemaLine.Builder#withParent(String)}. It is called for the master line before its detail
+ * lines, recursively, in the same order as the lines were read. Returning false for a master line omits it together
+ * with all its detail lines; returning false for a detail line removes it, and its own detail lines, from its master
+ * line. See {@link ConvertTask#manipulate(Line, java.util.List)}.
  *
  * @see org.jsapar.Text2TextConverter
  * @see org.jsapar.Text2BeanConverter
@@ -26,7 +32,7 @@ public interface LineManipulator {
      * be reflected in the output. Cells can be added, altered or removed by a manipulator.
      *
      * @param line The line to manipulate
-     * @return If this method returns false, the line will be omitted from the output.
+     * @return If this method returns false, the line, and its detail lines if any, will be omitted from the output.
      */
     boolean manipulate(Line line);
 

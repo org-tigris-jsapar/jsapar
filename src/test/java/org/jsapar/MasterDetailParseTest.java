@@ -139,4 +139,175 @@ class MasterDetailParseTest {
         assertThrows(LineParseException.class,
                 () -> parser.parseForEach(new StringReader("D;10\n"), l -> fail("No line expected")));
     }
+
+    private static final String ORDER_1 = "O;1001;2026-11-02;ACME\n";
+    private static final String ORDER_2_INSUFFICIENT = "O;1002\n";
+
+    private static TextParser parserWithConfig(TextParseConfig config, List<JSaParException> errors) throws IOException {
+        TextParser parser = new TextParser(schema("09_CsvSchemaMasterDetail.xml"), config);
+        parser.setErrorConsumer(errors::add);
+        return parser;
+    }
+
+    private static TextParseConfig omitInsufficient() {
+        TextParseConfig config = new TextParseConfig();
+        config.setOnLineInsufficient(ValidationAction.OMIT_LINE);
+        return config;
+    }
+
+    @Test
+    void omittedMasterLine_detailsAreOrphans() throws IOException {
+        String input = ORDER_1 + "L;SKU-1;2\n" + ORDER_2_INSUFFICIENT + "L;SKU-3;5\nD;10\n";
+        List<JSaParException> errors = new ArrayList<>();
+        TextParser parser = parserWithConfig(omitInsufficient(), errors);
+        List<Line> lines = new ArrayList<>();
+        parser.parseForEach(new StringReader(input), lines::add);
+
+        assertEquals(1, lines.size());
+        assertEquals(1, lines.getFirst().getDetails().size(), "Detail lines of the omitted order are not added to the previous order");
+        assertEquals(2, errors.size());
+        assertEquals(List.of(4L, 5L), errors.stream().map(e -> ((LineParseException) e).getLineNumber()).toList());
+
+        errors.clear();
+        try (Stream<Line> stream = parser.stream(new StringReader(input))) {
+            List<Line> streamed = stream.toList();
+            assertEquals(1, streamed.size());
+            assertEquals(1, streamed.getFirst().getDetails().size());
+        }
+        assertEquals(2, errors.size());
+    }
+
+    @Test
+    void omittedDetailLine_closesItsLevel() throws IOException {
+        String input = ORDER_1 + "L;SKU-1;2\nL;SKU-2\nD;10\nH;Log\n";
+        List<JSaParException> errors = new ArrayList<>();
+        List<Line> lines = new ArrayList<>();
+        parserWithConfig(omitInsufficient(), errors).parseForEach(new StringReader(input), lines::add);
+
+        assertEquals(1, lines.size());
+        Line order = lines.getFirst();
+        assertEquals(List.of("OrderLine", "HistoryLog"), order.getDetails().stream().map(Line::getLineType).toList());
+        assertFalse(order.getDetails().getFirst().hasDetails(), "The discount does not belong to the previous order line");
+        assertEquals(1, errors.size());
+        assertEquals(4, ((LineParseException) errors.getFirst()).getLineNumber());
+    }
+
+    @Test
+    void omittedMasterLine_fixedWidth() throws IOException {
+        TextParseConfig config = new TextParseConfig();
+        config.setOnLineOverflow(ValidationAction.OMIT_LINE);
+        TextParser parser = new TextParser(schema("09_FixedWidthSchemaMasterDetail.xml"), config);
+        List<JSaParException> errors = new ArrayList<>();
+        parser.setErrorConsumer(errors::add);
+        List<String> input;
+        try (Reader reader = new FileReader("examples/09_Orders.txt", StandardCharsets.UTF_8)) {
+            input = new java.io.BufferedReader(reader).lines().toList();
+        }
+        // Make the second order line too long so that it is omitted.
+        String text = String.join("\n", input.subList(0, 5)) + "\n" + input.get(5) + "EXTRA\n" + input.get(6) + "\n";
+        List<Line> lines = new ArrayList<>();
+        parser.parseForEach(new StringReader(text), lines::add);
+
+        assertEquals(1, lines.size());
+        assertEquals(3, lines.getFirst().getDetails().size());
+        assertEquals(1, errors.size(), errors.toString());
+    }
+
+    @Test
+    void stream_skipsEmptyLines() throws IOException {
+        TextParser parser = new TextParser(schema("09_CsvSchemaMasterDetail.xml"));
+        try (Stream<Line> stream = parser.stream(new StringReader(ORDER_1 + "\nL;SKU-1;2\n\n" + ORDER_1))) {
+            List<Line> lines = stream.toList();
+            assertEquals(2, lines.size());
+            assertEquals(1, lines.getFirst().getDetails().size());
+        }
+    }
+
+    @Test
+    void exceptionOnLaterLine_completedMasterIsPassedOn() throws IOException {
+        TextParseConfig config = new TextParseConfig();
+        config.setOnLineInsufficient(ValidationAction.EXCEPTION);
+        TextParser parser = new TextParser(schema("09_CsvSchemaMasterDetail.xml"), config);
+        String input = ORDER_1 + "L;SKU-1;2\n" + ORDER_2_INSUFFICIENT;
+
+        List<Line> lines = new ArrayList<>();
+        assertThrows(LineParseException.class, () -> parser.parseForEach(new StringReader(input), lines::add));
+        assertEquals(1, lines.size());
+        assertEquals(1, lines.getFirst().getDetails().size());
+
+        try (Stream<Line> stream = parser.stream(new StringReader(input))) {
+            java.util.Iterator<Line> it = stream.iterator();
+            assertTrue(it.hasNext());
+            assertEquals(1, it.next().getDetails().size());
+            assertThrows(LineParseException.class, it::hasNext);
+        }
+    }
+
+    @Test
+    void addedSchemaLineWithUnknownParent_failsWhenParsing() throws IOException {
+        Schema<?> schema = schema("09_CsvSchemaMasterDetail.xml");
+        ((org.jsapar.schema.CsvSchema) schema).addSchemaLine(
+                org.jsapar.schema.CsvSchemaLine.builder("Note").withParent("Ordr").build());
+        assertThrows(org.jsapar.schema.SchemaException.class, schema::validateParentLineTypes);
+        TextParser parser = new TextParser(schema);
+        assertThrows(org.jsapar.schema.SchemaException.class,
+                () -> parser.parseForEach(new StringReader(ORDER_1), l -> {}));
+        assertThrows(org.jsapar.schema.SchemaException.class, () -> parser.stream(new StringReader(ORDER_1)));
+    }
+
+    @Test
+    void changedParentFormingLoop_failsWhenParsing() throws IOException {
+        Schema<?> schema = schema("09_CsvSchemaMasterDetail.xml");
+        schema.getSchemaLine("Order").orElseThrow().setParentLineType("Discount");
+        TextParser parser = new TextParser(schema);
+        assertThrows(org.jsapar.schema.SchemaException.class,
+                () -> parser.parseForEach(new StringReader(ORDER_1), l -> {}));
+    }
+
+    private static List<Line> parseIgnoringRead(String schemaFile, String dataFile, String lineType,
+                                                List<JSaParException> errors, boolean stream) throws IOException {
+        Schema<?> schema = schema(schemaFile);
+        schema.getSchemaLine(lineType).orElseThrow().setIgnoreRead(true);
+        TextParser parser = new TextParser(schema);
+        parser.setErrorConsumer(errors::add);
+        try (Reader reader = new FileReader("examples/" + dataFile, StandardCharsets.UTF_8)) {
+            if (stream) {
+                try (Stream<Line> lines = parser.stream(reader)) {
+                    return lines.toList();
+                }
+            }
+            List<Line> lines = new ArrayList<>();
+            parser.parseForEach(reader, lines::add);
+            return lines;
+        }
+    }
+
+    @Test
+    void ignoreReadMaster_detailsIgnoredWithoutErrors() throws IOException {
+        for (String[] files : new String[][]{{"09_CsvSchemaMasterDetail.xml", "09_Orders.csv"},
+                {"09_FixedWidthSchemaMasterDetail.xml", "09_Orders.txt"}}) {
+            for (boolean stream : new boolean[]{false, true}) {
+                List<JSaParException> errors = new ArrayList<>();
+                assertEquals(List.of(), parseIgnoringRead(files[0], files[1], "Order", errors, stream));
+                assertEquals(List.of(), errors, files[0]);
+            }
+        }
+    }
+
+    @Test
+    void ignoreReadDetail_itsDetailsIgnoredWithoutErrors() throws IOException {
+        for (String[] files : new String[][]{{"09_CsvSchemaMasterDetail.xml", "09_Orders.csv"},
+                {"09_FixedWidthSchemaMasterDetail.xml", "09_Orders.txt"}}) {
+            for (boolean stream : new boolean[]{false, true}) {
+                List<JSaParException> errors = new ArrayList<>();
+                List<Line> orders = parseIgnoringRead(files[0], files[1], "OrderLine", errors, stream);
+                assertEquals(List.of(), errors, files[0]);
+                assertEquals(2, orders.size());
+                assertEquals(List.of("HistoryLog"),
+                        orders.getFirst().getDetails().stream().map(Line::getLineType).toList(),
+                        "Order lines and their discounts are ignored, the history log is kept");
+                assertFalse(orders.get(1).hasDetails());
+            }
+        }
+    }
 }

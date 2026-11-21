@@ -368,6 +368,7 @@ public abstract class SchemaLine<C extends SchemaCell> implements Cloneable, Ite
     }
 
     /**
+     * The parent line type is checked when parsing starts, see {@link Schema#validateParentLineTypes()}.
      * @param parentLineType The line type of the master line that lines of this type belong to. null means that
      *                       lines of this type have no parent.
      * @see Builder#withParent(String)

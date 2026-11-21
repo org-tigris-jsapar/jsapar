@@ -54,20 +54,32 @@ public class ConvertTask {
         if(lineManipulators.isEmpty()){
             return composer::composeLine;
         }
-        if(lineManipulators.size() == 1){
-            final LineManipulator manipulator = lineManipulators.getFirst();
-            return line->{
-                if(manipulator.manipulate(line))
-                    composer.composeLine(line);
-            };
-        }
         return line->{
-            for (LineManipulator manipulator : lineManipulators) {
-                if (!manipulator.manipulate(line))
-                    return;
-            }
-            composer.composeLine(line);
+            if (manipulate(line, lineManipulators))
+                composer.composeLine(line);
         };
+    }
+
+    /**
+     * Calls the line manipulators for a line and then, recursively, for each of its detail lines, see
+     * {@link Line#getDetails()}. The manipulators are called for the master line before its detail lines, in the
+     * same order as the lines were read. A detail line for which a manipulator returns false is removed from its
+     * master line together with its own detail lines.
+     * @param line             The line to manipulate.
+     * @param lineManipulators The line manipulators to call, in order. The remaining manipulators are not called for
+     *                         a line once one of them returns false.
+     * @return False if one of the manipulators returned false for the line itself, which means that the line, and
+     * all its detail lines, should be omitted.
+     * @since 2.5
+     */
+    public static boolean manipulate(Line line, List<LineManipulator> lineManipulators) {
+        for (LineManipulator manipulator : lineManipulators) {
+            if (!manipulator.manipulate(line))
+                return false;
+        }
+        if (line.hasDetails())
+            line.removeDetailsIf(detail -> !manipulate(detail, lineManipulators));
+        return true;
     }
 
     public static ConvertTask of(ParseTask parseTask, Composer composer, Consumer<JSaParException> errorConsumer, Function<Line, List<Line>> transformer){
