@@ -436,6 +436,19 @@ class RecordBeanTest {
         assertTrue(errors.getFirst().getMessage().contains("There is no property"), errors.getFirst().getMessage());
     }
 
+    @Test
+    void beanFactoryDefault_record_conflictingCellNames_reportedForCell() {
+        Line line = new Line(ContactWithPhone.class.getName())
+                .addCell(new StringCell("name", "Ann"))
+                .addCell(new StringCell("phone", "123"))
+                .addCell(new StringCell("phone.number", "456"));
+        List<JSaParException> errors = new ArrayList<>();
+        List<Object> beans = assertDoesNotThrow(() -> composeDefault(line, errors));
+        assertEquals(List.of(new ContactWithPhone("Ann", null)), beans);
+        assertEquals(2, errors.size(), errors.toString());
+        assertTrue(errors.get(1).getMessage().contains("There is no property phone.number"), errors.get(1).getMessage());
+    }
+
     public record Tag(char code, Character mark) {
     }
 

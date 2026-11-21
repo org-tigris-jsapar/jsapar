@@ -6,8 +6,10 @@ import org.jsapar.parse.bean.BeanPropertyMap;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -73,10 +75,10 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
      * The mapping of a record class, created from the cell names of the lines.
      * @param c               The record class.
      * @param cellNames       All cell names that have been seen, also those that do not match any component.
-     * @param mappedNames     The cell names that could be mapped.
+     * @param mappedNames     The cell names that could be mapped, in the order they were mapped.
      * @param beanPropertyMap The mapping.
      */
-    private record RecordMapping(Class<?> c, Set<String> cellNames, Set<String> mappedNames,
+    private record RecordMapping(Class<?> c, Set<String> cellNames, List<String> mappedNames,
                                  BeanPropertyMap beanPropertyMap) {
 
         boolean hasAllCellNames(Line line) {
@@ -100,31 +102,40 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
          */
         static RecordMapping of(Class<?> c, Line line, RecordMapping previous) {
             Set<String> cellNames = new HashSet<>();
-            Set<String> mappedNames = new HashSet<>();
+            // Kept in order, so that the mapping is created in the same order as when the names were tried.
+            Set<String> mappedNames = new LinkedHashSet<>();
             if (previous != null && previous.c() == c) {
                 cellNames.addAll(previous.cellNames());
                 mappedNames.addAll(previous.mappedNames());
             }
             String lineType = line.getLineType();
             for (Cell<?> cell : line) {
-                if (hasName(cell) && cellNames.add(cell.getName()) && canMap(c, lineType, cell.getName()))
-                    mappedNames.add(cell.getName());
+                if (hasName(cell) && cellNames.add(cell.getName()))
+                    tryMap(c, lineType, mappedNames, cell.getName());
             }
-            return new RecordMapping(c, Set.copyOf(cellNames), Set.copyOf(mappedNames),
+            return new RecordMapping(c, Set.copyOf(cellNames), List.copyOf(mappedNames),
                     BeanPropertyMap.ofClass(c, lineType, cellNameOfProperty(mappedNames)));
         }
 
-        private static boolean canMap(Class<?> c, String lineType, String cellName) {
+        /**
+         * Adds a cell name to the mapped names if it can be mapped together with the names that are already mapped.
+         * Some names fail only together with others, for instance {@code phone} and {@code phone.number}.
+         * @param c           The record class.
+         * @param lineType    The line type.
+         * @param mappedNames The names that can be mapped so far. The cell name is added if it can be mapped.
+         * @param cellName    The cell name to try.
+         */
+        private static void tryMap(Class<?> c, String lineType, Set<String> mappedNames, String cellName) {
+            mappedNames.add(cellName);
             try {
-                BeanPropertyMap.ofClass(c, lineType, cellNameOfProperty(Set.of(cellName)));
-                return true;
+                BeanPropertyMap.ofClass(c, lineType, cellNameOfProperty(mappedNames));
             } catch (RuntimeException e) {
-                return false;
+                mappedNames.remove(cellName);
             }
         }
 
         private static Map<String, String> cellNameOfProperty(Set<String> cellNames) {
-            Map<String, String> cellNameOfProperty = new HashMap<>();
+            Map<String, String> cellNameOfProperty = new LinkedHashMap<>();
             cellNames.forEach(name -> cellNameOfProperty.put(name, name));
             return cellNameOfProperty;
         }
