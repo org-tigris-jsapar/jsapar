@@ -167,7 +167,7 @@ public class Bean2Cell {
             else if (paramType == Boolean.TYPE || paramType==Boolean.class)
                 return number.intValue() != 0;
             else if (paramType == Character.TYPE || paramType==Character.class)
-                return number.intValue();
+                return (char) number.intValue();
 
         }
         // Will squeeze in first character of any datatype's string representation.
@@ -192,6 +192,11 @@ public class Bean2Cell {
 
     /**
      * Assigns the value of a cell to a mutable bean, possibly to a property of a nested object.
+     * <p>
+     * If the cell belongs to a record nested within the bean, the record is created again with the new value each time
+     * this method is called, while the other components keep their current values, or null if there was no record.
+     * A record whose constructor validates its values may therefore fail before all its cells have been assigned. Use
+     * {@link BeanPropertyMap#createObjectNode()} to assign all cells of a line before the records are created.
      * @param bean The bean of the line.
      * @param cell The cell.
      * @throws BeanComposeException      If the value cannot be assigned.

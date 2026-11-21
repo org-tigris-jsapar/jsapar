@@ -35,7 +35,11 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T createBean(Line line) throws ClassNotFoundException, InstantiationException, IllegalAccessException, ClassCastException, NoSuchMethodException, InvocationTargetException {
-        Class<?> c = lineClass(line);
+        return newBean(lineClass(line));
+    }
+
+    @SuppressWarnings("unchecked")
+    private T newBean(Class<?> c) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         if (c.isRecord())
             throw new InstantiationException("The record " + c.getName()
                     + " cannot be created before its values are known. Use createBeanBuilder() instead.");
@@ -53,7 +57,7 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
     public BeanBuilder<T> createBeanBuilder(Line line) throws ReflectiveOperationException {
         Class<?> c = lineClass(line);
         if (!c.isRecord())
-            return BeanFactory.super.createBeanBuilder(line);
+            return new DefaultBeanBuilder<>(this, line.getLineType(), newBean(c));
         RecordMapping mapping = recordMappings.get(line.getLineType());
         if (mapping == null || mapping.c() != c || !mapping.hasAllCellNames(line)) {
             mapping = RecordMapping.of(c, line, mapping);

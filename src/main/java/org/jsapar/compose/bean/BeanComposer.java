@@ -111,7 +111,7 @@ public final class BeanComposer<T> implements Composer{
             case InstantiationException ignored -> generateErrorEvent(line, "Failed to instantiate object. Skipped creating bean", e);
             case NoSuchMethodException ignored -> generateErrorEvent(line, "Failed to instantiate object. Skipped creating bean", e);
             case InvocationTargetException ignored -> generateErrorEvent(line, "Failed to instantiate object. Skipped creating bean", e);
-            case IllegalAccessException ignored -> generateErrorEvent(line, "Failed to call set method. Skipped creating bean", e);
+            case IllegalAccessException ignored -> generateErrorEvent(line, "Failed to access a constructor or method. Skipped creating bean", e);
             case ClassNotFoundException ignored -> generateErrorEvent(line, "Class not found. Skipped creating bean", e);
             case ClassCastException ignored -> generateErrorEvent(line,
                     "Class of the created bean is not inherited from the generic type specified when creating the BeanComposer", e);

@@ -94,23 +94,7 @@ public interface BeanFactory<T> {
         T bean = createBean(line);
         if (bean == null)
             return null;
-        String lineType = line.getLineType();
-        return new BeanBuilder<>() {
-            @Override
-            public void assignCell(Cell<?> cell) throws BeanComposeException, ReflectiveOperationException {
-                assignCellToBean(lineType, bean, cell);
-            }
-
-            @Override
-            public void assignDetail(Line detailLine, Object detailBean) throws BeanComposeException, ReflectiveOperationException {
-                assignDetailToBean(lineType, bean, detailLine, detailBean);
-            }
-
-            @Override
-            public T build() {
-                return bean;
-            }
-        };
+        return new DefaultBeanBuilder<>(this, line.getLineType(), bean);
     }
 
 }

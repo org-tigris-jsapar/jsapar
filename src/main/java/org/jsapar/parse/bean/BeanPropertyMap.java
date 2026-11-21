@@ -171,6 +171,10 @@ public class BeanPropertyMap {
         if (propertyDescriptor == null)
             throw new BeanException("There is no property " + propertyName + " in class " + lineClass.getName()
                     + " for detail lines of type " + detailLineType + ".");
+        if (lineClass.isRecord() && Arrays.stream(lineClass.getRecordComponents())
+                .noneMatch(component -> component.getName().equals(propertyName)))
+            throw new BeanException("The property " + propertyName + " of record " + lineClass.getName()
+                    + " for detail lines of type " + detailLineType + " is not a record component.");
         bean2DetailByLineType.put(detailLineType, Bean2Detail.of(detailLineType, propertyDescriptor, keyCellName));
         return this;
     }

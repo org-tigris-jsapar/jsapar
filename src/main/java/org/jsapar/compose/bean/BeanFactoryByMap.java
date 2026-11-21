@@ -43,6 +43,13 @@ public final class BeanFactoryByMap<T> implements BeanFactory<T>{
         return new PropertyMapBeanBuilder<>(beanPropertyMap, false);
     }
 
+    /**
+     * Assigns the value of a cell to a mutable bean. If the cell belongs to a record nested within the bean, the record
+     * is created again with the new value each time this method is called, so a record whose constructor validates
+     * its values may fail before all its cells have been assigned. The {@link BeanComposer} uses
+     * {@link #createBeanBuilder(Line)} instead, which creates records when all cells of the line have been assigned.
+     * @see BeanFactory#assignCellToBean(String, Object, Cell)
+     */
     @Override
     public void assignCellToBean(String lineType, T bean, Cell<?> cell) throws InvocationTargetException, InstantiationException, IllegalAccessException, BeanComposeException, NoSuchMethodException {
         BeanPropertyMap beanPropertyMap = beanMap.getBeanPropertyMap(lineType);

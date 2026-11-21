@@ -65,7 +65,8 @@ with a property that is a record. A record within a bean is assigned with the se
 are known.
 * Collection and map components that [detail lines](#detail-lines) are mapped to always get a collection or map, which 
 is empty if there are no detail lines. This makes it possible for the record to make immutable copies in its 
-constructor, such as `lines = List.copyOf(lines)`.
+constructor, such as `lines = List.copyOf(lines)`. Detail lines can only be mapped to record components, not to 
+other getter methods of the record.
 * The record does not need to be public. If the record or its package is not public, its package needs to be open to 
 the module `org.jsapar` when Java modules are used.
 

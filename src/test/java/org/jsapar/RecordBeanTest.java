@@ -9,6 +9,7 @@ import org.jsapar.compose.ComposeException;
 import org.jsapar.compose.bean.BeanComposer;
 import org.jsapar.compose.bean.BeanFactoryByMap;
 import org.jsapar.compose.bean.BeanFactoryDefault;
+import org.jsapar.error.BeanException;
 import org.jsapar.error.JSaParException;
 import org.jsapar.model.CellType;
 import org.jsapar.model.IntegerCell;
@@ -405,6 +406,34 @@ class RecordBeanTest {
     void beanFactoryDefault_createBean_record_fails() {
         Line line = new Line(Contact.class.getName());
         assertThrows(InstantiationException.class, () -> new BeanFactoryDefault<>().createBean(line));
+    }
+
+    public record Tag(char code, Character mark) {
+    }
+
+    @Test
+    void numberToCharComponent() {
+        Line line = new Line(Tag.class.getName())
+                .addCell(new IntegerCell("code", 65))
+                .addCell(new IntegerCell("mark", 66));
+        List<JSaParException> errors = new ArrayList<>();
+        assertEquals(List.of(new Tag('A', 'B')), composeDefault(line, errors));
+        assertEquals(List.of(), errors);
+    }
+
+    /** Has a derived getter that looks like a property but is not a record component. */
+    public record OrderWithDerived(List<OrderLine> lines) {
+        public List<OrderLine> getItems() {
+            return lines;
+        }
+    }
+
+    @Test
+    void detailOfRecord_notAComponent_fails() {
+        BeanException e = assertThrows(BeanException.class, () -> BeanMap.builder()
+                .withLine("Order", OrderWithDerived.class, b -> b.withDetail("OrderLine", "items"))
+                .build());
+        assertTrue(e.getMessage().contains("not a record component"), e.getMessage());
     }
 
     @Test
