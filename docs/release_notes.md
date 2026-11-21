@@ -64,7 +64,8 @@ title: Release notes
     `phone` to property `phone.number`, and there also was a property with the same name as the cell, creating the 
     bean map could fail with a `NullPointerException` or map the cell to the wrong property.
 23. Fixed: When a bean could not be created, for instance because the class has no default constructor, and the error
-    consumer did not throw an exception, `null` was passed to the bean consumer. The line is now skipped.
+    consumer did not throw an exception, `null` was passed to the bean consumer. The same happened for a line type
+    without class when `onUndefinedLineType` was `ERROR` or `NONE`. The line is now skipped in both cases.
 24. Fixed: Converting a numeric cell to a `char` or `Character` property failed with an argument type mismatch, and a
     text cell could not be converted to a `Character` property. Both now work, a text cell gives its first character.
 

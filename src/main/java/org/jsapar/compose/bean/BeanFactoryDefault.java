@@ -61,8 +61,11 @@ public final class BeanFactoryDefault<T> implements BeanFactory<T> {
             return new DefaultBeanBuilder<>(this, line.getLineType(), newBean(c));
         RecordMapping mapping = recordMappings.get(line.getLineType());
         if (mapping == null || mapping.c() != c || !mapping.hasAllCellNames(line)) {
-            mapping = RecordMapping.of(c, line, mapping);
-            recordMappings.put(line.getLineType(), mapping);
+            // Atomic, so that cell names added by other threads at the same time are not lost.
+            mapping = recordMappings.compute(line.getLineType(), (lineType, current) ->
+                    current != null && current.c() == c && current.hasAllCellNames(line)
+                            ? current
+                            : RecordMapping.of(c, line, current));
         }
         return new PropertyMapBeanBuilder<>(mapping.beanPropertyMap(), true);
     }

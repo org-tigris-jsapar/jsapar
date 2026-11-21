@@ -87,15 +87,15 @@ public final class BeanComposer<T> implements Composer{
 
     @Override
     public boolean composeLine(Line line) {
-        T bean = null;
+        T bean;
         try {
             BeanBuilder<T> builder = beanFactory.createBeanBuilder(line);
             if (builder == null) {
-                if (!validationHandler.lineValidationError(line, NO_CLASS_MESSAGE, config.getOnUndefinedLineType(), errorConsumer))
-                    return false;
-            } else {
-                bean = build(line, builder);
+                // There is no bean to pass to the bean consumer, whatever the validation action.
+                validationHandler.lineValidationError(line, NO_CLASS_MESSAGE, config.getOnUndefinedLineType(), errorConsumer);
+                return false;
             }
+            bean = build(line, builder);
         } catch (ReflectiveOperationException | BeanComposeException | ClassCastException | IllegalArgumentException e) {
             handleBeanError(line, e);
             return false;
