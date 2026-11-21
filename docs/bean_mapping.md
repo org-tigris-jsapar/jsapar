@@ -352,6 +352,19 @@ make it explicit that there should be no class for a line type, even if the line
 <bean linetype="Header"/>
 ```
 
+## Checking the class of the beans
+*New since version 2.5*
+
+The type argument of the converter cannot be checked at runtime. If a line type is mapped to a class that is not of 
+the type argument, the bean is still passed to the consumer, where it causes a `ClassCastException`. To get an error 
+for such lines instead, and skip them, tell the converter which class all beans need to be of:
+```java
+Text2BeanConverter<Employee> converter = new Text2BeanConverter<>(schema, Employee.class);
+converter.setBeanClass(Employee.class);
+```
+Beans of [detail lines](#detail-lines) are not checked, since they are usually of other classes than the master beans. 
+The same method is available on the `BeanComposer`.
+
 # Detail lines
 When the schema groups lines as [master and detail lines](advanced#master-and-detail-lines), the beans of the detail 
 lines can be added to a collection or map property of the bean of the master line, using the annotation 

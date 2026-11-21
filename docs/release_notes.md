@@ -68,6 +68,11 @@ title: Release notes
     without class when `onUndefinedLineType` was `ERROR` or `NONE`. The line is now skipped in both cases.
 24. Fixed: Converting a numeric cell to a `char` or `Character` property failed with an argument type mismatch, and a
     text cell could not be converted to a `Character` property. Both now work, a text cell gives its first character.
+25. Added `setBeanClass()` to `Text2BeanConverter` and `BeanComposer`. When set, a bean that is not of that class is 
+    reported as an error and its line is skipped, instead of causing a `ClassCastException` in the bean consumer. See 
+    [checking the class of the beans](bean_mapping#checking-the-class-of-the-beans).
+26. Fixed: `Text2BeanConverter.stream()` did not use the error consumer of the converter for errors while creating 
+    beans, so such errors were always thrown as exceptions.
 
 ## 2.4
 1. Built with and for Java 17. Support for Java 11 and below is dropped.

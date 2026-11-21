@@ -106,6 +106,28 @@ public class BeanComposerTest {
     }
 
     @Test
+    public void testBeanClass_otherClassReportedAndSkipped() {
+        BeanComposer<TstPerson> composer = new BeanComposer<>();
+        composer.setBeanClass(TstPerson.class);
+        assertSame(TstPerson.class, composer.getBeanClass());
+        java.util.List<TstPerson> beans = new java.util.ArrayList<>();
+        java.util.function.Consumer<TstPerson> beanConsumer = beans::add;
+        composer.setBeanConsumer(beanConsumer);
+        java.util.List<JSaParException> errors = new java.util.ArrayList<>();
+        composer.setErrorConsumer(errors::add);
+
+        Line address = new Line("org.jsapar.TstPostAddress").addCell(new StringCell("street", "Main street"));
+        assertFalse(composer.composeLine(address));
+        assertTrue(composer.toBean(address).isEmpty());
+        assertTrue(composer.composeLine(new Line("org.jsapar.TstPerson").addCell(new StringCell("firstName", "Ann"))));
+
+        assertEquals(1, beans.size());
+        assertEquals("Ann", beans.getFirst().getFirstName());
+        assertEquals(2, errors.size(), errors.toString());
+        assertInstanceOf(ClassCastException.class, errors.getFirst().getCause());
+    }
+
+    @Test
     public final void testCreateJavaObjects_Long_to_int() {
         Document document = new Document();
         Line line1 = new Line("org.jsapar.TstPerson");
