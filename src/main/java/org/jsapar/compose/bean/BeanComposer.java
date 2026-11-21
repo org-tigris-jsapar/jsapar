@@ -129,8 +129,9 @@ public final class BeanComposer<T> implements Composer{
     private boolean isOfBeanClass(T bean, Line line) {
         if (beanClass == null || beanClass.isInstance(bean))
             return true;
-        handleBeanError(line, new ClassCastException("The bean of class " + bean.getClass().getName()
-                + " is not of class " + beanClass.getName()));
+        String beanClassName = bean == null ? "null" : bean.getClass().getName();
+        generateErrorEvent(line, "The bean is not of the bean class " + beanClass.getName() + ". Skipped the line",
+                new ClassCastException("The bean of class " + beanClassName + " is not of class " + beanClass.getName()));
         return false;
     }
 

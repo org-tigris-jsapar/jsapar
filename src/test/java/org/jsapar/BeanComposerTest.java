@@ -125,6 +125,52 @@ public class BeanComposerTest {
         assertEquals("Ann", beans.getFirst().getFirstName());
         assertEquals(2, errors.size(), errors.toString());
         assertInstanceOf(ClassCastException.class, errors.getFirst().getCause());
+        assertTrue(errors.getFirst().getMessage().contains("not of the bean class org.jsapar.TstPerson"),
+                errors.getFirst().getMessage());
+    }
+
+    @Test
+    public void testBeanClass_nullBeanReportedAndSkipped() {
+        BeanFactory<Object> nullBeanFactory = new BeanFactory<>() {
+            @Override
+            public Object createBean(Line line) {
+                return null;
+            }
+
+            @Override
+            public void assignCellToBean(String lineType, Object bean, Cell<?> cell) {
+            }
+
+            @Override
+            public org.jsapar.compose.bean.BeanBuilder<Object> createBeanBuilder(Line line) {
+                return new org.jsapar.compose.bean.BeanBuilder<>() {
+                    @Override
+                    public void assignCell(Cell<?> cell) {
+                    }
+
+                    @Override
+                    public void assignDetail(Line detailLine, Object detailBean) {
+                    }
+
+                    @Override
+                    public Object build() {
+                        return null;
+                    }
+                };
+            }
+        };
+        BeanComposer<Object> composer = new BeanComposer<>(nullBeanFactory);
+        composer.setBeanClass(TstPerson.class);
+        java.util.List<Object> beans = new java.util.ArrayList<>();
+        java.util.function.Consumer<Object> beanConsumer = beans::add;
+        composer.setBeanConsumer(beanConsumer);
+        java.util.List<JSaParException> errors = new java.util.ArrayList<>();
+        composer.setErrorConsumer(errors::add);
+
+        assertFalse(composer.composeLine(new Line("org.jsapar.TstPerson")));
+        assertTrue(beans.isEmpty());
+        assertEquals(1, errors.size(), errors.toString());
+        assertInstanceOf(ClassCastException.class, errors.getFirst().getCause());
     }
 
     @Test
