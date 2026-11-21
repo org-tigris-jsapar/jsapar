@@ -27,6 +27,8 @@ public final class BeanComposer<T> implements Composer{
     private Consumer<JSaParException> errorConsumer = new ExceptionErrorConsumer();
     private BeanFactory<T>            beanFactory;
     private BeanComposeConfig config;
+    /** If not null, the class that all composed beans need to be of. */
+    private Class<? extends T> beanClass;
     private final ValidationHandler validationHandler = new ValidationHandler();
 
     /**
@@ -68,10 +70,21 @@ public final class BeanComposer<T> implements Composer{
     /**
      * The behavior in case of mapping error depends on the configuration supplied when creating this instance.
      * @param line The line to convert into a bean instance.
-     * @return Optionally a converted bean or Optional.empty() if no bean could be constructed based on the line.
+     * @return Optionally a converted bean or Optional.empty() if no bean could be constructed based on the line, or
+     * if the bean is not of the class set by {@link #setBeanClass(Class)}.
      * @throws ComposeException in case of error while composing the bean.
      */
     public Optional<T> toBean(Line line){
+        return createBean(line).filter(bean -> isOfBeanClass(bean, line));
+    }
+
+    /**
+     * Creates the bean of a line without checking its class against the bean class, since this is also used for
+     * detail lines, whose beans are usually of other classes than the beans of the master lines.
+     * @param line The line.
+     * @return Optionally a bean.
+     */
+    private Optional<T> createBean(Line line){
         try {
             BeanBuilder<T> builder = beanFactory.createBeanBuilder(line);
             if (builder == null) {
@@ -100,8 +113,26 @@ public final class BeanComposer<T> implements Composer{
             handleBeanError(line, e);
             return false;
         }
+        if (!isOfBeanClass(bean, line))
+            return false;
         beanLineConsumer.accept(bean, line);
         return true;
+    }
+
+    /**
+     * Checks the class of a bean before it is passed on, since the generic type of this class cannot be checked at
+     * runtime. Reports an error if the bean is not of the bean class.
+     * @param bean The bean of a line.
+     * @param line The line.
+     * @return True if no bean class is set or if the bean is of the bean class.
+     */
+    private boolean isOfBeanClass(T bean, Line line) {
+        if (beanClass == null || beanClass.isInstance(bean))
+            return true;
+        String beanClassName = bean == null ? "null" : bean.getClass().getName();
+        generateErrorEvent(line, "The bean is not of the bean class " + beanClass.getName() + ". Skipped the line",
+                new ClassCastException("The bean of class " + beanClassName + " is not of class " + beanClass.getName()));
+        return false;
     }
 
     private static final String NO_CLASS_MESSAGE = "BeanFactory failed to instantiate object for this line because there was no associated class. You can supress errors like this by setting config.onUndefinedLineType=OMIT_LINE";
@@ -163,6 +194,28 @@ public final class BeanComposer<T> implements Composer{
         this.beanFactory = beanFactory;
     }
 
+    /**
+     * Sets the class that all composed beans need to be of. Since the generic type of this class cannot be checked at
+     * runtime, a bean of another class would otherwise be passed to the bean consumer, where it causes a
+     * {@link ClassCastException}. When a bean class is set, a bean of another class is instead reported to the error
+     * consumer and the line is skipped. Beans of detail lines are not checked, since they are usually of other classes.
+     * @param beanClass The class that all composed beans need to be of, or null to not check the class of the beans,
+     *                  which is the default.
+     * @since 2.5
+     */
+    public void setBeanClass(Class<? extends T> beanClass) {
+        this.beanClass = beanClass;
+    }
+
+    /**
+     * @return The class that all composed beans need to be of, or null if the class of the beans is not checked.
+     * @see #setBeanClass(Class)
+     * @since 2.5
+     */
+    public Class<? extends T> getBeanClass() {
+        return beanClass;
+    }
+
 
     /**
      * Assigns the cells and detail beans of a line to a bean builder and builds the bean. Errors while assigning a
@@ -201,7 +254,7 @@ public final class BeanComposer<T> implements Composer{
         for (Line detail : line.getDetails()) {
             if (!beanFactory.hasDetail(line.getLineType(), detail.getLineType()))
                 continue;
-            Optional<T> detailBean = toBean(detail);
+            Optional<T> detailBean = createBean(detail);
             if (detailBean.isEmpty())
                 continue;
             try {

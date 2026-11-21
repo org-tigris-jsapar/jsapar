@@ -36,6 +36,7 @@ public class Text2BeanConverter<T> extends AbstractConverter {
     private BeanFactory<T> beanFactory;
     private BeanComposeConfig composeConfig = new BeanComposeConfig();
     private TextParseConfig parseConfig = new TextParseConfig();
+    private Class<? extends T> beanClass;
 
     /**
      * Creates a converter with supplied composer schema.
@@ -88,6 +89,32 @@ public class Text2BeanConverter<T> extends AbstractConverter {
     }
 
     /**
+     * Sets the class that all converted beans need to be of. Since the generic type of this class cannot be checked at
+     * runtime, a bean of another class would otherwise be passed to the bean consumer or the stream, where it causes a
+     * {@link ClassCastException}. When a bean class is set, a bean of another class is instead reported as an error and
+     * the line is skipped. Beans of detail lines are not checked, since they are usually of other classes.
+     * <p>
+     * This is not set by {@link #Text2BeanConverter(Schema, Class)}, since other line types may be mapped to other
+     * classes.
+     * @param beanClass The class that all converted beans need to be of, or null to not check the class of the beans,
+     *                  which is the default.
+     * @see BeanComposer#setBeanClass(Class)
+     * @since 2.5
+     */
+    public void setBeanClass(Class<? extends T> beanClass) {
+        this.beanClass = beanClass;
+    }
+
+    /**
+     * @return The class that all converted beans need to be of, or null if the class of the beans is not checked.
+     * @see #setBeanClass(Class)
+     * @since 2.5
+     */
+    public Class<? extends T> getBeanClass() {
+        return beanClass;
+    }
+
+    /**
      * Executes the actual convert. Will produce a callback to supplied eventListener for each bean that is parsed.
      * Deprecated since 2.2. Use {@link #convertForEach(Reader, Consumer)} or {@link #convertForEach(Reader, BiConsumer)} instead.
      * @param reader The reader to read the text from.
@@ -111,6 +138,7 @@ public class Text2BeanConverter<T> extends AbstractConverter {
      */
     public long convertForEach(Reader reader, BiConsumer<T, Line> beanConsumer) throws IOException {
         BeanComposer<T> composer = new BeanComposer<>(composeConfig, beanFactory);
+        composer.setBeanClass(beanClass);
         composer.setBeanConsumer(beanConsumer);
         if (beanFactory != null)
             composer.setBeanFactory(beanFactory);
@@ -131,6 +159,8 @@ public class Text2BeanConverter<T> extends AbstractConverter {
      */
     public Stream<T> stream(Reader reader) throws IOException {
         try(BeanComposer<T> composer = new BeanComposer<>(composeConfig, beanFactory)) {
+            composer.setBeanClass(beanClass);
+            composer.setErrorConsumer(getErrorConsumer());
             TextSchemaParser parser = TextSchemaParser.ofSchema(parseSchema, reader, getParseConfig());
             return parser.stream(getErrorConsumer()).flatMap(line -> composer.toBean(line).stream());
         }

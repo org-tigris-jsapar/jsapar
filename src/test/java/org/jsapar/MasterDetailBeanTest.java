@@ -299,6 +299,16 @@ class MasterDetailBeanTest {
     }
 
     @Test
+    void annotatedClass_beanClass_detailBeansNotChecked() throws IOException {
+        Text2BeanConverter<Order> converter = new Text2BeanConverter<>(csvSchema(), Order.class);
+        converter.setBeanClass(Order.class);
+        List<JSaParException> errors = new ArrayList<>();
+        List<Order> orders = convert(converter, ordersCsv(), errors);
+        assertEquals(List.of(), errors);
+        assertOrders(orders);
+    }
+
+    @Test
     void annotatedClass_stream() throws IOException {
         Text2BeanConverter<Order> converter = new Text2BeanConverter<>(csvSchema(), Order.class);
         try (Reader reader = ordersCsv(); Stream<Order> stream = converter.stream(reader)) {
